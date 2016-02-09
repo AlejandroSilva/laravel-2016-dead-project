@@ -13,5 +13,6 @@ class DatabaseSeeder extends Seeder
 //        $this->call(UserTableSeeder::class);
 //        $this->call(RegionesTableSeeder::class);
 //        $this->call(ProvinciasTableSeeder::class);
+//        $this->call(ComunasTableSeeder::class);
     }
 }
