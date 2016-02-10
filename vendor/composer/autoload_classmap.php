@@ -6,7 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'ClientesTableSeeder' => $baseDir . '/database/seeds/ClientesTableSeeder.php',
     'ComunasTableSeeder' => $baseDir . '/database/seeds/ComunasTableSeeder.php',
+    'CreateClientesTable' => $baseDir . '/database/migrations/2016_02_10_125237_create_clientes_table.php',
     'CreateComunasTable' => $baseDir . '/database/migrations/2016_02_09_200627_create_comunas_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreateProvinciasTable' => $baseDir . '/database/migrations/2016_02_09_184942_create_provincias_table.php',
@@ -482,7 +484,6 @@ return array(
     'PHP_Token_YIELD' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_YIELD_FROM' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'ProvinciasTableSeeder' => $baseDir . '/database/seeds/ProvinciasTableSeeder.php',
-    'ZonasTableSeeder' => $baseDir . '/database/seeds/ZonasTableSeeder.php',
     'RegionesTableSeeder' => $baseDir . '/database/seeds/RegionesTableSeeder.php',
     'SebastianBergmann\\Comparator\\ArrayComparator' => $vendorDir . '/sebastian/comparator/src/ArrayComparator.php',
     'SebastianBergmann\\Comparator\\Comparator' => $vendorDir . '/sebastian/comparator/src/Comparator.php',
@@ -522,4 +523,5 @@ return array(
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
+    'ZonasTableSeeder' => $baseDir . '/database/seeds/ZonasTableSeeder.php',
 );
