@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/map', function(){
+    return view('maptest');
+});
+
 Route::get('/hello', function(){
 //   return App\Zonas::find(1)->regiones;
 //   return App\Regiones::find(7)->provincias;
