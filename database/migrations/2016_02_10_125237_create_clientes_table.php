@@ -16,8 +16,8 @@ class CreateClientesTable extends Migration {
             $table->increments('idCliente');
 
             // Otros campos
-            $table->string('nombre', 50);
-            $table->string('nombreCorto', 10);
+            $table->string('nombre', 50)->unique();
+            $table->string('nombreCorto', 10)->unique();
         });
     }
 
