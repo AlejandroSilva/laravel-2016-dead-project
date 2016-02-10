@@ -12,6 +12,11 @@ class Regiones extends Model {
     public $timestamps = false;
 
     // #### Relaciones
+    public function zona(){
+        // belongsTo(modelo, this.fogeignKey, parent.otherKey)
+        return $this->belongsTo('App\Zonas', 'idZona', 'idZona');
+    }
+
     public function provincias(){
         // hasMany(modelo, child.fogeignKey, this.localKey)
         return $this->hasMany('App\Provincias', 'cutRegion', 'cutRegion');

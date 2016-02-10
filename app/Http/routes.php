@@ -16,7 +16,9 @@ Route::get('/', function () {
 });
 
 Route::get('/hello', function(){
+//   return App\Zonas::find(1)->regiones;
 //   return App\Regiones::find(7)->provincias;
+//   return App\Regiones::find(7)->zona;
 //   return App\Provincias::find(73)->comunas;
 });
 

@@ -16,6 +16,14 @@ class CreateRegionesTable extends Migration{
             $table->primary('cutRegion');
             $table->unique('cutRegion');
 
+            // FK
+            // idZona de la tabla Zonas
+            $table->integer('idZona')
+                  ->unsigned();
+            $table->foreign('idZona')
+                ->references('idZona')
+                ->on('zonas');
+
             // Otros campos
             $table->string('nombre', 55);   // maximo en "Región de Aysén del General Carlos Ibáñez del Campo" (52)
         });
