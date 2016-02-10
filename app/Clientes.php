@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Clientes extends Model {
     // llave primaria
     public $primaryKey = 'idCliente';
-    // tiene timestamps
-    public $timestamps = true;
+    // no tiene timestamps
+    public $timestamps = false;
 
     // #### Relaciones
     public function locales(){

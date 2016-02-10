@@ -18,7 +18,6 @@ class CreateClientesTable extends Migration {
             // Otros campos
             $table->string('nombre', 50);
             $table->string('nombreCorto', 10);
-            $table->timestamps();
         });
     }
 
