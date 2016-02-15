@@ -12,7 +12,7 @@ class CreateRegionesTable extends Migration{
     public function up() {
         Schema::create('regiones', function (Blueprint $table) {
             // PK
-            $table->integer('cutRegion');   // codigo unico regional
+            $table->integer('cutRegion')->unsigned();   // codigo unico regional
             $table->primary('cutRegion');
             $table->unique('cutRegion');
 
@@ -21,8 +21,8 @@ class CreateRegionesTable extends Migration{
             $table->integer('idZona')
                   ->unsigned();
             $table->foreign('idZona')
-                ->references('idZona')
-                ->on('zonas');
+                  ->references('idZona')
+                  ->on('zonas');
 
             // Otros campos
             $table->string('nombre', 55);   // maximo en "Región de Aysén del General Carlos Ibáñez del Campo" (52)

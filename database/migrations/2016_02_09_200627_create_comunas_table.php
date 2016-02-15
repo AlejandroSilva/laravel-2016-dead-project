@@ -13,13 +13,14 @@ class CreateComunasTable extends Migration {
     {
         Schema::create('comunas', function (Blueprint $table) {
             // PK
-            $table->integer('cutComuna');    // codigo unico regional
+            $table->integer('cutComuna')->unsigned();    // codigo unico regional
             $table->primary('cutComuna');
             $table->unique('cutComuna');
 
             // FK
             // cutProvincia de la tabla Provincias
-            $table->integer('cutProvincia');
+            $table->integer('cutProvincia')
+                  ->unsigned();
             $table->foreign('cutProvincia')
                 ->references('cutProvincia')
                 ->on('provincias');

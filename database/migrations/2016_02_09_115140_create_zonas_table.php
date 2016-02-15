@@ -10,7 +10,8 @@ class CreateZonasTable extends Migration {
             $table->increments('idZona');
 
             // Otros campos
-            $table->string('nombre', 50);
+            $table->string('nombre', 50)
+                  ->unique();
         });
     }
 
