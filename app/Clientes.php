@@ -12,6 +12,7 @@ class Clientes extends Model {
 
     // #### Relaciones
     public function locales(){
-        // ToDo: implementar
+        // hasMany(modelo, child.fogeignKey, this.localKey)
+        return $this->hasMany('App\Locales', 'idCliente', 'idCliente');
     }
 }

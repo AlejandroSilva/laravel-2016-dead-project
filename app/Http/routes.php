@@ -24,7 +24,18 @@ Route::get('/hello', function(){
 //   return App\Regiones::find(7)->provincias;
 //   return App\Regiones::find(7)->zona;
 //   return App\Provincias::find(73)->comunas;
+   return App\Locales::find(636)->direccion;
+//   return App\Clientes::find(9)->locales;
 });
+Route::get('import', function(){
+    DB::transaction(function() {
+        LocalesTableSeeder::parseAndInsert('/home/asilva/Escritorio/localesFCV.csv');
+        LocalesTableSeeder::parseAndInsert('/home/asilva/Escritorio/localesPreunic.csv');
+    });
+});
+
+//al hacer un seed "coquimbo" esta dos veces, hacer un constrain de unique con nombre/cliente
+//hacer un constrain con numero/cliente
 
 
 /*

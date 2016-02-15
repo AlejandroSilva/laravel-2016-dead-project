@@ -20,7 +20,11 @@ class FormatoLocalesTableSeeder extends Seeder {
             // Formatos de Bata
             ['idFormatoLocal'=> 4, 'nombre'=>'Calle',     'siglas'=>'CALLE',  'descripcion'=>'(descripcion pendiente)'],
             ['idFormatoLocal'=> 5, 'nombre'=>'Corner',    'siglas'=>'CORNER', 'descripcion'=>'(descripcion pendiente)'],
-            ['idFormatoLocal'=> 6, 'nombre'=>'Mall',      'siglas'=>'MALL',   'descripcion'=>'(descripcion pendiente)']
+            ['idFormatoLocal'=> 6, 'nombre'=>'Mall',      'siglas'=>'MALL',   'descripcion'=>'(descripcion pendiente)'],
+
+            // Pre-Unic
+            ['idFormatoLocal'=> 7, 'nombre'=>'Peatonales',     'siglas'=>'PEAT',  'descripcion'=>'(descripcion pendiente)'],
+            ['idFormatoLocal'=> 8, 'nombre'=>'No peatonales',  'siglas'=>'NOPEAT', 'descripcion'=>'(descripcion pendiente)'],
         ]);
     }
 }
