@@ -2,17 +2,43 @@
 
 /*
 |--------------------------------------------------------------------------
-| Routes File
+| Administracion de Clientes
 |--------------------------------------------------------------------------
-|
-| Here is where you will register all of the routes in an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
+|*/
+Route::get('admin/clientes', 'ClientesController@verLista')->name('admin.clientes.lista');
+Route::get('admin/locales', function(){
+    return view('administracion.locales.verLista');
+});
 
+/*
+|--------------------------------------------------------------------------
+| Gestión de Inventarios
+|--------------------------------------------------------------------------
+|*/
+Route::get('inventario/programa', function(){
+    return view('inventario.programa');
+});
+Route::get('inventario/inventario', function(){
+    return view('inventario.inventario');
+});
+
+Route::get('inventario/nominas', function(){
+    return view('inventario.nominas');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Gestion de Personal
+|--------------------------------------------------------------------------
+|*/
+
+/*
+|--------------------------------------------------------------------------
+| Otros
+|--------------------------------------------------------------------------
+|*/
 Route::get('/', function () {
-    return view('welcome');
+    return view('child');
 });
 
 Route::get('/map', function(){
@@ -24,7 +50,7 @@ Route::get('/hello', function(){
 //   return App\Regiones::find(7)->provincias;
 //   return App\Regiones::find(7)->zona;
 //   return App\Provincias::find(73)->comunas;
-   return App\Locales::find(636)->direccion;
+   return App\Locales::find(606)->direccion;
 //   return App\Clientes::find(9)->locales;
 });
 Route::get('import', function(){
@@ -33,10 +59,6 @@ Route::get('import', function(){
         LocalesTableSeeder::parseAndInsert('/home/asilva/Escritorio/localesPreunic.csv');
     });
 });
-
-//al hacer un seed "coquimbo" esta dos veces, hacer un constrain de unique con nombre/cliente
-//hacer un constrain con numero/cliente
-
 
 /*
 |--------------------------------------------------------------------------
