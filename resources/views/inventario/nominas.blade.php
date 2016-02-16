@@ -5,5 +5,11 @@
 @section('content')
     <h1 class="page-header">Nominas</h1>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit illum maxime mollitia, odio qui reprehenderit! Alias amet aspernatur atque dignissimos, eos id ipsam iusto, neque non similique, sint sunt totam?</p>
+    <ul>
+        <li>ver historico de nominas</li>
+        <li>editar datos de nomina</li>
+        <li>editar personal (lideres, supervisores y operadores)</li>
+        <li>cambiar hora llegada</li>
+        <li>publicar nomina (cerrar)</li>
+    </ul>
 @stop

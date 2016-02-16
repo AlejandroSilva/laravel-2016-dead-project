@@ -12,4 +12,10 @@
             {{ $cliente }}
         @endforeach
     </pre>
+
+    <ul>
+        <li>ver clientes</li>
+        <li>crear cliente</li>
+        <li>editar cliente</li>
+    </ul>
 @stop

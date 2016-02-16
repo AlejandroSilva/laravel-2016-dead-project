@@ -6,5 +6,15 @@
 @section('content')
     <h1 class="page-header">Lista de Locales</h1>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A alias asperiores consequuntur deserunt doloremque eius eligendi eos eum facere incidunt inventore labore molestias odio qui, tempora tenetur totam veritatis voluptatum.</p>
+    <ul>
+        <li>ver lista de locales</li>
+        <li>ver historial de inventarios por locales</li>
+        <li>crear local</li>
+        <li>editar local</li>
+        <li>ver local</li>
+        <ul>
+            <li>inventarios pasados</li>
+            <li>actualizar stock</li>
+        </ul>
+    </ul>
 @stop
