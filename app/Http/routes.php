@@ -21,7 +21,6 @@ Route::get('inventario/programa', function(){
 Route::get('inventario/inventario', function(){
     return view('inventario.inventario');
 });
-
 Route::get('inventario/nominas', function(){
     return view('inventario.nominas');
 });
@@ -31,7 +30,12 @@ Route::get('inventario/nominas', function(){
 | Gestion de Personal
 |--------------------------------------------------------------------------
 |*/
-
+Route::get('usuarios/usuarios', function(){
+    return view('usuarios.usuarios');
+});
+Route::get('usuarios/operadores', function(){
+    return view('usuarios.operadores');
+});
 /*
 |--------------------------------------------------------------------------
 | Otros
