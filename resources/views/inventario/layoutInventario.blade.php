@@ -13,5 +13,8 @@
         <li class="{{ Request::is('inventario/nominas')? 'active': '' }}">
             <a href="{{ url('inventario/nominas') }}">Nominas </a>
         </li>
+        <li class="{{ Request::is('inventario/nominasFinales')? 'active': '' }}">
+            <a href="{{ url('inventario/nominasFinales') }}">Nominas Finales</a>
+        </li>
     </ul>
 @stop

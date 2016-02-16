@@ -5,5 +5,21 @@
 @section('content')
     <h1 class="page-header">Operadores</h1>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit illum maxime mollitia, odio qui reprehenderit! Alias amet aspernatur atque dignissimos, eos id ipsam iusto, neque non similique, sint sunt totam?</p>
+    <ul>
+        <li>lista de operadores</li>
+        <li>ver inventarios realizados</li>
+        <li>agregar operador</li>
+        <ul>
+            <li>nombre</li>
+            <li>rut</li>
+            <li>medio pago, numero de cuenta</li>
+            <li>telefon, email</li>
+        </ul>
+        <li>editar operador</li>
+        <ul>
+            <li>evaluar</li>
+            <li>comentar</li>
+            <li></li>
+        </ul>
+    </ul>
 @stop

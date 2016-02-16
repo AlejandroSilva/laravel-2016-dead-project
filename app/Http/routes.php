@@ -24,6 +24,9 @@ Route::get('inventario/inventario', function(){
 Route::get('inventario/nominas', function(){
     return view('inventario.nominas');
 });
+Route::get('inventario/nominasFinales', function(){
+    return view('inventario.nominasFinales');
+});
 
 /*
 |--------------------------------------------------------------------------
