@@ -5,12 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateDireccionesTable extends Migration {
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up(){
+    public function up() {
         Schema::create('direcciones', function (Blueprint $table) {
             // PK
             // esta FK, se convirte en PK y hace referencia a 'locales.idLocal'
@@ -38,11 +33,6 @@ class CreateDireccionesTable extends Migration {
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down() {
         Schema::drop('direcciones');
     }

@@ -4,11 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateLocalesTable extends Migration {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up() {
         Schema::create('locales', function (Blueprint $table) {
             // PK
@@ -27,6 +23,13 @@ class CreateLocalesTable extends Migration {
             $table->foreign('idFormatoLocal')
                   ->references('idFormatoLocal')
                   ->on('formato_locales');
+            // Cada local, tienen una "jornada" sugerida para la toma de inventario
+            $table->integer('idJornadaSugerida')
+                ->unsigned();
+            $table->foreign('idJornadaSugerida')
+                ->references('idJornada')
+                ->on('jornadas');
+
 
             // Otros campos
             $table->integer('numero');
@@ -39,7 +42,7 @@ class CreateLocalesTable extends Migration {
             $table->string('telefono1', 20)->default('');
             $table->string('telefono2', 20)->default('');
             $table->integer('stock')->default(0);
-            $table->timestamp('fechaStock')->nullable();
+            $table->date('fechaStock')->nullable();
 
             // No puede haber dos locales con el mismo 'nombre' para el mismo cliente
             $table->unique(['idCliente', 'nombre']);
@@ -50,11 +53,6 @@ class CreateLocalesTable extends Migration {
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down() {
         Schema::drop('locales');
     }

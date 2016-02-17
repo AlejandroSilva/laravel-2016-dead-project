@@ -19,7 +19,6 @@
         <ul>
             <li>evaluar</li>
             <li>comentar</li>
-            <li></li>
         </ul>
     </ul>
 @stop

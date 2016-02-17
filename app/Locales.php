@@ -26,4 +26,8 @@ class Locales extends Model{
         //return $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\Direcciones', 'idLocal', 'idLocal');
     }
+
+    public function jornada(){
+        // ToDo: pendiente
+    }
 }

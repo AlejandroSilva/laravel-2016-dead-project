@@ -11,8 +11,8 @@ class LocalesTableSeeder extends Seeder {
     public function run() {
         $parsedData = null;
         DB::transaction(function() {
-            $this->parseAndInsert('/home/asilva/Escritorio/localesFCV.csv');
-            $this->parseAndInsert('/home/asilva/Escritorio/localesPreunic.csv');
+            $this->parseAndInsert( public_path('seedFiles/localesFCV.csv') );
+//            $this->parseAndInsert( public_path('seedFiles/localesPreunic.csv') );
         });
     }
 
@@ -26,6 +26,7 @@ class LocalesTableSeeder extends Seeder {
             $local = [// FK
                 'idCliente' => $row['idCliente'],
                 'idFormatoLocal' => $row['idFormatoLocal'],
+                'idJornadaSugerida' => $row['idJornadaSugerida'],
 
                 // otros campos
                 'numero' => $row['numero'],

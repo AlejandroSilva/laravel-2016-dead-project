@@ -16,7 +16,9 @@ class DatabaseSeeder extends Seeder {
 //        $this->call(ProvinciasTableSeeder::class);
 //        $this->call(ComunasTableSeeder::class);
 //        $this->call(ClientesTableSeeder::class);
-//        $this->call(FormatoLocalesTableSeeder::class);
+//        $this->call(JornadasTableSeeder::class);
+//        $this->call(FormatoLocalesTableSeeder::class); // + direcciones
 //        $this->call(LocalesTableSeeder::class);
+//        $this->call(InventariosTableSeeder::class);
     }
 }
