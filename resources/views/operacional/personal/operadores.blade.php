@@ -1,4 +1,4 @@
-@extends('usuarios.layoutUsuarios')
+@extends('operacional.layoutOperacional')
 
 @section('title', 'Operadores')
 

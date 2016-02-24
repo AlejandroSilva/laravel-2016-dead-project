@@ -28,6 +28,14 @@ class Locales extends Model{
     }
 
     public function jornada(){
-        // ToDo: pendiente
+        // belongsTo(modelo, this.fogeignKey, parent.otherKey)
+        return $this->belongsTo('App\Jornadas', 'idJornadaSugerida', 'idJornada');
+    }
+
+    public function llegadaSugerida(){
+        $horaCierre = $this->horaCierre;
+
+        return $horaCierre;
+//        return "da lo mismo wn";
     }
 }

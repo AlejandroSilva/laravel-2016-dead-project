@@ -1,4 +1,4 @@
-@extends('inventario.layoutInventario')
+@extends('operacional.layoutOperacional')
 
 @section('title', 'Nominas')
 

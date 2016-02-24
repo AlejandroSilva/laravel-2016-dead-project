@@ -12,6 +12,8 @@ class CreateJornadasTable extends Migration {
             // Otros campos
             $table->string('nombre');
             $table->string('descripcion');
+            $table->boolean('dia');
+            $table->boolean('noche');
         });
     }
 

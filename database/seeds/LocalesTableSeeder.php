@@ -12,7 +12,7 @@ class LocalesTableSeeder extends Seeder {
         $parsedData = null;
         DB::transaction(function() {
             $this->parseAndInsert( public_path('seedFiles/localesFCV.csv') );
-//            $this->parseAndInsert( public_path('seedFiles/localesPreunic.csv') );
+            $this->parseAndInsert( public_path('seedFiles/localesPreunic.csv') );
         });
     }
 

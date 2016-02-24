@@ -1,5 +1,5 @@
 {{-- locales.listado --}}
-@extends('administracion.layoutAdministracion')
+@extends('operacional.layoutOperacional')
 
 @section('title', 'Locales')
 

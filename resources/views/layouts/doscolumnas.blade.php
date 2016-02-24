@@ -15,14 +15,14 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="{{ Request::is('inventario/*') ? 'active' : '' }}">
-                        <a href="{{ url('inventario/programa') }}">Gestión de Inventario</a>
+                    <li class="{{ Request::is('inventario*') ? 'active' : '' }}">
+                        <a href="{{ url('programacion') }}">Gestión Operacional</a>
                     </li>
-                    <li class="{{ Request::is('usuarios/*') ? 'active' : '' }}">
-                        <a href="{{ url('usuarios/usuarios') }}">Gestión de personal</a>
+                    <li class="">
+                        <a href="#">Gestión Logistica</a>
                     </li>
-                    <li class="{{ Request::is('admin/*') ? 'active' : '' }}">
-                        <a href="{{ url('admin/clientes') }}">Administracion de Clientes</a>
+                    <li class="#">
+                        <a href="#">Gestión Financiera</a>
                     </li>
                     {{--<li class="dropdown">--}}
                         {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--}}
@@ -50,13 +50,12 @@
 @section('hmtl-body')
     @yield('top')
     <div class='container-fluid'>
-        <div class="row">
-            <div class="col-sm-3 col-md-2 sidebar">
-                @yield('sidebar')
-            </div>
-            <div class="col-sm-9 col-md-10 main">
-                @yield('content')
-            </div>
+        <div class="col-sm-2">
+            {{--@yield('main-sidebar')--}}
+            @include('includes.main-sidebar')
+        </div>
+        <div class="col-sm-10">
+            @yield('main-content')
         </div>
     </div>
 @stop

@@ -1,20 +1,53 @@
 body
-  min-height: 2000px
+  //min-height: 2000px
   padding-top: 70px
 
 /* Sidebar navigation */
-.nav-sidebar
-  margin-right: -21px /* 20px padding + 1px border */
-  margin-bottom: 20px
-  margin-left: -20px
+// menu principal
+a.active.collapsed
 
-.nav-sidebar > li > a
-  padding-right: 20px
-  padding-left: 20px
 
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus
-      color: #fff
-      background-color: #428bca
+.nav-header > a.active
+.nav-header > a:hover
+.nav-header > a:focus
+  color: #fff
+  background-color: #428bca
+.nav-header > a:focus
+  color: #337ab7
+  text-decoration: underline
+  /* background-color: #eee; */
 
+
+// submenu
+.nav-stacked > .active > a
+.nav-stacked > .active > a:hover
+.nav-stacked > .active > a:focus
+  color: #fff
+  background-color: #428bca
+
+.nav-header > .nav
+  padding-left: 10
+  padding-right:  10
+.nav-header > a:hover
+  color: #337ab7
+  text-decoration: underline
+
+//.nav-sidebar
+//  margin-right: -21px /* 20px padding + 1px border */
+//  margin-bottom: 20px
+//  margin-left: -20px
+//
+//.nav-sidebar > li > a
+//  padding-right: 20px
+//  padding-left: 20px
+//
+//.nav-sidebar > .active > a,
+//.nav-sidebar > .active > a:hover,
+//.nav-sidebar > .active > a:focus
+//      color: #fff
+//      background-color: #428bca
+//
+//.nav-sidebar > li > h4
+//  margin-top: 1em
+//  padding-left: 20px
+//
