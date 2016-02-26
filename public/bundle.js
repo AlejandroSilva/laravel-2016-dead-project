@@ -21675,13 +21675,19 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _Multiselect = __webpack_require__(281);
+	var _reactTabs = __webpack_require__(281);
 
-	var _Multiselect2 = _interopRequireDefault(_Multiselect);
-
-	var _TablaLocalesMensual = __webpack_require__(334);
+	var _TablaLocalesMensual = __webpack_require__(291);
 
 	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
+
+	var _AgregarManualmente = __webpack_require__(292);
+
+	var _AgregarManualmente2 = _interopRequireDefault(_AgregarManualmente);
+
+	var _AgregarPegarDesdeExcel = __webpack_require__(293);
+
+	var _AgregarPegarDesdeExcel2 = _interopRequireDefault(_AgregarPegarDesdeExcel);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21697,6 +21703,7 @@
 	_moment2.default.locale('es');
 
 	// Component
+	//import Multiselect from 'react-widgets/lib/Multiselect'
 
 	var ProgramacionMensual = function (_React$Component) {
 	    _inherits(ProgramacionMensual, _React$Component);
@@ -21704,75 +21711,30 @@
 	    function ProgramacionMensual(props) {
 	        _classCallCheck(this, ProgramacionMensual);
 
-	        // mostrar en el selector, los ultimos 12 meses
-
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ProgramacionMensual).call(this, props));
 
-	        var fechaActual = (0, _moment2.default)();
-	        var meses = [fechaActual.format('MM-YYYY')];
-	        for (var i = 0; i <= 11; i++) {
-	            meses.push(fechaActual.subtract(1, 'month').format('MM-YYYY'));
-	        }_this.state = {
-	            meses: meses,
-	            selectedMes: meses[0],
-	            selectedClientId: -1,
-	            locales: [],
-	            localesEnMultiselect: [],
-	            localesAgregados: []
+	        var meses = [];
+	        // mostrar en el selector, los proximos 12 meses
+	        for (var desface = 0; desface < 12; desface++) {
+	            var mes = (0, _moment2.default)().add(desface, 'month');
+	            meses.push({
+	                valor: mes.format('MM-YYYY'),
+	                texto: mes.format('MMMM  YYYY')
+	            });
+	        }
+
+	        _this.state = {
+	            meses: meses
 	        };
-	        _this.mesSeleccionado = _this.mesSeleccionado.bind(_this);
-	        _this.clienteSeleccionado = _this.clienteSeleccionado.bind(_this);
-	        _this.localSelected = _this.localSelected.bind(_this);
-	        _this.agregarLocales = _this.agregarLocales.bind(_this);
+	        _this.submitLocal = _this.submitLocal.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(ProgramacionMensual, [{
-	        key: 'mesSeleccionado',
-	        value: function mesSeleccionado(event) {
-	            this.setState({
-	                selectedMes: event.target.value
-	            });
-	        }
-	    }, {
-	        key: 'clienteSeleccionado',
-	        value: function clienteSeleccionado(event) {
-	            // al seleccionar un cliente, se deben cargar los locales el el <select> de clientes
-	            var idClienteSeleccionado = event.target.value;
-
-	            // buscamos el cliente seleccionado
-	            var selectedClient = this.props.clientes.find(function (cliente) {
-	                return cliente.idCliente == idClienteSeleccionado;
-	            });
-
-	            // lo marcados como seleccionado y mostramos la lista de locales
-	            this.setState({
-	                selectedClientId: idClienteSeleccionado,
-	                locales: selectedClient ? selectedClient.locales : [],
-	                localesEnMultiselect: []
-	            });
-	        }
-	    }, {
-	        key: 'localSelected',
-	        value: function localSelected(values) {
-	            // actualizar la lista de locales seleccionados, guardandola en el state de la app
-	            this.setState({
-	                localesEnMultiselect: values
-	            });
-	        }
-	    }, {
-	        key: 'agregarLocales',
-	        value: function agregarLocales(evt) {
-	            evt.preventDefault();
-
-	            // los locales que se agregaran
-	            var localesAgregados = this.state.localesEnMultiselect;
-	            this.tablaLocalesMensual.alertar("asdasd");
-
-	            this.setState({
-	                localesEnMultiselect: [],
-	                localesAgregados: localesAgregados
-	            });
+	        key: 'submitLocal',
+	        value: function submitLocal(local, mesAnno) {
+	            console.log("saludos desde el padre", local, mesAnno);
+	            return this.tablaLocalesMensual.agregarLocal(local, mesAnno);
 	        }
 	    }, {
 	        key: 'render',
@@ -21788,94 +21750,45 @@
 	                    'Programación mensual'
 	                ),
 	                _react2.default.createElement(
-	                    'form',
-	                    { className: 'form', onSubmit: this.agregarLocales },
+	                    _reactTabs.Tabs,
+	                    { selectedIndex: 0 },
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'row' },
+	                        _reactTabs.TabList,
+	                        null,
 	                        _react2.default.createElement(
-	                            'h4',
-	                            { className: 'page-header' },
-	                            'Agregar locales a la programación:'
+	                            _reactTabs.Tab,
+	                            null,
+	                            'Ingresar manualmente'
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactTabs.Tab,
+	                            null,
+	                            'Pegar desde Excel'
 	                        )
 	                    ),
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'row' },
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'col-sm-3 form-group' },
-	                            _react2.default.createElement(
-	                                'label',
-	                                { className: 'control-label', htmlFor: 'cliente' },
-	                                'Cliente'
-	                            ),
-	                            _react2.default.createElement(
-	                                'select',
-	                                { className: 'form-control', name: 'cliente', value: this.state.selectedClientId, onChange: this.clienteSeleccionado },
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: '-1', disabled: true },
-	                                    '--'
-	                                ),
-	                                this.props.clientes.map(function (cliente, index) {
-	                                    return _react2.default.createElement(
-	                                        'option',
-	                                        { key: index, value: cliente.idCliente },
-	                                        cliente.nombre
-	                                    );
-	                                })
-	                            )
-	                        ),
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'col-sm-3 form-group' },
-	                            _react2.default.createElement(
-	                                'label',
-	                                { className: 'control-label', htmlFor: 'fechaProgramada' },
-	                                'Mes'
-	                            ),
-	                            _react2.default.createElement(
-	                                'select',
-	                                { className: 'form-control', name: 'fechaProgramada', value: this.state.selectedMes, onChange: this.mesSeleccionado },
-	                                this.state.meses.map(function (mes, i) {
-	                                    return _react2.default.createElement(
-	                                        'option',
-	                                        { key: i, value: mes },
-	                                        (0, _moment2.default)(mes, 'MM-YYYY').format('MMMM YYYY')
-	                                    );
-	                                })
-	                            )
-	                        ),
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'col-sm-4 form-group' },
-	                            _react2.default.createElement(
-	                                'label',
-	                                { className: 'control-label', htmlFor: 'locales' },
-	                                'Locales'
-	                            ),
-	                            _react2.default.createElement(_Multiselect2.default, {
-	                                duration: 0 // sin animacion
-	                                , defaultValue: [],
-	                                value: this.state.localesEnMultiselect,
-	                                data: this.state.locales,
-	                                valueField: 'idLocal' // el valor retornado es loca.idLocal
-	                                , textField: 'nombre' // el texto es local.nombre
-	                                , filter: 'contains' // muestra los locales que tengan la palabra buscada
-	                                , onChange: this.localSelected
-	                            })
-	                        ),
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'col-sm-2 form-group' },
-	                            _react2.default.createElement(
-	                                'label',
-	                                { className: 'control-label' },
-	                                '.'
-	                            ),
-	                            _react2.default.createElement('input', { type: 'submit', className: 'form-control btn btn-primary', value: 'Agregar locales' })
-	                        )
+	                        _reactTabs.TabPanel,
+	                        null,
+	                        _react2.default.createElement(_AgregarManualmente2.default, {
+	                            ref: function ref(_ref) {
+	                                return _this2.AgregarManualmente = _ref;
+	                            },
+	                            clientes: this.props.clientes,
+	                            meses: this.state.meses,
+	                            onFormSubmit: this.submitLocal
+	                        })
+	                    ),
+	                    _react2.default.createElement(
+	                        _reactTabs.TabPanel,
+	                        null,
+	                        _react2.default.createElement(_AgregarPegarDesdeExcel2.default, {
+	                            ref: function ref(_ref2) {
+	                                return _this2.AgregarPegarDesdeExcel = _ref2;
+	                            },
+	                            clientes: this.props.clientes,
+	                            meses: this.state.meses,
+	                            onFormSubmit: this.submitLocal
+	                        })
 	                    )
 	                ),
 	                _react2.default.createElement(
@@ -21883,16 +21796,13 @@
 	                    { className: 'row' },
 	                    _react2.default.createElement(
 	                        'h4',
-	                        { className: 'page-header' },
-	                        'Locales programados:'
+	                        { className: 'page-header', style: { marginTop: '1em' } },
+	                        'Locales a programar:'
 	                    ),
-	                    _react2.default.createElement(_TablaLocalesMensual2.default
-	                    // cada vez que se
-	                    , { localesAgregados: this.state.localesAgregados,
-	                        ref: function ref(_ref) {
-	                            return _this2.tablaLocalesMensual = _ref;
+	                    _react2.default.createElement(_TablaLocalesMensual2.default, {
+	                        ref: function ref(_ref3) {
+	                            return _this2.tablaLocalesMensual = _ref3;
 	                        }
-
 	                    })
 	                )
 	            );
@@ -34734,683 +34644,371 @@
 
 	'use strict';
 
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = babelHelpers.interopRequireDefault(_react);
-
-	var _classnames = __webpack_require__(283);
-
-	var _classnames2 = babelHelpers.interopRequireDefault(_classnames);
-
-	var _util_ = __webpack_require__(284);
-
-	var _util_2 = babelHelpers.interopRequireDefault(_util_);
-
-	var _Popup = __webpack_require__(285);
-
-	var _Popup2 = babelHelpers.interopRequireDefault(_Popup);
-
-	var _MultiselectInput = __webpack_require__(306);
-
-	var _MultiselectInput2 = babelHelpers.interopRequireDefault(_MultiselectInput);
-
-	var _MultiselectTagList = __webpack_require__(311);
-
-	var _MultiselectTagList2 = babelHelpers.interopRequireDefault(_MultiselectTagList);
-
-	var _utilPropTypes = __webpack_require__(307);
-
-	var _utilPropTypes2 = babelHelpers.interopRequireDefault(_utilPropTypes);
-
-	var _List = __webpack_require__(317);
-
-	var _List2 = babelHelpers.interopRequireDefault(_List);
-
-	var _ListGroupable = __webpack_require__(320);
-
-	var _ListGroupable2 = babelHelpers.interopRequireDefault(_ListGroupable);
-
-	var _utilValidateListInterface = __webpack_require__(322);
-
-	var _utilValidateListInterface2 = babelHelpers.interopRequireDefault(_utilValidateListInterface);
-
-	var _uncontrollable = __webpack_require__(323);
-
-	var _uncontrollable2 = babelHelpers.interopRequireDefault(_uncontrollable);
-
-	var _utilDataHelpers = __webpack_require__(313);
-
-	var _utilInteraction = __webpack_require__(314);
-
-	var _utilWidgetHelpers = __webpack_require__(312);
-
-	var compatCreate = function compatCreate(props, msgs) {
-	  return typeof msgs.createNew === 'function' ? msgs.createNew(props) : [_react2['default'].createElement(
-	    'strong',
-	    { key: 'dumb' },
-	    '"' + props.searchTerm + '"'
-	  ), ' ' + msgs.createNew];
+	module.exports = {
+	  Tabs: __webpack_require__(282),
+	  TabList: __webpack_require__(288),
+	  Tab: __webpack_require__(287),
+	  TabPanel: __webpack_require__(290)
 	};
-
-	var omit = _util_2['default'].omit;
-	var pick = _util_2['default'].pick;
-	var splat = _util_2['default'].splat;
-
-	var propTypes = {
-	  data: _react2['default'].PropTypes.array,
-	  //-- controlled props --
-	  value: _react2['default'].PropTypes.array,
-	  onChange: _react2['default'].PropTypes.func,
-
-	  searchTerm: _react2['default'].PropTypes.string,
-	  onSearch: _react2['default'].PropTypes.func,
-
-	  open: _react2['default'].PropTypes.bool,
-	  onToggle: _react2['default'].PropTypes.func,
-	  //-------------------------------------------
-
-	  valueField: _react2['default'].PropTypes.string,
-	  textField: _utilPropTypes2['default'].accessor,
-
-	  tagComponent: _utilPropTypes2['default'].elementType,
-	  itemComponent: _utilPropTypes2['default'].elementType,
-	  listComponent: _utilPropTypes2['default'].elementType,
-
-	  groupComponent: _utilPropTypes2['default'].elementType,
-	  groupBy: _utilPropTypes2['default'].accessor,
-
-	  createComponent: _utilPropTypes2['default'].elementType,
-
-	  onSelect: _react2['default'].PropTypes.func,
-	  onCreate: _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.oneOf([false]), _react2['default'].PropTypes.func]),
-
-	  dropUp: _react2['default'].PropTypes.bool,
-	  duration: _react2['default'].PropTypes.number, //popup
-
-	  placeholder: _react2['default'].PropTypes.string,
-
-	  autoFocus: _react2['default'].PropTypes.bool,
-	  disabled: _utilPropTypes2['default'].disabled.acceptsArray,
-	  readOnly: _utilPropTypes2['default'].readOnly.acceptsArray,
-
-	  messages: _react2['default'].PropTypes.shape({
-	    open: _utilPropTypes2['default'].message,
-	    emptyList: _utilPropTypes2['default'].message,
-	    emptyFilter: _utilPropTypes2['default'].message,
-	    createNew: _utilPropTypes2['default'].message
-	  })
-	};
-
-	var Multiselect = _react2['default'].createClass(babelHelpers.createDecoratedObject([{
-	  key: 'displayName',
-	  initializer: function initializer() {
-	    return 'Multiselect';
-	  }
-	}, {
-	  key: 'mixins',
-	  initializer: function initializer() {
-	    return [__webpack_require__(326), __webpack_require__(327), __webpack_require__(328), __webpack_require__(333), __webpack_require__(316)('input', function (key, id) {
-	      var myKey = this.props.ariaActiveDescendantKey;
-
-	      var createIsActive = (!this._data().length || this.state.focusedItem === null) && key === myKey;
-
-	      var tagIsActive = this.state.focusedTag != null && key === 'taglist';
-	      var listIsActive = this.state.focusedTag == null && key === 'list';
-
-	      if (createIsActive || tagIsActive || listIsActive) return id;
-	    })];
-	  }
-	}, {
-	  key: 'propTypes',
-	  initializer: function initializer() {
-	    return propTypes;
-	  }
-	}, {
-	  key: 'getDefaultProps',
-	  value: function getDefaultProps() {
-	    return {
-	      data: [],
-	      filter: 'startsWith',
-	      value: [],
-	      open: false,
-	      searchTerm: '',
-	      ariaActiveDescendantKey: 'multiselect',
-	      messages: {
-	        createNew: '(create new tag)',
-	        emptyList: 'There are no items in this list',
-	        emptyFilter: 'The filter returned no results',
-	        tagsLabel: 'selected items',
-	        selectedItems: 'selected items',
-	        noneSelected: 'no selected items',
-	        removeLabel: 'remove selected item'
-	      }
-	    };
-	  }
-	}, {
-	  key: 'getInitialState',
-	  value: function getInitialState() {
-	    var _props = this.props;
-	    var data = _props.data;
-	    var value = _props.value;
-	    var valueField = _props.valueField;
-	    var searchTerm = _props.searchTerm;
-	    var dataItems = splat(value).map(function (item) {
-	      return _utilDataHelpers.dataItem(data, item, valueField);
-	    });
-	    var processedData = this.process(data, dataItems, searchTerm);
-
-	    return {
-	      focusedTag: null,
-	      focusedItem: processedData[0],
-	      processedData: processedData,
-	      dataItems: dataItems
-	    };
-	  }
-	}, {
-	  key: 'componentDidUpdate',
-	  value: function componentDidUpdate() {
-	    this.ariaActiveDescendant(_utilWidgetHelpers.instanceId(this, '__createlist_option'));
-
-	    this.refs.list && _utilValidateListInterface2['default'](this.refs.list);
-	  }
-	}, {
-	  key: 'componentWillReceiveProps',
-	  value: function componentWillReceiveProps(nextProps) {
-	    var data = nextProps.data;
-	    var value = nextProps.value;
-	    var valueField = nextProps.valueField;
-	    var searchTerm = nextProps.searchTerm;
-	    var values = _util_2['default'].splat(value);
-	    var current = this.state.focusedItem;
-	    var items = this.process(data, values, searchTerm);
-
-	    this.setState({
-	      processedData: items,
-	      focusedItem: items.indexOf(current) === -1 ? items[0] : current,
-	      dataItems: values.map(function (item) {
-	        return _utilDataHelpers.dataItem(data, item, valueField);
-	      })
-	    });
-	  }
-	}, {
-	  key: 'render',
-	  value: function render() {
-	    var _cx,
-	        _this = this;
-
-	    var _props2 = this.props;
-	    var searchTerm = _props2.searchTerm;
-	    var maxLength = _props2.maxLength;
-	    var className = _props2.className;
-	    var tabIndex = _props2.tabIndex;
-	    var textField = _props2.textField;
-	    var groupBy = _props2.groupBy;
-	    var messages = _props2.messages;
-	    var busy = _props2.busy;
-	    var dropUp = _props2.dropUp;
-	    var open = _props2.open;
-	    var disabled = _props2.disabled;
-	    var readOnly = _props2.readOnly;
-	    var TagComponent = _props2.tagComponent;
-	    var List = _props2.listComponent;
-
-	    List = List || groupBy && _ListGroupable2['default'] || _List2['default'];
-
-	    messages = msgs(messages);
-
-	    var elementProps = omit(this.props, Object.keys(propTypes));
-	    var tagsProps = pick(this.props, ['valueField', 'textField']);
-	    var inputProps = pick(this.props, ['maxLength', 'searchTerm', 'autoFocus']);
-	    var listProps = pick(this.props, Object.keys(List.propTypes));
-	    var popupProps = pick(this.props, Object.keys(_Popup2['default'].propTypes));
-
-	    var _state = this.state;
-	    var focusedTag = _state.focusedTag;
-	    var focusedItem = _state.focusedItem;
-	    var focused = _state.focused;
-	    var dataItems = _state.dataItems;
-
-	    var items = this._data(),
-	        tagsID = _utilWidgetHelpers.instanceId(this, '_taglist'),
-	        listID = _utilWidgetHelpers.instanceId(this, '__listbox'),
-	        createID = _utilWidgetHelpers.instanceId(this, '__createlist'),
-	        createOptionID = _utilWidgetHelpers.instanceId(this, '__createlist_option');
-
-	    var shouldRenderTags = !!dataItems.length,
-	        shouldRenderPopup = _utilWidgetHelpers.isFirstFocusedRender(this) || open,
-	        shouldShowCreate = this._shouldShowCreate(),
-	        createIsFocused = !items.length || focusedItem === null;
-
-	    if (focused) {
-	      var notify = dataItems.length ? messages.selectedItems + ': ' + dataItems.map(function (item) {
-	        return _utilDataHelpers.dataText(item, textField);
-	      }).join(', ') : messages.noneSelected;
-	    }
-
-	    return _react2['default'].createElement(
-	      'div',
-	      babelHelpers._extends({}, elementProps, {
-	        ref: 'element',
-	        id: _utilWidgetHelpers.instanceId(this),
-	        onKeyDown: this._keyDown,
-	        onFocus: this._focus.bind(null, true),
-	        onBlur: this._focus.bind(null, false),
-	        onTouchEnd: this._focus.bind(null, true),
-	        tabIndex: '-1',
-	        className: _classnames2['default'](className, 'rw-widget', 'rw-multiselect', (_cx = {
-	          'rw-state-focus': focused,
-	          'rw-state-disabled': disabled === true,
-	          'rw-state-readonly': readOnly === true,
-	          'rw-rtl': this.isRtl()
-	        }, _cx['rw-open' + (dropUp ? '-up' : '')] = open, _cx)) }),
-	      _react2['default'].createElement(
-	        'span',
-	        {
-	          ref: 'status',
-	          id: _utilWidgetHelpers.instanceId(this, '__notify'),
-	          role: 'status',
-	          className: 'rw-sr',
-	          'aria-live': 'assertive',
-	          'aria-atomic': 'true',
-	          'aria-relevant': 'additions removals text'
-	        },
-	        notify
-	      ),
-	      _react2['default'].createElement(
-	        'div',
-	        { className: 'rw-multiselect-wrapper', ref: 'wrapper' },
-	        busy && _react2['default'].createElement('i', { className: 'rw-i rw-loading' }),
-	        shouldRenderTags && _react2['default'].createElement(_MultiselectTagList2['default'], babelHelpers._extends({}, tagsProps, {
-	          ref: 'tagList',
-	          id: tagsID,
-	          'aria-label': messages.tagsLabel,
-	          value: dataItems,
-	          focused: focusedTag,
-	          disabled: disabled,
-	          readOnly: readOnly,
-	          onDelete: this._delete,
-	          valueComponent: TagComponent,
-	          ariaActiveDescendantKey: 'taglist'
-	        })),
-	        _react2['default'].createElement(_MultiselectInput2['default'], babelHelpers._extends({}, inputProps, {
-	          ref: 'input',
-	          tabIndex: tabIndex || 0,
-	          role: 'listbox',
-	          'aria-expanded': open,
-	          'aria-busy': !!busy,
-	          autoFocus: this.props.autoFocus,
-	          'aria-owns': listID + ' ' + _utilWidgetHelpers.instanceId(this, '__notify') + (shouldRenderTags ? ' ' + tagsID : '') + (shouldShowCreate ? ' ' + createID : ''),
-	          'aria-haspopup': true,
-	          value: searchTerm,
-	          maxLength: maxLength,
-	          disabled: disabled === true,
-	          readOnly: readOnly === true,
-	          placeholder: this._placeholder(),
-	          onKeyDown: this._searchKeyDown,
-	          onKeyUp: this._searchgKeyUp,
-	          onChange: this._typing,
-	          onFocus: this._inputFocus,
-	          onClick: this._inputFocus,
-	          onTouchEnd: this._inputFocus
-	        }))
-	      ),
-	      _react2['default'].createElement(
-	        _Popup2['default'],
-	        babelHelpers._extends({}, popupProps, {
-	          onOpening: function () {
-	            return _this.refs.list.forceUpdate();
-	          }
-	        }),
-	        _react2['default'].createElement(
-	          'div',
-	          null,
-	          shouldRenderPopup && [_react2['default'].createElement(List, babelHelpers._extends({ ref: 'list',
-	            key: 0
-	          }, listProps, {
-	            readOnly: readOnly,
-	            disabled: disabled,
-	            id: listID,
-	            'aria-live': 'polite',
-	            'aria-labelledby': _utilWidgetHelpers.instanceId(this),
-	            'aria-hidden': !open,
-	            ariaActiveDescendantKey: 'list',
-	            data: items,
-	            focused: focusedItem,
-	            onSelect: this._onSelect,
-	            onMove: this._scrollTo,
-	            messages: {
-	              emptyList: this._lengthWithoutValues ? messages.emptyFilter : messages.emptyList
-	            }
-	          })), shouldShowCreate && _react2['default'].createElement(
-	            'ul',
-	            { key: 1, role: 'listbox', id: createID, className: 'rw-list rw-multiselect-create-tag' },
-	            _react2['default'].createElement(
-	              'li',
-	              { onClick: this._onCreate.bind(null, searchTerm),
-	                role: 'option',
-	                id: createOptionID,
-	                className: _classnames2['default']({
-	                  'rw-list-option': true,
-	                  'rw-state-focus': createIsFocused
-	                }) },
-	              compatCreate(this.props, messages)
-	            )
-	          )]
-	        )
-	      )
-	    );
-	  }
-	}, {
-	  key: '_data',
-	  value: function _data() {
-	    return this.state.processedData;
-	  }
-	}, {
-	  key: '_delete',
-	  value: function _delete(value) {
-	    this._focus(true);
-	    this.change(this.state.dataItems.filter(function (d) {
-	      return d !== value;
-	    }));
-	  }
-	}, {
-	  key: '_inputFocus',
-	  value: function _inputFocus() {
-	    this._focus(true);
-	    !this.props.open && this.open();
-	  }
-	}, {
-	  key: '_focus',
-	  decorators: [_utilInteraction.widgetEnabled],
-	  value: function _focus(focused, e) {
-	    var _this2 = this;
-
-	    if (this.props.disabled === true) return;
-
-	    if (focused) this.refs.input.focus();
-
-	    this.setTimeout('focus', function () {
-	      if (!focused) _this2.refs.tagList && _this2.setState({ focusedTag: null });
-
-	      if (focused !== _this2.state.focused) {
-	        focused ? _this2.open() : _this2.close();
-
-	        _utilWidgetHelpers.notify(_this2.props[focused ? 'onFocus' : 'onBlur'], e);
-	        _this2.setState({ focused: focused });
-	      }
-	    });
-	  }
-	}, {
-	  key: '_searchKeyDown',
-	  value: function _searchKeyDown(e) {
-	    if (e.key === 'Backspace' && e.target.value && !this._deletingText) this._deletingText = true;
-	  }
-	}, {
-	  key: '_searchgKeyUp',
-	  value: function _searchgKeyUp(e) {
-	    if (e.key === 'Backspace' && this._deletingText) this._deletingText = false;
-	  }
-	}, {
-	  key: '_typing',
-	  value: function _typing(e) {
-	    _utilWidgetHelpers.notify(this.props.onSearch, [e.target.value]);
-	    this.open();
-	  }
-	}, {
-	  key: '_onSelect',
-	  decorators: [_utilInteraction.widgetEditable],
-	  value: function _onSelect(data) {
-
-	    if (data === undefined) {
-	      if (this.props.onCreate) this._onCreate(this.props.searchTerm);
-
-	      return;
-	    }
-
-	    _utilWidgetHelpers.notify(this.props.onSelect, data);
-	    this.change(this.state.dataItems.concat(data));
-
-	    this.close();
-	    this._focus(true);
-	  }
-	}, {
-	  key: '_onCreate',
-	  decorators: [_utilInteraction.widgetEditable],
-	  value: function _onCreate(tag) {
-	    if (tag.trim() === '') return;
-
-	    _utilWidgetHelpers.notify(this.props.onCreate, tag);
-	    this.props.searchTerm && _utilWidgetHelpers.notify(this.props.onSearch, ['']);
-
-	    this.close();
-	    this._focus(true);
-	  }
-	}, {
-	  key: '_keyDown',
-	  decorators: [_utilInteraction.widgetEditable],
-	  value: function _keyDown(e) {
-	    var key = e.key;
-	    var altKey = e.altKey;
-	    var ctrlKey = e.ctrlKey;
-	    var noSearch = !this.props.searchTerm && !this._deletingText;
-	    var isOpen = this.props.open;var _state2 = this.state;
-	    var focusedTag = _state2.focusedTag;
-	    var focusedItem = _state2.focusedItem;
-	    var _refs = this.refs;
-	    var list = _refs.list;
-	    var tagList = _refs.tagList;
-
-	    var nullTag = { focusedTag: null };
-
-	    _utilWidgetHelpers.notify(this.props.onKeyDown, [e]);
-
-	    if (e.defaultPrevented) return;
-
-	    if (key === 'ArrowDown') {
-	      var next = list.next(focusedItem),
-	          creating = this._shouldShowCreate() && focusedItem === next || focusedItem === null;
-
-	      next = creating ? null : next;
-
-	      e.preventDefault();
-	      if (isOpen) this.setState(babelHelpers._extends({ focusedItem: next }, nullTag));else this.open();
-	    } else if (key === 'ArrowUp') {
-	      var prev = focusedItem === null ? list.last() : list.prev(focusedItem);
-
-	      e.preventDefault();
-
-	      if (altKey) this.close();else if (isOpen) this.setState(babelHelpers._extends({ focusedItem: prev }, nullTag));
-	    } else if (key === 'End') {
-	      e.preventDefault();
-	      if (isOpen) this.setState(babelHelpers._extends({ focusedItem: list.last() }, nullTag));else tagList && this.setState({ focusedTag: tagList.last() });
-	    } else if (key === 'Home') {
-	      e.preventDefault();
-	      if (isOpen) this.setState(babelHelpers._extends({ focusedItem: list.first() }, nullTag));else tagList && this.setState({ focusedTag: tagList.first() });
-	    } else if (isOpen && key === 'Enter') {
-	      e.preventDefault();
-	      ctrlKey && this.props.onCreate || focusedItem === null ? this._onCreate(this.props.searchTerm) : this._onSelect(this.state.focusedItem);
-	    } else if (key === 'Escape') isOpen ? this.close() : tagList && this.setState(nullTag);else if (noSearch && key === 'ArrowLeft') tagList && this.setState({ focusedTag: tagList.prev(focusedTag) });else if (noSearch && key === 'ArrowRight') tagList && this.setState({ focusedTag: tagList.next(focusedTag) });else if (noSearch && key === 'Delete') tagList && tagList.remove(focusedTag);else if (noSearch && key === 'Backspace') tagList && tagList.removeNext();
-	  }
-	}, {
-	  key: 'change',
-	  decorators: [_utilInteraction.widgetEditable],
-	  value: function change(data) {
-	    _utilWidgetHelpers.notify(this.props.onChange, [data]);
-	    _utilWidgetHelpers.notify(this.props.onSearch, ['']);
-	  }
-	}, {
-	  key: 'open',
-	  value: function open() {
-	    if (!(this.props.disabled === true || this.props.readOnly === true)) _utilWidgetHelpers.notify(this.props.onToggle, true);
-	  }
-	}, {
-	  key: 'close',
-	  value: function close() {
-	    _utilWidgetHelpers.notify(this.props.onToggle, false);
-	  }
-	}, {
-	  key: 'toggle',
-	  value: function toggle() {
-	    this.props.open ? this.close() : this.open();
-	  }
-	}, {
-	  key: 'process',
-	  value: function process(data, values, searchTerm) {
-	    var valueField = this.props.valueField;
-
-	    var items = data.filter(function (i) {
-	      return !values.some(function (v) {
-	        return _utilDataHelpers.valueMatcher(i, v, valueField);
-	      });
-	    });
-
-	    this._lengthWithoutValues = items.length;
-
-	    if (searchTerm) items = this.filter(items, searchTerm);
-
-	    return items;
-	  }
-	}, {
-	  key: '_shouldShowCreate',
-	  value: function _shouldShowCreate() {
-	    var _props3 = this.props;
-	    var textField = _props3.textField;
-	    var searchTerm = _props3.searchTerm;
-	    var onCreate = _props3.onCreate;
-
-	    if (!onCreate || !searchTerm) return false;
-
-	    // if there is an exact match on textFields: "john" => { name: "john" }, don't show
-	    return !this._data().some(function (v) {
-	      return _utilDataHelpers.dataText(v, textField) === searchTerm;
-	    }) && !this.state.dataItems.some(function (v) {
-	      return _utilDataHelpers.dataText(v, textField) === searchTerm;
-	    });
-	  }
-	}, {
-	  key: '_placeholder',
-	  value: function _placeholder() {
-	    return (this.props.value || []).length ? '' : this.props.placeholder || '';
-	  }
-	}]));
-
-	function msgs(msgs) {
-	  return babelHelpers._extends({
-	    createNew: '(create new tag)',
-	    emptyList: 'There are no items in this list',
-	    emptyFilter: 'The filter returned no results',
-	    tagsLabel: 'selected items',
-	    selectedItems: 'selected items',
-	    removeLabel: 'remove selected item'
-	  }, msgs);
-	}
-
-	exports['default'] = _uncontrollable2['default'](Multiselect, { open: 'onToggle', value: 'onChange', searchTerm: 'onSearch' });
-	module.exports = exports['default'];
 
 /***/ },
 /* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
-	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	  } else if (typeof exports === "object") {
-	    factory(exports);
-	  } else {
-	    factory(root.babelHelpers = {});
-	  }
-	})(this, function (global) {
-	  var babelHelpers = global;
+	'use strict';
 
-	  babelHelpers.createDecoratedObject = function (descriptors) {
-	    var target = {};
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	    for (var i = 0; i < descriptors.length; i++) {
-	      var descriptor = descriptors[i];
-	      var decorators = descriptor.decorators;
-	      var key = descriptor.key;
-	      delete descriptor.key;
-	      delete descriptor.decorators;
-	      descriptor.enumerable = true;
-	      descriptor.configurable = true;
-	      if ("value" in descriptor || descriptor.initializer) descriptor.writable = true;
+	var _react = __webpack_require__(2);
 
-	      if (decorators) {
-	        for (var f = 0; f < decorators.length; f++) {
-	          var decorator = decorators[f];
+	var _react2 = _interopRequireDefault(_react);
 
-	          if (typeof decorator === "function") {
-	            descriptor = decorator(target, key, descriptor) || descriptor;
-	          } else {
-	            throw new TypeError("The decorator for method " + descriptor.key + " is of the invalid type " + typeof decorator);
-	          }
-	        }
-	      }
+	var _reactDom = __webpack_require__(159);
 
-	      if (descriptor.initializer) {
-	        descriptor.value = descriptor.initializer.call(target);
-	      }
+	var _classnames = __webpack_require__(283);
 
-	      Object.defineProperty(target, key, descriptor);
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _jsStylesheet = __webpack_require__(284);
+
+	var _jsStylesheet2 = _interopRequireDefault(_jsStylesheet);
+
+	var _helpersUuid = __webpack_require__(285);
+
+	var _helpersUuid2 = _interopRequireDefault(_helpersUuid);
+
+	var _helpersChildrenPropType = __webpack_require__(286);
+
+	var _helpersChildrenPropType2 = _interopRequireDefault(_helpersChildrenPropType);
+
+	// Determine if a node from event.target is a Tab element
+	function isTabNode(node) {
+	  return node.nodeName === 'LI' && node.getAttribute('role') === 'tab';
+	}
+
+	// Determine if a tab node is disabled
+	function isTabDisabled(node) {
+	  return node.getAttribute('aria-disabled') === 'true';
+	}
+
+	var useDefaultStyles = true;
+
+	module.exports = _react2['default'].createClass({
+	  displayName: 'Tabs',
+
+	  propTypes: {
+	    className: _react.PropTypes.string,
+	    selectedIndex: _react.PropTypes.number,
+	    onSelect: _react.PropTypes.func,
+	    focus: _react.PropTypes.bool,
+	    children: _helpersChildrenPropType2['default'],
+	    forceRenderTabPanel: _react.PropTypes.bool
+	  },
+
+	  childContextTypes: {
+	    forceRenderTabPanel: _react.PropTypes.bool
+	  },
+
+	  statics: {
+	    setUseDefaultStyles: function setUseDefaultStyles(use) {
+	      useDefaultStyles = use;
 	    }
+	  },
 
-	    return target;
-	  };
-
-	  babelHelpers.objectWithoutProperties = function (obj, keys) {
-	    var target = {};
-
-	    for (var i in obj) {
-	      if (keys.indexOf(i) >= 0) continue;
-	      if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
-	      target[i] = obj[i];
-	    }
-
-	    return target;
-	  };
-
-	  babelHelpers.interopRequireWildcard = function (obj) {
-	    if (obj && obj.__esModule) {
-	      return obj;
-	    } else {
-	      var newObj = {};
-
-	      if (obj != null) {
-	        for (var key in obj) {
-	          if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
-	        }
-	      }
-
-	      newObj["default"] = obj;
-	      return newObj;
-	    }
-	  };
-
-	  babelHelpers.interopRequireDefault = function (obj) {
-	    return obj && obj.__esModule ? obj : {
-	      "default": obj
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      selectedIndex: -1,
+	      focus: false,
+	      forceRenderTabPanel: false
 	    };
-	  };
+	  },
 
-	  babelHelpers._extends = Object.assign || function (target) {
-	    for (var i = 1; i < arguments.length; i++) {
-	      var source = arguments[i];
+	  getInitialState: function getInitialState() {
+	    return this.copyPropsToState(this.props);
+	  },
 
-	      for (var key in source) {
-	        if (Object.prototype.hasOwnProperty.call(source, key)) {
-	          target[key] = source[key];
+	  getChildContext: function getChildContext() {
+	    return {
+	      forceRenderTabPanel: this.props.forceRenderTabPanel
+	    };
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    if (useDefaultStyles) {
+	      (0, _jsStylesheet2['default'])(__webpack_require__(289));
+	    }
+	  },
+
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    this.setState(this.copyPropsToState(newProps));
+	  },
+
+	  handleClick: function handleClick(e) {
+	    var node = e.target;
+	    do {
+	      if (isTabNode(node)) {
+	        if (isTabDisabled(node)) {
+	          return;
 	        }
+
+	        var index = [].slice.call(node.parentNode.children).indexOf(node);
+	        this.setSelected(index);
+	        return;
+	      }
+	    } while ((node = node.parentNode) !== null);
+	  },
+
+	  handleKeyDown: function handleKeyDown(e) {
+	    if (isTabNode(e.target)) {
+	      var index = this.state.selectedIndex;
+	      var preventDefault = false;
+
+	      // Select next tab to the left
+	      if (e.keyCode === 37 || e.keyCode === 38) {
+	        index = this.getPrevTab(index);
+	        preventDefault = true;
+	      }
+	      // Select next tab to the right
+	      /* eslint brace-style:0 */
+	      else if (e.keyCode === 39 || e.keyCode === 40) {
+	          index = this.getNextTab(index);
+	          preventDefault = true;
+	        }
+
+	      // This prevents scrollbars from moving around
+	      if (preventDefault) {
+	        e.preventDefault();
+	      }
+
+	      this.setSelected(index, true);
+	    }
+	  },
+
+	  setSelected: function setSelected(index, focus) {
+	    // Don't do anything if nothing has changed
+	    if (index === this.state.selectedIndex) return;
+	    // Check index boundary
+	    if (index < 0 || index >= this.getTabsCount()) return;
+
+	    // Keep reference to last index for event handler
+	    var last = this.state.selectedIndex;
+
+	    // Update selected index
+	    this.setState({ selectedIndex: index, focus: focus === true });
+
+	    // Call change event handler
+	    if (typeof this.props.onSelect === 'function') {
+	      this.props.onSelect(index, last);
+	    }
+	  },
+
+	  getNextTab: function getNextTab(index) {
+	    var count = this.getTabsCount();
+
+	    // Look for non-disabled tab from index to the last tab on the right
+	    for (var i = index + 1; i < count; i++) {
+	      var tab = this.getTab(i);
+	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
+	        return i;
 	      }
 	    }
 
-	    return target;
-	  };
-	})
+	    // If no tab found, continue searching from first on left to index
+	    for (var i = 0; i < index; i++) {
+	      var tab = this.getTab(i);
+	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
+	        return i;
+	      }
+	    }
+
+	    // No tabs are disabled, return index
+	    return index;
+	  },
+
+	  getPrevTab: function getPrevTab(index) {
+	    var i = index;
+
+	    // Look for non-disabled tab from index to first tab on the left
+	    while (i--) {
+	      var tab = this.getTab(i);
+	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
+	        return i;
+	      }
+	    }
+
+	    // If no tab found, continue searching from last tab on right to index
+	    i = this.getTabsCount();
+	    while (i-- > index) {
+	      var tab = this.getTab(i);
+	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
+	        return i;
+	      }
+	    }
+
+	    // No tabs are disabled, return index
+	    return index;
+	  },
+
+	  getTabsCount: function getTabsCount() {
+	    return this.props.children && this.props.children[0] ? _react2['default'].Children.count(this.props.children[0].props.children) : 0;
+	  },
+
+	  getPanelsCount: function getPanelsCount() {
+	    return _react2['default'].Children.count(this.props.children.slice(1));
+	  },
+
+	  getTabList: function getTabList() {
+	    return this.refs.tablist;
+	  },
+
+	  getTab: function getTab(index) {
+	    return this.refs['tabs-' + index];
+	  },
+
+	  getPanel: function getPanel(index) {
+	    return this.refs['panels-' + index];
+	  },
+
+	  getChildren: function getChildren() {
+	    var index = 0;
+	    var count = 0;
+	    var children = this.props.children;
+	    var state = this.state;
+	    var tabIds = this.tabIds = this.tabIds || [];
+	    var panelIds = this.panelIds = this.panelIds || [];
+	    var diff = this.tabIds.length - this.getTabsCount();
+
+	    // Add ids if new tabs have been added
+	    // Don't bother removing ids, just keep them in case they are added again
+	    // This is more efficient, and keeps the uuid counter under control
+	    while (diff++ < 0) {
+	      tabIds.push((0, _helpersUuid2['default'])());
+	      panelIds.push((0, _helpersUuid2['default'])());
+	    }
+
+	    // Map children to dynamically setup refs
+	    return _react2['default'].Children.map(children, function (child) {
+	      // null happens when conditionally rendering TabPanel/Tab
+	      // see https://github.com/rackt/react-tabs/issues/37
+	      if (child === null) {
+	        return null;
+	      }
+
+	      var result = null;
+
+	      // Clone TabList and Tab components to have refs
+	      if (count++ === 0) {
+	        // TODO try setting the uuid in the "constructor" for `Tab`/`TabPanel`
+	        result = (0, _react.cloneElement)(child, {
+	          ref: 'tablist',
+	          children: _react2['default'].Children.map(child.props.children, function (tab) {
+	            // null happens when conditionally rendering TabPanel/Tab
+	            // see https://github.com/rackt/react-tabs/issues/37
+	            if (tab === null) {
+	              return null;
+	            }
+
+	            var ref = 'tabs-' + index;
+	            var id = tabIds[index];
+	            var panelId = panelIds[index];
+	            var selected = state.selectedIndex === index;
+	            var focus = selected && state.focus;
+
+	            index++;
+
+	            return (0, _react.cloneElement)(tab, {
+	              ref: ref,
+	              id: id,
+	              panelId: panelId,
+	              selected: selected,
+	              focus: focus
+	            });
+	          })
+	        });
+
+	        // Reset index for panels
+	        index = 0;
+	      }
+	      // Clone TabPanel components to have refs
+	      else {
+	          var ref = 'panels-' + index;
+	          var id = panelIds[index];
+	          var tabId = tabIds[index];
+	          var selected = state.selectedIndex === index;
+
+	          index++;
+
+	          result = (0, _react.cloneElement)(child, {
+	            ref: ref,
+	            id: id,
+	            tabId: tabId,
+	            selected: selected
+	          });
+	        }
+
+	      return result;
+	    });
+	  },
+
+	  render: function render() {
+	    var _this = this;
+
+	    // This fixes an issue with focus management.
+	    //
+	    // Ultimately, when focus is true, and an input has focus,
+	    // and any change on that input causes a state change/re-render,
+	    // focus gets sent back to the active tab, and input loses focus.
+	    //
+	    // Since the focus state only needs to be remembered
+	    // for the current render, we can reset it once the
+	    // render has happened.
+	    //
+	    // Don't use setState, because we don't want to re-render.
+	    //
+	    // See https://github.com/rackt/react-tabs/pull/7
+	    if (this.state.focus) {
+	      setTimeout(function () {
+	        _this.state.focus = false;
+	      }, 0);
+	    }
+
+	    return _react2['default'].createElement(
+	      'div',
+	      {
+	        className: (0, _classnames2['default'])('ReactTabs', 'react-tabs', this.props.className),
+	        onClick: this.handleClick,
+	        onKeyDown: this.handleKeyDown
+	      },
+	      this.getChildren()
+	    );
+	  },
+
+	  // This is an anti-pattern, so sue me
+	  copyPropsToState: function copyPropsToState(props) {
+	    var selectedIndex = props.selectedIndex;
+
+	    // If no selectedIndex prop was supplied, then try
+	    // preserving the existing selectedIndex from state.
+	    // If the state has not selectedIndex, default
+	    // to the first tab in the TabList.
+	    //
+	    // TODO: Need automation testing around this
+	    // Manual testing can be done using examples/focus
+	    // See 'should preserve selectedIndex when typing' in specs/Tabs.spec.js
+	    if (selectedIndex === -1) {
+	      if (this.state && this.state.selectedIndex) {
+	        selectedIndex = this.state.selectedIndex;
+	      } else {
+	        selectedIndex = 0;
+	      }
+	    }
+
+	    return {
+	      selectedIndex: selectedIndex,
+	      focus: props.focus
+	    };
+	  }
+	});
 
 /***/ },
 /* 283 */
@@ -35468,393 +35066,59 @@
 
 /***/ },
 /* 284 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	var idCount = 0;
-
-	var _ = module.exports = {
-
-	  has: has,
-
-	  result: function result(value) {
-	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	      args[_key - 1] = arguments[_key];
-	    }
-
-	    return typeof value === 'function' ? value.apply(undefined, args) : value;
-	  },
-
-	  isShallowEqual: function isShallowEqual(a, b) {
-	    if (a === b) return true;
-	    if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
-
-	    if (typeof a !== 'object' && typeof b !== 'object') return a === b;
-
-	    if (typeof a !== typeof b) return false;
-
-	    return shallowEqual(a, b);
-	  },
-
-	  transform: function transform(obj, cb, seed) {
-	    _.each(obj, cb.bind(null, seed = seed || (Array.isArray(obj) ? [] : {})));
-	    return seed;
-	  },
-
-	  each: function each(obj, cb, thisArg) {
-	    if (Array.isArray(obj)) return obj.forEach(cb, thisArg);
-
-	    for (var key in obj) if (has(obj, key)) cb.call(thisArg, obj[key], key, obj);
-	  },
-
-	  pick: function pick(obj, keys) {
-	    keys = [].concat(keys);
-	    return _.transform(obj, function (mapped, val, key) {
-	      if (keys.indexOf(key) !== -1) mapped[key] = val;
-	    }, {});
-	  },
-
-	  omit: function omit(obj, keys) {
-	    keys = [].concat(keys);
-	    return _.transform(obj, function (mapped, val, key) {
-	      if (keys.indexOf(key) === -1) mapped[key] = val;
-	    }, {});
-	  },
-
-	  find: function find(arr, cb, thisArg) {
-	    var result;
-	    if (Array.isArray(arr)) {
-	      arr.every(function (val, idx) {
-	        if (cb.call(thisArg, val, idx, arr)) return result = val, false;
-	        return true;
-	      });
-	      return result;
-	    } else for (var key in arr) if (has(arr, key)) if (cb.call(thisArg, arr[key], key, arr)) return arr[key];
-	  },
-
-	  chunk: function chunk(array, chunkSize) {
-	    var index = 0,
-	        length = array ? array.length : 0,
-	        result = [];
-
-	    chunkSize = Math.max(+chunkSize || 1, 1);
-
-	    while (index < length) result.push(array.slice(index, index += chunkSize));
-
-	    return result;
-	  },
-
-	  splat: function splat(obj) {
-	    return obj == null ? [] : [].concat(obj);
-	  },
-
-	  noop: function noop() {},
-
-	  uniqueId: function uniqueId(prefix) {
-	    return '' + ((prefix == null ? '' : prefix) + ++idCount);
+	!(function() {
+	  function jss(blocks) {
+	    var css = [];
+	    for (var block in blocks)
+	      css.push(createStyleBlock(block, blocks[block]));
+	    injectCSS(css);
 	  }
-	};
 
-	function has(o, k) {
-	  return o ? Object.prototype.hasOwnProperty.call(o, k) : false;
-	}
+	  function createStyleBlock(selector, rules) {
+	    return selector + ' {\n' + parseRules(rules) + '\n}';
+	  }
 
-	function eql(a, b) {
-	  return a === b;
-	}
+	  function parseRules(rules) {
+	    var css = [];
+	    for (var rule in rules)
+	      css.push('  '+rule+': '+rules[rule]+';');
+	    return css.join('\n');
+	  }
 
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 */
-	function shallowEqual(objA, objB) {
+	  function injectCSS(css) {
+	    var style = document.getElementById('jss-styles');
+	    if (!style) {
+	      style = document.createElement('style');
+	      style.setAttribute('id', 'jss-styles');
+	      var head = document.getElementsByTagName('head')[0];
+	      head.insertBefore(style, head.firstChild);
+	    }
+	    var node = document.createTextNode(css.join('\n\n'));
+	    style.appendChild(node);
+	  }
 
-	  if (objA == null || objB == null) return false;
+	  if (true)
+	    module.exports = jss;
+	  else
+	    window.jss = jss;
 
-	  var keysA = Object.keys(objA),
-	      keysB = Object.keys(objB);
+	})();
 
-	  if (keysA.length !== keysB.length) return false;
 
-	  for (var i = 0; i < keysA.length; i++) if (!has(objB, keysA[i]) || !eql(objA[keysA[i]], objB[keysA[i]])) return false;
-
-	  return true;
-	}
 
 /***/ },
 /* 285 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
+	// Get a universally unique identifier
 	'use strict';
 
-	var babelHelpers = __webpack_require__(282);
-
-	var _OVERFLOW;
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = babelHelpers.interopRequireDefault(_react);
-
-	var _domHelpersStyle = __webpack_require__(286);
-
-	var _domHelpersStyle2 = babelHelpers.interopRequireDefault(_domHelpersStyle);
-
-	var _domHelpersQueryHeight = __webpack_require__(294);
-
-	var _domHelpersQueryHeight2 = babelHelpers.interopRequireDefault(_domHelpersQueryHeight);
-
-	var _domHelpersUtilCamelizeStyle = __webpack_require__(287);
-
-	var _domHelpersUtilCamelizeStyle2 = babelHelpers.interopRequireDefault(_domHelpersUtilCamelizeStyle);
-
-	var _utilConfiguration = __webpack_require__(300);
-
-	var _utilConfiguration2 = babelHelpers.interopRequireDefault(_utilConfiguration);
-
-	var _classnames = __webpack_require__(283);
-
-	var _classnames2 = babelHelpers.interopRequireDefault(_classnames);
-
-	var _utilCompat = __webpack_require__(305);
-
-	var _utilCompat2 = babelHelpers.interopRequireDefault(_utilCompat);
-
-	var transform = _domHelpersUtilCamelizeStyle2['default'](_utilConfiguration2['default'].animate.transform);
-
-	var CLOSING = 0,
-	    CLOSED = 1,
-	    OPENING = 2,
-	    OPEN = 3;
-
-	function properties(prop, value) {
-	  var _ref, _ref2;
-
-	  var TRANSLATION_MAP = _utilConfiguration2['default'].animate.TRANSLATION_MAP;
-
-	  if (TRANSLATION_MAP && TRANSLATION_MAP[prop]) return _ref = {}, _ref[transform] = TRANSLATION_MAP[prop] + '(' + value + ')', _ref;
-
-	  return _ref2 = {}, _ref2[prop] = value, _ref2;
-	}
-
-	var OVERFLOW = (_OVERFLOW = {}, _OVERFLOW[CLOSED] = 'hidden', _OVERFLOW[CLOSING] = 'hidden', _OVERFLOW[OPENING] = 'hidden', _OVERFLOW);
-
-	module.exports = _react2['default'].createClass({
-
-	  displayName: 'Popup',
-
-	  propTypes: {
-	    open: _react2['default'].PropTypes.bool,
-	    dropUp: _react2['default'].PropTypes.bool,
-	    duration: _react2['default'].PropTypes.number,
-
-	    onClosing: _react2['default'].PropTypes.func,
-	    onOpening: _react2['default'].PropTypes.func,
-	    onClose: _react2['default'].PropTypes.func,
-	    onOpen: _react2['default'].PropTypes.func
-	  },
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      status: this.props.open ? OPENING : CLOSED
-	    };
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      duration: 200,
-	      open: false,
-	      onClosing: function onClosing() {},
-	      onOpening: function onOpening() {},
-	      onClose: function onClose() {},
-	      onOpen: function onOpen() {}
-	    };
-	  },
-
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    this.setState({
-	      contentChanged: childKey(nextProps.children) !== childKey(this.props.children)
-	    });
-	  },
-
-	  componentDidMount: function componentDidMount() {
-	    if (this.state.status === OPENING) {
-	      this.open();
-	    }
-	  },
-
-	  componentDidUpdate: function componentDidUpdate(pvProps) {
-	    var closing = pvProps.open && !this.props.open,
-	        opening = !pvProps.open && this.props.open,
-	        open = this.props.open,
-	        status = this.state.status;
-
-	    if (!!pvProps.dropUp !== !!this.props.dropUp) {
-	      this.cancelNextCallback();
-	      if (status === OPENING) this.open();
-	      if (status === CLOSING) this.close();
-	      return;
-	    }
-
-	    if (opening) this.open();else if (closing) this.close();else if (open) {
-	      var height = this.height();
-	      if (height !== this.state.height) this.setState({ height: height });
-	    }
-	  },
-
-	  render: function render() {
-	    var _props = this.props;
-	    var className = _props.className;
-	    var open = _props.open;
-	    var dropUp = _props.dropUp;
-	    var props = babelHelpers.objectWithoutProperties(_props, ['className', 'open', 'dropUp']);
-	    var _state = this.state;
-	    var status = _state.status;
-	    var height = _state.height;
-
-	    var overflow = OVERFLOW[status] || 'visible',
-	        display = status === CLOSED ? 'none' : 'block';
-
-	    return _react2['default'].createElement(
-	      'div',
-	      babelHelpers._extends({}, props, {
-	        style: babelHelpers._extends({ display: display, overflow: overflow, height: height }, props.style),
-	        className: _classnames2['default'](className, 'rw-popup-container', {
-	          'rw-dropup': dropUp,
-	          'rw-popup-animating': this.isTransitioning()
-	        })
-	      }),
-	      this.renderChildren()
-	    );
-	  },
-
-	  renderChildren: function renderChildren() {
-	    if (!this.props.children) return _react2['default'].createElement('span', { className: 'rw-popup rw-widget' });
-
-	    var offset = this.getOffsetForStatus(this.state.status),
-	        child = _react2['default'].Children.only(this.props.children);
-
-	    return _react.cloneElement(child, {
-	      style: babelHelpers._extends({}, child.props.style, offset, {
-	        position: this.isTransitioning() ? 'absolute' : undefined
-	      }),
-	      className: _classnames2['default'](child.props.className, 'rw-popup rw-widget')
-	    });
-	  },
-
-	  open: function open() {
-	    var _this = this;
-
-	    this.cancelNextCallback();
-	    var el = _utilCompat2['default'].findDOMNode(this).firstChild,
-	        height = this.height();
-
-	    this.props.onOpening();
-
-	    this.safeSetState({ status: OPENING, height: height }, function () {
-	      var offset = _this.getOffsetForStatus(OPEN),
-	          duration = _this.props.duration;
-
-	      _this.animate(el, offset, duration, 'ease', function () {
-	        _this.safeSetState({ status: OPEN }, function () {
-	          _this.props.onOpen();
-	        });
-	      });
-	    });
-	  },
-
-	  close: function close() {
-	    var _this2 = this;
-
-	    this.cancelNextCallback();
-	    var el = _utilCompat2['default'].findDOMNode(this).firstChild,
-	        height = this.height();
-
-	    this.props.onClosing();
-
-	    this.safeSetState({ status: CLOSING, height: height }, function () {
-	      var offset = _this2.getOffsetForStatus(CLOSED),
-	          duration = _this2.props.duration;
-
-	      _this2.animate(el, offset, duration, 'ease', function () {
-	        return _this2.setState({ status: CLOSED }, function () {
-	          _this2.props.onClose();
-	        });
-	      });
-	    });
-	  },
-
-	  getOffsetForStatus: function getOffsetForStatus(status) {
-	    var _CLOSED$CLOSING$OPENING$OPEN$status;
-
-	    var _in = properties('top', this.props.dropUp ? '100%' : '-100%'),
-	        out = properties('top', 0);
-	    return (_CLOSED$CLOSING$OPENING$OPEN$status = {}, _CLOSED$CLOSING$OPENING$OPEN$status[CLOSED] = _in, _CLOSED$CLOSING$OPENING$OPEN$status[CLOSING] = out, _CLOSED$CLOSING$OPENING$OPEN$status[OPENING] = _in, _CLOSED$CLOSING$OPENING$OPEN$status[OPEN] = out, _CLOSED$CLOSING$OPENING$OPEN$status)[status] || {};
-	  },
-
-	  height: function height() {
-	    var container = _utilCompat2['default'].findDOMNode(this),
-	        content = container.firstChild,
-	        margin = parseInt(_domHelpersStyle2['default'](content, 'margin-top'), 10) + parseInt(_domHelpersStyle2['default'](content, 'margin-bottom'), 10);
-
-	    var old = container.style.display,
-	        height = undefined;
-
-	    container.style.display = 'block';
-	    height = (_domHelpersQueryHeight2['default'](content) || 0) + (isNaN(margin) ? 0 : margin);
-	    container.style.display = old;
-	    return height;
-	  },
-
-	  isTransitioning: function isTransitioning() {
-	    return this.state.status === OPENING || this.state.status === CLOSED;
-	  },
-
-	  animate: function animate(el, props, dur, easing, cb) {
-	    this._transition = _utilConfiguration2['default'].animate(el, props, dur, easing, this.setNextCallback(cb));
-	  },
-
-	  cancelNextCallback: function cancelNextCallback() {
-	    if (this._transition && this._transition.cancel) {
-	      this._transition.cancel();
-	      this._transition = null;
-	    }
-	    if (this.nextCallback) {
-	      this.nextCallback.cancel();
-	      this.nextCallback = null;
-	    }
-	  },
-
-	  safeSetState: function safeSetState(nextState, callback) {
-	    this.setState(nextState, this.setNextCallback(callback));
-	  },
-
-	  setNextCallback: function setNextCallback(callback) {
-	    var _this3 = this;
-
-	    var active = true;
-
-	    this.nextCallback = function (event) {
-	      if (active) {
-	        active = false;
-	        _this3.nextCallback = null;
-	        callback(event);
-	      }
-	    };
-
-	    this.nextCallback.cancel = function () {
-	      return active = false;
-	    };
-	    return this.nextCallback;
-	  }
-
-	});
-
-	function childKey(children) {
-	  var nextChildMapping = _react2['default'].Children.map(children, function (c) {
-	    return c;
-	  });
-	  for (var key in nextChildMapping) return key;
-	}
+	var count = 0;
+	module.exports = function uuid() {
+	  return 'react-tabs-' + count++;
+	};
 
 /***/ },
 /* 286 */
@@ -35862,2818 +35126,292 @@
 
 	'use strict';
 
-	var camelize = __webpack_require__(287),
-	    hyphenate = __webpack_require__(289),
-	    _getComputedStyle = __webpack_require__(291),
-	    removeStyle = __webpack_require__(293);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var has = Object.prototype.hasOwnProperty;
+	var _react = __webpack_require__(2);
 
-	module.exports = function style(node, property, value) {
-	  var css = '',
-	      props = property;
+	var _react2 = _interopRequireDefault(_react);
 
-	  if (typeof property === 'string') {
+	var _componentsTab = __webpack_require__(287);
 
-	    if (value === undefined) return node.style[camelize(property)] || _getComputedStyle(node).getPropertyValue(hyphenate(property));else (props = {})[property] = value;
+	var _componentsTab2 = _interopRequireDefault(_componentsTab);
+
+	var _componentsTabList = __webpack_require__(288);
+
+	var _componentsTabList2 = _interopRequireDefault(_componentsTabList);
+
+	module.exports = function childrenPropTypes(props, propName) {
+	  var error = undefined;
+	  var tabsCount = 0;
+	  var panelsCount = 0;
+	  var children = props[propName];
+
+	  _react2['default'].Children.forEach(children, function (child) {
+	    // null happens when conditionally rendering TabPanel/Tab
+	    // see https://github.com/rackt/react-tabs/issues/37
+	    if (child === null) {
+	      return;
+	    }
+
+	    if (child.type === _componentsTabList2['default']) {
+	      _react2['default'].Children.forEach(child.props.children, function (c) {
+	        // null happens when conditionally rendering TabPanel/Tab
+	        // see https://github.com/rackt/react-tabs/issues/37
+	        if (c === null) {
+	          return;
+	        }
+
+	        if (c.type === _componentsTab2['default']) {
+	          tabsCount++;
+	        } else {
+	          error = new Error('Expected `Tab` but found `' + (c.type.displayName || c.type) + '`');
+	        }
+	      });
+	    } else if (child.type.displayName === 'TabPanel') {
+	      panelsCount++;
+	    } else {
+	      error = new Error('Expected `TabList` or `TabPanel` but found `' + (child.type.displayName || child.type) + '`');
+	    }
+	  });
+
+	  if (tabsCount !== panelsCount) {
+	    error = new Error('There should be an equal number of `Tabs` and `TabPanels`. ' + 'Received ' + tabsCount + ' `Tabs` and ' + panelsCount + ' `TabPanels`.');
 	  }
 
-	  for (var key in props) if (has.call(props, key)) {
-	    !props[key] && props[key] !== 0 ? removeStyle(node, hyphenate(key)) : css += hyphenate(key) + ':' + props[key] + ';';
-	  }
-
-	  node.style.cssText += ';' + css;
+	  return error;
 	};
 
 /***/ },
 /* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 * https://github.com/facebook/react/blob/2aeb8a2a6beb00617a4217f7f8284924fa2ad819/src/vendor/core/camelizeStyleName.js
-	 */
-
-	'use strict';
-	var camelize = __webpack_require__(288);
-	var msPattern = /^-ms-/;
-
-	module.exports = function camelizeStyleName(string) {
-	  return camelize(string.replace(msPattern, 'ms-'));
-	};
-
-/***/ },
-/* 288 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	var rHyphen = /-(.)/g;
-
-	module.exports = function camelize(string) {
-	  return string.replace(rHyphen, function (_, chr) {
-	    return chr.toUpperCase();
-	  });
-	};
-
-/***/ },
-/* 289 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 * https://github.com/facebook/react/blob/2aeb8a2a6beb00617a4217f7f8284924fa2ad819/src/vendor/core/hyphenateStyleName.js
-	 */
-
-	"use strict";
-
-	var hyphenate = __webpack_require__(290);
-	var msPattern = /^ms-/;
-
-	module.exports = function hyphenateStyleName(string) {
-	  return hyphenate(string).replace(msPattern, "-ms-");
-	};
-
-/***/ },
-/* 290 */
-/***/ function(module, exports) {
-
 	'use strict';
 
-	var rUpper = /([A-Z])/g;
-
-	module.exports = function hyphenate(string) {
-	  return string.replace(rUpper, '-$1').toLowerCase();
-	};
-
-/***/ },
-/* 291 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(292);
-
-	var _utilCamelizeStyle = __webpack_require__(287);
-
-	var _utilCamelizeStyle2 = babelHelpers.interopRequireDefault(_utilCamelizeStyle);
-
-	var rposition = /^(top|right|bottom|left)$/;
-	var rnumnonpx = /^([+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|))(?!px)[a-z%]+$/i;
-
-	module.exports = function _getComputedStyle(node) {
-	  if (!node) throw new TypeError('No Element passed to `getComputedStyle()`');
-	  var doc = node.ownerDocument;
-
-	  return 'defaultView' in doc ? doc.defaultView.opener ? node.ownerDocument.defaultView.getComputedStyle(node, null) : window.getComputedStyle(node, null) : { //ie 8 "magic" from: https://github.com/jquery/jquery/blob/1.11-stable/src/css/curCSS.js#L72
-	    getPropertyValue: function getPropertyValue(prop) {
-	      var style = node.style;
-
-	      prop = (0, _utilCamelizeStyle2['default'])(prop);
-
-	      if (prop == 'float') prop = 'styleFloat';
-
-	      var current = node.currentStyle[prop] || null;
-
-	      if (current == null && style && style[prop]) current = style[prop];
-
-	      if (rnumnonpx.test(current) && !rposition.test(prop)) {
-	        // Remember the original values
-	        var left = style.left;
-	        var runStyle = node.runtimeStyle;
-	        var rsLeft = runStyle && runStyle.left;
-
-	        // Put in the new values to get a computed value out
-	        if (rsLeft) runStyle.left = node.currentStyle.left;
-
-	        style.left = prop === 'fontSize' ? '1em' : current;
-	        current = style.pixelLeft + 'px';
-
-	        // Revert the changed values
-	        style.left = left;
-	        if (rsLeft) runStyle.left = rsLeft;
-	      }
-
-	      return current;
-	    }
-	  };
-	};
-
-/***/ },
-/* 292 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
-	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	  } else if (typeof exports === "object") {
-	    factory(exports);
-	  } else {
-	    factory(root.babelHelpers = {});
-	  }
-	})(this, function (global) {
-	  var babelHelpers = global;
-
-	  babelHelpers.interopRequireDefault = function (obj) {
-	    return obj && obj.__esModule ? obj : {
-	      "default": obj
-	    };
-	  };
-
-	  babelHelpers._extends = Object.assign || function (target) {
-	    for (var i = 1; i < arguments.length; i++) {
-	      var source = arguments[i];
-
-	      for (var key in source) {
-	        if (Object.prototype.hasOwnProperty.call(source, key)) {
-	          target[key] = source[key];
-	        }
-	      }
-	    }
-
-	    return target;
-	  };
-	})
-
-/***/ },
-/* 293 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = function removeStyle(node, key) {
-	  return 'removeProperty' in node.style ? node.style.removeProperty(key) : node.style.removeAttribute(key);
-	};
-
-/***/ },
-/* 294 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var offset = __webpack_require__(295),
-	    getWindow = __webpack_require__(298);
-
-	module.exports = function height(node, client) {
-	  var win = getWindow(node);
-	  return win ? win.innerHeight : client ? node.clientHeight : offset(node).height;
-	};
-
-/***/ },
-/* 295 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var contains = __webpack_require__(296),
-	    getWindow = __webpack_require__(298),
-	    ownerDocument = __webpack_require__(299);
-
-	module.exports = function offset(node) {
-	  var doc = ownerDocument(node),
-	      win = getWindow(doc),
-	      docElem = doc && doc.documentElement,
-	      box = { top: 0, left: 0, height: 0, width: 0 };
-
-	  if (!doc) return;
-
-	  // Make sure it's not a disconnected DOM node
-	  if (!contains(docElem, node)) return box;
-
-	  if (node.getBoundingClientRect !== undefined) box = node.getBoundingClientRect();
-
-	  if (box.width || box.height) {
-
-	    box = {
-	      top: box.top + (win.pageYOffset || docElem.scrollTop) - (docElem.clientTop || 0),
-	      left: box.left + (win.pageXOffset || docElem.scrollLeft) - (docElem.clientLeft || 0),
-	      width: (box.width == null ? node.offsetWidth : box.width) || 0,
-	      height: (box.height == null ? node.offsetHeight : box.height) || 0
-	    };
-	  }
-
-	  return box;
-	};
-
-/***/ },
-/* 296 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var canUseDOM = __webpack_require__(297);
-
-	var contains = (function () {
-	  var root = canUseDOM && document.documentElement;
-
-	  return root && root.contains ? function (context, node) {
-	    return context.contains(node);
-	  } : root && root.compareDocumentPosition ? function (context, node) {
-	    return context === node || !!(context.compareDocumentPosition(node) & 16);
-	  } : function (context, node) {
-	    if (node) do {
-	      if (node === context) return true;
-	    } while (node = node.parentNode);
-
-	    return false;
-	  };
-	})();
-
-	module.exports = contains;
-
-/***/ },
-/* 297 */
-/***/ function(module, exports) {
-
-	'use strict';
-	module.exports = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
-
-/***/ },
-/* 298 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = function getWindow(node) {
-	  return node === node.window ? node : node.nodeType === 9 ? node.defaultView || node.parentWindow : false;
-	};
-
-/***/ },
-/* 299 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	exports.__esModule = true;
-	exports["default"] = ownerDocument;
-
-	function ownerDocument(node) {
-	  return node && node.ownerDocument || document;
-	}
-
-	module.exports = exports["default"];
-
-/***/ },
-/* 300 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-
-	var _domAnimate = __webpack_require__(301);
-
-	var _domAnimate2 = babelHelpers.interopRequireDefault(_domAnimate);
-
-	exports['default'] = { animate: _domAnimate2['default'] };
-	module.exports = exports['default'];
-
-/***/ },
-/* 301 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-	exports['default'] = animate;
-
-	var _domHelpersUtilHyphenate = __webpack_require__(290);
-
-	var _domHelpersUtilHyphenate2 = babelHelpers.interopRequireDefault(_domHelpersUtilHyphenate);
-
-	var _domHelpersStyle = __webpack_require__(286);
-
-	var _domHelpersStyle2 = babelHelpers.interopRequireDefault(_domHelpersStyle);
-
-	var _domHelpersEventsOn = __webpack_require__(302);
-
-	var _domHelpersEventsOn2 = babelHelpers.interopRequireDefault(_domHelpersEventsOn);
-
-	var _domHelpersEventsOff = __webpack_require__(303);
-
-	var _domHelpersEventsOff2 = babelHelpers.interopRequireDefault(_domHelpersEventsOff);
-
-	var _domHelpersTransitionProperties = __webpack_require__(304);
-
-	var _domHelpersTransitionProperties2 = babelHelpers.interopRequireDefault(_domHelpersTransitionProperties);
-
-	var has = Object.prototype.hasOwnProperty,
-	    reset = {},
-	    TRANSLATION_MAP = {
-	  left: 'translateX',
-	  right: 'translateX',
-	  top: 'translateY',
-	  bottom: 'translateY'
-	};
-
-	reset[_domHelpersTransitionProperties2['default'].property] = reset[_domHelpersTransitionProperties2['default'].duration] = reset[_domHelpersTransitionProperties2['default'].delay] = reset[_domHelpersTransitionProperties2['default'].timing] = '';
-
-	animate.endEvent = _domHelpersTransitionProperties2['default'].end;
-	animate.transform = _domHelpersTransitionProperties2['default'].transform;
-	animate.TRANSLATION_MAP = TRANSLATION_MAP;
-
-	// super lean animate function for transitions
-	// doesn't support all translations to keep it matching the jquery API
-	/**
-	 * code in part from: Zepto 1.1.4 | zeptojs.com/license
-	 */
-
-	function animate(node, properties, duration, easing, callback) {
-	  var cssProperties = [],
-	      fakeEvent = { target: node, currentTarget: node },
-	      cssValues = {},
-	      transforms = '',
-	      fired;
-
-	  if (typeof easing === 'function') callback = easing, easing = null;
-
-	  if (!_domHelpersTransitionProperties2['default'].end) duration = 0;
-	  if (duration === undefined) duration = 200;
-
-	  for (var key in properties) if (has.call(properties, key)) {
-	    if (/(top|bottom)/.test(key)) transforms += TRANSLATION_MAP[key] + '(' + properties[key] + ') ';else {
-	      cssValues[key] = properties[key];
-	      cssProperties.push(_domHelpersUtilHyphenate2['default'](key));
-	    }
-	  }
-
-	  if (transforms) {
-	    cssValues[_domHelpersTransitionProperties2['default'].transform] = transforms;
-	    cssProperties.push(_domHelpersTransitionProperties2['default'].transform);
-	  }
-
-	  if (duration > 0) {
-	    cssValues[_domHelpersTransitionProperties2['default'].property] = cssProperties.join(', ');
-	    cssValues[_domHelpersTransitionProperties2['default'].duration] = duration / 1000 + 's';
-	    cssValues[_domHelpersTransitionProperties2['default'].delay] = 0 + 's';
-	    cssValues[_domHelpersTransitionProperties2['default'].timing] = easing || 'linear';
-
-	    _domHelpersEventsOn2['default'](node, _domHelpersTransitionProperties2['default'].end, done);
-
-	    setTimeout(function () {
-	      if (!fired) done(fakeEvent);
-	    }, duration + 500);
-	  }
-
-	  node.clientLeft; // trigger page reflow
-	  _domHelpersStyle2['default'](node, cssValues);
-
-	  if (duration <= 0) setTimeout(done.bind(null, fakeEvent), 0);
-
-	  return {
-	    cancel: function cancel() {
-	      if (fired) return;
-	      fired = true;
-	      _domHelpersEventsOff2['default'](node, _domHelpersTransitionProperties2['default'].end, done);
-	      _domHelpersStyle2['default'](node, reset);
-	    }
-	  };
-
-	  function done(event) {
-	    if (event.target !== event.currentTarget) return;
-
-	    fired = true;
-	    _domHelpersEventsOff2['default'](event.target, _domHelpersTransitionProperties2['default'].end, done);
-	    _domHelpersStyle2['default'](node, reset);
-	    callback && callback.call(this);
-	  }
-	}
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 302 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var canUseDOM = __webpack_require__(297);
-	var on = function on() {};
-
-	if (canUseDOM) {
-	  on = (function () {
-
-	    if (document.addEventListener) return function (node, eventName, handler, capture) {
-	      return node.addEventListener(eventName, handler, capture || false);
-	    };else if (document.attachEvent) return function (node, eventName, handler) {
-	      return node.attachEvent('on' + eventName, handler);
-	    };
-	  })();
-	}
-
-	module.exports = on;
-
-/***/ },
-/* 303 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var canUseDOM = __webpack_require__(297);
-	var off = function off() {};
-
-	if (canUseDOM) {
-
-	  off = (function () {
-
-	    if (document.addEventListener) return function (node, eventName, handler, capture) {
-	      return node.removeEventListener(eventName, handler, capture || false);
-	    };else if (document.attachEvent) return function (node, eventName, handler) {
-	      return node.detachEvent('on' + eventName, handler);
-	    };
-	  })();
-	}
-
-	module.exports = off;
-
-/***/ },
-/* 304 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var canUseDOM = __webpack_require__(297);
-
-	var has = Object.prototype.hasOwnProperty,
-	    transform = 'transform',
-	    transition = {},
-	    transitionTiming,
-	    transitionDuration,
-	    transitionProperty,
-	    transitionDelay;
-
-	if (canUseDOM) {
-	  transition = getTransitionProperties();
-
-	  transform = transition.prefix + transform;
-
-	  transitionProperty = transition.prefix + 'transition-property';
-	  transitionDuration = transition.prefix + 'transition-duration';
-	  transitionDelay = transition.prefix + 'transition-delay';
-	  transitionTiming = transition.prefix + 'transition-timing-function';
-	}
-
-	module.exports = {
-	  transform: transform,
-	  end: transition.end,
-	  property: transitionProperty,
-	  timing: transitionTiming,
-	  delay: transitionDelay,
-	  duration: transitionDuration
-	};
-
-	function getTransitionProperties() {
-	  var endEvent,
-	      prefix = '',
-	      transitions = {
-	    O: 'otransitionend',
-	    Moz: 'transitionend',
-	    Webkit: 'webkitTransitionEnd',
-	    ms: 'MSTransitionEnd'
-	  };
-
-	  var element = document.createElement('div');
-
-	  for (var vendor in transitions) if (has.call(transitions, vendor)) {
-	    if (element.style[vendor + 'TransitionProperty'] !== undefined) {
-	      prefix = '-' + vendor.toLowerCase() + '-';
-	      endEvent = transitions[vendor];
-	      break;
-	    }
-	  }
-
-	  if (!endEvent && element.style.transitionProperty !== undefined) endEvent = 'transitionend';
-
-	  return { end: endEvent, prefix: prefix };
-	}
-
-/***/ },
-/* 305 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _react = __webpack_require__(2);
 
-	var _react2 = babelHelpers.interopRequireDefault(_react);
+	var _react2 = _interopRequireDefault(_react);
 
 	var _reactDom = __webpack_require__(159);
 
-	var _reactDom2 = babelHelpers.interopRequireDefault(_reactDom);
-
-	var _version = _react2['default'].version.split('.').map(parseFloat);
-
-	module.exports = {
-
-	  version: function version() {
-	    return _version;
-	  },
-
-	  findDOMNode: function findDOMNode(component) {
-	    return _reactDom2['default'].findDOMNode(component);
-	  }
-
-	};
-
-/***/ },
-/* 306 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = babelHelpers.interopRequireDefault(_react);
-
-	var _utilCompat = __webpack_require__(305);
-
-	var _utilCompat2 = babelHelpers.interopRequireDefault(_utilCompat);
-
-	var _utilPropTypes = __webpack_require__(307);
-
-	var _utilPropTypes2 = babelHelpers.interopRequireDefault(_utilPropTypes);
-
-	exports['default'] = _react2['default'].createClass({
-
-	  displayName: 'MultiselectInput',
-
-	  propTypes: {
-	    value: _react2['default'].PropTypes.string,
-	    maxLength: _react2['default'].PropTypes.number,
-	    onChange: _react2['default'].PropTypes.func.isRequired,
-	    onFocus: _react2['default'].PropTypes.func,
-
-	    disabled: _utilPropTypes2['default'].disabled,
-	    readOnly: _utilPropTypes2['default'].readOnly
-	  },
-
-	  componentDidUpdate: function componentDidUpdate() {
-	    this.props.focused && this.focus();
-	  },
-
-	  render: function render() {
-	    var value = this.props.value,
-	        placeholder = this.props.placeholder,
-	        size = Math.max((value || placeholder).length, 1) + 1;
-
-	    return _react2['default'].createElement('input', babelHelpers._extends({}, this.props, {
-	      className: 'rw-input',
-	      autoComplete: 'off',
-	      'aria-disabled': this.props.disabled,
-	      'aria-readonly': this.props.readOnly,
-	      disabled: this.props.disabled,
-	      readOnly: this.props.readOnly,
-	      size: size
-	    }));
-	  },
-
-	  focus: function focus() {
-	    _utilCompat2['default'].findDOMNode(this).focus();
-	  }
-
-	});
-	module.exports = exports['default'];
-
-/***/ },
-/* 307 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = babelHelpers.interopRequireDefault(_react);
-
-	var _localizers = __webpack_require__(308);
-
-	var _localizers2 = babelHelpers.interopRequireDefault(_localizers);
-
-	var _filter = __webpack_require__(310);
-
-	var _filter2 = babelHelpers.interopRequireDefault(_filter);
-
-	var filterTypes = Object.keys(_filter2['default']).filter(function (i) {
-	  return i !== 'filter';
-	});
-
-	function getInteractionPropType(key) {
-	  var types = [_react.PropTypes.bool, _react.PropTypes.oneOf([key])],
-	      propType = _react.PropTypes.oneOfType(types);
-
-	  propType.acceptsArray = _react.PropTypes.oneOfType(types.concat(_react.PropTypes.array));
-
-	  return propType;
-	}
-
-	module.exports = {
-
-	  elementType: createChainableTypeChecker(function (props, propName, componentName) {
-
-	    if (typeof props[propName] !== 'function') {
-	      if (_react2['default'].isValidElement(props[propName])) return new Error('Invalid prop `' + propName + '` specified in  `' + componentName + '`.' + ' Expected an Element `type`, not an actual Element');
-
-	      if (typeof props[propName] !== 'string') return new Error('Invalid prop `' + propName + '` specified in  `' + componentName + '`.' + ' Expected an Element `type` such as a tag name or return value of React.createClass(...)');
-	    }
-	    return null;
-	  }),
-
-	  numberFormat: createChainableTypeChecker(function () {
-	    var _localizers$number;
-
-	    return (_localizers$number = _localizers2['default'].number).propType.apply(_localizers$number, arguments);
-	  }),
-
-	  dateFormat: createChainableTypeChecker(function () {
-	    var _localizers$date;
-
-	    return (_localizers$date = _localizers2['default'].date).propType.apply(_localizers$date, arguments);
-	  }),
-
-	  disabled: getInteractionPropType('disabled'),
-	  readOnly: getInteractionPropType('readOnly'),
-
-	  accessor: _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.string, _react2['default'].PropTypes.func]),
-
-	  message: _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.func, _react2['default'].PropTypes.string]),
-
-	  filter: _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.func, _react2['default'].PropTypes.bool, _react2['default'].PropTypes.oneOf(filterTypes)])
-	};
-
-	function createChainableTypeChecker(validate) {
-
-	  function checkType(isRequired, props, propName, componentName, location) {
-	    componentName = componentName || '<<anonymous>>';
-	    if (props[propName] == null) {
-	      if (isRequired) {
-	        return new Error('Required prop `' + propName + '` was not specified in  `' + componentName + '`.');
-	      }
-	    } else return validate(props, propName, componentName, location);
-	  }
-
-	  var chainedCheckType = checkType.bind(null, false);
-	  chainedCheckType.isRequired = checkType.bind(null, true);
-
-	  return chainedCheckType;
-	}
-
-/***/ },
-/* 308 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-	exports.setNumber = setNumber;
-	exports.setDate = setDate;
-
-	var _invariant = __webpack_require__(309);
-
-	var _invariant2 = babelHelpers.interopRequireDefault(_invariant);
-
-	var _ = __webpack_require__(284);
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = babelHelpers.interopRequireDefault(_react);
-
-	var localePropType = _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.string, _react2['default'].PropTypes.func]);
-
-	var REQUIRED_NUMBER_FORMATS = ['default'];
-
-	var REQUIRED_DATE_FORMATS = ['default', 'date', 'time', 'header', 'footer', 'dayOfMonth', 'month', 'year', 'decade', 'century'];
-
-	function _format(localizer, formatter, value, format, culture) {
-	  var result = typeof format === 'function' ? format(value, culture, localizer) : formatter.call(localizer, value, format, culture);
-
-	  _invariant2['default'](result == null || typeof result === 'string', '`localizer format(..)` must return a string, null, or undefined');
-
-	  return result;
-	}
-
-	function checkFormats(requiredFormats, formats) {
-	  if (process.env.NODE_ENV !== 'production') requiredFormats.forEach(function (f) {
-	    return _invariant2['default'](_.has(formats, f), 'localizer missing required format: `%s`', f);
-	  });
-	}
-
-	var _numberLocalizer = createWrapper('NumberPicker');
-
-	function setNumber(_ref) {
-	  var _format2 = _ref.format;
-	  var _parse = _ref.parse;
-	  var _ref$decimalChar = _ref.decimalChar;
-	  var decimalChar = _ref$decimalChar === undefined ? function () {
-	    return '.';
-	  } : _ref$decimalChar;
-	  var _ref$precision = _ref.precision;
-	  var precision = _ref$precision === undefined ? function () {
-	    return null;
-	  } : _ref$precision;
-	  var formats = _ref.formats;
-	  var propType = _ref.propType;
-
-	  _invariant2['default'](typeof _format2 === 'function', 'number localizer `format(..)` must be a function');
-	  _invariant2['default'](typeof _parse === 'function', 'number localizer `parse(..)` must be a function');
-
-	  checkFormats(REQUIRED_NUMBER_FORMATS, formats);
-
-	  formats.editFormat = formats.editFormat || function (str) {
-	    return parseFloat(str);
-	  };
-
-	  _numberLocalizer = {
-	    formats: formats,
-	    precision: precision,
-	    decimalChar: decimalChar,
-	    propType: propType || localePropType,
-
-	    format: function format(value, str, culture) {
-	      return _format(this, _format2, value, str, culture);
-	    },
-
-	    parse: function parse(value, culture, format) {
-	      var result = _parse.call(this, value, culture, format);
-	      _invariant2['default'](result == null || typeof result === 'number', 'number localizer `parse(..)` must return a number, null, or undefined');
-	      return result;
-	    }
-	  };
-	}
-
-	var _dateLocalizer = createWrapper('DateTimePicker');
-
-	function setDate(spec) {
-	  _invariant2['default'](typeof spec.format === 'function', 'date localizer `format(..)` must be a function');
-	  _invariant2['default'](typeof spec.parse === 'function', 'date localizer `parse(..)` must be a function');
-	  _invariant2['default'](typeof spec.firstOfWeek === 'function', 'date localizer `firstOfWeek(..)` must be a function');
-	  checkFormats(REQUIRED_DATE_FORMATS, spec.formats);
-
-	  _dateLocalizer = {
-	    formats: spec.formats,
-	    propType: spec.propType || localePropType,
-	    startOfWeek: spec.firstOfWeek,
-	    format: function format(value, str, culture) {
-	      return _format(this, spec.format, value, str, culture);
-	    },
-	    parse: function parse(value, culture) {
-	      var result = spec.parse.call(this, value, culture);
-	      _invariant2['default'](result == null || result instanceof Date && !isNaN(result.getTime()), 'date localizer `parse(..)` must return a valid Date, null, or undefined');
-	      return result;
-	    }
-	  };
-	}
-
-	var number = {
-	  propType: function propType() {
-	    var _numberLocalizer2;
-
-	    return (_numberLocalizer2 = _numberLocalizer).propType.apply(_numberLocalizer2, arguments);
-	  },
-	  getFormat: function getFormat(key, format) {
-	    return format || _numberLocalizer.formats[key];
-	  },
-	  parse: function parse() {
-	    var _numberLocalizer3;
-
-	    return (_numberLocalizer3 = _numberLocalizer).parse.apply(_numberLocalizer3, arguments);
-	  },
-	  format: function format() {
-	    var _numberLocalizer4;
-
-	    return (_numberLocalizer4 = _numberLocalizer).format.apply(_numberLocalizer4, arguments);
-	  },
-	  decimalChar: function decimalChar() {
-	    var _numberLocalizer5;
-
-	    return (_numberLocalizer5 = _numberLocalizer).decimalChar.apply(_numberLocalizer5, arguments);
-	  },
-	  precision: function precision() {
-	    var _numberLocalizer6;
-
-	    return (_numberLocalizer6 = _numberLocalizer).precision.apply(_numberLocalizer6, arguments);
-	  }
-	};
-
-	exports.number = number;
-	var date = {
-	  propType: function propType() {
-	    var _dateLocalizer2;
-
-	    return (_dateLocalizer2 = _dateLocalizer).propType.apply(_dateLocalizer2, arguments);
-	  },
-	  getFormat: function getFormat(key, format) {
-	    return format || _dateLocalizer.formats[key];
-	  },
-	  parse: function parse() {
-	    var _dateLocalizer3;
-
-	    return (_dateLocalizer3 = _dateLocalizer).parse.apply(_dateLocalizer3, arguments);
-	  },
-	  format: function format() {
-	    var _dateLocalizer4;
-
-	    return (_dateLocalizer4 = _dateLocalizer).format.apply(_dateLocalizer4, arguments);
-	  },
-	  startOfWeek: function startOfWeek() {
-	    var _dateLocalizer5;
-
-	    return (_dateLocalizer5 = _dateLocalizer).startOfWeek.apply(_dateLocalizer5, arguments);
-	  }
-	};
-
-	exports.date = date;
-	exports['default'] = { number: number, date: date };
-
-	function createWrapper() {
-	  var dummy = {};
-
-	  if (process.env.NODE_ENV !== 'production') {
-	    ['formats', 'parse', 'format', 'firstOfWeek', 'precision'].forEach(function (name) {
-	      return Object.defineProperty(dummy, name, {
-	        enumerable: true,
-	        get: function get() {
-	          throw new Error('[React Widgets] You are attempting to use a widget that requires localization ' + '(Calendar, DateTimePicker, NumberPicker). ' + 'However there is no localizer set. Please configure a localizer. \n\n' + 'see http://jquense.github.io/react-widgets/docs/#/i18n for more info.');
-	        }
-	      });
-	    });
-	  }
-	  return dummy;
-	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-/* 309 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
-
-	'use strict';
-
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var invariant = function(condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error(
-	        'Minified exception occurred; use the non-minified dev environment ' +
-	        'for the full error message and additional helpful warnings.'
-	      );
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(
-	        format.replace(/%s/g, function() { return args[argIndex++]; })
-	      );
-	      error.name = 'Invariant Violation';
-	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	};
-
-	module.exports = invariant;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-/* 310 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	exports.__esModule = true;
-	var common = {
-	  eq: function eq(a, b) {
-	    return a === b;
-	  },
-	  neq: function neq(a, b) {
-	    return a !== b;
-	  },
-	  gt: function gt(a, b) {
-	    return a > b;
-	  },
-	  gte: function gte(a, b) {
-	    return a >= b;
-	  },
-	  lt: function lt(a, b) {
-	    return a < b;
-	  },
-	  lte: function lte(a, b) {
-	    return a <= b;
-	  },
-
-	  contains: function contains(a, b) {
-	    return a.indexOf(b) !== -1;
-	  },
-
-	  startsWith: function startsWith(a, b) {
-	    return a.lastIndexOf(b, 0) === 0;
-	  },
-
-	  endsWith: function endsWith(a, b) {
-	    var pos = a.length - b.length,
-	        lastIndex = a.indexOf(b, pos);
-
-	    return lastIndex !== -1 && lastIndex === pos;
-	  }
-	};
-
-	exports["default"] = common;
-	module.exports = exports["default"];
-
-/***/ },
-/* 311 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = babelHelpers.interopRequireDefault(_react);
-
-	var _util_ = __webpack_require__(284);
-
-	var _util_2 = babelHelpers.interopRequireDefault(_util_);
-
 	var _classnames = __webpack_require__(283);
 
-	var _classnames2 = babelHelpers.interopRequireDefault(_classnames);
+	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _utilPropTypes = __webpack_require__(307);
+	function syncNodeAttributes(node, props) {
+	  if (props.selected) {
+	    node.setAttribute('tabindex', 0);
+	    node.setAttribute('selected', 'selected');
+	    if (props.focus) {
+	      node.focus();
+	    }
+	  } else {
+	    node.removeAttribute('tabindex');
+	    node.removeAttribute('selected');
+	  }
+	}
 
-	var _utilPropTypes2 = babelHelpers.interopRequireDefault(_utilPropTypes);
-
-	var _utilWidgetHelpers = __webpack_require__(312);
-
-	var _utilDataHelpers = __webpack_require__(313);
-
-	var _utilInteraction = __webpack_require__(314);
-
-	var optionId = function optionId(id, idx) {
-	  return id + '__option__' + idx;
-	};
-
-	exports['default'] = _react2['default'].createClass({
-
-	  displayName: 'MultiselectTagList',
-
-	  mixins: [__webpack_require__(315), __webpack_require__(316)()],
+	module.exports = _react2['default'].createClass({
+	  displayName: 'Tab',
 
 	  propTypes: {
-	    value: _react2['default'].PropTypes.array,
-	    focused: _react2['default'].PropTypes.number,
-
-	    valueField: _react2['default'].PropTypes.string,
-	    textField: _utilPropTypes2['default'].accessor,
-
-	    valueComponent: _react2['default'].PropTypes.func,
-
-	    disabled: _utilPropTypes2['default'].disabled.acceptsArray,
-	    readOnly: _utilPropTypes2['default'].readOnly.acceptsArray
+	    className: _react.PropTypes.string,
+	    id: _react.PropTypes.string,
+	    selected: _react.PropTypes.bool,
+	    disabled: _react.PropTypes.bool,
+	    panelId: _react.PropTypes.string,
+	    children: _react.PropTypes.oneOfType([_react.PropTypes.array, _react.PropTypes.object, _react.PropTypes.string])
 	  },
 
 	  getDefaultProps: function getDefaultProps() {
 	    return {
-	      ariaActiveDescendantKey: 'taglist'
-	    };
-	  },
-
-	  componentDidUpdate: function componentDidUpdate() {
-	    var focused = this.props.focused;
-	    var activeId = optionId(_utilWidgetHelpers.instanceId(this), focused);
-
-	    this.ariaActiveDescendant(focused == null || _utilInteraction.isDisabledItem(focused, this.props) ? null : activeId);
-	  },
-
-	  render: function render() {
-	    var _this = this;
-
-	    var props = _util_2['default'].omit(this.props, ['value', 'disabled', 'readOnly']);
-	    var _props = this.props;
-	    var focused = _props.focused;
-	    var value = _props.value;
-	    var textField = _props.textField;
-	    var ValueComponent = _props.valueComponent;
-
-	    var id = _utilWidgetHelpers.instanceId(this);
-
-	    return _react2['default'].createElement(
-	      'ul',
-	      babelHelpers._extends({}, props, {
-	        role: 'listbox',
-	        tabIndex: '-1',
-	        className: 'rw-multiselect-taglist'
-	      }),
-	      value.map(function (item, i) {
-	        var isDisabled = _utilInteraction.isDisabledItem(item, _this.props),
-	            isReadonly = _utilInteraction.isReadOnlyItem(item, _this.props),
-	            isFocused = !isDisabled && focused === i,
-	            currentID = optionId(id, i);
-
-	        return _react2['default'].createElement(
-	          'li',
-	          {
-	            key: i,
-	            id: currentID,
-	            tabIndex: '-1',
-	            role: 'option',
-	            className: _classnames2['default']({
-	              'rw-state-focus': isFocused,
-	              'rw-state-disabled': isDisabled,
-	              'rw-state-readonly': isReadonly
-	            })
-	          },
-	          ValueComponent ? _react2['default'].createElement(ValueComponent, { item: item }) : _utilDataHelpers.dataText(item, textField),
-	          _react2['default'].createElement(
-	            'span',
-	            {
-	              tabIndex: '-1',
-	              onClick: !(isDisabled || isReadonly) ? _this._delete.bind(null, item) : undefined,
-	              'aria-disabled': isDisabled,
-	              'aria-label': 'Unselect',
-	              disabled: isDisabled
-	            },
-	            _react2['default'].createElement(
-	              'span',
-	              { className: 'rw-tag-btn', 'aria-hidden': 'true' },
-	              '×'
-	            )
-	          )
-	        );
-	      })
-	    );
-	  },
-
-	  _delete: function _delete(val) {
-	    this.props.onDelete(val);
-	  },
-
-	  remove: function remove(idx) {
-	    var val = this.props.value[idx];
-
-	    if (val && !(_utilInteraction.isDisabledItem(val, this.props) || _utilInteraction.isReadOnlyItem(val, this.props))) this.props.onDelete(val);
-	  },
-
-	  removeNext: function removeNext() {
-	    var val = this.props.value[this.props.value.length - 1];
-
-	    if (val && !(_utilInteraction.isDisabledItem(val, this.props) || _utilInteraction.isReadOnlyItem(val, this.props))) this.props.onDelete(val);
-	  },
-
-	  clear: function clear() {
-	    this.setState({ focused: null });
-	  },
-
-	  first: function first() {
-	    var idx = 0,
-	        value = this.props.value,
-	        l = value.length;
-
-	    while (idx < l && _utilInteraction.isDisabledItem(value[idx], this.props)) idx++;
-
-	    return idx !== l ? idx : null;
-	  },
-
-	  last: function last() {
-	    var value = this.props.value,
-	        idx = value.length - 1;
-
-	    while (idx > -1 && _utilInteraction.isDisabledItem(value[idx], this.props)) idx--;
-
-	    return idx >= 0 ? idx : null;
-	  },
-
-	  next: function next(current) {
-	    var nextIdx = current + 1,
-	        value = this.props.value,
-	        l = value.length;
-
-	    while (nextIdx < l && _utilInteraction.isDisabledItem(nextIdx, this.props)) nextIdx++;
-
-	    if (current === null || nextIdx >= l) return null;
-
-	    return nextIdx;
-	  },
-
-	  prev: function prev(current) {
-	    var nextIdx = current,
-	        value = this.props.value;
-
-	    if (nextIdx === null || nextIdx === 0) nextIdx = value.length;
-
-	    nextIdx--;
-
-	    while (nextIdx > -1 && _utilInteraction.isDisabledItem(value[nextIdx], this.props)) nextIdx--;
-
-	    return nextIdx >= 0 ? nextIdx : null;
-	  }
-	});
-	module.exports = exports['default'];
-
-/***/ },
-/* 312 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-	exports.notify = notify;
-	exports.instanceId = instanceId;
-	exports.isFirstFocusedRender = isFirstFocusedRender;
-
-	var _ = __webpack_require__(284);
-
-	function notify(handler, args) {
-	  handler && handler.apply(null, [].concat(args));
-	}
-
-	function instanceId(component) {
-	  var suffix = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
-
-	  component.__id || (component.__id = _.uniqueId('rw_'));
-	  return (component.props.id || component.__id) + suffix;
-	}
-
-	function isFirstFocusedRender(component) {
-	  return component._firstFocus || component.state.focused && (component._firstFocus = true);
-	}
-
-/***/ },
-/* 313 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-	exports.dataValue = dataValue;
-	exports.dataText = dataText;
-	exports.dataIndexOf = dataIndexOf;
-	exports.valueMatcher = valueMatcher;
-	exports.dataItem = dataItem;
-
-	var _ = __webpack_require__(284);
-
-	function accessor(data, field) {
-	  var value = data;
-
-	  if (typeof field === 'function') value = field(data);else if (data == null) value = data;else if (typeof field === 'string' && typeof data === 'object' && field in data) value = data[field];
-
-	  return value;
-	}
-
-	function dataValue(item, valueField) {
-	  return valueField && item && _.has(item, valueField) ? item[valueField] : item;
-	}
-
-	function dataText(item, textField) {
-	  var value = accessor(item, textField);
-	  return value == null ? '' : value + '';
-	}
-
-	function dataIndexOf(data, item, valueField) {
-	  var idx = -1,
-	      len = data.length,
-	      finder = function finder(datum) {
-	    return valueMatcher(item, datum, valueField);
-	  };
-
-	  while (++idx < len) if (finder(data[idx])) return idx;
-
-	  return -1;
-	}
-
-	/**
-	 * I don't know that the shallow equal makes sense here but am too afraid to
-	 * remove it.
-	 */
-
-	function valueMatcher(a, b, valueField) {
-	  return _.isShallowEqual(dataValue(a, valueField), dataValue(b, valueField));
-	}
-
-	function dataItem(data, item, valueField) {
-	  var first = data[0],
-	      idx;
-
-	  // make an attempt to see if we were passed in dataItem vs just a valueField value
-	  // either an object with the right prop, or a primitive
-	  // { valueField: 5 } || "hello" [ "hello" ]
-	  if (_.has(item, valueField) || typeof first === typeof val) return item;
-
-	  idx = dataIndexOf(data, dataValue(item, valueField), valueField);
-
-	  if (idx !== -1) return data[idx];
-
-	  return item;
-	}
-
-/***/ },
-/* 314 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-	exports.isDisabled = isDisabled;
-	exports.isReadOnly = isReadOnly;
-	exports.isDisabledItem = isDisabledItem;
-	exports.isReadOnlyItem = isReadOnlyItem;
-	exports.contains = contains;
-	exports.move = move;
-
-	var _dataHelpers = __webpack_require__(313);
-
-	function isDisabled(props) {
-	  return props.disabled === true || props.disabled === 'disabled';
-	}
-
-	function isReadOnly(props) {
-	  return props.readOnly === true || props.readOnly === 'readOnly';
-	}
-
-	function isDisabledItem(item, props) {
-	  return isDisabled(props) || contains(item, props.disabled, props.valueField);
-	}
-
-	function isReadOnlyItem(item, props) {
-	  return isReadOnly(props) || contains(item, props.readOnly, props.valueField);
-	}
-
-	function contains(item, values, valueField) {
-	  return Array.isArray(values) ? values.some(function (value) {
-	    return _dataHelpers.valueMatcher(item, value, valueField);
-	  }) : _dataHelpers.valueMatcher(item, values, valueField);
-	}
-
-	function move(dir, item, props, list) {
-	  var isDisabledOrReadonly = function isDisabledOrReadonly(item) {
-	    return isDisabledItem(item, props) || isReadOnlyItem(item, props);
-	  },
-	      stop = dir === 'next' ? list.last() : list.first(),
-	      next = list[dir](item);
-
-	  while (next !== stop && isDisabledOrReadonly(next)) next = list[dir](next);
-
-	  return isDisabledOrReadonly(next) ? item : next;
-	}
-
-	var widgetEnabled = interactionDecorator(true);
-
-	exports.widgetEnabled = widgetEnabled;
-	var widgetEditable = interactionDecorator(false);
-
-	exports.widgetEditable = widgetEditable;
-	function interactionDecorator(disabledOnly) {
-	  function wrap(method) {
-	    return function decoratedMethod() {
-	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	        args[_key] = arguments[_key];
-	      }
-
-	      if (!(isDisabled(this.props) || !disabledOnly && isReadOnly(this.props))) return method.apply(this, args);
-	    };
-	  }
-
-	  return function decorate(target, key, desc) {
-	    if (desc.initializer) {
-	      (function () {
-	        var init = desc.initializer;
-	        desc.initializer = function () {
-	          return wrap(init());
-	        };
-	      })();
-	    } else desc.value = wrap(desc.value);
-	    return desc;
-	  };
-	}
-
-/***/ },
-/* 315 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var _ = __webpack_require__(284);
-
-	//backport PureRenderEqual
-	module.exports = {
-
-	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    return !_.isShallowEqual(this.props, nextProps) || !_.isShallowEqual(this.state, nextState);
-	  }
-	};
-
-/***/ },
-/* 316 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = babelHelpers.interopRequireDefault(_react);
-
-	var _utilCompat = __webpack_require__(305);
-
-	var _utilCompat2 = babelHelpers.interopRequireDefault(_utilCompat);
-
-	var shape = _react2['default'].PropTypes.shape({
-	  //setActive: React.PropTypes.func,
-	  reconcile: _react2['default'].PropTypes.func
-	});
-
-	function defaultReconcile(key, id) {
-	  return id;
-	}
-
-	function flushAriaToNode(id, nodeOrComponent, ctx) {
-	  var node = typeof nodeOrComponent === 'function' ? nodeOrComponent(ctx) : typeof nodeOrComponent === 'string' ? ctx.refs[nodeOrComponent] : ctx;
-
-	  if (node) {
-	    if (id) _utilCompat2['default'].findDOMNode(node).setAttribute('aria-activedescendant', id);else _utilCompat2['default'].findDOMNode(node).removeAttribute('aria-activedescendant');
-	  }
-	}
-
-	exports['default'] = function (nodeOrComponent) {
-	  var reconcileChildren = arguments.length <= 1 || arguments[1] === undefined ? defaultReconcile : arguments[1];
-
-	  return {
-	    propTypes: {
-	      ariaActiveDescendantKey: _react2['default'].PropTypes.string.isRequired
-	    },
-
-	    contextTypes: {
-	      activeDescendants: shape
-	    },
-
-	    childContextTypes: {
-	      activeDescendants: shape
-	    },
-
-	    ariaActiveDescendant: function ariaActiveDescendant(id) {
-	      var key = arguments.length <= 1 || arguments[1] === undefined ? this.props.ariaActiveDescendantKey : arguments[1];
-	      var activeDescendants = this.context.activeDescendants;
-
-	      var current = this.__ariaActiveDescendantId;
-
-	      if (id === undefined) return current;
-
-	      id = reconcileChildren.call(this, key, id);
-
-	      if (id === undefined) id = current;else {
-	        this.__ariaActiveDescendantId = id;
-	        flushAriaToNode(id, nodeOrComponent, this);
-	      }
-
-	      activeDescendants && activeDescendants.reconcile(key, id);
-	    },
-
-	    getChildContext: function getChildContext() {
-	      var _this = this;
-
-	      return this._context || (this._context = {
-	        activeDescendants: {
-	          reconcile: function reconcile(key, id) {
-	            return _this.ariaActiveDescendant(id, key);
-	          }
-	        }
-	      });
-	    }
-	  };
-	};
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 317 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = babelHelpers.interopRequireDefault(_react);
-
-	var _ListOption = __webpack_require__(318);
-
-	var _ListOption2 = babelHelpers.interopRequireDefault(_ListOption);
-
-	var _utilPropTypes = __webpack_require__(307);
-
-	var _utilPropTypes2 = babelHelpers.interopRequireDefault(_utilPropTypes);
-
-	var _utilCompat = __webpack_require__(305);
-
-	var _utilCompat2 = babelHelpers.interopRequireDefault(_utilCompat);
-
-	var _classnames = __webpack_require__(283);
-
-	var _classnames2 = babelHelpers.interopRequireDefault(_classnames);
-
-	var _util_ = __webpack_require__(284);
-
-	var _util_2 = babelHelpers.interopRequireDefault(_util_);
-
-	var _utilDataHelpers = __webpack_require__(313);
-
-	var _utilWidgetHelpers = __webpack_require__(312);
-
-	var _utilInteraction = __webpack_require__(314);
-
-	var optionId = function optionId(id, idx) {
-	  return id + '__option__' + idx;
-	};
-
-	exports['default'] = _react2['default'].createClass({
-
-	  displayName: 'List',
-
-	  mixins: [__webpack_require__(319), __webpack_require__(316)()],
-
-	  propTypes: {
-	    data: _react2['default'].PropTypes.array,
-	    onSelect: _react2['default'].PropTypes.func,
-	    onMove: _react2['default'].PropTypes.func,
-
-	    optionComponent: _utilPropTypes2['default'].elementType,
-	    itemComponent: _utilPropTypes2['default'].elementType,
-
-	    selected: _react2['default'].PropTypes.any,
-	    focused: _react2['default'].PropTypes.any,
-	    valueField: _utilPropTypes2['default'].accessor,
-	    textField: _utilPropTypes2['default'].accessor,
-
-	    disabled: _utilPropTypes2['default'].disabled.acceptsArray,
-	    readOnly: _utilPropTypes2['default'].readOnly.acceptsArray,
-
-	    messages: _react2['default'].PropTypes.shape({
-	      emptyList: _utilPropTypes2['default'].message
-	    })
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      onSelect: function onSelect() {},
-	      optionComponent: _ListOption2['default'],
-	      ariaActiveDescendantKey: 'list',
-	      data: [],
-	      messages: {
-	        emptyList: 'There are no items in this list'
-	      }
+	      focus: false,
+	      selected: false,
+	      id: null,
+	      panelId: null
 	    };
 	  },
 
 	  componentDidMount: function componentDidMount() {
-	    this.move();
+	    syncNodeAttributes((0, _reactDom.findDOMNode)(this), this.props);
 	  },
 
 	  componentDidUpdate: function componentDidUpdate() {
-	    var _props = this.props;
-	    var data = _props.data;
-	    var focused = _props.focused;
-	    var idx = data.indexOf(focused);
-	    var activeId = optionId(_utilWidgetHelpers.instanceId(this), idx);
-
-	    this.ariaActiveDescendant(idx !== -1 ? activeId : null);
-
-	    this.move();
+	    syncNodeAttributes((0, _reactDom.findDOMNode)(this), this.props);
 	  },
 
 	  render: function render() {
-	    var _props2 = this.props;
-	    var className = _props2.className;
-	    var role = _props2.role;
-	    var data = _props2.data;
-	    var textField = _props2.textField;
-	    var valueField = _props2.valueField;
-	    var focused = _props2.focused;
-	    var selected = _props2.selected;
-	    var messages = _props2.messages;
-	    var onSelect = _props2.onSelect;
-	    var ItemComponent = _props2.itemComponent;
-	    var Option = _props2.optionComponent;
-	    var props = babelHelpers.objectWithoutProperties(_props2, ['className', 'role', 'data', 'textField', 'valueField', 'focused', 'selected', 'messages', 'onSelect', 'itemComponent', 'optionComponent']);
-	    var id = _utilWidgetHelpers.instanceId(this);
-	    var items;
-
-	    items = !data.length ? _react2['default'].createElement(
-	      'li',
-	      { className: 'rw-list-empty' },
-	      _util_2['default'].result(messages.emptyList, this.props)
-	    ) : data.map(function (item, idx) {
-	      var currentId = optionId(id, idx),
-	          isDisabled = _utilInteraction.isDisabledItem(item, props),
-	          isReadOnly = _utilInteraction.isReadOnlyItem(item, props);
-
-	      return _react2['default'].createElement(
-	        Option,
-	        {
-	          key: 'item_' + idx,
-	          id: currentId,
-	          dataItem: item,
-	          disabled: isDisabled,
-	          readOnly: isReadOnly,
-	          focused: focused === item,
-	          selected: selected === item,
-	          onClick: isDisabled || isReadOnly ? undefined : onSelect.bind(null, item)
-	        },
-	        ItemComponent ? _react2['default'].createElement(ItemComponent, {
-	          item: item,
-	          value: _utilDataHelpers.dataValue(item, valueField),
-	          text: _utilDataHelpers.dataText(item, textField),
-	          disabled: isDisabled,
-	          readOnly: isReadOnly
-	        }) : _utilDataHelpers.dataText(item, textField)
-	      );
-	    });
-
 	    return _react2['default'].createElement(
-	      'ul',
-	      babelHelpers._extends({
-	        id: id,
-	        tabIndex: '-1',
-	        className: _classnames2['default'](className, 'rw-list'),
-	        role: role === undefined ? 'listbox' : role
-	      }, props),
-	      items
+	      'li',
+	      {
+	        className: (0, _classnames2['default'])('ReactTabs__Tab', this.props.className, {
+	          'ReactTabs__Tab--selected': this.props.selected,
+	          'ReactTabs__Tab--disabled': this.props.disabled
+	        }),
+	        role: 'tab',
+	        id: this.props.id,
+	        'aria-selected': this.props.selected ? 'true' : 'false',
+	        'aria-expanded': this.props.selected ? 'true' : 'false',
+	        'aria-disabled': this.props.disabled ? 'true' : 'false',
+	        'aria-controls': this.props.panelId
+	      },
+	      this.props.children
 	    );
-	  },
-
-	  _data: function _data() {
-	    return this.props.data;
-	  },
-
-	  move: function move() {
-	    var list = _utilCompat2['default'].findDOMNode(this),
-	        idx = this._data().indexOf(this.props.focused),
-	        selected = list.children[idx];
-
-	    if (!selected) return;
-
-	    _utilWidgetHelpers.notify(this.props.onMove, [selected, list, this.props.focused]);
 	  }
-
 	});
-	module.exports = exports['default'];
 
 /***/ },
-/* 318 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _react = __webpack_require__(2);
 
-	var _react2 = babelHelpers.interopRequireDefault(_react);
+	var _react2 = _interopRequireDefault(_react);
 
 	var _classnames = __webpack_require__(283);
 
-	var _classnames2 = babelHelpers.interopRequireDefault(_classnames);
+	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var ListOption = _react2['default'].createClass({
-	  displayName: 'ListOption',
+	module.exports = _react2['default'].createClass({
+	  displayName: 'TabList',
 
 	  propTypes: {
-	    dataItem: _react2['default'].PropTypes.any,
-	    focused: _react2['default'].PropTypes.bool,
-	    selected: _react2['default'].PropTypes.bool,
-	    disabled: _react2['default'].PropTypes.bool,
-	    readOnly: _react2['default'].PropTypes.bool
+	    className: _react.PropTypes.string,
+	    children: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.array])
 	  },
 
 	  render: function render() {
-	    var _props = this.props;
-	    var className = _props.className;
-	    var children = _props.children;
-	    var focused = _props.focused;
-	    var selected = _props.selected;
-	    var disabled = _props.disabled;
-	    var readOnly = _props.readOnly;
-	    var props = babelHelpers.objectWithoutProperties(_props, ['className', 'children', 'focused', 'selected', 'disabled', 'readOnly']);
+	    return _react2['default'].createElement(
+	      'ul',
+	      {
+	        className: (0, _classnames2['default'])('ReactTabs__TabList', this.props.className),
+	        role: 'tablist'
+	      },
+	      this.props.children
+	    );
+	  }
+	});
 
-	    var classes = {
-	      'rw-state-focus': focused,
-	      'rw-state-selected': selected,
-	      'rw-state-disabled': disabled,
-	      'rw-state-readonly': readOnly
+/***/ },
+/* 289 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = {
+	  '.react-tabs [role=tablist]': {
+	    'border-bottom': '1px solid #aaa',
+	    'margin': '0 0 10px',
+	    'padding': '0'
+	  },
+
+	  '.react-tabs [role=tab]': {
+	    'display': 'inline-block',
+	    'border': '1px solid transparent',
+	    'border-bottom': 'none',
+	    'bottom': '-1px',
+	    'position': 'relative',
+	    'list-style': 'none',
+	    'padding': '6px 12px',
+	    'cursor': 'pointer'
+	  },
+
+	  '.react-tabs [role=tab][aria-selected=true]': {
+	    'background': '#fff',
+	    'border-color': '#aaa',
+	    'color': 'black',
+	    'border-radius': '5px 5px 0 0',
+	    '-moz-border-radius': '5px 5px 0 0',
+	    '-webkit-border-radius': '5px 5px 0 0'
+	  },
+
+	  '.react-tabs [role=tab][aria-disabled=true]': {
+	    'color': 'GrayText',
+	    'cursor': 'default'
+	  },
+
+	  '.react-tabs [role=tab]:focus': {
+	    'box-shadow': '0 0 5px hsl(208, 99%, 50%)',
+	    'border-color': 'hsl(208, 99%, 50%)',
+	    'outline': 'none'
+	  },
+
+	  '.react-tabs [role=tab]:focus:after': {
+	    'content': '""',
+	    'position': 'absolute',
+	    'height': '5px',
+	    'left': '-4px',
+	    'right': '-4px',
+	    'bottom': '-5px',
+	    'background': '#fff'
+	  }
+	};
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(283);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	module.exports = _react2['default'].createClass({
+	  displayName: 'TabPanel',
+
+	  propTypes: {
+	    className: _react.PropTypes.string,
+	    selected: _react.PropTypes.bool,
+	    id: _react.PropTypes.string,
+	    tabId: _react.PropTypes.string,
+	    children: _react.PropTypes.oneOfType([_react.PropTypes.array, _react.PropTypes.object, _react.PropTypes.string])
+	  },
+
+	  contextTypes: {
+	    forceRenderTabPanel: _react.PropTypes.bool
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      selected: false,
+	      id: null,
+	      tabId: null
 	    };
+	  },
+
+	  render: function render() {
+	    var children = this.context.forceRenderTabPanel || this.props.selected ? this.props.children : null;
 
 	    return _react2['default'].createElement(
-	      'li',
-	      babelHelpers._extends({
-	        role: 'option',
-	        tabIndex: !(disabled || readOnly) ? '-1' : undefined,
-	        'aria-selected': !!selected,
-	        className: _classnames2['default']('rw-list-option', className, classes)
-	      }, props),
+	      'div',
+	      {
+	        className: (0, _classnames2['default'])('ReactTabs__TabPanel', this.props.className, {
+	          'ReactTabs__TabPanel--selected': this.props.selected
+	        }),
+	        role: 'tabpanel',
+	        id: this.props.id,
+	        'aria-labelledby': this.props.tabId,
+	        style: { display: this.props.selected ? null : 'none' }
+	      },
 	      children
 	    );
 	  }
 	});
 
-	exports['default'] = ListOption;
-	module.exports = exports['default'];
-
 /***/ },
-/* 319 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-
-	var _utilFilter = __webpack_require__(310);
-
-	var _utilFilter2 = babelHelpers.interopRequireDefault(_utilFilter);
-
-	var _utilDataHelpers = __webpack_require__(313);
-
-	var _utilPropTypes = __webpack_require__(307);
-
-	var _utilPropTypes2 = babelHelpers.interopRequireDefault(_utilPropTypes);
-
-	var _utilInteraction = __webpack_require__(314);
-
-	var EMPTY_VALUE = {};
-
-	var isDisabledOrReadonly = function isDisabledOrReadonly(item, props) {
-	  return _utilInteraction.isDisabledItem(item, props) || _utilInteraction.isReadOnlyItem(item, props);
-	};
-
-	exports['default'] = {
-
-	  propTypes: {
-	    textField: _utilPropTypes2['default'].accessor,
-	    valueField: _utilPropTypes2['default'].accessor,
-	    disabled: _utilPropTypes2['default'].disabled.acceptsArray,
-	    readOnly: _utilPropTypes2['default'].readOnly.acceptsArray
-	  },
-
-	  first: function first() {
-	    return this.next(EMPTY_VALUE);
-	  },
-
-	  last: function last() {
-	    var data = this._data(),
-	        item = data[data.length - 1];
-
-	    return isDisabledOrReadonly(item, this.props) ? this.prev(item) : item;
-	  },
-
-	  prev: function prev(item, word) {
-	    var data = this._data(),
-	        nextIdx = data.indexOf(item),
-	        matches = matcher(word, item, this.props.textField);
-
-	    if (nextIdx < 0 || nextIdx == null) nextIdx = 0;
-
-	    nextIdx--;
-
-	    while (nextIdx > -1 && (isDisabledOrReadonly(data[nextIdx], this.props) || !matches(data[nextIdx]))) nextIdx--;
-
-	    return nextIdx >= 0 ? data[nextIdx] : item;
-	  },
-
-	  next: function next(item, word) {
-	    var data = this._data(),
-	        nextIdx = data.indexOf(item) + 1,
-	        len = data.length,
-	        matches = matcher(word, item, this.props.textField);
-
-	    while (nextIdx < len && (isDisabledOrReadonly(data[nextIdx], this.props) || !matches(data[nextIdx]))) nextIdx++;
-
-	    return nextIdx < len ? data[nextIdx] : item;
-	  }
-	};
-
-	function matcher(word, item, textField) {
-	  if (!word) return function () {
-	    return true;
-	  };
-
-	  word = word.toLowerCase();
-	  return function (item) {
-	    return _utilFilter2['default'].startsWith(_utilDataHelpers.dataText(item, textField).toLowerCase(), word);
-	  };
-	}
-	module.exports = exports['default'];
-
-/***/ },
-/* 320 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = babelHelpers.interopRequireDefault(_react);
-
-	var _ListOption = __webpack_require__(318);
-
-	var _ListOption2 = babelHelpers.interopRequireDefault(_ListOption);
-
-	var _utilPropTypes = __webpack_require__(307);
-
-	var _utilPropTypes2 = babelHelpers.interopRequireDefault(_utilPropTypes);
-
-	var _utilCompat = __webpack_require__(305);
-
-	var _utilCompat2 = babelHelpers.interopRequireDefault(_utilCompat);
-
-	var _classnames = __webpack_require__(283);
-
-	var _classnames2 = babelHelpers.interopRequireDefault(_classnames);
-
-	var _util_ = __webpack_require__(284);
-
-	var _util_2 = babelHelpers.interopRequireDefault(_util_);
-
-	var _warning = __webpack_require__(321);
-
-	var _warning2 = babelHelpers.interopRequireDefault(_warning);
-
-	var _utilDataHelpers = __webpack_require__(313);
-
-	var _utilWidgetHelpers = __webpack_require__(312);
-
-	var _utilInteraction = __webpack_require__(314);
-
-	var optionId = function optionId(id, idx) {
-	  return id + '__option__' + idx;
-	};
-
-	exports['default'] = _react2['default'].createClass({
-
-	  displayName: 'List',
-
-	  mixins: [__webpack_require__(319), __webpack_require__(316)()],
-
-	  propTypes: {
-	    data: _react2['default'].PropTypes.array,
-	    onSelect: _react2['default'].PropTypes.func,
-	    onMove: _react2['default'].PropTypes.func,
-
-	    optionComponent: _utilPropTypes2['default'].elementType,
-	    itemComponent: _utilPropTypes2['default'].elementType,
-	    groupComponent: _utilPropTypes2['default'].elementType,
-
-	    selected: _react2['default'].PropTypes.any,
-	    focused: _react2['default'].PropTypes.any,
-
-	    valueField: _utilPropTypes2['default'].accessor,
-	    textField: _utilPropTypes2['default'].accessor,
-
-	    disabled: _utilPropTypes2['default'].disabled.acceptsArray,
-	    readOnly: _utilPropTypes2['default'].readOnly.acceptsArray,
-
-	    groupBy: _utilPropTypes2['default'].accessor,
-
-	    messages: _react2['default'].PropTypes.shape({
-	      emptyList: _utilPropTypes2['default'].message
-	    })
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      onSelect: function onSelect() {},
-	      data: [],
-	      optionComponent: _ListOption2['default'],
-	      ariaActiveDescendantKey: 'groupedList',
-	      messages: {
-	        emptyList: 'There are no items in this list'
-	      }
-	    };
-	  },
-
-	  getInitialState: function getInitialState() {
-	    var keys = [];
-
-	    return {
-	      groups: this._group(this.props.groupBy, this.props.data, keys),
-
-	      sortedKeys: keys
-	    };
-	  },
-
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    var keys = [];
-
-	    if (nextProps.data !== this.props.data || nextProps.groupBy !== this.props.groupBy) this.setState({
-	      groups: this._group(nextProps.groupBy, nextProps.data, keys),
-	      sortedKeys: keys
-	    });
-	  },
-
-	  componentDidMount: function componentDidMount() {
-	    this.move();
-	  },
-
-	  componentDidUpdate: function componentDidUpdate() {
-	    this.ariaActiveDescendant(this._currentActiveID);
-	    this.move();
-	  },
-
-	  render: function render() {
-	    var _this = this;
-
-	    var _props = this.props;
-	    var className = _props.className;
-	    var role = _props.role;
-	    var data = _props.data;
-	    var messages = _props.messages;
-	    var onSelect = _props.onSelect;
-	    var selectedIndex = _props.selectedIndex;
-	    var props = babelHelpers.objectWithoutProperties(_props, ['className', 'role', 'data', 'messages', 'onSelect', 'selectedIndex']);
-	    var id = _utilWidgetHelpers.instanceId(this);var _state = this.state;
-	    var sortedKeys = _state.sortedKeys;
-	    var groups = _state.groups;
-
-	    var items = [],
-	        idx = -1,
-	        group = undefined;
-
-	    this._currentActiveID = null;
-
-	    if (data.length) {
-	      items = sortedKeys.reduce(function (items, key) {
-	        group = groups[key];
-	        items.push(_this._renderGroupHeader(key));
-
-	        for (var itemIdx = 0; itemIdx < group.length; itemIdx++) items.push(_this._renderItem(key, group[itemIdx], ++idx));
-
-	        return items;
-	      }, []);
-	    } else items = _react2['default'].createElement(
-	      'li',
-	      { className: 'rw-list-empty' },
-	      _util_2['default'].result(messages.emptyList, this.props)
-	    );
-
-	    return _react2['default'].createElement(
-	      'ul',
-	      babelHelpers._extends({
-	        ref: 'scrollable',
-	        id: id,
-	        tabIndex: '-1',
-	        className: _classnames2['default'](className, 'rw-list', 'rw-list-grouped'),
-	        role: role === undefined ? 'listbox' : role
-	      }, props),
-	      items
-	    );
-	  },
-
-	  _renderGroupHeader: function _renderGroupHeader(group) {
-	    var GroupComponent = this.props.groupComponent,
-	        id = _utilWidgetHelpers.instanceId(this);
-
-	    return _react2['default'].createElement(
-	      'li',
-	      {
-	        key: 'item_' + group,
-	        tabIndex: '-1',
-	        role: 'separator',
-	        id: id + '_group_' + group,
-	        className: 'rw-list-optgroup'
-	      },
-	      GroupComponent ? _react2['default'].createElement(GroupComponent, { item: group }) : group
-	    );
-	  },
-
-	  _renderItem: function _renderItem(group, item, idx) {
-	    var _props2 = this.props;
-	    var focused = _props2.focused;
-	    var selected = _props2.selected;
-	    var onSelect = _props2.onSelect;
-	    var textField = _props2.textField;
-	    var valueField = _props2.valueField;
-	    var ItemComponent = _props2.itemComponent;
-	    var Option = _props2.optionComponent;
-
-	    var currentID = optionId(_utilWidgetHelpers.instanceId(this), idx),
-	        isDisabled = _utilInteraction.isDisabledItem(item, this.props),
-	        isReadOnly = _utilInteraction.isReadOnlyItem(item, this.props);
-
-	    if (focused === item) this._currentActiveID = currentID;
-
-	    return _react2['default'].createElement(
-	      Option,
-	      {
-	        key: 'item_' + group + '_' + idx,
-	        id: currentID,
-	        dataItem: item,
-	        focused: focused === item,
-	        selected: selected === item,
-	        disabled: isDisabled,
-	        readOnly: isReadOnly,
-	        onClick: isDisabled || isReadOnly ? undefined : onSelect.bind(null, item)
-	      },
-	      ItemComponent ? _react2['default'].createElement(ItemComponent, {
-	        item: item,
-	        value: _utilDataHelpers.dataValue(item, valueField),
-	        text: _utilDataHelpers.dataText(item, textField),
-	        disabled: isDisabled,
-	        readOnly: isReadOnly
-	      }) : _utilDataHelpers.dataText(item, textField)
-	    );
-	  },
-
-	  _isIndexOf: function _isIndexOf(idx, item) {
-	    return this.props.data[idx] === item;
-	  },
-
-	  _group: function _group(groupBy, data, keys) {
-	    var iter = typeof groupBy === 'function' ? groupBy : function (item) {
-	      return item[groupBy];
-	    };
-
-	    // the keys array ensures that groups are rendered in the order they came in
-	    // which means that if you sort the data array it will render sorted,
-	    // so long as you also sorted by group
-	    keys = keys || [];
-
-	    _warning2['default'](typeof groupBy !== 'string' || !data.length || _util_2['default'].has(data[0], groupBy), '[React Widgets] You are seem to be trying to group this list by a ' + ('property `' + groupBy + '` that doesn\'t exist in the dataset items, this may be a typo'));
-
-	    return data.reduce(function (grps, item) {
-	      var group = iter(item);
-
-	      _util_2['default'].has(grps, group) ? grps[group].push(item) : (keys.push(group), grps[group] = [item]);
-
-	      return grps;
-	    }, {});
-	  },
-
-	  _data: function _data() {
-	    var groups = this.state.groups;
-
-	    return this.state.sortedKeys.reduce(function (flat, grp) {
-	      return flat.concat(groups[grp]);
-	    }, []);
-	  },
-
-	  move: function move() {
-	    var selected = this.getItemDOMNode(this.props.focused);
-
-	    if (!selected) return;
-
-	    _utilWidgetHelpers.notify(this.props.onMove, [selected, _utilCompat2['default'].findDOMNode(this), this.props.focused]);
-	  },
-
-	  getItemDOMNode: function getItemDOMNode(item) {
-	    var list = _utilCompat2['default'].findDOMNode(this),
-	        groups = this.state.groups,
-	        idx = -1,
-	        itemIdx,
-	        child;
-
-	    this.state.sortedKeys.some(function (group) {
-	      itemIdx = groups[group].indexOf(item);
-	      idx++;
-
-	      if (itemIdx !== -1) return !!(child = list.children[idx + itemIdx + 1]);
-
-	      idx += groups[group].length;
-	    });
-
-	    return child;
-	  }
-
-	});
-	module.exports = exports['default'];
-
-/***/ },
-/* 321 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
-
-	'use strict';
-
-	/**
-	 * Similar to invariant but only logs a warning if the condition is not met.
-	 * This can be used to log issues in development environments in critical
-	 * paths. Removing the logging code for production environments will keep the
-	 * same logic and follow the same code paths.
-	 */
-
-	var warning = function() {};
-
-	if (process.env.NODE_ENV !== 'production') {
-	  warning = function(condition, format, args) {
-	    var len = arguments.length;
-	    args = new Array(len > 2 ? len - 2 : 0);
-	    for (var key = 2; key < len; key++) {
-	      args[key - 2] = arguments[key];
-	    }
-	    if (format === undefined) {
-	      throw new Error(
-	        '`warning(condition, format, ...args)` requires a warning ' +
-	        'message argument'
-	      );
-	    }
-
-	    if (format.length < 10 || (/^[s\W]*$/).test(format)) {
-	      throw new Error(
-	        'The warning format should be able to uniquely identify this ' +
-	        'warning. Please, use a more descriptive format than: ' + format
-	      );
-	    }
-
-	    if (!condition) {
-	      var argIndex = 0;
-	      var message = 'Warning: ' +
-	        format.replace(/%s/g, function() {
-	          return args[argIndex++];
-	        });
-	      if (typeof console !== 'undefined') {
-	        console.error(message);
-	      }
-	      try {
-	        // This error was thrown as a convenience so that you can use this stack
-	        // to find the callsite that caused this warning to fire.
-	        throw new Error(message);
-	      } catch(x) {}
-	    }
-	  };
-	}
-
-	module.exports = warning;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-/* 322 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-	exports['default'] = validateListComponent;
-
-	var _invariant = __webpack_require__(309);
-
-	var _invariant2 = babelHelpers.interopRequireDefault(_invariant);
-
-	var METHODS = ['next', 'prev', 'first', 'last'];
-
-	function validateListComponent(list) {
-	  if (process.env.NODE_ENV !== 'production') {
-	    METHODS.forEach(function (method) {
-	      return _invariant2['default'](typeof list[method] === 'function', 'List components must implement a `' + method + '()` method');
-	    });
-	  }
-	}
-
-	module.exports = exports['default'];
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-/* 323 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _createUncontrollable = __webpack_require__(324);
-
-	var _createUncontrollable2 = _interopRequireDefault(_createUncontrollable);
-
-	var mixin = {
-	  shouldComponentUpdate: function shouldComponentUpdate() {
-	    //let the forceUpdate trigger the update
-	    return !this._notifying;
-	  }
-	};
-
-	function set(component, propName, handler, value, args) {
-	  if (handler) {
-	    component._notifying = true;
-	    handler.call.apply(handler, [component, value].concat(args));
-	    component._notifying = false;
-	  }
-
-	  component._values[propName] = value;
-
-	  if (component.isMounted()) component.forceUpdate();
-	}
-
-	exports['default'] = _createUncontrollable2['default']([mixin], set);
-	module.exports = exports['default'];
-
-/***/ },
-/* 324 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	exports['default'] = createUncontrollable;
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _utils = __webpack_require__(325);
-
-	var utils = _interopRequireWildcard(_utils);
-
-	function createUncontrollable(mixins, set) {
-
-	  return uncontrollable;
-
-	  function uncontrollable(Component, controlledValues) {
-	    var methods = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
-
-	    var displayName = Component.displayName || Component.name || 'Component',
-	        basePropTypes = utils.getType(Component).propTypes,
-	        propTypes;
-
-	    propTypes = utils.uncontrolledPropTypes(controlledValues, basePropTypes, displayName);
-
-	    methods = utils.transform(methods, function (obj, method) {
-	      obj[method] = function () {
-	        var _refs$inner;
-
-	        return (_refs$inner = this.refs.inner)[method].apply(_refs$inner, arguments);
-	      };
-	    }, {});
-
-	    var component = _react2['default'].createClass(_extends({
-
-	      displayName: 'Uncontrolled(' + displayName + ')',
-
-	      mixins: mixins,
-
-	      propTypes: propTypes
-
-	    }, methods, {
-
-	      componentWillMount: function componentWillMount() {
-	        var props = this.props,
-	            keys = Object.keys(controlledValues);
-
-	        this._values = utils.transform(keys, function (values, key) {
-	          values[key] = props[utils.defaultKey(key)];
-	        }, {});
-	      },
-
-	      /**
-	       * If a prop switches from controlled to Uncontrolled
-	       * reset its value to the defaultValue
-	       */
-	      componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	        var _this = this;
-
-	        var props = this.props,
-	            keys = Object.keys(controlledValues);
-
-	        keys.forEach(function (key) {
-	          if (utils.getValue(nextProps, key) === undefined && utils.getValue(props, key) !== undefined) {
-	            _this._values[key] = nextProps[utils.defaultKey(key)];
-	          }
-	        });
-	      },
-
-	      render: function render() {
-	        var _this2 = this;
-
-	        var newProps = {};
-	        var _props = this.props;
-	        var valueLink = _props.valueLink;
-	        var checkedLink = _props.checkedLink;
-
-	        var props = _objectWithoutProperties(_props, ['valueLink', 'checkedLink']);
-
-	        utils.each(controlledValues, function (handle, propName) {
-	          var linkPropName = utils.getLinkName(propName),
-	              prop = _this2.props[propName];
-
-	          if (linkPropName && !isProp(_this2.props, propName) && isProp(_this2.props, linkPropName)) {
-	            prop = _this2.props[linkPropName].value;
-	          }
-
-	          newProps[propName] = prop !== undefined ? prop : _this2._values[propName];
-
-	          newProps[handle] = setAndNotify.bind(_this2, propName);
-	        });
-
-	        newProps = _extends({}, props, newProps, { ref: 'inner' });
-
-	        return _react2['default'].createElement(Component, newProps);
-	      }
-
-	    }));
-
-	    component.ControlledComponent = Component;
-
-	    /**
-	     * useful when wrapping a Component and you want to control
-	     * everything
-	     */
-	    component.deferControlTo = function (newComponent, additions, nextMethods) {
-	      if (additions === undefined) additions = {};
-
-	      return uncontrollable(newComponent, _extends({}, controlledValues, additions), nextMethods);
-	    };
-
-	    return component;
-
-	    function setAndNotify(propName, value) {
-	      var linkName = utils.getLinkName(propName),
-	          handler = this.props[controlledValues[propName]];
-
-	      if (linkName && isProp(this.props, linkName) && !handler) {
-	        handler = this.props[linkName].requestChange;
-	      }
-
-	      for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-	        args[_key - 2] = arguments[_key];
-	      }
-
-	      set(this, propName, handler, value, args);
-	    }
-
-	    function isProp(props, prop) {
-	      return props[prop] !== undefined;
-	    }
-	  }
-	}
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 325 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-
-	exports.__esModule = true;
-	exports.customPropType = customPropType;
-	exports.uncontrolledPropTypes = uncontrolledPropTypes;
-	exports.getType = getType;
-	exports.getValue = getValue;
-	exports.getLinkName = getLinkName;
-	exports.defaultKey = defaultKey;
-	exports.chain = chain;
-	exports.transform = transform;
-	exports.each = each;
-	exports.has = has;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _invariant = __webpack_require__(309);
-
-	var _invariant2 = _interopRequireDefault(_invariant);
-
-	function customPropType(handler, propType, name) {
-
-	  return function (props, propName) {
-
-	    if (props[propName] !== undefined) {
-	      if (!props[handler]) {
-	        return new Error('You have provided a `' + propName + '` prop to ' + '`' + name + '` without an `' + handler + '` handler. This will render a read-only field. ' + 'If the field should be mutable use `' + defaultKey(propName) + '`. Otherwise, set `' + handler + '`');
-	      }
-
-	      return propType && propType(props, propName, name);
-	    }
-	  };
-	}
-
-	function uncontrolledPropTypes(controlledValues, basePropTypes, displayName) {
-	  var propTypes = {};
-
-	  if (process.env.NODE_ENV !== 'production' && basePropTypes) {
-	    transform(controlledValues, function (obj, handler, prop) {
-	      var type = basePropTypes[prop];
-
-	      _invariant2['default'](typeof handler === 'string' && handler.trim().length, 'Uncontrollable - [%s]: the prop `%s` needs a valid handler key name in order to make it uncontrollable', displayName, prop);
-
-	      obj[prop] = customPropType(handler, type, displayName);
-
-	      if (type !== undefined) obj[defaultKey(prop)] = type;
-	    }, propTypes);
-	  }
-
-	  return propTypes;
-	}
-
-	var version = _react2['default'].version.split('.').map(parseFloat);
-
-	exports.version = version;
-
-	function getType(component) {
-	  if (version[0] === 0 && version[1] >= 13) return component;
-
-	  return component.type;
-	}
-
-	function getValue(props, name) {
-	  var linkPropName = getLinkName(name);
-
-	  if (linkPropName && !isProp(props, name) && isProp(props, linkPropName)) return props[linkPropName].value;
-
-	  return props[name];
-	}
-
-	function isProp(props, prop) {
-	  return props[prop] !== undefined;
-	}
-
-	function getLinkName(name) {
-	  return name === 'value' ? 'valueLink' : name === 'checked' ? 'checkedLink' : null;
-	}
-
-	function defaultKey(key) {
-	  return 'default' + key.charAt(0).toUpperCase() + key.substr(1);
-	}
-
-	function chain(thisArg, a, b) {
-	  return function chainedFunction() {
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    a && a.call.apply(a, [thisArg].concat(args));
-	    b && b.call.apply(b, [thisArg].concat(args));
-	  };
-	}
-
-	function transform(obj, cb, seed) {
-	  each(obj, cb.bind(null, seed = seed || (Array.isArray(obj) ? [] : {})));
-	  return seed;
-	}
-
-	function each(obj, cb, thisArg) {
-	  if (Array.isArray(obj)) return obj.forEach(cb, thisArg);
-
-	  for (var key in obj) if (has(obj, key)) cb.call(thisArg, obj[key], key, obj);
-	}
-
-	function has(o, k) {
-	  return o ? Object.prototype.hasOwnProperty.call(o, k) : false;
-	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-/* 326 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _require = __webpack_require__(284);
-
-	var has = _require.has;
-
-	module.exports = {
-
-	  componentWillUnmount: function componentWillUnmount() {
-	    var timers = this._timers || {};
-
-	    this._unmounted = true;
-
-	    for (var k in timers) if (has(timers, k)) clearTimeout(timers[k]);
-	  },
-
-	  setTimeout: function setTimeout(key, cb, duration) {
-	    var _this = this;
-
-	    var timers = this._timers || (this._timers = Object.create(null));
-
-	    if (this._unmounted) return;
-
-	    clearTimeout(timers[key]);
-	    timers[key] = window.setTimeout(function () {
-	      if (!_this._unmounted) cb();
-	    }, duration);
-	  }
-	};
-
-/***/ },
-/* 327 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = babelHelpers.interopRequireDefault(_react);
-
-	var _utilFilter = __webpack_require__(310);
-
-	var _utilFilter2 = babelHelpers.interopRequireDefault(_utilFilter);
-
-	var _utilPropTypes = __webpack_require__(307);
-
-	var _utilPropTypes2 = babelHelpers.interopRequireDefault(_utilPropTypes);
-
-	var _utilDataHelpers = __webpack_require__(313);
-
-	var dflt = function dflt(f) {
-	  return f === true ? 'startsWith' : f ? f : 'eq';
-	};
-
-	module.exports = {
-
-	  propTypes: {
-	    data: _react2['default'].PropTypes.array,
-	    value: _react2['default'].PropTypes.any,
-	    filter: _utilPropTypes2['default'].filter,
-	    caseSensitive: _react2['default'].PropTypes.bool,
-	    minLength: _react2['default'].PropTypes.number
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      caseSensitive: false,
-	      minLength: 1
-	    };
-	  },
-
-	  filterIndexOf: function filterIndexOf(items, searchTerm) {
-	    var idx = -1,
-	        matches = typeof this.props.filter === 'function' ? this.props.filter : getFilter(_utilFilter2['default'][dflt(this.props.filter)], searchTerm, this);
-
-	    if (!searchTerm || !searchTerm.trim() || this.props.filter && searchTerm.length < (this.props.minLength || 1)) return -1;
-
-	    items.every(function (item, i) {
-	      if (matches(item, searchTerm, i)) return idx = i, false;
-
-	      return true;
-	    });
-
-	    return idx;
-	  },
-
-	  filter: function filter(items, searchTerm) {
-	    var matches = typeof this.props.filter === 'string' ? getFilter(_utilFilter2['default'][this.props.filter], searchTerm, this) : this.props.filter;
-
-	    if (!matches || !searchTerm || !searchTerm.trim() || searchTerm.length < (this.props.minLength || 1)) return items;
-
-	    return items.filter(function (item, idx) {
-	      return matches(item, searchTerm, idx);
-	    });
-	  }
-	};
-
-	function getFilter(matcher, searchTerm, ctx) {
-	  searchTerm = !ctx.props.caseSensitive ? searchTerm.toLowerCase() : searchTerm;
-
-	  return function (item) {
-	    var val = _utilDataHelpers.dataText(item, ctx.props.textField);
-
-	    if (!ctx.props.caseSensitive) val = val.toLowerCase();
-
-	    return matcher(val, searchTerm);
-	  };
-	}
-
-/***/ },
-/* 328 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var babelHelpers = __webpack_require__(282);
-
-	exports.__esModule = true;
-
-	var _domHelpersUtilScrollTo = __webpack_require__(329);
-
-	var _domHelpersUtilScrollTo2 = babelHelpers.interopRequireDefault(_domHelpersUtilScrollTo);
-
-	exports['default'] = {
-
-	  _scrollTo: function _scrollTo(selected, list, focused) {
-	    var state = this._scrollState || (this._scrollState = {}),
-	        handler = this.props.onMove,
-	        lastVisible = state.visible,
-	        lastItem = state.focused,
-	        shown,
-	        changed;
-
-	    state.visible = !(!list.offsetWidth || !list.offsetHeight);
-	    state.focused = focused;
-
-	    changed = lastItem !== focused;
-	    shown = state.visible && !lastVisible;
-
-	    if (shown || state.visible && changed) {
-	      if (handler) handler(selected, list, focused);else {
-	        state.scrollCancel && state.scrollCancel();
-	        state.scrollCancel = _domHelpersUtilScrollTo2['default'](selected, list);
-	      }
-	    }
-	  }
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 329 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var getOffset = __webpack_require__(295),
-	    height = __webpack_require__(294),
-	    getScrollParent = __webpack_require__(330),
-	    scrollTop = __webpack_require__(331),
-	    raf = __webpack_require__(332),
-	    getWindow = __webpack_require__(298);
-
-	module.exports = function scrollTo(selected, scrollParent) {
-	    var offset = getOffset(selected),
-	        poff = { top: 0, left: 0 },
-	        list,
-	        listScrollTop,
-	        selectedTop,
-	        isWin,
-	        selectedHeight,
-	        listHeight,
-	        bottom;
-
-	    if (!selected) return;
-
-	    list = scrollParent || getScrollParent(selected);
-	    isWin = getWindow(list);
-	    listScrollTop = scrollTop(list);
-
-	    listHeight = height(list, true);
-	    isWin = getWindow(list);
-
-	    if (!isWin) poff = getOffset(list);
-
-	    offset = {
-	        top: offset.top - poff.top,
-	        left: offset.left - poff.left,
-	        height: offset.height,
-	        width: offset.width
-	    };
-
-	    selectedHeight = offset.height;
-	    selectedTop = offset.top + (isWin ? 0 : listScrollTop);
-	    bottom = selectedTop + selectedHeight;
-
-	    listScrollTop = listScrollTop > selectedTop ? selectedTop : bottom > listScrollTop + listHeight ? bottom - listHeight : listScrollTop;
-
-	    var id = raf(function () {
-	        return scrollTop(list, listScrollTop);
-	    });
-
-	    return function () {
-	        return raf.cancel(id);
-	    };
-	};
-
-/***/ },
-/* 330 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var css = __webpack_require__(286),
-	    height = __webpack_require__(294);
-
-	module.exports = function scrollPrarent(node) {
-	  var position = css(node, 'position'),
-	      excludeStatic = position === 'absolute',
-	      ownerDoc = node.ownerDocument;
-
-	  if (position === 'fixed') return ownerDoc || document;
-
-	  while ((node = node.parentNode) && node.nodeType !== 9) {
-
-	    var isStatic = excludeStatic && css(node, 'position') === 'static',
-	        style = css(node, 'overflow') + css(node, 'overflow-y') + css(node, 'overflow-x');
-
-	    if (isStatic) continue;
-
-	    if (/(auto|scroll)/.test(style) && height(node) < node.scrollHeight) return node;
-	  }
-
-	  return document;
-	};
-
-/***/ },
-/* 331 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var getWindow = __webpack_require__(298);
-
-	module.exports = function scrollTop(node, val) {
-	  var win = getWindow(node);
-
-	  if (val === undefined) return win ? 'pageYOffset' in win ? win.pageYOffset : win.document.documentElement.scrollTop : node.scrollTop;
-
-	  if (win) win.scrollTo('pageXOffset' in win ? win.pageXOffset : win.document.documentElement.scrollLeft, val);else node.scrollTop = val;
-	};
-
-/***/ },
-/* 332 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var canUseDOM = __webpack_require__(297);
-
-	var vendors = ['', 'webkit', 'moz', 'o', 'ms'],
-	    cancel = 'clearTimeout',
-	    raf = fallback,
-	    compatRaf;
-
-	var getKey = function getKey(vendor, k) {
-	  return vendor + (!vendor ? k : k[0].toUpperCase() + k.substr(1)) + 'AnimationFrame';
-	};
-
-	if (canUseDOM) {
-	  vendors.some(function (vendor) {
-	    var rafKey = getKey(vendor, 'request');
-
-	    if (rafKey in window) {
-	      cancel = getKey(vendor, 'cancel');
-	      return raf = function (cb) {
-	        return window[rafKey](cb);
-	      };
-	    }
-	  });
-	}
-
-	/* https://github.com/component/raf */
-	var prev = new Date().getTime();
-
-	function fallback(fn) {
-	  var curr = new Date().getTime(),
-	      ms = Math.max(0, 16 - (curr - prev)),
-	      req = setTimeout(fn, ms);
-
-	  prev = curr;
-	  return req;
-	}
-
-	compatRaf = function (cb) {
-	  return raf(cb);
-	};
-	compatRaf.cancel = function (id) {
-	  return window[cancel](id);
-	};
-
-	module.exports = compatRaf;
-
-/***/ },
-/* 333 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var React = __webpack_require__(2);
-
-	module.exports = {
-
-	  propTypes: {
-	    isRtl: React.PropTypes.bool
-	  },
-
-	  contextTypes: {
-	    isRtl: React.PropTypes.bool
-	  },
-
-	  childContextTypes: {
-	    isRtl: React.PropTypes.bool
-	  },
-
-	  getChildContext: function getChildContext() {
-	    return {
-	      isRtl: this.props.isRtl || this.context && this.context.isRtl
-	    };
-	  },
-
-	  isRtl: function isRtl() {
-	    return !!(this.props.isRtl || this.context && this.context.isRtl);
-	  }
-
-	};
-
-/***/ },
-/* 334 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38683,6 +35421,8 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -38719,59 +35459,47 @@
 	    }
 
 	    _createClass(TablaLocalesMensual, [{
-	        key: 'alertar',
-	        value: function alertar(obj) {
-	            console.log(obj);
-	        }
-	    }, {
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            // cuando se recibe una nueva propiedad, se verifica si los locales agregados
-	            // han cambiando, esto ocurre cuando se hace click en "agregar locales"
-	            var hanCambiado = this.props.localesAgregados !== nextProps.localesAgregados;
-	            if (hanCambiado) {
-	                this.actualizarLocales(nextProps.localesAgregados);
-	            }
-	        }
-	    }, {
-	        key: 'actualizarLocales',
-	        value: function actualizarLocales(localesAgregados) {
-	            var _this2 = this;
+	        key: 'agregarLocal',
+	        value: function agregarLocal(nuevoLocal, mesAnno) {
+	            var _mesAnno$split = mesAnno.split('-');
 
-	            // de la lista de locales, obtener solo los nuevos (que no estan en state.locales)
-	            var localesNuevos = localesAgregados.filter(function (localAgregado) {
-	                // si no esta en la lista, entrega undefined
-	                var esNuevo = _this2.state.locales.find(function (local) {
-	                    return local.idLocal === localAgregado.idLocal;
-	                }) === undefined;
-	                return esNuevo;
-	            });
-	            if (localesNuevos.length === 0) return;
+	            var _mesAnno$split2 = _slicedToArray(_mesAnno$split, 2);
 
-	            // por cada nuevo local, se debe pedir la informacion completa y ser agregado en la lista de localesPorInventariar
+	            var mes = _mesAnno$split2[0];
+	            var anno = _mesAnno$split2[1];
+
 	            var locales = this.state.locales;
-	            localesNuevos.forEach(function (nuevoLocal) {
-	                //ToDO: pedir todos los datos por json
-	                _this2.obtenerDatosLocal(nuevoLocal.idLocal);
-	                locales.push(nuevoLocal);
-	            });
 
-	            //console.log("locales nuevos: ", localesNuevos)
-	            this.setState({
-	                locales: locales
-	            });
+	            var localNoExiste = this.state.locales.find(function (local) {
+	                return local.idLocal === nuevoLocal.idLocal;
+	            }) === undefined;
+	            if (localNoExiste) {
+	                // buscar asincronicamente la informacion completa al servidor
+	                this.obtenerDatosLocal(nuevoLocal.idLocal);
+	                nuevoLocal.mesProgramado = mes;
+	                nuevoLocal.annoProgramado = anno;
+
+	                // actualizar la lista de locales
+	                locales.push(nuevoLocal);
+	                // actualizar la lista con los nuevos
+	                this.setState({
+	                    locales: locales
+	                });
+	            }
+	            return localNoExiste;
 	        }
 	    }, {
 	        key: 'obtenerDatosLocal',
 	        value: function obtenerDatosLocal(idLocal) {
-	            var _this3 = this;
+	            var _this2 = this;
 
 	            _v2.default.locales.getVerbose(idLocal).then(function (informacionLocal) {
-	                console.log(informacionLocal);
-	                _this3.setState({
+	                _this2.setState({
 	                    // actualizar los datos de la lista con la informacion obtenida por el api
-	                    locales: _this3.state.locales.map(function (local) {
-	                        if (local.idLocal === informacionLocal.idLocal) return informacionLocal;else return local;
+	                    locales: _this2.state.locales.map(function (local) {
+	                        if (local.idLocal === informacionLocal.idLocal)
+	                            // mezclar los objetos
+	                            return Object.assign(local, informacionLocal);else return local;
 	                    })
 	                });
 	            }).catch(function (error) {
@@ -38808,7 +35536,22 @@
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
+	                            'CECO'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
 	                            'Local'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'Zona SEI'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'Región'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
@@ -38857,42 +35600,10 @@
 	                            ),
 	                            _react2.default.createElement(
 	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
-	                                _react2.default.createElement(
-	                                    'div',
-	                                    null,
-	                                    _react2.default.createElement(
-	                                        'p',
-	                                        { style: { width: '50px', margin: '0 0 2px 0', display: "inline-block" } },
-	                                        'Dia'
-	                                    ),
-	                                    _react2.default.createElement(
-	                                        'p',
-	                                        { style: { width: '50px', margin: '0 0 2px 0', display: "inline-block" } },
-	                                        'Mes'
-	                                    ),
-	                                    _react2.default.createElement(
-	                                        'p',
-	                                        { style: { width: '70px', margin: '0 0 2px 0', display: "inline-block" } },
-	                                        'Año'
-	                                    )
-	                                ),
-	                                _react2.default.createElement(
-	                                    'div',
-	                                    null,
-	                                    _react2.default.createElement('input', { style: { width: '50px', marginRight: '2px' }, type: 'number' }),
-	                                    _react2.default.createElement('input', { style: { width: '50px', marginRight: '2px' }, type: 'number', defaultValue: '2', disabled: true }),
-	                                    _react2.default.createElement('input', { style: { width: '70px', marginRight: '2px' }, type: 'number', defaultValue: '2016', disabled: true })
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
-	                                _react2.default.createElement(
-	                                    'p',
-	                                    null,
-	                                    local.cliente ? local.cliente.nombre : '...'
-	                                )
+	                                { style: { verticalAlign: 'middle', minWidth: '162px' } },
+	                                _react2.default.createElement('input', { style: { width: '50px', marginRight: '2px' }, type: 'number' }),
+	                                _react2.default.createElement('input', { style: { width: '40px', marginRight: '2px' }, type: 'number', defaultValue: local.mesProgramado, disabled: true }),
+	                                _react2.default.createElement('input', { style: { width: '55px', marginRight: '2px' }, type: 'number', defaultValue: local.annoProgramado, disabled: true })
 	                            ),
 	                            _react2.default.createElement(
 	                                'td',
@@ -38901,9 +35612,43 @@
 	                                    'p',
 	                                    null,
 	                                    _react2.default.createElement(
-	                                        'b',
+	                                        'small',
 	                                        null,
-	                                        local.nombre ? local.nombre : '...'
+	                                        local.cliente ? local.cliente.nombre : '...'
+	                                    )
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'td',
+	                                { style: { verticalAlign: 'middle' } },
+	                                _react2.default.createElement(
+	                                    'p',
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        'small',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'b',
+	                                            null,
+	                                            local.numero ? local.numero : '...'
+	                                        )
+	                                    )
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'td',
+	                                { style: { verticalAlign: 'middle' } },
+	                                _react2.default.createElement(
+	                                    'p',
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        'small',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'b',
+	                                            null,
+	                                            local.nombre ? local.nombre : '...'
+	                                        )
 	                                    )
 	                                )
 	                            ),
@@ -38918,41 +35663,69 @@
 	                                        null,
 	                                        zona.nombre ? zona.nombre : '...'
 	                                    )
-	                                ),
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'td',
+	                                { style: { verticalAlign: 'middle' } },
 	                                _react2.default.createElement(
 	                                    'p',
 	                                    { style: { margin: 0 } },
 	                                    _react2.default.createElement(
 	                                        'small',
 	                                        null,
-	                                        region.nombre ? region.nombre : '...'
-	                                    )
-	                                ),
-	                                _react2.default.createElement(
-	                                    'p',
-	                                    { style: { margin: 0 } },
-	                                    _react2.default.createElement(
-	                                        'b',
-	                                        null,
-	                                        comuna.nombre ? comuna.nombre : '...'
+	                                        region.nombreCorto ? region.nombreCorto : '...'
 	                                    )
 	                                )
 	                            ),
 	                            _react2.default.createElement(
 	                                'td',
 	                                { style: { verticalAlign: 'middle' } },
-	                                local.stock ? local.stock : '...'
+	                                _react2.default.createElement(
+	                                    'p',
+	                                    { style: { margin: 0 } },
+	                                    _react2.default.createElement(
+	                                        'b',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'small',
+	                                            null,
+	                                            comuna.nombre ? comuna.nombre : '...'
+	                                        )
+	                                    )
+	                                )
 	                            ),
 	                            _react2.default.createElement(
 	                                'td',
 	                                { style: { verticalAlign: 'middle' } },
-	                                _react2.default.createElement('input', { style: { width: '50px', margin: '0 0 2px 0' }, type: 'number', defaultValue: '99', disabled: true }),
-	                                _react2.default.createElement('input', { style: { width: '50px', margin: '0 0 2px 0' }, type: 'number' })
+	                                _react2.default.createElement(
+	                                    'p',
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        'small',
+	                                        null,
+	                                        local.stock ? local.stock : '...'
+	                                    )
+	                                )
 	                            ),
 	                            _react2.default.createElement(
 	                                'td',
 	                                { style: { verticalAlign: 'middle' } },
-	                                local.jornada ? local.jornada.nombre : '(...jornada)'
+	                                _react2.default.createElement('input', { style: { width: '30px', margin: '0 0 2px 0' }, type: 'text', defaultValue: '99', disabled: true }),
+	                                _react2.default.createElement('input', { style: { width: '45px', margin: '0 0 2px 0' }, type: 'number' })
+	                            ),
+	                            _react2.default.createElement(
+	                                'td',
+	                                { style: { verticalAlign: 'middle' } },
+	                                _react2.default.createElement(
+	                                    'p',
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        'small',
+	                                        null,
+	                                        local.jornada ? local.jornada.nombre : '(...jornada)'
+	                                    )
+	                                )
 	                            ),
 	                            _react2.default.createElement(
 	                                'td',
@@ -38979,11 +35752,527 @@
 	}(_react2.default.Component);
 
 	TablaLocalesMensual.protoTypes = {
-	    localesAgregados: PropTypes.array.required
+	    //localesAgregados: PropTypes.array.required
 	};
 	exports.default = TablaLocalesMensual;
 
+	//separar zona
+	//region (solo el numero) => agregar el numero en la BD
+	//ciudad
+	//
+	//agregar el boton confirmar
+
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TablaLocalesMensual.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Libs
+
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var AgregarManualmente = function (_React$Component) {
+	    _inherits(AgregarManualmente, _React$Component);
+
+	    function AgregarManualmente(props) {
+	        _classCallCheck(this, AgregarManualmente);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AgregarManualmente).call(this, props));
+
+	        _this.state = {
+	            inputIdCliente_error: '',
+	            inputNumeroLocal_error: '',
+	            locales: []
+	        };
+	        _this.inputIdClienteChanged = _this.inputIdClienteChanged.bind(_this);
+	        _this.inputNumeroLocalChanged = _this.inputNumeroLocalChanged.bind(_this);
+	        _this.submitAgregarLocal = _this.submitAgregarLocal.bind(_this);
+	        return _this;
+	    }
+	    /**
+	     * Cambio en los campos del formulario
+	     */
+
+
+	    _createClass(AgregarManualmente, [{
+	        key: 'inputIdClienteChanged',
+	        value: function inputIdClienteChanged(event) {
+	            // al seleccionar un cliente, se deben cargar los locales el el <select> de clientes
+	            var idClienteSeleccionado = event.target.value;
+
+	            // buscamos el cliente seleccionado
+	            var selectedClient = this.props.clientes.find(function (cliente) {
+	                return cliente.idCliente == idClienteSeleccionado;
+	            });
+
+	            // lo marcados como seleccionado y mostramos la lista de locales
+	            this.setState({
+	                locales: selectedClient ? selectedClient.locales : [], // mostrar la lista de locales que tiene el cliente seleccionado
+	                inputIdCliente_error: '',
+	                inputNumeroLocal_error: '',
+	                // Todo: limpiar el campo de locales
+	                inputNumeroLocal: ''
+	            });
+	        }
+	    }, {
+	        key: 'inputNumeroLocalChanged',
+	        value: function inputNumeroLocalChanged(event) {
+	            this.setState({
+	                inputNumeroLocal_error: ''
+	            });
+	        }
+	        /**
+	         * Form Submit
+	         */
+
+	    }, {
+	        key: 'submitAgregarLocal',
+	        value: function submitAgregarLocal(evt) {
+	            evt.preventDefault();
+
+	            // ToDo: validar que exista un cliente seleccionado
+	            if (this.inputIdCliente.value === "-1") {
+	                this.setState({
+	                    inputIdCliente_error: 'Seleccione un Cliente de la lista'
+	                });
+	            }
+
+	            // validar que el local exista
+	            var numeroLocal = this.inputNumeroLocal.value;
+	            var local = this.state.locales.find(function (local) {
+	                return local.numero == numeroLocal;
+	            });
+	            if (local === undefined) {
+	                this.setState({
+	                    inputNumeroLocal_error: numeroLocal === '' ? 'Ingrese un numero de local' : 'El local \'' + numeroLocal + '\' no existe'
+	                });
+	                this.inputNumeroLocal.value = '';
+	                return;
+	            }
+
+	            // limpiar el formulario
+	            var localCreado = this.props.onFormSubmit(local, this.inputMesAnno.value);
+	            this.setState({
+	                inputNumeroLocal_error: localCreado ? '' : 'El local ' + numeroLocal + ' ya ha sido agendado'
+	            });
+	            this.inputNumeroLocal.value = '';
+
+	            console.log("FORMULARIO ENVIADO");
+	            console.log("cliente ", this.inputIdCliente.value, "  ", this.props.clientes[this.inputIdCliente.value - 1].nombre);
+	            console.log(local);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            return _react2.default.createElement(
+	                'form',
+	                { className: 'form', onSubmit: this.submitAgregarLocal },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'row' },
+	                    _react2.default.createElement(
+	                        'h4',
+	                        { className: 'page-header', style: { marginTop: '1em' } },
+	                        'Agregar locales a la programación:'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'row' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-sm-2 form-group ' + (this.state.inputIdCliente_error !== '' ? 'has-error' : '') },
+	                        _react2.default.createElement(
+	                            'label',
+	                            { className: 'control-label', htmlFor: 'cliente' },
+	                            'Cliente'
+	                        ),
+	                        _react2.default.createElement(
+	                            'select',
+	                            { className: 'form-control', name: 'cliente', defaultValue: '-1', ref: function ref(_ref) {
+	                                    return _this2.inputIdCliente = _ref;
+	                                }, onChange: this.inputIdClienteChanged },
+	                            _react2.default.createElement(
+	                                'option',
+	                                { value: '-1', disabled: true },
+	                                '--'
+	                            ),
+	                            this.props.clientes.map(function (cliente, index) {
+	                                return _react2.default.createElement(
+	                                    'option',
+	                                    { key: index, value: cliente.idCliente },
+	                                    ' ',
+	                                    cliente.nombreCorto,
+	                                    ' - ',
+	                                    cliente.nombre
+	                                );
+	                            })
+	                        ),
+	                        _react2.default.createElement(
+	                            'span',
+	                            { className: 'help-block' },
+	                            this.state.inputIdCliente_error
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-sm-2 form-group' },
+	                        _react2.default.createElement(
+	                            'label',
+	                            { className: 'control-label', htmlFor: 'fechaProgramada' },
+	                            'Mes'
+	                        ),
+	                        _react2.default.createElement(
+	                            'select',
+	                            { className: 'form-control', name: 'fechaProgramada', ref: function ref(_ref2) {
+	                                    return _this2.inputMesAnno = _ref2;
+	                                } },
+	                            this.props.meses.map(function (mes, i) {
+	                                return _react2.default.createElement(
+	                                    'option',
+	                                    { key: i, value: mes.valor },
+	                                    mes.texto
+	                                );
+	                            })
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-sm-2 form-group ' + (this.state.inputNumeroLocal_error !== '' ? 'has-error' : '') },
+	                        _react2.default.createElement(
+	                            'label',
+	                            { className: 'control-label', htmlFor: 'locales' },
+	                            'Locales ',
+	                            _react2.default.createElement('span', { className: 'glyphicon glyphicon-paste' })
+	                        ),
+	                        _react2.default.createElement('input', { className: 'form-control', type: 'number', min: '1', max: '9999', name: 'locales', ref: function ref(_ref3) {
+	                                return _this2.inputNumeroLocal = _ref3;
+	                            }, onChange: this.inputNumeroLocalChanged }),
+	                        _react2.default.createElement(
+	                            'span',
+	                            { className: 'help-block' },
+	                            this.state.inputNumeroLocal_error
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-sm-2 form-group' },
+	                        _react2.default.createElement(
+	                            'label',
+	                            { className: 'control-label' },
+	                            '.'
+	                        ),
+	                        _react2.default.createElement('input', { type: 'submit', className: 'form-control btn btn-primary', value: 'Agregar local' })
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return AgregarManualmente;
+	}(_react2.default.Component);
+
+	exports.default = AgregarManualmente;
+
+
+	{/*<Multiselect
+	    duration={0}                // sin animacion
+	    defaultValue={[]}
+	    value={this.state.localesEnMultiselect}
+	    data={this.state.locales}
+	    valueField="idLocal"        // el valor retornado es loca.idLocal
+	    textField="nombre"          // el texto es local.nombre
+	    filter="contains"           // muestra los locales que tengan la palabra buscada
+	    onChange={this.localSelected}
+	    />*/}
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AgregarManualmente.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Libs
+
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var style = {
+	    tableCell: {
+	        padding: 0
+	    },
+	    tableCellInput: {
+	        width: '100%',
+	        height: '100%',
+	        border: 0
+	    }
+	};
+
+	var AgregarPegarDesdeExcel = function (_React$Component) {
+	    _inherits(AgregarPegarDesdeExcel, _React$Component);
+
+	    function AgregarPegarDesdeExcel() {
+	        _classCallCheck(this, AgregarPegarDesdeExcel);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(AgregarPegarDesdeExcel).apply(this, arguments));
+	    }
+
+	    _createClass(AgregarPegarDesdeExcel, [{
+	        key: 'testOnPaste',
+	        value: function testOnPaste(event) {
+	            var _this2 = this;
+
+	            event.preventDefault();
+	            // cuando se pegue un elemento, separar separar las filas por el "line feed" '\n'
+	            console.log(event.clipboardData.items[0].type);
+	            event.clipboardData.items[0].getAsString(function (texto) {
+	                // separar cada una de las filas '\n'
+	                var rows = texto.trim().split('\n');
+	                // quitar las filas vacias, y separar sus valores por el caracter tabulador
+	                rows = rows.filter(function (row) {
+	                    return row !== '';
+	                });
+	                var celdas = rows.map(function (row) {
+	                    return row.trim().split('\t');
+	                });
+	                console.log(celdas);
+
+	                // Agregar los locales
+	                celdas.forEach(function (row) {
+
+	                    // buscar el cliente por nombre o nombreCorto, en la primera y la segunda celda
+	                    var cliente = _this2.props.clientes.find(function (cliente) {
+	                        return cliente.nombre === row[0] || cliente.nombreCorto === row[0] || cliente.nombre === row[1] || cliente.nombreCorto === row[1];
+	                    });
+
+	                    if (cliente) {
+	                        // buscar el local
+	                        var local = cliente.locales.find(function (local) {
+	                            return local.numero == row[0] || local.numero == row[1];
+	                        });
+	                        if (local) {
+	                            // TODO: FIX MES AÑO
+	                            //let localCreado = this.tablaLocalesMensual.agregarLocal(local, this.state.inputMesAnno)
+	                            var localCreado = _this2.props.onFormSubmit(local, '03-2016');
+	                            //console.log(local)
+	                        } else {
+	                                console.log('El cliente ' + cliente.nombreCorto + ' no tiene el local ' + row[0] + '||' + row[1]);
+	                            }
+	                    } else {
+	                        console.log('cliente ' + row[0] + ' no encontrado');
+	                    }
+	                });
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this3 = this;
+
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'row' },
+	                    _react2.default.createElement(
+	                        'h4',
+	                        { className: 'page-header', style: { marginTop: '1em' } },
+	                        'Agregar locales a la programación:'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'row' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-sm-offset-1 col-sm-3' },
+	                        _react2.default.createElement(
+	                            'p',
+	                            null,
+	                            'Abra Excel, seleccione los datos de la columna ',
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                'Cliente'
+	                            ),
+	                            ' y ',
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                'CECO'
+	                            ),
+	                            ', ',
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                'COPIE'
+	                            ),
+	                            ' el contendo y finalmente ',
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                'PEGUELO'
+	                            ),
+	                            ' en esta tabla:'
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-sm-offset-0 col-sm-6' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'form-horizontal' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'form-group' },
+	                                _react2.default.createElement(
+	                                    'label',
+	                                    { className: 'col-sm-2 control-label', htmlFor: 'fechaProgramada' },
+	                                    'Mes:'
+	                                ),
+	                                _react2.default.createElement(
+	                                    'div',
+	                                    { className: 'col-sm-10' },
+	                                    _react2.default.createElement(
+	                                        'select',
+	                                        { className: 'form-control', name: 'fechaProgramada', ref: function ref(_ref) {
+	                                                return _this3.inputMesAnno = _ref;
+	                                            } },
+	                                        this.props.meses.map(function (mes, i) {
+	                                            return _react2.default.createElement(
+	                                                'option',
+	                                                { key: i, value: mes.valor },
+	                                                mes.texto
+	                                            );
+	                                        })
+	                                    )
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'form-group' },
+	                                _react2.default.createElement(
+	                                    'label',
+	                                    { className: 'col-sm-2 control-label', htmlFor: 'fechaProgramada' },
+	                                    'Pegar datos:'
+	                                ),
+	                                _react2.default.createElement(
+	                                    'div',
+	                                    { className: 'col-sm-10' },
+	                                    _react2.default.createElement(
+	                                        'table',
+	                                        { className: 'table table-bordered table-condensed' },
+	                                        _react2.default.createElement(
+	                                            'thead',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'tr',
+	                                                null,
+	                                                _react2.default.createElement(
+	                                                    'th',
+	                                                    null,
+	                                                    'Cliente'
+	                                                ),
+	                                                _react2.default.createElement(
+	                                                    'th',
+	                                                    null,
+	                                                    'CECO'
+	                                                )
+	                                            )
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'tbody',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'tr',
+	                                                null,
+	                                                _react2.default.createElement(
+	                                                    'td',
+	                                                    { style: style.tableCell },
+	                                                    _react2.default.createElement('input', { type: 'text', style: style.tableCellInput, onPaste: this.testOnPaste.bind(this) })
+	                                                ),
+	                                                _react2.default.createElement(
+	                                                    'td',
+	                                                    { style: style.tableCell },
+	                                                    _react2.default.createElement('input', { type: 'text', style: style.tableCellInput, onPaste: this.testOnPaste.bind(this) })
+	                                                )
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'tr',
+	                                                null,
+	                                                _react2.default.createElement(
+	                                                    'td',
+	                                                    { style: style.tableCell },
+	                                                    _react2.default.createElement('input', { type: 'text', style: style.tableCellInput, onPaste: this.testOnPaste.bind(this) })
+	                                                ),
+	                                                _react2.default.createElement(
+	                                                    'td',
+	                                                    { style: style.tableCell },
+	                                                    _react2.default.createElement('input', { type: 'text', style: style.tableCellInput, onPaste: this.testOnPaste.bind(this) })
+	                                                )
+	                                            )
+	                                        )
+	                                    )
+	                                )
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return AgregarPegarDesdeExcel;
+	}(_react2.default.Component);
+
+	exports.default = AgregarPegarDesdeExcel;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AgregarPegarDesdeExcel.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 /******/ ]);

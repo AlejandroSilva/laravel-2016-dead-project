@@ -26,6 +26,8 @@ class CreateRegionesTable extends Migration{
 
             // Otros campos
             $table->string('nombre', 55);   // maximo en "Región de Aysén del General Carlos Ibáñez del Campo" (52)
+            $table->string('nombreCorto', 30);
+            $table->string('numero', 5);
         });
     }
 
