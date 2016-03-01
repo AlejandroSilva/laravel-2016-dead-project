@@ -35495,10 +35495,7 @@
 	                null,
 	                _react2.default.createElement(
 	                    _container2.default,
-	                    {
-	                        type: _react2.default.DOM.table,
-	                        className: 'table table-bordered table-condensed'
-	                    },
+	                    { type: _react2.default.DOM.table, className: 'table table-bordered table-condensed' },
 	                    _react2.default.createElement(
 	                        'thead',
 	                        null,
@@ -35506,69 +35503,67 @@
 	                            _sticky2.default,
 	                            {
 	                                topOffset: -50,
-	                                type: _react2.default.DOM.tr
-	                                //stickyClass={styles.stickyClass}
-	                                , stickyStyle: { top: '50px' }
-	                                //stickyContainerClass="web"
+	                                type: _react2.default.DOM.tr,
+	                                stickyStyle: { top: '50px' }
 	                            },
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
-	                                _react2.default.createElement('div', { id: '' })
+	                                { className: _TablaLocalesMensual2.default.thCorrelativo },
+	                                '#'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
+	                                { className: _TablaLocalesMensual2.default.thFecha },
 	                                'Fecha'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
+	                                { className: _TablaLocalesMensual2.default.thCliente },
 	                                'Cliente'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
-	                                'CECO'
+	                                { className: _TablaLocalesMensual2.default.thCeco },
+	                                'Ceco'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
+	                                { className: _TablaLocalesMensual2.default.thLocal },
 	                                'Local'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
+	                                { className: _TablaLocalesMensual2.default.thZonaSei },
 	                                'Zona SEI'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
+	                                { className: _TablaLocalesMensual2.default.thRegion },
 	                                'Región'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
+	                                { className: _TablaLocalesMensual2.default.thComuna },
 	                                'Comuna'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
+	                                { className: _TablaLocalesMensual2.default.thStock },
 	                                'Stock'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
+	                                { className: _TablaLocalesMensual2.default.thDotacion },
 	                                'Dotación'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
+	                                { className: _TablaLocalesMensual2.default.thJornada },
 	                                'Jornada'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                null,
+	                                { className: _TablaLocalesMensual2.default.thOpciones },
 	                                'Opciones'
 	                            )
 	                        )
@@ -35588,12 +35583,12 @@
 	                                { key: index },
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdCorrelativo },
 	                                    index
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle', minWidth: '162px' } },
+	                                    { className: _TablaLocalesMensual2.default.tdFecha },
 	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDia, type: 'number', min: '0', max: '31',
 	                                        onBlur: function onBlur(input) {
 	                                            console.log("lost focus");
@@ -35607,7 +35602,7 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdCliente },
 	                                    _react2.default.createElement(
 	                                        'p',
 	                                        null,
@@ -35620,7 +35615,7 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdCeco },
 	                                    _react2.default.createElement(
 	                                        'p',
 	                                        null,
@@ -35637,7 +35632,7 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdLocal },
 	                                    _react2.default.createElement(
 	                                        'p',
 	                                        null,
@@ -35654,7 +35649,7 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdZonaSei },
 	                                    _react2.default.createElement(
 	                                        'p',
 	                                        { style: { margin: 0 } },
@@ -35667,7 +35662,7 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdRegion },
 	                                    _react2.default.createElement(
 	                                        'p',
 	                                        { style: { margin: 0 } },
@@ -35680,7 +35675,7 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdComuna },
 	                                    _react2.default.createElement(
 	                                        'p',
 	                                        { style: { margin: 0 } },
@@ -35697,7 +35692,7 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdStock },
 	                                    _react2.default.createElement(
 	                                        'p',
 	                                        null,
@@ -35710,13 +35705,13 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdDotacion },
 	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionSugerida, type: 'text', defaultValue: '99', disabled: true }),
 	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionIngresada, type: 'number', tabIndex: '-1' })
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdJornada },
 	                                    _react2.default.createElement(
 	                                        'p',
 	                                        null,
@@ -35729,7 +35724,7 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    'td',
-	                                    { style: { verticalAlign: 'middle' } },
+	                                    { className: _TablaLocalesMensual2.default.tdOpciones },
 	                                    _react2.default.createElement(
 	                                        'button',
 	                                        { className: 'btn btn-sm btn-success', tabIndex: '-1' },
@@ -35773,7 +35768,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"inputDia":"TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputMes":"TablaLocalesMensual__inputMes___3dMJd shared__inputNumberAsText___1Qr9M","inputAnno":"TablaLocalesMensual__inputAnno___3XjjF shared__inputNumberAsText___1Qr9M","inputDotacionSugerida":"TablaLocalesMensual__inputDotacionSugerida___MCPhp shared__inputNumberAsText___1Qr9M","inputDotacionIngresada":"TablaLocalesMensual__inputDotacionIngresada___2FZVc shared__inputNumberAsText___1Qr9M","stickyClass":"TablaLocalesMensual__stickyClass___37E3g"};
+	module.exports = {"thCorrelativo":"TablaLocalesMensual__thCorrelativo___3HnOu","tdCorrelativo":"TablaLocalesMensual__tdCorrelativo___Kvh_p TablaLocalesMensual__thCorrelativo___3HnOu","thFecha":"TablaLocalesMensual__thFecha___1qDZQ","tdFecha":"TablaLocalesMensual__tdFecha___3Ppcl TablaLocalesMensual__thFecha___1qDZQ","thCliente":"TablaLocalesMensual__thCliente___3l2rs","tdCliente":"TablaLocalesMensual__tdCliente___1R8Nd TablaLocalesMensual__thCliente___3l2rs","thCeco":"TablaLocalesMensual__thCeco___1Isth","tdCeco":"TablaLocalesMensual__tdCeco___39Cmj TablaLocalesMensual__thCeco___1Isth","thLocal":"TablaLocalesMensual__thLocal___zaA5L","tdLocal":"TablaLocalesMensual__tdLocal___2quqk TablaLocalesMensual__thLocal___zaA5L","thZonaSei":"TablaLocalesMensual__thZonaSei___2_Eql","tdZonaSei":"TablaLocalesMensual__tdZonaSei___3ywi8 TablaLocalesMensual__thZonaSei___2_Eql","thRegion":"TablaLocalesMensual__thRegion___10Xps","tdRegion":"TablaLocalesMensual__tdRegion___2KUA- TablaLocalesMensual__thRegion___10Xps","thComuna":"TablaLocalesMensual__thComuna___2k2Sr","tdComuna":"TablaLocalesMensual__tdComuna___93qXr TablaLocalesMensual__thComuna___2k2Sr","thStock":"TablaLocalesMensual__thStock___1jhS_","tdStock":"TablaLocalesMensual__tdStock___1mA1i TablaLocalesMensual__thStock___1jhS_","thDotacion":"TablaLocalesMensual__thDotacion___K39aJ","tdDotacion":"TablaLocalesMensual__tdDotacion___3q5PS TablaLocalesMensual__thDotacion___K39aJ","thJornada":"TablaLocalesMensual__thJornada___1DQcG","tdJornada":"TablaLocalesMensual__tdJornada___kUo8p TablaLocalesMensual__thJornada___1DQcG","thOpciones":"TablaLocalesMensual__thOpciones___2PzVJ","tdOpciones":"TablaLocalesMensual__tdOpciones___fMayz TablaLocalesMensual__thOpciones___2PzVJ","inputDia":"TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputMes":"TablaLocalesMensual__inputMes___3dMJd shared__inputNumberAsText___1Qr9M","inputAnno":"TablaLocalesMensual__inputAnno___3XjjF shared__inputNumberAsText___1Qr9M","inputDotacionSugerida":"TablaLocalesMensual__inputDotacionSugerida___MCPhp shared__inputNumberAsText___1Qr9M","inputDotacionIngresada":"TablaLocalesMensual__inputDotacionIngresada___2FZVc shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
 /* 294 */
@@ -36364,7 +36359,9 @@
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * https://github.com/captivationsoftware/react-sticky
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
 	var Sticky = function (_React$Component) {
 	    _inherits(Sticky, _React$Component);
