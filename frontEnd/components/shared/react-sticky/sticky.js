@@ -1,3 +1,7 @@
+/**
+ * https://github.com/captivationsoftware/react-sticky
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import watcher from './watcher';
