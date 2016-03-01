@@ -35436,6 +35436,8 @@
 	        _this.state = {
 	            locales: []
 	        };
+	        _this.inputFecha = [];
+	        _this.inputFechaOnKeyDown = _this.inputFechaOnKeyDown.bind(_this);
 	        return _this;
 	    }
 
@@ -35488,8 +35490,38 @@
 	            });
 	        }
 	    }, {
+	        key: 'inputFechaOnKeyDown',
+	        value: function inputFechaOnKeyDown(evt) {
+
+	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
+	                // 9 = tab, flechaAbajo = 40,  13 = enter
+	                // seleccionar el proximo elemento
+	                evt.preventDefault();
+	                var index = this.inputFecha.findIndex(function (input) {
+	                    return input === evt.target;
+	                });
+	                var nextIndex = (index + 1) % this.inputFecha.length;
+	                var nextInput = this.inputFecha[nextIndex];
+	                nextInput.focus();
+	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
+	                // flechaArriba = 38, shift+tab
+	                // seleccionar el elemento anterior
+	                evt.preventDefault();
+	                var index = this.inputFecha.findIndex(function (input) {
+	                    return input === evt.target;
+	                });
+	                var prevIndex = index === 0 ? this.inputFecha.length - 1 : index - 1;
+	                var prevInput = this.inputFecha[prevIndex];
+	                prevInput.focus();
+	            } else {
+	                //console.log(evt.keyCode)
+	            }
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var _this3 = this;
+
 	            return _react2.default.createElement(
 	                'div',
 	                null,
@@ -35590,12 +35622,13 @@
 	                                    'td',
 	                                    { className: _TablaLocalesMensual2.default.tdFecha },
 	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDia, type: 'number', min: '0', max: '31',
-	                                        onBlur: function onBlur(input) {
-	                                            console.log("lost focus");
+	                                        ref: function ref(_ref) {
+	                                            return _this3.inputFecha[index] = _ref;
 	                                        },
-	                                        onKeyDown: function onKeyDown(evt) {
-	                                            console.log("down");
-	                                        }
+	                                        onBlur: function onBlur(input) {
+	                                            console.log("lost focus, guardando");
+	                                        },
+	                                        onKeyDown: _this3.inputFechaOnKeyDown
 	                                    }),
 	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputMes, type: 'number', defaultValue: local.mesProgramado, disabled: true }),
 	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputAnno, type: 'number', defaultValue: local.annoProgramado, disabled: true })

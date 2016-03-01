@@ -12,8 +12,10 @@ class TablaLocalesMensual extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            locales: []
+            locales: [],
         }
+        this.inputFecha = []
+        this.inputFechaOnKeyDown = this.inputFechaOnKeyDown.bind(this)
     }
     agregarLocal(nuevoLocal, mesAnno){
         let [mes, anno] = mesAnno.split('-')
@@ -50,6 +52,29 @@ class TablaLocalesMensual extends React.Component{
                 })
             })
             .catch(error=>console.error(`error al obtener los datos de ${idLocal}`, error))
+    }
+
+    inputFechaOnKeyDown(evt){
+
+        if((evt.keyCode===9 && evt.shiftKey===false) || evt.keyCode===40 || evt.keyCode===13){
+            // 9 = tab, flechaAbajo = 40,  13 = enter
+            // seleccionar el proximo elemento
+            evt.preventDefault()
+            let index = this.inputFecha.findIndex(input=>input===evt.target)
+            let nextIndex = (index+1)%this.inputFecha.length
+            let nextInput = this.inputFecha[nextIndex]
+            nextInput.focus()
+        }else if((evt.keyCode===9 && evt.shiftKey===true) || evt.keyCode===38){
+            // flechaArriba = 38, shift+tab
+            // seleccionar el elemento anterior
+            evt.preventDefault()
+            let index = this.inputFecha.findIndex(input=>input===evt.target)
+            let prevIndex = index===0? this.inputFecha.length-1 : index-1
+            let prevInput = this.inputFecha[prevIndex]
+            prevInput.focus()
+        }else{
+            //console.log(evt.keyCode)
+        }
     }
     render(){
         return (
@@ -93,12 +118,11 @@ class TablaLocalesMensual extends React.Component{
                             <td className={styles.tdFecha}>
                                 {/* Fecha */}
                                 <input className={styles.inputDia} type="number" min="0" max="31"
+                                       ref={ref=>this.inputFecha[index]=ref}
                                        onBlur={input=>{
-                                        console.log("lost focus")
+                                        console.log("lost focus, guardando")
                                        }}
-                                       onKeyDown={evt=>{
-                                        console.log("down")
-                                       }}
+                                       onKeyDown={this.inputFechaOnKeyDown}
                                 />
                                 <input className={styles.inputMes} type="number" defaultValue={local.mesProgramado} disabled/>
                                 <input className={styles.inputAnno} type="number" defaultValue={local.annoProgramado} disabled/>
