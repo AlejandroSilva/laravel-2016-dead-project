@@ -2,42 +2,46 @@
 
 /*
 |--------------------------------------------------------------------------
-| Administracion de Clientes
+| Administracion de Clientes y sus locales
 |--------------------------------------------------------------------------
 |*/
+// VISTAS
 Route::get('admin/clientes', 'ClientesController@verLista')->name('admin.clientes.lista');
 Route::get('admin/locales', function(){
-    return view('administracion.locales.verLista');
+    return view('operacional.clientes.locales');
 });
+// API REST
+Route::get('clientes', 'ClientesController@getClientes_json');
+Route::get('clientes/locales', 'ClientesController@getClientesWithLocales_json');
+Route::get('locales/{idLocal}', 'LocalesController@getLocal_json');
+Route::get('locales/{idLocal}/verbose', 'LocalesController@getLocalVerbose_json');
 
 /*
 |--------------------------------------------------------------------------
 | Gestión de Inventarios
 |--------------------------------------------------------------------------
 |*/
-Route::get('inventario/programa', function(){
-    return view('inventario.programa');
-});
-Route::get('inventario/inventario', function(){
-    return view('inventario.inventario');
-});
-Route::get('inventario/nominas', function(){
-    return view('inventario.nominas');
-});
-Route::get('inventario/nominasFinales', function(){
-    return view('inventario.nominasFinales');
-});
+Route::get('programacion',          'ProgramacionController@showIndex');
+Route::get('programacion/mensual',  'ProgramacionController@showMensual');
+Route::get('programacion/semanal',  'ProgramacionController@showSemanal');
+Route::get('inventario',            'InventariosController@index');
+Route::get('inventario/lista',      'InventariosController@lista');
+Route::get('inventario/nuevo',      'InventariosController@nuevo');
+Route::post('inventario/nuevo',     'InventariosController@postNuevo');
+
+Route::get('nominas',               function(){return view('operacional.nominas.nominas-index');});
+Route::get('nomFinales',            function(){return view('operacional.nominasFinales.nominasFinales-index');});
 
 /*
 |--------------------------------------------------------------------------
 | Gestion de Personal
 |--------------------------------------------------------------------------
 |*/
-Route::get('usuarios/usuarios', function(){
-    return view('usuarios.usuarios');
+Route::get('personal/personal', function(){
+    return view('operacional.personal.usuarios');
 });
-Route::get('usuarios/operadores', function(){
-    return view('usuarios.operadores');
+Route::get('personal/operadores', function(){
+    return view('operacional.personal.operadores');
 });
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +49,7 @@ Route::get('usuarios/operadores', function(){
 |--------------------------------------------------------------------------
 |*/
 Route::get('/', function () {
-    return view('child');
+    return redirect('/inventario');
 });
 
 Route::get('/map', function(){

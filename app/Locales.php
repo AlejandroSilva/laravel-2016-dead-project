@@ -26,4 +26,16 @@ class Locales extends Model{
         //return $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\Direcciones', 'idLocal', 'idLocal');
     }
+
+    public function jornada(){
+        // belongsTo(modelo, this.fogeignKey, parent.otherKey)
+        return $this->belongsTo('App\Jornadas', 'idJornadaSugerida', 'idJornada');
+    }
+
+    public function llegadaSugerida(){
+        $horaCierre = $this->horaCierre;
+
+        return $horaCierre;
+//        return "da lo mismo wn";
+    }
 }
