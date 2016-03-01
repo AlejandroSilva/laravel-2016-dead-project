@@ -1,0 +1,36 @@
+/* FECHA */
+.inputDia{
+    composes: inputNumberAsText from '../shared/shared.css';
+    width: 30px;
+    marginRight: 2px;
+}
+.inputMes{
+    composes: inputNumberAsText from '../shared/shared.css';
+    width: 25px;
+    marginRight: 2px;
+}
+.inputAnno{
+    composes: inputNumberAsText from '../shared/shared.css';
+    width: 45px;
+    marginRight: 2px;
+}
+
+/* Dotacion */
+.inputDotacionSugerida{
+    composes: inputNumberAsText from '../shared/shared.css';
+    width: 25px;
+    margin: 0 0 2px 0;
+}
+.inputDotacionIngresada{
+    composes: inputNumberAsText from '../shared/shared.css';
+    width: 35px;
+}
+
+.stickyClass {
+    position: fixed;
+    /*transform: translate3d(50px, 50px, 0px);*/
+    /*top: 50px;*/
+    /*width: 1285.83px;*/
+    top: 0;
+    left: 500px;
+}
