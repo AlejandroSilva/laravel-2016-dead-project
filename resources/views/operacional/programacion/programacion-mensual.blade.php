@@ -4,7 +4,9 @@
 @section('content')
 
     {{-- aca se montara el component 'ProgramacionMensual' de React --}}
-    <div id="sei-programacion-mensual"></div>
+    <div id="sei-programacion-mensual">
+        <p>Cargando, espere unos segundos</p>
+    </div>
 
 
     <script>
