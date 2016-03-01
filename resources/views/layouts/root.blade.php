@@ -7,6 +7,7 @@
     <link rel='stylesheet' href='/vendor/bootstrap/bootstrap.min.css'>
     <link rel='stylesheet' href='/vendor/react-widgets/react-widgets.min.css'>
     <link rel='stylesheet' href='/css/styles.css'>
+    <link rel='stylesheet' href='/css/frontEnd.css'>
 </head>
 <body>
     @yield('hmtl-body')

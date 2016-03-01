@@ -1,0 +1,62 @@
+/*input[type="number"]*/
+/* FIREFOX */
+.shared__inputNumberAsText___1Qr9M {
+    -moz-appearance: textfield;
+}
+/* CHROME */
+.shared__inputNumberAsText___1Qr9M::-webkit-outer-spin-button,
+.shared__inputNumberAsText___1Qr9M::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+
+
+/*input::-webkit-outer-spin-button,*/
+/*input::-webkit-inner-spin-button {*/
+/*!* display: none; <- Crashes Chrome on hover *!*/
+/*-webkit-appearance: none;*/
+/*margin: 0; !* <-- Apparently some margin are still there even though it's hidden *!*/
+/*}*//* FECHA */
+.TablaLocalesMensual__inputDia___1IKdv{
+    width: 30px;
+    marginRight: 2px;
+}
+.TablaLocalesMensual__inputMes___3dMJd{
+    width: 25px;
+    marginRight: 2px;
+}
+.TablaLocalesMensual__inputAnno___3XjjF{
+    width: 45px;
+    marginRight: 2px;
+}
+
+/* Dotacion */
+.TablaLocalesMensual__inputDotacionSugerida___MCPhp{
+    width: 25px;
+    margin: 0 0 2px 0;
+}
+.TablaLocalesMensual__inputDotacionIngresada___2FZVc{
+    width: 35px;
+}
+
+.TablaLocalesMensual__stickyClass___37E3g {
+    position: fixed;
+    /*transform: translate3d(50px, 50px, 0px);*/
+    /*top: 50px;*/
+    /*width: 1285.83px;*/
+    top: 0;
+    left: 500px;
+}.AgregarManualmente__tableCell___bz7b0 {
+    padding: 0 !important;
+    margin: 0;
+}
+.AgregarManualmente__tableCell___bz7b0 > p {
+    margin: 0;
+}
+/*.tableCellInput {*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*border: 0;*/
+/*}*/

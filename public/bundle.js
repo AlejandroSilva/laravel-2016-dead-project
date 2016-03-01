@@ -21681,13 +21681,9 @@
 
 	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
 
-	var _AgregarManualmente = __webpack_require__(292);
+	var _AgregarManualmente = __webpack_require__(294);
 
 	var _AgregarManualmente2 = _interopRequireDefault(_AgregarManualmente);
-
-	var _AgregarPegarDesdeExcel = __webpack_require__(293);
-
-	var _AgregarPegarDesdeExcel2 = _interopRequireDefault(_AgregarPegarDesdeExcel);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21704,6 +21700,8 @@
 
 	// Component
 	//import Multiselect from 'react-widgets/lib/Multiselect'
+
+	//import AgregarPegarDesdeExcel from './AgregarPegarDesdeExcel.jsx'
 
 	var ProgramacionMensual = function (_React$Component) {
 	    _inherits(ProgramacionMensual, _React$Component);
@@ -21722,7 +21720,6 @@
 	                texto: mes.format('MMMM  YYYY')
 	            });
 	        }
-
 	        _this.state = {
 	            meses: meses
 	        };
@@ -21733,7 +21730,7 @@
 	    _createClass(ProgramacionMensual, [{
 	        key: 'submitLocal',
 	        value: function submitLocal(local, mesAnno) {
-	            console.log("saludos desde el padre", local, mesAnno);
+	            console.log("agregarndo el local: ", local, mesAnno);
 	            return this.tablaLocalesMensual.agregarLocal(local, mesAnno);
 	        }
 	    }, {
@@ -21749,48 +21746,14 @@
 	                    null,
 	                    'Programación mensual'
 	                ),
-	                _react2.default.createElement(
-	                    _reactTabs.Tabs,
-	                    { selectedIndex: 0 },
-	                    _react2.default.createElement(
-	                        _reactTabs.TabList,
-	                        null,
-	                        _react2.default.createElement(
-	                            _reactTabs.Tab,
-	                            null,
-	                            'Ingresar manualmente'
-	                        ),
-	                        _react2.default.createElement(
-	                            _reactTabs.Tab,
-	                            null,
-	                            'Pegar desde Excel'
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        _reactTabs.TabPanel,
-	                        null,
-	                        _react2.default.createElement(_AgregarManualmente2.default, {
-	                            ref: function ref(_ref) {
-	                                return _this2.AgregarManualmente = _ref;
-	                            },
-	                            clientes: this.props.clientes,
-	                            meses: this.state.meses,
-	                            onFormSubmit: this.submitLocal
-	                        })
-	                    ),
-	                    _react2.default.createElement(
-	                        _reactTabs.TabPanel,
-	                        null,
-	                        _react2.default.createElement(_AgregarPegarDesdeExcel2.default, {
-	                            ref: function ref(_ref2) {
-	                                return _this2.AgregarPegarDesdeExcel = _ref2;
-	                            },
-	                            clientes: this.props.clientes,
-	                            meses: this.state.meses,
-	                            onFormSubmit: this.submitLocal
-	                        })
-	                    )
-	                ),
+	                _react2.default.createElement(_AgregarManualmente2.default, {
+	                    ref: function ref(_ref) {
+	                        return _this2.AgregarManualmente = _ref;
+	                    },
+	                    clientes: this.props.clientes,
+	                    meses: this.state.meses,
+	                    onFormSubmit: this.submitLocal
+	                }),
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'row' },
@@ -21800,8 +21763,8 @@
 	                        'Locales a programar:'
 	                    ),
 	                    _react2.default.createElement(_TablaLocalesMensual2.default, {
-	                        ref: function ref(_ref3) {
-	                            return _this2.tablaLocalesMensual = _ref3;
+	                        ref: function ref(_ref2) {
+	                            return _this2.tablaLocalesMensual = _ref2;
 	                        }
 	                    })
 	                )
@@ -35434,6 +35397,22 @@
 
 	var _v2 = _interopRequireDefault(_v);
 
+	var _sticky = __webpack_require__(296);
+
+	var _sticky2 = _interopRequireDefault(_sticky);
+
+	var _container = __webpack_require__(301);
+
+	var _container2 = _interopRequireDefault(_container);
+
+	var _shared = __webpack_require__(292);
+
+	var _shared2 = _interopRequireDefault(_shared);
+
+	var _TablaLocalesMensual = __webpack_require__(293);
+
+	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35443,6 +35422,8 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var PropTypes = _react2.default.PropTypes;
+
+	// Styles
 
 	var TablaLocalesMensual = function (_React$Component) {
 	    _inherits(TablaLocalesMensual, _React$Component);
@@ -35510,239 +35491,259 @@
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
-	                'table',
-	                { className: 'table table-bordered table-condensed' },
+	                'div',
+	                null,
 	                _react2.default.createElement(
-	                    'thead',
-	                    null,
+	                    _container2.default,
+	                    {
+	                        type: _react2.default.DOM.table,
+	                        className: 'table table-bordered table-condensed'
+	                    },
 	                    _react2.default.createElement(
-	                        'tr',
+	                        'thead',
 	                        null,
 	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            _react2.default.createElement('div', { id: '' })
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Fecha'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Cliente'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'CECO'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Local'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Zona SEI'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Región'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Ciudad'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Stock'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Dotación'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Jornada'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Opciones'
+	                            _sticky2.default,
+	                            {
+	                                topOffset: -50,
+	                                type: _react2.default.DOM.tr
+	                                //stickyClass={styles.stickyClass}
+	                                , stickyStyle: { top: '50px' }
+	                                //stickyContainerClass="web"
+	                            },
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                _react2.default.createElement('div', { id: '' })
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'Fecha'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'Cliente'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'CECO'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'Local'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'Zona SEI'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'Región'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'Comuna'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'Stock'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'Dotación'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'Jornada'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                null,
+	                                'Opciones'
+	                            )
 	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'tbody',
-	                    null,
-	                    this.state.locales.map(function (local, index) {
-	                        var direccion = local.direccion || {};
-	                        var comuna = direccion.comuna || {};
-	                        var provincia = comuna.provincia || {};
-	                        var region = provincia.region || {};
-	                        var zona = region.zona || {};
+	                    ),
+	                    _react2.default.createElement(
+	                        'tbody',
+	                        null,
+	                        this.state.locales.map(function (local, index) {
+	                            var direccion = local.direccion || {};
+	                            var comuna = direccion.comuna || {};
+	                            var provincia = comuna.provincia || {};
+	                            var region = provincia.region || {};
+	                            var zona = region.zona || {};
 
-	                        return _react2.default.createElement(
-	                            'tr',
-	                            { key: index },
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
-	                                index
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle', minWidth: '162px' } },
-	                                _react2.default.createElement('input', { style: { width: '50px', marginRight: '2px' }, type: 'number' }),
-	                                _react2.default.createElement('input', { style: { width: '40px', marginRight: '2px' }, type: 'number', defaultValue: local.mesProgramado, disabled: true }),
-	                                _react2.default.createElement('input', { style: { width: '55px', marginRight: '2px' }, type: 'number', defaultValue: local.annoProgramado, disabled: true })
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
+	                            return _react2.default.createElement(
+	                                'tr',
+	                                { key: index },
 	                                _react2.default.createElement(
-	                                    'p',
-	                                    null,
-	                                    _react2.default.createElement(
-	                                        'small',
-	                                        null,
-	                                        local.cliente ? local.cliente.nombre : '...'
-	                                    )
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
+	                                    index
+	                                ),
 	                                _react2.default.createElement(
-	                                    'p',
-	                                    null,
-	                                    _react2.default.createElement(
-	                                        'small',
-	                                        null,
-	                                        _react2.default.createElement(
-	                                            'b',
-	                                            null,
-	                                            local.numero ? local.numero : '...'
-	                                        )
-	                                    )
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle', minWidth: '162px' } },
+	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDia, type: 'number', min: '0', max: '31',
+	                                        onBlur: function onBlur(input) {
+	                                            console.log("lost focus");
+	                                        },
+	                                        onKeyDown: function onKeyDown(evt) {
+	                                            console.log("down");
+	                                        }
+	                                    }),
+	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputMes, type: 'number', defaultValue: local.mesProgramado, disabled: true }),
+	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputAnno, type: 'number', defaultValue: local.annoProgramado, disabled: true })
+	                                ),
 	                                _react2.default.createElement(
-	                                    'p',
-	                                    null,
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
 	                                    _react2.default.createElement(
-	                                        'small',
-	                                        null,
-	                                        _react2.default.createElement(
-	                                            'b',
-	                                            null,
-	                                            local.nombre ? local.nombre : '...'
-	                                        )
-	                                    )
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
-	                                _react2.default.createElement(
-	                                    'p',
-	                                    { style: { margin: 0 } },
-	                                    _react2.default.createElement(
-	                                        'small',
-	                                        null,
-	                                        zona.nombre ? zona.nombre : '...'
-	                                    )
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
-	                                _react2.default.createElement(
-	                                    'p',
-	                                    { style: { margin: 0 } },
-	                                    _react2.default.createElement(
-	                                        'small',
-	                                        null,
-	                                        region.nombreCorto ? region.nombreCorto : '...'
-	                                    )
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
-	                                _react2.default.createElement(
-	                                    'p',
-	                                    { style: { margin: 0 } },
-	                                    _react2.default.createElement(
-	                                        'b',
+	                                        'p',
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            'small',
 	                                            null,
-	                                            comuna.nombre ? comuna.nombre : '...'
+	                                            local.cliente ? local.cliente.nombreCorto : '...'
 	                                        )
 	                                    )
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
-	                                _react2.default.createElement(
-	                                    'p',
-	                                    null,
-	                                    _react2.default.createElement(
-	                                        'small',
-	                                        null,
-	                                        local.stock ? local.stock : '...'
-	                                    )
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
-	                                _react2.default.createElement('input', { style: { width: '30px', margin: '0 0 2px 0' }, type: 'text', defaultValue: '99', disabled: true }),
-	                                _react2.default.createElement('input', { style: { width: '45px', margin: '0 0 2px 0' }, type: 'number' })
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
-	                                _react2.default.createElement(
-	                                    'p',
-	                                    null,
-	                                    _react2.default.createElement(
-	                                        'small',
-	                                        null,
-	                                        local.jornada ? local.jornada.nombre : '(...jornada)'
-	                                    )
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                { style: { verticalAlign: 'middle' } },
-	                                _react2.default.createElement(
-	                                    'button',
-	                                    { className: 'btn btn-sm btn-success', tabIndex: '-1' },
-	                                    'Guardar'
 	                                ),
 	                                _react2.default.createElement(
-	                                    'button',
-	                                    { className: 'btn btn-sm btn-primary   ', tabIndex: '-1' },
-	                                    'Editar local'
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
+	                                    _react2.default.createElement(
+	                                        'p',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'small',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'b',
+	                                                null,
+	                                                local.numero ? local.numero : '...'
+	                                            )
+	                                        )
+	                                    )
+	                                ),
+	                                _react2.default.createElement(
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
+	                                    _react2.default.createElement(
+	                                        'p',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'small',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'b',
+	                                                null,
+	                                                local.nombre ? local.nombre : '...'
+	                                            )
+	                                        )
+	                                    )
+	                                ),
+	                                _react2.default.createElement(
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
+	                                    _react2.default.createElement(
+	                                        'p',
+	                                        { style: { margin: 0 } },
+	                                        _react2.default.createElement(
+	                                            'small',
+	                                            null,
+	                                            zona.nombre ? zona.nombre : '...'
+	                                        )
+	                                    )
+	                                ),
+	                                _react2.default.createElement(
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
+	                                    _react2.default.createElement(
+	                                        'p',
+	                                        { style: { margin: 0 } },
+	                                        _react2.default.createElement(
+	                                            'small',
+	                                            null,
+	                                            region.nombreCorto ? region.nombreCorto : '...'
+	                                        )
+	                                    )
+	                                ),
+	                                _react2.default.createElement(
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
+	                                    _react2.default.createElement(
+	                                        'p',
+	                                        { style: { margin: 0 } },
+	                                        _react2.default.createElement(
+	                                            'b',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'small',
+	                                                null,
+	                                                comuna.nombre ? comuna.nombre : '...'
+	                                            )
+	                                        )
+	                                    )
+	                                ),
+	                                _react2.default.createElement(
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
+	                                    _react2.default.createElement(
+	                                        'p',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'small',
+	                                            null,
+	                                            local.stock ? local.stock : '...'
+	                                        )
+	                                    )
+	                                ),
+	                                _react2.default.createElement(
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
+	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionSugerida, type: 'text', defaultValue: '99', disabled: true }),
+	                                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionIngresada, type: 'number', tabIndex: '-1' })
+	                                ),
+	                                _react2.default.createElement(
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
+	                                    _react2.default.createElement(
+	                                        'p',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'small',
+	                                            null,
+	                                            local.jornada ? local.jornada.nombre : '(...jornada)'
+	                                        )
+	                                    )
+	                                ),
+	                                _react2.default.createElement(
+	                                    'td',
+	                                    { style: { verticalAlign: 'middle' } },
+	                                    _react2.default.createElement(
+	                                        'button',
+	                                        { className: 'btn btn-sm btn-success', tabIndex: '-1' },
+	                                        'Guardar'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'button',
+	                                        { className: 'btn btn-sm btn-primary   ', tabIndex: '-1' },
+	                                        'Editar local'
+	                                    )
 	                                )
-	                            )
-	                        );
-	                    })
+	                            );
+	                        })
+	                    )
 	                )
 	            );
 	        }
@@ -35756,16 +35757,26 @@
 	};
 	exports.default = TablaLocalesMensual;
 
-	//separar zona
-	//region (solo el numero) => agregar el numero en la BD
-	//ciudad
-	//
-	//agregar el boton confirmar
+	//ToDo: agregar el boton confirmar
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TablaLocalesMensual.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
 /* 292 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M"};
+
+/***/ },
+/* 293 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"inputDia":"TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputMes":"TablaLocalesMensual__inputMes___3dMJd shared__inputNumberAsText___1Qr9M","inputAnno":"TablaLocalesMensual__inputAnno___3XjjF shared__inputNumberAsText___1Qr9M","inputDotacionSugerida":"TablaLocalesMensual__inputDotacionSugerida___MCPhp shared__inputNumberAsText___1Qr9M","inputDotacionIngresada":"TablaLocalesMensual__inputDotacionIngresada___2FZVc shared__inputNumberAsText___1Qr9M","stickyClass":"TablaLocalesMensual__stickyClass___37E3g"};
+
+/***/ },
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -35782,6 +35793,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _AgregarManualmente = __webpack_require__(295);
+
+	var _AgregarManualmente2 = _interopRequireDefault(_AgregarManualmente);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35792,6 +35807,7 @@
 
 
 	var PropTypes = _react2.default.PropTypes;
+	// Styles
 
 	var AgregarManualmente = function (_React$Component) {
 	    _inherits(AgregarManualmente, _React$Component);
@@ -35802,36 +35818,128 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AgregarManualmente).call(this, props));
 
 	        _this.state = {
+	            clienteSeleccionado: {},
 	            inputIdCliente_error: '',
 	            inputNumeroLocal_error: '',
-	            locales: []
+	            inputPegar_error: '',
+	            pegadoConProblemas: [],
+	            pegadoConteoTotal: 0,
+	            pegadoConteoCorrectos: 0,
+	            pegadoConteoProblemas: 0,
+	            locales: [],
+	            modoIngreso: 'manual' // 'manual'/'excel'
 	        };
 	        _this.inputIdClienteChanged = _this.inputIdClienteChanged.bind(_this);
 	        _this.inputNumeroLocalChanged = _this.inputNumeroLocalChanged.bind(_this);
 	        _this.submitAgregarLocal = _this.submitAgregarLocal.bind(_this);
 	        return _this;
 	    }
-	    /**
-	     * Cambio en los campos del formulario
-	     */
-
 
 	    _createClass(AgregarManualmente, [{
+	        key: 'setModoIngreso',
+	        value: function setModoIngreso(modo) {
+	            if (modo !== this.state.modoIngreso) {
+	                this.setState({
+	                    modoIngreso: this.state.modoIngreso === 'manual' ? 'excel' : 'manual'
+	                });
+	            }
+	        }
+	    }, {
+	        key: 'testOnPaste',
+	        value: function testOnPaste(event) {
+	            var _this2 = this;
+
+	            event.preventDefault();
+
+	            // validar que exista un cliente seleccionado
+	            if (this.inputIdCliente.value === '-1') {
+	                this.setState({
+	                    pegadoConProblemas: [],
+	                    pegadoConteoTotal: 0,
+	                    pegadoConteoCorrectos: 0,
+	                    pegadoConteoProblemas: 0,
+	                    inputIdCliente_error: 'Seleccione un Cliente',
+	                    inputPegar_error: 'Seleccione un Cliente'
+	                });
+	                return;
+	            }
+
+	            // cuando se pegue un elemento, separar separar las filas por el "line feed" '\n'
+	            event.clipboardData.items[0].getAsString(function (texto) {
+	                // separar cada una de las filas '\n'
+	                var rows = texto.trim().split('\n');
+	                // quitar las filas vacias, y separar sus valores por el caracter tabulador
+	                rows = rows.filter(function (row) {
+	                    return row !== '';
+	                });
+	                var celdas = rows.map(function (row) {
+	                    return row.trim().split('\t');
+	                });
+
+	                // Agregar los locales
+	                var resultado = celdas.map(function (row) {
+	                    var numeroLocal = row[0];
+
+	                    // buscar el local
+	                    var local = _this2.state.locales.find(function (local) {
+	                        return local.numero === numeroLocal;
+	                    });
+	                    if (local) {
+	                        // buscar los datos
+	                        var localCreado = _this2.props.onFormSubmit(local, _this2.inputMesAnno.value);
+	                        // cliente, local, estado final
+	                        return {
+	                            cliente: _this2.state.clienteSeleccionado.nombreCorto,
+	                            numeroLocal: numeroLocal,
+	                            mensaje: localCreado ? 'Ok' : 'Ya agendado',
+	                            error: localCreado
+	                        };
+	                    } else {
+	                        return {
+	                            cliente: _this2.state.clienteSeleccionado.nombreCorto,
+	                            numeroLocal: numeroLocal,
+	                            mensaje: 'No existe',
+	                            error: true
+	                        };
+	                    }
+	                });
+	                // quitar los que fueron correctamente agregados
+	                var pegadoConProblemas = resultado.filter(function (res) {
+	                    return res.mensaje !== 'Ok';
+	                });
+
+	                // guardar el resultado de agregar los elementos
+	                _this2.setState({
+	                    pegadoConProblemas: pegadoConProblemas,
+	                    pegadoConteoTotal: resultado.length,
+	                    pegadoConteoCorrectos: resultado.length - pegadoConProblemas.length,
+	                    pegadoConteoProblemas: pegadoConProblemas.length
+	                });
+	            });
+	        }
+
+	        /**
+	         * Cambio en los campos del formulario
+	         */
+
+	    }, {
 	        key: 'inputIdClienteChanged',
 	        value: function inputIdClienteChanged(event) {
 	            // al seleccionar un cliente, se deben cargar los locales el el <select> de clientes
 	            var idClienteSeleccionado = event.target.value;
 
 	            // buscamos el cliente seleccionado
-	            var selectedClient = this.props.clientes.find(function (cliente) {
+	            var cliente = this.props.clientes.find(function (cliente) {
 	                return cliente.idCliente == idClienteSeleccionado;
 	            });
 
 	            // lo marcados como seleccionado y mostramos la lista de locales
 	            this.setState({
-	                locales: selectedClient ? selectedClient.locales : [], // mostrar la lista de locales que tiene el cliente seleccionado
+	                clienteSeleccionado: cliente ? cliente : {},
+	                locales: cliente ? cliente.locales : [], // mostrar la lista de locales que tiene el cliente seleccionado
 	                inputIdCliente_error: '',
 	                inputNumeroLocal_error: '',
+	                inputPegar_error: '',
 	                // Todo: limpiar el campo de locales
 	                inputNumeroLocal: ''
 	            });
@@ -35852,10 +35960,10 @@
 	        value: function submitAgregarLocal(evt) {
 	            evt.preventDefault();
 
-	            // ToDo: validar que exista un cliente seleccionado
-	            if (this.inputIdCliente.value === "-1") {
+	            // validar que exista un cliente seleccionado
+	            if (this.inputIdCliente.value === '-1') {
 	                this.setState({
-	                    inputIdCliente_error: 'Seleccione un Cliente de la lista'
+	                    inputIdCliente_error: 'Seleccione un Cliente'
 	                });
 	            }
 
@@ -35866,7 +35974,7 @@
 	            });
 	            if (local === undefined) {
 	                this.setState({
-	                    inputNumeroLocal_error: numeroLocal === '' ? 'Ingrese un numero de local' : 'El local \'' + numeroLocal + '\' no existe'
+	                    inputNumeroLocal_error: numeroLocal === '' ? 'Digite un numero de local' : 'El local \'' + numeroLocal + '\' no existe'
 	                });
 	                this.inputNumeroLocal.value = '';
 	                return;
@@ -35880,17 +35988,17 @@
 	            this.inputNumeroLocal.value = '';
 
 	            console.log("FORMULARIO ENVIADO");
-	            console.log("cliente ", this.inputIdCliente.value, "  ", this.props.clientes[this.inputIdCliente.value - 1].nombre);
 	            console.log(local);
+	            console.log(this.state.clienteSeleccionado);
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this2 = this;
+	            var _this3 = this;
 
 	            return _react2.default.createElement(
-	                'form',
-	                { className: 'form', onSubmit: this.submitAgregarLocal },
+	                'div',
+	                { className: 'form' },
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'row' },
@@ -35898,6 +36006,24 @@
 	                        'h4',
 	                        { className: 'page-header', style: { marginTop: '1em' } },
 	                        'Agregar locales a la programación:'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'row', style: { marginBottom: '1em' } },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-sm-offset-4 col-sm-3' },
+	                        _react2.default.createElement(
+	                            'button',
+	                            { type: 'button', className: 'btn btn-sm btn-default ' + (this.state.modoIngreso === 'manual' ? 'active' : ''), onClick: this.setModoIngreso.bind(this, 'manual') },
+	                            'Manualmente'
+	                        ),
+	                        _react2.default.createElement(
+	                            'button',
+	                            { type: 'button', className: 'btn btn-sm btn-default ' + (this.state.modoIngreso === 'excel' ? 'active' : ''), onClick: this.setModoIngreso.bind(this, 'excel') },
+	                            'Desde Excel'
+	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
@@ -35914,7 +36040,7 @@
 	                        _react2.default.createElement(
 	                            'select',
 	                            { className: 'form-control', name: 'cliente', defaultValue: '-1', ref: function ref(_ref) {
-	                                    return _this2.inputIdCliente = _ref;
+	                                    return _this3.inputIdCliente = _ref;
 	                                }, onChange: this.inputIdClienteChanged },
 	                            _react2.default.createElement(
 	                                'option',
@@ -35922,13 +36048,11 @@
 	                                '--'
 	                            ),
 	                            this.props.clientes.map(function (cliente, index) {
+	                                //return <option key={index} value={cliente.idCliente}>{"asdas" + cliente.nombre}</option
 	                                return _react2.default.createElement(
 	                                    'option',
 	                                    { key: index, value: cliente.idCliente },
-	                                    ' ',
-	                                    cliente.nombreCorto,
-	                                    ' - ',
-	                                    cliente.nombre
+	                                    cliente.nombreCorto + ' - ' + cliente.nombre
 	                                );
 	                            })
 	                        ),
@@ -35949,7 +36073,7 @@
 	                        _react2.default.createElement(
 	                            'select',
 	                            { className: 'form-control', name: 'fechaProgramada', ref: function ref(_ref2) {
-	                                    return _this2.inputMesAnno = _ref2;
+	                                    return _this3.inputMesAnno = _ref2;
 	                                } },
 	                            this.props.meses.map(function (mes, i) {
 	                                return _react2.default.createElement(
@@ -35961,32 +36085,233 @@
 	                        )
 	                    ),
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'col-sm-2 form-group ' + (this.state.inputNumeroLocal_error !== '' ? 'has-error' : '') },
+	                        'form',
+	                        { className: 'form', onSubmit: this.submitAgregarLocal, style: { display: this.state.modoIngreso === 'manual' ? '' : 'none' } },
 	                        _react2.default.createElement(
-	                            'label',
-	                            { className: 'control-label', htmlFor: 'locales' },
-	                            'Locales ',
-	                            _react2.default.createElement('span', { className: 'glyphicon glyphicon-paste' })
+	                            'div',
+	                            { className: 'col-sm-3 form-group ' + (this.state.inputNumeroLocal_error !== '' ? 'has-error' : '') },
+	                            _react2.default.createElement(
+	                                'label',
+	                                { className: 'control-label', htmlFor: 'locales' },
+	                                'Local'
+	                            ),
+	                            _react2.default.createElement('input', { className: 'form-control', type: 'number', min: '1', max: '9999', name: 'locales', ref: function ref(_ref3) {
+	                                    return _this3.inputNumeroLocal = _ref3;
+	                                }, onChange: this.inputNumeroLocalChanged }),
+	                            _react2.default.createElement(
+	                                'span',
+	                                { className: 'help-block' },
+	                                this.state.inputNumeroLocal_error
+	                            )
 	                        ),
-	                        _react2.default.createElement('input', { className: 'form-control', type: 'number', min: '1', max: '9999', name: 'locales', ref: function ref(_ref3) {
-	                                return _this2.inputNumeroLocal = _ref3;
-	                            }, onChange: this.inputNumeroLocalChanged }),
 	                        _react2.default.createElement(
-	                            'span',
-	                            { className: 'help-block' },
-	                            this.state.inputNumeroLocal_error
+	                            'div',
+	                            { className: 'col-sm-2 form-group' },
+	                            _react2.default.createElement(
+	                                'label',
+	                                { className: 'control-label' },
+	                                ' '
+	                            ),
+	                            _react2.default.createElement('input', { type: 'submit', className: 'form-control btn btn-primary', value: 'Agregar local' })
 	                        )
 	                    ),
 	                    _react2.default.createElement(
 	                        'div',
-	                        { className: 'col-sm-2 form-group' },
+	                        { style: { display: this.state.modoIngreso === 'excel' ? '' : 'none' } },
 	                        _react2.default.createElement(
-	                            'label',
-	                            { className: 'control-label' },
-	                            '.'
+	                            'div',
+	                            { className: 'col-sm-3 form-group ' + (this.state.inputPegar_error !== '' ? 'has-error' : '') },
+	                            _react2.default.createElement(
+	                                'label',
+	                                { className: 'control-label', htmlFor: 'locales' },
+	                                'Locales'
+	                            ),
+	                            _react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'locales', placeholder: 'pegar aca los datos de Excel', onPaste: this.testOnPaste.bind(this) }),
+	                            _react2.default.createElement(
+	                                'span',
+	                                { className: 'help-block' },
+	                                this.state.inputPegar_error
+	                            ),
+	                            _react2.default.createElement(
+	                                'p',
+	                                { style: { marginTop: '1em' } },
+	                                'Abra Excel, seleccione los datos de la columna ',
+	                                _react2.default.createElement(
+	                                    'b',
+	                                    null,
+	                                    'CECO'
+	                                ),
+	                                ', ',
+	                                _react2.default.createElement(
+	                                    'b',
+	                                    null,
+	                                    'COPIE'
+	                                ),
+	                                ' el contendo y ',
+	                                _react2.default.createElement(
+	                                    'b',
+	                                    null,
+	                                    'PEGUELO'
+	                                ),
+	                                ' en la cuandro de texto.'
+	                            )
 	                        ),
-	                        _react2.default.createElement('input', { type: 'submit', className: 'form-control btn btn-primary', value: 'Agregar local' })
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-sm-5 form-group ' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'col-sm-5' },
+	                                _react2.default.createElement(
+	                                    'label',
+	                                    { className: 'control-label', htmlFor: 'locales' },
+	                                    'Resultado'
+	                                ),
+	                                _react2.default.createElement(
+	                                    'table',
+	                                    { className: 'table table-bordered table-condensed' },
+	                                    _react2.default.createElement(
+	                                        'tbody',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'tr',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                _react2.default.createElement(
+	                                                    'small',
+	                                                    null,
+	                                                    'Correctos'
+	                                                )
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                this.state.pegadoConteoCorrectos
+	                                            )
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'tr',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                _react2.default.createElement(
+	                                                    'small',
+	                                                    null,
+	                                                    'Con Problemas'
+	                                                )
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                this.state.pegadoConteoProblemas
+	                                            )
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'tr',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                _react2.default.createElement(
+	                                                    'small',
+	                                                    null,
+	                                                    'TOTAL'
+	                                                )
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                _react2.default.createElement(
+	                                                    'b',
+	                                                    null,
+	                                                    this.state.pegadoConteoTotal
+	                                                )
+	                                            )
+	                                        )
+	                                    )
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: "col-sm-7 " + (this.state.pegadoConteoTotal <= 0 ? 'hide' : '') },
+	                                _react2.default.createElement(
+	                                    'label',
+	                                    { className: 'control-label', htmlFor: 'locales' },
+	                                    'Detalle'
+	                                ),
+	                                _react2.default.createElement(
+	                                    'table',
+	                                    { className: 'table table-bordered table-condensed' },
+	                                    _react2.default.createElement(
+	                                        'thead',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'tr',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'th',
+	                                                null,
+	                                                'Cliente'
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'th',
+	                                                null,
+	                                                'CECO'
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'th',
+	                                                null,
+	                                                'Estado'
+	                                            )
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'tbody',
+	                                        null,
+	                                        this.state.pegadoConProblemas.map(function (res, index) {
+	                                            return _react2.default.createElement(
+	                                                'tr',
+	                                                { key: index },
+	                                                _react2.default.createElement(
+	                                                    'td',
+	                                                    { className: _AgregarManualmente2.default.tableCell },
+	                                                    _react2.default.createElement(
+	                                                        'p',
+	                                                        null,
+	                                                        res.cliente
+	                                                    )
+	                                                ),
+	                                                _react2.default.createElement(
+	                                                    'td',
+	                                                    { className: _AgregarManualmente2.default.tableCell },
+	                                                    _react2.default.createElement(
+	                                                        'p',
+	                                                        null,
+	                                                        res.numeroLocal
+	                                                    )
+	                                                ),
+	                                                _react2.default.createElement(
+	                                                    'td',
+	                                                    { className: _AgregarManualmente2.default.tableCell },
+	                                                    _react2.default.createElement(
+	                                                        'p',
+	                                                        null,
+	                                                        _react2.default.createElement(
+	                                                            'small',
+	                                                            null,
+	                                                            res.mensaje
+	                                                        )
+	                                                    )
+	                                                )
+	                                            );
+	                                        })
+	                                    )
+	                                )
+	                            )
+	                        )
 	                    )
 	                )
 	            );
@@ -35998,22 +36323,17 @@
 
 	exports.default = AgregarManualmente;
 
-
-	{/*<Multiselect
-	    duration={0}                // sin animacion
-	    defaultValue={[]}
-	    value={this.state.localesEnMultiselect}
-	    data={this.state.locales}
-	    valueField="idLocal"        // el valor retornado es loca.idLocal
-	    textField="nombre"          // el texto es local.nombre
-	    filter="contains"           // muestra los locales que tengan la palabra buscada
-	    onChange={this.localSelected}
-	    />*/}
-
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AgregarManualmente.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 293 */
+/* 295 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"tableCell":"AgregarManualmente__tableCell___bz7b0"};
+
+/***/ },
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36030,249 +36350,568 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactDom = __webpack_require__(159);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _watcher = __webpack_require__(297);
+
+	var _watcher2 = _interopRequireDefault(_watcher);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Libs
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var Sticky = function (_React$Component) {
+	    _inherits(Sticky, _React$Component);
 
-	var PropTypes = _react2.default.PropTypes;
+	    function Sticky(props) {
+	        _classCallCheck(this, Sticky);
 
-	var style = {
-	    tableCell: {
-	        padding: 0
-	    },
-	    tableCellInput: {
-	        width: '100%',
-	        height: '100%',
-	        border: 0
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Sticky).call(this, props));
+
+	        _this.state = {};
+	        return _this;
 	    }
+
+	    /*
+	     * Anytime new props are received, force re-evaluation
+	     */
+
+
+	    _createClass(Sticky, [{
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps() {
+	            var origin = this.calculateOrigin();
+	            this.setState({ origin: origin });
+
+	            _watcher2.default.emit();
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            _watcher2.default.on(this.transition.bind(this));
+
+	            var origin = this.calculateOrigin();
+	            this.setState({ origin: origin });
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            _watcher2.default.off(this.transition.bind(this));
+	        }
+
+	        /*
+	         * Return the distance of the scrollbar from the
+	         * top of the window plus the total height of all
+	         * stuck Sticky instances above this one.
+	         */
+
+	    }, {
+	        key: 'pageOffset',
+	        value: function pageOffset() {
+	            return window.pageYOffset || document.documentElement.scrollTop;
+	        }
+	    }, {
+	        key: 'cumulativeTopCorrection',
+	        value: function cumulativeTopCorrection() {
+	            return this.context.container.state.cumulativeTopCorrection;
+	        }
+
+	        /*
+	         * Returns true/false depending on if this should be sticky.
+	         */
+
+	    }, {
+	        key: 'shouldBeSticky',
+	        value: function shouldBeSticky() {
+	            var offset = this.pageOffset();
+	            var origin = this.state.origin - this.cumulativeTopCorrection();
+	            var containerNode = _reactDom2.default.findDOMNode(this.context.container);
+
+	            // check conditions
+	            var stickyTopConditionsMet = offset >= origin + this.props.topOffset;
+	            var stickyBottomConditionsMet = offset < containerNode.getBoundingClientRect().height + origin;
+	            return stickyTopConditionsMet && stickyBottomConditionsMet;
+	        }
+	    }, {
+	        key: 'transition',
+	        value: function transition() {
+	            if (this.context.container) {
+	                this.nextState(this.shouldBeSticky());
+	            }
+	        }
+
+	        /*
+	         * Returns the y-coordinate of the top of this element.
+	         */
+
+	    }, {
+	        key: 'calculateOrigin',
+	        value: function calculateOrigin() {
+	            var node = _react2.default.findDOMNode(this);
+
+	            // Do some ugly DOM manipulation to where this element's non-sticky position would be
+	            var previousPosition = node.style.position;
+	            node.style.position = '';
+	            var origin = node.getBoundingClientRect().top + this.pageOffset();
+	            node.style.position = previousPosition;
+	            return origin;
+	        }
+	        /*
+	         * If sticky, merge this.props.stickyStyle with this.props.style.
+	         * If not, just return this.props.style.
+	         */
+
+	    }, {
+	        key: 'nextStyle',
+	        value: function nextStyle(shouldBeSticky) {
+	            if (shouldBeSticky) {
+	                var node = _reactDom2.default.findDOMNode(this);
+	                var containerNode = _reactDom2.default.findDOMNode(this.context.container);
+
+	                // inherit the boundaries of the container
+	                var rect = containerNode.getBoundingClientRect();
+	                var style = Object.assign({}, this.props.style);
+	                style.position = 'fixed';
+	                style.left = rect.left;
+	                style.width = rect.width;
+	                style.top = this.cumulativeTopCorrection();
+
+	                var bottomLimit = rect.bottom - node.getBoundingClientRect().height;
+	                if (style.top > bottomLimit) style.top = bottomLimit;
+
+	                // Finally, override the best-fit style with any user props
+	                return Object.assign(style, this.props.stickyStyle);
+	            } else {
+	                return this.props.style;
+	            }
+	        }
+
+	        /*
+	         * If sticky, merge this.props.stickyClass with this.props.className.
+	         * If not, just return this.props.className.
+	         */
+
+	    }, {
+	        key: 'nextClassName',
+	        value: function nextClassName(shouldBeSticky) {
+	            var className = this.props.className;
+	            if (shouldBeSticky) {
+	                className += ' ' + this.props.stickyClass;
+	            }
+	            return className;
+	        }
+
+	        /*
+	         * Transition to the next state.
+	         *
+	         * Updates the isSticky, style, and className state
+	         * variables.
+	         *
+	         * If sticky state is different than the previous,
+	         * fire the onStickyStateChange callback.
+	         */
+
+	    }, {
+	        key: 'nextState',
+	        value: function nextState(shouldBeSticky) {
+	            var hasChanged = this.state.isSticky !== shouldBeSticky;
+
+	            // Update this state
+	            this.setState({
+	                isSticky: shouldBeSticky,
+	                style: this.nextStyle(shouldBeSticky),
+	                className: this.nextClassName(shouldBeSticky)
+	            });
+
+	            if (hasChanged) {
+	                // Update container state
+	                if (this.context.container) {
+	                    this.context.container.nextState({
+	                        isSticky: shouldBeSticky,
+	                        height: _reactDom2.default.findDOMNode(this).getBoundingClientRect().height
+	                    });
+	                }
+
+	                // Publish sticky state change
+	                this.props.onStickyStateChange(shouldBeSticky);
+	            }
+	        }
+
+	        /*
+	         * The special sauce.
+	         */
+
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            // https://github.com/captivationsoftware/react-sticky/commit/e33c4cd873fc3399c96eead97871b2d74235f6b1#diff-18aac22485b5225ec8d6628cce48a7bf
+	            // "VIEJO", commit "ES6 Update"
+	            return this.props.type({
+	                style: this.state.style,
+	                className: this.state.className
+	            }, this.props.children);
+
+	            // "NUEVO", no permite cambiar el tipo de elemento
+	            //return (
+	            //    <div style={this.state.style} className={this.state.className}>
+	            //        {this.props.children}
+	            //    </div>
+	            //);
+	        }
+	    }]);
+
+	    return Sticky;
+	}(_react2.default.Component);
+
+	Sticky.contextTypes = {
+	    type: _react2.default.PropTypes.func,
+	    container: _react2.default.PropTypes.any
 	};
 
-	var AgregarPegarDesdeExcel = function (_React$Component) {
-	    _inherits(AgregarPegarDesdeExcel, _React$Component);
+	/*
+	 * Default properties...
+	 */
+	Sticky.defaultProps = {
+	    type: _react2.default.DOM.div,
+	    className: '',
+	    style: {},
+	    stickyClass: 'sticky',
+	    stickyStyle: {},
+	    topOffset: 0,
+	    onStickyStateChange: function onStickyStateChange() {}
+	};
 
-	    function AgregarPegarDesdeExcel() {
-	        _classCallCheck(this, AgregarPegarDesdeExcel);
+	exports.default = Sticky;
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(AgregarPegarDesdeExcel).apply(this, arguments));
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "sticky.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 297 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _raf = __webpack_require__(298);
+
+	var _raf2 = _interopRequireDefault(_raf);
+
+	var _simpleSignal = __webpack_require__(300);
+
+	var _simpleSignal2 = _interopRequireDefault(_simpleSignal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var signal = new _simpleSignal2.default();
+
+	var handleEvent = function handleEvent() {
+	    return (0, _raf2.default)(signal.emit);
+	};
+
+	/**
+	 * Wire up event listeners
+	 */
+	['scroll', 'resize', 'touchmove', 'touchend'].forEach(function (evt) {
+	    if (window.addEventListener) {
+	        window.addEventListener(evt, handleEvent);
+	    } else {
+	        window.attachEvent('on' + evt, handleEvent);
+	    }
+	});
+
+	exports.default = signal;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "watcher.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 298 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(299)
+	  , root = typeof window === 'undefined' ? global : window
+	  , vendors = ['moz', 'webkit']
+	  , suffix = 'AnimationFrame'
+	  , raf = root['request' + suffix]
+	  , caf = root['cancel' + suffix] || root['cancelRequest' + suffix]
+
+	for(var i = 0; !raf && i < vendors.length; i++) {
+	  raf = root[vendors[i] + 'Request' + suffix]
+	  caf = root[vendors[i] + 'Cancel' + suffix]
+	      || root[vendors[i] + 'CancelRequest' + suffix]
+	}
+
+	// Some versions of FF have rAF but not cAF
+	if(!raf || !caf) {
+	  var last = 0
+	    , id = 0
+	    , queue = []
+	    , frameDuration = 1000 / 60
+
+	  raf = function(callback) {
+	    if(queue.length === 0) {
+	      var _now = now()
+	        , next = Math.max(0, frameDuration - (_now - last))
+	      last = next + _now
+	      setTimeout(function() {
+	        var cp = queue.slice(0)
+	        // Clear queue here to prevent
+	        // callbacks from appending listeners
+	        // to the current frame's queue
+	        queue.length = 0
+	        for(var i = 0; i < cp.length; i++) {
+	          if(!cp[i].cancelled) {
+	            try{
+	              cp[i].callback(last)
+	            } catch(e) {
+	              setTimeout(function() { throw e }, 0)
+	            }
+	          }
+	        }
+	      }, Math.round(next))
+	    }
+	    queue.push({
+	      handle: ++id,
+	      callback: callback,
+	      cancelled: false
+	    })
+	    return id
+	  }
+
+	  caf = function(handle) {
+	    for(var i = 0; i < queue.length; i++) {
+	      if(queue[i].handle === handle) {
+	        queue[i].cancelled = true
+	      }
+	    }
+	  }
+	}
+
+	module.exports = function(fn) {
+	  // Wrap in a new function to prevent
+	  // `cancel` potentially being assigned
+	  // to the native rAF function
+	  return raf.call(root, fn)
+	}
+	module.exports.cancel = function() {
+	  caf.apply(root, arguments)
+	}
+	module.exports.polyfill = function() {
+	  root.requestAnimationFrame = raf
+	  root.cancelAnimationFrame = caf
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 299 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.7.1
+	(function() {
+	  var getNanoSeconds, hrtime, loadTime;
+
+	  if ((typeof performance !== "undefined" && performance !== null) && performance.now) {
+	    module.exports = function() {
+	      return performance.now();
+	    };
+	  } else if ((typeof process !== "undefined" && process !== null) && process.hrtime) {
+	    module.exports = function() {
+	      return (getNanoSeconds() - loadTime) / 1e6;
+	    };
+	    hrtime = process.hrtime;
+	    getNanoSeconds = function() {
+	      var hr;
+	      hr = hrtime();
+	      return hr[0] * 1e9 + hr[1];
+	    };
+	    loadTime = getNanoSeconds();
+	  } else if (Date.now) {
+	    module.exports = function() {
+	      return Date.now() - loadTime;
+	    };
+	    loadTime = Date.now();
+	  } else {
+	    module.exports = function() {
+	      return new Date().getTime() - loadTime;
+	    };
+	    loadTime = new Date().getTime();
+	  }
+
+	}).call(this);
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+
+/***/ },
+/* 300 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	exports.__esModule = true;
+	exports["default"] = Signal;
+
+	function Signal() {
+	  var subscribers = [];
+	  return {
+	    on: function on(fn) {
+	      subscribers.push(fn);
+	    },
+	    off: function off(fn) {
+	      var index = subscribers.indexOf(fn);
+	      if (index > -1) {
+	        subscribers.splice(index, 1);
+	      }
+	    },
+	    emit: function emit(val) {
+	      for (var i = 0, len = subscribers.length; i < len; ++i) {
+	        subscribers[i](val);
+	      }
+	    }
+	  };
+	}
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _sticky = __webpack_require__(296);
+
+	var _sticky2 = _interopRequireDefault(_sticky);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Container = function (_React$Component) {
+	    _inherits(Container, _React$Component);
+
+	    function Container(props) {
+	        _classCallCheck(this, Container);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Container).call(this, props));
+
+	        _this.state = {
+	            topCorrection: 0,
+	            cumulativeTopCorrection: 0
+	        };
+	        return _this;
 	    }
 
-	    _createClass(AgregarPegarDesdeExcel, [{
-	        key: 'testOnPaste',
-	        value: function testOnPaste(event) {
-	            var _this2 = this;
-
-	            event.preventDefault();
-	            // cuando se pegue un elemento, separar separar las filas por el "line feed" '\n'
-	            console.log(event.clipboardData.items[0].type);
-	            event.clipboardData.items[0].getAsString(function (texto) {
-	                // separar cada una de las filas '\n'
-	                var rows = texto.trim().split('\n');
-	                // quitar las filas vacias, y separar sus valores por el caracter tabulador
-	                rows = rows.filter(function (row) {
-	                    return row !== '';
-	                });
-	                var celdas = rows.map(function (row) {
-	                    return row.trim().split('\t');
-	                });
-	                console.log(celdas);
-
-	                // Agregar los locales
-	                celdas.forEach(function (row) {
-
-	                    // buscar el cliente por nombre o nombreCorto, en la primera y la segunda celda
-	                    var cliente = _this2.props.clientes.find(function (cliente) {
-	                        return cliente.nombre === row[0] || cliente.nombreCorto === row[0] || cliente.nombre === row[1] || cliente.nombreCorto === row[1];
-	                    });
-
-	                    if (cliente) {
-	                        // buscar el local
-	                        var local = cliente.locales.find(function (local) {
-	                            return local.numero == row[0] || local.numero == row[1];
-	                        });
-	                        if (local) {
-	                            // TODO: FIX MES AÑO
-	                            //let localCreado = this.tablaLocalesMensual.agregarLocal(local, this.state.inputMesAnno)
-	                            var localCreado = _this2.props.onFormSubmit(local, '03-2016');
-	                            //console.log(local)
-	                        } else {
-	                                console.log('El cliente ' + cliente.nombreCorto + ' no tiene el local ' + row[0] + '||' + row[1]);
-	                            }
-	                    } else {
-	                        console.log('cliente ' + row[0] + ' no encontrado');
-	                    }
-	                });
-	            });
+	    _createClass(Container, [{
+	        key: 'getChildContext',
+	        value: function getChildContext() {
+	            return {
+	                container: this
+	            };
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.updateCumulativeTopCorrection();
+	        }
+	    }, {
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate() {
+	            this.updateCumulativeTopCorrection();
+	        }
+	    }, {
+	        key: 'cumulativeTopCorrection',
+	        value: function cumulativeTopCorrection() {
+	            var topCorrection = 0;
+	            if (this.context.container) {
+	                var container = this.context.container;
+	                while (container) {
+	                    topCorrection += container.state.topCorrection;
+	                    container = container.context.container;
+	                };
+	            }
+	            return topCorrection;
+	        }
+	    }, {
+	        key: 'updateCumulativeTopCorrection',
+	        value: function updateCumulativeTopCorrection() {
+	            var cumulativeTopCorrection = this.cumulativeTopCorrection();
+	            if (cumulativeTopCorrection !== this.state.cumulativeTopCorrection) {
+	                this.setState({ cumulativeTopCorrection: cumulativeTopCorrection });
+	            }
+	        }
+	    }, {
+	        key: 'nextState',
+	        value: function nextState(state) {
+	            var topCorrection = state.isSticky ? state.height : 0;
+	            this.setState({ topCorrection: topCorrection });
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this3 = this;
+	            var style = Object.assign({}, this.props.style || {});
 
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'row' },
-	                    _react2.default.createElement(
-	                        'h4',
-	                        { className: 'page-header', style: { marginTop: '1em' } },
-	                        'Agregar locales a la programación:'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'row' },
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'col-sm-offset-1 col-sm-3' },
-	                        _react2.default.createElement(
-	                            'p',
-	                            null,
-	                            'Abra Excel, seleccione los datos de la columna ',
-	                            _react2.default.createElement(
-	                                'b',
-	                                null,
-	                                'Cliente'
-	                            ),
-	                            ' y ',
-	                            _react2.default.createElement(
-	                                'b',
-	                                null,
-	                                'CECO'
-	                            ),
-	                            ', ',
-	                            _react2.default.createElement(
-	                                'b',
-	                                null,
-	                                'COPIE'
-	                            ),
-	                            ' el contendo y finalmente ',
-	                            _react2.default.createElement(
-	                                'b',
-	                                null,
-	                                'PEGUELO'
-	                            ),
-	                            ' en esta tabla:'
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'col-sm-offset-0 col-sm-6' },
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'form-horizontal' },
-	                            _react2.default.createElement(
-	                                'div',
-	                                { className: 'form-group' },
-	                                _react2.default.createElement(
-	                                    'label',
-	                                    { className: 'col-sm-2 control-label', htmlFor: 'fechaProgramada' },
-	                                    'Mes:'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'div',
-	                                    { className: 'col-sm-10' },
-	                                    _react2.default.createElement(
-	                                        'select',
-	                                        { className: 'form-control', name: 'fechaProgramada', ref: function ref(_ref) {
-	                                                return _this3.inputMesAnno = _ref;
-	                                            } },
-	                                        this.props.meses.map(function (mes, i) {
-	                                            return _react2.default.createElement(
-	                                                'option',
-	                                                { key: i, value: mes.valor },
-	                                                mes.texto
-	                                            );
-	                                        })
-	                                    )
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'div',
-	                                { className: 'form-group' },
-	                                _react2.default.createElement(
-	                                    'label',
-	                                    { className: 'col-sm-2 control-label', htmlFor: 'fechaProgramada' },
-	                                    'Pegar datos:'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'div',
-	                                    { className: 'col-sm-10' },
-	                                    _react2.default.createElement(
-	                                        'table',
-	                                        { className: 'table table-bordered table-condensed' },
-	                                        _react2.default.createElement(
-	                                            'thead',
-	                                            null,
-	                                            _react2.default.createElement(
-	                                                'tr',
-	                                                null,
-	                                                _react2.default.createElement(
-	                                                    'th',
-	                                                    null,
-	                                                    'Cliente'
-	                                                ),
-	                                                _react2.default.createElement(
-	                                                    'th',
-	                                                    null,
-	                                                    'CECO'
-	                                                )
-	                                            )
-	                                        ),
-	                                        _react2.default.createElement(
-	                                            'tbody',
-	                                            null,
-	                                            _react2.default.createElement(
-	                                                'tr',
-	                                                null,
-	                                                _react2.default.createElement(
-	                                                    'td',
-	                                                    { style: style.tableCell },
-	                                                    _react2.default.createElement('input', { type: 'text', style: style.tableCellInput, onPaste: this.testOnPaste.bind(this) })
-	                                                ),
-	                                                _react2.default.createElement(
-	                                                    'td',
-	                                                    { style: style.tableCell },
-	                                                    _react2.default.createElement('input', { type: 'text', style: style.tableCellInput, onPaste: this.testOnPaste.bind(this) })
-	                                                )
-	                                            ),
-	                                            _react2.default.createElement(
-	                                                'tr',
-	                                                null,
-	                                                _react2.default.createElement(
-	                                                    'td',
-	                                                    { style: style.tableCell },
-	                                                    _react2.default.createElement('input', { type: 'text', style: style.tableCellInput, onPaste: this.testOnPaste.bind(this) })
-	                                                ),
-	                                                _react2.default.createElement(
-	                                                    'td',
-	                                                    { style: style.tableCell },
-	                                                    _react2.default.createElement('input', { type: 'text', style: style.tableCellInput, onPaste: this.testOnPaste.bind(this) })
-	                                                )
-	                                            )
-	                                        )
-	                                    )
-	                                )
-	                            )
-	                        )
-	                    )
-	                )
-	            );
+	            var paddingTop = style.paddingTop || 0;
+	            style.paddingTop = paddingTop + this.state.topCorrection;
+
+	            // Mi version: hacer un pull request con esto:
+	            return this.props.type({
+	                style: style,
+	                className: this.props.className
+	            }, this.props.children);
+
+	            // ORIGINAL
+	            //return <div {...this.props} style={style}>
+	            //    {this.props.children}
+	            //</div>
 	        }
 	    }]);
 
-	    return AgregarPegarDesdeExcel;
+	    return Container;
 	}(_react2.default.Component);
 
-	exports.default = AgregarPegarDesdeExcel;
+	Container.contextTypes = {
+	    container: _react2.default.PropTypes.any
+	};
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AgregarPegarDesdeExcel.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	Container.childContextTypes = {
+	    container: _react2.default.PropTypes.any
+	};
+
+	// TODO: Hacer un pull request con esto
+	Container.defaultProps = {
+	    type: _react2.default.DOM.div
+	};
+
+	exports.default = Container;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 /******/ ]);
