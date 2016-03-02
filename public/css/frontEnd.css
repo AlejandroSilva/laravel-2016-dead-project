@@ -111,9 +111,17 @@
 .TablaLocalesMensual__tdJornada___kUo8p {
     vertical-align: middle !important;
 }
+/* Estado */
+.TablaLocalesMensual__thEstado___1oBQx {
+    width: 100px;
+    background: white;
+}
+.TablaLocalesMensual__tdEstado___22jAi {
+    vertical-align: middle !important;
+}
 /* Opciones */
 .TablaLocalesMensual__thOpciones___2PzVJ {
-    width: 350px;
+    width: 250px;
     background: white;
 }
 .TablaLocalesMensual__tdOpciones___fMayz {
@@ -124,6 +132,18 @@
 .TablaLocalesMensual__inputDia___1IKdv{
     width: 30px;
     marginRight: 2px;
+}
+.TablaLocalesMensual__inputDiaInvalido___kQYUg{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
+.TablaLocalesMensual__inputDiaPendiente___3UmCC{
+    border: 2px solid #f0ad4e;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
 }
 .TablaLocalesMensual__inputMes___3dMJd{
     width: 25px;
