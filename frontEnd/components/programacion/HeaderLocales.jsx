@@ -26,7 +26,7 @@ class HeaderLocales extends React.Component{
                 <th className={styles.thRegion}>
                     <Cabecera
                         nombre="Región"
-                        valores={this.props.zonas}
+                        opciones={this.props.zonas}
                     />
                 </th>
                 <th className={styles.thComuna}>Comuna</th>
