@@ -33,7 +33,7 @@
 }
 /* Fecha */
 .TablaLocalesMensual__thFecha___1qDZQ {
-    width: 120px;
+    min-width: 120px;
     background: white;
 }
 .TablaLocalesMensual__tdFecha___3Ppcl {
