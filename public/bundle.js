@@ -21726,17 +21726,19 @@
 	        _this.submitLocal = _this.submitLocal.bind(_this);
 	        return _this;
 	    }
-	    //componentDidMount(){
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[1], '04-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[2], '04-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[4], '04-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[5], '05-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[6], '05-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[8], '06-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[12], '06-2016')
-	    //}
 
 	    _createClass(ProgramacionMensual, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[1], '04-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[2], '04-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[4], '04-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[5], '05-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[6], '05-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[8], '06-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[12], '06-2016');
+	        }
+	    }, {
 	        key: 'submitLocal',
 	        value: function submitLocal(local, mesAnno) {
 	            console.log("agregarndo el local: ", local, mesAnno);
@@ -36580,7 +36582,7 @@
 	                    { className: _TablaLocalesMensual2.default.thRegion },
 	                    _react2.default.createElement(_Cabecera2.default, {
 	                        nombre: 'Región',
-	                        valores: this.props.zonas
+	                        opciones: this.props.zonas
 	                    })
 	                ),
 	                _react2.default.createElement(
@@ -36636,6 +36638,8 @@
 	    value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
@@ -36666,14 +36670,28 @@
 	    function Cabecera(props) {
 	        _classCallCheck(this, Cabecera);
 
+	        // mapear prop.opciones (arreglo de string) a state.opciones (string + selected)
+
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Cabecera).call(this, props));
 
+	        var opciones = _this.props.opciones.map(function (opcion) {
+	            return { texto: opcion, seleccionado: true };
+	        });
+
 	        _this.state = {
-	            open: false
+	            open: false,
+	            opciones: opciones,
+	            todosSeleccionados: true
 	        };
+
+	        // display del menu
 	        _this.onClickHandler = _this.onClickHandler.bind(_this);
 	        _this.closeMenu = _this.closeMenu.bind(_this);
 	        _this.toggleMenu = _this.toggleMenu.bind(_this);
+	        // elementos seleccionados
+	        _this.revisarTodosSeleccionados = _this.revisarTodosSeleccionados.bind(_this);
+	        _this.toggleTodos = _this.toggleTodos.bind(_this);
+	        _this.toggleTodos = _this.toggleTodos.bind(_this);
 	        return _this;
 	    }
 	    // Metodos para controlar el display del menu, ocultar y mostrar los elementos
@@ -36708,18 +36726,86 @@
 	            this.setState({ open: !this.state.open });
 	        }
 	    }, {
-	        key: 'aplicarFiltro',
-	        value: function aplicarFiltro() {}
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            var _this2 = this;
+
+	            // cuando se actualizan (o reciben los datos), se debe actualizar la lista de opciones, pero mantener su seleccion
+	            var nextOpciones = nextProps.opciones;
+	            var opcionesActualizadas = nextOpciones.map(function (nextOpc) {
+	                var opcion = _this2.state.opciones.find(function (opc) {
+	                    return opc.texto === nextOpc;
+	                });
+	                // si existe, se mantienen los datos, si no, se crea la opcion
+	                return opcion ? opcion : {
+	                    texto: nextOpc,
+	                    seleccionado: true
+	                };
+	            });
+
+	            console.log('x ', this.revisarTodosSeleccionados(opcionesActualizadas));
+	            this.setState({
+	                opciones: opcionesActualizadas,
+	                todosSeleccionados: this.revisarTodosSeleccionados(opcionesActualizadas)
+	            });
+	        }
+
+	        // Elementos seleccionados
+
+	    }, {
+	        key: 'revisarTodosSeleccionados',
+	        value: function revisarTodosSeleccionados(opciones) {
+	            var noSeleccionados = opciones.filter(function (opc) {
+	                return !opc.seleccionado;
+	            });
+	            return noSeleccionados.length === 0;
+	        }
+	    }, {
+	        key: 'toggleTodos',
+	        value: function toggleTodos() {
+	            // des-seleccionar todos los elementos
+	            if (this.state.todosSeleccionados) {
+	                this.setState({
+	                    opciones: this.state.opciones.map(function (opcion) {
+	                        return _extends({}, opcion, { seleccionado: false });
+	                    }),
+	                    todosSeleccionados: false
+	                });
+	            } else {
+	                this.setState({
+	                    opciones: this.state.opciones.map(function (opcion) {
+	                        return _extends({}, opcion, { seleccionado: true });
+	                    }),
+	                    todosSeleccionados: true
+	                });
+	            }
+	        }
+	    }, {
+	        key: 'checkboxSeleccionado',
+	        value: function checkboxSeleccionado(opcionSeleccionada) {
+	            var opcionesActualizadas = this.state.opciones.map(function (opcion) {
+	                if (opcion === opcionSeleccionada) opcion.seleccionado = !opcion.seleccionado;
+	                return opcion;
+	            });
+
+	            console.log('y ', this.revisarTodosSeleccionados(opcionesActualizadas));
+	            // cuando se selecciona una opcion, se cambia su campo 'seleccionado'
+	            this.setState({
+	                opciones: opcionesActualizadas,
+	                todosSeleccionados: this.revisarTodosSeleccionados(opcionesActualizadas)
+	            });
+	            // chequear si estan todos seleccionados
+	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this2 = this;
+	            var _this3 = this;
 
-	            //console.log(this.props.valores)
+	            console.log(this.state.opciones);
 	            return _react2.default.createElement(
 	                'div',
 	                { className: _Cabecera2.default.container, ref: function ref(_ref2) {
-	                        return _this2.node = _ref2;
+	                        return _this3.node = _ref2;
 	                    } },
 	                _react2.default.createElement(
 	                    'div',
@@ -36733,56 +36819,23 @@
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: _Cabecera2.default.contenedorValores },
-	                        this.props.valores.map(function (valor, index) {
+	                        this.state.opciones.map(function (opcion, index) {
 	                            return _react2.default.createElement(
 	                                'label',
-	                                null,
-	                                _react2.default.createElement('input', { type: 'checkbox' }),
+	                                { key: index },
+	                                _react2.default.createElement('input', { type: 'checkbox',
+	                                    onChange: _this3.checkboxSeleccionado.bind(_this3, opcion),
+	                                    checked: opcion.seleccionado
+	                                }),
 	                                ' ',
-	                                valor
+	                                opcion.texto
 	                            );
-	                        }),
-	                        _react2.default.createElement(
-	                            'label',
-	                            null,
-	                            _react2.default.createElement('input', { type: 'checkbox' }),
-	                            'Maule'
-	                        ),
-	                        _react2.default.createElement(
-	                            'label',
-	                            null,
-	                            _react2.default.createElement('input', { type: 'checkbox' }),
-	                            'Santiago'
-	                        ),
-	                        _react2.default.createElement(
-	                            'label',
-	                            null,
-	                            _react2.default.createElement('input', { type: 'checkbox' }),
-	                            'Norte Grande'
-	                        ),
-	                        _react2.default.createElement(
-	                            'label',
-	                            null,
-	                            _react2.default.createElement('input', { type: 'checkbox' }),
-	                            'Iquique'
-	                        ),
-	                        _react2.default.createElement(
-	                            'label',
-	                            null,
-	                            _react2.default.createElement('input', { type: 'checkbox' }),
-	                            'Arica'
-	                        ),
-	                        _react2.default.createElement(
-	                            'label',
-	                            null,
-	                            _react2.default.createElement('input', { type: 'checkbox' }),
-	                            'Osorno'
-	                        )
+	                        })
 	                    ),
 	                    _react2.default.createElement(
 	                        'label',
 	                        null,
-	                        _react2.default.createElement('input', { type: 'checkbox' }),
+	                        _react2.default.createElement('input', { type: 'checkbox', onChange: this.toggleTodos, checked: this.state.todosSeleccionados }),
 	                        'Todos'
 	                    ),
 	                    _react2.default.createElement('input', { type: 'text', placeholder: '...' }),

@@ -28,15 +28,15 @@ class ProgramacionMensual extends React.Component{
         }
         this.submitLocal = this.submitLocal.bind(this)
     }
-    //componentDidMount(){
-    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[1], '04-2016')
-    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[2], '04-2016')
-    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[4], '04-2016')
-    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[5], '05-2016')
-    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[6], '05-2016')
-    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[8], '06-2016')
-    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[12], '06-2016')
-    //}
+    componentDidMount(){
+        this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[1], '04-2016')
+        this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[2], '04-2016')
+        this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[4], '04-2016')
+        this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[5], '05-2016')
+        this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[6], '05-2016')
+        this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[8], '06-2016')
+        this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[12], '06-2016')
+    }
 
     submitLocal(local, mesAnno){
         console.log("agregarndo el local: ", local, mesAnno)
