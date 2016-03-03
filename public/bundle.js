@@ -21681,7 +21681,7 @@
 
 	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
 
-	var _AgregarManualmente = __webpack_require__(294);
+	var _AgregarManualmente = __webpack_require__(304);
 
 	var _AgregarManualmente2 = _interopRequireDefault(_AgregarManualmente);
 
@@ -21728,6 +21728,17 @@
 	    }
 
 	    _createClass(ProgramacionMensual, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[1], '04-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[2], '04-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[4], '04-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[5], '05-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[6], '05-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[8], '06-2016');
+	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[12], '06-2016');
+	        }
+	    }, {
 	        key: 'submitLocal',
 	        value: function submitLocal(local, mesAnno) {
 	            console.log("agregarndo el local: ", local, mesAnno);
@@ -35401,23 +35412,23 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _container = __webpack_require__(301);
+	var _container = __webpack_require__(292);
 
 	var _container2 = _interopRequireDefault(_container);
 
-	var _RowLocales = __webpack_require__(302);
+	var _RowLocales = __webpack_require__(298);
 
 	var _RowLocales2 = _interopRequireDefault(_RowLocales);
 
-	var _HeaderLocales = __webpack_require__(303);
+	var _HeaderLocales = __webpack_require__(300);
 
 	var _HeaderLocales2 = _interopRequireDefault(_HeaderLocales);
 
-	var _shared = __webpack_require__(292);
+	var _shared = __webpack_require__(303);
 
 	var _shared2 = _interopRequireDefault(_shared);
 
-	var _TablaLocalesMensual = __webpack_require__(293);
+	var _TablaLocalesMensual = __webpack_require__(299);
 
 	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
 
@@ -35518,6 +35529,9 @@
 	            prevRow.focusFecha();
 	        }
 	    }, {
+	        key: 'aplicarFiltroZona',
+	        value: function aplicarFiltroZona() {}
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var _this3 = this;
@@ -35531,7 +35545,14 @@
 	                    _react2.default.createElement(
 	                        'thead',
 	                        null,
-	                        _react2.default.createElement(_HeaderLocales2.default, null)
+	                        _react2.default.createElement(_HeaderLocales2.default
+	                        // mapear las zonas.nombreCorto, y luego seleccionar solo las unicas
+	                        , { zonas: this.state.locales.map(function (local) {
+	                                return local.direccion && local.direccion.comuna && local.direccion.comuna.provincia && local.direccion.comuna.provincia.region && local.direccion.comuna.provincia.region && local.direccion.comuna.provincia.region.nombreCorto || '...';
+	                            }).filter(function (zona, index, self) {
+	                                return self.indexOf(zona) === index;
+	                            })
+	                        })
 	                    ),
 	                    _react2.default.createElement(
 	                        'tbody',
@@ -35583,20 +35604,6 @@
 
 /***/ },
 /* 292 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M"};
-
-/***/ },
-/* 293 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-	module.exports = {"thCorrelativo":"TablaLocalesMensual__thCorrelativo___3HnOu","tdCorrelativo":"TablaLocalesMensual__tdCorrelativo___Kvh_p TablaLocalesMensual__thCorrelativo___3HnOu","thFecha":"TablaLocalesMensual__thFecha___1qDZQ","tdFecha":"TablaLocalesMensual__tdFecha___3Ppcl TablaLocalesMensual__thFecha___1qDZQ","thCliente":"TablaLocalesMensual__thCliente___3l2rs","tdCliente":"TablaLocalesMensual__tdCliente___1R8Nd TablaLocalesMensual__thCliente___3l2rs","thCeco":"TablaLocalesMensual__thCeco___1Isth","tdCeco":"TablaLocalesMensual__tdCeco___39Cmj TablaLocalesMensual__thCeco___1Isth","thLocal":"TablaLocalesMensual__thLocal___zaA5L","tdLocal":"TablaLocalesMensual__tdLocal___2quqk TablaLocalesMensual__thLocal___zaA5L","thZonaSei":"TablaLocalesMensual__thZonaSei___2_Eql","tdZonaSei":"TablaLocalesMensual__tdZonaSei___3ywi8 TablaLocalesMensual__thZonaSei___2_Eql","thRegion":"TablaLocalesMensual__thRegion___10Xps","tdRegion":"TablaLocalesMensual__tdRegion___2KUA- TablaLocalesMensual__thRegion___10Xps","thComuna":"TablaLocalesMensual__thComuna___2k2Sr","tdComuna":"TablaLocalesMensual__tdComuna___93qXr TablaLocalesMensual__thComuna___2k2Sr","thStock":"TablaLocalesMensual__thStock___1jhS_","tdStock":"TablaLocalesMensual__tdStock___1mA1i TablaLocalesMensual__thStock___1jhS_","thDotacion":"TablaLocalesMensual__thDotacion___K39aJ","tdDotacion":"TablaLocalesMensual__tdDotacion___3q5PS TablaLocalesMensual__thDotacion___K39aJ","thJornada":"TablaLocalesMensual__thJornada___1DQcG","tdJornada":"TablaLocalesMensual__tdJornada___kUo8p TablaLocalesMensual__thJornada___1DQcG","thEstado":"TablaLocalesMensual__thEstado___1oBQx","tdEstado":"TablaLocalesMensual__tdEstado___22jAi TablaLocalesMensual__thEstado___1oBQx","thOpciones":"TablaLocalesMensual__thOpciones___2PzVJ","tdOpciones":"TablaLocalesMensual__tdOpciones___fMayz TablaLocalesMensual__thOpciones___2PzVJ","inputDia":"TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"TablaLocalesMensual__inputDiaInvalido___kQYUg TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"TablaLocalesMensual__inputDiaPendiente___3UmCC TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputMes":"TablaLocalesMensual__inputMes___3dMJd shared__inputNumberAsText___1Qr9M","inputAnno":"TablaLocalesMensual__inputAnno___3XjjF shared__inputNumberAsText___1Qr9M","inputDotacionSugerida":"TablaLocalesMensual__inputDotacionSugerida___MCPhp shared__inputNumberAsText___1Qr9M","inputDotacionIngresada":"TablaLocalesMensual__inputDotacionIngresada___2FZVc shared__inputNumberAsText___1Qr9M"};
-
-/***/ },
-/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -35613,7 +35620,1224 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _AgregarManualmente = __webpack_require__(295);
+	var _sticky = __webpack_require__(293);
+
+	var _sticky2 = _interopRequireDefault(_sticky);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Container = function (_React$Component) {
+	    _inherits(Container, _React$Component);
+
+	    function Container(props) {
+	        _classCallCheck(this, Container);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Container).call(this, props));
+
+	        _this.state = {
+	            topCorrection: 0,
+	            cumulativeTopCorrection: 0
+	        };
+	        return _this;
+	    }
+
+	    _createClass(Container, [{
+	        key: 'getChildContext',
+	        value: function getChildContext() {
+	            return {
+	                container: this
+	            };
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.updateCumulativeTopCorrection();
+	        }
+	    }, {
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate() {
+	            this.updateCumulativeTopCorrection();
+	        }
+	    }, {
+	        key: 'cumulativeTopCorrection',
+	        value: function cumulativeTopCorrection() {
+	            var topCorrection = 0;
+	            if (this.context.container) {
+	                var container = this.context.container;
+	                while (container) {
+	                    topCorrection += container.state.topCorrection;
+	                    container = container.context.container;
+	                };
+	            }
+	            return topCorrection;
+	        }
+	    }, {
+	        key: 'updateCumulativeTopCorrection',
+	        value: function updateCumulativeTopCorrection() {
+	            var cumulativeTopCorrection = this.cumulativeTopCorrection();
+	            if (cumulativeTopCorrection !== this.state.cumulativeTopCorrection) {
+	                this.setState({ cumulativeTopCorrection: cumulativeTopCorrection });
+	            }
+	        }
+	    }, {
+	        key: 'nextState',
+	        value: function nextState(state) {
+	            var topCorrection = state.isSticky ? state.height : 0;
+	            this.setState({ topCorrection: topCorrection });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var style = Object.assign({}, this.props.style || {});
+
+	            var paddingTop = style.paddingTop || 0;
+	            style.paddingTop = paddingTop + this.state.topCorrection;
+
+	            // Mi version: hacer un pull request con esto:
+	            return this.props.type({
+	                style: style,
+	                className: this.props.className
+	            }, this.props.children);
+
+	            // ORIGINAL
+	            //return <div {...this.props} style={style}>
+	            //    {this.props.children}
+	            //</div>
+	        }
+	    }]);
+
+	    return Container;
+	}(_react2.default.Component);
+
+	Container.contextTypes = {
+	    container: _react2.default.PropTypes.any
+	};
+
+	Container.childContextTypes = {
+	    container: _react2.default.PropTypes.any
+	};
+
+	// TODO: Hacer un pull request con esto
+	Container.defaultProps = {
+	    type: _react2.default.DOM.div
+	};
+
+	exports.default = Container;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(159);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _watcher = __webpack_require__(294);
+
+	var _watcher2 = _interopRequireDefault(_watcher);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * https://github.com/captivationsoftware/react-sticky
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+	var Sticky = function (_React$Component) {
+	    _inherits(Sticky, _React$Component);
+
+	    function Sticky(props) {
+	        _classCallCheck(this, Sticky);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Sticky).call(this, props));
+
+	        _this.state = {};
+	        return _this;
+	    }
+
+	    /*
+	     * Anytime new props are received, force re-evaluation
+	     */
+
+
+	    _createClass(Sticky, [{
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps() {
+	            var origin = this.calculateOrigin();
+	            this.setState({ origin: origin });
+
+	            _watcher2.default.emit();
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            _watcher2.default.on(this.transition.bind(this));
+
+	            var origin = this.calculateOrigin();
+	            this.setState({ origin: origin });
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            _watcher2.default.off(this.transition.bind(this));
+	        }
+
+	        /*
+	         * Return the distance of the scrollbar from the
+	         * top of the window plus the total height of all
+	         * stuck Sticky instances above this one.
+	         */
+
+	    }, {
+	        key: 'pageOffset',
+	        value: function pageOffset() {
+	            return window.pageYOffset || document.documentElement.scrollTop;
+	        }
+	    }, {
+	        key: 'cumulativeTopCorrection',
+	        value: function cumulativeTopCorrection() {
+	            return this.context.container.state.cumulativeTopCorrection;
+	        }
+
+	        /*
+	         * Returns true/false depending on if this should be sticky.
+	         */
+
+	    }, {
+	        key: 'shouldBeSticky',
+	        value: function shouldBeSticky() {
+	            var offset = this.pageOffset();
+	            var origin = this.state.origin - this.cumulativeTopCorrection();
+	            var containerNode = _reactDom2.default.findDOMNode(this.context.container);
+
+	            // check conditions
+	            var stickyTopConditionsMet = offset >= origin + this.props.topOffset;
+	            var stickyBottomConditionsMet = offset < containerNode.getBoundingClientRect().height + origin;
+	            return stickyTopConditionsMet && stickyBottomConditionsMet;
+	        }
+	    }, {
+	        key: 'transition',
+	        value: function transition() {
+	            if (this.context.container) {
+	                this.nextState(this.shouldBeSticky());
+	            }
+	        }
+
+	        /*
+	         * Returns the y-coordinate of the top of this element.
+	         */
+
+	    }, {
+	        key: 'calculateOrigin',
+	        value: function calculateOrigin() {
+	            var node = _react2.default.findDOMNode(this);
+
+	            // Do some ugly DOM manipulation to where this element's non-sticky position would be
+	            var previousPosition = node.style.position;
+	            node.style.position = '';
+	            var origin = node.getBoundingClientRect().top + this.pageOffset();
+	            node.style.position = previousPosition;
+	            return origin;
+	        }
+	        /*
+	         * If sticky, merge this.props.stickyStyle with this.props.style.
+	         * If not, just return this.props.style.
+	         */
+
+	    }, {
+	        key: 'nextStyle',
+	        value: function nextStyle(shouldBeSticky) {
+	            if (shouldBeSticky) {
+	                var node = _reactDom2.default.findDOMNode(this);
+	                var containerNode = _reactDom2.default.findDOMNode(this.context.container);
+
+	                // inherit the boundaries of the container
+	                var rect = containerNode.getBoundingClientRect();
+	                var style = Object.assign({}, this.props.style);
+	                style.position = 'fixed';
+	                style.left = rect.left;
+	                style.width = rect.width;
+	                style.top = this.cumulativeTopCorrection();
+
+	                var bottomLimit = rect.bottom - node.getBoundingClientRect().height;
+	                if (style.top > bottomLimit) style.top = bottomLimit;
+
+	                // Finally, override the best-fit style with any user props
+	                return Object.assign(style, this.props.stickyStyle);
+	            } else {
+	                return this.props.style;
+	            }
+	        }
+
+	        /*
+	         * If sticky, merge this.props.stickyClass with this.props.className.
+	         * If not, just return this.props.className.
+	         */
+
+	    }, {
+	        key: 'nextClassName',
+	        value: function nextClassName(shouldBeSticky) {
+	            var className = this.props.className;
+	            if (shouldBeSticky) {
+	                className += ' ' + this.props.stickyClass;
+	            }
+	            return className;
+	        }
+
+	        /*
+	         * Transition to the next state.
+	         *
+	         * Updates the isSticky, style, and className state
+	         * variables.
+	         *
+	         * If sticky state is different than the previous,
+	         * fire the onStickyStateChange callback.
+	         */
+
+	    }, {
+	        key: 'nextState',
+	        value: function nextState(shouldBeSticky) {
+	            var hasChanged = this.state.isSticky !== shouldBeSticky;
+
+	            // Update this state
+	            this.setState({
+	                isSticky: shouldBeSticky,
+	                style: this.nextStyle(shouldBeSticky),
+	                className: this.nextClassName(shouldBeSticky)
+	            });
+
+	            if (hasChanged) {
+	                // Update container state
+	                if (this.context.container) {
+	                    this.context.container.nextState({
+	                        isSticky: shouldBeSticky,
+	                        height: _reactDom2.default.findDOMNode(this).getBoundingClientRect().height
+	                    });
+	                }
+
+	                // Publish sticky state change
+	                this.props.onStickyStateChange(shouldBeSticky);
+	            }
+	        }
+
+	        /*
+	         * The special sauce.
+	         */
+
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            // https://github.com/captivationsoftware/react-sticky/commit/e33c4cd873fc3399c96eead97871b2d74235f6b1#diff-18aac22485b5225ec8d6628cce48a7bf
+	            // "VIEJO", commit "ES6 Update"
+	            return this.props.type({
+	                style: this.state.style,
+	                className: this.state.className
+	            }, this.props.children);
+
+	            // "NUEVO", no permite cambiar el tipo de elemento
+	            //return (
+	            //    <div style={this.state.style} className={this.state.className}>
+	            //        {this.props.children}
+	            //    </div>
+	            //);
+	        }
+	    }]);
+
+	    return Sticky;
+	}(_react2.default.Component);
+
+	Sticky.contextTypes = {
+	    type: _react2.default.PropTypes.func,
+	    container: _react2.default.PropTypes.any
+	};
+
+	/*
+	 * Default properties...
+	 */
+	Sticky.defaultProps = {
+	    type: _react2.default.DOM.div,
+	    className: '',
+	    style: {},
+	    stickyClass: 'sticky',
+	    stickyStyle: {},
+	    topOffset: 0,
+	    onStickyStateChange: function onStickyStateChange() {}
+	};
+
+	exports.default = Sticky;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "sticky.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _raf = __webpack_require__(295);
+
+	var _raf2 = _interopRequireDefault(_raf);
+
+	var _simpleSignal = __webpack_require__(297);
+
+	var _simpleSignal2 = _interopRequireDefault(_simpleSignal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var signal = new _simpleSignal2.default();
+
+	var handleEvent = function handleEvent() {
+	    return (0, _raf2.default)(signal.emit);
+	};
+
+	/**
+	 * Wire up event listeners
+	 */
+	['scroll', 'resize', 'touchmove', 'touchend'].forEach(function (evt) {
+	    if (window.addEventListener) {
+	        window.addEventListener(evt, handleEvent);
+	    } else {
+	        window.attachEvent('on' + evt, handleEvent);
+	    }
+	});
+
+	exports.default = signal;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "watcher.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 295 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(296)
+	  , root = typeof window === 'undefined' ? global : window
+	  , vendors = ['moz', 'webkit']
+	  , suffix = 'AnimationFrame'
+	  , raf = root['request' + suffix]
+	  , caf = root['cancel' + suffix] || root['cancelRequest' + suffix]
+
+	for(var i = 0; !raf && i < vendors.length; i++) {
+	  raf = root[vendors[i] + 'Request' + suffix]
+	  caf = root[vendors[i] + 'Cancel' + suffix]
+	      || root[vendors[i] + 'CancelRequest' + suffix]
+	}
+
+	// Some versions of FF have rAF but not cAF
+	if(!raf || !caf) {
+	  var last = 0
+	    , id = 0
+	    , queue = []
+	    , frameDuration = 1000 / 60
+
+	  raf = function(callback) {
+	    if(queue.length === 0) {
+	      var _now = now()
+	        , next = Math.max(0, frameDuration - (_now - last))
+	      last = next + _now
+	      setTimeout(function() {
+	        var cp = queue.slice(0)
+	        // Clear queue here to prevent
+	        // callbacks from appending listeners
+	        // to the current frame's queue
+	        queue.length = 0
+	        for(var i = 0; i < cp.length; i++) {
+	          if(!cp[i].cancelled) {
+	            try{
+	              cp[i].callback(last)
+	            } catch(e) {
+	              setTimeout(function() { throw e }, 0)
+	            }
+	          }
+	        }
+	      }, Math.round(next))
+	    }
+	    queue.push({
+	      handle: ++id,
+	      callback: callback,
+	      cancelled: false
+	    })
+	    return id
+	  }
+
+	  caf = function(handle) {
+	    for(var i = 0; i < queue.length; i++) {
+	      if(queue[i].handle === handle) {
+	        queue[i].cancelled = true
+	      }
+	    }
+	  }
+	}
+
+	module.exports = function(fn) {
+	  // Wrap in a new function to prevent
+	  // `cancel` potentially being assigned
+	  // to the native rAF function
+	  return raf.call(root, fn)
+	}
+	module.exports.cancel = function() {
+	  caf.apply(root, arguments)
+	}
+	module.exports.polyfill = function() {
+	  root.requestAnimationFrame = raf
+	  root.cancelAnimationFrame = caf
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 296 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.7.1
+	(function() {
+	  var getNanoSeconds, hrtime, loadTime;
+
+	  if ((typeof performance !== "undefined" && performance !== null) && performance.now) {
+	    module.exports = function() {
+	      return performance.now();
+	    };
+	  } else if ((typeof process !== "undefined" && process !== null) && process.hrtime) {
+	    module.exports = function() {
+	      return (getNanoSeconds() - loadTime) / 1e6;
+	    };
+	    hrtime = process.hrtime;
+	    getNanoSeconds = function() {
+	      var hr;
+	      hr = hrtime();
+	      return hr[0] * 1e9 + hr[1];
+	    };
+	    loadTime = getNanoSeconds();
+	  } else if (Date.now) {
+	    module.exports = function() {
+	      return Date.now() - loadTime;
+	    };
+	    loadTime = Date.now();
+	  } else {
+	    module.exports = function() {
+	      return new Date().getTime() - loadTime;
+	    };
+	    loadTime = new Date().getTime();
+	  }
+
+	}).call(this);
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+
+/***/ },
+/* 297 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	exports.__esModule = true;
+	exports["default"] = Signal;
+
+	function Signal() {
+	  var subscribers = [];
+	  return {
+	    on: function on(fn) {
+	      subscribers.push(fn);
+	    },
+	    off: function off(fn) {
+	      var index = subscribers.indexOf(fn);
+	      if (index > -1) {
+	        subscribers.splice(index, 1);
+	      }
+	    },
+	    emit: function emit(val) {
+	      for (var i = 0, len = subscribers.length; i < len; ++i) {
+	        subscribers[i](val);
+	      }
+	    }
+	  };
+	}
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 298 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TablaLocalesMensual = __webpack_require__(299);
+
+	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+	// Componentes
+
+	// Styles
+
+	var RowLocales = function (_React$Component) {
+	    _inherits(RowLocales, _React$Component);
+
+	    function RowLocales(props) {
+	        _classCallCheck(this, RowLocales);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RowLocales).call(this, props));
+
+	        _this.state = {
+	            guardado: false,
+	            fechaValida: false,
+	            mensaje: 'Fecha Pendiente',
+	            mensajeClassName: 'label-danger'
+	        };
+	        _this.inputFechaOnKeyDown = _this.inputFechaOnKeyDown.bind(_this);
+	        _this.guardarOCrear = _this.guardarOCrear.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(RowLocales, [{
+	        key: 'focusFecha',
+	        value: function focusFecha() {
+	            this.inputFecha.focus();
+	        }
+	    }, {
+	        key: 'inputFechaOnKeyDown',
+	        value: function inputFechaOnKeyDown(evt) {
+	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
+	                // 9 = tab, flechaAbajo = 40,  13 = enter
+	                evt.preventDefault();
+	                this.props.focusFilaSiguiente(this.props.index);
+	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
+	                // flechaArriba = 38, shift+tab
+	                this.props.focusFilaAnterior(this.props.index);
+	                evt.preventDefault();
+	            }
+	        }
+	    }, {
+	        key: 'guardarOCrear',
+	        value: function guardarOCrear(evt) {
+	            var dia = this.inputFecha.value;
+	            var fechaEsValida = dia >= 1 && dia <= this.props.ultimoDiaMes;
+	            if (fechaEsValida) {
+	                // ToDo: llamar al API
+	                this.setState({
+	                    //guardado: true,
+	                    fechaValida: true,
+	                    mensaje: 'Guardado',
+	                    mensajeClassName: 'label-success'
+	                });
+	                console.log('dia ' + dia + ' valido, guardado/actualizado');
+	            } else {
+	                this.setState({
+	                    //guardado: true,
+	                    fechaValida: false,
+	                    mensaje: 'Fecha Invalida',
+	                    mensajeClassName: 'label-danger'
+	                });
+	                console.log('dia ' + dia + ' incorrecto');
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdCorrelativo },
+	                    this.props.index
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdFecha },
+	                    _react2.default.createElement('input', { className: this.state.fechaValida ? _TablaLocalesMensual2.default.inputDia : _TablaLocalesMensual2.default.inputDiaInvalido, type: 'number', min: 0, max: this.props.ultimoDiaMes,
+	                        ref: function ref(_ref) {
+	                            return _this2.inputFecha = _ref;
+	                        },
+	                        onKeyDown: this.inputFechaOnKeyDown,
+	                        onBlur: this.guardarOCrear
+	                    }),
+	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputMes, type: 'number', defaultValue: this.props.mesProgramado, disabled: true }),
+	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputAnno, type: 'number', defaultValue: this.props.annoProgramado, disabled: true })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdCliente },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.nombreCliente
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdCeco },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                this.props.ceco
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdLocal },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                this.props.nombreLocal
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdZonaSei },
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { margin: 0 } },
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.zona
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdRegion },
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { margin: 0 } },
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.region
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdComuna },
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { margin: 0 } },
+	                        _react2.default.createElement(
+	                            'b',
+	                            null,
+	                            _react2.default.createElement(
+	                                'small',
+	                                null,
+	                                this.props.comuna
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdStock },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.stock
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdDotacion },
+	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionSugerida, type: 'text', defaultValue: this.props.dotacionSugerida, disabled: true }),
+	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionIngresada, type: 'number', tabIndex: '-1' })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdJornada },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.jornada
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdEstado },
+	                    _react2.default.createElement(
+	                        'span',
+	                        { className: 'label ' + this.state.mensajeClassName },
+	                        this.state.mensaje
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaLocalesMensual2.default.tdOpciones },
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
+	                        'Editar local'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return RowLocales;
+	}(_react2.default.Component);
+
+	RowLocales.protoTypes = {
+	    index: PropTypes.number.required,
+	    mesProgramado: PropTypes.string.required,
+	    annoProgramado: PropTypes.string.required,
+	    nombreCliente: PropTypes.string.required,
+	    ceco: PropTypes.number.required,
+	    nombreLocal: PropTypes.string.required,
+	    zona: PropTypes.string.required,
+	    region: PropTypes.string.required,
+	    comuna: PropTypes.string.required,
+	    stock: PropTypes.number.required,
+	    dotacionSugerida: PropTypes.number.required,
+	    //jornada: PropTypes.number.required,
+	    focusFilaSiguiente: PropTypes.func.required,
+	    focusFilaAnterior: PropTypes.func.required
+	};
+
+	exports.default = RowLocales;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowLocales.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 299 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"thCorrelativo":"TablaLocalesMensual__thCorrelativo___3HnOu","tdCorrelativo":"TablaLocalesMensual__tdCorrelativo___Kvh_p TablaLocalesMensual__thCorrelativo___3HnOu","thFecha":"TablaLocalesMensual__thFecha___1qDZQ","tdFecha":"TablaLocalesMensual__tdFecha___3Ppcl TablaLocalesMensual__thFecha___1qDZQ","thCliente":"TablaLocalesMensual__thCliente___3l2rs","tdCliente":"TablaLocalesMensual__tdCliente___1R8Nd TablaLocalesMensual__thCliente___3l2rs","thCeco":"TablaLocalesMensual__thCeco___1Isth","tdCeco":"TablaLocalesMensual__tdCeco___39Cmj TablaLocalesMensual__thCeco___1Isth","thLocal":"TablaLocalesMensual__thLocal___zaA5L","tdLocal":"TablaLocalesMensual__tdLocal___2quqk TablaLocalesMensual__thLocal___zaA5L","thZonaSei":"TablaLocalesMensual__thZonaSei___2_Eql","tdZonaSei":"TablaLocalesMensual__tdZonaSei___3ywi8 TablaLocalesMensual__thZonaSei___2_Eql","thRegion":"TablaLocalesMensual__thRegion___10Xps","tdRegion":"TablaLocalesMensual__tdRegion___2KUA- TablaLocalesMensual__thRegion___10Xps","thComuna":"TablaLocalesMensual__thComuna___2k2Sr","tdComuna":"TablaLocalesMensual__tdComuna___93qXr TablaLocalesMensual__thComuna___2k2Sr","thStock":"TablaLocalesMensual__thStock___1jhS_","tdStock":"TablaLocalesMensual__tdStock___1mA1i TablaLocalesMensual__thStock___1jhS_","thDotacion":"TablaLocalesMensual__thDotacion___K39aJ","tdDotacion":"TablaLocalesMensual__tdDotacion___3q5PS TablaLocalesMensual__thDotacion___K39aJ","thJornada":"TablaLocalesMensual__thJornada___1DQcG","tdJornada":"TablaLocalesMensual__tdJornada___kUo8p TablaLocalesMensual__thJornada___1DQcG","thEstado":"TablaLocalesMensual__thEstado___1oBQx","tdEstado":"TablaLocalesMensual__tdEstado___22jAi TablaLocalesMensual__thEstado___1oBQx","thOpciones":"TablaLocalesMensual__thOpciones___2PzVJ","tdOpciones":"TablaLocalesMensual__tdOpciones___fMayz TablaLocalesMensual__thOpciones___2PzVJ","inputDia":"TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"TablaLocalesMensual__inputDiaInvalido___kQYUg TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"TablaLocalesMensual__inputDiaPendiente___3UmCC TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputMes":"TablaLocalesMensual__inputMes___3dMJd shared__inputNumberAsText___1Qr9M","inputAnno":"TablaLocalesMensual__inputAnno___3XjjF shared__inputNumberAsText___1Qr9M","inputDotacionSugerida":"TablaLocalesMensual__inputDotacionSugerida___MCPhp shared__inputNumberAsText___1Qr9M","inputDotacionIngresada":"TablaLocalesMensual__inputDotacionIngresada___2FZVc shared__inputNumberAsText___1Qr9M"};
+
+/***/ },
+/* 300 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _sticky = __webpack_require__(293);
+
+	var _sticky2 = _interopRequireDefault(_sticky);
+
+	var _Cabecera = __webpack_require__(301);
+
+	var _Cabecera2 = _interopRequireDefault(_Cabecera);
+
+	var _TablaLocalesMensual = __webpack_require__(299);
+
+	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	// Componentes
+
+
+	// Styles
+
+	var HeaderLocales = function (_React$Component) {
+	    _inherits(HeaderLocales, _React$Component);
+
+	    function HeaderLocales() {
+	        _classCallCheck(this, HeaderLocales);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(HeaderLocales).apply(this, arguments));
+	    }
+
+	    _createClass(HeaderLocales, [{
+	        key: 'render',
+	        value: function render() {
+
+	            return _react2.default.createElement(
+	                _sticky2.default,
+	                {
+	                    topOffset: -50,
+	                    type: _react2.default.DOM.tr,
+	                    stickyStyle: { top: '50px' }
+	                },
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thCorrelativo },
+	                    '#'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thFecha },
+	                    'Fecha'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thCliente },
+	                    'Cliente'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thCeco },
+	                    'Ceco'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thLocal },
+	                    'Local'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thZonaSei },
+	                    'Zona SEI'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thRegion },
+	                    _react2.default.createElement(_Cabecera2.default, {
+	                        nombre: 'Región',
+	                        valores: this.props.zonas
+	                    })
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thComuna },
+	                    'Comuna'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thStock },
+	                    'Stock'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thDotacion },
+	                    'Dotación'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thJornada },
+	                    'Jornada'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thEstado },
+	                    'Estado'
+	                ),
+	                _react2.default.createElement(
+	                    'th',
+	                    { className: _TablaLocalesMensual2.default.thOpciones },
+	                    'Opciones'
+	                )
+	            );
+	        }
+	    }]);
+
+	    return HeaderLocales;
+	}(_react2.default.Component);
+
+	exports.default = HeaderLocales;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "HeaderLocales.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Cabecera = __webpack_require__(302);
+
+	var _Cabecera2 = _interopRequireDefault(_Cabecera);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	// Componentes
+
+	// Styles
+
+	var Cabecera = function (_React$Component) {
+	    _inherits(Cabecera, _React$Component);
+
+	    function Cabecera(props) {
+	        _classCallCheck(this, Cabecera);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Cabecera).call(this, props));
+
+	        _this.state = {
+	            open: false
+	        };
+	        _this.onClickHandler = _this.onClickHandler.bind(_this);
+	        _this.closeMenu = _this.closeMenu.bind(_this);
+	        _this.toggleMenu = _this.toggleMenu.bind(_this);
+	        return _this;
+	    }
+	    // Metodos para controlar el display del menu, ocultar y mostrar los elementos
+
+
+	    _createClass(Cabecera, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            document.addEventListener('click', this.onClickHandler);
+	        }
+	    }, {
+	        key: 'componentWillUnMount',
+	        value: function componentWillUnMount() {
+	            document.removeEventListener('click', this.onClickHandler);
+	        }
+	    }, {
+	        key: 'onClickHandler',
+	        value: function onClickHandler(_ref) {
+	            var target = _ref.target;
+
+	            // detecta cuando se hace un click fuera de este componente, cuando eso pasa y el menu es visible, lo oculta
+	            if (!this.node.contains(target) && this.state.open) this.closeMenu();
+	        }
+	    }, {
+	        key: 'closeMenu',
+	        value: function closeMenu() {
+	            this.setState({ open: false });
+	        }
+	    }, {
+	        key: 'toggleMenu',
+	        value: function toggleMenu() {
+	            this.setState({ open: !this.state.open });
+	        }
+	    }, {
+	        key: 'aplicarFiltro',
+	        value: function aplicarFiltro() {}
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            //console.log(this.props.valores)
+	            return _react2.default.createElement(
+	                'div',
+	                { className: _Cabecera2.default.container, ref: function ref(_ref2) {
+	                        return _this2.node = _ref2;
+	                    } },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: _Cabecera2.default.cell, onClick: this.toggleMenu },
+	                    this.props.nombre,
+	                    _react2.default.createElement('span', { className: "glyphicon pull-right " + (this.state.open ? 'glyphicon-triangle-top' : 'glyphicon-triangle-bottom') })
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: _Cabecera2.default.menu, style: { display: this.state.open ? '' : 'none' } },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: _Cabecera2.default.contenedorValores },
+	                        this.props.valores.map(function (valor, index) {
+	                            return _react2.default.createElement(
+	                                'label',
+	                                null,
+	                                _react2.default.createElement('input', { type: 'checkbox' }),
+	                                ' ',
+	                                valor
+	                            );
+	                        }),
+	                        _react2.default.createElement(
+	                            'label',
+	                            null,
+	                            _react2.default.createElement('input', { type: 'checkbox' }),
+	                            'Maule'
+	                        ),
+	                        _react2.default.createElement(
+	                            'label',
+	                            null,
+	                            _react2.default.createElement('input', { type: 'checkbox' }),
+	                            'Santiago'
+	                        ),
+	                        _react2.default.createElement(
+	                            'label',
+	                            null,
+	                            _react2.default.createElement('input', { type: 'checkbox' }),
+	                            'Norte Grande'
+	                        ),
+	                        _react2.default.createElement(
+	                            'label',
+	                            null,
+	                            _react2.default.createElement('input', { type: 'checkbox' }),
+	                            'Iquique'
+	                        ),
+	                        _react2.default.createElement(
+	                            'label',
+	                            null,
+	                            _react2.default.createElement('input', { type: 'checkbox' }),
+	                            'Arica'
+	                        ),
+	                        _react2.default.createElement(
+	                            'label',
+	                            null,
+	                            _react2.default.createElement('input', { type: 'checkbox' }),
+	                            'Osorno'
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        _react2.default.createElement('input', { type: 'checkbox' }),
+	                        'Todos'
+	                    ),
+	                    _react2.default.createElement('input', { type: 'text', placeholder: '...' }),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-sm btn-block btn-default' },
+	                        'Aceptar'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Cabecera;
+	}(_react2.default.Component);
+
+	exports.default = Cabecera;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Cabecera.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 302 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"container":"Cabecera__container___3QvtW","cell":"Cabecera__cell___1YFbN","menu":"Cabecera__menu___1L7n3","contenedorValores":"Cabecera__contenedorValores___3Bx-H"};
+
+/***/ },
+/* 303 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M"};
+
+/***/ },
+/* 304 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _AgregarManualmente = __webpack_require__(305);
 
 	var _AgregarManualmente2 = _interopRequireDefault(_AgregarManualmente);
 
@@ -36146,1020 +37370,11 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AgregarManualmente.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 295 */
+/* 305 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"tableCell":"AgregarManualmente__tableCell___bz7b0"};
-
-/***/ },
-/* 296 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(159);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _watcher = __webpack_require__(297);
-
-	var _watcher2 = _interopRequireDefault(_watcher);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * https://github.com/captivationsoftware/react-sticky
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-	var Sticky = function (_React$Component) {
-	    _inherits(Sticky, _React$Component);
-
-	    function Sticky(props) {
-	        _classCallCheck(this, Sticky);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Sticky).call(this, props));
-
-	        _this.state = {};
-	        return _this;
-	    }
-
-	    /*
-	     * Anytime new props are received, force re-evaluation
-	     */
-
-
-	    _createClass(Sticky, [{
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps() {
-	            var origin = this.calculateOrigin();
-	            this.setState({ origin: origin });
-
-	            _watcher2.default.emit();
-	        }
-	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            _watcher2.default.on(this.transition.bind(this));
-
-	            var origin = this.calculateOrigin();
-	            this.setState({ origin: origin });
-	        }
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            _watcher2.default.off(this.transition.bind(this));
-	        }
-
-	        /*
-	         * Return the distance of the scrollbar from the
-	         * top of the window plus the total height of all
-	         * stuck Sticky instances above this one.
-	         */
-
-	    }, {
-	        key: 'pageOffset',
-	        value: function pageOffset() {
-	            return window.pageYOffset || document.documentElement.scrollTop;
-	        }
-	    }, {
-	        key: 'cumulativeTopCorrection',
-	        value: function cumulativeTopCorrection() {
-	            return this.context.container.state.cumulativeTopCorrection;
-	        }
-
-	        /*
-	         * Returns true/false depending on if this should be sticky.
-	         */
-
-	    }, {
-	        key: 'shouldBeSticky',
-	        value: function shouldBeSticky() {
-	            var offset = this.pageOffset();
-	            var origin = this.state.origin - this.cumulativeTopCorrection();
-	            var containerNode = _reactDom2.default.findDOMNode(this.context.container);
-
-	            // check conditions
-	            var stickyTopConditionsMet = offset >= origin + this.props.topOffset;
-	            var stickyBottomConditionsMet = offset < containerNode.getBoundingClientRect().height + origin;
-	            return stickyTopConditionsMet && stickyBottomConditionsMet;
-	        }
-	    }, {
-	        key: 'transition',
-	        value: function transition() {
-	            if (this.context.container) {
-	                this.nextState(this.shouldBeSticky());
-	            }
-	        }
-
-	        /*
-	         * Returns the y-coordinate of the top of this element.
-	         */
-
-	    }, {
-	        key: 'calculateOrigin',
-	        value: function calculateOrigin() {
-	            var node = _react2.default.findDOMNode(this);
-
-	            // Do some ugly DOM manipulation to where this element's non-sticky position would be
-	            var previousPosition = node.style.position;
-	            node.style.position = '';
-	            var origin = node.getBoundingClientRect().top + this.pageOffset();
-	            node.style.position = previousPosition;
-	            return origin;
-	        }
-	        /*
-	         * If sticky, merge this.props.stickyStyle with this.props.style.
-	         * If not, just return this.props.style.
-	         */
-
-	    }, {
-	        key: 'nextStyle',
-	        value: function nextStyle(shouldBeSticky) {
-	            if (shouldBeSticky) {
-	                var node = _reactDom2.default.findDOMNode(this);
-	                var containerNode = _reactDom2.default.findDOMNode(this.context.container);
-
-	                // inherit the boundaries of the container
-	                var rect = containerNode.getBoundingClientRect();
-	                var style = Object.assign({}, this.props.style);
-	                style.position = 'fixed';
-	                style.left = rect.left;
-	                style.width = rect.width;
-	                style.top = this.cumulativeTopCorrection();
-
-	                var bottomLimit = rect.bottom - node.getBoundingClientRect().height;
-	                if (style.top > bottomLimit) style.top = bottomLimit;
-
-	                // Finally, override the best-fit style with any user props
-	                return Object.assign(style, this.props.stickyStyle);
-	            } else {
-	                return this.props.style;
-	            }
-	        }
-
-	        /*
-	         * If sticky, merge this.props.stickyClass with this.props.className.
-	         * If not, just return this.props.className.
-	         */
-
-	    }, {
-	        key: 'nextClassName',
-	        value: function nextClassName(shouldBeSticky) {
-	            var className = this.props.className;
-	            if (shouldBeSticky) {
-	                className += ' ' + this.props.stickyClass;
-	            }
-	            return className;
-	        }
-
-	        /*
-	         * Transition to the next state.
-	         *
-	         * Updates the isSticky, style, and className state
-	         * variables.
-	         *
-	         * If sticky state is different than the previous,
-	         * fire the onStickyStateChange callback.
-	         */
-
-	    }, {
-	        key: 'nextState',
-	        value: function nextState(shouldBeSticky) {
-	            var hasChanged = this.state.isSticky !== shouldBeSticky;
-
-	            // Update this state
-	            this.setState({
-	                isSticky: shouldBeSticky,
-	                style: this.nextStyle(shouldBeSticky),
-	                className: this.nextClassName(shouldBeSticky)
-	            });
-
-	            if (hasChanged) {
-	                // Update container state
-	                if (this.context.container) {
-	                    this.context.container.nextState({
-	                        isSticky: shouldBeSticky,
-	                        height: _reactDom2.default.findDOMNode(this).getBoundingClientRect().height
-	                    });
-	                }
-
-	                // Publish sticky state change
-	                this.props.onStickyStateChange(shouldBeSticky);
-	            }
-	        }
-
-	        /*
-	         * The special sauce.
-	         */
-
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            // https://github.com/captivationsoftware/react-sticky/commit/e33c4cd873fc3399c96eead97871b2d74235f6b1#diff-18aac22485b5225ec8d6628cce48a7bf
-	            // "VIEJO", commit "ES6 Update"
-	            return this.props.type({
-	                style: this.state.style,
-	                className: this.state.className
-	            }, this.props.children);
-
-	            // "NUEVO", no permite cambiar el tipo de elemento
-	            //return (
-	            //    <div style={this.state.style} className={this.state.className}>
-	            //        {this.props.children}
-	            //    </div>
-	            //);
-	        }
-	    }]);
-
-	    return Sticky;
-	}(_react2.default.Component);
-
-	Sticky.contextTypes = {
-	    type: _react2.default.PropTypes.func,
-	    container: _react2.default.PropTypes.any
-	};
-
-	/*
-	 * Default properties...
-	 */
-	Sticky.defaultProps = {
-	    type: _react2.default.DOM.div,
-	    className: '',
-	    style: {},
-	    stickyClass: 'sticky',
-	    stickyStyle: {},
-	    topOffset: 0,
-	    onStickyStateChange: function onStickyStateChange() {}
-	};
-
-	exports.default = Sticky;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "sticky.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 297 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _raf = __webpack_require__(298);
-
-	var _raf2 = _interopRequireDefault(_raf);
-
-	var _simpleSignal = __webpack_require__(300);
-
-	var _simpleSignal2 = _interopRequireDefault(_simpleSignal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var signal = new _simpleSignal2.default();
-
-	var handleEvent = function handleEvent() {
-	    return (0, _raf2.default)(signal.emit);
-	};
-
-	/**
-	 * Wire up event listeners
-	 */
-	['scroll', 'resize', 'touchmove', 'touchend'].forEach(function (evt) {
-	    if (window.addEventListener) {
-	        window.addEventListener(evt, handleEvent);
-	    } else {
-	        window.attachEvent('on' + evt, handleEvent);
-	    }
-	});
-
-	exports.default = signal;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "watcher.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 298 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(299)
-	  , root = typeof window === 'undefined' ? global : window
-	  , vendors = ['moz', 'webkit']
-	  , suffix = 'AnimationFrame'
-	  , raf = root['request' + suffix]
-	  , caf = root['cancel' + suffix] || root['cancelRequest' + suffix]
-
-	for(var i = 0; !raf && i < vendors.length; i++) {
-	  raf = root[vendors[i] + 'Request' + suffix]
-	  caf = root[vendors[i] + 'Cancel' + suffix]
-	      || root[vendors[i] + 'CancelRequest' + suffix]
-	}
-
-	// Some versions of FF have rAF but not cAF
-	if(!raf || !caf) {
-	  var last = 0
-	    , id = 0
-	    , queue = []
-	    , frameDuration = 1000 / 60
-
-	  raf = function(callback) {
-	    if(queue.length === 0) {
-	      var _now = now()
-	        , next = Math.max(0, frameDuration - (_now - last))
-	      last = next + _now
-	      setTimeout(function() {
-	        var cp = queue.slice(0)
-	        // Clear queue here to prevent
-	        // callbacks from appending listeners
-	        // to the current frame's queue
-	        queue.length = 0
-	        for(var i = 0; i < cp.length; i++) {
-	          if(!cp[i].cancelled) {
-	            try{
-	              cp[i].callback(last)
-	            } catch(e) {
-	              setTimeout(function() { throw e }, 0)
-	            }
-	          }
-	        }
-	      }, Math.round(next))
-	    }
-	    queue.push({
-	      handle: ++id,
-	      callback: callback,
-	      cancelled: false
-	    })
-	    return id
-	  }
-
-	  caf = function(handle) {
-	    for(var i = 0; i < queue.length; i++) {
-	      if(queue[i].handle === handle) {
-	        queue[i].cancelled = true
-	      }
-	    }
-	  }
-	}
-
-	module.exports = function(fn) {
-	  // Wrap in a new function to prevent
-	  // `cancel` potentially being assigned
-	  // to the native rAF function
-	  return raf.call(root, fn)
-	}
-	module.exports.cancel = function() {
-	  caf.apply(root, arguments)
-	}
-	module.exports.polyfill = function() {
-	  root.requestAnimationFrame = raf
-	  root.cancelAnimationFrame = caf
-	}
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 299 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.7.1
-	(function() {
-	  var getNanoSeconds, hrtime, loadTime;
-
-	  if ((typeof performance !== "undefined" && performance !== null) && performance.now) {
-	    module.exports = function() {
-	      return performance.now();
-	    };
-	  } else if ((typeof process !== "undefined" && process !== null) && process.hrtime) {
-	    module.exports = function() {
-	      return (getNanoSeconds() - loadTime) / 1e6;
-	    };
-	    hrtime = process.hrtime;
-	    getNanoSeconds = function() {
-	      var hr;
-	      hr = hrtime();
-	      return hr[0] * 1e9 + hr[1];
-	    };
-	    loadTime = getNanoSeconds();
-	  } else if (Date.now) {
-	    module.exports = function() {
-	      return Date.now() - loadTime;
-	    };
-	    loadTime = Date.now();
-	  } else {
-	    module.exports = function() {
-	      return new Date().getTime() - loadTime;
-	    };
-	    loadTime = new Date().getTime();
-	  }
-
-	}).call(this);
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-/* 300 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	exports.__esModule = true;
-	exports["default"] = Signal;
-
-	function Signal() {
-	  var subscribers = [];
-	  return {
-	    on: function on(fn) {
-	      subscribers.push(fn);
-	    },
-	    off: function off(fn) {
-	      var index = subscribers.indexOf(fn);
-	      if (index > -1) {
-	        subscribers.splice(index, 1);
-	      }
-	    },
-	    emit: function emit(val) {
-	      for (var i = 0, len = subscribers.length; i < len; ++i) {
-	        subscribers[i](val);
-	      }
-	    }
-	  };
-	}
-
-	module.exports = exports["default"];
-
-/***/ },
-/* 301 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _sticky = __webpack_require__(296);
-
-	var _sticky2 = _interopRequireDefault(_sticky);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Container = function (_React$Component) {
-	    _inherits(Container, _React$Component);
-
-	    function Container(props) {
-	        _classCallCheck(this, Container);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Container).call(this, props));
-
-	        _this.state = {
-	            topCorrection: 0,
-	            cumulativeTopCorrection: 0
-	        };
-	        return _this;
-	    }
-
-	    _createClass(Container, [{
-	        key: 'getChildContext',
-	        value: function getChildContext() {
-	            return {
-	                container: this
-	            };
-	        }
-	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.updateCumulativeTopCorrection();
-	        }
-	    }, {
-	        key: 'componentDidUpdate',
-	        value: function componentDidUpdate() {
-	            this.updateCumulativeTopCorrection();
-	        }
-	    }, {
-	        key: 'cumulativeTopCorrection',
-	        value: function cumulativeTopCorrection() {
-	            var topCorrection = 0;
-	            if (this.context.container) {
-	                var container = this.context.container;
-	                while (container) {
-	                    topCorrection += container.state.topCorrection;
-	                    container = container.context.container;
-	                };
-	            }
-	            return topCorrection;
-	        }
-	    }, {
-	        key: 'updateCumulativeTopCorrection',
-	        value: function updateCumulativeTopCorrection() {
-	            var cumulativeTopCorrection = this.cumulativeTopCorrection();
-	            if (cumulativeTopCorrection !== this.state.cumulativeTopCorrection) {
-	                this.setState({ cumulativeTopCorrection: cumulativeTopCorrection });
-	            }
-	        }
-	    }, {
-	        key: 'nextState',
-	        value: function nextState(state) {
-	            var topCorrection = state.isSticky ? state.height : 0;
-	            this.setState({ topCorrection: topCorrection });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var style = Object.assign({}, this.props.style || {});
-
-	            var paddingTop = style.paddingTop || 0;
-	            style.paddingTop = paddingTop + this.state.topCorrection;
-
-	            // Mi version: hacer un pull request con esto:
-	            return this.props.type({
-	                style: style,
-	                className: this.props.className
-	            }, this.props.children);
-
-	            // ORIGINAL
-	            //return <div {...this.props} style={style}>
-	            //    {this.props.children}
-	            //</div>
-	        }
-	    }]);
-
-	    return Container;
-	}(_react2.default.Component);
-
-	Container.contextTypes = {
-	    container: _react2.default.PropTypes.any
-	};
-
-	Container.childContextTypes = {
-	    container: _react2.default.PropTypes.any
-	};
-
-	// TODO: Hacer un pull request con esto
-	Container.defaultProps = {
-	    type: _react2.default.DOM.div
-	};
-
-	exports.default = Container;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 302 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _TablaLocalesMensual = __webpack_require__(293);
-
-	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-	// Componentes
-
-	// Styles
-
-	var RowLocales = function (_React$Component) {
-	    _inherits(RowLocales, _React$Component);
-
-	    function RowLocales(props) {
-	        _classCallCheck(this, RowLocales);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RowLocales).call(this, props));
-
-	        _this.state = {
-	            guardado: false,
-	            fechaValida: false,
-	            mensaje: 'Fecha Pendiente',
-	            mensajeClassName: 'label-danger'
-	        };
-	        _this.inputFechaOnKeyDown = _this.inputFechaOnKeyDown.bind(_this);
-	        _this.guardarOCrear = _this.guardarOCrear.bind(_this);
-	        return _this;
-	    }
-
-	    _createClass(RowLocales, [{
-	        key: 'focusFecha',
-	        value: function focusFecha() {
-	            this.inputFecha.focus();
-	        }
-	    }, {
-	        key: 'inputFechaOnKeyDown',
-	        value: function inputFechaOnKeyDown(evt) {
-	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
-	                // 9 = tab, flechaAbajo = 40,  13 = enter
-	                evt.preventDefault();
-	                this.props.focusFilaSiguiente(this.props.index);
-	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
-	                // flechaArriba = 38, shift+tab
-	                this.props.focusFilaAnterior(this.props.index);
-	                evt.preventDefault();
-	            }
-	        }
-	    }, {
-	        key: 'guardarOCrear',
-	        value: function guardarOCrear(evt) {
-	            var dia = this.inputFecha.value;
-	            var fechaEsValida = dia >= 1 && dia <= this.props.ultimoDiaMes;
-	            if (fechaEsValida) {
-	                // ToDo: llamar al API
-	                this.setState({
-	                    //guardado: true,
-	                    fechaValida: true,
-	                    mensaje: 'Guardado',
-	                    mensajeClassName: 'label-success'
-	                });
-	                console.log('dia ' + dia + ' valido, guardado/actualizado');
-	            } else {
-	                this.setState({
-	                    //guardado: true,
-	                    fechaValida: false,
-	                    mensaje: 'Fecha Invalida',
-	                    mensajeClassName: 'label-danger'
-	                });
-	                console.log('dia ' + dia + ' incorrecto');
-	            }
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this2 = this;
-
-	            return _react2.default.createElement(
-	                'tr',
-	                null,
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdCorrelativo },
-	                    this.props.index
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdFecha },
-	                    _react2.default.createElement('input', { className: this.state.fechaValida ? _TablaLocalesMensual2.default.inputDia : _TablaLocalesMensual2.default.inputDiaInvalido, type: 'number', min: 0, max: this.props.ultimoDiaMes,
-	                        ref: function ref(_ref) {
-	                            return _this2.inputFecha = _ref;
-	                        },
-	                        onKeyDown: this.inputFechaOnKeyDown,
-	                        onBlur: this.guardarOCrear
-	                    }),
-	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputMes, type: 'number', defaultValue: this.props.mesProgramado, disabled: true }),
-	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputAnno, type: 'number', defaultValue: this.props.annoProgramado, disabled: true })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdCliente },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.nombreCliente
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdCeco },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            _react2.default.createElement(
-	                                'b',
-	                                null,
-	                                this.props.ceco
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdLocal },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            _react2.default.createElement(
-	                                'b',
-	                                null,
-	                                this.props.nombreLocal
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdZonaSei },
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { margin: 0 } },
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.zona
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdRegion },
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { margin: 0 } },
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.region
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdComuna },
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { margin: 0 } },
-	                        _react2.default.createElement(
-	                            'b',
-	                            null,
-	                            _react2.default.createElement(
-	                                'small',
-	                                null,
-	                                this.props.comuna
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdStock },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.stock
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdDotacion },
-	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionSugerida, type: 'text', defaultValue: this.props.dotacionSugerida, disabled: true }),
-	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionIngresada, type: 'number', tabIndex: '-1' })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdJornada },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.jornada
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdEstado },
-	                    _react2.default.createElement(
-	                        'span',
-	                        { className: 'label ' + this.state.mensajeClassName },
-	                        this.state.mensaje
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdOpciones },
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-sm btn-primary', tabIndex: '-1' },
-	                        'Editar local'
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return RowLocales;
-	}(_react2.default.Component);
-
-	RowLocales.protoTypes = {
-	    index: PropTypes.number.required,
-	    mesProgramado: PropTypes.string.required,
-	    annoProgramado: PropTypes.string.required,
-	    nombreCliente: PropTypes.string.required,
-	    ceco: PropTypes.number.required,
-	    nombreLocal: PropTypes.string.required,
-	    zona: PropTypes.string.required,
-	    region: PropTypes.string.required,
-	    comuna: PropTypes.string.required,
-	    stock: PropTypes.number.required,
-	    dotacionSugerida: PropTypes.number.required,
-	    //jornada: PropTypes.number.required,
-	    focusFilaSiguiente: PropTypes.func.required,
-	    focusFilaAnterior: PropTypes.func.required
-	};
-
-	exports.default = RowLocales;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowLocales.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 303 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _sticky = __webpack_require__(296);
-
-	var _sticky2 = _interopRequireDefault(_sticky);
-
-	var _TablaLocalesMensual = __webpack_require__(293);
-
-	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	// Componentes
-
-
-	// Styles
-
-	var HeaderLocales = function (_React$Component) {
-	    _inherits(HeaderLocales, _React$Component);
-
-	    function HeaderLocales() {
-	        _classCallCheck(this, HeaderLocales);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(HeaderLocales).apply(this, arguments));
-	    }
-
-	    _createClass(HeaderLocales, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                _sticky2.default,
-	                {
-	                    topOffset: -50,
-	                    type: _react2.default.DOM.tr,
-	                    stickyStyle: { top: '50px' }
-	                },
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thCorrelativo },
-	                    '#'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thFecha },
-	                    'Fecha'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thCliente },
-	                    'Cliente'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thCeco },
-	                    'Ceco'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thLocal },
-	                    'Local'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thZonaSei },
-	                    'Zona SEI'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thRegion },
-	                    'Región'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thComuna },
-	                    'Comuna'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thStock },
-	                    'Stock'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thDotacion },
-	                    'Dotación'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thJornada },
-	                    'Jornada'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thEstado },
-	                    'Estado'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thOpciones },
-	                    'Opciones'
-	                )
-	            );
-	        }
-	    }]);
-
-	    return HeaderLocales;
-	}(_react2.default.Component);
-
-	exports.default = HeaderLocales;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "HeaderLocales.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 /******/ ]);

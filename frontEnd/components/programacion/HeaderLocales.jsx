@@ -3,12 +3,14 @@ let PropTypes = React.PropTypes
 
 // Componentes
 import Sticky from '../shared/react-sticky/sticky.js'
+import Cabecera from './Cabecera.jsx'
 
 // Styles
 import styles from './TablaLocalesMensual.css'
 
 class HeaderLocales extends React.Component{
     render(){
+
         return(
             <Sticky
                 topOffset={-50}
@@ -21,7 +23,12 @@ class HeaderLocales extends React.Component{
                 <th className={styles.thCeco}>Ceco</th>
                 <th className={styles.thLocal}>Local</th>
                 <th className={styles.thZonaSei}>Zona SEI</th>
-                <th className={styles.thRegion}>Región</th>
+                <th className={styles.thRegion}>
+                    <Cabecera
+                        nombre="Región"
+                        valores={this.props.zonas}
+                    />
+                </th>
                 <th className={styles.thComuna}>Comuna</th>
                 <th className={styles.thStock}>Stock</th>
                 <th className={styles.thDotacion}>Dotación</th>

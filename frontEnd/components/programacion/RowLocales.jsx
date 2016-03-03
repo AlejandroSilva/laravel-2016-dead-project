@@ -116,7 +116,7 @@ class RowLocales extends React.Component{
                 </td>
                 <td className={styles.tdOpciones}>
                     {/* Opciones    */}
-                    <button className="btn btn-sm btn-primary" tabIndex="-1">Editar local</button>
+                    <button className="btn btn-xs btn-primary" tabIndex="-1">Editar local</button>
                 </td>
             </tr>
         )
