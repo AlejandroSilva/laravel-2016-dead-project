@@ -72,6 +72,10 @@ class TablaLocalesMensual extends React.Component{
         prevRow.focusFecha()
     }
 
+    aplicarFiltroZona() {
+
+    }
+
     render(){
         return (
             <div>
@@ -79,7 +83,15 @@ class TablaLocalesMensual extends React.Component{
                 <StickyContainer type={React.DOM.table}  className="table table-bordered table-condensed">
                     <thead>
                         {/* TR que se pega al top de la pagina, es una TR, con instancia de 'Sticky' */}
-                        <HeaderLocales />
+                        <HeaderLocales
+                            // mapear las zonas.nombreCorto, y luego seleccionar solo las unicas
+                            zonas={ this.state.locales.map(local=>{
+                                return (
+                                local.direccion && local.direccion.comuna &&
+                                local.direccion.comuna.provincia && local.direccion.comuna.provincia.region &&
+                                local.direccion.comuna.provincia.region && local.direccion.comuna.provincia.region.nombreCorto) || '...'
+                            }).filter((zona, index, self)=>self.indexOf(zona)===index) }
+                        />
                     </thead>
                     <tbody>
                     {this.state.locales.map((local, index)=>{
