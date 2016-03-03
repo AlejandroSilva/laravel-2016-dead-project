@@ -21726,19 +21726,17 @@
 	        _this.submitLocal = _this.submitLocal.bind(_this);
 	        return _this;
 	    }
+	    //componentDidMount(){
+	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[1], '04-2016')
+	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[2], '04-2016')
+	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[4], '04-2016')
+	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[5], '05-2016')
+	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[6], '05-2016')
+	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[8], '06-2016')
+	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[12], '06-2016')
+	    //}
 
 	    _createClass(ProgramacionMensual, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[1], '04-2016');
-	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[2], '04-2016');
-	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[4], '04-2016');
-	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[5], '05-2016');
-	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[6], '05-2016');
-	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[8], '06-2016');
-	            this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[12], '06-2016');
-	        }
-	    }, {
 	        key: 'submitLocal',
 	        value: function submitLocal(local, mesAnno) {
 	            console.log("agregarndo el local: ", local, mesAnno);
