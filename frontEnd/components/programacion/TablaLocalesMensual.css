@@ -23,7 +23,7 @@
 }
 /* Cliente */
 .thCliente {
-    width: 65px;
+    width: 120px;
     background: white;
 }
 .tdCliente {
@@ -41,7 +41,7 @@
 }
 /* Local */
 .thLocal {
-    width: 140px;
+    width: 200px;
     background: white;
 }
 .tdLocal {
