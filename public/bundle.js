@@ -20332,8 +20332,21 @@
 	        get: function get(idLocal) {
 	            return _axios2.default.get('/locales/' + idLocal);
 	        },
+	        //getVerbose: (idLocal)=>{
+	        //    return axios.get(`/locales/${idLocal}/verbose`)
+	        //}
+
+	        // Demora artificial para probar los mensajes de carga
 	        getVerbose: function getVerbose(idLocal) {
-	            return _axios2.default.get('/locales/' + idLocal + '/verbose');
+	            return new Promise(function (resolve, reject) {
+	                _axios2.default.get('/locales/' + idLocal + '/verbose').then(function (data) {
+	                    setTimeout(function () {
+	                        resolve(data);
+	                    }, Math.random() * 2000);
+	                }).catch(function (err) {
+	                    return reject(err);
+	                });
+	            });
 	        }
 	    }
 	};
@@ -21681,7 +21694,7 @@
 
 	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
 
-	var _AgregarManualmente = __webpack_require__(304);
+	var _AgregarManualmente = __webpack_require__(303);
 
 	var _AgregarManualmente2 = _interopRequireDefault(_AgregarManualmente);
 
@@ -35412,23 +35425,27 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _container = __webpack_require__(292);
+	var _sticky = __webpack_require__(292);
+
+	var _sticky2 = _interopRequireDefault(_sticky);
+
+	var _container = __webpack_require__(297);
 
 	var _container2 = _interopRequireDefault(_container);
 
-	var _RowLocales = __webpack_require__(298);
+	var _Cabecera = __webpack_require__(298);
+
+	var _Cabecera2 = _interopRequireDefault(_Cabecera);
+
+	var _RowLocales = __webpack_require__(300);
 
 	var _RowLocales2 = _interopRequireDefault(_RowLocales);
 
-	var _HeaderLocales = __webpack_require__(300);
-
-	var _HeaderLocales2 = _interopRequireDefault(_HeaderLocales);
-
-	var _shared = __webpack_require__(303);
+	var _shared = __webpack_require__(302);
 
 	var _shared2 = _interopRequireDefault(_shared);
 
-	var _TablaLocalesMensual = __webpack_require__(299);
+	var _TablaLocalesMensual = __webpack_require__(301);
 
 	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
 
@@ -35456,17 +35473,61 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TablaLocalesMensual).call(this, props));
 
 	        _this.state = {
-	            locales: []
+	            locales: [],
+	            localesFiltrados: [],
+	            filtro: {
+	                clientes: []
+	            }
 	        };
 	        // referencia a todos las entradas de fecha de los locales a inventariar
 	        _this.inputFecha = [];
-
-	        _this.focusFilaSiguiente = _this.focusFilaSiguiente.bind(_this);
-	        _this.focusFilaAnterior = _this.focusFilaAnterior.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(TablaLocalesMensual, [{
+	        key: 'obtenerDatosLocal',
+	        value: function obtenerDatosLocal(idLocal) {
+	            _v2.default.locales.getVerbose(idLocal).then(this.actualizarLocal.bind(this)).catch(function (error) {
+	                return console.error('error al obtener los datos de ' + idLocal, error);
+	            });
+	        }
+	    }, {
+	        key: 'generarFiltro',
+	        value: function generarFiltro(locales) {
+	            var _this2 = this;
+
+	            //console.log('--- generar filtro: ')
+	            var seleccionarNombreCliente = function seleccionarNombreCliente(local) {
+	                return local.cliente.nombreCorto || '';
+	            };
+	            var filtrarSoloUnicos = function filtrarSoloUnicos(valor, index, self) {
+	                return self.indexOf(valor) === index;
+	            };
+
+	            // obtener una lista de clientes sin repetir
+	            var clientesUnicos = locales.map(seleccionarNombreCliente).filter(filtrarSoloUnicos);
+
+	            // crear el filtro con los datos del filtro anterior, y si no existe el la opcion sea y selecciona por defecto
+	            var filtroClientes = clientesUnicos.map(function (clienteUnico) {
+	                var opcion = _this2.state.filtro.clientes.find(function (cliente) {
+	                    return cliente.texto === clienteUnico;
+	                });
+	                if (opcion) {
+	                    return opcion;
+	                } else {
+	                    return { texto: clienteUnico, seleccionado: true };
+	                }
+	            });
+
+	            //console.log('clientes unicos ', clientesUnicos )
+	            //console.log('filtro.cliente viejo: ', this.state.filtro.clientes.map(fi=>fi.seleccionado))
+	            //console.log('filtro.cliente nuevo: ', filtroClientes.map(fi=>fi.seleccionado))
+	            //console.log('--------------------')
+	            return {
+	                clientes: filtroClientes
+	            };
+	        }
+	    }, {
 	        key: 'agregarLocal',
 	        value: function agregarLocal(nuevoLocal, mesAnno) {
 	            var _mesAnno$split = mesAnno.split('-');
@@ -35476,7 +35537,7 @@
 	            var mes = _mesAnno$split2[0];
 	            var anno = _mesAnno$split2[1];
 
-	            var locales = this.state.locales;
+	            var localesActualizados = this.state.locales;
 
 	            var localNoExiste = this.state.locales.find(function (local) {
 	                return local.idLocal === nuevoLocal.idLocal;
@@ -35487,31 +35548,50 @@
 	                nuevoLocal.mesProgramado = mes;
 	                nuevoLocal.annoProgramado = anno;
 
+	                // modificar la estructura el objeto para que sea mas manejable
+	                nuevoLocal.cliente = {};
+	                nuevoLocal.comuna = {};
+	                nuevoLocal.provincia = {};
+	                nuevoLocal.region = {};
+	                nuevoLocal.zona = {};
+
 	                // actualizar la lista de locales
-	                locales.push(nuevoLocal);
-	                // actualizar la lista con los nuevos
+	                localesActualizados.push(nuevoLocal);
+
+	                // actualizar la lista de locales, y el filtro
+	                var filtroActualizado = this.generarFiltro(localesActualizados);
+	                // Todo: actualizar filtro con el nuevo elemento
+
 	                this.setState({
-	                    locales: locales
+	                    locales: localesActualizados,
+	                    filtro: filtroActualizado,
+	                    localesFiltrados: this.filtrarLocales(localesActualizados, filtroActualizado)
 	                });
 	            }
 	            return localNoExiste;
 	        }
 	    }, {
-	        key: 'obtenerDatosLocal',
-	        value: function obtenerDatosLocal(idLocal) {
-	            var _this2 = this;
+	        key: 'actualizarLocal',
+	        value: function actualizarLocal(localActualizado) {
+	            var localesActualizados = this.state.locales.map(function (local) {
+	                if (local.idLocal === localActualizado.idLocal) {
+	                    // modificar la estructura el objeto para que sea mas manejable
+	                    localActualizado.comuna = localActualizado.direccion.comuna || {};
+	                    localActualizado.provincia = localActualizado.comuna.provincia || {};
+	                    localActualizado.region = localActualizado.provincia.region || {};
+	                    localActualizado.zona = localActualizado.region.zona || {};
 
-	            _v2.default.locales.getVerbose(idLocal).then(function (informacionLocal) {
-	                _this2.setState({
-	                    // actualizar los datos de la lista con la informacion obtenida por el api
-	                    locales: _this2.state.locales.map(function (local) {
-	                        if (local.idLocal === informacionLocal.idLocal)
-	                            // mezclar los objetos
-	                            return Object.assign(local, informacionLocal);else return local;
-	                    })
-	                });
-	            }).catch(function (error) {
-	                return console.error('error al obtener los datos de ' + idLocal, error);
+	                    // mezclar los objetos
+	                    return Object.assign(local, localActualizado);
+	                } else return local;
+	            });
+	            var filtroActualizado = this.generarFiltro(localesActualizados);
+
+	            this.setState({
+	                // actualizar los datos de la lista con la informacion obtenida por el api
+	                locales: localesActualizados,
+	                filtro: filtroActualizado,
+	                localesFiltrados: this.filtrarLocales(localesActualizados, filtroActualizado)
 	            });
 	        }
 	    }, {
@@ -35528,13 +35608,53 @@
 	            var prevRow = this.inputFecha[prevIndex];
 	            prevRow.focusFecha();
 	        }
+
+	        // Aplicar filtros a los elementos
+
 	    }, {
-	        key: 'aplicarFiltroZona',
-	        value: function aplicarFiltroZona() {}
+	        key: 'actualizarFiltro',
+	        value: function actualizarFiltro(filtroClientes) {
+	            var filtroActualizado = {
+	                clientes: filtroClientes
+	            };
+
+	            this.setState({
+	                filtro: filtroActualizado,
+	                localesFiltrados: this.filtrarLocales(this.state.locales, filtroActualizado)
+	            });
+	        }
+	    }, {
+	        key: 'filtrarLocales',
+	        value: function filtrarLocales(locales, filtros) {
+	            //console.log('filtros actualizado: ', filtros.clientes.map(op=>op.seleccionado))
+	            //console.log('locales: ', locales.map(local=>local.cliente.nombreCorto))
+
+	            // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
+	            var filtro = filtros.clientes;
+
+	            var localesFiltrados = locales.filter(function (local) {
+	                var textoBuscado = local.cliente.nombreCorto || ''; // si es undefined, es tratado como ''
+	                return filtro.find(function (opcion) {
+	                    return opcion.texto === textoBuscado && opcion.seleccionado === true;
+	                });
+	            });
+	            return localesFiltrados;
+	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var _this3 = this;
+
+	            // agregar los unicos a state (cuando se crean y actualizan), o va a perjudicar el performance
+	            //let fechasUnicas = ['01-03-2016', '03-03-2016', '08-03-2016', '12-03-2016', '18-03-2016', '23-03-2016', '28-03-2016']
+	            var filtroClientes = [{ texto: 'FCV', seleccionado: true }, { texto: 'PUC', seleccionado: true }];
+
+	            // todo: malo , se debe arreglar
+	            var filtroRegiones = this.state.locales.map(function (local) {
+	                return { texto: local.region.nombreCorto, seleccionado: true };
+	            }).filter(function (opcion, index, self) {
+	                return self.indexOf(opcion.texto) === index;
+	            });
 
 	            return _react2.default.createElement(
 	                'div',
@@ -35545,25 +35665,87 @@
 	                    _react2.default.createElement(
 	                        'thead',
 	                        null,
-	                        _react2.default.createElement(_HeaderLocales2.default
-	                        // mapear las zonas.nombreCorto, y luego seleccionar solo las unicas
-	                        , { zonas: this.state.locales.map(function (local) {
-	                                return local.direccion && local.direccion.comuna && local.direccion.comuna.provincia && local.direccion.comuna.provincia.region && local.direccion.comuna.provincia.region && local.direccion.comuna.provincia.region.nombreCorto || '...';
-	                            }).filter(function (zona, index, self) {
-	                                return self.indexOf(zona) === index;
-	                            })
-	                        })
+	                        _react2.default.createElement(
+	                            _sticky2.default,
+	                            {
+	                                topOffset: -50,
+	                                type: _react2.default.DOM.tr,
+	                                stickyStyle: { top: '50px' } },
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thCorrelativo },
+	                                '#'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thFecha },
+	                                'Fecha'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thCliente },
+	                                _react2.default.createElement(_Cabecera2.default, { nombre: 'Cliente',
+	                                    filtro: this.state.filtro.clientes,
+	                                    onFiltroChanged: this.actualizarFiltro.bind(this) })
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thCeco },
+	                                'Ceco'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thLocal },
+	                                'Local'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thZonaSei },
+	                                'Zona SEI'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thRegion },
+	                                _react2.default.createElement(_Cabecera2.default, { nombre: 'Región',
+	                                    filtro: filtroRegiones,
+	                                    onFiltroChanged: this.actualizarFiltro.bind(this) })
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thComuna },
+	                                'Comuna'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thStock },
+	                                'Stock'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thDotacion },
+	                                'Dotación'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thJornada },
+	                                'Jornada'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thEstado },
+	                                'Estado'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: _TablaLocalesMensual2.default.thOpciones },
+	                                'Opciones'
+	                            )
+	                        )
 	                    ),
 	                    _react2.default.createElement(
 	                        'tbody',
 	                        null,
-	                        this.state.locales.map(function (local, index) {
-	                            var direccion = local.direccion || {};
-	                            var comuna = direccion.comuna || {};
-	                            var provincia = comuna.provincia || {};
-	                            var region = provincia.region || {};
-	                            var zona = region.zona || {};
-
+	                        this.state.localesFiltrados.map(function (local, index) {
 	                            return _react2.default.createElement(_RowLocales2.default, {
 	                                key: index,
 	                                index: index,
@@ -35573,14 +35755,14 @@
 	                                nombreCliente: local.cliente ? local.cliente.nombreCorto : '...',
 	                                ceco: local.numero ? local.numero : '...',
 	                                nombreLocal: local.nombre ? local.nombre : '...',
-	                                zona: zona.nombre ? zona.nombre : '...',
-	                                region: region.nombreCorto ? region.nombreCorto : '...',
-	                                comuna: comuna.nombre ? comuna.nombre : '...',
+	                                zona: local.zona.nombre ? local.zona.nombre : '...',
+	                                region: local.region.nombreCorto ? local.region.nombreCorto : '...',
+	                                comuna: local.comuna.nombre ? local.comuna.nombre : '...',
 	                                stock: local.stock ? local.stock : '...',
 	                                dotacionSugerida: 98,
 	                                jornada: local.jornada ? local.jornada.nombre : '(...jornada)',
-	                                focusFilaSiguiente: _this3.focusFilaSiguiente,
-	                                focusFilaAnterior: _this3.focusFilaAnterior,
+	                                focusFilaSiguiente: _this3.focusFilaSiguiente.bind(_this3),
+	                                focusFilaAnterior: _this3.focusFilaAnterior.bind(_this3),
 	                                ref: function ref(_ref) {
 	                                    return _this3.inputFecha[index] = _ref;
 	                                }
@@ -35620,141 +35802,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _sticky = __webpack_require__(293);
-
-	var _sticky2 = _interopRequireDefault(_sticky);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Container = function (_React$Component) {
-	    _inherits(Container, _React$Component);
-
-	    function Container(props) {
-	        _classCallCheck(this, Container);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Container).call(this, props));
-
-	        _this.state = {
-	            topCorrection: 0,
-	            cumulativeTopCorrection: 0
-	        };
-	        return _this;
-	    }
-
-	    _createClass(Container, [{
-	        key: 'getChildContext',
-	        value: function getChildContext() {
-	            return {
-	                container: this
-	            };
-	        }
-	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.updateCumulativeTopCorrection();
-	        }
-	    }, {
-	        key: 'componentDidUpdate',
-	        value: function componentDidUpdate() {
-	            this.updateCumulativeTopCorrection();
-	        }
-	    }, {
-	        key: 'cumulativeTopCorrection',
-	        value: function cumulativeTopCorrection() {
-	            var topCorrection = 0;
-	            if (this.context.container) {
-	                var container = this.context.container;
-	                while (container) {
-	                    topCorrection += container.state.topCorrection;
-	                    container = container.context.container;
-	                };
-	            }
-	            return topCorrection;
-	        }
-	    }, {
-	        key: 'updateCumulativeTopCorrection',
-	        value: function updateCumulativeTopCorrection() {
-	            var cumulativeTopCorrection = this.cumulativeTopCorrection();
-	            if (cumulativeTopCorrection !== this.state.cumulativeTopCorrection) {
-	                this.setState({ cumulativeTopCorrection: cumulativeTopCorrection });
-	            }
-	        }
-	    }, {
-	        key: 'nextState',
-	        value: function nextState(state) {
-	            var topCorrection = state.isSticky ? state.height : 0;
-	            this.setState({ topCorrection: topCorrection });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var style = Object.assign({}, this.props.style || {});
-
-	            var paddingTop = style.paddingTop || 0;
-	            style.paddingTop = paddingTop + this.state.topCorrection;
-
-	            // Mi version: hacer un pull request con esto:
-	            return this.props.type({
-	                style: style,
-	                className: this.props.className
-	            }, this.props.children);
-
-	            // ORIGINAL
-	            //return <div {...this.props} style={style}>
-	            //    {this.props.children}
-	            //</div>
-	        }
-	    }]);
-
-	    return Container;
-	}(_react2.default.Component);
-
-	Container.contextTypes = {
-	    container: _react2.default.PropTypes.any
-	};
-
-	Container.childContextTypes = {
-	    container: _react2.default.PropTypes.any
-	};
-
-	// TODO: Hacer un pull request con esto
-	Container.defaultProps = {
-	    type: _react2.default.DOM.div
-	};
-
-	exports.default = Container;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 293 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
 	var _reactDom = __webpack_require__(159);
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _watcher = __webpack_require__(294);
+	var _watcher = __webpack_require__(293);
 
 	var _watcher2 = _interopRequireDefault(_watcher);
 
@@ -35994,7 +36046,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "sticky.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 294 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36005,11 +36057,11 @@
 	    value: true
 	});
 
-	var _raf = __webpack_require__(295);
+	var _raf = __webpack_require__(294);
 
 	var _raf2 = _interopRequireDefault(_raf);
 
-	var _simpleSignal = __webpack_require__(297);
+	var _simpleSignal = __webpack_require__(296);
 
 	var _simpleSignal2 = _interopRequireDefault(_simpleSignal);
 
@@ -36037,10 +36089,10 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "watcher.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 295 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(296)
+	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(295)
 	  , root = typeof window === 'undefined' ? global : window
 	  , vendors = ['moz', 'webkit']
 	  , suffix = 'AnimationFrame'
@@ -36116,7 +36168,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 296 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.7.1
@@ -36155,7 +36207,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 297 */
+/* 296 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36186,6 +36238,136 @@
 	module.exports = exports["default"];
 
 /***/ },
+/* 297 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _sticky = __webpack_require__(292);
+
+	var _sticky2 = _interopRequireDefault(_sticky);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Container = function (_React$Component) {
+	    _inherits(Container, _React$Component);
+
+	    function Container(props) {
+	        _classCallCheck(this, Container);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Container).call(this, props));
+
+	        _this.state = {
+	            topCorrection: 0,
+	            cumulativeTopCorrection: 0
+	        };
+	        return _this;
+	    }
+
+	    _createClass(Container, [{
+	        key: 'getChildContext',
+	        value: function getChildContext() {
+	            return {
+	                container: this
+	            };
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.updateCumulativeTopCorrection();
+	        }
+	    }, {
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate() {
+	            this.updateCumulativeTopCorrection();
+	        }
+	    }, {
+	        key: 'cumulativeTopCorrection',
+	        value: function cumulativeTopCorrection() {
+	            var topCorrection = 0;
+	            if (this.context.container) {
+	                var container = this.context.container;
+	                while (container) {
+	                    topCorrection += container.state.topCorrection;
+	                    container = container.context.container;
+	                };
+	            }
+	            return topCorrection;
+	        }
+	    }, {
+	        key: 'updateCumulativeTopCorrection',
+	        value: function updateCumulativeTopCorrection() {
+	            var cumulativeTopCorrection = this.cumulativeTopCorrection();
+	            if (cumulativeTopCorrection !== this.state.cumulativeTopCorrection) {
+	                this.setState({ cumulativeTopCorrection: cumulativeTopCorrection });
+	            }
+	        }
+	    }, {
+	        key: 'nextState',
+	        value: function nextState(state) {
+	            var topCorrection = state.isSticky ? state.height : 0;
+	            this.setState({ topCorrection: topCorrection });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var style = Object.assign({}, this.props.style || {});
+
+	            var paddingTop = style.paddingTop || 0;
+	            style.paddingTop = paddingTop + this.state.topCorrection;
+
+	            // Mi version: hacer un pull request con esto:
+	            return this.props.type({
+	                style: style,
+	                className: this.props.className
+	            }, this.props.children);
+
+	            // ORIGINAL
+	            //return <div {...this.props} style={style}>
+	            //    {this.props.children}
+	            //</div>
+	        }
+	    }]);
+
+	    return Container;
+	}(_react2.default.Component);
+
+	Container.contextTypes = {
+	    container: _react2.default.PropTypes.any
+	};
+
+	Container.childContextTypes = {
+	    container: _react2.default.PropTypes.any
+	};
+
+	// TODO: Hacer un pull request con esto
+	Container.defaultProps = {
+	    type: _react2.default.DOM.div
+	};
+
+	exports.default = Container;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
 /* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -36203,7 +36385,187 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TablaLocalesMensual = __webpack_require__(299);
+	var _Cabecera = __webpack_require__(299);
+
+	var _Cabecera2 = _interopRequireDefault(_Cabecera);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	// Styles
+
+	var Cabecera = function (_React$Component) {
+	    _inherits(Cabecera, _React$Component);
+
+	    function Cabecera(props) {
+	        _classCallCheck(this, Cabecera);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Cabecera).call(this, props));
+
+	        _this.state = {
+	            open: false
+	        };
+	        return _this;
+	    }
+	    // Metodos para controlar el display del menu, ocultar y mostrar los elementos
+
+
+	    _createClass(Cabecera, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            document.addEventListener('click', this.onClickHandler.bind(this));
+	        }
+	    }, {
+	        key: 'componentWillUnMount',
+	        value: function componentWillUnMount() {
+	            document.removeEventListener('click', this.onClickHandler.bind(this));
+	        }
+	    }, {
+	        key: 'onClickHandler',
+	        value: function onClickHandler(evt) {
+	            // detecta cuando se hace un click fuera de este componente, cuando eso pasa y el menu es visible, lo oculta
+	            if (!this.node.contains(evt.target) && this.state.open) this.closeMenu();
+	        }
+	    }, {
+	        key: 'closeMenu',
+	        value: function closeMenu() {
+	            this.setState({ open: false });
+	        }
+	    }, {
+	        key: 'toggleMenu',
+	        value: function toggleMenu() {
+	            this.setState({ open: !this.state.open });
+	        }
+
+	        // Elementos seleccionados
+
+	    }, {
+	        key: 'revisarTodosSeleccionados',
+	        value: function revisarTodosSeleccionados() /*opciones*/{
+	            // todo mejorar esto
+	            var noSeleccionados = this.props.filtro.filter(function (opc) {
+	                return !opc.seleccionado;
+	            });
+	            return noSeleccionados.length === 0;
+	        }
+	    }, {
+	        key: 'toggleTodos',
+	        value: function toggleTodos() {
+	            var todosSeleccionados = this.revisarTodosSeleccionados();
+
+	            // si estan todos seleccionados, marcar ninguno
+	            // si falta uno por marcar, se marcan todos
+	            var filtroActualizado = this.props.filtro.map(function (opcion) {
+	                return { texto: opcion.texto, seleccionado: !todosSeleccionados };
+	            });
+	            // informar la actualizacion al padre
+	            this.props.onFiltroChanged(filtroActualizado);
+	        }
+	    }, {
+	        key: 'checkboxSeleccionado',
+	        value: function checkboxSeleccionado(opcionSeleccionada) {
+	            var filtroActualizado = this.props.filtro.map(function (opcion) {
+	                if (opcion === opcionSeleccionada) opcion.seleccionado = !opcion.seleccionado;
+	                return opcion;
+	            });
+	            // informar la actualizacion al padre
+	            this.props.onFiltroChanged(filtroActualizado);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            //console.log(this.props.filtro)
+	            return _react2.default.createElement(
+	                'div',
+	                { className: _Cabecera2.default.container, ref: function ref(_ref) {
+	                        return _this2.node = _ref;
+	                    } },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: _Cabecera2.default.cell, onClick: this.toggleMenu.bind(this) },
+	                    this.props.nombre,
+	                    _react2.default.createElement('span', { className: "glyphicon pull-right " + (this.state.open ? 'glyphicon-triangle-top' : 'glyphicon-triangle-bottom') })
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: _Cabecera2.default.menu, style: { display: this.state.open ? '' : 'none' } },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: _Cabecera2.default.contenedorValores },
+	                        this.props.filtro.map(function (opcion, index) {
+	                            return _react2.default.createElement(
+	                                'label',
+	                                { key: index },
+	                                _react2.default.createElement('input', { type: 'checkbox',
+	                                    onChange: _this2.checkboxSeleccionado.bind(_this2, opcion),
+	                                    checked: opcion.seleccionado
+	                                }),
+	                                ' ',
+	                                opcion.texto
+	                            );
+	                        })
+	                    ),
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        _react2.default.createElement('input', { type: 'checkbox', onChange: this.toggleTodos.bind(this), checked: this.revisarTodosSeleccionados.call(this) }),
+	                        'Todos'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Cabecera;
+	}(_react2.default.Component);
+
+	Cabecera.propTypes = {
+	    nombre: PropTypes.string,
+	    filtro: PropTypes.arrayOf(PropTypes.object).isRequired,
+	    onFiltroChanged: PropTypes.func.isRequired
+	};
+	Cabecera.defaultProps = {
+	    nombre: '[sin nombre]'
+	};
+	exports.default = Cabecera;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Cabecera.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 299 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"container":"Cabecera__container___3QvtW","cell":"Cabecera__cell___1YFbN","menu":"Cabecera__menu___1L7n3","contenedorValores":"Cabecera__contenedorValores___3Bx-H"};
+
+/***/ },
+/* 300 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TablaLocalesMensual = __webpack_require__(301);
 
 	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
 
@@ -36476,402 +36838,21 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowLocales.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 299 */
+/* 301 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"thCorrelativo":"TablaLocalesMensual__thCorrelativo___3HnOu","tdCorrelativo":"TablaLocalesMensual__tdCorrelativo___Kvh_p TablaLocalesMensual__thCorrelativo___3HnOu","thFecha":"TablaLocalesMensual__thFecha___1qDZQ","tdFecha":"TablaLocalesMensual__tdFecha___3Ppcl TablaLocalesMensual__thFecha___1qDZQ","thCliente":"TablaLocalesMensual__thCliente___3l2rs","tdCliente":"TablaLocalesMensual__tdCliente___1R8Nd TablaLocalesMensual__thCliente___3l2rs","thCeco":"TablaLocalesMensual__thCeco___1Isth","tdCeco":"TablaLocalesMensual__tdCeco___39Cmj TablaLocalesMensual__thCeco___1Isth","thLocal":"TablaLocalesMensual__thLocal___zaA5L","tdLocal":"TablaLocalesMensual__tdLocal___2quqk TablaLocalesMensual__thLocal___zaA5L","thZonaSei":"TablaLocalesMensual__thZonaSei___2_Eql","tdZonaSei":"TablaLocalesMensual__tdZonaSei___3ywi8 TablaLocalesMensual__thZonaSei___2_Eql","thRegion":"TablaLocalesMensual__thRegion___10Xps","tdRegion":"TablaLocalesMensual__tdRegion___2KUA- TablaLocalesMensual__thRegion___10Xps","thComuna":"TablaLocalesMensual__thComuna___2k2Sr","tdComuna":"TablaLocalesMensual__tdComuna___93qXr TablaLocalesMensual__thComuna___2k2Sr","thStock":"TablaLocalesMensual__thStock___1jhS_","tdStock":"TablaLocalesMensual__tdStock___1mA1i TablaLocalesMensual__thStock___1jhS_","thDotacion":"TablaLocalesMensual__thDotacion___K39aJ","tdDotacion":"TablaLocalesMensual__tdDotacion___3q5PS TablaLocalesMensual__thDotacion___K39aJ","thJornada":"TablaLocalesMensual__thJornada___1DQcG","tdJornada":"TablaLocalesMensual__tdJornada___kUo8p TablaLocalesMensual__thJornada___1DQcG","thEstado":"TablaLocalesMensual__thEstado___1oBQx","tdEstado":"TablaLocalesMensual__tdEstado___22jAi TablaLocalesMensual__thEstado___1oBQx","thOpciones":"TablaLocalesMensual__thOpciones___2PzVJ","tdOpciones":"TablaLocalesMensual__tdOpciones___fMayz TablaLocalesMensual__thOpciones___2PzVJ","inputDia":"TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"TablaLocalesMensual__inputDiaInvalido___kQYUg TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"TablaLocalesMensual__inputDiaPendiente___3UmCC TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputMes":"TablaLocalesMensual__inputMes___3dMJd shared__inputNumberAsText___1Qr9M","inputAnno":"TablaLocalesMensual__inputAnno___3XjjF shared__inputNumberAsText___1Qr9M","inputDotacionSugerida":"TablaLocalesMensual__inputDotacionSugerida___MCPhp shared__inputNumberAsText___1Qr9M","inputDotacionIngresada":"TablaLocalesMensual__inputDotacionIngresada___2FZVc shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 300 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _sticky = __webpack_require__(293);
-
-	var _sticky2 = _interopRequireDefault(_sticky);
-
-	var _Cabecera = __webpack_require__(301);
-
-	var _Cabecera2 = _interopRequireDefault(_Cabecera);
-
-	var _TablaLocalesMensual = __webpack_require__(299);
-
-	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	// Componentes
-
-
-	// Styles
-
-	var HeaderLocales = function (_React$Component) {
-	    _inherits(HeaderLocales, _React$Component);
-
-	    function HeaderLocales() {
-	        _classCallCheck(this, HeaderLocales);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(HeaderLocales).apply(this, arguments));
-	    }
-
-	    _createClass(HeaderLocales, [{
-	        key: 'render',
-	        value: function render() {
-
-	            return _react2.default.createElement(
-	                _sticky2.default,
-	                {
-	                    topOffset: -50,
-	                    type: _react2.default.DOM.tr,
-	                    stickyStyle: { top: '50px' }
-	                },
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thCorrelativo },
-	                    '#'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thFecha },
-	                    'Fecha'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thCliente },
-	                    'Cliente'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thCeco },
-	                    'Ceco'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thLocal },
-	                    'Local'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thZonaSei },
-	                    'Zona SEI'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thRegion },
-	                    _react2.default.createElement(_Cabecera2.default, {
-	                        nombre: 'Región',
-	                        opciones: this.props.zonas
-	                    })
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thComuna },
-	                    'Comuna'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thStock },
-	                    'Stock'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thDotacion },
-	                    'Dotación'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thJornada },
-	                    'Jornada'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thEstado },
-	                    'Estado'
-	                ),
-	                _react2.default.createElement(
-	                    'th',
-	                    { className: _TablaLocalesMensual2.default.thOpciones },
-	                    'Opciones'
-	                )
-	            );
-	        }
-	    }]);
-
-	    return HeaderLocales;
-	}(_react2.default.Component);
-
-	exports.default = HeaderLocales;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "HeaderLocales.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 301 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Cabecera = __webpack_require__(302);
-
-	var _Cabecera2 = _interopRequireDefault(_Cabecera);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	// Componentes
-
-	// Styles
-
-	var Cabecera = function (_React$Component) {
-	    _inherits(Cabecera, _React$Component);
-
-	    function Cabecera(props) {
-	        _classCallCheck(this, Cabecera);
-
-	        // mapear prop.opciones (arreglo de string) a state.opciones (string + selected)
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Cabecera).call(this, props));
-
-	        var opciones = _this.props.opciones.map(function (opcion) {
-	            return { texto: opcion, seleccionado: true };
-	        });
-
-	        _this.state = {
-	            open: false,
-	            opciones: opciones,
-	            todosSeleccionados: true
-	        };
-
-	        // display del menu
-	        _this.onClickHandler = _this.onClickHandler.bind(_this);
-	        _this.closeMenu = _this.closeMenu.bind(_this);
-	        _this.toggleMenu = _this.toggleMenu.bind(_this);
-	        // elementos seleccionados
-	        _this.revisarTodosSeleccionados = _this.revisarTodosSeleccionados.bind(_this);
-	        _this.toggleTodos = _this.toggleTodos.bind(_this);
-	        _this.toggleTodos = _this.toggleTodos.bind(_this);
-	        return _this;
-	    }
-	    // Metodos para controlar el display del menu, ocultar y mostrar los elementos
-
-
-	    _createClass(Cabecera, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            document.addEventListener('click', this.onClickHandler);
-	        }
-	    }, {
-	        key: 'componentWillUnMount',
-	        value: function componentWillUnMount() {
-	            document.removeEventListener('click', this.onClickHandler);
-	        }
-	    }, {
-	        key: 'onClickHandler',
-	        value: function onClickHandler(_ref) {
-	            var target = _ref.target;
-
-	            // detecta cuando se hace un click fuera de este componente, cuando eso pasa y el menu es visible, lo oculta
-	            if (!this.node.contains(target) && this.state.open) this.closeMenu();
-	        }
-	    }, {
-	        key: 'closeMenu',
-	        value: function closeMenu() {
-	            this.setState({ open: false });
-	        }
-	    }, {
-	        key: 'toggleMenu',
-	        value: function toggleMenu() {
-	            this.setState({ open: !this.state.open });
-	        }
-	    }, {
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            var _this2 = this;
-
-	            // cuando se actualizan (o reciben los datos), se debe actualizar la lista de opciones, pero mantener su seleccion
-	            var nextOpciones = nextProps.opciones;
-	            var opcionesActualizadas = nextOpciones.map(function (nextOpc) {
-	                var opcion = _this2.state.opciones.find(function (opc) {
-	                    return opc.texto === nextOpc;
-	                });
-	                // si existe, se mantienen los datos, si no, se crea la opcion
-	                return opcion ? opcion : {
-	                    texto: nextOpc,
-	                    seleccionado: true
-	                };
-	            });
-
-	            console.log('x ', this.revisarTodosSeleccionados(opcionesActualizadas));
-	            this.setState({
-	                opciones: opcionesActualizadas,
-	                todosSeleccionados: this.revisarTodosSeleccionados(opcionesActualizadas)
-	            });
-	        }
-
-	        // Elementos seleccionados
-
-	    }, {
-	        key: 'revisarTodosSeleccionados',
-	        value: function revisarTodosSeleccionados(opciones) {
-	            var noSeleccionados = opciones.filter(function (opc) {
-	                return !opc.seleccionado;
-	            });
-	            return noSeleccionados.length === 0;
-	        }
-	    }, {
-	        key: 'toggleTodos',
-	        value: function toggleTodos() {
-	            // des-seleccionar todos los elementos
-	            if (this.state.todosSeleccionados) {
-	                this.setState({
-	                    opciones: this.state.opciones.map(function (opcion) {
-	                        return _extends({}, opcion, { seleccionado: false });
-	                    }),
-	                    todosSeleccionados: false
-	                });
-	            } else {
-	                this.setState({
-	                    opciones: this.state.opciones.map(function (opcion) {
-	                        return _extends({}, opcion, { seleccionado: true });
-	                    }),
-	                    todosSeleccionados: true
-	                });
-	            }
-	        }
-	    }, {
-	        key: 'checkboxSeleccionado',
-	        value: function checkboxSeleccionado(opcionSeleccionada) {
-	            var opcionesActualizadas = this.state.opciones.map(function (opcion) {
-	                if (opcion === opcionSeleccionada) opcion.seleccionado = !opcion.seleccionado;
-	                return opcion;
-	            });
-
-	            console.log('y ', this.revisarTodosSeleccionados(opcionesActualizadas));
-	            // cuando se selecciona una opcion, se cambia su campo 'seleccionado'
-	            this.setState({
-	                opciones: opcionesActualizadas,
-	                todosSeleccionados: this.revisarTodosSeleccionados(opcionesActualizadas)
-	            });
-	            // chequear si estan todos seleccionados
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this3 = this;
-
-	            console.log(this.state.opciones);
-	            return _react2.default.createElement(
-	                'div',
-	                { className: _Cabecera2.default.container, ref: function ref(_ref2) {
-	                        return _this3.node = _ref2;
-	                    } },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: _Cabecera2.default.cell, onClick: this.toggleMenu },
-	                    this.props.nombre,
-	                    _react2.default.createElement('span', { className: "glyphicon pull-right " + (this.state.open ? 'glyphicon-triangle-top' : 'glyphicon-triangle-bottom') })
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: _Cabecera2.default.menu, style: { display: this.state.open ? '' : 'none' } },
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: _Cabecera2.default.contenedorValores },
-	                        this.state.opciones.map(function (opcion, index) {
-	                            return _react2.default.createElement(
-	                                'label',
-	                                { key: index },
-	                                _react2.default.createElement('input', { type: 'checkbox',
-	                                    onChange: _this3.checkboxSeleccionado.bind(_this3, opcion),
-	                                    checked: opcion.seleccionado
-	                                }),
-	                                ' ',
-	                                opcion.texto
-	                            );
-	                        })
-	                    ),
-	                    _react2.default.createElement(
-	                        'label',
-	                        null,
-	                        _react2.default.createElement('input', { type: 'checkbox', onChange: this.toggleTodos, checked: this.state.todosSeleccionados }),
-	                        'Todos'
-	                    ),
-	                    _react2.default.createElement('input', { type: 'text', placeholder: '...' }),
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-sm btn-block btn-default' },
-	                        'Aceptar'
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Cabecera;
-	}(_react2.default.Component);
-
-	exports.default = Cabecera;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Cabecera.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
 /* 302 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-	module.exports = {"container":"Cabecera__container___3QvtW","cell":"Cabecera__cell___1YFbN","menu":"Cabecera__menu___1L7n3","contenedorValores":"Cabecera__contenedorValores___3Bx-H"};
-
-/***/ },
-/* 303 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 304 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36888,7 +36869,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _AgregarManualmente = __webpack_require__(305);
+	var _AgregarManualmente = __webpack_require__(304);
 
 	var _AgregarManualmente2 = _interopRequireDefault(_AgregarManualmente);
 
@@ -37421,7 +37402,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AgregarManualmente.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 305 */
+/* 304 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

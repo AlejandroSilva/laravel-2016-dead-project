@@ -1,4 +1,30 @@
-/*input[type="number"]*/
+
+.Cabecera__container___3QvtW{
+    position: relative;
+}
+.Cabecera__cell___1YFbN{
+
+}
+.Cabecera__menu___1L7n3{
+    background: white;
+    position: absolute;
+    width: 100%;
+    min-width: 200px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px grey;
+    padding: 5px;
+}
+.Cabecera__contenedorValores___3Bx-H{
+    height: 130px;
+    border: 1px solid grey;
+    border-radius: 2px;
+    overflow: auto;
+    padding: 5px;
+}
+.Cabecera__menu___1L7n3 label{
+    display: block;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}/*input[type="number"]*/
 /* FIREFOX */
 .shared__inputNumberAsText___1Qr9M {
     -moz-appearance: textfield;
@@ -162,33 +188,7 @@
 .TablaLocalesMensual__inputDotacionIngresada___2FZVc{
     width: 35px;
 }
-
-.Cabecera__container___3QvtW{
-    position: relative;
-}
-.Cabecera__cell___1YFbN{
-
-}
-.Cabecera__menu___1L7n3{
-    background: white;
-    position: absolute;
-    width: 100%;
-    min-width: 200px;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px grey;
-    padding: 5px;
-}
-.Cabecera__contenedorValores___3Bx-H{
-    height: 130px;
-    border: 1px solid grey;
-    border-radius: 2px;
-    overflow: auto;
-    padding: 5px;
-}
-.Cabecera__menu___1L7n3 label{
-    display: block;
-    margin-top: 2px;
-    margin-bottom: 2px;
-}.AgregarManualmente__tableCell___bz7b0 {
+.AgregarManualmente__tableCell___bz7b0 {
     padding: 0 !important;
     margin: 0;
 }
