@@ -1,9 +1,27 @@
 import React from 'react'
 let PropTypes = React.PropTypes
 // Componentes
+import Tooltip from 'react-bootstrap/lib/Tooltip'
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 // Styles
 import styles from './TablaLocalesMensual.css'
+
+const ESTADO = {
+    FECHA_PENDIENTE: {
+        mensaje: 'Fecha Pendiente',
+        className: 'label-danger'
+    },
+    FECHA_INVALIDA: {
+        mensaje: 'Fecha Invalida',
+        className: 'label-danger'
+    },
+    GUARDADO: {
+        mensaje: 'Guardado',
+        className: 'label-success'
+    }
+}
+
 
 class RowLocales extends React.Component{
     constructor(props){
@@ -11,8 +29,7 @@ class RowLocales extends React.Component{
         this.state = {
             guardado: false,
             fechaValida: false,
-            mensaje: 'Fecha Pendiente',
-            mensajeClassName: 'label-danger'
+            estado: ESTADO.FECHA_PENDIENTE
         }
         this.inputFechaOnKeyDown = this.inputFechaOnKeyDown.bind(this)
         this.guardarOCrear = this.guardarOCrear.bind(this)
@@ -40,16 +57,14 @@ class RowLocales extends React.Component{
             this.setState({
                 //guardado: true,
                 fechaValida: true,
-                mensaje: 'Guardado',
-                mensajeClassName: 'label-success'
+                estado: ESTADO.GUARDADO
             })
             console.log(`dia ${dia} valido, guardado/actualizado`)
         }else {
             this.setState({
                 //guardado: true,
                 fechaValida: false,
-                mensaje: 'Fecha Invalida',
-                mensajeClassName: 'label-danger'
+                estado: ESTADO.FECHA_INVALIDA
             })
             console.log(`dia ${dia} incorrecto`)
         }
@@ -57,6 +72,7 @@ class RowLocales extends React.Component{
     render(){
         // correcto: guardado && valido
         // incorrecto: !valido
+        // <Tooltip placement="right" className="in" positionLeft={125} id="xxxx">
         return (
             <tr>
                 <td className={styles.tdCorrelativo}>
@@ -65,6 +81,13 @@ class RowLocales extends React.Component{
                 </td>
                 <td className={styles.tdFecha}>
                     {/* Fecha */}
+                    {this.state.estado!==ESTADO.GUARDADO?
+
+                        <Tooltip placement="left" className="in" positionLeft={-120} id="xxxx" style={{width: '120px'}}>
+                            {this.state.estado.mensaje}
+                        </Tooltip>
+                        : null
+                    }
                     <input className={this.state.fechaValida? styles.inputDia : styles.inputDiaInvalido} type="number" min={0} max={this.props.ultimoDiaMes}
                            ref={ref=>this.inputFecha=ref}
                            onKeyDown={this.inputFechaOnKeyDown}
@@ -112,7 +135,7 @@ class RowLocales extends React.Component{
                 </td>
                 <td className={styles.tdEstado}>
                     {/* Estado    */}
-                    <span className={'label '+ this.state.mensajeClassName}>{this.state.mensaje}</span>
+                    <span className={'label '+ this.state.estado.className}>{this.state.estado.mensaje}</span>
                 </td>
                 <td className={styles.tdOpciones}>
                     {/* Opciones    */}

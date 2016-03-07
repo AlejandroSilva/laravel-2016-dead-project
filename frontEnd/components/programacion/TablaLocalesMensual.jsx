@@ -20,43 +20,28 @@ class TablaLocalesMensual extends React.Component{
             locales: [],
             localesFiltrados: [],
             filtro: {
-                clientes: []
+                clientes: [],
+                regiones: []
             }
         }
         // referencia a todos las entradas de fecha de los locales a inventariar
         this.inputFecha = []
     }
+    focusFilaSiguiente(indexActual){
+        let nextIndex = (indexActual+1)%this.inputFecha.length
+        let nextRow = this.inputFecha[nextIndex]
+        nextRow.focusFecha()
+    }
+    focusFilaAnterior(indexActual){
+        let prevIndex = indexActual===0? this.inputFecha.length-1 : indexActual-1
+        let prevRow = this.inputFecha[prevIndex]
+        prevRow.focusFecha()
+    }
+
     obtenerDatosLocal(idLocal){
         api.locales.getVerbose(idLocal)
             .then(this.actualizarLocal.bind(this))
             .catch(error=>console.error(`error al obtener los datos de ${idLocal}`, error))
-    }
-
-    generarFiltro(locales){
-        //console.log('--- generar filtro: ')
-        const seleccionarNombreCliente = local=>local.cliente.nombreCorto || ''
-        const filtrarSoloUnicos = (valor, index, self)=>self.indexOf(valor)===index
-
-        // obtener una lista de clientes sin repetir
-        let clientesUnicos = locales.map(seleccionarNombreCliente).filter(filtrarSoloUnicos)
-
-        // crear el filtro con los datos del filtro anterior, y si no existe el la opcion sea y selecciona por defecto
-        let filtroClientes = clientesUnicos.map(clienteUnico=>{
-            let opcion = this.state.filtro.clientes.find(cliente=> cliente.texto===clienteUnico)
-            if(opcion){
-                return opcion
-            }else{
-                return { texto: clienteUnico, seleccionado: true}
-            }
-        })
-
-        //console.log('clientes unicos ', clientesUnicos )
-        //console.log('filtro.cliente viejo: ', this.state.filtro.clientes.map(fi=>fi.seleccionado))
-        //console.log('filtro.cliente nuevo: ', filtroClientes.map(fi=>fi.seleccionado))
-        //console.log('--------------------')
-        return {
-            clientes: filtroClientes
-        }
     }
 
     agregarLocal(nuevoLocal, mesAnno){
@@ -82,17 +67,16 @@ class TablaLocalesMensual extends React.Component{
 
             // actualizar la lista de locales, y el filtro
             let filtroActualizado = this.generarFiltro(localesActualizados)
-            // Todo: actualizar filtro con el nuevo elemento
+            let localesFiltrados = this.filtrarLocales(localesActualizados, filtroActualizado)
 
             this.setState({
                 locales: localesActualizados,
                 filtro: filtroActualizado,
-                localesFiltrados: this.filtrarLocales(localesActualizados, filtroActualizado)
+                localesFiltrados: localesFiltrados
             })
         }
         return localNoExiste
     }
-
     actualizarLocal(localActualizado){
         let localesActualizados = this.state.locales.map(local=>{
             if(local.idLocal===localActualizado.idLocal) {
@@ -108,61 +92,81 @@ class TablaLocalesMensual extends React.Component{
                 return local
         })
         let filtroActualizado = this.generarFiltro(localesActualizados)
+        let localesFiltrados = this.filtrarLocales(localesActualizados, filtroActualizado)
 
         this.setState({
             // actualizar los datos de la lista con la informacion obtenida por el api
             locales: localesActualizados,
             filtro: filtroActualizado,
-            localesFiltrados: this.filtrarLocales(localesActualizados, filtroActualizado)
+            localesFiltrados: localesFiltrados
         })
     }
 
-    focusFilaSiguiente(indexActual){
-        let nextIndex = (indexActual+1)%this.inputFecha.length
-        let nextRow = this.inputFecha[nextIndex]
-        nextRow.focusFecha()
-    }
-    focusFilaAnterior(indexActual){
-        let prevIndex = indexActual===0? this.inputFecha.length-1 : indexActual-1
-        let prevRow = this.inputFecha[prevIndex]
-        prevRow.focusFecha()
-    }
+    generarFiltro(locales){
+        // TODO: simplificar este metodo, hay mucho codigo repetido
+        const filtrarSoloUnicos = (valor, index, self)=>self.indexOf(valor)===index
 
-    // Aplicar filtros a los elementos
-    actualizarFiltro(filtroClientes) {
-        let filtroActualizado = {
-            clientes: filtroClientes
+        // FILTRO CLIENTES
+        // obtener una lista de clientes sin repetir
+        const seleccionarNombreCliente = local=>local.cliente.nombreCorto || ''
+        let clientesUnicos = locales.map(seleccionarNombreCliente).filter(filtrarSoloUnicos)
+
+        // crear el filtro con los datos del filtro anterior
+        let filtroClientes = clientesUnicos.map(textoUnico=>{
+            let opcion = this.state.filtro.clientes.find(opc=> opc.texto===textoUnico)
+
+            // si no existe la opcion, se crea y se selecciona por defecto
+            return opcion || { texto: textoUnico, seleccionado: true}
+        })
+
+        // FILTRO REGIONES
+        const seleccionarNombreRegion = local=>local.region.nombreCorto || ''
+        let regionesUnicas = locales.map(seleccionarNombreRegion).filter(filtrarSoloUnicos)
+
+        // crear el filtro con los datos del filtro anterior
+        let filtroRegiones = regionesUnicas.map(textoUnico=>{
+            let opcion = this.state.filtro.regiones.find(opc=> opc.texto===textoUnico)
+
+            // si no existe la opcion, se crea y se selecciona por defecto
+            return opcion || { texto: textoUnico, seleccionado: true}
+        })
+
+        return {
+            clientes: filtroClientes,
+            regiones: filtroRegiones
         }
-
-        this.setState({
-            filtro: filtroActualizado,
-            localesFiltrados: this.filtrarLocales(this.state.locales, filtroActualizado)
-        })
     }
+
     filtrarLocales(locales, filtros){
         //console.log('filtros actualizado: ', filtros.clientes.map(op=>op.seleccionado))
         //console.log('locales: ', locales.map(local=>local.cliente.nombreCorto))
 
         // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
-        let filtro = filtros.clientes
-
         let localesFiltrados = locales.filter(local=>{
             let textoBuscado = local.cliente.nombreCorto || ''  // si es undefined, es tratado como ''
-            return filtro.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
+            return filtros.clientes.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
+        })
+        // por regiones
+        localesFiltrados = localesFiltrados.filter(local=>{
+            let textoBuscado = local.region.nombreCorto || ''  // si es undefined, es tratado como ''
+            return filtros.regiones.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
         })
         return localesFiltrados
     }
 
+    // Reemplazar el filtro que es actualizado por la Cabecera
+    reemplazarFiltro(nombreFiltro, filtroActualizado) {
+        // se reemplaza el filtro indicado en 'nombreFiltro'
+        let nuevoFiltro = this.state.filtro
+        nuevoFiltro[nombreFiltro] = filtroActualizado
+
+        this.setState({
+            filtro: nuevoFiltro,
+            localesFiltrados: this.filtrarLocales(this.state.locales, nuevoFiltro)
+        })
+    }
+
     render(){
-        // agregar los unicos a state (cuando se crean y actualizan), o va a perjudicar el performance
-        //let fechasUnicas = ['01-03-2016', '03-03-2016', '08-03-2016', '12-03-2016', '18-03-2016', '23-03-2016', '28-03-2016']
-        let filtroClientes = [{texto: 'FCV', seleccionado: true}, {texto: 'PUC', seleccionado: true}]
-
-        // todo: malo , se debe arreglar
-        let filtroRegiones = this.state.locales
-            .map(local=>({texto: local.region.nombreCorto, seleccionado: true}))
-            .filter((opcion, index, self)=>self.indexOf(opcion.texto)===index)
-
         return (
             <div>
                 {/* Table */}
@@ -179,15 +183,15 @@ class TablaLocalesMensual extends React.Component{
                             <th className={styles.thCliente}>
                                 <Cabecera nombre="Cliente"
                                           filtro={this.state.filtro.clientes}
-                                          onFiltroChanged={this.actualizarFiltro.bind(this)}/>
+                                          onFiltroChanged={this.reemplazarFiltro.bind(this, 'clientes')}/>
                             </th>
                             <th className={styles.thCeco}>Ceco</th>
                             <th className={styles.thLocal}>Local</th>
                             <th className={styles.thZonaSei}>Zona SEI</th>
                             <th className={styles.thRegion}>
                                 <Cabecera nombre="Región"
-                                          filtro={filtroRegiones}
-                                          onFiltroChanged={this.actualizarFiltro.bind(this)}/>
+                                          filtro={this.state.filtro.regiones}
+                                          onFiltroChanged={this.reemplazarFiltro.bind(this, 'regiones')}/>
                             </th>
                             <th className={styles.thComuna}>Comuna</th>
                             <th className={styles.thStock}>Stock</th>
