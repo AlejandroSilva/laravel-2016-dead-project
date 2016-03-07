@@ -28,7 +28,7 @@ class CreateInventariosTable extends Migration {
             $table->date('fechaProgramada');
             $table->time('horaLlegada');
             $table->integer('stockTeorico');
-            $table->integer('produccionAsignada');
+            $table->integer('dotacionAsignada');
 
             $table->timestamps();
         });
