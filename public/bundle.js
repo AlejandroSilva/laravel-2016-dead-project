@@ -21744,20 +21744,20 @@
 	        return _this;
 	    }
 	    //componentDidMount(){
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[1], '04-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[2], '04-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[4], '04-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[5], '05-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[6], '05-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[1].locales[8], '06-2016')
-	    //    this.tablaLocalesMensual.agregarLocal(this.props.clientes[0].locales[12], '06-2016')
+	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[1], '04-2016')
+	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[2], '04-2016')
+	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[4], '04-2016')
+	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[5], '05-2016')
+	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[6], '05-2016')
+	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[8], '06-2016')
+	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[12], '06-2016')
 	    //}
 
 	    _createClass(ProgramacionMensual, [{
 	        key: 'submitLocal',
 	        value: function submitLocal(local, mesAnno) {
 	            console.log("agregarndo el local: ", local, mesAnno);
-	            return this.tablaLocalesMensual.agregarLocal(local, mesAnno);
+	            this.tablaLocalesMensual.agregarInventario(local, mesAnno);
 	        }
 	    }, {
 	        key: 'render',
@@ -35475,14 +35475,14 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TablaLocalesMensual).call(this, props));
 
 	        _this.state = {
-	            locales: [],
-	            localesFiltrados: [],
+	            inventarios: [],
+	            inventariosFiltrados: [],
 	            filtro: {
 	                clientes: [],
 	                regiones: []
 	            }
 	        };
-	        // referencia a todos las entradas de fecha de los locales a inventariar
+	        // referencia a todos las entradas de fecha de los inventarios
 	        _this.inputFecha = [];
 	        return _this;
 	    }
@@ -35501,24 +35501,14 @@
 	            var prevRow = this.inputFecha[prevIndex];
 	            prevRow.focusFecha();
 	        }
-
-	        // Llamadas al API
-
-	    }, {
-	        key: 'obtenerDatosLocal',
-	        value: function obtenerDatosLocal(idLocal) {
-	            _v2.default.locales.getVerbose(idLocal).then(this.actualizarLocal.bind(this)).catch(function (error) {
-	                return console.error('error al obtener los datos de ' + idLocal, error);
-	            });
-	        }
 	    }, {
 	        key: 'guardarOCrear',
 	        value: function guardarOCrear(datos) {
 	            return _v2.default.inventario.nuevo(datos);
 	        }
 	    }, {
-	        key: 'agregarLocal',
-	        value: function agregarLocal(nuevoLocal, mesAnno) {
+	        key: 'agregarInventario',
+	        value: function agregarInventario(nuevoInventario, mesAnno) {
 	            var _mesAnno$split = mesAnno.split('-');
 
 	            var _mesAnno$split2 = _slicedToArray(_mesAnno$split, 2);
@@ -35526,67 +35516,69 @@
 	            var mes = _mesAnno$split2[0];
 	            var anno = _mesAnno$split2[1];
 
-	            var localesActualizados = this.state.locales;
+	            var inventariosActualizados = this.state.inventarios;
 
-	            var localNoExiste = this.state.locales.find(function (local) {
-	                return local.idLocal === nuevoLocal.idLocal;
+	            var inventarioNoAgregado = this.state.inventarios.find(function (inventario) {
+	                return inventario.idLocal === nuevoInventario.idLocal;
 	            }) === undefined;
-	            if (localNoExiste) {
+	            if (inventarioNoAgregado) {
 	                // buscar asincronicamente la informacion completa al servidor
-	                this.obtenerDatosLocal(nuevoLocal.idLocal);
-	                nuevoLocal.mesProgramado = mes;
-	                nuevoLocal.annoProgramado = anno;
+	                _v2.default.locales.getVerbose(nuevoInventario.idLocal).then(this.actualizarInventario.bind(this)).catch(function (error) {
+	                    return console.error('error al obtener los datos de ' + idLocal, error);
+	                });
+
+	                nuevoInventario.mesProgramado = mes;
+	                nuevoInventario.annoProgramado = anno;
 
 	                // modificar la estructura el objeto para que sea mas manejable
-	                nuevoLocal.cliente = {};
-	                nuevoLocal.comuna = {};
-	                nuevoLocal.provincia = {};
-	                nuevoLocal.region = {};
-	                nuevoLocal.zona = {};
+	                nuevoInventario.cliente = {};
+	                nuevoInventario.comuna = {};
+	                nuevoInventario.provincia = {};
+	                nuevoInventario.region = {};
+	                nuevoInventario.zona = {};
 
 	                // actualizar la lista de locales
-	                localesActualizados.push(nuevoLocal);
+	                inventariosActualizados.push(nuevoInventario);
 
 	                // actualizar la lista de locales, y el filtro
-	                var filtroActualizado = this.generarFiltro(localesActualizados);
-	                var localesFiltrados = this.filtrarLocales(localesActualizados, filtroActualizado);
+	                var filtroActualizado = this.generarFiltro(inventariosActualizados);
+	                var inventariosFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado);
 
 	                this.setState({
-	                    locales: localesActualizados,
+	                    inventarios: inventariosActualizados,
 	                    filtro: filtroActualizado,
-	                    localesFiltrados: localesFiltrados
+	                    inventariosFiltrados: inventariosFiltrados
 	                });
 	            }
-	            return localNoExiste;
 	        }
 	    }, {
-	        key: 'actualizarLocal',
-	        value: function actualizarLocal(localActualizado) {
-	            var localesActualizados = this.state.locales.map(function (local) {
-	                if (local.idLocal === localActualizado.idLocal) {
+	        key: 'actualizarInventario',
+	        value: function actualizarInventario(local) {
+	            var localesActualizados = this.state.inventarios.map(function (inventario) {
+	                if (inventario.idLocal === local.idLocal) {
 	                    // modificar la estructura el objeto para que sea mas manejable
-	                    localActualizado.comuna = localActualizado.direccion.comuna || {};
-	                    localActualizado.provincia = localActualizado.comuna.provincia || {};
-	                    localActualizado.region = localActualizado.provincia.region || {};
-	                    localActualizado.zona = localActualizado.region.zona || {};
+	                    local.comuna = local.direccion.comuna || {};
+	                    local.provincia = local.comuna.provincia || {};
+	                    local.region = local.provincia.region || {};
+	                    local.zona = local.region.zona || {};
 
 	                    // mezclar los objetos
-	                    return Object.assign(local, localActualizado);
-	                } else return local;
+	                    return Object.assign(inventario, local);
+	                } else return inventario;
 	            });
 	            var filtroActualizado = this.generarFiltro(localesActualizados);
-	            var localesFiltrados = this.filtrarLocales(localesActualizados, filtroActualizado);
+	            var inventariosFiltrados = this.filtrarInventarios(localesActualizados, filtroActualizado);
 
 	            this.setState({
 	                // actualizar los datos de la lista con la informacion obtenida por el api
-	                locales: localesActualizados,
+	                inventarios: localesActualizados,
 	                filtro: filtroActualizado,
-	                localesFiltrados: localesFiltrados
+	                inventariosFiltrados: inventariosFiltrados
 	            });
 	        }
 	    }, {
 	        key: 'generarFiltro',
-	        value: function generarFiltro(locales) {
+	        value: function generarFiltro(inventarios) {
 	            var _this2 = this;
 
 	            // TODO: simplificar este metodo, hay mucho codigo repetido
@@ -35596,10 +35588,10 @@
 
 	            // FILTRO CLIENTES
 	            // obtener una lista de clientes sin repetir
-	            var seleccionarNombreCliente = function seleccionarNombreCliente(local) {
-	                return local.cliente.nombreCorto || '';
+	            var seleccionarNombreCliente = function seleccionarNombreCliente(inventario) {
+	                return inventario.cliente.nombreCorto || '';
 	            };
-	            var clientesUnicos = locales.map(seleccionarNombreCliente).filter(filtrarSoloUnicos);
+	            var clientesUnicos = inventarios.map(seleccionarNombreCliente).filter(filtrarSoloUnicos);
 
 	            // crear el filtro con los datos del filtro anterior
 	            var filtroClientes = clientesUnicos.map(function (textoUnico) {
@@ -35612,10 +35604,10 @@
 	            });
 
 	            // FILTRO REGIONES
-	            var seleccionarNombreRegion = function seleccionarNombreRegion(local) {
-	                return local.region.nombreCorto || '';
+	            var seleccionarNombreRegion = function seleccionarNombreRegion(inventario) {
+	                return inventario.region.nombreCorto || '';
 	            };
-	            var regionesUnicas = locales.map(seleccionarNombreRegion).filter(filtrarSoloUnicos);
+	            var regionesUnicas = inventarios.map(seleccionarNombreRegion).filter(filtrarSoloUnicos);
 
 	            // crear el filtro con los datos del filtro anterior
 	            var filtroRegiones = regionesUnicas.map(function (textoUnico) {
@@ -35633,26 +35625,26 @@
 	            };
 	        }
 	    }, {
-	        key: 'filtrarLocales',
-	        value: function filtrarLocales(locales, filtros) {
+	        key: 'filtrarInventarios',
+	        value: function filtrarInventarios(inventarios, filtros) {
 	            //console.log('filtros actualizado: ', filtros.clientes.map(op=>op.seleccionado))
-	            //console.log('locales: ', locales.map(local=>local.cliente.nombreCorto))
+	            //console.log('inventarios: ', inventarios.map(local=>local.cliente.nombreCorto))
 
 	            // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
-	            var localesFiltrados = locales.filter(function (local) {
-	                var textoBuscado = local.cliente.nombreCorto || ''; // si es undefined, es tratado como ''
+	            var inventariosFiltrados = inventarios.filter(function (inventario) {
+	                var textoBuscado = inventario.cliente.nombreCorto || ''; // si es undefined, es tratado como ''
 	                return filtros.clientes.find(function (opcion) {
 	                    return opcion.texto === textoBuscado && opcion.seleccionado === true;
 	                });
 	            });
 	            // por regiones
-	            localesFiltrados = localesFiltrados.filter(function (local) {
-	                var textoBuscado = local.region.nombreCorto || ''; // si es undefined, es tratado como ''
+	            inventariosFiltrados = inventariosFiltrados.filter(function (inventario) {
+	                var textoBuscado = inventario.region.nombreCorto || ''; // si es undefined, es tratado como ''
 	                return filtros.regiones.find(function (opcion) {
 	                    return opcion.texto === textoBuscado && opcion.seleccionado === true;
 	                });
 	            });
-	            return localesFiltrados;
+	            return inventariosFiltrados;
 	        }
 
 	        // Reemplazar el filtro que es actualizado por la Cabecera
@@ -35666,7 +35658,7 @@
 
 	            this.setState({
 	                filtro: nuevoFiltro,
-	                localesFiltrados: this.filtrarLocales(this.state.locales, nuevoFiltro)
+	                inventariosFiltrados: this.filtrarInventarios(this.state.inventarios, nuevoFiltro)
 	            });
 	        }
 	    }, {
@@ -35750,11 +35742,6 @@
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thEstado },
-	                                'Estado'
-	                            ),
-	                            _react2.default.createElement(
-	                                'th',
 	                                { className: _TablaLocalesMensual2.default.thOpciones },
 	                                'Opciones'
 	                            )
@@ -35763,22 +35750,22 @@
 	                    _react2.default.createElement(
 	                        'tbody',
 	                        null,
-	                        this.state.localesFiltrados.map(function (local, index) {
+	                        this.state.inventariosFiltrados.map(function (inventario, index) {
 	                            return _react2.default.createElement(_RowLocales2.default, {
 	                                key: index,
 	                                index: index,
-	                                mesProgramado: local.mesProgramado,
-	                                ultimoDiaMes: (0, _moment2.default)('' + local.annoProgramado + local.mesProgramado, 'YYYYMM').daysInMonth(),
-	                                annoProgramado: local.annoProgramado,
-	                                nombreCliente: local.cliente ? local.cliente.nombreCorto : '...',
-	                                ceco: local.numero ? local.numero : '...',
-	                                nombreLocal: local.nombre ? local.nombre : '...',
-	                                zona: local.zona.nombre ? local.zona.nombre : '...',
-	                                region: local.region.nombreCorto ? local.region.nombreCorto : '...',
-	                                comuna: local.comuna.nombre ? local.comuna.nombre : '...',
-	                                stock: local.stock ? local.stock : '...',
+	                                mesProgramado: inventario.mesProgramado,
+	                                ultimoDiaMes: (0, _moment2.default)('' + inventario.annoProgramado + inventario.mesProgramado, 'YYYYMM').daysInMonth(),
+	                                annoProgramado: inventario.annoProgramado,
+	                                nombreCliente: inventario.cliente ? inventario.cliente.nombreCorto : '...',
+	                                ceco: inventario.numero ? inventario.numero : '...',
+	                                nombreLocal: inventario.nombre ? inventario.nombre : '...',
+	                                zona: inventario.zona.nombre ? inventario.zona.nombre : '...',
+	                                region: inventario.region.nombreCorto ? inventario.region.nombreCorto : '...',
+	                                comuna: inventario.comuna.nombre ? inventario.comuna.nombre : '...',
+	                                stock: inventario.stock ? inventario.stock : '...',
 	                                dotacionSugerida: 98,
-	                                jornada: local.jornada ? local.jornada.nombre : '(...jornada)',
+	                                jornada: inventario.jornada ? inventario.jornada.nombre : '(...jornada)',
 	                                focusFilaSiguiente: _this3.focusFilaSiguiente.bind(_this3),
 	                                focusFilaAnterior: _this3.focusFilaAnterior.bind(_this3),
 	                                guardarOCrear: _this3.guardarOCrear.bind(_this3),
@@ -35797,7 +35784,7 @@
 	}(_react2.default.Component);
 
 	TablaLocalesMensual.protoTypes = {
-	    //localesAgregados: PropTypes.array.required
+	    //inventarioesAgregados: PropTypes.array.required
 	};
 	exports.default = TablaLocalesMensual;
 
@@ -36847,15 +36834,6 @@
 	                            null,
 	                            this.props.jornada
 	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdEstado },
-	                    _react2.default.createElement(
-	                        'span',
-	                        { className: 'label ' + this.state.estado.className },
-	                        this.state.estado.mensaje
 	                    )
 	                ),
 	                _react2.default.createElement(

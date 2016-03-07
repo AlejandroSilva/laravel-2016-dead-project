@@ -140,10 +140,12 @@ class RowLocales extends React.Component{
                     {/* Jornada */}
                     <p><small>{this.props.jornada}</small></p>
                 </td>
+                {/*
                 <td className={styles.tdEstado}>
-                    {/* Estado    */}
+                    {/ * Estado    * /}
                     <span className={'label '+ this.state.estado.className}>{this.state.estado.mensaje}</span>
                 </td>
+                */}
                 <td className={styles.tdOpciones}>
                     {/* Opciones    */}
                     <button className="btn btn-xs btn-primary" tabIndex="-1">Editar local</button>
