@@ -22,7 +22,6 @@ const ESTADO = {
     }
 }
 
-
 class RowLocales extends React.Component{
     constructor(props){
         super(props)
@@ -53,13 +52,24 @@ class RowLocales extends React.Component{
         let dia = this.inputFecha.value
         const fechaEsValida = dia>=1 && dia<=this.props.ultimoDiaMes
         if(fechaEsValida){
-            // ToDo: llamar al API
-            this.setState({
-                //guardado: true,
-                fechaValida: true,
-                estado: ESTADO.GUARDADO
-            })
             console.log(`dia ${dia} valido, guardado/actualizado`)
+            // ToDo: llamar al API
+            this.props.guardarOCrear({
+                idLocal: 99,
+                idJornada: 3,
+                fechaProgramada: '1-2-2016',
+                horaLlegada: '11:12',
+                stockTeorico: '123456',
+                dotacionAsignada: 97
+            }).then(res=>{
+                this.setState({
+                    //guardado: true,
+                    fechaValida: true,
+                    estado: ESTADO.GUARDADO
+                })
+            }).catch(err=>{
+                console.error(err)
+            })
         }else {
             this.setState({
                 //guardado: true,
@@ -70,9 +80,6 @@ class RowLocales extends React.Component{
         }
     }
     render(){
-        // correcto: guardado && valido
-        // incorrecto: !valido
-        // <Tooltip placement="right" className="in" positionLeft={125} id="xxxx">
         return (
             <tr>
                 <td className={styles.tdCorrelativo}>
@@ -160,7 +167,8 @@ RowLocales.protoTypes = {
     dotacionSugerida: PropTypes.number.required,
     //jornada: PropTypes.number.required,
     focusFilaSiguiente: PropTypes.func.required,
-    focusFilaAnterior: PropTypes.func.required
+    focusFilaAnterior: PropTypes.func.required,
+    guardarOCrear: PropTypes.func.required
 }
 
 export default RowLocales

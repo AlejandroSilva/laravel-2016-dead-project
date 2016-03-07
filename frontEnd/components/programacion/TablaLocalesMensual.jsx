@@ -38,10 +38,14 @@ class TablaLocalesMensual extends React.Component{
         prevRow.focusFecha()
     }
 
+    // Llamadas al API
     obtenerDatosLocal(idLocal){
         api.locales.getVerbose(idLocal)
             .then(this.actualizarLocal.bind(this))
             .catch(error=>console.error(`error al obtener los datos de ${idLocal}`, error))
+    }
+    guardarOCrear(datos){
+        return api.inventario.nuevo(datos)
     }
 
     agregarLocal(nuevoLocal, mesAnno){
@@ -220,6 +224,7 @@ class TablaLocalesMensual extends React.Component{
                             jornada={local.jornada? local.jornada.nombre : '(...jornada)'}
                             focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
                             focusFilaAnterior={this.focusFilaAnterior.bind(this)}
+                            guardarOCrear={this.guardarOCrear.bind(this)}
                             ref={ref=>this.inputFecha[index]=ref}
                         />
                     })}
