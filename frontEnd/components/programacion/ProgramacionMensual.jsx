@@ -29,13 +29,13 @@ class ProgramacionMensual extends React.Component{
         this.submitLocal = this.submitLocal.bind(this)
     }
     componentDidMount(){
-        this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[1], '04-2016')
+        this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[1], '07-2016')
         //this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[2], '04-2016')
-        this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[4], '04-2016')
+        this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[4], '07-2016')
     //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[5], '05-2016')
     //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[6], '05-2016')
-        this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[8], '06-2016')
-        this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[12], '06-2016')
+        this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[8], '09-2016')
+        this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[12], '08-2016')
     }
 
     submitLocal(local, mesAnno){

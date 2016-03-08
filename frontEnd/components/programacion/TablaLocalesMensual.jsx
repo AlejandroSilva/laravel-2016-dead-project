@@ -38,8 +38,35 @@ class TablaLocalesMensual extends React.Component{
         prevRow.focusElemento(elemento)
     }
 
-    guardarOCrear(datos){
-        return api.inventario.nuevo(datos)
+    guardarOCrear(request){
+        let inventario = this.state.inventarios.find(inventario=>inventario.idLocal===request.idLocal)
+        if(!inventario){
+            return console.error(`inventario ${request.idLocal} no encontrado`)
+        }
+        // actualizar
+        if(inventario.idInventario){
+            // actualizar el inventario
+            console.log(`actualizar ${inventario.idInventario}    `)
+            return new Promise((res, rej)=>{
+                res()
+            })
+        }else{
+            // Crear el inventario
+            return new Promise((res, rej)=>{
+                api.inventario.nuevo(request)
+                    .then(resp=>{
+                        // buscar el inventario, por el id de local (en teorica nunca deberia estar repetido en esta instancia)
+                        let inventarioCreado = resp.inventario   //   <---- esto va a cambiar
+
+                        inventario.idInventario = inventarioCreado.idInventario
+                        this.actualizarInventario(inventario)
+
+                        console.log(`inventario ${inventarioCreado.idInventario} creado correctamente`)
+                        res(inventario)
+                    })
+                    .catch(rej)
+            })
+        }
     }
 
     agregarInventario(nuevoInventario, mesAnno){
@@ -51,8 +78,24 @@ class TablaLocalesMensual extends React.Component{
             // buscar asincronicamente la informacion completa al servidor
 
             api.locales.getVerbose(nuevoInventario.idLocal)
-                .then(this.actualizarInventario.bind(this))
-                .catch(error=>console.error(`error al obtener los datos de ${idLocal}`, error))
+                .then(local=>{
+                    // modificar la estructura el objeto para que sea mas manejable
+                    local.comuna = local.direccion.comuna || {}
+                    local.provincia = local.comuna.provincia || {}
+                    local.region = local.provincia.region || {}
+                    local.zona = local.region.zona || {}
+
+                    // actualizar los datos del inventario
+                    nuevoInventario.local = local
+                    nuevoInventario.nombreCliente = local.cliente.nombreCorto
+                    nuevoInventario.nombreComuna = local.comuna.nombre
+                    nuevoInventario.nombreProvincia = local.provincia.nombre
+                    nuevoInventario.nombreRegion = local.region.nombreCorto
+                    nuevoInventario.nombreZona = local.zona.nombre
+
+                    this.actualizarInventario(nuevoInventario)
+                })
+                .catch(error=>console.error(`error al obtener los datos de ${nuevoInventario.idLocal}`, error))
 
             nuevoInventario.mesProgramado = mes
             nuevoInventario.annoProgramado = anno
@@ -79,32 +122,19 @@ class TablaLocalesMensual extends React.Component{
             })
         }
     }
-    actualizarInventario(local){
-        let localesActualizados = this.state.inventarios.map(inventario=>{
-            if(inventario.idLocal===local.idLocal) {
-                // modificar la estructura el objeto para que sea mas manejable
-                local.comuna = local.direccion.comuna || {}
-                local.provincia = local.comuna.provincia || {}
-                local.region = local.provincia.region || {}
-                local.zona = local.region.zona || {}
-
-                // actualizar los datos del inventario
-                inventario.local = local
-                inventario.nombreCliente = local.cliente.nombreCorto
-                inventario.nombreComuna = local.comuna.nombre
-                inventario.nombreProvincia = local.provincia.nombre
-                inventario.nombreRegion = local.region.nombreCorto
-                inventario.nombreZona = local.zona.nombre
+    actualizarInventario(inventarioModificado){
+        let inventariosActualizados = this.state.inventarios.map(inventario=>{
+            if(inventario.idLocal===inventarioModificado.idLocal) { // Todo idLocal no existe
+                return inventarioModificado
             }
-            console.log('inventario actualizado ', inventario)
             return inventario
         })
-        let filtroActualizado = this.generarFiltro(localesActualizados)
-        let inventariosFiltrados = this.filtrarInventarios(localesActualizados, filtroActualizado)
+        let filtroActualizado = this.generarFiltro(inventariosActualizados)
+        let inventariosFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado)
 
         this.setState({
             // actualizar los datos de la lista con la informacion obtenida por el api
-            inventarios: localesActualizados,
+            inventarios: inventariosActualizados,
             filtro: filtroActualizado,
             inventariosFiltrados: inventariosFiltrados
         })
@@ -214,6 +244,7 @@ class TablaLocalesMensual extends React.Component{
                         return <RowLocales
                             key={index}
                             index={index}
+                            idInventario={inventario.idInventario}
                             mesProgramado={inventario.mesProgramado}
                             ultimoDiaMes={moment(`${inventario.annoProgramado}${inventario.mesProgramado}`, 'YYYYMM').daysInMonth()}
                             annoProgramado={inventario.annoProgramado}

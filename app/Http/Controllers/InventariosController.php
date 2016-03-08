@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 // Modelos
 use App\Clientes;
+use App\Inventarios;
 use App\Locales;
 
 class InventariosController extends Controller {
@@ -46,16 +47,31 @@ class InventariosController extends Controller {
             'fechaProgramada'=> 'required',
             'horaLlegada'=> 'required',
             'stockTeorico'=> 'required',
-
+            'dotacionAsignada'=> 'required'
         ]);
         if($validator->fails()){
-            return [
+            return response()->json([
                 'request'=> $request->all(),
                 'errors'=> $validator->errors()
-            ];
+            ], 400);
 //            return redirect('inventario/nuevo')->withInput()->withErrors($validator);
         }else{
-            return view('operacional.inventario.inventario-nuevo-ok');
+            $inventario = new Inventarios();
+            $inventario->idLocal = $request->idLocal;
+            $inventario->idJornada = $request->idJornada;
+            $inventario->fechaProgramada = $request->fechaProgramada;
+            $inventario->horaLlegada = $request->horaLlegada;
+            $inventario->stockTeorico = $request->stockTeorico;
+            $inventario->dotacionAsignada = $request->dotacionAsignada;
+            $resultado =  $inventario->save();
+
+            return response()->json([
+                'request'=> $request->all(),
+                'errors'=> $validator->errors(),
+                'resultado'=>$resultado,
+                'inventario'=>$inventario
+            ]);
+//            return view('operacional.inventario.inventario-nuevo-ok');
         }
     }
 

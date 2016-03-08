@@ -1,5 +1,7 @@
 import React from 'react'
 let PropTypes = React.PropTypes
+import numeral from 'numeral'
+
 // Componentes
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
@@ -71,15 +73,15 @@ class RowLocales extends React.Component{
     guardarOCrear(evt){
         const fechaEsValida = this.state.inputDia>=1 && this.state.inputDia<=this.props.ultimoDiaMes
         if(fechaEsValida){
-            console.log(`dia ${this.state.inputDia} valido, guardado/actualizado`)
+            console.log(`dia ${this.state.inputDia} valido`)
             // ToDo: llamar al API
             this.props.guardarOCrear({
-                idLocal: 99,
-                idJornada: 3,
-                fechaProgramada: '1-2-2016',
-                horaLlegada: '11:12',
-                stockTeorico: '123456',
-                dotacionAsignada: 97
+                idLocal: this.props.local.idLocal,
+                idJornada: 3,//**
+                fechaProgramada: `${this.props.annoProgramado}-${this.props.mesProgramado}-${this.state.inputDia}`,
+                horaLlegada: '00:00',
+                stockTeorico: this.props.local.stock,
+                dotacionAsignada: this.state.inputDotacion
             }).then(res=>{
                 this.setState({
                     //guardado: true,
@@ -154,17 +156,25 @@ class RowLocales extends React.Component{
                         placement="left"
                         delay={0}
                         overlay={<Tooltip id="yyy">{'Stock al '+(this.props.local.fechaStock || '??-??-????')}</Tooltip>}>
-                        <p><small>{this.props.local.stock || '-'}</small></p>
+                        <p><small>{numeral(this.props.local.stock || 0).format('0,0')}</small></p>
+
                     </OverlayTrigger>
                 </td>
                 <td className={styles.tdDotacion}>
                     {/* Dotación */}
-                    <input className={styles.inputDotacionIngresada} type="number"
-                           ref={ref=>this.inputDotacion=ref}
-                           value={this.state.inputDotacion}
-                           onChange={this.inputDotacionHandler.bind(this)}
-                           onKeyDown={this.inputOnKeyDown.bind(this, 'dotacion')}
-                           onBlur={this.guardarOCrear}/>
+                    <OverlayTrigger
+                        placement="left"
+                        delay={0}
+                        overlay={<Tooltip id="yyy">{this.props.local.formato_local? 'Produción '+this.props.local.formato_local.produccionSugerida : ''}</Tooltip>}>
+
+                        <input className={styles.inputDotacionIngresada} type="number"
+                               ref={ref=>this.inputDotacion=ref}
+                               value={this.state.inputDotacion}
+                               onChange={this.inputDotacionHandler.bind(this)}
+                               onKeyDown={this.inputOnKeyDown.bind(this, 'dotacion')}
+                               onBlur={this.guardarOCrear}/>
+
+                    </OverlayTrigger>
                 </td>
                 <td className={styles.tdJornada}>
                     {/* Jornada */}
@@ -179,6 +189,7 @@ class RowLocales extends React.Component{
                 <td className={styles.tdOpciones}>
                     {/* Opciones    */}
                     <button className="btn btn-xs btn-primary" tabIndex="-1">Editar local</button>
+                    <p>{this.props.idInventario || '----    '}</p>
                 </td>
             </tr>
         )
