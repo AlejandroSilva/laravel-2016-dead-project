@@ -54,9 +54,8 @@ class TablaLocalesMensual extends React.Component{
             // Crear el inventario
             return new Promise((res, rej)=>{
                 api.inventario.nuevo(request)
-                    .then(resp=>{
+                    .then(inventarioCreado=>{
                         // buscar el inventario, por el id de local (en teorica nunca deberia estar repetido en esta instancia)
-                        let inventarioCreado = resp.inventario   //   <---- esto va a cambiar
 
                         inventario.idInventario = inventarioCreado.idInventario
                         this.actualizarInventario(inventario)
@@ -252,7 +251,6 @@ class TablaLocalesMensual extends React.Component{
                             zona={inventario.nombreZona}
                             region={inventario.nombreRegion}
                             comuna={inventario.nombreComuna}
-                        jornada={inventario.local.jornada? inventario.local.jornada.nombre : '(...jornada)'}
                             local={inventario.local}
                             focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
                             focusFilaAnterior={this.focusFilaAnterior.bind(this)}

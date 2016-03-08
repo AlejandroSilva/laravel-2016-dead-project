@@ -10,6 +10,18 @@
     margin: 0;
 }
 
+.tooltipDanger :global .tooltip-inner{
+    background-color: #d9534f;
+}
+.tooltipDanger :global .tooltip-arrow{
+    border-left-color: #d9534f !important;
+}
+.tooltipWarning :global .tooltip-inner{
+    background-color: #f0ad4e;
+}
+.tooltipWarning :global .tooltip-arrow{
+    border-left-color: #f0ad4e !important;
+}
 
 
 
