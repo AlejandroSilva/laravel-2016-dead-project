@@ -8,15 +8,18 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 // Styles
 import styles from './TablaLocalesMensual.css'
+import styleShared from '../shared/shared.css'
 
 const ESTADO = {
     FECHA_PENDIENTE: {
         mensaje: 'Fecha Pendiente',
-        className: 'label-danger'
+        className: 'label-danger',
+        tooltipClass: styleShared.tooltipWarning
     },
     FECHA_INVALIDA: {
         mensaje: 'Fecha Invalida',
-        className: 'label-danger'
+        className: 'label-danger',
+        tooltipClass: styleShared.tooltipDanger
     },
     GUARDADO: {
         mensaje: 'Guardado',
@@ -29,6 +32,7 @@ class RowLocales extends React.Component{
         super(props)
         this.state = {
             inputDotacion: 1,
+            inputJornada: 0,
             inputDia: '',
             guardado: false,
             fechaValida: false,
@@ -40,7 +44,8 @@ class RowLocales extends React.Component{
         // si la dotacion anteriormente era undefined, pero ahora se recibe el valor, se actualiza el state
         if(!this.props.local.dotacionSugerida && nextProps.local.dotacionSugerida){
             this.setState({
-                inputDotacion: nextProps.local.dotacionSugerida
+                inputDotacion: nextProps.local.dotacionSugerida,
+                inputJornada: nextProps.local.idJornadaSugerida
             })
         }
     }
@@ -66,6 +71,10 @@ class RowLocales extends React.Component{
     inputDiaHandler(evt){
         this.setState({inputDia: evt.target.value})
     }
+    inputJornadaHandler(evt){
+        this.setState({inputJornada: evt.target.value})
+        this.guardarOCrear()
+    }
     inputDotacionHandler(evt){
         this.setState({inputDotacion: evt.target.value})
     }
@@ -77,7 +86,7 @@ class RowLocales extends React.Component{
             // ToDo: llamar al API
             this.props.guardarOCrear({
                 idLocal: this.props.local.idLocal,
-                idJornada: 3,//**
+                idJornada: this.state.inputJornada,
                 fechaProgramada: `${this.props.annoProgramado}-${this.props.mesProgramado}-${this.state.inputDia}`,
                 horaLlegada: '00:00',
                 stockTeorico: this.props.local.stock,
@@ -111,7 +120,8 @@ class RowLocales extends React.Component{
                     {/* Fecha */}
                     {this.state.estado!==ESTADO.GUARDADO?
 
-                        <Tooltip placement="left" className="in" positionLeft={-120} id="xxxx" style={{width: '120px'}}>
+                        <Tooltip placement="left" positionLeft={-120} id="xxxx" style={{width: '120px'}}
+                        className={"in "+this.state.estado.tooltipClass}>
                             {this.state.estado.mensaje}
                         </Tooltip>
                         : null
@@ -178,18 +188,26 @@ class RowLocales extends React.Component{
                 </td>
                 <td className={styles.tdJornada}>
                     {/* Jornada */}
-                    <p><small>{this.props.jornada}</small></p>
+                    <select value={this.state.inputJornada} onChange={this.inputJornadaHandler.bind(this)}>
+                        <option value="0">no definido</option>
+                        <option value="1">día</option>
+                        <option value="2">noche</option>
+                        <option value="3">día y noche</option>
+                    </select>
                 </td>
+                {/* Estado    */}
                 {/*
                 <td className={styles.tdEstado}>
-                    {/ * Estado    * /}
                     <span className={'label '+ this.state.estado.className}>{this.state.estado.mensaje}</span>
                 </td>
                 */}
                 <td className={styles.tdOpciones}>
                     {/* Opciones    */}
                     <button className="btn btn-xs btn-primary" tabIndex="-1">Editar local</button>
-                    <p>{this.props.idInventario || '----    '}</p>
+                    {this.props.idInventario?
+                        <button className="btn btn-xs btn-primary" tabIndex="-1">Editar inventario</button>
+                        : null
+                    }
                 </td>
             </tr>
         )

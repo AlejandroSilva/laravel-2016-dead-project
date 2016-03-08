@@ -46,6 +46,7 @@ class Locales extends Model{
         // El ultimo stock actualizado / Produccion del tipo de local
         $producion = $this->formatoLocal->produccionSugerida;
         $stock = $this->stock;
-        return $stock/$producion;
+
+        return round($stock/$producion);
     }
 }

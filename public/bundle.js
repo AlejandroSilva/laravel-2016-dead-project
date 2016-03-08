@@ -20269,7 +20269,7 @@
 	};
 	var Dia = {
 	    idJornada: 2,
-	    nombre: "dia",
+	    nombre: "día",
 	    descripcion: "el inventario se realizara dentro del dia.",
 	    dia: "1",
 	    noche: "0"
@@ -35524,9 +35524,8 @@
 	            } else {
 	                // Crear el inventario
 	                return new Promise(function (res, rej) {
-	                    _v2.default.inventario.nuevo(request).then(function (resp) {
+	                    _v2.default.inventario.nuevo(request).then(function (inventarioCreado) {
 	                        // buscar el inventario, por el id de local (en teorica nunca deberia estar repetido en esta instancia)
-	                        var inventarioCreado = resp.inventario; //   <---- esto va a cambiar
 
 	                        inventario.idInventario = inventarioCreado.idInventario;
 	                        _this2.actualizarInventario(inventario);
@@ -35808,7 +35807,6 @@
 	                                zona: inventario.nombreZona,
 	                                region: inventario.nombreRegion,
 	                                comuna: inventario.nombreComuna,
-	                                jornada: inventario.local.jornada ? inventario.local.jornada.nombre : '(...jornada)',
 	                                local: inventario.local,
 	                                focusFilaSiguiente: _this5.focusFilaSiguiente.bind(_this5),
 	                                focusFilaAnterior: _this5.focusFilaAnterior.bind(_this5),
@@ -36630,6 +36628,10 @@
 
 	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
 
+	var _shared = __webpack_require__(411);
+
+	var _shared2 = _interopRequireDefault(_shared);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -36648,11 +36650,13 @@
 	var ESTADO = {
 	    FECHA_PENDIENTE: {
 	        mensaje: 'Fecha Pendiente',
-	        className: 'label-danger'
+	        className: 'label-danger',
+	        tooltipClass: _shared2.default.tooltipWarning
 	    },
 	    FECHA_INVALIDA: {
 	        mensaje: 'Fecha Invalida',
-	        className: 'label-danger'
+	        className: 'label-danger',
+	        tooltipClass: _shared2.default.tooltipDanger
 	    },
 	    GUARDADO: {
 	        mensaje: 'Guardado',
@@ -36670,6 +36674,7 @@
 
 	        _this.state = {
 	            inputDotacion: 1,
+	            inputJornada: 0,
 	            inputDia: '',
 	            guardado: false,
 	            fechaValida: false,
@@ -36685,7 +36690,8 @@
 	            // si la dotacion anteriormente era undefined, pero ahora se recibe el valor, se actualiza el state
 	            if (!this.props.local.dotacionSugerida && nextProps.local.dotacionSugerida) {
 	                this.setState({
-	                    inputDotacion: nextProps.local.dotacionSugerida
+	                    inputDotacion: nextProps.local.dotacionSugerida,
+	                    inputJornada: nextProps.local.idJornadaSugerida
 	                });
 	            }
 	        }
@@ -36717,6 +36723,12 @@
 	            this.setState({ inputDia: evt.target.value });
 	        }
 	    }, {
+	        key: 'inputJornadaHandler',
+	        value: function inputJornadaHandler(evt) {
+	            this.setState({ inputJornada: evt.target.value });
+	            this.guardarOCrear();
+	        }
+	    }, {
 	        key: 'inputDotacionHandler',
 	        value: function inputDotacionHandler(evt) {
 	            this.setState({ inputDotacion: evt.target.value });
@@ -36732,7 +36744,7 @@
 	                // ToDo: llamar al API
 	                this.props.guardarOCrear({
 	                    idLocal: this.props.local.idLocal,
-	                    idJornada: 3, //**
+	                    idJornada: this.state.inputJornada,
 	                    fechaProgramada: this.props.annoProgramado + '-' + this.props.mesProgramado + '-' + this.state.inputDia,
 	                    horaLlegada: '00:00',
 	                    stockTeorico: this.props.local.stock,
@@ -36773,7 +36785,8 @@
 	                    { className: _TablaLocalesMensual2.default.tdFecha },
 	                    this.state.estado !== ESTADO.GUARDADO ? _react2.default.createElement(
 	                        _Tooltip2.default,
-	                        { placement: 'left', className: 'in', positionLeft: -120, id: 'xxxx', style: { width: '120px' } },
+	                        { placement: 'left', positionLeft: -120, id: 'xxxx', style: { width: '120px' },
+	                            className: "in " + this.state.estado.tooltipClass },
 	                        this.state.estado.mensaje
 	                    ) : null,
 	                    _react2.default.createElement('input', { className: this.state.fechaValida ? _TablaLocalesMensual2.default.inputDia : _TablaLocalesMensual2.default.inputDiaInvalido,
@@ -36929,12 +36942,27 @@
 	                    'td',
 	                    { className: _TablaLocalesMensual2.default.tdJornada },
 	                    _react2.default.createElement(
-	                        'p',
-	                        null,
+	                        'select',
+	                        { value: this.state.inputJornada, onChange: this.inputJornadaHandler.bind(this) },
 	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.jornada
+	                            'option',
+	                            { value: '0' },
+	                            'no definido'
+	                        ),
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '1' },
+	                            'día'
+	                        ),
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '2' },
+	                            'noche'
+	                        ),
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '3' },
+	                            'día y noche'
 	                        )
 	                    )
 	                ),
@@ -36946,11 +36974,11 @@
 	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
 	                        'Editar local'
 	                    ),
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        this.props.idInventario || '----    '
-	                    )
+	                    this.props.idInventario ? _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
+	                        'Editar inventario'
+	                    ) : null
 	                )
 	            );
 	        }
@@ -42515,7 +42543,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M"};
+	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M","tooltipDanger":"shared__tooltipDanger___3_QoZ","tooltipWarning":"shared__tooltipWarning___38s1A"};
 
 /***/ },
 /* 412 */

@@ -13,7 +13,7 @@ const NoSeleccionada = {
 }
 const Dia = {
     idJornada: 2,
-    nombre: "dia",
+    nombre: "día",
     descripcion: "el inventario se realizara dentro del dia.",
     dia: "1",
     noche: "0"

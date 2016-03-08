@@ -36,6 +36,12 @@ class InventariosController extends Controller {
         ]);
     }
 
+    /**
+     * ##########################################################
+     * Rutas para consumo del API REST
+     * ##########################################################
+     */
+
     // POST inventario/nuevo
     function postNuevo(Request $request){
         $validator = Validator::make($request->all(), [
@@ -65,19 +71,17 @@ class InventariosController extends Controller {
             $inventario->dotacionAsignada = $request->dotacionAsignada;
             $resultado =  $inventario->save();
 
-            return response()->json([
-                'request'=> $request->all(),
-                'errors'=> $validator->errors(),
-                'resultado'=>$resultado,
-                'inventario'=>$inventario
-            ]);
+            if($resultado){
+                return response()->json($inventario, 201);
+            }else{
+                return response()->json([
+                    'request'=> $request->all(),
+                    'errors'=> $validator->errors(),
+                    'resultado'=>$resultado,
+                    'inventario'=>$inventario
+                ], 400);
+            }
 //            return view('operacional.inventario.inventario-nuevo-ok');
         }
     }
-
-    /**
-     * ##########################################################
-     * Rutas para consumo del API REST
-     * ##########################################################
-     */
 }
