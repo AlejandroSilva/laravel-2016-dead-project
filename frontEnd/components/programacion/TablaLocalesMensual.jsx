@@ -27,15 +27,15 @@ class TablaLocalesMensual extends React.Component{
         // referencia a todos las entradas de fecha de los inventarios
         this.inputFecha = []
     }
-    focusFilaSiguiente(indexActual){
+    focusFilaSiguiente(indexActual, elemento){
         let nextIndex = (indexActual+1)%this.inputFecha.length
         let nextRow = this.inputFecha[nextIndex]
-        nextRow.focusFecha()
+        nextRow.focusElemento(elemento)
     }
-    focusFilaAnterior(indexActual){
+    focusFilaAnterior(indexActual, elemento){
         let prevIndex = indexActual===0? this.inputFecha.length-1 : indexActual-1
         let prevRow = this.inputFecha[prevIndex]
-        prevRow.focusFecha()
+        prevRow.focusElemento(elemento)
     }
 
     guardarOCrear(datos){
@@ -49,6 +49,7 @@ class TablaLocalesMensual extends React.Component{
         let inventarioNoAgregado = this.state.inventarios.find(inventario=>inventario.idLocal===nuevoInventario.idLocal)===undefined
         if( inventarioNoAgregado ){
             // buscar asincronicamente la informacion completa al servidor
+
             api.locales.getVerbose(nuevoInventario.idLocal)
                 .then(this.actualizarInventario.bind(this))
                 .catch(error=>console.error(`error al obtener los datos de ${idLocal}`, error))
@@ -57,11 +58,12 @@ class TablaLocalesMensual extends React.Component{
             nuevoInventario.annoProgramado = anno
 
             // modificar la estructura el objeto para que sea mas manejable
-            nuevoInventario.cliente = {}
-            nuevoInventario.comuna = {}
-            nuevoInventario.provincia = {}
-            nuevoInventario.region = {}
-            nuevoInventario.zona = {}
+            nuevoInventario.local = {}
+            nuevoInventario.nombreCliente = '-'
+            nuevoInventario.nombreComuna = '-'
+            nuevoInventario.nombreProvincia = '-'
+            nuevoInventario.nombreRegion = '-'
+            nuevoInventario.nombreZona = '-'
 
             // actualizar la lista de locales
             inventariosActualizados.push(nuevoInventario)
@@ -86,10 +88,16 @@ class TablaLocalesMensual extends React.Component{
                 local.region = local.provincia.region || {}
                 local.zona = local.region.zona || {}
 
-                // mezclar los objetos
-                return Object.assign(inventario, local)
-            }else
-                return inventario
+                // actualizar los datos del inventario
+                inventario.local = local
+                inventario.nombreCliente = local.cliente.nombreCorto
+                inventario.nombreComuna = local.comuna.nombre
+                inventario.nombreProvincia = local.provincia.nombre
+                inventario.nombreRegion = local.region.nombreCorto
+                inventario.nombreZona = local.zona.nombre
+            }
+            console.log('inventario actualizado ', inventario)
+            return inventario
         })
         let filtroActualizado = this.generarFiltro(localesActualizados)
         let inventariosFiltrados = this.filtrarInventarios(localesActualizados, filtroActualizado)
@@ -108,7 +116,7 @@ class TablaLocalesMensual extends React.Component{
 
         // FILTRO CLIENTES
         // obtener una lista de clientes sin repetir
-        const seleccionarNombreCliente = inventario=>inventario.cliente.nombreCorto || ''
+        const seleccionarNombreCliente = inventario=>inventario.nombreCliente || ''
         let clientesUnicos = inventarios.map(seleccionarNombreCliente).filter(filtrarSoloUnicos)
 
         // crear el filtro con los datos del filtro anterior
@@ -120,7 +128,7 @@ class TablaLocalesMensual extends React.Component{
         })
 
         // FILTRO REGIONES
-        const seleccionarNombreRegion = inventario=>inventario.region.nombreCorto || ''
+        const seleccionarNombreRegion = inventario=>inventario.nombreRegion || ''
         let regionesUnicas = inventarios.map(seleccionarNombreRegion).filter(filtrarSoloUnicos)
 
         // crear el filtro con los datos del filtro anterior
@@ -139,16 +147,16 @@ class TablaLocalesMensual extends React.Component{
 
     filtrarInventarios(inventarios, filtros){
         //console.log('filtros actualizado: ', filtros.clientes.map(op=>op.seleccionado))
-        //console.log('inventarios: ', inventarios.map(local=>local.cliente.nombreCorto))
+        //console.log('inventarios: ', inventarios.map(local=>local.nombreCliente))
 
         // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
         let inventariosFiltrados = inventarios.filter(inventario=>{
-            let textoBuscado = inventario.cliente.nombreCorto || ''  // si es undefined, es tratado como ''
+            let textoBuscado = inventario.nombreCliente || ''  // si es undefined, es tratado como ''
             return filtros.clientes.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
         })
         // por regiones
         inventariosFiltrados = inventariosFiltrados.filter(inventario=>{
-            let textoBuscado = inventario.region.nombreCorto || ''  // si es undefined, es tratado como ''
+            let textoBuscado = inventario.nombreRegion || ''  // si es undefined, es tratado como ''
             return filtros.regiones.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
         })
         return inventariosFiltrados
@@ -209,15 +217,12 @@ class TablaLocalesMensual extends React.Component{
                             mesProgramado={inventario.mesProgramado}
                             ultimoDiaMes={moment(`${inventario.annoProgramado}${inventario.mesProgramado}`, 'YYYYMM').daysInMonth()}
                             annoProgramado={inventario.annoProgramado}
-                            nombreCliente={inventario.cliente? inventario.cliente.nombreCorto : '...'}
-                            ceco={inventario.numero? inventario.numero : '...'}
-                            nombreLocal={inventario.nombre? inventario.nombre : '...'}
-                            zona={inventario.zona.nombre? inventario.zona.nombre : '...'}
-                            region={inventario.region.nombreCorto? inventario.region.nombreCorto : '...'}
-                            comuna={inventario.comuna.nombre? inventario.comuna.nombre : '...'}
-                            stock={inventario.stock? inventario.stock : '...'}
-                            dotacionSugerida={98}
-                            jornada={inventario.jornada? inventario.jornada.nombre : '(...jornada)'}
+                            nombreCliente={inventario.nombreCliente}
+                            zona={inventario.nombreZona}
+                            region={inventario.nombreRegion}
+                            comuna={inventario.nombreComuna}
+                        jornada={inventario.local.jornada? inventario.local.jornada.nombre : '(...jornada)'}
+                            local={inventario.local}
                             focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
                             focusFilaAnterior={this.focusFilaAnterior.bind(this)}
                             guardarOCrear={this.guardarOCrear.bind(this)}

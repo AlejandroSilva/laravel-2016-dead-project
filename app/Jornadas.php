@@ -13,8 +13,8 @@ class Jornadas extends Model {
 
     // #### Relaciones
     public function locales(){
-        // los 'locales' tienen una jornada
-        // ToDo: por implementar
+        //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
+        return $this->hasMany('App\Locales', 'idJornadaSugerida', 'idJornada');
     }
 
     public function inventarios(){

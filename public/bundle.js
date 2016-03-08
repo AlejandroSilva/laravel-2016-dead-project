@@ -21743,17 +21743,19 @@
 	        _this.submitLocal = _this.submitLocal.bind(_this);
 	        return _this;
 	    }
-	    //componentDidMount(){
-	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[1], '04-2016')
-	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[2], '04-2016')
-	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[4], '04-2016')
-	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[5], '05-2016')
-	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[6], '05-2016')
-	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[8], '06-2016')
-	    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[12], '06-2016')
-	    //}
 
 	    _createClass(ProgramacionMensual, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[1], '04-2016');
+	            //this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[2], '04-2016')
+	            this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[4], '04-2016');
+	            //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[5], '05-2016')
+	            //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[6], '05-2016')
+	            this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[8], '06-2016');
+	            this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[12], '06-2016');
+	        }
+	    }, {
 	        key: 'submitLocal',
 	        value: function submitLocal(local, mesAnno) {
 	            console.log("agregarndo el local: ", local, mesAnno);
@@ -35489,17 +35491,17 @@
 
 	    _createClass(TablaLocalesMensual, [{
 	        key: 'focusFilaSiguiente',
-	        value: function focusFilaSiguiente(indexActual) {
+	        value: function focusFilaSiguiente(indexActual, elemento) {
 	            var nextIndex = (indexActual + 1) % this.inputFecha.length;
 	            var nextRow = this.inputFecha[nextIndex];
-	            nextRow.focusFecha();
+	            nextRow.focusElemento(elemento);
 	        }
 	    }, {
 	        key: 'focusFilaAnterior',
-	        value: function focusFilaAnterior(indexActual) {
+	        value: function focusFilaAnterior(indexActual, elemento) {
 	            var prevIndex = indexActual === 0 ? this.inputFecha.length - 1 : indexActual - 1;
 	            var prevRow = this.inputFecha[prevIndex];
-	            prevRow.focusFecha();
+	            prevRow.focusElemento(elemento);
 	        }
 	    }, {
 	        key: 'guardarOCrear',
@@ -35523,6 +35525,7 @@
 	            }) === undefined;
 	            if (inventarioNoAgregado) {
 	                // buscar asincronicamente la informacion completa al servidor
+
 	                _v2.default.locales.getVerbose(nuevoInventario.idLocal).then(this.actualizarInventario.bind(this)).catch(function (error) {
 	                    return console.error('error al obtener los datos de ' + idLocal, error);
 	                });
@@ -35531,11 +35534,12 @@
 	                nuevoInventario.annoProgramado = anno;
 
 	                // modificar la estructura el objeto para que sea mas manejable
-	                nuevoInventario.cliente = {};
-	                nuevoInventario.comuna = {};
-	                nuevoInventario.provincia = {};
-	                nuevoInventario.region = {};
-	                nuevoInventario.zona = {};
+	                nuevoInventario.local = {};
+	                nuevoInventario.nombreCliente = '-';
+	                nuevoInventario.nombreComuna = '-';
+	                nuevoInventario.nombreProvincia = '-';
+	                nuevoInventario.nombreRegion = '-';
+	                nuevoInventario.nombreZona = '-';
 
 	                // actualizar la lista de locales
 	                inventariosActualizados.push(nuevoInventario);
@@ -35562,9 +35566,16 @@
 	                    local.region = local.provincia.region || {};
 	                    local.zona = local.region.zona || {};
 
-	                    // mezclar los objetos
-	                    return Object.assign(inventario, local);
-	                } else return inventario;
+	                    // actualizar los datos del inventario
+	                    inventario.local = local;
+	                    inventario.nombreCliente = local.cliente.nombreCorto;
+	                    inventario.nombreComuna = local.comuna.nombre;
+	                    inventario.nombreProvincia = local.provincia.nombre;
+	                    inventario.nombreRegion = local.region.nombreCorto;
+	                    inventario.nombreZona = local.zona.nombre;
+	                }
+	                console.log('inventario actualizado ', inventario);
+	                return inventario;
 	            });
 	            var filtroActualizado = this.generarFiltro(localesActualizados);
 	            var inventariosFiltrados = this.filtrarInventarios(localesActualizados, filtroActualizado);
@@ -35589,7 +35600,7 @@
 	            // FILTRO CLIENTES
 	            // obtener una lista de clientes sin repetir
 	            var seleccionarNombreCliente = function seleccionarNombreCliente(inventario) {
-	                return inventario.cliente.nombreCorto || '';
+	                return inventario.nombreCliente || '';
 	            };
 	            var clientesUnicos = inventarios.map(seleccionarNombreCliente).filter(filtrarSoloUnicos);
 
@@ -35605,7 +35616,7 @@
 
 	            // FILTRO REGIONES
 	            var seleccionarNombreRegion = function seleccionarNombreRegion(inventario) {
-	                return inventario.region.nombreCorto || '';
+	                return inventario.nombreRegion || '';
 	            };
 	            var regionesUnicas = inventarios.map(seleccionarNombreRegion).filter(filtrarSoloUnicos);
 
@@ -35628,18 +35639,18 @@
 	        key: 'filtrarInventarios',
 	        value: function filtrarInventarios(inventarios, filtros) {
 	            //console.log('filtros actualizado: ', filtros.clientes.map(op=>op.seleccionado))
-	            //console.log('inventarios: ', inventarios.map(local=>local.cliente.nombreCorto))
+	            //console.log('inventarios: ', inventarios.map(local=>local.nombreCliente))
 
 	            // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
 	            var inventariosFiltrados = inventarios.filter(function (inventario) {
-	                var textoBuscado = inventario.cliente.nombreCorto || ''; // si es undefined, es tratado como ''
+	                var textoBuscado = inventario.nombreCliente || ''; // si es undefined, es tratado como ''
 	                return filtros.clientes.find(function (opcion) {
 	                    return opcion.texto === textoBuscado && opcion.seleccionado === true;
 	                });
 	            });
 	            // por regiones
 	            inventariosFiltrados = inventariosFiltrados.filter(function (inventario) {
-	                var textoBuscado = inventario.region.nombreCorto || ''; // si es undefined, es tratado como ''
+	                var textoBuscado = inventario.nombreRegion || ''; // si es undefined, es tratado como ''
 	                return filtros.regiones.find(function (opcion) {
 	                    return opcion.texto === textoBuscado && opcion.seleccionado === true;
 	                });
@@ -35757,15 +35768,12 @@
 	                                mesProgramado: inventario.mesProgramado,
 	                                ultimoDiaMes: (0, _moment2.default)('' + inventario.annoProgramado + inventario.mesProgramado, 'YYYYMM').daysInMonth(),
 	                                annoProgramado: inventario.annoProgramado,
-	                                nombreCliente: inventario.cliente ? inventario.cliente.nombreCorto : '...',
-	                                ceco: inventario.numero ? inventario.numero : '...',
-	                                nombreLocal: inventario.nombre ? inventario.nombre : '...',
-	                                zona: inventario.zona.nombre ? inventario.zona.nombre : '...',
-	                                region: inventario.region.nombreCorto ? inventario.region.nombreCorto : '...',
-	                                comuna: inventario.comuna.nombre ? inventario.comuna.nombre : '...',
-	                                stock: inventario.stock ? inventario.stock : '...',
-	                                dotacionSugerida: 98,
-	                                jornada: inventario.jornada ? inventario.jornada.nombre : '(...jornada)',
+	                                nombreCliente: inventario.nombreCliente,
+	                                zona: inventario.nombreZona,
+	                                region: inventario.nombreRegion,
+	                                comuna: inventario.nombreComuna,
+	                                jornada: inventario.local.jornada ? inventario.local.jornada.nombre : '(...jornada)',
+	                                local: inventario.local,
 	                                focusFilaSiguiente: _this3.focusFilaSiguiente.bind(_this3),
 	                                focusFilaAnterior: _this3.focusFilaAnterior.bind(_this3),
 	                                guardarOCrear: _this3.guardarOCrear.bind(_this3),
@@ -36621,42 +36629,66 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RowLocales).call(this, props));
 
 	        _this.state = {
+	            inputDotacion: 1,
+	            inputDia: '',
 	            guardado: false,
 	            fechaValida: false,
 	            estado: ESTADO.FECHA_PENDIENTE
 	        };
-	        _this.inputFechaOnKeyDown = _this.inputFechaOnKeyDown.bind(_this);
 	        _this.guardarOCrear = _this.guardarOCrear.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(RowLocales, [{
-	        key: 'focusFecha',
-	        value: function focusFecha() {
-	            this.inputFecha.focus();
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            // si la dotacion anteriormente era undefined, pero ahora se recibe el valor, se actualiza el state
+	            if (!this.props.local.dotacionSugerida && nextProps.local.dotacionSugerida) {
+	                this.setState({
+	                    inputDotacion: nextProps.local.dotacionSugerida
+	                });
+	            }
 	        }
 	    }, {
-	        key: 'inputFechaOnKeyDown',
-	        value: function inputFechaOnKeyDown(evt) {
+	        key: 'focusElemento',
+	        value: function focusElemento(elemento) {
+	            if (elemento === 'dia') {
+	                this.inputDia.focus();
+	            } else if (elemento === 'dotacion') {
+	                this.inputDotacion.focus();
+	            }
+	        }
+	    }, {
+	        key: 'inputOnKeyDown',
+	        value: function inputOnKeyDown(elemento, evt) {
 	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
 	                // 9 = tab, flechaAbajo = 40,  13 = enter
 	                evt.preventDefault();
-	                this.props.focusFilaSiguiente(this.props.index);
+	                this.props.focusFilaSiguiente(this.props.index, elemento);
 	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
 	                // flechaArriba = 38, shift+tab
-	                this.props.focusFilaAnterior(this.props.index);
+	                this.props.focusFilaAnterior(this.props.index, elemento);
 	                evt.preventDefault();
 	            }
+	        }
+	    }, {
+	        key: 'inputDiaHandler',
+	        value: function inputDiaHandler(evt) {
+	            this.setState({ inputDia: evt.target.value });
+	        }
+	    }, {
+	        key: 'inputDotacionHandler',
+	        value: function inputDotacionHandler(evt) {
+	            this.setState({ inputDotacion: evt.target.value });
 	        }
 	    }, {
 	        key: 'guardarOCrear',
 	        value: function guardarOCrear(evt) {
 	            var _this2 = this;
 
-	            var dia = this.inputFecha.value;
-	            var fechaEsValida = dia >= 1 && dia <= this.props.ultimoDiaMes;
+	            var fechaEsValida = this.state.inputDia >= 1 && this.state.inputDia <= this.props.ultimoDiaMes;
 	            if (fechaEsValida) {
-	                console.log('dia ' + dia + ' valido, guardado/actualizado');
+	                console.log('dia ' + this.state.inputDia + ' valido, guardado/actualizado');
 	                // ToDo: llamar al API
 	                this.props.guardarOCrear({
 	                    idLocal: 99,
@@ -36680,7 +36712,7 @@
 	                    fechaValida: false,
 	                    estado: ESTADO.FECHA_INVALIDA
 	                });
-	                console.log('dia ' + dia + ' incorrecto');
+	                console.log('dia ' + this.state.inputDia + ' incorrecto');
 	            }
 	        }
 	    }, {
@@ -36704,13 +36736,15 @@
 	                        { placement: 'left', className: 'in', positionLeft: -120, id: 'xxxx', style: { width: '120px' } },
 	                        this.state.estado.mensaje
 	                    ) : null,
-	                    _react2.default.createElement('input', { className: this.state.fechaValida ? _TablaLocalesMensual2.default.inputDia : _TablaLocalesMensual2.default.inputDiaInvalido, type: 'number', min: 0, max: this.props.ultimoDiaMes,
+	                    _react2.default.createElement('input', { className: this.state.fechaValida ? _TablaLocalesMensual2.default.inputDia : _TablaLocalesMensual2.default.inputDiaInvalido,
+	                        type: 'number', min: 0, max: this.props.ultimoDiaMes,
 	                        ref: function ref(_ref) {
-	                            return _this3.inputFecha = _ref;
+	                            return _this3.inputDia = _ref;
 	                        },
-	                        onKeyDown: this.inputFechaOnKeyDown,
-	                        onBlur: this.guardarOCrear
-	                    }),
+	                        value: this.state.inputDia,
+	                        onChange: this.inputDiaHandler.bind(this),
+	                        onKeyDown: this.inputOnKeyDown.bind(this, 'dia'),
+	                        onBlur: this.guardarOCrear }),
 	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputMes, type: 'number', defaultValue: this.props.mesProgramado, disabled: true }),
 	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputAnno, type: 'number', defaultValue: this.props.annoProgramado, disabled: true })
 	                ),
@@ -36739,7 +36773,7 @@
 	                            _react2.default.createElement(
 	                                'b',
 	                                null,
-	                                this.props.ceco
+	                                this.props.local.numero || '-'
 	                            )
 	                        )
 	                    )
@@ -36756,7 +36790,7 @@
 	                            _react2.default.createElement(
 	                                'b',
 	                                null,
-	                                this.props.nombreLocal
+	                                this.props.local.nombre || '-'
 	                            )
 	                        )
 	                    )
@@ -36808,20 +36842,37 @@
 	                    'td',
 	                    { className: _TablaLocalesMensual2.default.tdStock },
 	                    _react2.default.createElement(
-	                        'p',
-	                        null,
+	                        _OverlayTrigger2.default,
+	                        {
+	                            placement: 'left',
+	                            delay: 0,
+	                            overlay: _react2.default.createElement(
+	                                _Tooltip2.default,
+	                                { id: 'yyy' },
+	                                'Stock al ' + (this.props.local.fechaStock || '??-??-????')
+	                            ) },
 	                        _react2.default.createElement(
-	                            'small',
+	                            'p',
 	                            null,
-	                            this.props.stock
+	                            _react2.default.createElement(
+	                                'small',
+	                                null,
+	                                this.props.local.stock || '-'
+	                            )
 	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: _TablaLocalesMensual2.default.tdDotacion },
-	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionSugerida, type: 'text', defaultValue: this.props.dotacionSugerida, disabled: true }),
-	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionIngresada, type: 'number', tabIndex: '-1' })
+	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionIngresada, type: 'number',
+	                        ref: function ref(_ref2) {
+	                            return _this3.inputDotacion = _ref2;
+	                        },
+	                        value: this.state.inputDotacion,
+	                        onChange: this.inputDotacionHandler.bind(this),
+	                        onKeyDown: this.inputOnKeyDown.bind(this, 'dotacion'),
+	                        onBlur: this.guardarOCrear })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
@@ -36857,8 +36908,6 @@
 	    mesProgramado: PropTypes.string.required,
 	    annoProgramado: PropTypes.string.required,
 	    nombreCliente: PropTypes.string.required,
-	    ceco: PropTypes.number.required,
-	    nombreLocal: PropTypes.string.required,
 	    zona: PropTypes.string.required,
 	    region: PropTypes.string.required,
 	    comuna: PropTypes.string.required,
@@ -36867,7 +36916,9 @@
 	    //jornada: PropTypes.number.required,
 	    focusFilaSiguiente: PropTypes.func.required,
 	    focusFilaAnterior: PropTypes.func.required,
-	    guardarOCrear: PropTypes.func.required
+	    guardarOCrear: PropTypes.func.required,
+
+	    local: PropTypes.object.required
 	};
 
 	exports.default = RowLocales;
