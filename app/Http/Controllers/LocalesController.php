@@ -47,15 +47,17 @@ class LocalesController extends Controller {
         $local->direccion->comuna->provincia->region->zona;
 
         // incluir en el query el "formato de local" para conocer la "produccion sugerida"
-        $local->formatolocal;
+        $local->formatoLocal;
 
         // incluir en el query la "jornada" por defecto del local
         $local->jornada;
 
-        // incluir en el objeto la "hora de llegada sugerida" del local
+        // incluir en el objeto la "hora de llegada sugerida" y la "dotacion sugerida" del local
         $localAsArray = $local->toArray();
         $localAsArray['horaLlegadaSugerida'] = $local->llegadaSugerida();
 
+        // Calcular la dotacion sugerida
+        $localAsArray['dotacionSugerida'] = $local->dotacionSugerida();
         return response()->json($localAsArray);
     }
 }

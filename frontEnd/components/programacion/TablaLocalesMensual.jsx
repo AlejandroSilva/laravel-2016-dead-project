@@ -17,99 +17,137 @@ class TablaLocalesMensual extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            locales: [],
-            localesFiltrados: [],
+            inventarios: [],
+            inventariosFiltrados: [],
             filtro: {
                 clientes: [],
                 regiones: []
             }
         }
-        // referencia a todos las entradas de fecha de los locales a inventariar
+        // referencia a todos las entradas de fecha de los inventarios
         this.inputFecha = []
     }
-    focusFilaSiguiente(indexActual){
+    focusFilaSiguiente(indexActual, elemento){
         let nextIndex = (indexActual+1)%this.inputFecha.length
         let nextRow = this.inputFecha[nextIndex]
-        nextRow.focusFecha()
+        nextRow.focusElemento(elemento)
     }
-    focusFilaAnterior(indexActual){
+    focusFilaAnterior(indexActual, elemento){
         let prevIndex = indexActual===0? this.inputFecha.length-1 : indexActual-1
         let prevRow = this.inputFecha[prevIndex]
-        prevRow.focusFecha()
+        prevRow.focusElemento(elemento)
     }
 
-    obtenerDatosLocal(idLocal){
-        api.locales.getVerbose(idLocal)
-            .then(this.actualizarLocal.bind(this))
-            .catch(error=>console.error(`error al obtener los datos de ${idLocal}`, error))
-    }
+    guardarOCrear(request){
+        let inventario = this.state.inventarios.find(inventario=>inventario.idLocal===request.idLocal)
+        if(!inventario){
+            return console.error(`inventario ${request.idLocal} no encontrado`)
+        }
+        // actualizar
+        if(inventario.idInventario){
+            // actualizar el inventario
+            console.log(`actualizar ${inventario.idInventario}    `)
+            return new Promise((res, rej)=>{
+                res()
+            })
+        }else{
+            // Crear el inventario
+            return new Promise((res, rej)=>{
+                api.inventario.nuevo(request)
+                    .then(resp=>{
+                        // buscar el inventario, por el id de local (en teorica nunca deberia estar repetido en esta instancia)
+                        let inventarioCreado = resp.inventario   //   <---- esto va a cambiar
 
-    agregarLocal(nuevoLocal, mesAnno){
-        let [mes, anno] = mesAnno.split('-')
-        let localesActualizados = this.state.locales
+                        inventario.idInventario = inventarioCreado.idInventario
+                        this.actualizarInventario(inventario)
 
-        let localNoExiste = this.state.locales.find(local=>local.idLocal===nuevoLocal.idLocal)===undefined
-        if( localNoExiste ){
-            // buscar asincronicamente la informacion completa al servidor
-            this.obtenerDatosLocal(nuevoLocal.idLocal)
-            nuevoLocal.mesProgramado = mes
-            nuevoLocal.annoProgramado = anno
-
-            // modificar la estructura el objeto para que sea mas manejable
-            nuevoLocal.cliente = {}
-            nuevoLocal.comuna = {}
-            nuevoLocal.provincia = {}
-            nuevoLocal.region = {}
-            nuevoLocal.zona = {}
-
-            // actualizar la lista de locales
-            localesActualizados.push(nuevoLocal)
-
-            // actualizar la lista de locales, y el filtro
-            let filtroActualizado = this.generarFiltro(localesActualizados)
-            let localesFiltrados = this.filtrarLocales(localesActualizados, filtroActualizado)
-
-            this.setState({
-                locales: localesActualizados,
-                filtro: filtroActualizado,
-                localesFiltrados: localesFiltrados
+                        console.log(`inventario ${inventarioCreado.idInventario} creado correctamente`)
+                        res(inventario)
+                    })
+                    .catch(rej)
             })
         }
-        return localNoExiste
     }
-    actualizarLocal(localActualizado){
-        let localesActualizados = this.state.locales.map(local=>{
-            if(local.idLocal===localActualizado.idLocal) {
-                // modificar la estructura el objeto para que sea mas manejable
-                localActualizado.comuna = localActualizado.direccion.comuna || {}
-                localActualizado.provincia = localActualizado.comuna.provincia || {}
-                localActualizado.region = localActualizado.provincia.region || {}
-                localActualizado.zona = localActualizado.region.zona || {}
 
-                // mezclar los objetos
-                return Object.assign(local, localActualizado)
-            }else
-                return local
+    agregarInventario(nuevoInventario, mesAnno){
+        let [mes, anno] = mesAnno.split('-')
+        let inventariosActualizados = this.state.inventarios
+
+        let inventarioNoAgregado = this.state.inventarios.find(inventario=>inventario.idLocal===nuevoInventario.idLocal)===undefined
+        if( inventarioNoAgregado ){
+            // buscar asincronicamente la informacion completa al servidor
+
+            api.locales.getVerbose(nuevoInventario.idLocal)
+                .then(local=>{
+                    // modificar la estructura el objeto para que sea mas manejable
+                    local.comuna = local.direccion.comuna || {}
+                    local.provincia = local.comuna.provincia || {}
+                    local.region = local.provincia.region || {}
+                    local.zona = local.region.zona || {}
+
+                    // actualizar los datos del inventario
+                    nuevoInventario.local = local
+                    nuevoInventario.nombreCliente = local.cliente.nombreCorto
+                    nuevoInventario.nombreComuna = local.comuna.nombre
+                    nuevoInventario.nombreProvincia = local.provincia.nombre
+                    nuevoInventario.nombreRegion = local.region.nombreCorto
+                    nuevoInventario.nombreZona = local.zona.nombre
+
+                    this.actualizarInventario(nuevoInventario)
+                })
+                .catch(error=>console.error(`error al obtener los datos de ${nuevoInventario.idLocal}`, error))
+
+            nuevoInventario.mesProgramado = mes
+            nuevoInventario.annoProgramado = anno
+
+            // modificar la estructura el objeto para que sea mas manejable
+            nuevoInventario.local = {}
+            nuevoInventario.nombreCliente = '-'
+            nuevoInventario.nombreComuna = '-'
+            nuevoInventario.nombreProvincia = '-'
+            nuevoInventario.nombreRegion = '-'
+            nuevoInventario.nombreZona = '-'
+
+            // actualizar la lista de locales
+            inventariosActualizados.push(nuevoInventario)
+
+            // actualizar la lista de locales, y el filtro
+            let filtroActualizado = this.generarFiltro(inventariosActualizados)
+            let inventariosFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado)
+
+            this.setState({
+                inventarios: inventariosActualizados,
+                filtro: filtroActualizado,
+                inventariosFiltrados: inventariosFiltrados
+            })
+        }
+    }
+    actualizarInventario(inventarioModificado){
+        let inventariosActualizados = this.state.inventarios.map(inventario=>{
+            if(inventario.idLocal===inventarioModificado.idLocal) { // Todo idLocal no existe
+                return inventarioModificado
+            }
+            return inventario
         })
-        let filtroActualizado = this.generarFiltro(localesActualizados)
-        let localesFiltrados = this.filtrarLocales(localesActualizados, filtroActualizado)
+        let filtroActualizado = this.generarFiltro(inventariosActualizados)
+        let inventariosFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado)
 
         this.setState({
             // actualizar los datos de la lista con la informacion obtenida por el api
-            locales: localesActualizados,
+            inventarios: inventariosActualizados,
             filtro: filtroActualizado,
-            localesFiltrados: localesFiltrados
+            inventariosFiltrados: inventariosFiltrados
         })
     }
 
-    generarFiltro(locales){
+    generarFiltro(inventarios){
         // TODO: simplificar este metodo, hay mucho codigo repetido
         const filtrarSoloUnicos = (valor, index, self)=>self.indexOf(valor)===index
 
         // FILTRO CLIENTES
         // obtener una lista de clientes sin repetir
-        const seleccionarNombreCliente = local=>local.cliente.nombreCorto || ''
-        let clientesUnicos = locales.map(seleccionarNombreCliente).filter(filtrarSoloUnicos)
+        const seleccionarNombreCliente = inventario=>inventario.nombreCliente || ''
+        let clientesUnicos = inventarios.map(seleccionarNombreCliente).filter(filtrarSoloUnicos)
 
         // crear el filtro con los datos del filtro anterior
         let filtroClientes = clientesUnicos.map(textoUnico=>{
@@ -120,8 +158,8 @@ class TablaLocalesMensual extends React.Component{
         })
 
         // FILTRO REGIONES
-        const seleccionarNombreRegion = local=>local.region.nombreCorto || ''
-        let regionesUnicas = locales.map(seleccionarNombreRegion).filter(filtrarSoloUnicos)
+        const seleccionarNombreRegion = inventario=>inventario.nombreRegion || ''
+        let regionesUnicas = inventarios.map(seleccionarNombreRegion).filter(filtrarSoloUnicos)
 
         // crear el filtro con los datos del filtro anterior
         let filtroRegiones = regionesUnicas.map(textoUnico=>{
@@ -137,21 +175,21 @@ class TablaLocalesMensual extends React.Component{
         }
     }
 
-    filtrarLocales(locales, filtros){
+    filtrarInventarios(inventarios, filtros){
         //console.log('filtros actualizado: ', filtros.clientes.map(op=>op.seleccionado))
-        //console.log('locales: ', locales.map(local=>local.cliente.nombreCorto))
+        //console.log('inventarios: ', inventarios.map(local=>local.nombreCliente))
 
         // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
-        let localesFiltrados = locales.filter(local=>{
-            let textoBuscado = local.cliente.nombreCorto || ''  // si es undefined, es tratado como ''
+        let inventariosFiltrados = inventarios.filter(inventario=>{
+            let textoBuscado = inventario.nombreCliente || ''  // si es undefined, es tratado como ''
             return filtros.clientes.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
         })
         // por regiones
-        localesFiltrados = localesFiltrados.filter(local=>{
-            let textoBuscado = local.region.nombreCorto || ''  // si es undefined, es tratado como ''
+        inventariosFiltrados = inventariosFiltrados.filter(inventario=>{
+            let textoBuscado = inventario.nombreRegion || ''  // si es undefined, es tratado como ''
             return filtros.regiones.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
         })
-        return localesFiltrados
+        return inventariosFiltrados
     }
 
     // Reemplazar el filtro que es actualizado por la Cabecera
@@ -162,7 +200,7 @@ class TablaLocalesMensual extends React.Component{
 
         this.setState({
             filtro: nuevoFiltro,
-            localesFiltrados: this.filtrarLocales(this.state.locales, nuevoFiltro)
+            inventariosFiltrados: this.filtrarInventarios(this.state.inventarios, nuevoFiltro)
         })
     }
 
@@ -197,29 +235,28 @@ class TablaLocalesMensual extends React.Component{
                             <th className={styles.thStock}>Stock</th>
                             <th className={styles.thDotacion}>Dotación</th>
                             <th className={styles.thJornada}>Jornada</th>
-                            <th className={styles.thEstado}>Estado</th>
+                            {/*<th className={styles.thEstado}>Estado</th>*/}
                             <th className={styles.thOpciones}>Opciones</th>
                         </Sticky>
                     </thead>
                     <tbody>
-                    {this.state.localesFiltrados.map((local, index)=>{
+                    {this.state.inventariosFiltrados.map((inventario, index)=>{
                         return <RowLocales
                             key={index}
                             index={index}
-                            mesProgramado={local.mesProgramado}
-                            ultimoDiaMes={moment(`${local.annoProgramado}${local.mesProgramado}`, 'YYYYMM').daysInMonth()}
-                            annoProgramado={local.annoProgramado}
-                            nombreCliente={local.cliente? local.cliente.nombreCorto : '...'}
-                            ceco={local.numero? local.numero : '...'}
-                            nombreLocal={local.nombre? local.nombre : '...'}
-                            zona={local.zona.nombre? local.zona.nombre : '...'}
-                            region={local.region.nombreCorto? local.region.nombreCorto : '...'}
-                            comuna={local.comuna.nombre? local.comuna.nombre : '...'}
-                            stock={local.stock? local.stock : '...'}
-                            dotacionSugerida={98}
-                            jornada={local.jornada? local.jornada.nombre : '(...jornada)'}
+                            idInventario={inventario.idInventario}
+                            mesProgramado={inventario.mesProgramado}
+                            ultimoDiaMes={moment(`${inventario.annoProgramado}${inventario.mesProgramado}`, 'YYYYMM').daysInMonth()}
+                            annoProgramado={inventario.annoProgramado}
+                            nombreCliente={inventario.nombreCliente}
+                            zona={inventario.nombreZona}
+                            region={inventario.nombreRegion}
+                            comuna={inventario.nombreComuna}
+                        jornada={inventario.local.jornada? inventario.local.jornada.nombre : '(...jornada)'}
+                            local={inventario.local}
                             focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
                             focusFilaAnterior={this.focusFilaAnterior.bind(this)}
+                            guardarOCrear={this.guardarOCrear.bind(this)}
                             ref={ref=>this.inputFecha[index]=ref}
                         />
                     })}
@@ -231,6 +268,6 @@ class TablaLocalesMensual extends React.Component{
 }
 
 TablaLocalesMensual.protoTypes = {
-    //localesAgregados: PropTypes.array.required
+    //inventarioesAgregados: PropTypes.array.required
 }
 export default TablaLocalesMensual

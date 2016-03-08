@@ -27,6 +27,11 @@ class Locales extends Model{
         return $this->hasOne('App\Direcciones', 'idLocal', 'idLocal');
     }
 
+    public function inventarios(){
+        //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
+        return $this->hasMany('App\Inventarios', 'idLocal', 'idLocal');
+    }
+
     public function jornada(){
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Jornadas', 'idJornadaSugerida', 'idJornada');
@@ -34,8 +39,13 @@ class Locales extends Model{
 
     public function llegadaSugerida(){
         $horaCierre = $this->horaCierre;
-
         return $horaCierre;
-//        return "da lo mismo wn";
+    }
+
+    public function dotacionSugerida(){
+        // El ultimo stock actualizado / Produccion del tipo de local
+        $producion = $this->formatoLocal->produccionSugerida;
+        $stock = $this->stock;
+        return $stock/$producion;
     }
 }

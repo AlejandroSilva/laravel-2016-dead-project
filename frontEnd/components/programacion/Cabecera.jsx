@@ -56,7 +56,6 @@ class Cabecera extends React.Component {
     }
 
     render(){
-        //console.log(this.props.filtro)
         return (
             <div className={style.container} ref={ref=>this.node=ref}>
                 <div className={style.cell} onClick={this.toggleMenu.bind(this)}>
