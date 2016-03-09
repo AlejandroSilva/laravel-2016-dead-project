@@ -157,6 +157,15 @@ class AgregarManualmente extends React.Component {
         console.log(this.state.clienteSeleccionado)
     }
 
+    limpiarProblemas(){
+        this.setState({
+            pegadoConProblemas: [],
+            pegadoConteoTotal: 0,
+            pegadoConteoCorrectos: 0,
+            pegadoConteoProblemas: 0,
+        })
+    }
+
     render(){
         return <div className="form">
             <div className="row">
@@ -233,6 +242,9 @@ class AgregarManualmente extends React.Component {
 
                         <div className={"col-sm-7 " + (this.state.pegadoConteoTotal<=0? 'hide':'')}>
                             <label className="control-label" htmlFor="locales">Detalle</label>
+                            <button className="btn btn-xs btn-primary pull-right" tabIndex="-1"onClick={this.limpiarProblemas.bind(this)}>
+                                Aceptar/Limpiar
+                            </button>
                             <table className="table table-bordered table-condensed">
                                 <thead>
                                 <tr><th>Cliente</th><th>CECO</th><th>Estado</th></tr>
