@@ -95,6 +95,24 @@
 	    }), programacionMensualDOM);
 	}
 
+	// http://jamesknelson.com/push-state-vs-hash-based-routing-with-react-js/
+	//class App extends React.Component{
+	//    render(){
+	//        console.log('render componente')
+	//        return <div>
+	//            <h1>golas {this.props.route}</h1>
+	//        </div>
+	//    }
+	//}
+	//
+	//let hashChangeHandler = ()=>{
+	//    let hashes = window.location.hash.replace(/^#\/?|\/$/g, '').split('/')
+	//
+	//    ReactDOM.render( <App route={hashes[0]}/>, document.getElementById('rc-top-menu'))
+	//}
+	//hashChangeHandler()
+	//window.addEventListener('hashchange', hashChangeHandler, false)
+
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "boot-client.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
@@ -20351,6 +20369,9 @@
 	    inventario: {
 	        nuevo: function nuevo(datos) {
 	            return _axios2.default.post('/inventario/nuevo', datos);
+	        },
+	        actualizar: function actualizar(idInventario, datos) {
+	            return _axios2.default.put('/inventario/' + idInventario, datos);
 	        }
 	    }
 	};
@@ -21468,6 +21489,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -21524,6 +21547,8 @@
 	    }, {
 	        key: "render",
 	        value: function render() {
+	            var _React$createElement, _React$createElement2;
+
 	            if (!this.props.habilitado) {
 	                return _react2.default.createElement("div", null);
 	            }
@@ -21552,10 +21577,9 @@
 	                        { className: "col-sm-8" },
 	                        _react2.default.createElement(
 	                            "select",
-	                            { className: "form-control", name: "idLiderDia", name: "idLiderDia",
-	                                onChange: function onChange() {
-	                                    alert("sad");
-	                                } },
+	                            (_React$createElement = { className: "form-control", name: "idLiderDia" }, _defineProperty(_React$createElement, "name", "idLiderDia"), _defineProperty(_React$createElement, "onChange", function onChange() {
+	                                alert("sad");
+	                            }), _React$createElement),
 	                            _react2.default.createElement(
 	                                "option",
 	                                { value: "1" },
@@ -21587,10 +21611,9 @@
 	                        { className: "col-sm-8" },
 	                        _react2.default.createElement(
 	                            "select",
-	                            { className: "form-control", name: "idSupervisorDia", name: "idSupervisorDia",
-	                                onChange: function onChange() {
-	                                    alert("sad");
-	                                } },
+	                            (_React$createElement2 = { className: "form-control", name: "idSupervisorDia" }, _defineProperty(_React$createElement2, "name", "idSupervisorDia"), _defineProperty(_React$createElement2, "onChange", function onChange() {
+	                                alert("sad");
+	                            }), _React$createElement2),
 	                            _react2.default.createElement(
 	                                "option",
 	                                { value: "1" },
@@ -21692,15 +21715,15 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _reactTabs = __webpack_require__(281);
+	var _reactTabs = __webpack_require__(282);
 
-	var _TablaLocalesMensual = __webpack_require__(291);
+	var _TablaProgramas = __webpack_require__(292);
 
-	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
+	var _TablaProgramas2 = _interopRequireDefault(_TablaProgramas);
 
-	var _AgregarManualmente = __webpack_require__(412);
+	var _AgregarPrograma = __webpack_require__(413);
 
-	var _AgregarManualmente2 = _interopRequireDefault(_AgregarManualmente);
+	var _AgregarPrograma2 = _interopRequireDefault(_AgregarPrograma);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21717,8 +21740,6 @@
 
 	// Component
 	//import Multiselect from 'react-widgets/lib/Multiselect'
-
-	//import AgregarPegarDesdeExcel from './AgregarPegarDesdeExcel.jsx'
 
 	var ProgramacionMensual = function (_React$Component) {
 	    _inherits(ProgramacionMensual, _React$Component);
@@ -21740,26 +21761,25 @@
 	        _this.state = {
 	            meses: meses
 	        };
-	        _this.submitLocal = _this.submitLocal.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(ProgramacionMensual, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            //this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[1], '07-2016')
-	            //this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[2], '04-2016')
-	            //this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[4], '07-2016')
-	            //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[5], '05-2016')
-	            //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[6], '05-2016')
-	            //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[8], '09-2016')
-	            //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[12], '08-2016')
+	            this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[1], '07-2016');
+	            //this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[2], '04-2016')
+	            this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[4], '07-2016');
+	            //    this.TablaInventarios.agregarInventario(this.props.clientes[0].locales[5], '05-2016')
+	            //    this.TablaInventarios.agregarInventario(this.props.clientes[0].locales[6], '05-2016')
+	            this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[8], '09-2016');
+	            this.TablaInventarios.agregarInventario(this.props.clientes[0].locales[12], '08-2016');
 	        }
 	    }, {
-	        key: 'submitLocal',
-	        value: function submitLocal(local, mesAnno) {
+	        key: 'agregarInventario',
+	        value: function agregarInventario(local, mesAnno) {
 	            console.log("agregarndo el local: ", local, mesAnno);
-	            this.tablaLocalesMensual.agregarInventario(local, mesAnno);
+	            return this.TablaInventarios.agregarInventario(local, mesAnno);
 	        }
 	    }, {
 	        key: 'render',
@@ -21774,13 +21794,10 @@
 	                    null,
 	                    'Programación mensual'
 	                ),
-	                _react2.default.createElement(_AgregarManualmente2.default, {
-	                    ref: function ref(_ref) {
-	                        return _this2.AgregarManualmente = _ref;
-	                    },
+	                _react2.default.createElement(_AgregarPrograma2.default, {
 	                    clientes: this.props.clientes,
 	                    meses: this.state.meses,
-	                    onFormSubmit: this.submitLocal
+	                    onFormSubmit: this.agregarInventario.bind(this)
 	                }),
 	                _react2.default.createElement(
 	                    'div',
@@ -21790,9 +21807,9 @@
 	                        { className: 'page-header', style: { marginTop: '1em' } },
 	                        'Locales a programar:'
 	                    ),
-	                    _react2.default.createElement(_TablaLocalesMensual2.default, {
-	                        ref: function ref(_ref2) {
-	                            return _this2.tablaLocalesMensual = _ref2;
+	                    _react2.default.createElement(_TablaProgramas2.default, {
+	                        ref: function ref(_ref) {
+	                            return _this2.TablaInventarios = _ref;
 	                        }
 	                    })
 	                )
@@ -21816,7 +21833,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
-	//! version : 2.11.2
+	//! version : 2.12.0
 	//! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 	//! license : MIT
 	//! momentjs.com
@@ -21840,7 +21857,7 @@
 	    }
 
 	    function isArray(input) {
-	        return Object.prototype.toString.call(input) === '[object Array]';
+	        return input instanceof Array || Object.prototype.toString.call(input) === '[object Array]';
 	    }
 
 	    function isDate(input) {
@@ -22046,7 +22063,82 @@
 	        return diffs + lengthDiff;
 	    }
 
-	    function Locale() {
+	    function warn(msg) {
+	        if (utils_hooks__hooks.suppressDeprecationWarnings === false &&
+	                (typeof console !==  'undefined') && console.warn) {
+	            console.warn('Deprecation warning: ' + msg);
+	        }
+	    }
+
+	    function deprecate(msg, fn) {
+	        var firstTime = true;
+
+	        return extend(function () {
+	            if (firstTime) {
+	                warn(msg + '\nArguments: ' + Array.prototype.slice.call(arguments).join(', ') + '\n' + (new Error()).stack);
+	                firstTime = false;
+	            }
+	            return fn.apply(this, arguments);
+	        }, fn);
+	    }
+
+	    var deprecations = {};
+
+	    function deprecateSimple(name, msg) {
+	        if (!deprecations[name]) {
+	            warn(msg);
+	            deprecations[name] = true;
+	        }
+	    }
+
+	    utils_hooks__hooks.suppressDeprecationWarnings = false;
+
+	    function isFunction(input) {
+	        return input instanceof Function || Object.prototype.toString.call(input) === '[object Function]';
+	    }
+
+	    function isObject(input) {
+	        return Object.prototype.toString.call(input) === '[object Object]';
+	    }
+
+	    function locale_set__set (config) {
+	        var prop, i;
+	        for (i in config) {
+	            prop = config[i];
+	            if (isFunction(prop)) {
+	                this[i] = prop;
+	            } else {
+	                this['_' + i] = prop;
+	            }
+	        }
+	        this._config = config;
+	        // Lenient ordinal parsing accepts just a number in addition to
+	        // number + (possibly) stuff coming from _ordinalParseLenient.
+	        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
+	    }
+
+	    function mergeConfigs(parentConfig, childConfig) {
+	        var res = extend({}, parentConfig), prop;
+	        for (prop in childConfig) {
+	            if (hasOwnProp(childConfig, prop)) {
+	                if (isObject(parentConfig[prop]) && isObject(childConfig[prop])) {
+	                    res[prop] = {};
+	                    extend(res[prop], parentConfig[prop]);
+	                    extend(res[prop], childConfig[prop]);
+	                } else if (childConfig[prop] != null) {
+	                    res[prop] = childConfig[prop];
+	                } else {
+	                    delete res[prop];
+	                }
+	            }
+	        }
+	        return res;
+	    }
+
+	    function Locale(config) {
+	        if (config != null) {
+	            this.set(config);
+	        }
 	    }
 
 	    // internal storage for locale config files
@@ -22122,11 +22214,25 @@
 	        return globalLocale._abbr;
 	    }
 
-	    function defineLocale (name, values) {
-	        if (values !== null) {
-	            values.abbr = name;
-	            locales[name] = locales[name] || new Locale();
-	            locales[name].set(values);
+	    function defineLocale (name, config) {
+	        if (config !== null) {
+	            config.abbr = name;
+	            if (locales[name] != null) {
+	                deprecateSimple('defineLocaleOverride',
+	                        'use moment.updateLocale(localeName, config) to change ' +
+	                        'an existing locale. moment.defineLocale(localeName, ' +
+	                        'config) should only be used for creating a new locale');
+	                config = mergeConfigs(locales[name]._config, config);
+	            } else if (config.parentLocale != null) {
+	                if (locales[config.parentLocale] != null) {
+	                    config = mergeConfigs(locales[config.parentLocale]._config, config);
+	                } else {
+	                    // treat as if there is no base config
+	                    deprecateSimple('parentLocaleUndefined',
+	                            'specified parentLocale is not defined yet');
+	                }
+	            }
+	            locales[name] = new Locale(config);
 
 	            // backwards compat for now: also set the locale
 	            locale_locales__getSetGlobalLocale(name);
@@ -22137,6 +22243,31 @@
 	            delete locales[name];
 	            return null;
 	        }
+	    }
+
+	    function updateLocale(name, config) {
+	        if (config != null) {
+	            var locale;
+	            if (locales[name] != null) {
+	                config = mergeConfigs(locales[name]._config, config);
+	            }
+	            locale = new Locale(config);
+	            locale.parentLocale = locales[name];
+	            locales[name] = locale;
+
+	            // backwards compat for now: also set the locale
+	            locale_locales__getSetGlobalLocale(name);
+	        } else {
+	            // pass null for config to unupdate, useful for tests
+	            if (locales[name] != null) {
+	                if (locales[name].parentLocale != null) {
+	                    locales[name] = locales[name].parentLocale;
+	                } else if (locales[name] != null) {
+	                    delete locales[name];
+	                }
+	            }
+	        }
+	        return locales[name];
 	    }
 
 	    // returns locale data
@@ -22161,6 +22292,10 @@
 	        }
 
 	        return chooseLocale(key);
+	    }
+
+	    function locale_locales__listLocales() {
+	        return Object.keys(locales);
 	    }
 
 	    var aliases = {};
@@ -22189,10 +22324,6 @@
 	        }
 
 	        return normalizedInput;
-	    }
-
-	    function isFunction(input) {
-	        return input instanceof Function || Object.prototype.toString.call(input) === '[object Function]';
 	    }
 
 	    function makeGetSet (unit, keepTime) {
@@ -22528,12 +22659,15 @@
 	            return mom;
 	        }
 
-	        // TODO: Move this out of here!
 	        if (typeof value === 'string') {
-	            value = mom.localeData().monthsParse(value);
-	            // TODO: Another silent failure?
-	            if (typeof value !== 'number') {
-	                return mom;
+	            if (/^\d+$/.test(value)) {
+	                value = toInt(value);
+	            } else {
+	                value = mom.localeData().monthsParse(value);
+	                // TODO: Another silent failure?
+	                if (typeof value !== 'number') {
+	                    return mom;
+	                }
 	            }
 	        }
 
@@ -22651,36 +22785,6 @@
 
 	        return m;
 	    }
-
-	    function warn(msg) {
-	        if (utils_hooks__hooks.suppressDeprecationWarnings === false &&
-	                (typeof console !==  'undefined') && console.warn) {
-	            console.warn('Deprecation warning: ' + msg);
-	        }
-	    }
-
-	    function deprecate(msg, fn) {
-	        var firstTime = true;
-
-	        return extend(function () {
-	            if (firstTime) {
-	                warn(msg + '\nArguments: ' + Array.prototype.slice.call(arguments).join(', ') + '\n' + (new Error()).stack);
-	                firstTime = false;
-	            }
-	            return fn.apply(this, arguments);
-	        }, fn);
-	    }
-
-	    var deprecations = {};
-
-	    function deprecateSimple(name, msg) {
-	        if (!deprecations[name]) {
-	            warn(msg);
-	            deprecations[name] = true;
-	        }
-	    }
-
-	    utils_hooks__hooks.suppressDeprecationWarnings = false;
 
 	    // iso 8601 regex
 	    // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
@@ -23327,7 +23431,7 @@
 	    }
 
 	    var prototypeMin = deprecate(
-	         'moment().min is deprecated, use moment.min instead. https://github.com/moment/moment/issues/1548',
+	         'moment().min is deprecated, use moment.max instead. https://github.com/moment/moment/issues/1548',
 	         function () {
 	             var other = local__createLocal.apply(null, arguments);
 	             if (this.isValid() && other.isValid()) {
@@ -23339,7 +23443,7 @@
 	     );
 
 	    var prototypeMax = deprecate(
-	        'moment().max is deprecated, use moment.max instead. https://github.com/moment/moment/issues/1548',
+	        'moment().max is deprecated, use moment.min instead. https://github.com/moment/moment/issues/1548',
 	        function () {
 	            var other = local__createLocal.apply(null, arguments);
 	            if (this.isValid() && other.isValid()) {
@@ -23637,7 +23741,8 @@
 
 	    // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
 	    // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
-	    var isoRegex = /^(-)?P(?:(?:([0-9,.]*)Y)?(?:([0-9,.]*)M)?(?:([0-9,.]*)D)?(?:T(?:([0-9,.]*)H)?(?:([0-9,.]*)M)?(?:([0-9,.]*)S)?)?|([0-9,.]*)W)$/;
+	    // and further modified to allow for strings containing both week and day
+	    var isoRegex = /^(-)?P(?:([0-9,.]*)Y)?(?:([0-9,.]*)M)?(?:([0-9,.]*)W)?(?:([0-9,.]*)D)?(?:T(?:([0-9,.]*)H)?(?:([0-9,.]*)M)?(?:([0-9,.]*)S)?)?$/;
 
 	    function create__createDuration (input, key) {
 	        var duration = input,
@@ -23675,11 +23780,11 @@
 	            duration = {
 	                y : parseIso(match[2], sign),
 	                M : parseIso(match[3], sign),
-	                d : parseIso(match[4], sign),
-	                h : parseIso(match[5], sign),
-	                m : parseIso(match[6], sign),
-	                s : parseIso(match[7], sign),
-	                w : parseIso(match[8], sign)
+	                w : parseIso(match[4], sign),
+	                d : parseIso(match[5], sign),
+	                h : parseIso(match[6], sign),
+	                m : parseIso(match[7], sign),
+	                s : parseIso(match[8], sign)
 	            };
 	        } else if (duration == null) {// checks for null or undefined
 	            duration = {};
@@ -23743,6 +23848,14 @@
 	        return res;
 	    }
 
+	    function absRound (number) {
+	        if (number < 0) {
+	            return Math.round(-1 * number) * -1;
+	        } else {
+	            return Math.round(number);
+	        }
+	    }
+
 	    // TODO: remove 'name' arg after deprecation is removed
 	    function createAdder(direction, name) {
 	        return function (val, period) {
@@ -23762,8 +23875,8 @@
 
 	    function add_subtract__addSubtract (mom, duration, isAdding, updateOffset) {
 	        var milliseconds = duration._milliseconds,
-	            days = duration._days,
-	            months = duration._months;
+	            days = absRound(duration._days),
+	            months = absRound(duration._months);
 
 	        if (!mom.isValid()) {
 	            // No op
@@ -24089,8 +24202,8 @@
 	    }
 
 	    function toJSON () {
-	        // JSON.stringify(new Date(NaN)) === 'null'
-	        return this.isValid() ? this.toISOString() : 'null';
+	        // new Date(NaN).toJSON() === null
+	        return this.isValid() ? this.toISOString() : null;
 	    }
 
 	    function moment_valid__isValid () {
@@ -24200,7 +24313,6 @@
 	        var dayOfYearData = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy),
 	            date = createUTCDate(dayOfYearData.year, 0, dayOfYearData.dayOfYear);
 
-	        // console.log("got", weekYear, week, weekday, "set", date.toISOString());
 	        this.year(date.getUTCFullYear());
 	        this.month(date.getUTCMonth());
 	        this.date(date.getUTCDate());
@@ -24910,21 +25022,6 @@
 	        return isFunction(format) ? format(output) : format.replace(/%s/i, output);
 	    }
 
-	    function locale_set__set (config) {
-	        var prop, i;
-	        for (i in config) {
-	            prop = config[i];
-	            if (isFunction(prop)) {
-	                this[i] = prop;
-	            } else {
-	                this['_' + i] = prop;
-	            }
-	        }
-	        // Lenient ordinal parsing accepts just a number in addition to
-	        // number + (possibly) stuff coming from _ordinalParseLenient.
-	        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
-	    }
-
 	    var prototype__proto = Locale.prototype;
 
 	    prototype__proto._calendar       = defaultCalendar;
@@ -25388,7 +25485,7 @@
 	    // Side effect imports
 
 
-	    utils_hooks__hooks.version = '2.11.2';
+	    utils_hooks__hooks.version = '2.12.0';
 
 	    setHookCallback(local__createLocal);
 
@@ -25411,6 +25508,8 @@
 	    utils_hooks__hooks.monthsShort           = lists__listMonthsShort;
 	    utils_hooks__hooks.weekdaysMin           = lists__listWeekdaysMin;
 	    utils_hooks__hooks.defineLocale          = defineLocale;
+	    utils_hooks__hooks.updateLocale          = updateLocale;
+	    utils_hooks__hooks.locales               = locale_locales__listLocales;
 	    utils_hooks__hooks.weekdaysShort         = lists__listWeekdaysShort;
 	    utils_hooks__hooks.normalizeUnits        = normalizeUnits;
 	    utils_hooks__hooks.relativeTimeThreshold = duration_humanize__getSetRelativeTimeThreshold;
@@ -25580,62 +25679,64 @@
 		"./nl.js": 251,
 		"./nn": 252,
 		"./nn.js": 252,
-		"./pl": 253,
-		"./pl.js": 253,
-		"./pt": 254,
-		"./pt-br": 255,
-		"./pt-br.js": 255,
-		"./pt.js": 254,
-		"./ro": 256,
-		"./ro.js": 256,
-		"./ru": 257,
-		"./ru.js": 257,
-		"./se": 258,
-		"./se.js": 258,
-		"./si": 259,
-		"./si.js": 259,
-		"./sk": 260,
-		"./sk.js": 260,
-		"./sl": 261,
-		"./sl.js": 261,
-		"./sq": 262,
-		"./sq.js": 262,
-		"./sr": 263,
-		"./sr-cyrl": 264,
-		"./sr-cyrl.js": 264,
-		"./sr.js": 263,
-		"./sv": 265,
-		"./sv.js": 265,
-		"./sw": 266,
-		"./sw.js": 266,
-		"./ta": 267,
-		"./ta.js": 267,
-		"./te": 268,
-		"./te.js": 268,
-		"./th": 269,
-		"./th.js": 269,
-		"./tl-ph": 270,
-		"./tl-ph.js": 270,
-		"./tlh": 271,
-		"./tlh.js": 271,
-		"./tr": 272,
-		"./tr.js": 272,
-		"./tzl": 273,
-		"./tzl.js": 273,
-		"./tzm": 274,
-		"./tzm-latn": 275,
-		"./tzm-latn.js": 275,
-		"./tzm.js": 274,
-		"./uk": 276,
-		"./uk.js": 276,
-		"./uz": 277,
-		"./uz.js": 277,
-		"./vi": 278,
-		"./vi.js": 278,
-		"./zh-cn": 279,
-		"./zh-cn.js": 279,
-		"./zh-tw": 280,
-		"./zh-tw.js": 280
+		"./pa-in": 253,
+		"./pa-in.js": 253,
+		"./pl": 254,
+		"./pl.js": 254,
+		"./pt": 255,
+		"./pt-br": 256,
+		"./pt-br.js": 256,
+		"./pt.js": 255,
+		"./ro": 257,
+		"./ro.js": 257,
+		"./ru": 258,
+		"./ru.js": 258,
+		"./se": 259,
+		"./se.js": 259,
+		"./si": 260,
+		"./si.js": 260,
+		"./sk": 261,
+		"./sk.js": 261,
+		"./sl": 262,
+		"./sl.js": 262,
+		"./sq": 263,
+		"./sq.js": 263,
+		"./sr": 264,
+		"./sr-cyrl": 265,
+		"./sr-cyrl.js": 265,
+		"./sr.js": 264,
+		"./sv": 266,
+		"./sv.js": 266,
+		"./sw": 267,
+		"./sw.js": 267,
+		"./ta": 268,
+		"./ta.js": 268,
+		"./te": 269,
+		"./te.js": 269,
+		"./th": 270,
+		"./th.js": 270,
+		"./tl-ph": 271,
+		"./tl-ph.js": 271,
+		"./tlh": 272,
+		"./tlh.js": 272,
+		"./tr": 273,
+		"./tr.js": 273,
+		"./tzl": 274,
+		"./tzl.js": 274,
+		"./tzm": 275,
+		"./tzm-latn": 276,
+		"./tzm-latn.js": 276,
+		"./tzm.js": 275,
+		"./uk": 277,
+		"./uk.js": 277,
+		"./uz": 278,
+		"./uz.js": 278,
+		"./vi": 279,
+		"./vi.js": 279,
+		"./zh-cn": 280,
+		"./zh-cn.js": 280,
+		"./zh-tw": 281,
+		"./zh-tw.js": 281
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -26527,12 +26628,18 @@
 	            });
 	        },
 	        meridiemParse: /রাত|সকাল|দুপুর|বিকাল|রাত/,
-	        isPM: function (input) {
-	            return /^(দুপুর|বিকাল|রাত)$/.test(input);
+	        meridiemHour : function (hour, meridiem) {
+	            if (hour === 12) {
+	                hour = 0;
+	            }
+	            if ((meridiem === 'রাত' && hour >= 4) ||
+	                    (meridiem === 'দুপুর' && hour < 5) ||
+	                    meridiem === 'বিকাল') {
+	                return hour + 12;
+	            } else {
+	                return hour;
+	            }
 	        },
-	        //Bengali is a vast language its spoken
-	        //in different forms in various parts of the world.
-	        //I have just generalized with most common one used
 	        meridiem : function (hour, minute, isLower) {
 	            if (hour < 4) {
 	                return 'রাত';
@@ -26644,8 +26751,17 @@
 	            });
 	        },
 	        meridiemParse: /མཚན་མོ|ཞོགས་ཀས|ཉིན་གུང|དགོང་དག|མཚན་མོ/,
-	        isPM: function (input) {
-	            return /^(ཉིན་གུང|དགོང་དག|མཚན་མོ)$/.test(input);
+	        meridiemHour : function (hour, meridiem) {
+	            if (hour === 12) {
+	                hour = 0;
+	            }
+	            if ((meridiem === 'མཚན་མོ' && hour >= 4) ||
+	                    (meridiem === 'ཉིན་གུང' && hour < 5) ||
+	                    meridiem === 'དགོང་དག') {
+	                return hour + 12;
+	            } else {
+	                return hour;
+	            }
 	        },
 	        meridiem : function (hour, minute, isLower) {
 	            if (hour < 4) {
@@ -27614,7 +27730,7 @@
 	        },
 	        meridiemParse: /މކ|މފ/,
 	        isPM : function (input) {
-	            return '' === input;
+	            return 'މފ' === input;
 	        },
 	        meridiem : function (hour, minute, isLower) {
 	            if (hour < 12) {
@@ -27859,9 +27975,9 @@
 	            LT : 'h:mm A',
 	            LTS : 'h:mm:ss A',
 	            L : 'YYYY-MM-DD',
-	            LL : 'D MMMM, YYYY',
-	            LLL : 'D MMMM, YYYY h:mm A',
-	            LLLL : 'dddd, D MMMM, YYYY h:mm A'
+	            LL : 'MMMM D, YYYY',
+	            LLL : 'MMMM D, YYYY h:mm A',
+	            LLLL : 'dddd, MMMM D, YYYY h:mm A'
 	        },
 	        calendar : {
 	            sameDay : '[Today at] LT',
@@ -29216,6 +29332,23 @@
 	                }
 	                return number + ' שנים';
 	            }
+	        },
+	        meridiemParse: /אחה"צ|לפנה"צ|אחרי הצהריים|לפני הצהריים|לפנות בוקר|בבוקר|בערב/i,
+	        isPM : function (input) {
+	            return /^(אחה"צ|אחרי הצהריים|בערב)$/.test(input);
+	        },
+	        meridiem : function (hour, minute, isLower) {
+	            if (hour < 5) {
+	                return 'לפנות בוקר';
+	            } else if (hour < 10) {
+	                return 'בבוקר';
+	            } else if (hour < 12) {
+	                return isLower ? 'לפנה"צ' : 'לפני הצהריים';
+	            } else if (hour < 18) {
+	                return isLower ? 'אחה"צ' : 'אחרי הצהריים';
+	            } else {
+	                return 'בערב';
+	            }
 	        }
 	    });
 
@@ -29887,7 +30020,7 @@
 	        longDateFormat : {
 	            LT : 'H:mm',
 	            LTS : 'H:mm:ss',
-	            L : 'DD/MM/YYYY',
+	            L : 'DD.MM.YYYY',
 	            LL : 'D. MMMM YYYY',
 	            LLL : 'D. MMMM YYYY [kl.] H:mm',
 	            LLLL : 'dddd, D. MMMM YYYY [kl.] H:mm'
@@ -30048,6 +30181,17 @@
 	            lastDay : '[昨日] LT',
 	            lastWeek : '[前週]dddd LT',
 	            sameElse : 'L'
+	        },
+	        ordinalParse : /\d{1,2}日/,
+	        ordinal : function (number, period) {
+	            switch (period) {
+	            case 'd':
+	            case 'D':
+	            case 'DDD':
+	                return number + '日';
+	            default:
+	                return number;
+	            }
 	        },
 	        relativeTime : {
 	            future : '%s後',
@@ -31165,8 +31309,17 @@
 	            yy : '%d വർഷം'
 	        },
 	        meridiemParse: /രാത്രി|രാവിലെ|ഉച്ച കഴിഞ്ഞ്|വൈകുന്നേരം|രാത്രി/i,
-	        isPM : function (input) {
-	            return /^(ഉച്ച കഴിഞ്ഞ്|വൈകുന്നേരം|രാത്രി)$/.test(input);
+	        meridiemHour : function (hour, meridiem) {
+	            if (hour === 12) {
+	                hour = 0;
+	            }
+	            if ((meridiem === 'രാത്രി' && hour >= 4) ||
+	                    meridiem === 'ഉച്ച കഴിഞ്ഞ്' ||
+	                    meridiem === 'വൈകുന്നേരം') {
+	                return hour + 12;
+	            } else {
+	                return hour;
+	            }
 	        },
 	        meridiem : function (hour, minute, isLower) {
 	            if (hour < 4) {
@@ -31952,6 +32105,134 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
+	//! locale : punjabi india (pa-in)
+	//! author : Harpreet Singh : https://github.com/harpreetkhalsagtbit
+
+	;(function (global, factory) {
+	    true ? factory(__webpack_require__(182)) :
+	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
+	   factory(global.moment)
+	}(this, function (moment) { 'use strict';
+
+
+	    var symbolMap = {
+	        '1': '੧',
+	        '2': '੨',
+	        '3': '੩',
+	        '4': '੪',
+	        '5': '੫',
+	        '6': '੬',
+	        '7': '੭',
+	        '8': '੮',
+	        '9': '੯',
+	        '0': '੦'
+	    },
+	    numberMap = {
+	        '੧': '1',
+	        '੨': '2',
+	        '੩': '3',
+	        '੪': '4',
+	        '੫': '5',
+	        '੬': '6',
+	        '੭': '7',
+	        '੮': '8',
+	        '੯': '9',
+	        '੦': '0'
+	    };
+
+	    var pa_in = moment.defineLocale('pa-in', {
+	        // There are months name as per Nanakshahi Calender but they are not used as rigidly in modern Punjabi.
+	        months : 'ਜਨਵਰੀ_ਫ਼ਰਵਰੀ_ਮਾਰਚ_ਅਪ੍ਰੈਲ_ਮਈ_ਜੂਨ_ਜੁਲਾਈ_ਅਗਸਤ_ਸਤੰਬਰ_ਅਕਤੂਬਰ_ਨਵੰਬਰ_ਦਸੰਬਰ'.split('_'),
+	        monthsShort : 'ਜਨਵਰੀ_ਫ਼ਰਵਰੀ_ਮਾਰਚ_ਅਪ੍ਰੈਲ_ਮਈ_ਜੂਨ_ਜੁਲਾਈ_ਅਗਸਤ_ਸਤੰਬਰ_ਅਕਤੂਬਰ_ਨਵੰਬਰ_ਦਸੰਬਰ'.split('_'),
+	        weekdays : 'ਐਤਵਾਰ_ਸੋਮਵਾਰ_ਮੰਗਲਵਾਰ_ਬੁਧਵਾਰ_ਵੀਰਵਾਰ_ਸ਼ੁੱਕਰਵਾਰ_ਸ਼ਨੀਚਰਵਾਰ'.split('_'),
+	        weekdaysShort : 'ਐਤ_ਸੋਮ_ਮੰਗਲ_ਬੁਧ_ਵੀਰ_ਸ਼ੁਕਰ_ਸ਼ਨੀ'.split('_'),
+	        weekdaysMin : 'ਐਤ_ਸੋਮ_ਮੰਗਲ_ਬੁਧ_ਵੀਰ_ਸ਼ੁਕਰ_ਸ਼ਨੀ'.split('_'),
+	        longDateFormat : {
+	            LT : 'A h:mm ਵਜੇ',
+	            LTS : 'A h:mm:ss ਵਜੇ',
+	            L : 'DD/MM/YYYY',
+	            LL : 'D MMMM YYYY',
+	            LLL : 'D MMMM YYYY, A h:mm ਵਜੇ',
+	            LLLL : 'dddd, D MMMM YYYY, A h:mm ਵਜੇ'
+	        },
+	        calendar : {
+	            sameDay : '[ਅਜ] LT',
+	            nextDay : '[ਕਲ] LT',
+	            nextWeek : 'dddd, LT',
+	            lastDay : '[ਕਲ] LT',
+	            lastWeek : '[ਪਿਛਲੇ] dddd, LT',
+	            sameElse : 'L'
+	        },
+	        relativeTime : {
+	            future : '%s ਵਿੱਚ',
+	            past : '%s ਪਿਛਲੇ',
+	            s : 'ਕੁਝ ਸਕਿੰਟ',
+	            m : 'ਇਕ ਮਿੰਟ',
+	            mm : '%d ਮਿੰਟ',
+	            h : 'ਇੱਕ ਘੰਟਾ',
+	            hh : '%d ਘੰਟੇ',
+	            d : 'ਇੱਕ ਦਿਨ',
+	            dd : '%d ਦਿਨ',
+	            M : 'ਇੱਕ ਮਹੀਨਾ',
+	            MM : '%d ਮਹੀਨੇ',
+	            y : 'ਇੱਕ ਸਾਲ',
+	            yy : '%d ਸਾਲ'
+	        },
+	        preparse: function (string) {
+	            return string.replace(/[੧੨੩੪੫੬੭੮੯੦]/g, function (match) {
+	                return numberMap[match];
+	            });
+	        },
+	        postformat: function (string) {
+	            return string.replace(/\d/g, function (match) {
+	                return symbolMap[match];
+	            });
+	        },
+	        // Punjabi notation for meridiems are quite fuzzy in practice. While there exists
+	        // a rigid notion of a 'Pahar' it is not used as rigidly in modern Punjabi.
+	        meridiemParse: /ਰਾਤ|ਸਵੇਰ|ਦੁਪਹਿਰ|ਸ਼ਾਮ/,
+	        meridiemHour : function (hour, meridiem) {
+	            if (hour === 12) {
+	                hour = 0;
+	            }
+	            if (meridiem === 'ਰਾਤ') {
+	                return hour < 4 ? hour : hour + 12;
+	            } else if (meridiem === 'ਸਵੇਰ') {
+	                return hour;
+	            } else if (meridiem === 'ਦੁਪਹਿਰ') {
+	                return hour >= 10 ? hour : hour + 12;
+	            } else if (meridiem === 'ਸ਼ਾਮ') {
+	                return hour + 12;
+	            }
+	        },
+	        meridiem : function (hour, minute, isLower) {
+	            if (hour < 4) {
+	                return 'ਰਾਤ';
+	            } else if (hour < 10) {
+	                return 'ਸਵੇਰ';
+	            } else if (hour < 17) {
+	                return 'ਦੁਪਹਿਰ';
+	            } else if (hour < 20) {
+	                return 'ਸ਼ਾਮ';
+	            } else {
+	                return 'ਰਾਤ';
+	            }
+	        },
+	        week : {
+	            dow : 0, // Sunday is the first day of the week.
+	            doy : 6  // The week that contains Jan 1st is the first week of the year.
+	        }
+	    });
+
+	    return pa_in;
+
+	}));
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//! moment.js locale configuration
 	//! locale : polish (pl)
 	//! author : Rafal Hirsz : https://github.com/evoL
 
@@ -32057,7 +32338,7 @@
 	}));
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32125,7 +32406,7 @@
 	}));
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32142,7 +32423,7 @@
 	    var pt_br = moment.defineLocale('pt-br', {
 	        months : 'Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro'.split('_'),
 	        monthsShort : 'Jan_Fev_Mar_Abr_Mai_Jun_Jul_Ago_Set_Out_Nov_Dez'.split('_'),
-	        weekdays : 'Domingo_Segunda-Feira_Terça-Feira_Quarta-Feira_Quinta-Feira_Sexta-Feira_Sábado'.split('_'),
+	        weekdays : 'Domingo_Segunda-feira_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado'.split('_'),
 	        weekdaysShort : 'Dom_Seg_Ter_Qua_Qui_Sex_Sáb'.split('_'),
 	        weekdaysMin : 'Dom_2ª_3ª_4ª_5ª_6ª_Sáb'.split('_'),
 	        longDateFormat : {
@@ -32189,7 +32470,7 @@
 	}));
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32267,13 +32548,14 @@
 	}));
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
 	//! locale : russian (ru)
 	//! author : Viktorminator : https://github.com/Viktorminator
 	//! Author : Menelion Elensúle : https://github.com/Oire
+	//! author : Коренберг Марк : https://github.com/socketpair
 
 	;(function (global, factory) {
 	    true ? factory(__webpack_require__(182)) :
@@ -32303,22 +32585,23 @@
 	    }
 	    var monthsParse = [/^янв/i, /^фев/i, /^мар/i, /^апр/i, /^ма[й|я]/i, /^июн/i, /^июл/i, /^авг/i, /^сен/i, /^окт/i, /^ноя/i, /^дек/i];
 
+	    // http://new.gramota.ru/spravka/rules/139-prop : § 103
 	    var ru = moment.defineLocale('ru', {
 	        months : {
-	            format: 'Января_Февраля_Марта_Апреля_Мая_Июня_Июля_Августа_Сентября_Октября_Ноября_Декабря'.split('_'),
-	            standalone: 'Январь_Февраль_Март_Апрель_Май_Июнь_Июль_Август_Сентябрь_Октябрь_Ноябрь_Декабрь'.split('_')
+	            format: 'января_февраля_марта_апреля_мая_июня_июля_августа_сентября_октября_ноября_декабря'.split('_'),
+	            standalone: 'январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь'.split('_')
 	        },
 	        monthsShort : {
 	            format: 'янв_фев_мар_апр_мая_июня_июля_авг_сен_окт_ноя_дек'.split('_'),
 	            standalone: 'янв_фев_март_апр_май_июнь_июль_авг_сен_окт_ноя_дек'.split('_')
 	        },
 	        weekdays : {
-	            standalone: 'Воскресенье_Понедельник_Вторник_Среда_Четверг_Пятница_Суббота'.split('_'),
-	            format: 'Воскресенье_Понедельник_Вторник_Среду_Четверг_Пятницу_Субботу'.split('_'),
+	            standalone: 'воскресенье_понедельник_вторник_среда_четверг_пятница_суббота'.split('_'),
+	            format: 'воскресенье_понедельник_вторник_среду_четверг_пятницу_субботу'.split('_'),
 	            isFormat: /\[ ?[Вв] ?(?:прошлую|следующую|эту)? ?\] ?dddd/
 	        },
-	        weekdaysShort : 'Вс_Пн_Вт_Ср_Чт_Пт_Сб'.split('_'),
-	        weekdaysMin : 'Вс_Пн_Вт_Ср_Чт_Пт_Сб'.split('_'),
+	        weekdaysShort : 'вс_пн_вт_ср_чт_пт_сб'.split('_'),
+	        weekdaysMin : 'вс_пн_вт_ср_чт_пт_сб'.split('_'),
 	        monthsParse : monthsParse,
 	        longMonthsParse : monthsParse,
 	        shortMonthsParse : monthsParse,
@@ -32437,7 +32720,7 @@
 	}));
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32502,7 +32785,7 @@
 	}));
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32558,6 +32841,10 @@
 	        ordinal : function (number) {
 	            return number + ' වැනි';
 	        },
+	        meridiemParse : /පෙර වරු|පස් වරු|පෙ.ව|ප.ව./,
+	        isPM : function (input) {
+	            return input === 'ප.ව.' || input === 'පස් වරු';
+	        },
 	        meridiem : function (hours, minutes, isLower) {
 	            if (hours > 11) {
 	                return isLower ? 'ප.ව.' : 'පස් වරු';
@@ -32572,7 +32859,7 @@
 	}));
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32726,7 +33013,7 @@
 	}));
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32890,7 +33177,7 @@
 	}));
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32963,7 +33250,7 @@
 	}));
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33075,7 +33362,7 @@
 	}));
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33187,7 +33474,7 @@
 	}));
 
 /***/ },
-/* 265 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33258,7 +33545,7 @@
 	}));
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33320,7 +33607,7 @@
 	}));
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33453,7 +33740,7 @@
 	}));
 
 /***/ },
-/* 268 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33545,7 +33832,7 @@
 	}));
 
 /***/ },
-/* 269 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33614,7 +33901,7 @@
 	}));
 
 /***/ },
-/* 270 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33680,7 +33967,7 @@
 	}));
 
 /***/ },
-/* 271 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33803,7 +34090,7 @@
 	}));
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33897,7 +34184,7 @@
 	}));
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33927,6 +34214,10 @@
 	            LL : 'D. MMMM [dallas] YYYY',
 	            LLL : 'D. MMMM [dallas] YYYY HH.mm',
 	            LLLL : 'dddd, [li] D. MMMM [dallas] YYYY HH.mm'
+	        },
+	        meridiemParse: /d\'o|d\'a/i,
+	        isPM : function (input) {
+	            return 'd\'o' === input.toLowerCase();
 	        },
 	        meridiem : function (hours, minutes, isLower) {
 	            if (hours > 11) {
@@ -33988,7 +34279,7 @@
 	}));
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34050,7 +34341,7 @@
 	}));
 
 /***/ },
-/* 275 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34112,7 +34403,7 @@
 	}));
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34262,7 +34553,7 @@
 	}));
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34324,7 +34615,7 @@
 	}));
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34344,6 +34635,17 @@
 	        weekdays : 'chủ nhật_thứ hai_thứ ba_thứ tư_thứ năm_thứ sáu_thứ bảy'.split('_'),
 	        weekdaysShort : 'CN_T2_T3_T4_T5_T6_T7'.split('_'),
 	        weekdaysMin : 'CN_T2_T3_T4_T5_T6_T7'.split('_'),
+	        meridiemParse: /sa|ch/i,
+	        isPM : function (input) {
+	            return /^ch$/i.test(input);
+	        },
+	        meridiem : function (hours, minutes, isLower) {
+	            if (hours < 12) {
+	                return isLower ? 'sa' : 'SA';
+	            } else {
+	                return isLower ? 'ch' : 'CH';
+	            }
+	        },
 	        longDateFormat : {
 	            LT : 'HH:mm',
 	            LTS : 'HH:mm:ss',
@@ -34394,7 +34696,7 @@
 	}));
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34525,7 +34827,7 @@
 	}));
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34630,20 +34932,20 @@
 	}));
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  Tabs: __webpack_require__(282),
-	  TabList: __webpack_require__(288),
-	  Tab: __webpack_require__(287),
-	  TabPanel: __webpack_require__(290)
+	  Tabs: __webpack_require__(283),
+	  TabList: __webpack_require__(289),
+	  Tab: __webpack_require__(288),
+	  TabPanel: __webpack_require__(291)
 	};
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34656,19 +34958,19 @@
 
 	var _reactDom = __webpack_require__(159);
 
-	var _classnames = __webpack_require__(283);
+	var _classnames = __webpack_require__(284);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _jsStylesheet = __webpack_require__(284);
+	var _jsStylesheet = __webpack_require__(285);
 
 	var _jsStylesheet2 = _interopRequireDefault(_jsStylesheet);
 
-	var _helpersUuid = __webpack_require__(285);
+	var _helpersUuid = __webpack_require__(286);
 
 	var _helpersUuid2 = _interopRequireDefault(_helpersUuid);
 
-	var _helpersChildrenPropType = __webpack_require__(286);
+	var _helpersChildrenPropType = __webpack_require__(287);
 
 	var _helpersChildrenPropType2 = _interopRequireDefault(_helpersChildrenPropType);
 
@@ -34726,7 +35028,7 @@
 
 	  componentDidMount: function componentDidMount() {
 	    if (useDefaultStyles) {
-	      (0, _jsStylesheet2['default'])(__webpack_require__(289));
+	      (0, _jsStylesheet2['default'])(__webpack_require__(290));
 	    }
 	  },
 
@@ -35002,7 +35304,7 @@
 	});
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -35056,7 +35358,7 @@
 
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	!(function() {
@@ -35100,7 +35402,7 @@
 
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports) {
 
 	// Get a universally unique identifier
@@ -35112,7 +35414,7 @@
 	};
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35123,11 +35425,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _componentsTab = __webpack_require__(287);
+	var _componentsTab = __webpack_require__(288);
 
 	var _componentsTab2 = _interopRequireDefault(_componentsTab);
 
-	var _componentsTabList = __webpack_require__(288);
+	var _componentsTabList = __webpack_require__(289);
 
 	var _componentsTabList2 = _interopRequireDefault(_componentsTabList);
 
@@ -35173,7 +35475,7 @@
 	};
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35186,7 +35488,7 @@
 
 	var _reactDom = __webpack_require__(159);
 
-	var _classnames = __webpack_require__(283);
+	var _classnames = __webpack_require__(284);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -35253,7 +35555,7 @@
 	});
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35264,7 +35566,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(283);
+	var _classnames = __webpack_require__(284);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -35289,7 +35591,7 @@
 	});
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -35344,7 +35646,7 @@
 	};
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35355,7 +35657,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(283);
+	var _classnames = __webpack_require__(284);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -35402,7 +35704,7 @@
 	});
 
 /***/ },
-/* 291 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -35429,29 +35731,29 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _sticky = __webpack_require__(292);
+	var _sticky = __webpack_require__(293);
 
 	var _sticky2 = _interopRequireDefault(_sticky);
 
-	var _container = __webpack_require__(297);
+	var _container = __webpack_require__(298);
 
 	var _container2 = _interopRequireDefault(_container);
 
-	var _Cabecera = __webpack_require__(298);
+	var _TableHeader = __webpack_require__(299);
 
-	var _Cabecera2 = _interopRequireDefault(_Cabecera);
+	var _TableHeader2 = _interopRequireDefault(_TableHeader);
 
-	var _RowLocales = __webpack_require__(300);
+	var _RowInventario = __webpack_require__(301);
 
-	var _RowLocales2 = _interopRequireDefault(_RowLocales);
+	var _RowInventario2 = _interopRequireDefault(_RowInventario);
 
-	var _shared = __webpack_require__(411);
+	var _shared = __webpack_require__(412);
 
 	var _shared2 = _interopRequireDefault(_shared);
 
-	var _TablaLocalesMensual = __webpack_require__(410);
+	var _TablaProgramas = __webpack_require__(411);
 
-	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
+	var _TablaProgramas2 = _interopRequireDefault(_TablaProgramas);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35468,17 +35770,17 @@
 
 	// Styles
 
-	var TablaLocalesMensual = function (_React$Component) {
-	    _inherits(TablaLocalesMensual, _React$Component);
+	var TablaInventarios = function (_React$Component) {
+	    _inherits(TablaInventarios, _React$Component);
 
-	    function TablaLocalesMensual(props) {
-	        _classCallCheck(this, TablaLocalesMensual);
+	    function TablaInventarios(props) {
+	        _classCallCheck(this, TablaInventarios);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TablaLocalesMensual).call(this, props));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TablaInventarios).call(this, props));
 
 	        _this.state = {
-	            inventarios: [],
-	            inventariosFiltrados: [],
+	            programas: [],
+	            programasFiltrados: [],
 	            filtro: {
 	                clientes: [],
 	                regiones: []
@@ -35489,49 +35791,55 @@
 	        return _this;
 	    }
 
-	    _createClass(TablaLocalesMensual, [{
+	    _createClass(TablaInventarios, [{
 	        key: 'focusFilaSiguiente',
-	        value: function focusFilaSiguiente(indexActual, elemento) {
+	        value: function focusFilaSiguiente(indexActual, nombreElemento) {
 	            var nextIndex = (indexActual + 1) % this.inputFecha.length;
 	            var nextRow = this.inputFecha[nextIndex];
-	            nextRow.focusElemento(elemento);
+	            nextRow.focusElemento(nombreElemento);
 	        }
 	    }, {
 	        key: 'focusFilaAnterior',
-	        value: function focusFilaAnterior(indexActual, elemento) {
+	        value: function focusFilaAnterior(indexActual, nombreElemento) {
 	            var prevIndex = indexActual === 0 ? this.inputFecha.length - 1 : indexActual - 1;
 	            var prevRow = this.inputFecha[prevIndex];
-	            prevRow.focusElemento(elemento);
+	            prevRow.focusElemento(nombreElemento);
 	        }
 	    }, {
 	        key: 'guardarOCrear',
 	        value: function guardarOCrear(request) {
 	            var _this2 = this;
 
-	            var inventario = this.state.inventarios.find(function (inventario) {
-	                return inventario.idLocal === request.idLocal;
+	            var programa = this.state.programas.find(function (programa) {
+	                return programa.idLocal === request.idLocal;
 	            });
-	            if (!inventario) {
+	            if (!programa) {
 	                return console.error('inventario ' + request.idLocal + ' no encontrado');
 	            }
 	            // actualizar
-	            if (inventario.idInventario) {
-	                // actualizar el inventario
-	                console.log('actualizar ' + inventario.idInventario + '    ');
+	            if (programa.idInventario) {
+	                // actualizar el programa
 	                return new Promise(function (res, rej) {
-	                    res();
+	                    _v2.default.inventario.actualizar(programa.idInventario, request).then(function (programaActualizado) {
+	                        console.log('el servidor retorna ', programaActualizado.idJornada);
+	                        //todo Esto en la practica no va a hacer mucho, porque los cambios ya estan visialente escritos en los formularios
+	                        _this2.actualizarInventario(programa);
+	                        console.log('programa ' + programa.idInventario + ' actualizado');
+	                        res(programa);
+	                    }).catch(rej);
 	                });
 	            } else {
 	                // Crear el inventario
 	                return new Promise(function (res, rej) {
 	                    _v2.default.inventario.nuevo(request).then(function (inventarioCreado) {
+	                        console.log(inventarioCreado.idJornada);
 	                        // buscar el inventario, por el id de local (en teorica nunca deberia estar repetido en esta instancia)
 
 	                        inventario.idInventario = inventarioCreado.idInventario;
 	                        _this2.actualizarInventario(inventario);
 
 	                        console.log('inventario ' + inventarioCreado.idInventario + ' creado correctamente');
-	                        res(inventario);
+	                        res(inventarioCreado);
 	                    }).catch(rej);
 	                });
 	            }
@@ -35548,12 +35856,12 @@
 	            var mes = _mesAnno$split2[0];
 	            var anno = _mesAnno$split2[1];
 
-	            var inventariosActualizados = this.state.inventarios;
+	            var inventariosActualizados = this.state.programas;
 
-	            var inventarioNoAgregado = this.state.inventarios.find(function (inventario) {
+	            var programaNoAgregado = this.state.programas.find(function (inventario) {
 	                return inventario.idLocal === nuevoInventario.idLocal;
 	            }) === undefined;
-	            if (inventarioNoAgregado) {
+	            if (programaNoAgregado) {
 	                // buscar asincronicamente la informacion completa al servidor
 
 	                _v2.default.locales.getVerbose(nuevoInventario.idLocal).then(function (local) {
@@ -35561,7 +35869,6 @@
 	                    local.comuna = local.direccion.comuna || {};
 	                    local.provincia = local.comuna.provincia || {};
 	                    local.region = local.provincia.region || {};
-	                    local.zona = local.region.zona || {};
 
 	                    // actualizar los datos del inventario
 	                    nuevoInventario.local = local;
@@ -35569,7 +35876,6 @@
 	                    nuevoInventario.nombreComuna = local.comuna.nombre;
 	                    nuevoInventario.nombreProvincia = local.provincia.nombre;
 	                    nuevoInventario.nombreRegion = local.region.nombreCorto;
-	                    nuevoInventario.nombreZona = local.zona.nombre;
 
 	                    _this3.actualizarInventario(nuevoInventario);
 	                }).catch(function (error) {
@@ -35585,26 +35891,26 @@
 	                nuevoInventario.nombreComuna = '-';
 	                nuevoInventario.nombreProvincia = '-';
 	                nuevoInventario.nombreRegion = '-';
-	                nuevoInventario.nombreZona = '-';
 
 	                // actualizar la lista de locales
 	                inventariosActualizados.push(nuevoInventario);
 
 	                // actualizar la lista de locales, y el filtro
 	                var filtroActualizado = this.generarFiltro(inventariosActualizados);
-	                var inventariosFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado);
+	                var programasFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado);
 
 	                this.setState({
 	                    inventarios: inventariosActualizados,
 	                    filtro: filtroActualizado,
-	                    inventariosFiltrados: inventariosFiltrados
+	                    programasFiltrados: programasFiltrados
 	                });
 	            }
+	            return programaNoAgregado;
 	        }
 	    }, {
 	        key: 'actualizarInventario',
 	        value: function actualizarInventario(inventarioModificado) {
-	            var inventariosActualizados = this.state.inventarios.map(function (inventario) {
+	            var inventariosActualizados = this.state.programas.map(function (inventario) {
 	                if (inventario.idLocal === inventarioModificado.idLocal) {
 	                    // Todo idLocal no existe
 	                    return inventarioModificado;
@@ -35612,13 +35918,13 @@
 	                return inventario;
 	            });
 	            var filtroActualizado = this.generarFiltro(inventariosActualizados);
-	            var inventariosFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado);
+	            var programasFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado);
 
 	            this.setState({
 	                // actualizar los datos de la lista con la informacion obtenida por el api
-	                inventarios: inventariosActualizados,
+	                programas: inventariosActualizados,
 	                filtro: filtroActualizado,
-	                inventariosFiltrados: inventariosFiltrados
+	                programasFiltrados: programasFiltrados
 	            });
 	        }
 	    }, {
@@ -35676,20 +35982,20 @@
 	            //console.log('inventarios: ', inventarios.map(local=>local.nombreCliente))
 
 	            // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
-	            var inventariosFiltrados = inventarios.filter(function (inventario) {
+	            var programasFiltrados = inventarios.filter(function (inventario) {
 	                var textoBuscado = inventario.nombreCliente || ''; // si es undefined, es tratado como ''
 	                return filtros.clientes.find(function (opcion) {
 	                    return opcion.texto === textoBuscado && opcion.seleccionado === true;
 	                });
 	            });
 	            // por regiones
-	            inventariosFiltrados = inventariosFiltrados.filter(function (inventario) {
+	            programasFiltrados = programasFiltrados.filter(function (inventario) {
 	                var textoBuscado = inventario.nombreRegion || ''; // si es undefined, es tratado como ''
 	                return filtros.regiones.find(function (opcion) {
 	                    return opcion.texto === textoBuscado && opcion.seleccionado === true;
 	                });
 	            });
-	            return inventariosFiltrados;
+	            return programasFiltrados;
 	        }
 
 	        // Reemplazar el filtro que es actualizado por la Cabecera
@@ -35703,7 +36009,7 @@
 
 	            this.setState({
 	                filtro: nuevoFiltro,
-	                inventariosFiltrados: this.filtrarInventarios(this.state.inventarios, nuevoFiltro)
+	                programasFiltrados: this.filtrarInventarios(this.state.programas, nuevoFiltro)
 	            });
 	        }
 	    }, {
@@ -35728,66 +36034,61 @@
 	                                stickyStyle: { top: '50px' } },
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thCorrelativo },
+	                                { className: _TablaProgramas2.default.thCorrelativo },
 	                                '#'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thFecha },
+	                                { className: _TablaProgramas2.default.thFecha },
 	                                'Fecha'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thCliente },
-	                                _react2.default.createElement(_Cabecera2.default, { nombre: 'Cliente',
+	                                { className: _TablaProgramas2.default.thCliente },
+	                                _react2.default.createElement(_TableHeader2.default, { nombre: 'Cliente',
 	                                    filtro: this.state.filtro.clientes,
 	                                    onFiltroChanged: this.reemplazarFiltro.bind(this, 'clientes') })
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thCeco },
+	                                { className: _TablaProgramas2.default.thCeco },
 	                                'Ceco'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thLocal },
+	                                { className: _TablaProgramas2.default.thLocal },
 	                                'Local'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thZonaSei },
-	                                'Zona SEI'
-	                            ),
-	                            _react2.default.createElement(
-	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thRegion },
-	                                _react2.default.createElement(_Cabecera2.default, { nombre: 'Región',
+	                                { className: _TablaProgramas2.default.thRegion },
+	                                _react2.default.createElement(_TableHeader2.default, { nombre: 'Región',
 	                                    filtro: this.state.filtro.regiones,
 	                                    onFiltroChanged: this.reemplazarFiltro.bind(this, 'regiones') })
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thComuna },
+	                                { className: _TablaProgramas2.default.thComuna },
 	                                'Comuna'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thStock },
+	                                { className: _TablaProgramas2.default.thStock },
 	                                'Stock'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thDotacion },
+	                                { className: _TablaProgramas2.default.thDotacion },
 	                                'Dotación'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thJornada },
+	                                { className: _TablaProgramas2.default.thJornada },
 	                                'Jornada'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: _TablaLocalesMensual2.default.thOpciones },
+	                                { className: _TablaProgramas2.default.thOpciones },
 	                                'Opciones'
 	                            )
 	                        )
@@ -35795,20 +36096,26 @@
 	                    _react2.default.createElement(
 	                        'tbody',
 	                        null,
-	                        this.state.inventariosFiltrados.map(function (inventario, index) {
-	                            return _react2.default.createElement(_RowLocales2.default, {
+	                        this.state.programasFiltrados.map(function (inventario, index) {
+	                            return _react2.default.createElement(_RowInventario2.default, {
 	                                key: index,
-	                                index: index,
-	                                idInventario: inventario.idInventario,
-	                                mesProgramado: inventario.mesProgramado,
-	                                ultimoDiaMes: (0, _moment2.default)('' + inventario.annoProgramado + inventario.mesProgramado, 'YYYYMM').daysInMonth(),
-	                                annoProgramado: inventario.annoProgramado,
-	                                nombreCliente: inventario.nombreCliente,
-	                                zona: inventario.nombreZona,
+	                                index: index
+	                                // a quitar
+	                                , nombreCliente: inventario.nombreCliente,
 	                                region: inventario.nombreRegion,
 	                                comuna: inventario.nombreComuna,
-	                                local: inventario.local,
-	                                focusFilaSiguiente: _this5.focusFilaSiguiente.bind(_this5),
+
+	                                idInventario: inventario.idInventario
+
+	                                // desde el formulario
+	                                , mesProgramado: inventario.mesProgramado,
+	                                ultimoDiaMes: (0, _moment2.default)('' + inventario.annoProgramado + inventario.mesProgramado, 'YYYYMM').daysInMonth(),
+	                                annoProgramado: inventario.annoProgramado
+
+	                                // Importante
+	                                , local: inventario.local
+	                                // Metodos
+	                                , focusFilaSiguiente: _this5.focusFilaSiguiente.bind(_this5),
 	                                focusFilaAnterior: _this5.focusFilaAnterior.bind(_this5),
 	                                guardarOCrear: _this5.guardarOCrear.bind(_this5),
 	                                ref: function ref(_ref) {
@@ -35822,18 +36129,18 @@
 	        }
 	    }]);
 
-	    return TablaLocalesMensual;
+	    return TablaInventarios;
 	}(_react2.default.Component);
 
-	TablaLocalesMensual.protoTypes = {
+	TablaInventarios.protoTypes = {
 	    //inventarioesAgregados: PropTypes.array.required
 	};
-	exports.default = TablaLocalesMensual;
+	exports.default = TablaInventarios;
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TablaLocalesMensual.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TablaProgramas.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 292 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -35854,7 +36161,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _watcher = __webpack_require__(293);
+	var _watcher = __webpack_require__(294);
 
 	var _watcher2 = _interopRequireDefault(_watcher);
 
@@ -35955,7 +36262,8 @@
 	    }, {
 	        key: 'calculateOrigin',
 	        value: function calculateOrigin() {
-	            var node = _react2.default.findDOMNode(this);
+	            //let node = React.findDOMNode(this);
+	            var node = _reactDom2.default.findDOMNode(this);
 
 	            // Do some ugly DOM manipulation to where this element's non-sticky position would be
 	            var previousPosition = node.style.position;
@@ -36094,7 +36402,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "sticky.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36105,11 +36413,11 @@
 	    value: true
 	});
 
-	var _raf = __webpack_require__(294);
+	var _raf = __webpack_require__(295);
 
 	var _raf2 = _interopRequireDefault(_raf);
 
-	var _simpleSignal = __webpack_require__(296);
+	var _simpleSignal = __webpack_require__(297);
 
 	var _simpleSignal2 = _interopRequireDefault(_simpleSignal);
 
@@ -36137,10 +36445,10 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "watcher.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(295)
+	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(296)
 	  , root = typeof window === 'undefined' ? global : window
 	  , vendors = ['moz', 'webkit']
 	  , suffix = 'AnimationFrame'
@@ -36216,7 +36524,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.7.1
@@ -36255,7 +36563,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36286,7 +36594,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36303,7 +36611,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _sticky = __webpack_require__(292);
+	var _sticky = __webpack_require__(293);
 
 	var _sticky2 = _interopRequireDefault(_sticky);
 
@@ -36416,7 +36724,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36433,9 +36741,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Cabecera = __webpack_require__(299);
+	var _TableHeader = __webpack_require__(300);
 
-	var _Cabecera2 = _interopRequireDefault(_Cabecera);
+	var _TableHeader2 = _interopRequireDefault(_TableHeader);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36449,13 +36757,13 @@
 
 	// Styles
 
-	var Cabecera = function (_React$Component) {
-	    _inherits(Cabecera, _React$Component);
+	var TableHeader = function (_React$Component) {
+	    _inherits(TableHeader, _React$Component);
 
-	    function Cabecera(props) {
-	        _classCallCheck(this, Cabecera);
+	    function TableHeader(props) {
+	        _classCallCheck(this, TableHeader);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Cabecera).call(this, props));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TableHeader).call(this, props));
 
 	        _this.state = {
 	            open: false
@@ -36465,7 +36773,7 @@
 	    // Metodos para controlar el display del menu, ocultar y mostrar los elementos
 
 
-	    _createClass(Cabecera, [{
+	    _createClass(TableHeader, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            document.addEventListener('click', this.onClickHandler.bind(this));
@@ -36533,21 +36841,21 @@
 
 	            return _react2.default.createElement(
 	                'div',
-	                { className: _Cabecera2.default.container, ref: function ref(_ref) {
+	                { className: _TableHeader2.default.container, ref: function ref(_ref) {
 	                        return _this2.node = _ref;
 	                    } },
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: _Cabecera2.default.cell, onClick: this.toggleMenu.bind(this) },
+	                    { className: _TableHeader2.default.cell, onClick: this.toggleMenu.bind(this) },
 	                    this.props.nombre,
 	                    _react2.default.createElement('span', { className: "glyphicon pull-right " + (this.state.open ? 'glyphicon-triangle-top' : 'glyphicon-triangle-bottom') })
 	                ),
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: _Cabecera2.default.menu, style: { display: this.state.open ? '' : 'none' } },
+	                    { className: _TableHeader2.default.menu, style: { display: this.state.open ? '' : 'none' } },
 	                    _react2.default.createElement(
 	                        'div',
-	                        { className: _Cabecera2.default.contenedorValores },
+	                        { className: _TableHeader2.default.contenedorValores },
 	                        this.props.filtro.map(function (opcion, index) {
 	                            return _react2.default.createElement(
 	                                'label',
@@ -36572,30 +36880,30 @@
 	        }
 	    }]);
 
-	    return Cabecera;
+	    return TableHeader;
 	}(_react2.default.Component);
 
-	Cabecera.propTypes = {
+	TableHeader.propTypes = {
 	    nombre: PropTypes.string,
 	    filtro: PropTypes.arrayOf(PropTypes.object).isRequired,
 	    onFiltroChanged: PropTypes.func.isRequired
 	};
-	Cabecera.defaultProps = {
+	TableHeader.defaultProps = {
 	    nombre: '[sin nombre]'
 	};
-	exports.default = Cabecera;
+	exports.default = TableHeader;
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Cabecera.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 299 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-	module.exports = {"container":"Cabecera__container___3QvtW","cell":"Cabecera__cell___1YFbN","menu":"Cabecera__menu___1L7n3","contenedorValores":"Cabecera__contenedorValores___3Bx-H"};
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TableHeader.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
 /* 300 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"container":"TableHeader__container___N1LYN","cell":"TableHeader__cell___qBAiu","menu":"TableHeader__menu___x-Ng6","contenedorValores":"TableHeader__contenedorValores___qZzS4"};
+
+/***/ },
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36612,23 +36920,23 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _numeral = __webpack_require__(301);
+	var _numeral = __webpack_require__(302);
 
 	var _numeral2 = _interopRequireDefault(_numeral);
 
-	var _Tooltip = __webpack_require__(302);
+	var _Tooltip = __webpack_require__(303);
 
 	var _Tooltip2 = _interopRequireDefault(_Tooltip);
 
-	var _OverlayTrigger = __webpack_require__(332);
+	var _OverlayTrigger = __webpack_require__(333);
 
 	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
 
-	var _TablaLocalesMensual = __webpack_require__(410);
+	var _TablaProgramas = __webpack_require__(411);
 
-	var _TablaLocalesMensual2 = _interopRequireDefault(_TablaLocalesMensual);
+	var _TablaProgramas2 = _interopRequireDefault(_TablaProgramas);
 
-	var _shared = __webpack_require__(411);
+	var _shared = __webpack_require__(412);
 
 	var _shared2 = _interopRequireDefault(_shared);
 
@@ -36664,17 +36972,16 @@
 	    }
 	};
 
-	var RowLocales = function (_React$Component) {
-	    _inherits(RowLocales, _React$Component);
+	var RowInventario = function (_React$Component) {
+	    _inherits(RowInventario, _React$Component);
 
-	    function RowLocales(props) {
-	        _classCallCheck(this, RowLocales);
+	    function RowInventario(props) {
+	        _classCallCheck(this, RowInventario);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RowLocales).call(this, props));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RowInventario).call(this, props));
 
 	        _this.state = {
 	            inputDotacion: 1,
-	            inputJornada: 0,
 	            inputDia: '',
 	            guardado: false,
 	            fechaValida: false,
@@ -36684,16 +36991,17 @@
 	        return _this;
 	    }
 
-	    _createClass(RowLocales, [{
+	    _createClass(RowInventario, [{
 	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(nextProps) {
 	            // si la dotacion anteriormente era undefined, pero ahora se recibe el valor, se actualiza el state
+	            // esto pasa cuando se reciben los datos luego de una peticion json
 	            if (!this.props.local.dotacionSugerida && nextProps.local.dotacionSugerida) {
 	                this.setState({
-	                    inputDotacion: nextProps.local.dotacionSugerida,
-	                    inputJornada: nextProps.local.idJornadaSugerida
+	                    inputDotacion: nextProps.local.dotacionSugerida
 	                });
 	            }
+	            console.log('nextProps', nextProps);
 	        }
 	    }, {
 	        key: 'focusElemento',
@@ -36725,7 +37033,7 @@
 	    }, {
 	        key: 'inputJornadaHandler',
 	        value: function inputJornadaHandler(evt) {
-	            this.setState({ inputJornada: evt.target.value });
+	            console.log('opcion ' + evt.target.value + ' seleccionada');
 	            this.guardarOCrear();
 	        }
 	    }, {
@@ -36738,13 +37046,17 @@
 	        value: function guardarOCrear(evt) {
 	            var _this2 = this;
 
+	            if (evt) evt.preventDefault();
+
+	            var jornada = this.inputJornada.value;
+	            console.log("guardar o crear: ", jornada);
+
 	            var fechaEsValida = this.state.inputDia >= 1 && this.state.inputDia <= this.props.ultimoDiaMes;
 	            if (fechaEsValida) {
-	                console.log('dia ' + this.state.inputDia + ' valido');
 	                // ToDo: llamar al API
 	                this.props.guardarOCrear({
 	                    idLocal: this.props.local.idLocal,
-	                    idJornada: this.state.inputJornada,
+	                    idJornada: jornada,
 	                    fechaProgramada: this.props.annoProgramado + '-' + this.props.mesProgramado + '-' + this.state.inputDia,
 	                    horaLlegada: '00:00',
 	                    stockTeorico: this.props.local.stock,
@@ -36777,19 +37089,19 @@
 	                null,
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdCorrelativo },
+	                    { className: _TablaProgramas2.default.tdCorrelativo },
 	                    this.props.index
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdFecha },
+	                    { className: _TablaProgramas2.default.tdFecha },
 	                    this.state.estado !== ESTADO.GUARDADO ? _react2.default.createElement(
 	                        _Tooltip2.default,
 	                        { placement: 'left', positionLeft: -120, id: 'xxxx', style: { width: '120px' },
 	                            className: "in " + this.state.estado.tooltipClass },
 	                        this.state.estado.mensaje
 	                    ) : null,
-	                    _react2.default.createElement('input', { className: this.state.fechaValida ? _TablaLocalesMensual2.default.inputDia : _TablaLocalesMensual2.default.inputDiaInvalido,
+	                    _react2.default.createElement('input', { className: this.state.fechaValida ? _TablaProgramas2.default.inputDia : _TablaProgramas2.default.inputDiaInvalido,
 	                        type: 'number', min: 0, max: this.props.ultimoDiaMes,
 	                        ref: function ref(_ref) {
 	                            return _this3.inputDia = _ref;
@@ -36798,12 +37110,12 @@
 	                        onChange: this.inputDiaHandler.bind(this),
 	                        onKeyDown: this.inputOnKeyDown.bind(this, 'dia'),
 	                        onBlur: this.guardarOCrear }),
-	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputMes, type: 'number', defaultValue: this.props.mesProgramado, disabled: true }),
-	                    _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputAnno, type: 'number', defaultValue: this.props.annoProgramado, disabled: true })
+	                    _react2.default.createElement('input', { className: _TablaProgramas2.default.inputMes, type: 'number', defaultValue: this.props.mesProgramado, disabled: true }),
+	                    _react2.default.createElement('input', { className: _TablaProgramas2.default.inputAnno, type: 'number', defaultValue: this.props.annoProgramado, disabled: true })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdCliente },
+	                    { className: _TablaProgramas2.default.tdCliente },
 	                    _react2.default.createElement(
 	                        'p',
 	                        null,
@@ -36816,7 +37128,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdCeco },
+	                    { className: _TablaProgramas2.default.tdCeco },
 	                    _react2.default.createElement(
 	                        'p',
 	                        null,
@@ -36833,7 +37145,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdLocal },
+	                    { className: _TablaProgramas2.default.tdLocal },
 	                    _react2.default.createElement(
 	                        'p',
 	                        null,
@@ -36850,20 +37162,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdZonaSei },
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { margin: 0 } },
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.zona
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdRegion },
+	                    { className: _TablaProgramas2.default.tdRegion },
 	                    _react2.default.createElement(
 	                        'p',
 	                        { style: { margin: 0 } },
@@ -36876,7 +37175,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdComuna },
+	                    { className: _TablaProgramas2.default.tdComuna },
 	                    _react2.default.createElement(
 	                        'p',
 	                        { style: { margin: 0 } },
@@ -36893,7 +37192,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdStock },
+	                    { className: _TablaProgramas2.default.tdStock },
 	                    _react2.default.createElement(
 	                        _OverlayTrigger2.default,
 	                        {
@@ -36917,7 +37216,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdDotacion },
+	                    { className: _TablaProgramas2.default.tdDotacion },
 	                    _react2.default.createElement(
 	                        _OverlayTrigger2.default,
 	                        {
@@ -36928,7 +37227,7 @@
 	                                { id: 'yyy' },
 	                                this.props.local.formato_local ? 'Produción ' + this.props.local.formato_local.produccionSugerida : ''
 	                            ) },
-	                        _react2.default.createElement('input', { className: _TablaLocalesMensual2.default.inputDotacionIngresada, type: 'number',
+	                        _react2.default.createElement('input', { className: _TablaProgramas2.default.inputDotacionIngresada, type: 'number',
 	                            ref: function ref(_ref2) {
 	                                return _this3.inputDotacion = _ref2;
 	                            },
@@ -36940,15 +37239,12 @@
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdJornada },
+	                    { className: _TablaProgramas2.default.tdJornada },
 	                    _react2.default.createElement(
 	                        'select',
-	                        { value: this.state.inputJornada, onChange: this.inputJornadaHandler.bind(this) },
-	                        _react2.default.createElement(
-	                            'option',
-	                            { value: '0' },
-	                            'no definido'
-	                        ),
+	                        { onChange: this.inputJornadaHandler.bind(this), ref: function ref(_ref3) {
+	                                return _this3.inputJornada = _ref3;
+	                            } },
 	                        _react2.default.createElement(
 	                            'option',
 	                            { value: '1' },
@@ -36963,12 +37259,17 @@
 	                            'option',
 	                            { value: '3' },
 	                            'día y noche'
+	                        ),
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '4' },
+	                            'no definido'
 	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _TablaLocalesMensual2.default.tdOpciones },
+	                    { className: _TablaProgramas2.default.tdOpciones },
 	                    _react2.default.createElement(
 	                        'button',
 	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
@@ -36984,15 +37285,14 @@
 	        }
 	    }]);
 
-	    return RowLocales;
+	    return RowInventario;
 	}(_react2.default.Component);
 
-	RowLocales.protoTypes = {
+	RowInventario.protoTypes = {
 	    index: PropTypes.number.required,
 	    mesProgramado: PropTypes.string.required,
 	    annoProgramado: PropTypes.string.required,
 	    nombreCliente: PropTypes.string.required,
-	    zona: PropTypes.string.required,
 	    region: PropTypes.string.required,
 	    comuna: PropTypes.string.required,
 	    stock: PropTypes.number.required,
@@ -37005,12 +37305,12 @@
 	    local: PropTypes.object.required
 	};
 
-	exports.default = RowLocales;
+	exports.default = RowInventario;
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowLocales.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowInventario.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 301 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -37695,14 +37995,14 @@
 
 
 /***/ },
-/* 302 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _extends = __webpack_require__(303)['default'];
+	var _extends = __webpack_require__(304)['default'];
 
-	var _interopRequireDefault = __webpack_require__(319)['default'];
+	var _interopRequireDefault = __webpack_require__(320)['default'];
 
 	exports.__esModule = true;
 
@@ -37710,15 +38010,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(320);
+	var _classnames = __webpack_require__(321);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _utilsBootstrapUtils = __webpack_require__(321);
+	var _utilsBootstrapUtils = __webpack_require__(322);
 
 	var _utilsBootstrapUtils2 = _interopRequireDefault(_utilsBootstrapUtils);
 
-	var _reactPropTypesLibIsRequiredForA11y = __webpack_require__(331);
+	var _reactPropTypesLibIsRequiredForA11y = __webpack_require__(332);
 
 	var _reactPropTypesLibIsRequiredForA11y2 = _interopRequireDefault(_reactPropTypesLibIsRequiredForA11y);
 
@@ -37799,12 +38099,12 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 303 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var _Object$assign = __webpack_require__(304)["default"];
+	var _Object$assign = __webpack_require__(305)["default"];
 
 	exports["default"] = _Object$assign || function (target) {
 	  for (var i = 1; i < arguments.length; i++) {
@@ -37823,34 +38123,34 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 304 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(305), __esModule: true };
-
-/***/ },
 /* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(306);
-	module.exports = __webpack_require__(309).Object.assign;
+	module.exports = { "default": __webpack_require__(306), __esModule: true };
 
 /***/ },
 /* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// 19.1.3.1 Object.assign(target, source)
-	var $export = __webpack_require__(307);
-
-	$export($export.S + $export.F, 'Object', {assign: __webpack_require__(312)});
+	__webpack_require__(307);
+	module.exports = __webpack_require__(310).Object.assign;
 
 /***/ },
 /* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var global    = __webpack_require__(308)
-	  , core      = __webpack_require__(309)
-	  , ctx       = __webpack_require__(310)
+	// 19.1.3.1 Object.assign(target, source)
+	var $export = __webpack_require__(308);
+
+	$export($export.S + $export.F, 'Object', {assign: __webpack_require__(313)});
+
+/***/ },
+/* 308 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global    = __webpack_require__(309)
+	  , core      = __webpack_require__(310)
+	  , ctx       = __webpack_require__(311)
 	  , PROTOTYPE = 'prototype';
 
 	var $export = function(type, name, source){
@@ -37896,7 +38196,7 @@
 	module.exports = $export;
 
 /***/ },
-/* 308 */
+/* 309 */
 /***/ function(module, exports) {
 
 	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
@@ -37905,18 +38205,18 @@
 	if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
 
 /***/ },
-/* 309 */
+/* 310 */
 /***/ function(module, exports) {
 
 	var core = module.exports = {version: '1.2.6'};
 	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 
 /***/ },
-/* 310 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// optional / simple context binding
-	var aFunction = __webpack_require__(311);
+	var aFunction = __webpack_require__(312);
 	module.exports = function(fn, that, length){
 	  aFunction(fn);
 	  if(that === undefined)return fn;
@@ -37937,7 +38237,7 @@
 	};
 
 /***/ },
-/* 311 */
+/* 312 */
 /***/ function(module, exports) {
 
 	module.exports = function(it){
@@ -37946,16 +38246,16 @@
 	};
 
 /***/ },
-/* 312 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// 19.1.2.1 Object.assign(target, source, ...)
-	var $        = __webpack_require__(313)
-	  , toObject = __webpack_require__(314)
-	  , IObject  = __webpack_require__(316);
+	var $        = __webpack_require__(314)
+	  , toObject = __webpack_require__(315)
+	  , IObject  = __webpack_require__(317);
 
 	// should work with symbols and should have deterministic property order (V8 bug)
-	module.exports = __webpack_require__(318)(function(){
+	module.exports = __webpack_require__(319)(function(){
 	  var a = Object.assign
 	    , A = {}
 	    , B = {}
@@ -37984,7 +38284,7 @@
 	} : Object.assign;
 
 /***/ },
-/* 313 */
+/* 314 */
 /***/ function(module, exports) {
 
 	var $Object = Object;
@@ -38002,17 +38302,17 @@
 	};
 
 /***/ },
-/* 314 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.1.13 ToObject(argument)
-	var defined = __webpack_require__(315);
+	var defined = __webpack_require__(316);
 	module.exports = function(it){
 	  return Object(defined(it));
 	};
 
 /***/ },
-/* 315 */
+/* 316 */
 /***/ function(module, exports) {
 
 	// 7.2.1 RequireObjectCoercible(argument)
@@ -38022,17 +38322,17 @@
 	};
 
 /***/ },
-/* 316 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// fallback for non-array-like ES3 and non-enumerable old V8 strings
-	var cof = __webpack_require__(317);
+	var cof = __webpack_require__(318);
 	module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
 	  return cof(it) == 'String' ? it.split('') : Object(it);
 	};
 
 /***/ },
-/* 317 */
+/* 318 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -38042,7 +38342,7 @@
 	};
 
 /***/ },
-/* 318 */
+/* 319 */
 /***/ function(module, exports) {
 
 	module.exports = function(exec){
@@ -38054,7 +38354,7 @@
 	};
 
 /***/ },
-/* 319 */
+/* 320 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -38068,7 +38368,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 320 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -38122,28 +38422,28 @@
 
 
 /***/ },
-/* 321 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var _extends = __webpack_require__(303)['default'];
+	var _extends = __webpack_require__(304)['default'];
 
-	var _interopRequireDefault = __webpack_require__(319)['default'];
+	var _interopRequireDefault = __webpack_require__(320)['default'];
 
 	exports.__esModule = true;
 
 	var _react = __webpack_require__(2);
 
-	var _styleMaps = __webpack_require__(322);
+	var _styleMaps = __webpack_require__(323);
 
 	var _styleMaps2 = _interopRequireDefault(_styleMaps);
 
-	var _invariant = __webpack_require__(329);
+	var _invariant = __webpack_require__(330);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _warning = __webpack_require__(330);
+	var _warning = __webpack_require__(331);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -38304,16 +38604,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 322 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _Object$assign = __webpack_require__(304)['default'];
+	var _Object$assign = __webpack_require__(305)['default'];
 
-	var _Object$create = __webpack_require__(323)['default'];
+	var _Object$create = __webpack_require__(324)['default'];
 
-	var _Object$keys = __webpack_require__(325)['default'];
+	var _Object$keys = __webpack_require__(326)['default'];
 
 	exports.__esModule = true;
 
@@ -38372,54 +38672,54 @@
 	exports['default'] = styleMaps;
 
 /***/ },
-/* 323 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(324), __esModule: true };
-
-/***/ },
 /* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(313);
-	module.exports = function create(P, D){
-	  return $.create(P, D);
-	};
+	module.exports = { "default": __webpack_require__(325), __esModule: true };
 
 /***/ },
 /* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(326), __esModule: true };
+	var $ = __webpack_require__(314);
+	module.exports = function create(P, D){
+	  return $.create(P, D);
+	};
 
 /***/ },
 /* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(327);
-	module.exports = __webpack_require__(309).Object.keys;
+	module.exports = { "default": __webpack_require__(327), __esModule: true };
 
 /***/ },
 /* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// 19.1.2.14 Object.keys(O)
-	var toObject = __webpack_require__(314);
+	__webpack_require__(328);
+	module.exports = __webpack_require__(310).Object.keys;
 
-	__webpack_require__(328)('keys', function($keys){
+/***/ },
+/* 328 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.14 Object.keys(O)
+	var toObject = __webpack_require__(315);
+
+	__webpack_require__(329)('keys', function($keys){
 	  return function keys(it){
 	    return $keys(toObject(it));
 	  };
 	});
 
 /***/ },
-/* 328 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// most Object methods by ES6 should accept primitives
-	var $export = __webpack_require__(307)
-	  , core    = __webpack_require__(309)
-	  , fails   = __webpack_require__(318);
+	var $export = __webpack_require__(308)
+	  , core    = __webpack_require__(310)
+	  , fails   = __webpack_require__(319);
 	module.exports = function(KEY, exec){
 	  var fn  = (core.Object || {})[KEY] || Object[KEY]
 	    , exp = {};
@@ -38428,7 +38728,7 @@
 	};
 
 /***/ },
-/* 329 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -38486,7 +38786,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 330 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -38553,7 +38853,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 331 */
+/* 332 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -38574,26 +38874,26 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 332 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/* eslint-disable react/prop-types */
 
 	'use strict';
 
-	var _extends = __webpack_require__(303)['default'];
+	var _extends = __webpack_require__(304)['default'];
 
-	var _Object$keys = __webpack_require__(325)['default'];
+	var _Object$keys = __webpack_require__(326)['default'];
 
-	var _interopRequireDefault = __webpack_require__(319)['default'];
+	var _interopRequireDefault = __webpack_require__(320)['default'];
 
 	exports.__esModule = true;
 
-	var _domHelpersQueryContains = __webpack_require__(333);
+	var _domHelpersQueryContains = __webpack_require__(334);
 
 	var _domHelpersQueryContains2 = _interopRequireDefault(_domHelpersQueryContains);
 
-	var _lodashCompatObjectPick = __webpack_require__(335);
+	var _lodashCompatObjectPick = __webpack_require__(336);
 
 	var _lodashCompatObjectPick2 = _interopRequireDefault(_lodashCompatObjectPick);
 
@@ -38605,15 +38905,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _warning = __webpack_require__(330);
+	var _warning = __webpack_require__(331);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _Overlay = __webpack_require__(364);
+	var _Overlay = __webpack_require__(365);
 
 	var _Overlay2 = _interopRequireDefault(_Overlay);
 
-	var _utilsCreateChainedFunction = __webpack_require__(409);
+	var _utilsCreateChainedFunction = __webpack_require__(410);
 
 	var _utilsCreateChainedFunction2 = _interopRequireDefault(_utilsCreateChainedFunction);
 
@@ -38894,11 +39194,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 333 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var canUseDOM = __webpack_require__(334);
+	var canUseDOM = __webpack_require__(335);
 
 	var contains = (function () {
 	  var root = canUseDOM && document.documentElement;
@@ -38919,21 +39219,21 @@
 	module.exports = contains;
 
 /***/ },
-/* 334 */
+/* 335 */
 /***/ function(module, exports) {
 
 	'use strict';
 	module.exports = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 
 /***/ },
-/* 335 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(336),
-	    bindCallback = __webpack_require__(353),
-	    pickByArray = __webpack_require__(355),
-	    pickByCallback = __webpack_require__(356),
-	    restParam = __webpack_require__(363);
+	var baseFlatten = __webpack_require__(337),
+	    bindCallback = __webpack_require__(354),
+	    pickByArray = __webpack_require__(356),
+	    pickByCallback = __webpack_require__(357),
+	    restParam = __webpack_require__(364);
 
 	/**
 	 * Creates an object composed of the picked `object` properties. Property
@@ -38974,14 +39274,14 @@
 
 
 /***/ },
-/* 336 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayPush = __webpack_require__(337),
-	    isArguments = __webpack_require__(338),
-	    isArray = __webpack_require__(348),
-	    isArrayLike = __webpack_require__(339),
-	    isObjectLike = __webpack_require__(345);
+	var arrayPush = __webpack_require__(338),
+	    isArguments = __webpack_require__(339),
+	    isArray = __webpack_require__(349),
+	    isArrayLike = __webpack_require__(340),
+	    isObjectLike = __webpack_require__(346);
 
 	/**
 	 * The base implementation of `_.flatten` with added support for restricting
@@ -39021,7 +39321,7 @@
 
 
 /***/ },
-/* 337 */
+/* 338 */
 /***/ function(module, exports) {
 
 	/**
@@ -39047,11 +39347,11 @@
 
 
 /***/ },
-/* 338 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(339),
-	    isObjectLike = __webpack_require__(345);
+	var isArrayLike = __webpack_require__(340),
+	    isObjectLike = __webpack_require__(346);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -39087,11 +39387,11 @@
 
 
 /***/ },
-/* 339 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(340),
-	    isLength = __webpack_require__(347);
+	var getLength = __webpack_require__(341),
+	    isLength = __webpack_require__(348);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -39108,10 +39408,10 @@
 
 
 /***/ },
-/* 340 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(341);
+	var baseProperty = __webpack_require__(342);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -39129,10 +39429,10 @@
 
 
 /***/ },
-/* 341 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(342);
+	var toObject = __webpack_require__(343);
 
 	/**
 	 * The base implementation of `_.property` without support for deep paths.
@@ -39151,12 +39451,12 @@
 
 
 /***/ },
-/* 342 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(343),
-	    isString = __webpack_require__(344),
-	    support = __webpack_require__(346);
+	var isObject = __webpack_require__(344),
+	    isString = __webpack_require__(345),
+	    support = __webpack_require__(347);
 
 	/**
 	 * Converts `value` to an object if it's not one.
@@ -39183,7 +39483,7 @@
 
 
 /***/ },
-/* 343 */
+/* 344 */
 /***/ function(module, exports) {
 
 	/**
@@ -39217,10 +39517,10 @@
 
 
 /***/ },
-/* 344 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(345);
+	var isObjectLike = __webpack_require__(346);
 
 	/** `Object#toString` result references. */
 	var stringTag = '[object String]';
@@ -39258,7 +39558,7 @@
 
 
 /***/ },
-/* 345 */
+/* 346 */
 /***/ function(module, exports) {
 
 	/**
@@ -39276,7 +39576,7 @@
 
 
 /***/ },
-/* 346 */
+/* 347 */
 /***/ function(module, exports) {
 
 	/** Used for native method references. */
@@ -39378,7 +39678,7 @@
 
 
 /***/ },
-/* 347 */
+/* 348 */
 /***/ function(module, exports) {
 
 	/**
@@ -39404,12 +39704,12 @@
 
 
 /***/ },
-/* 348 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(349),
-	    isLength = __webpack_require__(347),
-	    isObjectLike = __webpack_require__(345);
+	var getNative = __webpack_require__(350),
+	    isLength = __webpack_require__(348),
+	    isObjectLike = __webpack_require__(346);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -39450,10 +39750,10 @@
 
 
 /***/ },
-/* 349 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(350);
+	var isNative = __webpack_require__(351);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -39472,12 +39772,12 @@
 
 
 /***/ },
-/* 350 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(351),
-	    isHostObject = __webpack_require__(352),
-	    isObjectLike = __webpack_require__(345);
+	var isFunction = __webpack_require__(352),
+	    isHostObject = __webpack_require__(353),
+	    isObjectLike = __webpack_require__(346);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -39527,10 +39827,10 @@
 
 
 /***/ },
-/* 351 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(343);
+	var isObject = __webpack_require__(344);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -39571,7 +39871,7 @@
 
 
 /***/ },
-/* 352 */
+/* 353 */
 /***/ function(module, exports) {
 
 	/**
@@ -39598,10 +39898,10 @@
 
 
 /***/ },
-/* 353 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(354);
+	var identity = __webpack_require__(355);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -39643,7 +39943,7 @@
 
 
 /***/ },
-/* 354 */
+/* 355 */
 /***/ function(module, exports) {
 
 	/**
@@ -39669,10 +39969,10 @@
 
 
 /***/ },
-/* 355 */
+/* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(342);
+	var toObject = __webpack_require__(343);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties specified
@@ -39703,10 +40003,10 @@
 
 
 /***/ },
-/* 356 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(357);
+	var baseForIn = __webpack_require__(358);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties `predicate`
@@ -39731,11 +40031,11 @@
 
 
 /***/ },
-/* 357 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(358),
-	    keysIn = __webpack_require__(360);
+	var baseFor = __webpack_require__(359),
+	    keysIn = __webpack_require__(361);
 
 	/**
 	 * The base implementation of `_.forIn` without support for callback
@@ -39754,10 +40054,10 @@
 
 
 /***/ },
-/* 358 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(359);
+	var createBaseFor = __webpack_require__(360);
 
 	/**
 	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -39777,10 +40077,10 @@
 
 
 /***/ },
-/* 359 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(342);
+	var toObject = __webpack_require__(343);
 
 	/**
 	 * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -39810,18 +40110,18 @@
 
 
 /***/ },
-/* 360 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(361),
-	    isArguments = __webpack_require__(338),
-	    isArray = __webpack_require__(348),
-	    isFunction = __webpack_require__(351),
-	    isIndex = __webpack_require__(362),
-	    isLength = __webpack_require__(347),
-	    isObject = __webpack_require__(343),
-	    isString = __webpack_require__(344),
-	    support = __webpack_require__(346);
+	var arrayEach = __webpack_require__(362),
+	    isArguments = __webpack_require__(339),
+	    isArray = __webpack_require__(349),
+	    isFunction = __webpack_require__(352),
+	    isIndex = __webpack_require__(363),
+	    isLength = __webpack_require__(348),
+	    isObject = __webpack_require__(344),
+	    isString = __webpack_require__(345),
+	    support = __webpack_require__(347);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]',
@@ -39952,7 +40252,7 @@
 
 
 /***/ },
-/* 361 */
+/* 362 */
 /***/ function(module, exports) {
 
 	/**
@@ -39980,7 +40280,7 @@
 
 
 /***/ },
-/* 362 */
+/* 363 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -40010,7 +40310,7 @@
 
 
 /***/ },
-/* 363 */
+/* 364 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -40074,7 +40374,7 @@
 
 
 /***/ },
-/* 364 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint react/prop-types: [2, {ignore: ["container", "containerPadding", "target", "placement", "children"] }] */
@@ -40082,15 +40382,15 @@
 
 	'use strict';
 
-	var _inherits = __webpack_require__(365)['default'];
+	var _inherits = __webpack_require__(366)['default'];
 
-	var _classCallCheck = __webpack_require__(372)['default'];
+	var _classCallCheck = __webpack_require__(373)['default'];
 
-	var _extends = __webpack_require__(303)['default'];
+	var _extends = __webpack_require__(304)['default'];
 
-	var _objectWithoutProperties = __webpack_require__(373)['default'];
+	var _objectWithoutProperties = __webpack_require__(374)['default'];
 
-	var _interopRequireDefault = __webpack_require__(319)['default'];
+	var _interopRequireDefault = __webpack_require__(320)['default'];
 
 	exports.__esModule = true;
 
@@ -40098,19 +40398,19 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactOverlaysLibOverlay = __webpack_require__(374);
+	var _reactOverlaysLibOverlay = __webpack_require__(375);
 
 	var _reactOverlaysLibOverlay2 = _interopRequireDefault(_reactOverlaysLibOverlay);
 
-	var _reactPropTypesLibElementType = __webpack_require__(403);
+	var _reactPropTypesLibElementType = __webpack_require__(404);
 
 	var _reactPropTypesLibElementType2 = _interopRequireDefault(_reactPropTypesLibElementType);
 
-	var _Fade = __webpack_require__(405);
+	var _Fade = __webpack_require__(406);
 
 	var _Fade2 = _interopRequireDefault(_Fade);
 
-	var _classnames = __webpack_require__(320);
+	var _classnames = __webpack_require__(321);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -40218,14 +40518,14 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 365 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var _Object$create = __webpack_require__(323)["default"];
+	var _Object$create = __webpack_require__(324)["default"];
 
-	var _Object$setPrototypeOf = __webpack_require__(366)["default"];
+	var _Object$setPrototypeOf = __webpack_require__(367)["default"];
 
 	exports["default"] = function (subClass, superClass) {
 	  if (typeof superClass !== "function" && superClass !== null) {
@@ -40246,35 +40546,35 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 366 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(367), __esModule: true };
-
-/***/ },
 /* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(368);
-	module.exports = __webpack_require__(309).Object.setPrototypeOf;
+	module.exports = { "default": __webpack_require__(368), __esModule: true };
 
 /***/ },
 /* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// 19.1.3.19 Object.setPrototypeOf(O, proto)
-	var $export = __webpack_require__(307);
-	$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(369).set});
+	__webpack_require__(369);
+	module.exports = __webpack_require__(310).Object.setPrototypeOf;
 
 /***/ },
 /* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
+	// 19.1.3.19 Object.setPrototypeOf(O, proto)
+	var $export = __webpack_require__(308);
+	$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(370).set});
+
+/***/ },
+/* 370 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// Works with __proto__ only. Old v8 can't work with null proto objects.
 	/* eslint-disable no-proto */
-	var getDesc  = __webpack_require__(313).getDesc
-	  , isObject = __webpack_require__(370)
-	  , anObject = __webpack_require__(371);
+	var getDesc  = __webpack_require__(314).getDesc
+	  , isObject = __webpack_require__(371)
+	  , anObject = __webpack_require__(372);
 	var check = function(O, proto){
 	  anObject(O);
 	  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
@@ -40283,7 +40583,7 @@
 	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
 	    function(test, buggy, set){
 	      try {
-	        set = __webpack_require__(310)(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
+	        set = __webpack_require__(311)(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
 	        set(test, []);
 	        buggy = !(test instanceof Array);
 	      } catch(e){ buggy = true; }
@@ -40298,7 +40598,7 @@
 	};
 
 /***/ },
-/* 370 */
+/* 371 */
 /***/ function(module, exports) {
 
 	module.exports = function(it){
@@ -40306,17 +40606,17 @@
 	};
 
 /***/ },
-/* 371 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(370);
+	var isObject = __webpack_require__(371);
 	module.exports = function(it){
 	  if(!isObject(it))throw TypeError(it + ' is not an object!');
 	  return it;
 	};
 
 /***/ },
-/* 372 */
+/* 373 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40330,7 +40630,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 373 */
+/* 374 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40350,7 +40650,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 374 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40371,19 +40671,19 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Portal = __webpack_require__(375);
+	var _Portal = __webpack_require__(376);
 
 	var _Portal2 = _interopRequireDefault(_Portal);
 
-	var _Position = __webpack_require__(381);
+	var _Position = __webpack_require__(382);
 
 	var _Position2 = _interopRequireDefault(_Position);
 
-	var _RootCloseWrapper = __webpack_require__(397);
+	var _RootCloseWrapper = __webpack_require__(398);
 
 	var _RootCloseWrapper2 = _interopRequireDefault(_RootCloseWrapper);
 
-	var _reactPropTypesLibElementType = __webpack_require__(402);
+	var _reactPropTypesLibElementType = __webpack_require__(403);
 
 	var _reactPropTypesLibElementType2 = _interopRequireDefault(_reactPropTypesLibElementType);
 
@@ -40550,7 +40850,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 375 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40567,15 +40867,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _reactPropTypesLibMountable = __webpack_require__(376);
+	var _reactPropTypesLibMountable = __webpack_require__(377);
 
 	var _reactPropTypesLibMountable2 = _interopRequireDefault(_reactPropTypesLibMountable);
 
-	var _utilsOwnerDocument = __webpack_require__(378);
+	var _utilsOwnerDocument = __webpack_require__(379);
 
 	var _utilsOwnerDocument2 = _interopRequireDefault(_utilsOwnerDocument);
 
-	var _utilsGetContainer = __webpack_require__(380);
+	var _utilsGetContainer = __webpack_require__(381);
 
 	var _utilsGetContainer2 = _interopRequireDefault(_utilsGetContainer);
 
@@ -40678,14 +40978,14 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 376 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _common = __webpack_require__(377);
+	var _common = __webpack_require__(378);
 
 	/**
 	 * Checks whether a prop provides a DOM element
@@ -40710,7 +41010,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 377 */
+/* 378 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -40749,7 +41049,7 @@
 	}
 
 /***/ },
-/* 378 */
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40762,7 +41062,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _domHelpersOwnerDocument = __webpack_require__(379);
+	var _domHelpersOwnerDocument = __webpack_require__(380);
 
 	var _domHelpersOwnerDocument2 = _interopRequireDefault(_domHelpersOwnerDocument);
 
@@ -40773,7 +41073,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 379 */
+/* 380 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40788,7 +41088,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 380 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40810,7 +41110,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 381 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40835,21 +41135,21 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _classnames = __webpack_require__(320);
+	var _classnames = __webpack_require__(321);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _utilsOwnerDocument = __webpack_require__(378);
+	var _utilsOwnerDocument = __webpack_require__(379);
 
 	var _utilsOwnerDocument2 = _interopRequireDefault(_utilsOwnerDocument);
 
-	var _utilsGetContainer = __webpack_require__(380);
+	var _utilsGetContainer = __webpack_require__(381);
 
 	var _utilsGetContainer2 = _interopRequireDefault(_utilsGetContainer);
 
-	var _utilsOverlayPositionUtils = __webpack_require__(382);
+	var _utilsOverlayPositionUtils = __webpack_require__(383);
 
-	var _reactPropTypesLibMountable = __webpack_require__(376);
+	var _reactPropTypesLibMountable = __webpack_require__(377);
 
 	var _reactPropTypesLibMountable2 = _interopRequireDefault(_reactPropTypesLibMountable);
 
@@ -41013,7 +41313,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 382 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41022,19 +41322,19 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _ownerDocument = __webpack_require__(378);
+	var _ownerDocument = __webpack_require__(379);
 
 	var _ownerDocument2 = _interopRequireDefault(_ownerDocument);
 
-	var _domHelpersQueryOffset = __webpack_require__(383);
+	var _domHelpersQueryOffset = __webpack_require__(384);
 
 	var _domHelpersQueryOffset2 = _interopRequireDefault(_domHelpersQueryOffset);
 
-	var _domHelpersQueryPosition = __webpack_require__(385);
+	var _domHelpersQueryPosition = __webpack_require__(386);
 
 	var _domHelpersQueryPosition2 = _interopRequireDefault(_domHelpersQueryPosition);
 
-	var _domHelpersQueryScrollTop = __webpack_require__(395);
+	var _domHelpersQueryScrollTop = __webpack_require__(396);
 
 	var _domHelpersQueryScrollTop2 = _interopRequireDefault(_domHelpersQueryScrollTop);
 
@@ -41152,13 +41452,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 383 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var contains = __webpack_require__(333),
-	    getWindow = __webpack_require__(384),
-	    ownerDocument = __webpack_require__(379);
+	var contains = __webpack_require__(334),
+	    getWindow = __webpack_require__(385),
+	    ownerDocument = __webpack_require__(380);
 
 	module.exports = function offset(node) {
 	  var doc = ownerDocument(node),
@@ -41187,7 +41487,7 @@
 	};
 
 /***/ },
-/* 384 */
+/* 385 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41197,33 +41497,33 @@
 	};
 
 /***/ },
-/* 385 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var babelHelpers = __webpack_require__(386);
+	var babelHelpers = __webpack_require__(387);
 
 	exports.__esModule = true;
 	exports['default'] = position;
 
-	var _offset = __webpack_require__(383);
+	var _offset = __webpack_require__(384);
 
 	var _offset2 = babelHelpers.interopRequireDefault(_offset);
 
-	var _offsetParent = __webpack_require__(387);
+	var _offsetParent = __webpack_require__(388);
 
 	var _offsetParent2 = babelHelpers.interopRequireDefault(_offsetParent);
 
-	var _scrollTop = __webpack_require__(395);
+	var _scrollTop = __webpack_require__(396);
 
 	var _scrollTop2 = babelHelpers.interopRequireDefault(_scrollTop);
 
-	var _scrollLeft = __webpack_require__(396);
+	var _scrollLeft = __webpack_require__(397);
 
 	var _scrollLeft2 = babelHelpers.interopRequireDefault(_scrollLeft);
 
-	var _style = __webpack_require__(388);
+	var _style = __webpack_require__(389);
 
 	var _style2 = babelHelpers.interopRequireDefault(_style);
 
@@ -41259,7 +41559,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 386 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
@@ -41295,21 +41595,21 @@
 	})
 
 /***/ },
-/* 387 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var babelHelpers = __webpack_require__(386);
+	var babelHelpers = __webpack_require__(387);
 
 	exports.__esModule = true;
 	exports['default'] = offsetParent;
 
-	var _ownerDocument = __webpack_require__(379);
+	var _ownerDocument = __webpack_require__(380);
 
 	var _ownerDocument2 = babelHelpers.interopRequireDefault(_ownerDocument);
 
-	var _style = __webpack_require__(388);
+	var _style = __webpack_require__(389);
 
 	var _style2 = babelHelpers.interopRequireDefault(_style);
 
@@ -41331,15 +41631,15 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 388 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var camelize = __webpack_require__(389),
-	    hyphenate = __webpack_require__(391),
-	    _getComputedStyle = __webpack_require__(393),
-	    removeStyle = __webpack_require__(394);
+	var camelize = __webpack_require__(390),
+	    hyphenate = __webpack_require__(392),
+	    _getComputedStyle = __webpack_require__(394),
+	    removeStyle = __webpack_require__(395);
 
 	var has = Object.prototype.hasOwnProperty;
 
@@ -41360,7 +41660,7 @@
 	};
 
 /***/ },
-/* 389 */
+/* 390 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -41370,7 +41670,7 @@
 	 */
 
 	'use strict';
-	var camelize = __webpack_require__(390);
+	var camelize = __webpack_require__(391);
 	var msPattern = /^-ms-/;
 
 	module.exports = function camelizeStyleName(string) {
@@ -41378,7 +41678,7 @@
 	};
 
 /***/ },
-/* 390 */
+/* 391 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -41392,7 +41692,7 @@
 	};
 
 /***/ },
-/* 391 */
+/* 392 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -41403,7 +41703,7 @@
 
 	"use strict";
 
-	var hyphenate = __webpack_require__(392);
+	var hyphenate = __webpack_require__(393);
 	var msPattern = /^ms-/;
 
 	module.exports = function hyphenateStyleName(string) {
@@ -41411,7 +41711,7 @@
 	};
 
 /***/ },
-/* 392 */
+/* 393 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41423,14 +41723,14 @@
 	};
 
 /***/ },
-/* 393 */
+/* 394 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var babelHelpers = __webpack_require__(386);
+	var babelHelpers = __webpack_require__(387);
 
-	var _utilCamelizeStyle = __webpack_require__(389);
+	var _utilCamelizeStyle = __webpack_require__(390);
 
 	var _utilCamelizeStyle2 = babelHelpers.interopRequireDefault(_utilCamelizeStyle);
 
@@ -41476,7 +41776,7 @@
 	};
 
 /***/ },
-/* 394 */
+/* 395 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41486,11 +41786,11 @@
 	};
 
 /***/ },
-/* 395 */
+/* 396 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var getWindow = __webpack_require__(384);
+	var getWindow = __webpack_require__(385);
 
 	module.exports = function scrollTop(node, val) {
 	  var win = getWindow(node);
@@ -41501,11 +41801,11 @@
 	};
 
 /***/ },
-/* 396 */
+/* 397 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var getWindow = __webpack_require__(384);
+	var getWindow = __webpack_require__(385);
 
 	module.exports = function scrollTop(node, val) {
 	  var win = getWindow(node);
@@ -41516,7 +41816,7 @@
 	};
 
 /***/ },
-/* 397 */
+/* 398 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41537,15 +41837,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _utilsAddEventListener = __webpack_require__(398);
+	var _utilsAddEventListener = __webpack_require__(399);
 
 	var _utilsAddEventListener2 = _interopRequireDefault(_utilsAddEventListener);
 
-	var _utilsCreateChainedFunction = __webpack_require__(401);
+	var _utilsCreateChainedFunction = __webpack_require__(402);
 
 	var _utilsCreateChainedFunction2 = _interopRequireDefault(_utilsCreateChainedFunction);
 
-	var _utilsOwnerDocument = __webpack_require__(378);
+	var _utilsOwnerDocument = __webpack_require__(379);
 
 	var _utilsOwnerDocument2 = _interopRequireDefault(_utilsOwnerDocument);
 
@@ -41680,7 +41980,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 398 */
+/* 399 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41689,11 +41989,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _domHelpersEventsOn = __webpack_require__(399);
+	var _domHelpersEventsOn = __webpack_require__(400);
 
 	var _domHelpersEventsOn2 = _interopRequireDefault(_domHelpersEventsOn);
 
-	var _domHelpersEventsOff = __webpack_require__(400);
+	var _domHelpersEventsOff = __webpack_require__(401);
 
 	var _domHelpersEventsOff2 = _interopRequireDefault(_domHelpersEventsOff);
 
@@ -41709,11 +42009,11 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 399 */
+/* 400 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var canUseDOM = __webpack_require__(334);
+	var canUseDOM = __webpack_require__(335);
 	var on = function on() {};
 
 	if (canUseDOM) {
@@ -41730,11 +42030,11 @@
 	module.exports = on;
 
 /***/ },
-/* 400 */
+/* 401 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var canUseDOM = __webpack_require__(334);
+	var canUseDOM = __webpack_require__(335);
 	var off = function off() {};
 
 	if (canUseDOM) {
@@ -41752,7 +42052,7 @@
 	module.exports = off;
 
 /***/ },
-/* 401 */
+/* 402 */
 /***/ function(module, exports) {
 
 	/**
@@ -41798,52 +42098,6 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 402 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _common = __webpack_require__(377);
-
-	/**
-	 * Checks whether a prop provides a type of element.
-	 *
-	 * The type of element can be provided in two forms:
-	 * - tag name (string)
-	 * - a return value of React.createClass(...)
-	 *
-	 * @param props
-	 * @param propName
-	 * @param componentName
-	 * @returns {Error|undefined}
-	 */
-
-	function validate(props, propName, componentName) {
-	  var errBeginning = _common.errMsg(props, propName, componentName, '. Expected an Element `type`');
-
-	  if (typeof props[propName] !== 'function') {
-	    if (_react2['default'].isValidElement(props[propName])) {
-	      return new Error(errBeginning + ', not an actual Element');
-	    }
-
-	    if (typeof props[propName] !== 'string') {
-	      return new Error(errBeginning + ' such as a tag name or return value of React.createClass(...)');
-	    }
-	  }
-	}
-
-	exports['default'] = _common.createChainableTypeChecker(validate);
-	module.exports = exports['default'];
-
-/***/ },
 /* 403 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -41857,7 +42111,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _common = __webpack_require__(404);
+	var _common = __webpack_require__(378);
 
 	/**
 	 * Checks whether a prop provides a type of element.
@@ -41891,6 +42145,52 @@
 
 /***/ },
 /* 404 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _common = __webpack_require__(405);
+
+	/**
+	 * Checks whether a prop provides a type of element.
+	 *
+	 * The type of element can be provided in two forms:
+	 * - tag name (string)
+	 * - a return value of React.createClass(...)
+	 *
+	 * @param props
+	 * @param propName
+	 * @param componentName
+	 * @returns {Error|undefined}
+	 */
+
+	function validate(props, propName, componentName) {
+	  var errBeginning = _common.errMsg(props, propName, componentName, '. Expected an Element `type`');
+
+	  if (typeof props[propName] !== 'function') {
+	    if (_react2['default'].isValidElement(props[propName])) {
+	      return new Error(errBeginning + ', not an actual Element');
+	    }
+
+	    if (typeof props[propName] !== 'string') {
+	      return new Error(errBeginning + ' such as a tag name or return value of React.createClass(...)');
+	    }
+	  }
+	}
+
+	exports['default'] = _common.createChainableTypeChecker(validate);
+	module.exports = exports['default'];
+
+/***/ },
+/* 405 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41929,18 +42229,18 @@
 	}
 
 /***/ },
-/* 405 */
+/* 406 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _inherits = __webpack_require__(365)['default'];
+	var _inherits = __webpack_require__(366)['default'];
 
-	var _classCallCheck = __webpack_require__(372)['default'];
+	var _classCallCheck = __webpack_require__(373)['default'];
 
-	var _extends = __webpack_require__(303)['default'];
+	var _extends = __webpack_require__(304)['default'];
 
-	var _interopRequireDefault = __webpack_require__(319)['default'];
+	var _interopRequireDefault = __webpack_require__(320)['default'];
 
 	exports.__esModule = true;
 
@@ -41948,15 +42248,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(320);
+	var _classnames = __webpack_require__(321);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _reactOverlaysLibTransition = __webpack_require__(406);
+	var _reactOverlaysLibTransition = __webpack_require__(407);
 
 	var _reactOverlaysLibTransition2 = _interopRequireDefault(_reactOverlaysLibTransition);
 
-	var _reactPropTypesLibDeprecated = __webpack_require__(408);
+	var _reactPropTypesLibDeprecated = __webpack_require__(409);
 
 	var _reactPropTypesLibDeprecated2 = _interopRequireDefault(_reactPropTypesLibDeprecated);
 
@@ -42057,7 +42357,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 406 */
+/* 407 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42082,15 +42382,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _domHelpersTransitionProperties = __webpack_require__(407);
+	var _domHelpersTransitionProperties = __webpack_require__(408);
 
 	var _domHelpersTransitionProperties2 = _interopRequireDefault(_domHelpersTransitionProperties);
 
-	var _domHelpersEventsOn = __webpack_require__(399);
+	var _domHelpersEventsOn = __webpack_require__(400);
 
 	var _domHelpersEventsOn2 = _interopRequireDefault(_domHelpersEventsOn);
 
-	var _classnames = __webpack_require__(320);
+	var _classnames = __webpack_require__(321);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -42399,11 +42699,11 @@
 	exports['default'] = Transition;
 
 /***/ },
-/* 407 */
+/* 408 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var canUseDOM = __webpack_require__(334);
+	var canUseDOM = __webpack_require__(335);
 
 	var has = Object.prototype.hasOwnProperty,
 	    transform = 'transform',
@@ -42459,7 +42759,7 @@
 	}
 
 /***/ },
-/* 408 */
+/* 409 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42469,7 +42769,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(330);
+	var _warning = __webpack_require__(331);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -42486,7 +42786,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 409 */
+/* 410 */
 /***/ function(module, exports) {
 
 	/**
@@ -42532,21 +42832,21 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 410 */
+/* 411 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"thCorrelativo":"TablaLocalesMensual__thCorrelativo___3HnOu","tdCorrelativo":"TablaLocalesMensual__tdCorrelativo___Kvh_p TablaLocalesMensual__thCorrelativo___3HnOu","thFecha":"TablaLocalesMensual__thFecha___1qDZQ","tdFecha":"TablaLocalesMensual__tdFecha___3Ppcl TablaLocalesMensual__thFecha___1qDZQ","thCliente":"TablaLocalesMensual__thCliente___3l2rs","tdCliente":"TablaLocalesMensual__tdCliente___1R8Nd TablaLocalesMensual__thCliente___3l2rs","thCeco":"TablaLocalesMensual__thCeco___1Isth","tdCeco":"TablaLocalesMensual__tdCeco___39Cmj TablaLocalesMensual__thCeco___1Isth","thLocal":"TablaLocalesMensual__thLocal___zaA5L","tdLocal":"TablaLocalesMensual__tdLocal___2quqk TablaLocalesMensual__thLocal___zaA5L","thZonaSei":"TablaLocalesMensual__thZonaSei___2_Eql","tdZonaSei":"TablaLocalesMensual__tdZonaSei___3ywi8 TablaLocalesMensual__thZonaSei___2_Eql","thRegion":"TablaLocalesMensual__thRegion___10Xps","tdRegion":"TablaLocalesMensual__tdRegion___2KUA- TablaLocalesMensual__thRegion___10Xps","thComuna":"TablaLocalesMensual__thComuna___2k2Sr","tdComuna":"TablaLocalesMensual__tdComuna___93qXr TablaLocalesMensual__thComuna___2k2Sr","thStock":"TablaLocalesMensual__thStock___1jhS_","tdStock":"TablaLocalesMensual__tdStock___1mA1i TablaLocalesMensual__thStock___1jhS_","thDotacion":"TablaLocalesMensual__thDotacion___K39aJ","tdDotacion":"TablaLocalesMensual__tdDotacion___3q5PS TablaLocalesMensual__thDotacion___K39aJ","thJornada":"TablaLocalesMensual__thJornada___1DQcG","tdJornada":"TablaLocalesMensual__tdJornada___kUo8p TablaLocalesMensual__thJornada___1DQcG","thEstado":"TablaLocalesMensual__thEstado___1oBQx","tdEstado":"TablaLocalesMensual__tdEstado___22jAi TablaLocalesMensual__thEstado___1oBQx","thOpciones":"TablaLocalesMensual__thOpciones___2PzVJ","tdOpciones":"TablaLocalesMensual__tdOpciones___fMayz TablaLocalesMensual__thOpciones___2PzVJ","inputDia":"TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"TablaLocalesMensual__inputDiaInvalido___kQYUg TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"TablaLocalesMensual__inputDiaPendiente___3UmCC TablaLocalesMensual__inputDia___1IKdv shared__inputNumberAsText___1Qr9M","inputMes":"TablaLocalesMensual__inputMes___3dMJd shared__inputNumberAsText___1Qr9M","inputAnno":"TablaLocalesMensual__inputAnno___3XjjF shared__inputNumberAsText___1Qr9M","inputDotacionSugerida":"TablaLocalesMensual__inputDotacionSugerida___MCPhp shared__inputNumberAsText___1Qr9M","inputDotacionIngresada":"TablaLocalesMensual__inputDotacionIngresada___2FZVc shared__inputNumberAsText___1Qr9M"};
+	module.exports = {"thCorrelativo":"TablaProgramas__thCorrelativo___3NzKu","tdCorrelativo":"TablaProgramas__tdCorrelativo___3-WWy TablaProgramas__thCorrelativo___3NzKu","thFecha":"TablaProgramas__thFecha___2Eby7","tdFecha":"TablaProgramas__tdFecha___2GiOv TablaProgramas__thFecha___2Eby7","thCliente":"TablaProgramas__thCliente___ko7yb","tdCliente":"TablaProgramas__tdCliente___36LDr TablaProgramas__thCliente___ko7yb","thCeco":"TablaProgramas__thCeco___6I29x","tdCeco":"TablaProgramas__tdCeco___3b4K- TablaProgramas__thCeco___6I29x","thLocal":"TablaProgramas__thLocal___1lZcg","tdLocal":"TablaProgramas__tdLocal___2Ws36 TablaProgramas__thLocal___1lZcg","thZonaSei":"TablaProgramas__thZonaSei___2_Bz_","tdZonaSei":"TablaProgramas__tdZonaSei___1kQ8p TablaProgramas__thZonaSei___2_Bz_","thRegion":"TablaProgramas__thRegion___2z44D","tdRegion":"TablaProgramas__tdRegion___3fA1s TablaProgramas__thRegion___2z44D","thComuna":"TablaProgramas__thComuna___2lkCv","tdComuna":"TablaProgramas__tdComuna___1lVN_ TablaProgramas__thComuna___2lkCv","thStock":"TablaProgramas__thStock___2-lAz","tdStock":"TablaProgramas__tdStock___34Eem TablaProgramas__thStock___2-lAz","thDotacion":"TablaProgramas__thDotacion___3wkjn","tdDotacion":"TablaProgramas__tdDotacion___2crpd TablaProgramas__thDotacion___3wkjn","thJornada":"TablaProgramas__thJornada___3xMvk","tdJornada":"TablaProgramas__tdJornada___BDr2g TablaProgramas__thJornada___3xMvk","thEstado":"TablaProgramas__thEstado___21gDk","tdEstado":"TablaProgramas__tdEstado___2W113 TablaProgramas__thEstado___21gDk","thOpciones":"TablaProgramas__thOpciones___3yi_K","tdOpciones":"TablaProgramas__tdOpciones___RelBN TablaProgramas__thOpciones___3yi_K","inputDia":"TablaProgramas__inputDia___3gS_m shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"TablaProgramas__inputDiaInvalido___1fRN_ TablaProgramas__inputDia___3gS_m shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"TablaProgramas__inputDiaPendiente___3n91q TablaProgramas__inputDia___3gS_m shared__inputNumberAsText___1Qr9M","inputMes":"TablaProgramas__inputMes___ulW5T shared__inputNumberAsText___1Qr9M","inputAnno":"TablaProgramas__inputAnno___gVXq7 shared__inputNumberAsText___1Qr9M","inputDotacionSugerida":"TablaProgramas__inputDotacionSugerida___FLU9S shared__inputNumberAsText___1Qr9M","inputDotacionIngresada":"TablaProgramas__inputDotacionIngresada___3T4HM shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 411 */
+/* 412 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M","tooltipDanger":"shared__tooltipDanger___3_QoZ","tooltipWarning":"shared__tooltipWarning___38s1A"};
 
 /***/ },
-/* 412 */
+/* 413 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -42563,9 +42863,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _AgregarManualmente = __webpack_require__(413);
+	var _AgregarPrograma = __webpack_require__(414);
 
-	var _AgregarManualmente2 = _interopRequireDefault(_AgregarManualmente);
+	var _AgregarPrograma2 = _interopRequireDefault(_AgregarPrograma);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -42579,13 +42879,13 @@
 	var PropTypes = _react2.default.PropTypes;
 	// Styles
 
-	var AgregarManualmente = function (_React$Component) {
-	    _inherits(AgregarManualmente, _React$Component);
+	var AgregarInventario = function (_React$Component) {
+	    _inherits(AgregarInventario, _React$Component);
 
-	    function AgregarManualmente(props) {
-	        _classCallCheck(this, AgregarManualmente);
+	    function AgregarInventario(props) {
+	        _classCallCheck(this, AgregarInventario);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AgregarManualmente).call(this, props));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AgregarInventario).call(this, props));
 
 	        _this.state = {
 	            clienteSeleccionado: {},
@@ -42605,7 +42905,7 @@
 	        return _this;
 	    }
 
-	    _createClass(AgregarManualmente, [{
+	    _createClass(AgregarInventario, [{
 	        key: 'setModoIngreso',
 	        value: function setModoIngreso(modo) {
 	            if (modo !== this.state.modoIngreso) {
@@ -42760,6 +43060,16 @@
 	            console.log("FORMULARIO ENVIADO");
 	            console.log(local);
 	            console.log(this.state.clienteSeleccionado);
+	        }
+	    }, {
+	        key: 'limpiarProblemas',
+	        value: function limpiarProblemas() {
+	            this.setState({
+	                pegadoConProblemas: [],
+	                pegadoConteoTotal: 0,
+	                pegadoConteoCorrectos: 0,
+	                pegadoConteoProblemas: 0
+	            });
 	        }
 	    }, {
 	        key: 'render',
@@ -43013,6 +43323,11 @@
 	                                    'Detalle'
 	                                ),
 	                                _react2.default.createElement(
+	                                    'button',
+	                                    { className: 'btn btn-xs btn-primary pull-right', tabIndex: '-1', onClick: this.limpiarProblemas.bind(this) },
+	                                    'Aceptar/Limpiar'
+	                                ),
+	                                _react2.default.createElement(
 	                                    'table',
 	                                    { className: 'table table-bordered table-condensed' },
 	                                    _react2.default.createElement(
@@ -43047,7 +43362,7 @@
 	                                                { key: index },
 	                                                _react2.default.createElement(
 	                                                    'td',
-	                                                    { className: _AgregarManualmente2.default.tableCell },
+	                                                    { className: _AgregarPrograma2.default.tableCell },
 	                                                    _react2.default.createElement(
 	                                                        'p',
 	                                                        null,
@@ -43056,7 +43371,7 @@
 	                                                ),
 	                                                _react2.default.createElement(
 	                                                    'td',
-	                                                    { className: _AgregarManualmente2.default.tableCell },
+	                                                    { className: _AgregarPrograma2.default.tableCell },
 	                                                    _react2.default.createElement(
 	                                                        'p',
 	                                                        null,
@@ -43065,7 +43380,7 @@
 	                                                ),
 	                                                _react2.default.createElement(
 	                                                    'td',
-	                                                    { className: _AgregarManualmente2.default.tableCell },
+	                                                    { className: _AgregarPrograma2.default.tableCell },
 	                                                    _react2.default.createElement(
 	                                                        'p',
 	                                                        null,
@@ -43088,19 +43403,19 @@
 	        }
 	    }]);
 
-	    return AgregarManualmente;
+	    return AgregarInventario;
 	}(_react2.default.Component);
 
-	exports.default = AgregarManualmente;
+	exports.default = AgregarInventario;
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AgregarManualmente.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AgregarPrograma.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 413 */
+/* 414 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"tableCell":"AgregarManualmente__tableCell___bz7b0"};
+	module.exports = {"tableCell":"AgregarPrograma__tableCell___Fw_r2"};
 
 /***/ }
 /******/ ]);

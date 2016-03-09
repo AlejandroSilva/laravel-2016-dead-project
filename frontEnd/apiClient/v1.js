@@ -33,6 +33,9 @@ export default {
     inventario: {
         nuevo: (datos)=>{
             return axios.post(`/inventario/nuevo`, datos)
+        },
+        actualizar: (idInventario, datos)=>{
+            return axios.put(`/inventario/${idInventario}`, datos)
         }
     }
 }

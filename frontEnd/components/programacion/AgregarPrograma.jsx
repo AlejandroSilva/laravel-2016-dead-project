@@ -2,13 +2,12 @@
 import React from 'react'
 let PropTypes = React.PropTypes
 // Styles
-import style from './AgregarManualmente.css'
+import style from './AgregarPrograma.css'
 
 
-class AgregarManualmente extends React.Component {
+class AgregarInventario extends React.Component {
     constructor(props) {
         super(props)
-
         this.state = {
             clienteSeleccionado: {},
             inputIdCliente_error: '',
@@ -276,4 +275,4 @@ class AgregarManualmente extends React.Component {
     }
 }
 
-export default AgregarManualmente
+export default AgregarInventario

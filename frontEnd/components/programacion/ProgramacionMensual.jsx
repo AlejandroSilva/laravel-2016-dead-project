@@ -7,9 +7,8 @@ moment.locale('es')
 // Component
 //import Multiselect from 'react-widgets/lib/Multiselect'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import TablaLocalesMensual from './TablaLocalesMensual.jsx'
-import AgregarManualmente from './AgregarManualmente.jsx'
-//import AgregarPegarDesdeExcel from './AgregarPegarDesdeExcel.jsx'
+import TablaProgramas from './TablaProgramas.jsx'
+import AgregarInventario from './AgregarPrograma.jsx'
 
 class ProgramacionMensual extends React.Component{
     constructor(props) {
@@ -26,21 +25,20 @@ class ProgramacionMensual extends React.Component{
         this.state = {
             meses
         }
-        this.submitLocal = this.submitLocal.bind(this)
     }
     componentDidMount(){
-        //this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[1], '07-2016')
-        //this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[2], '04-2016')
-        //this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[4], '07-2016')
-    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[5], '05-2016')
-    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[6], '05-2016')
-    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[1].locales[8], '09-2016')
-    //    this.tablaLocalesMensual.agregarInventario(this.props.clientes[0].locales[12], '08-2016')
+        this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[1], '07-2016')
+        //this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[2], '04-2016')
+        this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[4], '07-2016')
+    //    this.TablaInventarios.agregarInventario(this.props.clientes[0].locales[5], '05-2016')
+    //    this.TablaInventarios.agregarInventario(this.props.clientes[0].locales[6], '05-2016')
+        this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[8], '09-2016')
+        this.TablaInventarios.agregarInventario(this.props.clientes[0].locales[12], '08-2016')
     }
 
-    submitLocal(local, mesAnno){
+    agregarInventario(local, mesAnno){
         console.log("agregarndo el local: ", local, mesAnno)
-        this.tablaLocalesMensual.agregarInventario(local, mesAnno)
+        return this.TablaInventarios.agregarInventario(local, mesAnno)
     }
 
     render(){
@@ -48,17 +46,16 @@ class ProgramacionMensual extends React.Component{
             <div>
                 <h1>Programación mensual</h1>
 
-                <AgregarManualmente
-                    ref={ref=>this.AgregarManualmente=ref}
+                <AgregarInventario
                     clientes={this.props.clientes}
                     meses={this.state.meses}
-                    onFormSubmit={this.submitLocal}
+                    onFormSubmit={this.agregarInventario.bind(this)}
                 />
 
                 <div className="row">
                     <h4 className="page-header" style={{marginTop: '1em'}}>Locales a programar:</h4>
-                    <TablaLocalesMensual
-                        ref={ref=>this.tablaLocalesMensual=ref}
+                    <TablaProgramas
+                        ref={ref=>this.TablaInventarios=ref}
                     />
                 </div>
             </div>

@@ -7,7 +7,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 // Styles
-import styles from './TablaLocalesMensual.css'
+import styles from './TablaProgramas.css'
 import styleShared from '../shared/shared.css'
 
 const ESTADO = {
@@ -27,12 +27,11 @@ const ESTADO = {
     }
 }
 
-class RowLocales extends React.Component{
+class RowInventario extends React.Component{
     constructor(props){
         super(props)
         this.state = {
             inputDotacion: 1,
-            inputJornada: 0,
             inputDia: '',
             guardado: false,
             fechaValida: false,
@@ -42,12 +41,13 @@ class RowLocales extends React.Component{
     }
     componentWillReceiveProps(nextProps){
         // si la dotacion anteriormente era undefined, pero ahora se recibe el valor, se actualiza el state
+        // esto pasa cuando se reciben los datos luego de una peticion json
         if(!this.props.local.dotacionSugerida && nextProps.local.dotacionSugerida){
             this.setState({
-                inputDotacion: nextProps.local.dotacionSugerida,
-                inputJornada: nextProps.local.idJornadaSugerida
+                inputDotacion: nextProps.local.dotacionSugerida
             })
         }
+        console.log('nextProps', nextProps)
     }
     focusElemento(elemento){
         if(elemento==='dia'){
@@ -72,7 +72,7 @@ class RowLocales extends React.Component{
         this.setState({inputDia: evt.target.value})
     }
     inputJornadaHandler(evt){
-        this.setState({inputJornada: evt.target.value})
+        console.log(`opcion ${evt.target.value} seleccionada`)
         this.guardarOCrear()
     }
     inputDotacionHandler(evt){
@@ -80,13 +80,17 @@ class RowLocales extends React.Component{
     }
 
     guardarOCrear(evt){
+        if(evt) evt.preventDefault()
+
+        let jornada  = this.inputJornada.value
+        console.log("guardar o crear: ", jornada)
+
         const fechaEsValida = this.state.inputDia>=1 && this.state.inputDia<=this.props.ultimoDiaMes
         if(fechaEsValida){
-            console.log(`dia ${this.state.inputDia} valido`)
             // ToDo: llamar al API
             this.props.guardarOCrear({
                 idLocal: this.props.local.idLocal,
-                idJornada: this.state.inputJornada,
+                idJornada: jornada,
                 fechaProgramada: `${this.props.annoProgramado}-${this.props.mesProgramado}-${this.state.inputDia}`,
                 horaLlegada: '00:00',
                 stockTeorico: this.props.local.stock,
@@ -112,12 +116,12 @@ class RowLocales extends React.Component{
     render(){
         return (
             <tr>
+                {/* Correlativo */}
                 <td className={styles.tdCorrelativo}>
-                    {/* Correlativo */}
                     {this.props.index}
                 </td>
+                {/* Fecha */}
                 <td className={styles.tdFecha}>
-                    {/* Fecha */}
                     {this.state.estado!==ESTADO.GUARDADO?
 
                         <Tooltip placement="left" positionLeft={-120} id="xxxx" style={{width: '120px'}}
@@ -136,32 +140,28 @@ class RowLocales extends React.Component{
                     <input className={styles.inputMes} type="number" defaultValue={this.props.mesProgramado} disabled/>
                     <input className={styles.inputAnno} type="number" defaultValue={this.props.annoProgramado} disabled/>
                 </td>
+                {/* Cliente*/}
                 <td className={styles.tdCliente}>
-                    {/* Cliente*/}
                     <p><small>{this.props.nombreCliente}</small></p>
                 </td>
+                {/* CECO */}
                 <td className={styles.tdCeco}>
-                    {/* CECO */}
                     <p><small><b>{this.props.local.numero || '-'}</b></small></p>
                 </td>
+                {/* Local */}
                 <td className={styles.tdLocal}>
-                    {/* Local */}
                     <p><small><b>{this.props.local.nombre || '-'}</b></small></p>
                 </td>
-                <td className={styles.tdZonaSei}>
-                    {/* Zona */}
-                    <p style={{margin:0}}><small>{this.props.zona}</small></p>
-                </td>
+                {/* Region*/}
                 <td className={styles.tdRegion}>
-                    {/* Region*/}
                     <p style={{margin:0}}><small>{this.props.region}</small></p>
                 </td>
+                {/* Comuna */}
                 <td className={styles.tdComuna}>
-                    {/* Comuna */}
                     <p style={{margin:0}}><b><small>{this.props.comuna}</small></b></p>
                 </td>
+                {/* Stock */}
                 <td className={styles.tdStock}>
-                    {/* Stock */}
                     <OverlayTrigger
                         placement="left"
                         delay={0}
@@ -170,8 +170,8 @@ class RowLocales extends React.Component{
 
                     </OverlayTrigger>
                 </td>
+                {/* Dotación */}
                 <td className={styles.tdDotacion}>
-                    {/* Dotación */}
                     <OverlayTrigger
                         placement="left"
                         delay={0}
@@ -186,13 +186,13 @@ class RowLocales extends React.Component{
 
                     </OverlayTrigger>
                 </td>
+                {/* Jornada */}
                 <td className={styles.tdJornada}>
-                    {/* Jornada */}
-                    <select value={this.state.inputJornada} onChange={this.inputJornadaHandler.bind(this)}>
-                        <option value="0">no definido</option>
+                    <select onChange={this.inputJornadaHandler.bind(this)} ref={ref=>this.inputJornada=ref}>
                         <option value="1">día</option>
                         <option value="2">noche</option>
                         <option value="3">día y noche</option>
+                        <option value="4">no definido</option>
                     </select>
                 </td>
                 {/* Estado    */}
@@ -201,8 +201,8 @@ class RowLocales extends React.Component{
                     <span className={'label '+ this.state.estado.className}>{this.state.estado.mensaje}</span>
                 </td>
                 */}
+                {/* Opciones    */}
                 <td className={styles.tdOpciones}>
-                    {/* Opciones    */}
                     <button className="btn btn-xs btn-primary" tabIndex="-1">Editar local</button>
                     {this.props.idInventario?
                         <button className="btn btn-xs btn-primary" tabIndex="-1">Editar inventario</button>
@@ -214,12 +214,11 @@ class RowLocales extends React.Component{
     }
 }
 
-RowLocales.protoTypes = {
+RowInventario.protoTypes = {
     index: PropTypes.number.required,
     mesProgramado: PropTypes.string.required,
     annoProgramado: PropTypes.string.required,
     nombreCliente: PropTypes.string.required,
-    zona: PropTypes.string.required,
     region: PropTypes.string.required,
     comuna: PropTypes.string.required,
     stock: PropTypes.number.required,
@@ -232,4 +231,4 @@ RowLocales.protoTypes = {
     local: PropTypes.object.required
 }
 
-export default RowLocales
+export default RowInventario

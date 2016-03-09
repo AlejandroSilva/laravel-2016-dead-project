@@ -21,13 +21,14 @@ Route::get('locales/{idLocal}/verbose', 'LocalesController@getLocalVerbose_json'
 | Gestión de Inventarios
 |--------------------------------------------------------------------------
 |*/
-Route::get('programacion',          'ProgramacionController@showIndex');
-Route::get('programacion/mensual',  'ProgramacionController@showMensual');
-Route::get('programacion/semanal',  'ProgramacionController@showSemanal');
-Route::get('inventario',            'InventariosController@index');
-Route::get('inventario/lista',      'InventariosController@lista');
-Route::get('inventario/nuevo',      'InventariosController@nuevo');
-Route::post('inventario/nuevo',     'InventariosController@postNuevo');
+Route::get('programacion',                  'ProgramacionController@showIndex');
+Route::get('programacion/mensual',          'ProgramacionController@showMensual');
+Route::get('programacion/semanal',          'ProgramacionController@showSemanal');
+Route::get('inventario',                    'InventariosController@index');
+Route::get('inventario/lista',              'InventariosController@lista');
+Route::get('inventario/nuevo',              'InventariosController@nuevo');
+Route::post('inventario/nuevo',             'InventariosController@api_crear');
+Route::put('inventario/{idInventario}',     'InventariosController@api_actualizar');
 
 Route::get('nominas',               function(){return view('operacional.nominas.nominas-index');});
 Route::get('nomFinales',            function(){return view('operacional.nominasFinales.nominasFinales-index');});
