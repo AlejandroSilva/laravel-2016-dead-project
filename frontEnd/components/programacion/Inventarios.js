@@ -61,13 +61,14 @@ export default class Inventarios{
         return[ null, {
             idInventario: null,
             idLocal: local.idLocal,
-            idJornada: 4, // no definida
+            idJornada: null,
             fechaProgramada: fechaProgramada,
             //horaLlegada: "00:00:00",
             stockTeorico: 0,
             dotacionAsignada: null,
             local: {
                 idLocal: local.idLocal,
+                idJornadaSugerida: 4, // no definida
                 nombre: '-',
                 numero: '-',
                 stock: 0,
@@ -79,7 +80,7 @@ export default class Inventarios{
                 nombreComuna: '-',
                 nombreProvincia: '-',
                 nombreRegion: '-',
-                dotacionSugerida: 1
+                dotacionSugerida: 0
             }
         }]
     }

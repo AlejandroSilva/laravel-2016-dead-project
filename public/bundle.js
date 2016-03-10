@@ -35160,13 +35160,14 @@
 	            return [null, {
 	                idInventario: null,
 	                idLocal: local.idLocal,
-	                idJornada: 4, // no definida
+	                idJornada: null,
 	                fechaProgramada: fechaProgramada,
 	                //horaLlegada: "00:00:00",
 	                stockTeorico: 0,
 	                dotacionAsignada: null,
 	                local: {
 	                    idLocal: local.idLocal,
+	                    idJornadaSugerida: 4, // no definida
 	                    nombre: '-',
 	                    numero: '-',
 	                    stock: 0,
@@ -35178,7 +35179,7 @@
 	                    nombreComuna: '-',
 	                    nombreProvincia: '-',
 	                    nombreRegion: '-',
-	                    dotacionSugerida: 1
+	                    dotacionSugerida: 0
 	                }
 	            }];
 	        }
@@ -37143,7 +37144,7 @@
 	            // fijar la dotacionSugerida
 	            var dotacionSugerida = this.props.inventario.local.dotacionSugerida;
 	            var dotacionAsignada = this.props.inventario.dotacionAsignada;
-	            if (dotacionAsignada) this.inputDotacion.value = dotacionAsignada;else this.inputDotacion.value = dotacionSugerida;
+	            this.inputDotacion.value = dotacionAsignada ? dotacionAsignada : dotacionSugerida;
 
 	            // fijar la fecha
 
@@ -37163,14 +37164,34 @@
 	            this.inputJornada.value = this.props.inventario.idJornada;
 	        }
 	    }, {
-	        key: 'componentWillUpdate',
-	        value: function componentWillUpdate(nextProps) {
-	            //if(this.inputDotacion.value===''){
-	            //    // si no se ha fijado, poner la dotacionSugerida del local
-	            //    this.inputDotacion.value = dotacionSugerida
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            //Actualizar dotacion
+	            //if(!this.inputDotacion.value || this.inputDotacion.value=='' || this.inputDotacion.value==0){
+	            // fijar la dotacionSugerida
+	            var dotacionSugerida = nextProps.inventario.local.dotacionSugerida;
+	            var dotacionAsignada = nextProps.inventario.dotacionAsignada;
+	            this.inputDotacion.value = dotacionAsignada ? dotacionAsignada : dotacionSugerida;
 	            //}
 
-	            //console.log(this.props.inventario.local.idJornadaSugerida, nextProps.inventario.local.idJornadaSugerida)
+	            // actualizar la fecha
+
+	            var _props$inventario$fec3 = this.props.inventario.fechaProgramada.split('-');
+
+	            var _props$inventario$fec4 = _slicedToArray(_props$inventario$fec3, 3);
+
+	            var anno = _props$inventario$fec4[0];
+	            var mes = _props$inventario$fec4[1];
+	            var dia = _props$inventario$fec4[2];
+
+	            this.inputDia.value = dia;
+	            this.inputMes.value = mes;
+	            this.inputAnno.value = anno;
+
+	            // actualizar la jornada
+	            var jornadaInventario = nextProps.inventario.idJornada;
+	            var jornadaLocal = nextProps.inventario.local.idJornadaSugerida;
+	            this.inputJornada.value = jornadaInventario ? jornadaInventario : jornadaLocal;
 	        }
 	    }, {
 	        key: 'focusElemento',

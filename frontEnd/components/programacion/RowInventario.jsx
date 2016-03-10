@@ -40,10 +40,7 @@ class RowInventario extends React.Component{
         // fijar la dotacionSugerida
         let dotacionSugerida = this.props.inventario.local.dotacionSugerida
         let dotacionAsignada = this.props.inventario.dotacionAsignada
-        if(dotacionAsignada)
-            this.inputDotacion.value = dotacionAsignada
-        else
-            this.inputDotacion.value = dotacionSugerida
+        this.inputDotacion.value = dotacionAsignada? dotacionAsignada : dotacionSugerida
 
         // fijar la fecha
         let [anno, mes, dia] = this.props.inventario.fechaProgramada.split('-')
@@ -55,13 +52,25 @@ class RowInventario extends React.Component{
         this.inputJornada.value = this.props.inventario.idJornada
     }
 
-    componentWillUpdate(nextProps){
-        //if(this.inputDotacion.value===''){
-        //    // si no se ha fijado, poner la dotacionSugerida del local
-        //    this.inputDotacion.value = dotacionSugerida
+    componentWillReceiveProps(nextProps){
+         //Actualizar dotacion
+        //if(!this.inputDotacion.value || this.inputDotacion.value=='' || this.inputDotacion.value==0){
+            // fijar la dotacionSugerida
+            let dotacionSugerida = nextProps.inventario.local.dotacionSugerida
+            let dotacionAsignada = nextProps.inventario.dotacionAsignada
+            this.inputDotacion.value = dotacionAsignada? dotacionAsignada : dotacionSugerida
         //}
 
-        //console.log(this.props.inventario.local.idJornadaSugerida, nextProps.inventario.local.idJornadaSugerida)
+        // actualizar la fecha
+        let [anno, mes, dia] = this.props.inventario.fechaProgramada.split('-')
+        this.inputDia.value = dia
+        this.inputMes.value = mes
+        this.inputAnno.value = anno
+
+        // actualizar la jornada
+        let jornadaInventario = nextProps.inventario.idJornada
+        let jornadaLocal = nextProps.inventario.local.idJornadaSugerida
+        this.inputJornada.value = jornadaInventario? jornadaInventario : jornadaLocal
     }
     focusElemento(elemento){
         if(elemento==='dia'){
