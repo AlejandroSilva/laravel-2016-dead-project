@@ -21705,6 +21705,8 @@
 	    value: true
 	});
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
@@ -21715,13 +21717,21 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _reactTabs = __webpack_require__(282);
+	var _v = __webpack_require__(162);
 
-	var _TablaProgramas = __webpack_require__(292);
+	var _v2 = _interopRequireDefault(_v);
+
+	var _Inventarios = __webpack_require__(282);
+
+	var _Inventarios2 = _interopRequireDefault(_Inventarios);
+
+	var _reactTabs = __webpack_require__(283);
+
+	var _TablaProgramas = __webpack_require__(293);
 
 	var _TablaProgramas2 = _interopRequireDefault(_TablaProgramas);
 
-	var _AgregarPrograma = __webpack_require__(413);
+	var _AgregarPrograma = __webpack_require__(414);
 
 	var _AgregarPrograma2 = _interopRequireDefault(_AgregarPrograma);
 
@@ -21733,8 +21743,6 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Libs
 
-
-	var PropTypes = _react2.default.PropTypes;
 
 	_moment2.default.locale('es');
 
@@ -21754,37 +21762,158 @@
 	        for (var desface = 0; desface < 12; desface++) {
 	            var mes = (0, _moment2.default)().add(desface, 'month');
 	            meses.push({
-	                valor: mes.format('MM-YYYY'),
+	                valor: mes.format('YYYY-MM'),
 	                texto: mes.format('MMMM  YYYY')
 	            });
 	        }
 	        _this.state = {
+	            inventariosFiltrados: [],
 	            meses: meses
 	        };
+	        // MAGIA NEGRA!!
+	        _this.blackbox = new _Inventarios2.default(_this.props.clientes);
 	        return _this;
 	    }
 
 	    _createClass(ProgramacionMensual, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[1], '07-2016');
-	            //this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[2], '04-2016')
-	            this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[4], '07-2016');
-	            //    this.TablaInventarios.agregarInventario(this.props.clientes[0].locales[5], '05-2016')
-	            //    this.TablaInventarios.agregarInventario(this.props.clientes[0].locales[6], '05-2016')
-	            this.TablaInventarios.agregarInventario(this.props.clientes[1].locales[8], '09-2016');
-	            this.TablaInventarios.agregarInventario(this.props.clientes[0].locales[12], '08-2016');
+	            this.agregarInventario(2, this.props.clientes[1].locales[1].numero, '2016-07');
+	            //this.agregarInventario(this.props.clientes[1].locales[2].numero, '2016-04')
+	            this.agregarInventario(2, this.props.clientes[1].locales[4].numero, '2016-07');
+	            //    this.agregarInventario(this.props.clientes[0].locales[5].numero, '2016-05')
+	            //    this.agregarInventario(this.props.clientes[0].locales[6].numero, '2016-05')
+	            this.agregarInventario(2, this.props.clientes[1].locales[8].numero, '2016-09');
+	            this.agregarInventario(1, this.props.clientes[0].locales[12].numero, '2016-08');
 	        }
 	    }, {
 	        key: 'agregarInventario',
-	        value: function agregarInventario(local, mesAnno) {
-	            console.log("agregarndo el local: ", local, mesAnno);
-	            return this.TablaInventarios.agregarInventario(local, mesAnno);
+	        value: function agregarInventario(idCliente, numeroLocal, annoMes) {
+	            var _this2 = this;
+
+	            var _blackbox$crearDummy = this.blackbox.crearDummy(idCliente, numeroLocal, annoMes);
+
+	            var _blackbox$crearDummy2 = _slicedToArray(_blackbox$crearDummy, 2);
+
+	            var errores = _blackbox$crearDummy2[0];
+	            var nuevoInventario = _blackbox$crearDummy2[1];
+
+	            if (errores) return [errores, {}];
+
+	            // agregar al listado
+	            this.blackbox.add(nuevoInventario);
+
+	            // actualizar la vista de la lista
+	            this.setState({
+	                inventariosFiltrados: this.blackbox.getListaFiltrada()
+	            });
+
+	            // fetch de todos los datos, y actualizacion de la lista
+	            _v2.default.locales.getVerbose(nuevoInventario.local.idLocal).then(function (local) {
+	                _this2.blackbox.actualizarDatosLocal(local);
+
+	                _this2.setState({
+	                    inventariosFiltrados: _this2.blackbox.getListaFiltrada()
+	                });
+	            }).catch(function (error) {
+	                console.error('error al obtener los datos de ' + nuevoInventario.local.idLocal, error);
+	                alert('error al obtener los datos de ' + nuevoInventario.local.idLocal);
+	            });
+
+	            return [null, {}];
+	        }
+	    }, {
+	        key: 'agregarGrupoInventarios',
+	        value: function agregarGrupoInventarios(idCliente, idLocales, annoMes) {
+	            var _this3 = this;
+
+	            var promesasFetch = [];
+	            var pegadoConProblemas = [];
+	            // se evalua y agrega cada uno de los elementos
+	            idLocales.forEach(function (idLocal) {
+	                var _blackbox$crearDummy3 = _this3.blackbox.crearDummy(idCliente, idLocal, annoMes);
+
+	                var _blackbox$crearDummy4 = _slicedToArray(_blackbox$crearDummy3, 2);
+
+	                var errores = _blackbox$crearDummy4[0];
+	                var nuevoInventario = _blackbox$crearDummy4[1];
+
+	                if (errores) {
+	                    pegadoConProblemas.push(errores);
+	                } else {
+	                    // pedir los datos de los locales
+	                    promesasFetch.push(_v2.default.locales.getVerbose(nuevoInventario.local.idLocal).then(function (local) {
+	                        return _this3.blackbox.actualizarDatosLocal(local);
+	                    }).catch(function (error) {
+	                        return console.error('error con :', error);
+	                    }));
+	                    _this3.blackbox.add(nuevoInventario);
+	                }
+	            });
+
+	            // cuando terminen todos, se actualiza el state de la aplicacion
+	            this.setState({
+	                inventariosFiltrados: this.blackbox.getListaFiltrada()
+	            });
+
+	            // en algun momento las promesas se van a cumplior, entonces actualizar el estado
+	            Promise.all(promesasFetch).then(function (locales) {
+	                console.log('AgregarGrupoInventarios desde Excel: fetch de todos los locales correcto');
+	                _this3.setState({ inventariosFiltrados: _this3.blackbox.getListaFiltrada() });
+	            }).catch(function (datos) {
+	                // Todo: agregar bluebird para que esto no ocurra nunca
+	                // todo, al fallar UNA promesa, no se cumple el resto
+	                alert('error al buscar la información de los locales, (AgregarGrupoInventarios desde Excel: fetch de todos los locales correcto)');
+	                _this3.setState({ inventariosFiltrados: _this3.blackbox.getListaFiltrada() });
+	            });
+	            return {
+	                pegadoConProblemas: pegadoConProblemas,
+	                conteoTotal: idLocales.length,
+	                conteoCorrectos: idLocales.length - pegadoConProblemas.length,
+	                conteoProblemas: pegadoConProblemas.length
+	            };
+	        }
+	    }, {
+	        key: 'guardarOCrearInventario',
+	        value: function guardarOCrearInventario() {
+	            //if(evt) evt.preventDefault()
+	            //
+	            //let jornada  = this.inputJornada.value
+	            //console.log("guardar o crear: ", jornada)
+	            //
+	            //// Todo: validar esto
+	            //const fechaEsValida = this.state.inputDia>=1 && this.state.inputDia<= 31//this.props.ultimoDiaMes
+	            //if(fechaEsValida){
+	            //    // ToDo: llamar al API
+	            //    this.props.guardarOCrear({
+	            //        idLocal: this.props.local.idLocal,
+	            //        idJornada: jornada,
+	            //        fechaProgramada: `${this.props.annoProgramado}-${this.props.mesProgramado}-${this.state.inputDia}`,
+	            //        horaLlegada: '00:00',
+	            //        stockTeorico: this.props.local.stock,
+	            //        dotacionAsignada: 66,
+	            //    }).then(res=>{
+	            //        this.setState({
+	            //            //guardado: true,
+	            //            fechaValida: true,
+	            //            estado: ESTADO.GUARDADO
+	            //        })
+	            //    }).catch(err=>{
+	            //        console.error(err)
+	            //    })
+	            //}else {
+	            //    this.setState({
+	            //        //guardado: true,
+	            //        fechaValida: false,
+	            //        estado: ESTADO.FECHA_INVALIDA
+	            //    })
+	            //    console.log(`dia ${this.state.inputDia} incorrecto`)
+	            //}
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this2 = this;
+	            var _this4 = this;
 
 	            return _react2.default.createElement(
 	                'div',
@@ -21797,7 +21926,8 @@
 	                _react2.default.createElement(_AgregarPrograma2.default, {
 	                    clientes: this.props.clientes,
 	                    meses: this.state.meses,
-	                    onFormSubmit: this.agregarInventario.bind(this)
+	                    agregarInventario: this.agregarInventario.bind(this),
+	                    agregarGrupoInventarios: this.agregarGrupoInventarios.bind(this)
 	                }),
 	                _react2.default.createElement(
 	                    'div',
@@ -21808,8 +21938,10 @@
 	                        'Locales a programar:'
 	                    ),
 	                    _react2.default.createElement(_TablaProgramas2.default, {
+	                        inventariosFiltrados: this.state.inventariosFiltrados,
+	                        guardarOCrearInventario: this.guardarOCrearInventario.bind(this),
 	                        ref: function ref(_ref) {
-	                            return _this2.TablaInventarios = _ref;
+	                            return _this4.TablaInventarios = _ref;
 	                        }
 	                    })
 	                )
@@ -21821,7 +21953,7 @@
 	}(_react2.default.Component);
 
 	ProgramacionMensual.protoTypes = {
-	    clientes: PropTypes.array.isRequired
+	    clientes: _react2.default.PropTypes.array.isRequired
 	};
 
 	exports.default = ProgramacionMensual;
@@ -34935,17 +35067,207 @@
 /* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
 	'use strict';
 
-	module.exports = {
-	  Tabs: __webpack_require__(283),
-	  TabList: __webpack_require__(289),
-	  Tab: __webpack_require__(288),
-	  TabPanel: __webpack_require__(291)
-	};
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Inventarios = function () {
+	    function Inventarios(clientes) {
+	        _classCallCheck(this, Inventarios);
+
+	        this.clientes = clientes;
+	        this.lista = [];
+	    }
+	    // Optimizar
+
+
+	    _createClass(Inventarios, [{
+	        key: 'add',
+	        value: function add(inventario) {
+	            this.lista.push(inventario);
+	        }
+	    }, {
+	        key: 'existe',
+	        value: function existe(idLocal) {
+	            return this.lista.find(function (inventario) {
+	                return inventario.idLocal === idLocal;
+	            }) !== undefined;
+	        }
+	    }, {
+	        key: 'getListaFiltrada',
+	        value: function getListaFiltrada() {
+	            return this.lista;
+	        }
+
+	        // Metodos de alto nivel
+
+	    }, {
+	        key: 'crearDummy',
+	        value: function crearDummy(idCliente, numeroLocal, annoMes) {
+	            var fechaProgramada = annoMes + '-00';
+	            // ########### Revisar Cliente ###########
+	            // el usuario no selecciono uno en el formulario
+	            if (idCliente === '-1' || idCliente === '' || !idCliente) {
+	                return [{
+	                    idCliente: idCliente,
+	                    numeroLocal: numeroLocal,
+	                    errorIdCliente: 'Seleccione un Cliente'
+	                }, null];
+	            }
+	            // dio un idCliente, pero no existe
+	            var cliente = this.clientes.find(function (cliente) {
+	                return cliente.idCliente == idCliente;
+	            });
+	            if (!cliente) {
+	                return [{
+	                    idCliente: idCliente,
+	                    numeroLocal: numeroLocal,
+	                    errorIdCliente: 'Cliente no Existe'
+	                }, null];
+	            }
+
+	            // ########### Revisar Local ###########
+	            // revisar que el local exista
+	            var local = cliente.locales.find(function (local) {
+	                return local.numero == numeroLocal;
+	            });
+	            if (local === undefined) {
+	                return [{
+	                    idCliente: idCliente,
+	                    numeroLocal: numeroLocal,
+	                    errorNumeroLocal: numeroLocal === '' ? 'Digite un numero de local.' : 'El local \'' + numeroLocal + '\' no existe.'
+	                }, null];
+	            }
+
+	            // revisar que no exista en la lista
+	            if (this.existe(local.idLocal)) {
+	                return [{
+	                    idCliente: idCliente,
+	                    numeroLocal: numeroLocal,
+	                    errorNumeroLocal: 'El local ' + numeroLocal + ' ya ha sido agendado.'
+	                }, null];
+	            }
+
+	            // ########### ok, se puede crear el inventario "vacio" ###########
+	            return [null, {
+	                idInventario: null,
+	                idLocal: local.idLocal,
+	                idJornada: 4, // no definida
+	                fechaProgramada: fechaProgramada,
+	                //horaLlegada: "00:00:00",
+	                stockTeorico: 0,
+	                dotacionAsignada: null,
+	                local: {
+	                    idLocal: local.idLocal,
+	                    nombre: '-',
+	                    numero: '-',
+	                    stock: 0,
+	                    fechaStock: 'YYYY-MM-DD',
+	                    formato_local: {
+	                        produccionSugerida: 0
+	                    },
+	                    nombreCliente: '-',
+	                    nombreComuna: '-',
+	                    nombreProvincia: '-',
+	                    nombreRegion: '-',
+	                    dotacionSugerida: 1
+	                }
+	            }];
+	        }
+	    }, {
+	        key: 'actualizarDatosLocal',
+	        value: function actualizarDatosLocal(local) {
+	            this.lista = this.lista.map(function (inventario) {
+	                if (inventario.local.idLocal === local.idLocal) {
+	                    inventario.local = Object.assign(inventario.local, local);
+	                    // si no hay una dotacion asignada, ver la sugerida
+	                    if (inventario.dotacionAsignada === null) {
+	                        inventario.dotacionAsignada = local.dotacionSugerida;
+	                    }
+	                }
+	                return inventario;
+	            });
+	        }
+
+	        /*
+	        let filtroActualizado = this.generarFiltro(inventariosActualizados)
+	        let programasFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado)
+	         generarFiltro(inventarios){
+	            // TODO: simplificar este metodo, hay mucho codigo repetido
+	            const filtrarSoloUnicos = (valor, index, self)=>self.indexOf(valor)===index
+	             // FILTRO CLIENTES
+	            // obtener una lista de clientes sin repetir
+	            const seleccionarNombreCliente = inventario=>inventario.nombreCliente || ''
+	            let clientesUnicos = inventarios.map(seleccionarNombreCliente).filter(filtrarSoloUnicos)
+	             // crear el filtro con los datos del filtro anterior
+	            let filtroClientes = clientesUnicos.map(textoUnico=>{
+	                let opcion = this.state.filtro.clientes.find(opc=> opc.texto===textoUnico)
+	                 // si no existe la opcion, se crea y se selecciona por defecto
+	                return opcion || { texto: textoUnico, seleccionado: true}
+	            })
+	             // FILTRO REGIONES
+	            const seleccionarNombreRegion = inventario=>inventario.nombreRegion || ''
+	            let regionesUnicas = inventarios.map(seleccionarNombreRegion).filter(filtrarSoloUnicos)
+	             // crear el filtro con los datos del filtro anterior
+	            let filtroRegiones = regionesUnicas.map(textoUnico=>{
+	                let opcion = this.state.filtro.regiones.find(opc=> opc.texto===textoUnico)
+	                 // si no existe la opcion, se crea y se selecciona por defecto
+	                return opcion || { texto: textoUnico, seleccionado: true}
+	            })
+	             return {
+	                clientes: filtroClientes,
+	                regiones: filtroRegiones
+	            }
+	        }
+	         filtrarInventarios(inventarios, filtros){
+	            //console.log('filtros actualizado: ', filtros.clientes.map(op=>op.seleccionado))
+	            //console.log('inventarios: ', inventarios.map(local=>local.nombreCliente))
+	             // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
+	            let programasFiltrados = inventarios.filter(inventario=>{
+	                let textoBuscado = inventario.nombreCliente || ''  // si es undefined, es tratado como ''
+	                return filtros.clientes.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
+	            })
+	            // por regiones
+	            programasFiltrados = programasFiltrados.filter(inventario=>{
+	                let textoBuscado = inventario.nombreRegion || ''  // si es undefined, es tratado como ''
+	                return filtros.regiones.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
+	            })
+	            return programasFiltrados
+	        }
+	        */
+
+	    }]);
+
+	    return Inventarios;
+	}();
+
+	exports.default = Inventarios;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Inventarios.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
 /* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  Tabs: __webpack_require__(284),
+	  TabList: __webpack_require__(290),
+	  Tab: __webpack_require__(289),
+	  TabPanel: __webpack_require__(292)
+	};
+
+/***/ },
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34958,19 +35280,19 @@
 
 	var _reactDom = __webpack_require__(159);
 
-	var _classnames = __webpack_require__(284);
+	var _classnames = __webpack_require__(285);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _jsStylesheet = __webpack_require__(285);
+	var _jsStylesheet = __webpack_require__(286);
 
 	var _jsStylesheet2 = _interopRequireDefault(_jsStylesheet);
 
-	var _helpersUuid = __webpack_require__(286);
+	var _helpersUuid = __webpack_require__(287);
 
 	var _helpersUuid2 = _interopRequireDefault(_helpersUuid);
 
-	var _helpersChildrenPropType = __webpack_require__(287);
+	var _helpersChildrenPropType = __webpack_require__(288);
 
 	var _helpersChildrenPropType2 = _interopRequireDefault(_helpersChildrenPropType);
 
@@ -35028,7 +35350,7 @@
 
 	  componentDidMount: function componentDidMount() {
 	    if (useDefaultStyles) {
-	      (0, _jsStylesheet2['default'])(__webpack_require__(290));
+	      (0, _jsStylesheet2['default'])(__webpack_require__(291));
 	    }
 	  },
 
@@ -35304,7 +35626,7 @@
 	});
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -35358,7 +35680,7 @@
 
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	!(function() {
@@ -35402,7 +35724,7 @@
 
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports) {
 
 	// Get a universally unique identifier
@@ -35414,7 +35736,7 @@
 	};
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35425,11 +35747,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _componentsTab = __webpack_require__(288);
+	var _componentsTab = __webpack_require__(289);
 
 	var _componentsTab2 = _interopRequireDefault(_componentsTab);
 
-	var _componentsTabList = __webpack_require__(289);
+	var _componentsTabList = __webpack_require__(290);
 
 	var _componentsTabList2 = _interopRequireDefault(_componentsTabList);
 
@@ -35475,7 +35797,7 @@
 	};
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35488,7 +35810,7 @@
 
 	var _reactDom = __webpack_require__(159);
 
-	var _classnames = __webpack_require__(284);
+	var _classnames = __webpack_require__(285);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -35555,7 +35877,7 @@
 	});
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35566,7 +35888,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(284);
+	var _classnames = __webpack_require__(285);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -35591,7 +35913,7 @@
 	});
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -35646,7 +35968,7 @@
 	};
 
 /***/ },
-/* 291 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35657,7 +35979,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(284);
+	var _classnames = __webpack_require__(285);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -35704,7 +36026,7 @@
 	});
 
 /***/ },
-/* 292 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -35715,43 +36037,37 @@
 	    value: true
 	});
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _v = __webpack_require__(162);
-
-	var _v2 = _interopRequireDefault(_v);
-
 	var _moment = __webpack_require__(182);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _sticky = __webpack_require__(293);
+	var _sticky = __webpack_require__(294);
 
 	var _sticky2 = _interopRequireDefault(_sticky);
 
-	var _container = __webpack_require__(298);
+	var _container = __webpack_require__(299);
 
 	var _container2 = _interopRequireDefault(_container);
 
-	var _TableHeader = __webpack_require__(299);
+	var _TableHeader = __webpack_require__(300);
 
 	var _TableHeader2 = _interopRequireDefault(_TableHeader);
 
-	var _RowInventario = __webpack_require__(301);
+	var _RowInventario = __webpack_require__(302);
 
 	var _RowInventario2 = _interopRequireDefault(_RowInventario);
 
-	var _shared = __webpack_require__(412);
+	var _shared = __webpack_require__(413);
 
 	var _shared2 = _interopRequireDefault(_shared);
 
-	var _TablaProgramas = __webpack_require__(411);
+	var _TablaProgramas = __webpack_require__(412);
 
 	var _TablaProgramas2 = _interopRequireDefault(_TablaProgramas);
 
@@ -35763,12 +36079,11 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var PropTypes = _react2.default.PropTypes;
-
 	// Componentes
 
 
 	// Styles
+
 
 	var TablaInventarios = function (_React$Component) {
 	    _inherits(TablaInventarios, _React$Component);
@@ -35776,17 +36091,10 @@
 	    function TablaInventarios(props) {
 	        _classCallCheck(this, TablaInventarios);
 
+	        // referencia a todos las entradas de fecha de los inventarios
+
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TablaInventarios).call(this, props));
 
-	        _this.state = {
-	            programas: [],
-	            programasFiltrados: [],
-	            filtro: {
-	                clientes: [],
-	                regiones: []
-	            }
-	        };
-	        // referencia a todos las entradas de fecha de los inventarios
 	        _this.inputFecha = [];
 	        return _this;
 	    }
@@ -35805,217 +36113,61 @@
 	            var prevRow = this.inputFecha[prevIndex];
 	            prevRow.focusElemento(nombreElemento);
 	        }
-	    }, {
-	        key: 'guardarOCrear',
-	        value: function guardarOCrear(request) {
-	            var _this2 = this;
 
-	            var programa = this.state.programas.find(function (programa) {
-	                return programa.idLocal === request.idLocal;
-	            });
-	            if (!programa) {
-	                return console.error('inventario ' + request.idLocal + ' no encontrado');
-	            }
-	            // actualizar
-	            if (programa.idInventario) {
-	                // actualizar el programa
-	                return new Promise(function (res, rej) {
-	                    _v2.default.inventario.actualizar(programa.idInventario, request).then(function (programaActualizado) {
-	                        console.log('el servidor retorna ', programaActualizado.idJornada);
-	                        //todo Esto en la practica no va a hacer mucho, porque los cambios ya estan visialente escritos en los formularios
-	                        _this2.actualizarInventario(programa);
-	                        console.log('programa ' + programa.idInventario + ' actualizado');
-	                        res(programa);
-	                    }).catch(rej);
-	                });
-	            } else {
-	                // Crear el inventario
-	                return new Promise(function (res, rej) {
-	                    _v2.default.inventario.nuevo(request).then(function (inventarioCreado) {
-	                        console.log(inventarioCreado.idJornada);
-	                        // buscar el inventario, por el id de local (en teorica nunca deberia estar repetido en esta instancia)
+	        //guardarOCrear(request){
+	        //    let programa = this.state.programas.find(programa=>programa.idLocal===request.idLocal)
+	        //    if(!programa){
+	        //        return console.error(`inventario ${request.idLocal} no encontrado`)
+	        //    }
+	        //    // actualizar
+	        //    if(programa.idInventario){
+	        //        // actualizar el programa
+	        //        return new Promise((res, rej)=>{
+	        //            api.inventario.actualizar(programa.idInventario, request)
+	        //                .then(programaActualizado=>{
+	        //                    console.log('el servidor retorna ', programaActualizado.idJornada)
+	        //                    //todo Esto en la practica no va a hacer mucho, porque los cambios ya estan visialente escritos en los formularios
+	        //                    this.actualizarInventario(programa)
+	        //                    console.log(`programa ${programa.idInventario} actualizado`)
+	        //                    res(programa)
+	        //                })
+	        //                .catch(rej)
+	        //        })
+	        //    }else{
+	        //        // Crear el inventario
+	        //        return new Promise((res, rej)=>{
+	        //            api.inventario.nuevo(request)
+	        //                .then(inventarioCreado=>{
+	        //                    console.log(inventarioCreado.idJornada)
+	        //                    // buscar el inventario, por el id de local (en teorica nunca deberia estar repetido en esta instancia)
+	        //
+	        //                    inventario.idInventario = inventarioCreado.idInventario
+	        //                    this.actualizarInventario(inventario)
+	        //
+	        //                    console.log(`inventario ${inventarioCreado.idInventario} creado correctamente`)
+	        //                    res(inventarioCreado)
+	        //                })
+	        //                .catch(rej)
+	        //        })
+	        //    }
+	        //}
 
-	                        inventario.idInventario = inventarioCreado.idInventario;
-	                        _this2.actualizarInventario(inventario);
+	        // Reemplazar el filtro que es actualizado por la TableHeader
+	        //reemplazarFiltro(nombreFiltro, filtroActualizado) {
+	        //    // se reemplaza el filtro indicado en 'nombreFiltro'
+	        //    let nuevoFiltro = this.state.filtro
+	        //    nuevoFiltro[nombreFiltro] = filtroActualizado
+	        //
+	        //    this.setState({
+	        //        filtro: nuevoFiltro,
+	        //        programasFiltrados: this.filtrarInventarios(this.state.programas, nuevoFiltro)
+	        //    })
+	        //}
 
-	                        console.log('inventario ' + inventarioCreado.idInventario + ' creado correctamente');
-	                        res(inventarioCreado);
-	                    }).catch(rej);
-	                });
-	            }
-	        }
-	    }, {
-	        key: 'agregarInventario',
-	        value: function agregarInventario(nuevoInventario, mesAnno) {
-	            var _this3 = this;
-
-	            var _mesAnno$split = mesAnno.split('-');
-
-	            var _mesAnno$split2 = _slicedToArray(_mesAnno$split, 2);
-
-	            var mes = _mesAnno$split2[0];
-	            var anno = _mesAnno$split2[1];
-
-	            var inventariosActualizados = this.state.programas;
-
-	            var programaNoAgregado = this.state.programas.find(function (inventario) {
-	                return inventario.idLocal === nuevoInventario.idLocal;
-	            }) === undefined;
-	            if (programaNoAgregado) {
-	                // buscar asincronicamente la informacion completa al servidor
-
-	                _v2.default.locales.getVerbose(nuevoInventario.idLocal).then(function (local) {
-	                    // modificar la estructura el objeto para que sea mas manejable
-	                    local.comuna = local.direccion.comuna || {};
-	                    local.provincia = local.comuna.provincia || {};
-	                    local.region = local.provincia.region || {};
-
-	                    // actualizar los datos del inventario
-	                    nuevoInventario.local = local;
-	                    nuevoInventario.nombreCliente = local.cliente.nombreCorto;
-	                    nuevoInventario.nombreComuna = local.comuna.nombre;
-	                    nuevoInventario.nombreProvincia = local.provincia.nombre;
-	                    nuevoInventario.nombreRegion = local.region.nombreCorto;
-
-	                    _this3.actualizarInventario(nuevoInventario);
-	                }).catch(function (error) {
-	                    return console.error('error al obtener los datos de ' + nuevoInventario.idLocal, error);
-	                });
-
-	                nuevoInventario.mesProgramado = mes;
-	                nuevoInventario.annoProgramado = anno;
-
-	                // modificar la estructura el objeto para que sea mas manejable
-	                nuevoInventario.local = {};
-	                nuevoInventario.nombreCliente = '-';
-	                nuevoInventario.nombreComuna = '-';
-	                nuevoInventario.nombreProvincia = '-';
-	                nuevoInventario.nombreRegion = '-';
-
-	                // actualizar la lista de locales
-	                inventariosActualizados.push(nuevoInventario);
-
-	                // actualizar la lista de locales, y el filtro
-	                var filtroActualizado = this.generarFiltro(inventariosActualizados);
-	                var programasFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado);
-
-	                this.setState({
-	                    inventarios: inventariosActualizados,
-	                    filtro: filtroActualizado,
-	                    programasFiltrados: programasFiltrados
-	                });
-	            }
-	            return programaNoAgregado;
-	        }
-	    }, {
-	        key: 'actualizarInventario',
-	        value: function actualizarInventario(inventarioModificado) {
-	            var inventariosActualizados = this.state.programas.map(function (inventario) {
-	                if (inventario.idLocal === inventarioModificado.idLocal) {
-	                    // Todo idLocal no existe
-	                    return inventarioModificado;
-	                }
-	                return inventario;
-	            });
-	            var filtroActualizado = this.generarFiltro(inventariosActualizados);
-	            var programasFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado);
-
-	            this.setState({
-	                // actualizar los datos de la lista con la informacion obtenida por el api
-	                programas: inventariosActualizados,
-	                filtro: filtroActualizado,
-	                programasFiltrados: programasFiltrados
-	            });
-	        }
-	    }, {
-	        key: 'generarFiltro',
-	        value: function generarFiltro(inventarios) {
-	            var _this4 = this;
-
-	            // TODO: simplificar este metodo, hay mucho codigo repetido
-	            var filtrarSoloUnicos = function filtrarSoloUnicos(valor, index, self) {
-	                return self.indexOf(valor) === index;
-	            };
-
-	            // FILTRO CLIENTES
-	            // obtener una lista de clientes sin repetir
-	            var seleccionarNombreCliente = function seleccionarNombreCliente(inventario) {
-	                return inventario.nombreCliente || '';
-	            };
-	            var clientesUnicos = inventarios.map(seleccionarNombreCliente).filter(filtrarSoloUnicos);
-
-	            // crear el filtro con los datos del filtro anterior
-	            var filtroClientes = clientesUnicos.map(function (textoUnico) {
-	                var opcion = _this4.state.filtro.clientes.find(function (opc) {
-	                    return opc.texto === textoUnico;
-	                });
-
-	                // si no existe la opcion, se crea y se selecciona por defecto
-	                return opcion || { texto: textoUnico, seleccionado: true };
-	            });
-
-	            // FILTRO REGIONES
-	            var seleccionarNombreRegion = function seleccionarNombreRegion(inventario) {
-	                return inventario.nombreRegion || '';
-	            };
-	            var regionesUnicas = inventarios.map(seleccionarNombreRegion).filter(filtrarSoloUnicos);
-
-	            // crear el filtro con los datos del filtro anterior
-	            var filtroRegiones = regionesUnicas.map(function (textoUnico) {
-	                var opcion = _this4.state.filtro.regiones.find(function (opc) {
-	                    return opc.texto === textoUnico;
-	                });
-
-	                // si no existe la opcion, se crea y se selecciona por defecto
-	                return opcion || { texto: textoUnico, seleccionado: true };
-	            });
-
-	            return {
-	                clientes: filtroClientes,
-	                regiones: filtroRegiones
-	            };
-	        }
-	    }, {
-	        key: 'filtrarInventarios',
-	        value: function filtrarInventarios(inventarios, filtros) {
-	            //console.log('filtros actualizado: ', filtros.clientes.map(op=>op.seleccionado))
-	            //console.log('inventarios: ', inventarios.map(local=>local.nombreCliente))
-
-	            // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
-	            var programasFiltrados = inventarios.filter(function (inventario) {
-	                var textoBuscado = inventario.nombreCliente || ''; // si es undefined, es tratado como ''
-	                return filtros.clientes.find(function (opcion) {
-	                    return opcion.texto === textoBuscado && opcion.seleccionado === true;
-	                });
-	            });
-	            // por regiones
-	            programasFiltrados = programasFiltrados.filter(function (inventario) {
-	                var textoBuscado = inventario.nombreRegion || ''; // si es undefined, es tratado como ''
-	                return filtros.regiones.find(function (opcion) {
-	                    return opcion.texto === textoBuscado && opcion.seleccionado === true;
-	                });
-	            });
-	            return programasFiltrados;
-	        }
-
-	        // Reemplazar el filtro que es actualizado por la Cabecera
-
-	    }, {
-	        key: 'reemplazarFiltro',
-	        value: function reemplazarFiltro(nombreFiltro, filtroActualizado) {
-	            // se reemplaza el filtro indicado en 'nombreFiltro'
-	            var nuevoFiltro = this.state.filtro;
-	            nuevoFiltro[nombreFiltro] = filtroActualizado;
-
-	            this.setState({
-	                filtro: nuevoFiltro,
-	                programasFiltrados: this.filtrarInventarios(this.state.programas, nuevoFiltro)
-	            });
-	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this5 = this;
+	            var _this2 = this;
 
 	            return _react2.default.createElement(
 	                'div',
@@ -36045,9 +36197,12 @@
 	                            _react2.default.createElement(
 	                                'th',
 	                                { className: _TablaProgramas2.default.thCliente },
-	                                _react2.default.createElement(_TableHeader2.default, { nombre: 'Cliente',
-	                                    filtro: this.state.filtro.clientes,
-	                                    onFiltroChanged: this.reemplazarFiltro.bind(this, 'clientes') })
+	                                _react2.default.createElement(_TableHeader2.default, { nombre: 'Cliente'
+	                                    //filtro={this.state.filtro.clientes}
+	                                    //onFiltroChanged={this.reemplazarFiltro.bind(this, 'clientes')}
+	                                    , filtro: [],
+	                                    onFiltroChanged: function onFiltroChanged() {}
+	                                })
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
@@ -36062,9 +36217,12 @@
 	                            _react2.default.createElement(
 	                                'th',
 	                                { className: _TablaProgramas2.default.thRegion },
-	                                _react2.default.createElement(_TableHeader2.default, { nombre: 'Región',
-	                                    filtro: this.state.filtro.regiones,
-	                                    onFiltroChanged: this.reemplazarFiltro.bind(this, 'regiones') })
+	                                _react2.default.createElement(_TableHeader2.default, { nombre: 'Región'
+	                                    //filtro={this.state.filtro.regiones}
+	                                    //onFiltroChanged={this.reemplazarFiltro.bind(this, 'regiones')}
+	                                    , filtro: [],
+	                                    onFiltroChanged: function onFiltroChanged() {}
+	                                })
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
@@ -36096,30 +36254,18 @@
 	                    _react2.default.createElement(
 	                        'tbody',
 	                        null,
-	                        this.state.programasFiltrados.map(function (inventario, index) {
+	                        this.props.inventariosFiltrados.map(function (inventario, index) {
 	                            return _react2.default.createElement(_RowInventario2.default, {
 	                                key: index,
-	                                index: index
-	                                // a quitar
-	                                , nombreCliente: inventario.nombreCliente,
-	                                region: inventario.nombreRegion,
-	                                comuna: inventario.nombreComuna,
+	                                index: index,
+	                                inventario: inventario
 
-	                                idInventario: inventario.idInventario
-
-	                                // desde el formulario
-	                                , mesProgramado: inventario.mesProgramado,
-	                                ultimoDiaMes: (0, _moment2.default)('' + inventario.annoProgramado + inventario.mesProgramado, 'YYYYMM').daysInMonth(),
-	                                annoProgramado: inventario.annoProgramado
-
-	                                // Importante
-	                                , local: inventario.local
 	                                // Metodos
-	                                , focusFilaSiguiente: _this5.focusFilaSiguiente.bind(_this5),
-	                                focusFilaAnterior: _this5.focusFilaAnterior.bind(_this5),
-	                                guardarOCrear: _this5.guardarOCrear.bind(_this5),
-	                                ref: function ref(_ref) {
-	                                    return _this5.inputFecha[index] = _ref;
+	                                , focusFilaSiguiente: _this2.focusFilaSiguiente.bind(_this2),
+	                                focusFilaAnterior: _this2.focusFilaAnterior.bind(_this2)
+	                                //guardarOCrear={this.guardarOCrear.bind(this)}
+	                                , ref: function ref(_ref) {
+	                                    return _this2.inputFecha[index] = _ref;
 	                                }
 	                            });
 	                        })
@@ -36132,15 +36278,16 @@
 	    return TablaInventarios;
 	}(_react2.default.Component);
 
-	TablaInventarios.protoTypes = {
-	    //inventarioesAgregados: PropTypes.array.required
+	TablaInventarios.propTypes = {
+	    inventariosFiltrados: _react2.default.PropTypes.array.isRequired,
+	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired
 	};
 	exports.default = TablaInventarios;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TablaProgramas.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36161,7 +36308,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _watcher = __webpack_require__(294);
+	var _watcher = __webpack_require__(295);
 
 	var _watcher2 = _interopRequireDefault(_watcher);
 
@@ -36402,7 +36549,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "sticky.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36413,11 +36560,11 @@
 	    value: true
 	});
 
-	var _raf = __webpack_require__(295);
+	var _raf = __webpack_require__(296);
 
 	var _raf2 = _interopRequireDefault(_raf);
 
-	var _simpleSignal = __webpack_require__(297);
+	var _simpleSignal = __webpack_require__(298);
 
 	var _simpleSignal2 = _interopRequireDefault(_simpleSignal);
 
@@ -36445,10 +36592,10 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "watcher.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(296)
+	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(297)
 	  , root = typeof window === 'undefined' ? global : window
 	  , vendors = ['moz', 'webkit']
 	  , suffix = 'AnimationFrame'
@@ -36524,7 +36671,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.7.1
@@ -36563,7 +36710,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36594,7 +36741,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36611,7 +36758,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _sticky = __webpack_require__(293);
+	var _sticky = __webpack_require__(294);
 
 	var _sticky2 = _interopRequireDefault(_sticky);
 
@@ -36724,7 +36871,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 299 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36741,7 +36888,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TableHeader = __webpack_require__(300);
+	var _TableHeader = __webpack_require__(301);
 
 	var _TableHeader2 = _interopRequireDefault(_TableHeader);
 
@@ -36896,14 +37043,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TableHeader.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 300 */
+/* 301 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"container":"TableHeader__container___N1LYN","cell":"TableHeader__cell___qBAiu","menu":"TableHeader__menu___x-Ng6","contenedorValores":"TableHeader__contenedorValores___qZzS4"};
 
 /***/ },
-/* 301 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -36914,29 +37061,31 @@
 	    value: true
 	});
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _numeral = __webpack_require__(302);
+	var _numeral = __webpack_require__(303);
 
 	var _numeral2 = _interopRequireDefault(_numeral);
 
-	var _Tooltip = __webpack_require__(303);
+	var _Tooltip = __webpack_require__(304);
 
 	var _Tooltip2 = _interopRequireDefault(_Tooltip);
 
-	var _OverlayTrigger = __webpack_require__(333);
+	var _OverlayTrigger = __webpack_require__(334);
 
 	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
 
-	var _TablaProgramas = __webpack_require__(411);
+	var _TablaProgramas = __webpack_require__(412);
 
 	var _TablaProgramas2 = _interopRequireDefault(_TablaProgramas);
 
-	var _shared = __webpack_require__(412);
+	var _shared = __webpack_require__(413);
 
 	var _shared2 = _interopRequireDefault(_shared);
 
@@ -36981,27 +37130,47 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RowInventario).call(this, props));
 
 	        _this.state = {
-	            inputDotacion: 1,
-	            inputDia: '',
-	            guardado: false,
 	            fechaValida: false,
 	            estado: ESTADO.FECHA_PENDIENTE
 	        };
-	        _this.guardarOCrear = _this.guardarOCrear.bind(_this);
+	        // Refs disponibles: this.inputDia, this.inputMes, this.inputAnno, this.inputDotacion, this.inputJornada
 	        return _this;
 	    }
 
 	    _createClass(RowInventario, [{
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            // si la dotacion anteriormente era undefined, pero ahora se recibe el valor, se actualiza el state
-	            // esto pasa cuando se reciben los datos luego de una peticion json
-	            if (!this.props.local.dotacionSugerida && nextProps.local.dotacionSugerida) {
-	                this.setState({
-	                    inputDotacion: nextProps.local.dotacionSugerida
-	                });
-	            }
-	            console.log('nextProps', nextProps);
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            // fijar la dotacionSugerida
+	            var dotacionSugerida = this.props.inventario.local.dotacionSugerida;
+	            var dotacionAsignada = this.props.inventario.dotacionAsignada;
+	            if (dotacionAsignada) this.inputDotacion.value = dotacionAsignada;else this.inputDotacion.value = dotacionSugerida;
+
+	            // fijar la fecha
+
+	            var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
+
+	            var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
+
+	            var anno = _props$inventario$fec2[0];
+	            var mes = _props$inventario$fec2[1];
+	            var dia = _props$inventario$fec2[2];
+
+	            this.inputDia.value = dia;
+	            this.inputMes.value = mes;
+	            this.inputAnno.value = anno;
+
+	            // fijar la jornada
+	            this.inputJornada.value = this.props.inventario.idJornada;
+	        }
+	    }, {
+	        key: 'componentWillUpdate',
+	        value: function componentWillUpdate(nextProps) {
+	            //if(this.inputDotacion.value===''){
+	            //    // si no se ha fijado, poner la dotacionSugerida del local
+	            //    this.inputDotacion.value = dotacionSugerida
+	            //}
+
+	            //console.log(this.props.inventario.local.idJornadaSugerida, nextProps.inventario.local.idJornadaSugerida)
 	        }
 	    }, {
 	        key: 'focusElemento',
@@ -37028,61 +37197,30 @@
 	    }, {
 	        key: 'inputDiaHandler',
 	        value: function inputDiaHandler(evt) {
-	            this.setState({ inputDia: evt.target.value });
+	            //this.setState({inputDia: evt.target.value})
 	        }
 	    }, {
 	        key: 'inputJornadaHandler',
 	        value: function inputJornadaHandler(evt) {
-	            console.log('opcion ' + evt.target.value + ' seleccionada');
 	            this.guardarOCrear();
 	        }
 	    }, {
 	        key: 'inputDotacionHandler',
 	        value: function inputDotacionHandler(evt) {
-	            this.setState({ inputDotacion: evt.target.value });
+	            //this.setState({inputDotacion: evt.target.value})
 	        }
 	    }, {
 	        key: 'guardarOCrear',
-	        value: function guardarOCrear(evt) {
-	            var _this2 = this;
-
-	            if (evt) evt.preventDefault();
-
+	        value: function guardarOCrear() {
+	            var dotacion = this.inputDotacion.value;
 	            var jornada = this.inputJornada.value;
-	            console.log("guardar o crear: ", jornada);
-
-	            var fechaEsValida = this.state.inputDia >= 1 && this.state.inputDia <= this.props.ultimoDiaMes;
-	            if (fechaEsValida) {
-	                // ToDo: llamar al API
-	                this.props.guardarOCrear({
-	                    idLocal: this.props.local.idLocal,
-	                    idJornada: jornada,
-	                    fechaProgramada: this.props.annoProgramado + '-' + this.props.mesProgramado + '-' + this.state.inputDia,
-	                    horaLlegada: '00:00',
-	                    stockTeorico: this.props.local.stock,
-	                    dotacionAsignada: this.state.inputDotacion
-	                }).then(function (res) {
-	                    _this2.setState({
-	                        //guardado: true,
-	                        fechaValida: true,
-	                        estado: ESTADO.GUARDADO
-	                    });
-	                }).catch(function (err) {
-	                    console.error(err);
-	                });
-	            } else {
-	                this.setState({
-	                    //guardado: true,
-	                    fechaValida: false,
-	                    estado: ESTADO.FECHA_INVALIDA
-	                });
-	                console.log('dia ' + this.state.inputDia + ' incorrecto');
-	            }
+	            var dia = this.inputDia.value;
+	            console.log('dia ' + dia + ', dotacion ' + dotacion + ', jornada ' + jornada);
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this3 = this;
+	            var _this2 = this;
 
 	            return _react2.default.createElement(
 	                'tr',
@@ -37097,21 +37235,26 @@
 	                    { className: _TablaProgramas2.default.tdFecha },
 	                    this.state.estado !== ESTADO.GUARDADO ? _react2.default.createElement(
 	                        _Tooltip2.default,
-	                        { placement: 'left', positionLeft: -120, id: 'xxxx', style: { width: '120px' },
+	                        { placement: 'left', positionLeft: -120, id: 'xxxx', style: { width: '120px', zIndex: 0 },
 	                            className: "in " + this.state.estado.tooltipClass },
 	                        this.state.estado.mensaje
 	                    ) : null,
 	                    _react2.default.createElement('input', { className: this.state.fechaValida ? _TablaProgramas2.default.inputDia : _TablaProgramas2.default.inputDiaInvalido,
-	                        type: 'number', min: 0, max: this.props.ultimoDiaMes,
+	                        type: 'number', min: 0, max: 31,
 	                        ref: function ref(_ref) {
-	                            return _this3.inputDia = _ref;
+	                            return _this2.inputDia = _ref;
 	                        },
-	                        value: this.state.inputDia,
 	                        onChange: this.inputDiaHandler.bind(this),
 	                        onKeyDown: this.inputOnKeyDown.bind(this, 'dia'),
-	                        onBlur: this.guardarOCrear }),
-	                    _react2.default.createElement('input', { className: _TablaProgramas2.default.inputMes, type: 'number', defaultValue: this.props.mesProgramado, disabled: true }),
-	                    _react2.default.createElement('input', { className: _TablaProgramas2.default.inputAnno, type: 'number', defaultValue: this.props.annoProgramado, disabled: true })
+	                        onBlur: this.guardarOCrear.bind(this) }),
+	                    _react2.default.createElement('input', { className: _TablaProgramas2.default.inputMes, type: 'number', disabled: true,
+	                        ref: function ref(_ref2) {
+	                            return _this2.inputMes = _ref2;
+	                        } }),
+	                    _react2.default.createElement('input', { className: _TablaProgramas2.default.inputAnno, type: 'number', disabled: true,
+	                        ref: function ref(_ref3) {
+	                            return _this2.inputAnno = _ref3;
+	                        } })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
@@ -37122,7 +37265,7 @@
 	                        _react2.default.createElement(
 	                            'small',
 	                            null,
-	                            this.props.nombreCliente
+	                            this.props.inventario.local.nombreCliente
 	                        )
 	                    )
 	                ),
@@ -37138,7 +37281,7 @@
 	                            _react2.default.createElement(
 	                                'b',
 	                                null,
-	                                this.props.local.numero || '-'
+	                                this.props.inventario.local.numero
 	                            )
 	                        )
 	                    )
@@ -37155,7 +37298,7 @@
 	                            _react2.default.createElement(
 	                                'b',
 	                                null,
-	                                this.props.local.nombre || '-'
+	                                this.props.inventario.local.nombre
 	                            )
 	                        )
 	                    )
@@ -37169,7 +37312,7 @@
 	                        _react2.default.createElement(
 	                            'small',
 	                            null,
-	                            this.props.region
+	                            this.props.inventario.local.nombreRegion
 	                        )
 	                    )
 	                ),
@@ -37185,7 +37328,7 @@
 	                            _react2.default.createElement(
 	                                'small',
 	                                null,
-	                                this.props.comuna
+	                                this.props.inventario.local.nombreComuna
 	                            )
 	                        )
 	                    )
@@ -37201,7 +37344,7 @@
 	                            overlay: _react2.default.createElement(
 	                                _Tooltip2.default,
 	                                { id: 'yyy' },
-	                                'Stock al ' + (this.props.local.fechaStock || '??-??-????')
+	                                'Stock al ' + this.props.inventario.local.fechaStock
 	                            ) },
 	                        _react2.default.createElement(
 	                            'p',
@@ -37209,7 +37352,7 @@
 	                            _react2.default.createElement(
 	                                'small',
 	                                null,
-	                                (0, _numeral2.default)(this.props.local.stock || 0).format('0,0')
+	                                (0, _numeral2.default)(this.props.inventario.local.stock).format('0,0')
 	                            )
 	                        )
 	                    )
@@ -37225,16 +37368,15 @@
 	                            overlay: _react2.default.createElement(
 	                                _Tooltip2.default,
 	                                { id: 'yyy' },
-	                                this.props.local.formato_local ? 'Produción ' + this.props.local.formato_local.produccionSugerida : ''
+	                                'Produción ' + this.props.inventario.local.formato_local.produccionSugerida
 	                            ) },
 	                        _react2.default.createElement('input', { className: _TablaProgramas2.default.inputDotacionIngresada, type: 'number',
-	                            ref: function ref(_ref2) {
-	                                return _this3.inputDotacion = _ref2;
+	                            ref: function ref(_ref4) {
+	                                return _this2.inputDotacion = _ref4;
 	                            },
-	                            value: this.state.inputDotacion,
 	                            onChange: this.inputDotacionHandler.bind(this),
 	                            onKeyDown: this.inputOnKeyDown.bind(this, 'dotacion'),
-	                            onBlur: this.guardarOCrear })
+	                            onBlur: this.guardarOCrear.bind(this) })
 	                    )
 	                ),
 	                _react2.default.createElement(
@@ -37242,8 +37384,8 @@
 	                    { className: _TablaProgramas2.default.tdJornada },
 	                    _react2.default.createElement(
 	                        'select',
-	                        { onChange: this.inputJornadaHandler.bind(this), ref: function ref(_ref3) {
-	                                return _this3.inputJornada = _ref3;
+	                        { onChange: this.inputJornadaHandler.bind(this), ref: function ref(_ref5) {
+	                                return _this2.inputJornada = _ref5;
 	                            } },
 	                        _react2.default.createElement(
 	                            'option',
@@ -37288,7 +37430,7 @@
 	    return RowInventario;
 	}(_react2.default.Component);
 
-	RowInventario.protoTypes = {
+	RowInventario.protTypes = {
 	    index: PropTypes.number.required,
 	    mesProgramado: PropTypes.string.required,
 	    annoProgramado: PropTypes.string.required,
@@ -37310,7 +37452,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowInventario.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 302 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -37995,14 +38137,14 @@
 
 
 /***/ },
-/* 303 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _extends = __webpack_require__(304)['default'];
+	var _extends = __webpack_require__(305)['default'];
 
-	var _interopRequireDefault = __webpack_require__(320)['default'];
+	var _interopRequireDefault = __webpack_require__(321)['default'];
 
 	exports.__esModule = true;
 
@@ -38010,15 +38152,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(321);
+	var _classnames = __webpack_require__(322);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _utilsBootstrapUtils = __webpack_require__(322);
+	var _utilsBootstrapUtils = __webpack_require__(323);
 
 	var _utilsBootstrapUtils2 = _interopRequireDefault(_utilsBootstrapUtils);
 
-	var _reactPropTypesLibIsRequiredForA11y = __webpack_require__(332);
+	var _reactPropTypesLibIsRequiredForA11y = __webpack_require__(333);
 
 	var _reactPropTypesLibIsRequiredForA11y2 = _interopRequireDefault(_reactPropTypesLibIsRequiredForA11y);
 
@@ -38099,12 +38241,12 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 304 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var _Object$assign = __webpack_require__(305)["default"];
+	var _Object$assign = __webpack_require__(306)["default"];
 
 	exports["default"] = _Object$assign || function (target) {
 	  for (var i = 1; i < arguments.length; i++) {
@@ -38123,34 +38265,34 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 305 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(306), __esModule: true };
-
-/***/ },
 /* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(307);
-	module.exports = __webpack_require__(310).Object.assign;
+	module.exports = { "default": __webpack_require__(307), __esModule: true };
 
 /***/ },
 /* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// 19.1.3.1 Object.assign(target, source)
-	var $export = __webpack_require__(308);
-
-	$export($export.S + $export.F, 'Object', {assign: __webpack_require__(313)});
+	__webpack_require__(308);
+	module.exports = __webpack_require__(311).Object.assign;
 
 /***/ },
 /* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var global    = __webpack_require__(309)
-	  , core      = __webpack_require__(310)
-	  , ctx       = __webpack_require__(311)
+	// 19.1.3.1 Object.assign(target, source)
+	var $export = __webpack_require__(309);
+
+	$export($export.S + $export.F, 'Object', {assign: __webpack_require__(314)});
+
+/***/ },
+/* 309 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global    = __webpack_require__(310)
+	  , core      = __webpack_require__(311)
+	  , ctx       = __webpack_require__(312)
 	  , PROTOTYPE = 'prototype';
 
 	var $export = function(type, name, source){
@@ -38196,7 +38338,7 @@
 	module.exports = $export;
 
 /***/ },
-/* 309 */
+/* 310 */
 /***/ function(module, exports) {
 
 	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
@@ -38205,18 +38347,18 @@
 	if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
 
 /***/ },
-/* 310 */
+/* 311 */
 /***/ function(module, exports) {
 
 	var core = module.exports = {version: '1.2.6'};
 	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 
 /***/ },
-/* 311 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// optional / simple context binding
-	var aFunction = __webpack_require__(312);
+	var aFunction = __webpack_require__(313);
 	module.exports = function(fn, that, length){
 	  aFunction(fn);
 	  if(that === undefined)return fn;
@@ -38237,7 +38379,7 @@
 	};
 
 /***/ },
-/* 312 */
+/* 313 */
 /***/ function(module, exports) {
 
 	module.exports = function(it){
@@ -38246,16 +38388,16 @@
 	};
 
 /***/ },
-/* 313 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// 19.1.2.1 Object.assign(target, source, ...)
-	var $        = __webpack_require__(314)
-	  , toObject = __webpack_require__(315)
-	  , IObject  = __webpack_require__(317);
+	var $        = __webpack_require__(315)
+	  , toObject = __webpack_require__(316)
+	  , IObject  = __webpack_require__(318);
 
 	// should work with symbols and should have deterministic property order (V8 bug)
-	module.exports = __webpack_require__(319)(function(){
+	module.exports = __webpack_require__(320)(function(){
 	  var a = Object.assign
 	    , A = {}
 	    , B = {}
@@ -38284,7 +38426,7 @@
 	} : Object.assign;
 
 /***/ },
-/* 314 */
+/* 315 */
 /***/ function(module, exports) {
 
 	var $Object = Object;
@@ -38302,17 +38444,17 @@
 	};
 
 /***/ },
-/* 315 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.1.13 ToObject(argument)
-	var defined = __webpack_require__(316);
+	var defined = __webpack_require__(317);
 	module.exports = function(it){
 	  return Object(defined(it));
 	};
 
 /***/ },
-/* 316 */
+/* 317 */
 /***/ function(module, exports) {
 
 	// 7.2.1 RequireObjectCoercible(argument)
@@ -38322,17 +38464,17 @@
 	};
 
 /***/ },
-/* 317 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// fallback for non-array-like ES3 and non-enumerable old V8 strings
-	var cof = __webpack_require__(318);
+	var cof = __webpack_require__(319);
 	module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
 	  return cof(it) == 'String' ? it.split('') : Object(it);
 	};
 
 /***/ },
-/* 318 */
+/* 319 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -38342,7 +38484,7 @@
 	};
 
 /***/ },
-/* 319 */
+/* 320 */
 /***/ function(module, exports) {
 
 	module.exports = function(exec){
@@ -38354,7 +38496,7 @@
 	};
 
 /***/ },
-/* 320 */
+/* 321 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -38368,7 +38510,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 321 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -38422,28 +38564,28 @@
 
 
 /***/ },
-/* 322 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var _extends = __webpack_require__(304)['default'];
+	var _extends = __webpack_require__(305)['default'];
 
-	var _interopRequireDefault = __webpack_require__(320)['default'];
+	var _interopRequireDefault = __webpack_require__(321)['default'];
 
 	exports.__esModule = true;
 
 	var _react = __webpack_require__(2);
 
-	var _styleMaps = __webpack_require__(323);
+	var _styleMaps = __webpack_require__(324);
 
 	var _styleMaps2 = _interopRequireDefault(_styleMaps);
 
-	var _invariant = __webpack_require__(330);
+	var _invariant = __webpack_require__(331);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _warning = __webpack_require__(331);
+	var _warning = __webpack_require__(332);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -38604,16 +38746,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 323 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _Object$assign = __webpack_require__(305)['default'];
+	var _Object$assign = __webpack_require__(306)['default'];
 
-	var _Object$create = __webpack_require__(324)['default'];
+	var _Object$create = __webpack_require__(325)['default'];
 
-	var _Object$keys = __webpack_require__(326)['default'];
+	var _Object$keys = __webpack_require__(327)['default'];
 
 	exports.__esModule = true;
 
@@ -38672,54 +38814,54 @@
 	exports['default'] = styleMaps;
 
 /***/ },
-/* 324 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(325), __esModule: true };
-
-/***/ },
 /* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(314);
-	module.exports = function create(P, D){
-	  return $.create(P, D);
-	};
+	module.exports = { "default": __webpack_require__(326), __esModule: true };
 
 /***/ },
 /* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(327), __esModule: true };
+	var $ = __webpack_require__(315);
+	module.exports = function create(P, D){
+	  return $.create(P, D);
+	};
 
 /***/ },
 /* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(328);
-	module.exports = __webpack_require__(310).Object.keys;
+	module.exports = { "default": __webpack_require__(328), __esModule: true };
 
 /***/ },
 /* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// 19.1.2.14 Object.keys(O)
-	var toObject = __webpack_require__(315);
+	__webpack_require__(329);
+	module.exports = __webpack_require__(311).Object.keys;
 
-	__webpack_require__(329)('keys', function($keys){
+/***/ },
+/* 329 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.14 Object.keys(O)
+	var toObject = __webpack_require__(316);
+
+	__webpack_require__(330)('keys', function($keys){
 	  return function keys(it){
 	    return $keys(toObject(it));
 	  };
 	});
 
 /***/ },
-/* 329 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// most Object methods by ES6 should accept primitives
-	var $export = __webpack_require__(308)
-	  , core    = __webpack_require__(310)
-	  , fails   = __webpack_require__(319);
+	var $export = __webpack_require__(309)
+	  , core    = __webpack_require__(311)
+	  , fails   = __webpack_require__(320);
 	module.exports = function(KEY, exec){
 	  var fn  = (core.Object || {})[KEY] || Object[KEY]
 	    , exp = {};
@@ -38728,7 +38870,7 @@
 	};
 
 /***/ },
-/* 330 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -38786,7 +38928,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 331 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -38853,7 +38995,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 332 */
+/* 333 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -38874,26 +39016,26 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 333 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/* eslint-disable react/prop-types */
 
 	'use strict';
 
-	var _extends = __webpack_require__(304)['default'];
+	var _extends = __webpack_require__(305)['default'];
 
-	var _Object$keys = __webpack_require__(326)['default'];
+	var _Object$keys = __webpack_require__(327)['default'];
 
-	var _interopRequireDefault = __webpack_require__(320)['default'];
+	var _interopRequireDefault = __webpack_require__(321)['default'];
 
 	exports.__esModule = true;
 
-	var _domHelpersQueryContains = __webpack_require__(334);
+	var _domHelpersQueryContains = __webpack_require__(335);
 
 	var _domHelpersQueryContains2 = _interopRequireDefault(_domHelpersQueryContains);
 
-	var _lodashCompatObjectPick = __webpack_require__(336);
+	var _lodashCompatObjectPick = __webpack_require__(337);
 
 	var _lodashCompatObjectPick2 = _interopRequireDefault(_lodashCompatObjectPick);
 
@@ -38905,15 +39047,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _warning = __webpack_require__(331);
+	var _warning = __webpack_require__(332);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _Overlay = __webpack_require__(365);
+	var _Overlay = __webpack_require__(366);
 
 	var _Overlay2 = _interopRequireDefault(_Overlay);
 
-	var _utilsCreateChainedFunction = __webpack_require__(410);
+	var _utilsCreateChainedFunction = __webpack_require__(411);
 
 	var _utilsCreateChainedFunction2 = _interopRequireDefault(_utilsCreateChainedFunction);
 
@@ -39194,11 +39336,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 334 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var canUseDOM = __webpack_require__(335);
+	var canUseDOM = __webpack_require__(336);
 
 	var contains = (function () {
 	  var root = canUseDOM && document.documentElement;
@@ -39219,21 +39361,21 @@
 	module.exports = contains;
 
 /***/ },
-/* 335 */
+/* 336 */
 /***/ function(module, exports) {
 
 	'use strict';
 	module.exports = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 
 /***/ },
-/* 336 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(337),
-	    bindCallback = __webpack_require__(354),
-	    pickByArray = __webpack_require__(356),
-	    pickByCallback = __webpack_require__(357),
-	    restParam = __webpack_require__(364);
+	var baseFlatten = __webpack_require__(338),
+	    bindCallback = __webpack_require__(355),
+	    pickByArray = __webpack_require__(357),
+	    pickByCallback = __webpack_require__(358),
+	    restParam = __webpack_require__(365);
 
 	/**
 	 * Creates an object composed of the picked `object` properties. Property
@@ -39274,14 +39416,14 @@
 
 
 /***/ },
-/* 337 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayPush = __webpack_require__(338),
-	    isArguments = __webpack_require__(339),
-	    isArray = __webpack_require__(349),
-	    isArrayLike = __webpack_require__(340),
-	    isObjectLike = __webpack_require__(346);
+	var arrayPush = __webpack_require__(339),
+	    isArguments = __webpack_require__(340),
+	    isArray = __webpack_require__(350),
+	    isArrayLike = __webpack_require__(341),
+	    isObjectLike = __webpack_require__(347);
 
 	/**
 	 * The base implementation of `_.flatten` with added support for restricting
@@ -39321,7 +39463,7 @@
 
 
 /***/ },
-/* 338 */
+/* 339 */
 /***/ function(module, exports) {
 
 	/**
@@ -39347,11 +39489,11 @@
 
 
 /***/ },
-/* 339 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(340),
-	    isObjectLike = __webpack_require__(346);
+	var isArrayLike = __webpack_require__(341),
+	    isObjectLike = __webpack_require__(347);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -39387,11 +39529,11 @@
 
 
 /***/ },
-/* 340 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(341),
-	    isLength = __webpack_require__(348);
+	var getLength = __webpack_require__(342),
+	    isLength = __webpack_require__(349);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -39408,10 +39550,10 @@
 
 
 /***/ },
-/* 341 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(342);
+	var baseProperty = __webpack_require__(343);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -39429,10 +39571,10 @@
 
 
 /***/ },
-/* 342 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(343);
+	var toObject = __webpack_require__(344);
 
 	/**
 	 * The base implementation of `_.property` without support for deep paths.
@@ -39451,12 +39593,12 @@
 
 
 /***/ },
-/* 343 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(344),
-	    isString = __webpack_require__(345),
-	    support = __webpack_require__(347);
+	var isObject = __webpack_require__(345),
+	    isString = __webpack_require__(346),
+	    support = __webpack_require__(348);
 
 	/**
 	 * Converts `value` to an object if it's not one.
@@ -39483,7 +39625,7 @@
 
 
 /***/ },
-/* 344 */
+/* 345 */
 /***/ function(module, exports) {
 
 	/**
@@ -39517,10 +39659,10 @@
 
 
 /***/ },
-/* 345 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(346);
+	var isObjectLike = __webpack_require__(347);
 
 	/** `Object#toString` result references. */
 	var stringTag = '[object String]';
@@ -39558,7 +39700,7 @@
 
 
 /***/ },
-/* 346 */
+/* 347 */
 /***/ function(module, exports) {
 
 	/**
@@ -39576,7 +39718,7 @@
 
 
 /***/ },
-/* 347 */
+/* 348 */
 /***/ function(module, exports) {
 
 	/** Used for native method references. */
@@ -39678,7 +39820,7 @@
 
 
 /***/ },
-/* 348 */
+/* 349 */
 /***/ function(module, exports) {
 
 	/**
@@ -39704,12 +39846,12 @@
 
 
 /***/ },
-/* 349 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(350),
-	    isLength = __webpack_require__(348),
-	    isObjectLike = __webpack_require__(346);
+	var getNative = __webpack_require__(351),
+	    isLength = __webpack_require__(349),
+	    isObjectLike = __webpack_require__(347);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -39750,10 +39892,10 @@
 
 
 /***/ },
-/* 350 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(351);
+	var isNative = __webpack_require__(352);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -39772,12 +39914,12 @@
 
 
 /***/ },
-/* 351 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(352),
-	    isHostObject = __webpack_require__(353),
-	    isObjectLike = __webpack_require__(346);
+	var isFunction = __webpack_require__(353),
+	    isHostObject = __webpack_require__(354),
+	    isObjectLike = __webpack_require__(347);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -39827,10 +39969,10 @@
 
 
 /***/ },
-/* 352 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(344);
+	var isObject = __webpack_require__(345);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -39871,7 +40013,7 @@
 
 
 /***/ },
-/* 353 */
+/* 354 */
 /***/ function(module, exports) {
 
 	/**
@@ -39898,10 +40040,10 @@
 
 
 /***/ },
-/* 354 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(355);
+	var identity = __webpack_require__(356);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -39943,7 +40085,7 @@
 
 
 /***/ },
-/* 355 */
+/* 356 */
 /***/ function(module, exports) {
 
 	/**
@@ -39969,10 +40111,10 @@
 
 
 /***/ },
-/* 356 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(343);
+	var toObject = __webpack_require__(344);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties specified
@@ -40003,10 +40145,10 @@
 
 
 /***/ },
-/* 357 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(358);
+	var baseForIn = __webpack_require__(359);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties `predicate`
@@ -40031,11 +40173,11 @@
 
 
 /***/ },
-/* 358 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(359),
-	    keysIn = __webpack_require__(361);
+	var baseFor = __webpack_require__(360),
+	    keysIn = __webpack_require__(362);
 
 	/**
 	 * The base implementation of `_.forIn` without support for callback
@@ -40054,10 +40196,10 @@
 
 
 /***/ },
-/* 359 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(360);
+	var createBaseFor = __webpack_require__(361);
 
 	/**
 	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -40077,10 +40219,10 @@
 
 
 /***/ },
-/* 360 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(343);
+	var toObject = __webpack_require__(344);
 
 	/**
 	 * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -40110,18 +40252,18 @@
 
 
 /***/ },
-/* 361 */
+/* 362 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(362),
-	    isArguments = __webpack_require__(339),
-	    isArray = __webpack_require__(349),
-	    isFunction = __webpack_require__(352),
-	    isIndex = __webpack_require__(363),
-	    isLength = __webpack_require__(348),
-	    isObject = __webpack_require__(344),
-	    isString = __webpack_require__(345),
-	    support = __webpack_require__(347);
+	var arrayEach = __webpack_require__(363),
+	    isArguments = __webpack_require__(340),
+	    isArray = __webpack_require__(350),
+	    isFunction = __webpack_require__(353),
+	    isIndex = __webpack_require__(364),
+	    isLength = __webpack_require__(349),
+	    isObject = __webpack_require__(345),
+	    isString = __webpack_require__(346),
+	    support = __webpack_require__(348);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]',
@@ -40252,7 +40394,7 @@
 
 
 /***/ },
-/* 362 */
+/* 363 */
 /***/ function(module, exports) {
 
 	/**
@@ -40280,7 +40422,7 @@
 
 
 /***/ },
-/* 363 */
+/* 364 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -40310,7 +40452,7 @@
 
 
 /***/ },
-/* 364 */
+/* 365 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -40374,7 +40516,7 @@
 
 
 /***/ },
-/* 365 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint react/prop-types: [2, {ignore: ["container", "containerPadding", "target", "placement", "children"] }] */
@@ -40382,15 +40524,15 @@
 
 	'use strict';
 
-	var _inherits = __webpack_require__(366)['default'];
+	var _inherits = __webpack_require__(367)['default'];
 
-	var _classCallCheck = __webpack_require__(373)['default'];
+	var _classCallCheck = __webpack_require__(374)['default'];
 
-	var _extends = __webpack_require__(304)['default'];
+	var _extends = __webpack_require__(305)['default'];
 
-	var _objectWithoutProperties = __webpack_require__(374)['default'];
+	var _objectWithoutProperties = __webpack_require__(375)['default'];
 
-	var _interopRequireDefault = __webpack_require__(320)['default'];
+	var _interopRequireDefault = __webpack_require__(321)['default'];
 
 	exports.__esModule = true;
 
@@ -40398,19 +40540,19 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactOverlaysLibOverlay = __webpack_require__(375);
+	var _reactOverlaysLibOverlay = __webpack_require__(376);
 
 	var _reactOverlaysLibOverlay2 = _interopRequireDefault(_reactOverlaysLibOverlay);
 
-	var _reactPropTypesLibElementType = __webpack_require__(404);
+	var _reactPropTypesLibElementType = __webpack_require__(405);
 
 	var _reactPropTypesLibElementType2 = _interopRequireDefault(_reactPropTypesLibElementType);
 
-	var _Fade = __webpack_require__(406);
+	var _Fade = __webpack_require__(407);
 
 	var _Fade2 = _interopRequireDefault(_Fade);
 
-	var _classnames = __webpack_require__(321);
+	var _classnames = __webpack_require__(322);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -40518,14 +40660,14 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 366 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var _Object$create = __webpack_require__(324)["default"];
+	var _Object$create = __webpack_require__(325)["default"];
 
-	var _Object$setPrototypeOf = __webpack_require__(367)["default"];
+	var _Object$setPrototypeOf = __webpack_require__(368)["default"];
 
 	exports["default"] = function (subClass, superClass) {
 	  if (typeof superClass !== "function" && superClass !== null) {
@@ -40546,35 +40688,35 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 367 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(368), __esModule: true };
-
-/***/ },
 /* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(369);
-	module.exports = __webpack_require__(310).Object.setPrototypeOf;
+	module.exports = { "default": __webpack_require__(369), __esModule: true };
 
 /***/ },
 /* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// 19.1.3.19 Object.setPrototypeOf(O, proto)
-	var $export = __webpack_require__(308);
-	$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(370).set});
+	__webpack_require__(370);
+	module.exports = __webpack_require__(311).Object.setPrototypeOf;
 
 /***/ },
 /* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
+	// 19.1.3.19 Object.setPrototypeOf(O, proto)
+	var $export = __webpack_require__(309);
+	$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(371).set});
+
+/***/ },
+/* 371 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// Works with __proto__ only. Old v8 can't work with null proto objects.
 	/* eslint-disable no-proto */
-	var getDesc  = __webpack_require__(314).getDesc
-	  , isObject = __webpack_require__(371)
-	  , anObject = __webpack_require__(372);
+	var getDesc  = __webpack_require__(315).getDesc
+	  , isObject = __webpack_require__(372)
+	  , anObject = __webpack_require__(373);
 	var check = function(O, proto){
 	  anObject(O);
 	  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
@@ -40583,7 +40725,7 @@
 	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
 	    function(test, buggy, set){
 	      try {
-	        set = __webpack_require__(311)(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
+	        set = __webpack_require__(312)(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
 	        set(test, []);
 	        buggy = !(test instanceof Array);
 	      } catch(e){ buggy = true; }
@@ -40598,7 +40740,7 @@
 	};
 
 /***/ },
-/* 371 */
+/* 372 */
 /***/ function(module, exports) {
 
 	module.exports = function(it){
@@ -40606,17 +40748,17 @@
 	};
 
 /***/ },
-/* 372 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(371);
+	var isObject = __webpack_require__(372);
 	module.exports = function(it){
 	  if(!isObject(it))throw TypeError(it + ' is not an object!');
 	  return it;
 	};
 
 /***/ },
-/* 373 */
+/* 374 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40630,7 +40772,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 374 */
+/* 375 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40650,7 +40792,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 375 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40671,19 +40813,19 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Portal = __webpack_require__(376);
+	var _Portal = __webpack_require__(377);
 
 	var _Portal2 = _interopRequireDefault(_Portal);
 
-	var _Position = __webpack_require__(382);
+	var _Position = __webpack_require__(383);
 
 	var _Position2 = _interopRequireDefault(_Position);
 
-	var _RootCloseWrapper = __webpack_require__(398);
+	var _RootCloseWrapper = __webpack_require__(399);
 
 	var _RootCloseWrapper2 = _interopRequireDefault(_RootCloseWrapper);
 
-	var _reactPropTypesLibElementType = __webpack_require__(403);
+	var _reactPropTypesLibElementType = __webpack_require__(404);
 
 	var _reactPropTypesLibElementType2 = _interopRequireDefault(_reactPropTypesLibElementType);
 
@@ -40850,7 +40992,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 376 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40867,15 +41009,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _reactPropTypesLibMountable = __webpack_require__(377);
+	var _reactPropTypesLibMountable = __webpack_require__(378);
 
 	var _reactPropTypesLibMountable2 = _interopRequireDefault(_reactPropTypesLibMountable);
 
-	var _utilsOwnerDocument = __webpack_require__(379);
+	var _utilsOwnerDocument = __webpack_require__(380);
 
 	var _utilsOwnerDocument2 = _interopRequireDefault(_utilsOwnerDocument);
 
-	var _utilsGetContainer = __webpack_require__(381);
+	var _utilsGetContainer = __webpack_require__(382);
 
 	var _utilsGetContainer2 = _interopRequireDefault(_utilsGetContainer);
 
@@ -40978,14 +41120,14 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 377 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _common = __webpack_require__(378);
+	var _common = __webpack_require__(379);
 
 	/**
 	 * Checks whether a prop provides a DOM element
@@ -41010,7 +41152,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 378 */
+/* 379 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41049,7 +41191,7 @@
 	}
 
 /***/ },
-/* 379 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41062,7 +41204,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _domHelpersOwnerDocument = __webpack_require__(380);
+	var _domHelpersOwnerDocument = __webpack_require__(381);
 
 	var _domHelpersOwnerDocument2 = _interopRequireDefault(_domHelpersOwnerDocument);
 
@@ -41073,7 +41215,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 380 */
+/* 381 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -41088,7 +41230,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 381 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41110,7 +41252,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 382 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41135,21 +41277,21 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _classnames = __webpack_require__(321);
+	var _classnames = __webpack_require__(322);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _utilsOwnerDocument = __webpack_require__(379);
+	var _utilsOwnerDocument = __webpack_require__(380);
 
 	var _utilsOwnerDocument2 = _interopRequireDefault(_utilsOwnerDocument);
 
-	var _utilsGetContainer = __webpack_require__(381);
+	var _utilsGetContainer = __webpack_require__(382);
 
 	var _utilsGetContainer2 = _interopRequireDefault(_utilsGetContainer);
 
-	var _utilsOverlayPositionUtils = __webpack_require__(383);
+	var _utilsOverlayPositionUtils = __webpack_require__(384);
 
-	var _reactPropTypesLibMountable = __webpack_require__(377);
+	var _reactPropTypesLibMountable = __webpack_require__(378);
 
 	var _reactPropTypesLibMountable2 = _interopRequireDefault(_reactPropTypesLibMountable);
 
@@ -41313,7 +41455,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 383 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41322,19 +41464,19 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _ownerDocument = __webpack_require__(379);
+	var _ownerDocument = __webpack_require__(380);
 
 	var _ownerDocument2 = _interopRequireDefault(_ownerDocument);
 
-	var _domHelpersQueryOffset = __webpack_require__(384);
+	var _domHelpersQueryOffset = __webpack_require__(385);
 
 	var _domHelpersQueryOffset2 = _interopRequireDefault(_domHelpersQueryOffset);
 
-	var _domHelpersQueryPosition = __webpack_require__(386);
+	var _domHelpersQueryPosition = __webpack_require__(387);
 
 	var _domHelpersQueryPosition2 = _interopRequireDefault(_domHelpersQueryPosition);
 
-	var _domHelpersQueryScrollTop = __webpack_require__(396);
+	var _domHelpersQueryScrollTop = __webpack_require__(397);
 
 	var _domHelpersQueryScrollTop2 = _interopRequireDefault(_domHelpersQueryScrollTop);
 
@@ -41452,13 +41594,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 384 */
+/* 385 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var contains = __webpack_require__(334),
-	    getWindow = __webpack_require__(385),
-	    ownerDocument = __webpack_require__(380);
+	var contains = __webpack_require__(335),
+	    getWindow = __webpack_require__(386),
+	    ownerDocument = __webpack_require__(381);
 
 	module.exports = function offset(node) {
 	  var doc = ownerDocument(node),
@@ -41487,7 +41629,7 @@
 	};
 
 /***/ },
-/* 385 */
+/* 386 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41497,33 +41639,33 @@
 	};
 
 /***/ },
-/* 386 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var babelHelpers = __webpack_require__(387);
+	var babelHelpers = __webpack_require__(388);
 
 	exports.__esModule = true;
 	exports['default'] = position;
 
-	var _offset = __webpack_require__(384);
+	var _offset = __webpack_require__(385);
 
 	var _offset2 = babelHelpers.interopRequireDefault(_offset);
 
-	var _offsetParent = __webpack_require__(388);
+	var _offsetParent = __webpack_require__(389);
 
 	var _offsetParent2 = babelHelpers.interopRequireDefault(_offsetParent);
 
-	var _scrollTop = __webpack_require__(396);
+	var _scrollTop = __webpack_require__(397);
 
 	var _scrollTop2 = babelHelpers.interopRequireDefault(_scrollTop);
 
-	var _scrollLeft = __webpack_require__(397);
+	var _scrollLeft = __webpack_require__(398);
 
 	var _scrollLeft2 = babelHelpers.interopRequireDefault(_scrollLeft);
 
-	var _style = __webpack_require__(389);
+	var _style = __webpack_require__(390);
 
 	var _style2 = babelHelpers.interopRequireDefault(_style);
 
@@ -41559,7 +41701,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 387 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
@@ -41595,21 +41737,21 @@
 	})
 
 /***/ },
-/* 388 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var babelHelpers = __webpack_require__(387);
+	var babelHelpers = __webpack_require__(388);
 
 	exports.__esModule = true;
 	exports['default'] = offsetParent;
 
-	var _ownerDocument = __webpack_require__(380);
+	var _ownerDocument = __webpack_require__(381);
 
 	var _ownerDocument2 = babelHelpers.interopRequireDefault(_ownerDocument);
 
-	var _style = __webpack_require__(389);
+	var _style = __webpack_require__(390);
 
 	var _style2 = babelHelpers.interopRequireDefault(_style);
 
@@ -41631,15 +41773,15 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 389 */
+/* 390 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var camelize = __webpack_require__(390),
-	    hyphenate = __webpack_require__(392),
-	    _getComputedStyle = __webpack_require__(394),
-	    removeStyle = __webpack_require__(395);
+	var camelize = __webpack_require__(391),
+	    hyphenate = __webpack_require__(393),
+	    _getComputedStyle = __webpack_require__(395),
+	    removeStyle = __webpack_require__(396);
 
 	var has = Object.prototype.hasOwnProperty;
 
@@ -41660,7 +41802,7 @@
 	};
 
 /***/ },
-/* 390 */
+/* 391 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -41670,7 +41812,7 @@
 	 */
 
 	'use strict';
-	var camelize = __webpack_require__(391);
+	var camelize = __webpack_require__(392);
 	var msPattern = /^-ms-/;
 
 	module.exports = function camelizeStyleName(string) {
@@ -41678,7 +41820,7 @@
 	};
 
 /***/ },
-/* 391 */
+/* 392 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -41692,7 +41834,7 @@
 	};
 
 /***/ },
-/* 392 */
+/* 393 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -41703,7 +41845,7 @@
 
 	"use strict";
 
-	var hyphenate = __webpack_require__(393);
+	var hyphenate = __webpack_require__(394);
 	var msPattern = /^ms-/;
 
 	module.exports = function hyphenateStyleName(string) {
@@ -41711,7 +41853,7 @@
 	};
 
 /***/ },
-/* 393 */
+/* 394 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41723,14 +41865,14 @@
 	};
 
 /***/ },
-/* 394 */
+/* 395 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var babelHelpers = __webpack_require__(387);
+	var babelHelpers = __webpack_require__(388);
 
-	var _utilCamelizeStyle = __webpack_require__(390);
+	var _utilCamelizeStyle = __webpack_require__(391);
 
 	var _utilCamelizeStyle2 = babelHelpers.interopRequireDefault(_utilCamelizeStyle);
 
@@ -41776,7 +41918,7 @@
 	};
 
 /***/ },
-/* 395 */
+/* 396 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41786,11 +41928,11 @@
 	};
 
 /***/ },
-/* 396 */
+/* 397 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var getWindow = __webpack_require__(385);
+	var getWindow = __webpack_require__(386);
 
 	module.exports = function scrollTop(node, val) {
 	  var win = getWindow(node);
@@ -41801,11 +41943,11 @@
 	};
 
 /***/ },
-/* 397 */
+/* 398 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var getWindow = __webpack_require__(385);
+	var getWindow = __webpack_require__(386);
 
 	module.exports = function scrollTop(node, val) {
 	  var win = getWindow(node);
@@ -41816,7 +41958,7 @@
 	};
 
 /***/ },
-/* 398 */
+/* 399 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41837,15 +41979,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _utilsAddEventListener = __webpack_require__(399);
+	var _utilsAddEventListener = __webpack_require__(400);
 
 	var _utilsAddEventListener2 = _interopRequireDefault(_utilsAddEventListener);
 
-	var _utilsCreateChainedFunction = __webpack_require__(402);
+	var _utilsCreateChainedFunction = __webpack_require__(403);
 
 	var _utilsCreateChainedFunction2 = _interopRequireDefault(_utilsCreateChainedFunction);
 
-	var _utilsOwnerDocument = __webpack_require__(379);
+	var _utilsOwnerDocument = __webpack_require__(380);
 
 	var _utilsOwnerDocument2 = _interopRequireDefault(_utilsOwnerDocument);
 
@@ -41980,7 +42122,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 399 */
+/* 400 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41989,11 +42131,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _domHelpersEventsOn = __webpack_require__(400);
+	var _domHelpersEventsOn = __webpack_require__(401);
 
 	var _domHelpersEventsOn2 = _interopRequireDefault(_domHelpersEventsOn);
 
-	var _domHelpersEventsOff = __webpack_require__(401);
+	var _domHelpersEventsOff = __webpack_require__(402);
 
 	var _domHelpersEventsOff2 = _interopRequireDefault(_domHelpersEventsOff);
 
@@ -42009,11 +42151,11 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 400 */
+/* 401 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var canUseDOM = __webpack_require__(335);
+	var canUseDOM = __webpack_require__(336);
 	var on = function on() {};
 
 	if (canUseDOM) {
@@ -42030,11 +42172,11 @@
 	module.exports = on;
 
 /***/ },
-/* 401 */
+/* 402 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var canUseDOM = __webpack_require__(335);
+	var canUseDOM = __webpack_require__(336);
 	var off = function off() {};
 
 	if (canUseDOM) {
@@ -42052,7 +42194,7 @@
 	module.exports = off;
 
 /***/ },
-/* 402 */
+/* 403 */
 /***/ function(module, exports) {
 
 	/**
@@ -42098,52 +42240,6 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 403 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _common = __webpack_require__(378);
-
-	/**
-	 * Checks whether a prop provides a type of element.
-	 *
-	 * The type of element can be provided in two forms:
-	 * - tag name (string)
-	 * - a return value of React.createClass(...)
-	 *
-	 * @param props
-	 * @param propName
-	 * @param componentName
-	 * @returns {Error|undefined}
-	 */
-
-	function validate(props, propName, componentName) {
-	  var errBeginning = _common.errMsg(props, propName, componentName, '. Expected an Element `type`');
-
-	  if (typeof props[propName] !== 'function') {
-	    if (_react2['default'].isValidElement(props[propName])) {
-	      return new Error(errBeginning + ', not an actual Element');
-	    }
-
-	    if (typeof props[propName] !== 'string') {
-	      return new Error(errBeginning + ' such as a tag name or return value of React.createClass(...)');
-	    }
-	  }
-	}
-
-	exports['default'] = _common.createChainableTypeChecker(validate);
-	module.exports = exports['default'];
-
-/***/ },
 /* 404 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -42157,7 +42253,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _common = __webpack_require__(405);
+	var _common = __webpack_require__(379);
 
 	/**
 	 * Checks whether a prop provides a type of element.
@@ -42191,6 +42287,52 @@
 
 /***/ },
 /* 405 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _common = __webpack_require__(406);
+
+	/**
+	 * Checks whether a prop provides a type of element.
+	 *
+	 * The type of element can be provided in two forms:
+	 * - tag name (string)
+	 * - a return value of React.createClass(...)
+	 *
+	 * @param props
+	 * @param propName
+	 * @param componentName
+	 * @returns {Error|undefined}
+	 */
+
+	function validate(props, propName, componentName) {
+	  var errBeginning = _common.errMsg(props, propName, componentName, '. Expected an Element `type`');
+
+	  if (typeof props[propName] !== 'function') {
+	    if (_react2['default'].isValidElement(props[propName])) {
+	      return new Error(errBeginning + ', not an actual Element');
+	    }
+
+	    if (typeof props[propName] !== 'string') {
+	      return new Error(errBeginning + ' such as a tag name or return value of React.createClass(...)');
+	    }
+	  }
+	}
+
+	exports['default'] = _common.createChainableTypeChecker(validate);
+	module.exports = exports['default'];
+
+/***/ },
+/* 406 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -42229,18 +42371,18 @@
 	}
 
 /***/ },
-/* 406 */
+/* 407 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _inherits = __webpack_require__(366)['default'];
+	var _inherits = __webpack_require__(367)['default'];
 
-	var _classCallCheck = __webpack_require__(373)['default'];
+	var _classCallCheck = __webpack_require__(374)['default'];
 
-	var _extends = __webpack_require__(304)['default'];
+	var _extends = __webpack_require__(305)['default'];
 
-	var _interopRequireDefault = __webpack_require__(320)['default'];
+	var _interopRequireDefault = __webpack_require__(321)['default'];
 
 	exports.__esModule = true;
 
@@ -42248,15 +42390,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(321);
+	var _classnames = __webpack_require__(322);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _reactOverlaysLibTransition = __webpack_require__(407);
+	var _reactOverlaysLibTransition = __webpack_require__(408);
 
 	var _reactOverlaysLibTransition2 = _interopRequireDefault(_reactOverlaysLibTransition);
 
-	var _reactPropTypesLibDeprecated = __webpack_require__(409);
+	var _reactPropTypesLibDeprecated = __webpack_require__(410);
 
 	var _reactPropTypesLibDeprecated2 = _interopRequireDefault(_reactPropTypesLibDeprecated);
 
@@ -42357,7 +42499,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 407 */
+/* 408 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42382,15 +42524,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _domHelpersTransitionProperties = __webpack_require__(408);
+	var _domHelpersTransitionProperties = __webpack_require__(409);
 
 	var _domHelpersTransitionProperties2 = _interopRequireDefault(_domHelpersTransitionProperties);
 
-	var _domHelpersEventsOn = __webpack_require__(400);
+	var _domHelpersEventsOn = __webpack_require__(401);
 
 	var _domHelpersEventsOn2 = _interopRequireDefault(_domHelpersEventsOn);
 
-	var _classnames = __webpack_require__(321);
+	var _classnames = __webpack_require__(322);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -42699,11 +42841,11 @@
 	exports['default'] = Transition;
 
 /***/ },
-/* 408 */
+/* 409 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var canUseDOM = __webpack_require__(335);
+	var canUseDOM = __webpack_require__(336);
 
 	var has = Object.prototype.hasOwnProperty,
 	    transform = 'transform',
@@ -42759,7 +42901,7 @@
 	}
 
 /***/ },
-/* 409 */
+/* 410 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42769,7 +42911,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(331);
+	var _warning = __webpack_require__(332);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -42786,7 +42928,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 410 */
+/* 411 */
 /***/ function(module, exports) {
 
 	/**
@@ -42832,21 +42974,21 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 411 */
+/* 412 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"thCorrelativo":"TablaProgramas__thCorrelativo___3NzKu","tdCorrelativo":"TablaProgramas__tdCorrelativo___3-WWy TablaProgramas__thCorrelativo___3NzKu","thFecha":"TablaProgramas__thFecha___2Eby7","tdFecha":"TablaProgramas__tdFecha___2GiOv TablaProgramas__thFecha___2Eby7","thCliente":"TablaProgramas__thCliente___ko7yb","tdCliente":"TablaProgramas__tdCliente___36LDr TablaProgramas__thCliente___ko7yb","thCeco":"TablaProgramas__thCeco___6I29x","tdCeco":"TablaProgramas__tdCeco___3b4K- TablaProgramas__thCeco___6I29x","thLocal":"TablaProgramas__thLocal___1lZcg","tdLocal":"TablaProgramas__tdLocal___2Ws36 TablaProgramas__thLocal___1lZcg","thZonaSei":"TablaProgramas__thZonaSei___2_Bz_","tdZonaSei":"TablaProgramas__tdZonaSei___1kQ8p TablaProgramas__thZonaSei___2_Bz_","thRegion":"TablaProgramas__thRegion___2z44D","tdRegion":"TablaProgramas__tdRegion___3fA1s TablaProgramas__thRegion___2z44D","thComuna":"TablaProgramas__thComuna___2lkCv","tdComuna":"TablaProgramas__tdComuna___1lVN_ TablaProgramas__thComuna___2lkCv","thStock":"TablaProgramas__thStock___2-lAz","tdStock":"TablaProgramas__tdStock___34Eem TablaProgramas__thStock___2-lAz","thDotacion":"TablaProgramas__thDotacion___3wkjn","tdDotacion":"TablaProgramas__tdDotacion___2crpd TablaProgramas__thDotacion___3wkjn","thJornada":"TablaProgramas__thJornada___3xMvk","tdJornada":"TablaProgramas__tdJornada___BDr2g TablaProgramas__thJornada___3xMvk","thEstado":"TablaProgramas__thEstado___21gDk","tdEstado":"TablaProgramas__tdEstado___2W113 TablaProgramas__thEstado___21gDk","thOpciones":"TablaProgramas__thOpciones___3yi_K","tdOpciones":"TablaProgramas__tdOpciones___RelBN TablaProgramas__thOpciones___3yi_K","inputDia":"TablaProgramas__inputDia___3gS_m shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"TablaProgramas__inputDiaInvalido___1fRN_ TablaProgramas__inputDia___3gS_m shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"TablaProgramas__inputDiaPendiente___3n91q TablaProgramas__inputDia___3gS_m shared__inputNumberAsText___1Qr9M","inputMes":"TablaProgramas__inputMes___ulW5T shared__inputNumberAsText___1Qr9M","inputAnno":"TablaProgramas__inputAnno___gVXq7 shared__inputNumberAsText___1Qr9M","inputDotacionSugerida":"TablaProgramas__inputDotacionSugerida___FLU9S shared__inputNumberAsText___1Qr9M","inputDotacionIngresada":"TablaProgramas__inputDotacionIngresada___3T4HM shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 412 */
+/* 413 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M","tooltipDanger":"shared__tooltipDanger___3_QoZ","tooltipWarning":"shared__tooltipWarning___38s1A"};
 
 /***/ },
-/* 413 */
+/* 414 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -42857,13 +42999,15 @@
 	    value: true
 	});
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _AgregarPrograma = __webpack_require__(414);
+	var _AgregarPrograma = __webpack_require__(415);
 
 	var _AgregarPrograma2 = _interopRequireDefault(_AgregarPrograma);
 
@@ -42875,37 +43019,38 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Libs
 
-
-	var PropTypes = _react2.default.PropTypes;
 	// Styles
 
-	var AgregarInventario = function (_React$Component) {
-	    _inherits(AgregarInventario, _React$Component);
 
-	    function AgregarInventario(props) {
-	        _classCallCheck(this, AgregarInventario);
+	var AgregarPrograma = function (_React$Component) {
+	    _inherits(AgregarPrograma, _React$Component);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AgregarInventario).call(this, props));
+	    function AgregarPrograma(props) {
+	        _classCallCheck(this, AgregarPrograma);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AgregarPrograma).call(this, props));
 
 	        _this.state = {
 	            clienteSeleccionado: {},
-	            inputIdCliente_error: '',
-	            inputNumeroLocal_error: '',
-	            inputPegar_error: '',
-	            pegadoConProblemas: [],
-	            pegadoConteoTotal: 0,
-	            pegadoConteoCorrectos: 0,
-	            pegadoConteoProblemas: 0,
 	            locales: [],
+	            errores: {
+	                errorIdCliente: '',
+	                errorNumeroLocal: '',
+	                erorrInputPegar: ''
+	            },
+	            pegados: {
+	                pegadoConProblemas: [],
+	                conteoTotal: 0,
+	                conteoCorrectos: 0,
+	                conteoProblemas: 0
+	            },
+	            inputPegar_error: '',
 	            modoIngreso: 'manual' // 'manual'/'excel'
 	        };
-	        _this.inputIdClienteChanged = _this.inputIdClienteChanged.bind(_this);
-	        _this.inputNumeroLocalChanged = _this.inputNumeroLocalChanged.bind(_this);
-	        _this.submitAgregarLocal = _this.submitAgregarLocal.bind(_this);
 	        return _this;
 	    }
 
-	    _createClass(AgregarInventario, [{
+	    _createClass(AgregarPrograma, [{
 	        key: 'setModoIngreso',
 	        value: function setModoIngreso(modo) {
 	            if (modo !== this.state.modoIngreso) {
@@ -42913,79 +43058,6 @@
 	                    modoIngreso: this.state.modoIngreso === 'manual' ? 'excel' : 'manual'
 	                });
 	            }
-	        }
-	    }, {
-	        key: 'testOnPaste',
-	        value: function testOnPaste(event) {
-	            var _this2 = this;
-
-	            event.preventDefault();
-
-	            // validar que exista un cliente seleccionado
-	            if (this.inputIdCliente.value === '-1') {
-	                this.setState({
-	                    pegadoConProblemas: [],
-	                    pegadoConteoTotal: 0,
-	                    pegadoConteoCorrectos: 0,
-	                    pegadoConteoProblemas: 0,
-	                    inputIdCliente_error: 'Seleccione un Cliente',
-	                    inputPegar_error: 'Seleccione un Cliente'
-	                });
-	                return;
-	            }
-
-	            // cuando se pegue un elemento, separar separar las filas por el "line feed" '\n'
-	            event.clipboardData.items[0].getAsString(function (texto) {
-	                // separar cada una de las filas '\n'
-	                var rows = texto.trim().split('\n');
-	                // quitar las filas vacias, y separar sus valores por el caracter tabulador
-	                rows = rows.filter(function (row) {
-	                    return row !== '';
-	                });
-	                var celdas = rows.map(function (row) {
-	                    return row.trim().split('\t');
-	                });
-
-	                // Agregar los locales
-	                var resultado = celdas.map(function (row) {
-	                    var numeroLocal = row[0];
-
-	                    // buscar el local
-	                    var local = _this2.state.locales.find(function (local) {
-	                        return local.numero === numeroLocal;
-	                    });
-	                    if (local) {
-	                        // buscar los datos
-	                        var localCreado = _this2.props.onFormSubmit(local, _this2.inputMesAnno.value);
-	                        // cliente, local, estado final
-	                        return {
-	                            cliente: _this2.state.clienteSeleccionado.nombreCorto,
-	                            numeroLocal: numeroLocal,
-	                            mensaje: localCreado ? 'Ok' : 'Ya agendado',
-	                            error: localCreado
-	                        };
-	                    } else {
-	                        return {
-	                            cliente: _this2.state.clienteSeleccionado.nombreCorto,
-	                            numeroLocal: numeroLocal,
-	                            mensaje: 'No existe',
-	                            error: true
-	                        };
-	                    }
-	                });
-	                // quitar los que fueron correctamente agregados
-	                var pegadoConProblemas = resultado.filter(function (res) {
-	                    return res.mensaje !== 'Ok';
-	                });
-
-	                // guardar el resultado de agregar los elementos
-	                _this2.setState({
-	                    pegadoConProblemas: pegadoConProblemas,
-	                    pegadoConteoTotal: resultado.length,
-	                    pegadoConteoCorrectos: resultado.length - pegadoConProblemas.length,
-	                    pegadoConteoProblemas: pegadoConProblemas.length
-	                });
-	            });
 	        }
 
 	        /**
@@ -43007,68 +43079,130 @@
 	            this.setState({
 	                clienteSeleccionado: cliente ? cliente : {},
 	                locales: cliente ? cliente.locales : [], // mostrar la lista de locales que tiene el cliente seleccionado
-	                inputIdCliente_error: '',
-	                inputNumeroLocal_error: '',
-	                inputPegar_error: '',
-	                // Todo: limpiar el campo de locales
-	                inputNumeroLocal: ''
+	                errores: {}
 	            });
 	        }
 	    }, {
 	        key: 'inputNumeroLocalChanged',
-	        value: function inputNumeroLocalChanged(event) {
+	        value: function inputNumeroLocalChanged(evt) {
 	            this.setState({
-	                inputNumeroLocal_error: ''
+	                errores: { errorNumeroLocal: '' }
 	            });
 	        }
 	        /**
-	         * Form Submit
+	         * Enviar Manualmente
 	         */
 
 	    }, {
-	        key: 'submitAgregarLocal',
-	        value: function submitAgregarLocal(evt) {
+	        key: 'agregarLocalManualmente',
+	        value: function agregarLocalManualmente(evt) {
 	            evt.preventDefault();
+	            var idCliente = this.inputIdCliente.value;
+	            var numeroLocal = this.inputNumeroLocal.value;
+	            var annoMes = this.inputAnnoMes.value;
+
+	            this.inputNumeroLocal.value = '';
+
+	            var _props$agregarInventa = this.props.agregarInventario(idCliente, numeroLocal, annoMes);
+
+	            var _props$agregarInventa2 = _slicedToArray(_props$agregarInventa, 2);
+
+	            var errores = _props$agregarInventa2[0];
+	            var objeto = _props$agregarInventa2[1];
+
+	            this.setState({
+	                errores: errores || {}
+	            });
+	        }
+
+	        /**
+	         * Enviar Al pegar
+	         */
+
+	    }, {
+	        key: 'agregarLocalesAlPegarVIEJO',
+	        value: function agregarLocalesAlPegarVIEJO(event) {
+	            var _this2 = this;
+
+	            event.preventDefault();
 
 	            // validar que exista un cliente seleccionado
-	            if (this.inputIdCliente.value === '-1') {
+	            var idCliente = this.inputIdCliente.value;
+	            if (idCliente === '-1') {
 	                this.setState({
-	                    inputIdCliente_error: 'Seleccione un Cliente'
+	                    pegados: {
+	                        conteoTotal: 0,
+	                        conteoCorrectos: 0,
+	                        conteoProblemas: 0,
+	                        pegadoConProblemas: []
+	                    },
+	                    errores: {
+	                        errorIdCliente: 'Seleccione un Cliente'
+	                    },
+	                    inputPegar_error: 'Seleccione un Cliente'
 	                });
-	            }
-
-	            // validar que el local exista
-	            var numeroLocal = this.inputNumeroLocal.value;
-	            var local = this.state.locales.find(function (local) {
-	                return local.numero == numeroLocal;
-	            });
-	            if (local === undefined) {
-	                this.setState({
-	                    inputNumeroLocal_error: numeroLocal === '' ? 'Digite un numero de local' : 'El local \'' + numeroLocal + '\' no existe'
-	                });
-	                this.inputNumeroLocal.value = '';
 	                return;
 	            }
 
-	            // limpiar el formulario
-	            var localCreado = this.props.onFormSubmit(local, this.inputMesAnno.value);
-	            this.setState({
-	                inputNumeroLocal_error: localCreado ? '' : 'El local ' + numeroLocal + ' ya ha sido agendado'
-	            });
-	            this.inputNumeroLocal.value = '';
+	            // cuando se pegue un elemento, separar separar las filas por el "line feed" '\n'
+	            event.clipboardData.items[0].getAsString(function (texto) {
+	                // separar cada una de las filas '\n'
+	                var rows = texto.trim().split('\n');
+	                // quitar las filas vacias, y separar sus valores por el caracter tabulador
+	                rows = rows.filter(function (row) {
+	                    return row !== '';
+	                });
+	                var idLocales = rows.map(function (row) {
+	                    return row.trim().split('\t')[0];
+	                });
 
-	            console.log("FORMULARIO ENVIADO");
-	            console.log(local);
-	            console.log(this.state.clienteSeleccionado);
+	                // Agregar los locales
+	                //let resultado = celdas.map(row=>{
+	                //    let numeroLocal = row[0]
+	                //
+	                //    // buscar el local
+	                //    let local = this.state.locales.find(local=>local.numero===numeroLocal)
+	                //    if(local){
+	                //        // buscar los datos
+	                //        let localCreado = this.props.agregarInventario(local.idLocal, this.inputAnnoMes.value)
+	                //        // cliente, local, estado final
+	                //        return {
+	                //            cliente: this.state.clienteSeleccionado.nombreCorto,
+	                //            numeroLocal: numeroLocal,
+	                //            mensaje: localCreado? 'Ok' : 'Ya agendado',
+	                //            error: localCreado
+	                //        }
+	                //    }else{
+	                //        return {
+	                //            cliente: this.state.clienteSeleccionado.nombreCorto,
+	                //            numeroLocal: numeroLocal,
+	                //            mensaje: 'No existe',
+	                //            error: true
+	                //        }
+	                //    }
+	                //})
+	                // quitar los que fueron correctamente agregados
+	                //let pegadoConProblemas = resultado.filter(res=> res.mensaje!=='Ok')
+
+	                var resultadoPegar = _this2.props.agregarGrupoInventarios(idCliente, idLocales, _this2.inputAnnoMes.value);
+	                // guardar el resultado de agregar los elementos
+	                _this2.setState({
+	                    pegados: resultadoPegar
+	                });
+	                console.log('AgregarPrograma.... resultado:', resultadoPegar);
+	            });
 	        }
 	    }, {
 	        key: 'limpiarProblemas',
 	        value: function limpiarProblemas() {
 	            this.setState({
-	                pegadoConProblemas: [],
-	                pegadoConteoTotal: 0,
-	                pegadoConteoCorrectos: 0,
-	                pegadoConteoProblemas: 0
+	                pegados: {
+	                    conteoTotal: 0,
+	                    conteoCorrectos: 0,
+	                    conteoProblemas: 0,
+	                    pegadoConProblemas: []
+	                },
+	                inputPegar_error: ''
 	            });
 	        }
 	    }, {
@@ -43111,7 +43245,7 @@
 	                    { className: 'row' },
 	                    _react2.default.createElement(
 	                        'div',
-	                        { className: 'col-sm-2 form-group ' + (this.state.inputIdCliente_error !== '' ? 'has-error' : '') },
+	                        { className: 'col-sm-2 form-group ' + (this.state.errores.errorIdCliente ? 'has-error' : '') },
 	                        _react2.default.createElement(
 	                            'label',
 	                            { className: 'control-label', htmlFor: 'cliente' },
@@ -43121,7 +43255,7 @@
 	                            'select',
 	                            { className: 'form-control', name: 'cliente', defaultValue: '-1', ref: function ref(_ref) {
 	                                    return _this3.inputIdCliente = _ref;
-	                                }, onChange: this.inputIdClienteChanged },
+	                                }, onChange: this.inputIdClienteChanged.bind(this) },
 	                            _react2.default.createElement(
 	                                'option',
 	                                { value: '-1', disabled: true },
@@ -43139,7 +43273,7 @@
 	                        _react2.default.createElement(
 	                            'span',
 	                            { className: 'help-block' },
-	                            this.state.inputIdCliente_error
+	                            this.state.errores.errorIdCliente
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -43153,7 +43287,7 @@
 	                        _react2.default.createElement(
 	                            'select',
 	                            { className: 'form-control', name: 'fechaProgramada', ref: function ref(_ref2) {
-	                                    return _this3.inputMesAnno = _ref2;
+	                                    return _this3.inputAnnoMes = _ref2;
 	                                } },
 	                            this.props.meses.map(function (mes, i) {
 	                                return _react2.default.createElement(
@@ -43166,10 +43300,10 @@
 	                    ),
 	                    _react2.default.createElement(
 	                        'form',
-	                        { className: 'form', onSubmit: this.submitAgregarLocal, style: { display: this.state.modoIngreso === 'manual' ? '' : 'none' } },
+	                        { className: 'form', onSubmit: this.agregarLocalManualmente.bind(this), style: { display: this.state.modoIngreso === 'manual' ? '' : 'none' } },
 	                        _react2.default.createElement(
 	                            'div',
-	                            { className: 'col-sm-3 form-group ' + (this.state.inputNumeroLocal_error !== '' ? 'has-error' : '') },
+	                            { className: 'col-sm-3 form-group ' + (this.state.errores.errorNumeroLocal ? 'has-error' : '') },
 	                            _react2.default.createElement(
 	                                'label',
 	                                { className: 'control-label', htmlFor: 'locales' },
@@ -43177,11 +43311,11 @@
 	                            ),
 	                            _react2.default.createElement('input', { className: 'form-control', type: 'number', min: '1', max: '9999', name: 'locales', ref: function ref(_ref3) {
 	                                    return _this3.inputNumeroLocal = _ref3;
-	                                }, onChange: this.inputNumeroLocalChanged }),
+	                                }, onChange: this.inputNumeroLocalChanged.bind(this) }),
 	                            _react2.default.createElement(
 	                                'span',
 	                                { className: 'help-block' },
-	                                this.state.inputNumeroLocal_error
+	                                this.state.errores.errorNumeroLocal
 	                            )
 	                        ),
 	                        _react2.default.createElement(
@@ -43200,17 +43334,17 @@
 	                        { style: { display: this.state.modoIngreso === 'excel' ? '' : 'none' } },
 	                        _react2.default.createElement(
 	                            'div',
-	                            { className: 'col-sm-3 form-group ' + (this.state.inputPegar_error !== '' ? 'has-error' : '') },
+	                            { className: 'col-sm-3 form-group ' + (this.state.errores.errorInputPegar !== '' ? 'has-error' : '') },
 	                            _react2.default.createElement(
 	                                'label',
 	                                { className: 'control-label', htmlFor: 'locales' },
 	                                'Locales'
 	                            ),
-	                            _react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'locales', placeholder: 'pegar aca los datos de Excel', onPaste: this.testOnPaste.bind(this) }),
+	                            _react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'locales', placeholder: 'pegar aca los datos de Excel', onPaste: this.agregarLocalesAlPegarVIEJO.bind(this) }),
 	                            _react2.default.createElement(
 	                                'span',
 	                                { className: 'help-block' },
-	                                this.state.inputPegar_error
+	                                this.state.errores.errorInputPegar
 	                            ),
 	                            _react2.default.createElement(
 	                                'p',
@@ -43238,7 +43372,7 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            'div',
-	                            { className: 'col-sm-5 form-group ' },
+	                            { className: 'col-sm-5 form-group ' + (this.state.pegados.conteoTotal == 0 ? 'hide' : '') },
 	                            _react2.default.createElement(
 	                                'div',
 	                                { className: 'col-sm-5' },
@@ -43268,7 +43402,7 @@
 	                                            _react2.default.createElement(
 	                                                'td',
 	                                                null,
-	                                                this.state.pegadoConteoCorrectos
+	                                                this.state.pegados.conteoCorrectos
 	                                            )
 	                                        ),
 	                                        _react2.default.createElement(
@@ -43286,7 +43420,7 @@
 	                                            _react2.default.createElement(
 	                                                'td',
 	                                                null,
-	                                                this.state.pegadoConteoProblemas
+	                                                this.state.pegados.conteoProblemas
 	                                            )
 	                                        ),
 	                                        _react2.default.createElement(
@@ -43307,7 +43441,7 @@
 	                                                _react2.default.createElement(
 	                                                    'b',
 	                                                    null,
-	                                                    this.state.pegadoConteoTotal
+	                                                    this.state.pegados.conteoTotal
 	                                                )
 	                                            )
 	                                        )
@@ -43316,7 +43450,7 @@
 	                            ),
 	                            _react2.default.createElement(
 	                                'div',
-	                                { className: "col-sm-7 " + (this.state.pegadoConteoTotal <= 0 ? 'hide' : '') },
+	                                { className: "col-sm-7 " },
 	                                _react2.default.createElement(
 	                                    'label',
 	                                    { className: 'control-label', htmlFor: 'locales' },
@@ -43339,11 +43473,6 @@
 	                                            _react2.default.createElement(
 	                                                'th',
 	                                                null,
-	                                                'Cliente'
-	                                            ),
-	                                            _react2.default.createElement(
-	                                                'th',
-	                                                null,
 	                                                'CECO'
 	                                            ),
 	                                            _react2.default.createElement(
@@ -43356,7 +43485,7 @@
 	                                    _react2.default.createElement(
 	                                        'tbody',
 	                                        null,
-	                                        this.state.pegadoConProblemas.map(function (res, index) {
+	                                        this.state.pegados.pegadoConProblemas.map(function (error, index) {
 	                                            return _react2.default.createElement(
 	                                                'tr',
 	                                                { key: index },
@@ -43366,16 +43495,7 @@
 	                                                    _react2.default.createElement(
 	                                                        'p',
 	                                                        null,
-	                                                        res.cliente
-	                                                    )
-	                                                ),
-	                                                _react2.default.createElement(
-	                                                    'td',
-	                                                    { className: _AgregarPrograma2.default.tableCell },
-	                                                    _react2.default.createElement(
-	                                                        'p',
-	                                                        null,
-	                                                        res.numeroLocal
+	                                                        error.numeroLocal
 	                                                    )
 	                                                ),
 	                                                _react2.default.createElement(
@@ -43387,7 +43507,7 @@
 	                                                        _react2.default.createElement(
 	                                                            'small',
 	                                                            null,
-	                                                            res.mensaje
+	                                                            error.errorIdCliente || error.errorNumeroLocal
 	                                                        )
 	                                                    )
 	                                                )
@@ -43403,15 +43523,15 @@
 	        }
 	    }]);
 
-	    return AgregarInventario;
+	    return AgregarPrograma;
 	}(_react2.default.Component);
 
-	exports.default = AgregarInventario;
+	exports.default = AgregarPrograma;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AgregarPrograma.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 414 */
+/* 415 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

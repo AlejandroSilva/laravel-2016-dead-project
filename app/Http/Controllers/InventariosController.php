@@ -85,6 +85,15 @@ class InventariosController extends Controller {
         }
     }
 
+    function api_get($idInventario){
+        $inventario = Inventarios::find($idInventario);
+        if($inventario){
+            return response()->json($inventario, 200);
+        }else{
+            return response()->json([], 404);
+        }
+    }
+
     function api_actualizar($idInventario, Request $request){
         $inventario = Inventarios::find($idInventario);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)

@@ -28,6 +28,7 @@ Route::get('inventario',                    'InventariosController@index');
 Route::get('inventario/lista',              'InventariosController@lista');
 Route::get('inventario/nuevo',              'InventariosController@nuevo');
 Route::post('inventario/nuevo',             'InventariosController@api_crear');
+Route::get('inventario/{idInventario}',     'InventariosController@api_get');
 Route::put('inventario/{idInventario}',     'InventariosController@api_actualizar');
 
 Route::get('nominas',               function(){return view('operacional.nominas.nominas-index');});

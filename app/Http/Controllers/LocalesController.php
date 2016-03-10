@@ -52,8 +52,16 @@ class LocalesController extends Controller {
         // incluir en el query la "jornada" por defecto del local
         $local->jornada;
 
+        // -----------------------------------------------
         // incluir en el objeto la "hora de llegada sugerida" y la "dotacion sugerida" del local
         $localAsArray = $local->toArray();
+        // ordenar campos para que sean mas accesibles
+        $localAsArray['nombreCliente'] = $local->cliente->nombreCorto;
+        $localAsArray['nombreComuna'] = $local->direccion->comuna->nombre;
+        $localAsArray['nombreProvincia'] = $local->direccion->comuna->provincia->nombre;
+        $localAsArray['nombreRegion'] = $local->direccion->comuna->provincia->region->numero;
+
+
         $localAsArray['horaLlegadaSugerida'] = $local->llegadaSugerida();
 
         // Calcular la dotacion sugerida
