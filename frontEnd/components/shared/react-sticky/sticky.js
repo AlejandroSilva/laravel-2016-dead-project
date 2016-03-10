@@ -71,7 +71,8 @@ class Sticky extends React.Component {
      * Returns the y-coordinate of the top of this element.
      */
     calculateOrigin() {
-        let node = React.findDOMNode(this);
+        //let node = React.findDOMNode(this);
+        let node = ReactDOM.findDOMNode(this)
 
         // Do some ugly DOM manipulation to where this element's non-sticky position would be
         let previousPosition = node.style.position;

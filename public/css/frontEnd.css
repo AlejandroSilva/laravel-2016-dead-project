@@ -1,11 +1,11 @@
 
-.Cabecera__container___3QvtW{
+.TableHeader__container___N1LYN{
     position: relative;
 }
-.Cabecera__cell___1YFbN{
+.TableHeader__cell___qBAiu{
 
 }
-.Cabecera__menu___1L7n3{
+.TableHeader__menu___x-Ng6{
     background: white;
     position: absolute;
     width: 100%;
@@ -13,14 +13,14 @@
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px grey;
     padding: 5px;
 }
-.Cabecera__contenedorValores___3Bx-H{
+.TableHeader__contenedorValores___qZzS4{
     height: 130px;
     border: 1px solid grey;
     border-radius: 2px;
     overflow: auto;
     padding: 5px;
 }
-.Cabecera__menu___1L7n3 label{
+.TableHeader__menu___x-Ng6 label{
     display: block;
     margin-top: 2px;
     margin-bottom: 2px;
@@ -62,149 +62,149 @@
  esto, es necesario que los anchos de las celdas sean fijos, no dinamicos
  */
 /* correlativo */
-.TablaLocalesMensual__thCorrelativo___3HnOu {
+.TablaProgramas__thCorrelativo___3NzKu {
     width: 30px;
     background: white;
 }
-.TablaLocalesMensual__tdCorrelativo___Kvh_p {
+.TablaProgramas__tdCorrelativo___3-WWy {
     vertical-align: middle !important;
 }
 /* Fecha */
-.TablaLocalesMensual__thFecha___1qDZQ {
+.TablaProgramas__thFecha___2Eby7 {
     min-width: 120px;
     background: white;
 }
-.TablaLocalesMensual__tdFecha___3Ppcl {
+.TablaProgramas__tdFecha___2GiOv {
     vertical-align: middle !important;
 }
 /* Cliente */
-.TablaLocalesMensual__thCliente___3l2rs {
+.TablaProgramas__thCliente___ko7yb {
     width: 120px;
     background: white;
 }
-.TablaLocalesMensual__tdCliente___1R8Nd {
+.TablaProgramas__tdCliente___36LDr {
     vertical-align: middle !important;
 }
 /* CECO */
-.TablaLocalesMensual__thCeco___1Isth {
+.TablaProgramas__thCeco___6I29x {
     width: 55px;
     background: white;
 }
-.TablaLocalesMensual__tdCeco___39Cmj {
+.TablaProgramas__tdCeco___3b4K- {
     vertical-align: middle !important;
 }
 /* Local */
-.TablaLocalesMensual__thLocal___zaA5L {
+.TablaProgramas__thLocal___1lZcg {
     width: 200px;
     background: white;
 }
-.TablaLocalesMensual__tdLocal___2quqk {
+.TablaProgramas__tdLocal___2Ws36 {
     vertical-align: middle !important;
 }
 /* ZonaSei */
-.TablaLocalesMensual__thZonaSei___2_Eql {
+.TablaProgramas__thZonaSei___2_Bz_ {
     width: 150px;
     background: white;
 }
-.TablaLocalesMensual__tdZonaSei___3ywi8 {
+.TablaProgramas__tdZonaSei___1kQ8p {
     vertical-align: middle !important;
 }
 /* Region */
-.TablaLocalesMensual__thRegion___10Xps {
+.TablaProgramas__thRegion___2z44D {
     width: 140px;
     background: white;
 }
-.TablaLocalesMensual__tdRegion___2KUA- {
+.TablaProgramas__tdRegion___3fA1s {
     vertical-align: middle !important;
 }
 /* Comuna */
-.TablaLocalesMensual__thComuna___2k2Sr {
+.TablaProgramas__thComuna___2lkCv {
     width: 140px;
     background: white;
 }
-.TablaLocalesMensual__tdComuna___93qXr {
+.TablaProgramas__tdComuna___1lVN_ {
     vertical-align: middle !important;
 }
 /* Stock */
-.TablaLocalesMensual__thStock___1jhS_ {
+.TablaProgramas__thStock___2-lAz {
     width: 60px;
     background: white;
 }
-.TablaLocalesMensual__tdStock___1mA1i {
+.TablaProgramas__tdStock___34Eem {
     vertical-align: middle !important;
 }
 /* Dotacion */
-.TablaLocalesMensual__thDotacion___K39aJ {
+.TablaProgramas__thDotacion___3wkjn {
     width: 80px;
     background: white;
 }
-.TablaLocalesMensual__tdDotacion___3q5PS {
+.TablaProgramas__tdDotacion___2crpd {
     vertical-align: middle !important;
 }
 /* Jornada */
-.TablaLocalesMensual__thJornada___1DQcG {
+.TablaProgramas__thJornada___3xMvk {
     width: 200px;
     background: white;
 }
-.TablaLocalesMensual__tdJornada___kUo8p {
+.TablaProgramas__tdJornada___BDr2g {
     vertical-align: middle !important;
 }
 /* Estado */
-.TablaLocalesMensual__thEstado___1oBQx {
+.TablaProgramas__thEstado___21gDk {
     width: 100px;
     background: white;
 }
-.TablaLocalesMensual__tdEstado___22jAi {
+.TablaProgramas__tdEstado___2W113 {
     vertical-align: middle !important;
 }
 /* Opciones */
-.TablaLocalesMensual__thOpciones___2PzVJ {
+.TablaProgramas__thOpciones___3yi_K {
     width: 250px;
     background: white;
 }
-.TablaLocalesMensual__tdOpciones___fMayz {
+.TablaProgramas__tdOpciones___RelBN {
     vertical-align: middle !important;
 }
 
 /* FECHA */
-.TablaLocalesMensual__inputDia___1IKdv{
+.TablaProgramas__inputDia___3gS_m{
     width: 30px;
     marginRight: 2px;
 }
-.TablaLocalesMensual__inputDiaInvalido___kQYUg{
+.TablaProgramas__inputDiaInvalido___1fRN_{
     border: 2px solid #a94442;
     border-radius: 2px;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
     outline-color: #ce8483;
 }
-.TablaLocalesMensual__inputDiaPendiente___3UmCC{
+.TablaProgramas__inputDiaPendiente___3n91q{
     border: 2px solid #f0ad4e;
     border-radius: 2px;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
     outline-color: #ce8483;
 }
-.TablaLocalesMensual__inputMes___3dMJd{
+.TablaProgramas__inputMes___ulW5T{
     width: 25px;
     marginRight: 2px;
 }
-.TablaLocalesMensual__inputAnno___3XjjF{
+.TablaProgramas__inputAnno___gVXq7{
     width: 45px;
     marginRight: 2px;
 }
 
 /* Dotacion */
-.TablaLocalesMensual__inputDotacionSugerida___MCPhp{
+.TablaProgramas__inputDotacionSugerida___FLU9S{
     width: 25px;
     margin: 0 0 2px 0;
 }
-.TablaLocalesMensual__inputDotacionIngresada___2FZVc{
+.TablaProgramas__inputDotacionIngresada___3T4HM{
     width: 35px;
 }
-.AgregarManualmente__tableCell___bz7b0 {
+.AgregarPrograma__tableCell___Fw_r2 {
     padding: 0 !important;
     margin: 0;
 }
-.AgregarManualmente__tableCell___bz7b0 > p {
+.AgregarPrograma__tableCell___Fw_r2 > p {
     margin: 0;
 }
 /*.tableCellInput {*/

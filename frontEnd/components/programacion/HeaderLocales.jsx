@@ -3,10 +3,10 @@
 //
 //// Componentes
 //import Sticky from '../shared/react-sticky/sticky.js'
-//import Cabecera from './Cabecera.jsx'
+//import Cabecera from './TableHeader.jsx'
 //
 //// Styles
-//import styles from './TablaLocalesMensual.css'
+//import styles from './TablaProgramas.css'
 //
 //class HeaderLocales extends React.Component{
 //    render(){

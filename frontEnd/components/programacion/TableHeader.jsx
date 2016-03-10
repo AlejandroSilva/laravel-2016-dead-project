@@ -2,9 +2,9 @@ import React from 'react'
 let PropTypes = React.PropTypes
 
 // Styles
-import style from './Cabecera.css'
+import style from './TableHeader.css'
 
-class Cabecera extends React.Component {
+class TableHeader extends React.Component {
     constructor(props){
         super(props)
         this.state = {
@@ -80,12 +80,12 @@ class Cabecera extends React.Component {
     }
 }
 
-Cabecera.propTypes = {
+TableHeader.propTypes = {
     nombre: PropTypes.string,
     filtro: PropTypes.arrayOf(PropTypes.object).isRequired,
     onFiltroChanged: PropTypes.func.isRequired
 }
-Cabecera.defaultProps = {
+TableHeader.defaultProps = {
     nombre: '[sin nombre]'
 }
-export default Cabecera
+export default TableHeader

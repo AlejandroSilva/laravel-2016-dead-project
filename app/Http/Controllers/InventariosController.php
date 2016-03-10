@@ -43,7 +43,7 @@ class InventariosController extends Controller {
      */
 
     // POST inventario/nuevo
-    function postNuevo(Request $request){
+    function api_crear(Request $request){
         $validator = Validator::make($request->all(), [
             // FK
             'idLocal'=> 'required',
@@ -82,6 +82,46 @@ class InventariosController extends Controller {
                 ], 400);
             }
 //            return view('operacional.inventario.inventario-nuevo-ok');
+        }
+    }
+
+    function api_get($idInventario){
+        $inventario = Inventarios::find($idInventario);
+        if($inventario){
+            return response()->json($inventario, 200);
+        }else{
+            return response()->json([], 404);
+        }
+    }
+
+    function api_actualizar($idInventario, Request $request){
+        $inventario = Inventarios::find($idInventario);
+        // si no existe retorna un objeto vacio con statusCode 404 (not found)
+        if($inventario){
+            if(isset($request->idJornada))
+                $inventario->idJornada = $request->idJornada;
+            if(isset($request->fechaProgramada))
+                $inventario->fechaProgramada = $request->fechaProgramada;
+            if(isset($request->horaLlegada))
+                $inventario->horaLlegada = $request->horaLlegada;
+            if(isset($request->stockTeorico))
+                $inventario->stockTeorico = $request->stockTeorico;
+            if(isset($request->dotacionAsignada))
+                $inventario->dotacionAsignada = $request->dotacionAsignada;
+
+            $resultado =  $inventario->save();
+
+            if($resultado) {
+                return response()->json($inventario, 200);
+            }else{
+                return response()->json([
+                    'request'=>$request->all(),
+                    'resultado'=>$resultado,
+                    'inventario'=>$inventario
+                ], 400);
+            }
+        }else{
+            return response()->json([], 404);
         }
     }
 }
