@@ -36175,6 +36175,14 @@
 	    }
 
 	    _createClass(TablaInventarios, [{
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            // cuando se pasa de mes a mes, se generand posiciones "vacias" en el arreglo inputFecha, esto lo soluciona
+	            this.inputFecha = this.inputFecha.filter(function (input) {
+	                return input !== null;
+	            });
+	        }
+	    }, {
 	        key: 'focusFilaSiguiente',
 	        value: function focusFilaSiguiente(indexActual, nombreElemento) {
 	            var nextIndex = (indexActual + 1) % this.inputFecha.length;

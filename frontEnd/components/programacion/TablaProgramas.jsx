@@ -17,6 +17,11 @@ class TablaInventarios extends React.Component{
         // referencia a todos las entradas de fecha de los inventarios
         this.inputFecha = []
     }
+    componentWillReceiveProps(nextProps){
+        // cuando se pasa de mes a mes, se generand posiciones "vacias" en el arreglo inputFecha, esto lo soluciona
+        this.inputFecha = this.inputFecha.filter(input=>input!==null)
+    }
+
     focusFilaSiguiente(indexActual, nombreElemento){
         let nextIndex = (indexActual+1)%this.inputFecha.length
         let nextRow = this.inputFecha[nextIndex]
