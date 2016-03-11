@@ -36300,7 +36300,19 @@
 	                    _react2.default.createElement(
 	                        'tbody',
 	                        null,
-	                        this.props.inventariosFiltrados.map(function (inventario, index) {
+	                        this.props.inventariosFiltrados.length === 0 ? _react2.default.createElement(
+	                            'tr',
+	                            null,
+	                            _react2.default.createElement(
+	                                'td',
+	                                { colSpan: '13', style: { textAlign: 'center' } },
+	                                _react2.default.createElement(
+	                                    'b',
+	                                    null,
+	                                    'no hay inventarios para mostrar en este periodo'
+	                                )
+	                            )
+	                        ) : this.props.inventariosFiltrados.map(function (inventario, index) {
 	                            return _react2.default.createElement(_RowInventario2.default, {
 	                                key: index,
 	                                index: index,
@@ -43537,7 +43549,7 @@
 	                                _react2.default.createElement(
 	                                    'button',
 	                                    { className: 'btn btn-xs btn-primary pull-right', tabIndex: '-1', onClick: this.limpiarProblemas.bind(this) },
-	                                    'Aceptar/Limpiar'
+	                                    'Aceptar/Ocultar'
 	                                ),
 	                                _react2.default.createElement(
 	                                    'table',

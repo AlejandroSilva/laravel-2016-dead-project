@@ -207,7 +207,7 @@ class AgregarPrograma extends React.Component {
                         <div className={"col-sm-7 "}>
                             <label className="control-label" htmlFor="locales">Detalle</label>
                             <button className="btn btn-xs btn-primary pull-right" tabIndex="-1"onClick={this.limpiarProblemas.bind(this)}>
-                                Aceptar/Limpiar
+                                Aceptar/Ocultar
                             </button>
                             <table className="table table-bordered table-condensed">
                                 <thead>

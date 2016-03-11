@@ -86,20 +86,24 @@ class TablaInventarios extends React.Component{
                         </Sticky>
                     </thead>
                     <tbody>
-                    {this.props.inventariosFiltrados.map((inventario, index)=>{
-                        return <RowInventario
-                            key={index}
-                            index={index}
-                            inventario={inventario}
+                    {}
+                    {this.props.inventariosFiltrados.length===0
+                        ? <tr><td colSpan="13" style={{textAlign: 'center'}}><b>no hay inventarios para mostrar en este periodo</b></td></tr>
+                        : this.props.inventariosFiltrados.map((inventario, index)=>{
+                            return <RowInventario
+                                key={index}
+                                index={index}
+                                inventario={inventario}
 
-                            // Metodos
-                            focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
-                            focusFilaAnterior={this.focusFilaAnterior.bind(this)}
-                            guardarOCrearInventario={this.props.guardarOCrearInventario}
-                            //guardarOCrear={this.guardarOCrear.bind(this)}
-                            ref={ref=>this.inputFecha[index]=ref}
-                        />
-                    })}
+                                // Metodos
+                                focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
+                                focusFilaAnterior={this.focusFilaAnterior.bind(this)}
+                                guardarOCrearInventario={this.props.guardarOCrearInventario}
+                                //guardarOCrear={this.guardarOCrear.bind(this)}
+                                ref={ref=>this.inputFecha[index]=ref}
+                            />
+                        })
+                    }
                     </tbody>
                 </StickyContainer>
             </div>
