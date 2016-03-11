@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 // Modelos
 use App\Clientes;
 use App\Inventarios;
-use App\Locales;
 
 class InventariosController extends Controller {
     /**
@@ -19,17 +17,17 @@ class InventariosController extends Controller {
      * ##########################################################
      */
     // GET inventario
-    function index(){
+    function showIndex(){
         return view('operacional.inventario.inventario-index');
     }
 
     // GET inventario/lista
-    function lista(){
+    function showLista(){
         return view('operacional.inventario.inventario-lista');
     }
 
     // GET inventario/nuevo
-    function nuevo(){
+    function showNuevo(){
         $clientesWithLocales = Clientes::allWithSimpleLocales();
         return view('operacional.inventario.inventario-nuevo', [
             'clientes' => $clientesWithLocales
@@ -42,8 +40,8 @@ class InventariosController extends Controller {
      * ##########################################################
      */
 
-    // POST inventario/nuevo
-    function api_crear(Request $request){
+    // POST api/inventario/nuevo
+    function api_nuevo(Request $request){
         $validator = Validator::make($request->all(), [
             // FK
             'idLocal'=> 'required',
@@ -85,6 +83,7 @@ class InventariosController extends Controller {
         }
     }
 
+    // GET api/inventario/{idInventario}
     function api_get($idInventario){
         $inventario = Inventarios::find($idInventario);
         if($inventario){
@@ -94,6 +93,7 @@ class InventariosController extends Controller {
         }
     }
 
+    // PUT api/inventario/{idInventario}
     function api_actualizar($idInventario, Request $request){
         $inventario = Inventarios::find($idInventario);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
@@ -123,5 +123,19 @@ class InventariosController extends Controller {
         }else{
             return response()->json([], 404);
         }
+    }
+
+    // GET api/inventario/mes/{annoMesDia}
+    function api_getPorMes($annoMesDia){
+        $fecha = explode('-', $annoMesDia);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+        return response()->json(
+//            \DB::table('inventarios')
+            Inventarios::
+                whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+                ->get()
+        , 200);
     }
 }

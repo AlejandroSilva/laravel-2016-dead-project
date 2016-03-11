@@ -11,8 +11,7 @@ class AgregarPrograma extends React.Component {
             locales: [],
             errores:{
                 errorIdCliente: '',
-                errorNumeroLocal: '',
-                erorrInputPegar: ''
+                errorNumeroLocal: ''
             },
             pegados: {
                 pegadoConProblemas: [],
@@ -24,11 +23,17 @@ class AgregarPrograma extends React.Component {
             modoIngreso: 'manual' // 'manual'/'excel'
         }
     }
+    componentWillMount(){
+        // seleccionar el primer mes por defecto
+        this.props.onSeleccionarMes(this.props.meses[0].valor)
+    }
+    onSeleccionarMes(evt){
+        this.props.onSeleccionarMes(evt.target.value)
+    }
+
     setModoIngreso(modo){
        if(modo!==this.state.modoIngreso){
-           this.setState({
-               modoIngreso: this.state.modoIngreso==='manual'? 'excel' : 'manual'
-           })
+           this.setState({modoIngreso: this.state.modoIngreso==='manual'? 'excel' : 'manual'})
        }
     }
 
@@ -61,10 +66,10 @@ class AgregarPrograma extends React.Component {
         evt.preventDefault()
         let idCliente = this.inputIdCliente.value
         let numeroLocal = this.inputNumeroLocal.value
-        let annoMes = this.inputAnnoMes.value
+        let annoMesDia = this.inputAnnoMesDia.value
 
         this.inputNumeroLocal.value = ''
-        let [errores, objeto] = this.props.agregarInventario(idCliente, numeroLocal, annoMes)
+        let [errores, objeto] = this.props.agregarInventario(idCliente, numeroLocal, annoMesDia)
         this.setState({
             errores: errores || {}
         })
@@ -73,7 +78,7 @@ class AgregarPrograma extends React.Component {
     /**
      * Enviar Al pegar
      */
-    agregarLocalesAlPegarVIEJO(event){
+    agregarLocalesAlPegar(event){
         event.preventDefault()
 
         // validar que exista un cliente seleccionado
@@ -104,35 +109,8 @@ class AgregarPrograma extends React.Component {
                 return row.trim().split('\t')[0]
             })
 
-            // Agregar los locales
-            //let resultado = celdas.map(row=>{
-            //    let numeroLocal = row[0]
-            //
-            //    // buscar el local
-            //    let local = this.state.locales.find(local=>local.numero===numeroLocal)
-            //    if(local){
-            //        // buscar los datos
-            //        let localCreado = this.props.agregarInventario(local.idLocal, this.inputAnnoMes.value)
-            //        // cliente, local, estado final
-            //        return {
-            //            cliente: this.state.clienteSeleccionado.nombreCorto,
-            //            numeroLocal: numeroLocal,
-            //            mensaje: localCreado? 'Ok' : 'Ya agendado',
-            //            error: localCreado
-            //        }
-            //    }else{
-            //        return {
-            //            cliente: this.state.clienteSeleccionado.nombreCorto,
-            //            numeroLocal: numeroLocal,
-            //            mensaje: 'No existe',
-            //            error: true
-            //        }
-            //    }
-            //})
-            // quitar los que fueron correctamente agregados
-            //let pegadoConProblemas = resultado.filter(res=> res.mensaje!=='Ok')
 
-            let resultadoPegar = this.props.agregarGrupoInventarios(idCliente, idLocales, this.inputAnnoMes.value)
+            let resultadoPegar = this.props.agregarGrupoInventarios(idCliente, idLocales, this.inputAnnoMesDia.value)
             // guardar el resultado de agregar los elementos
             this.setState({
                 pegados: resultadoPegar
@@ -169,19 +147,19 @@ class AgregarPrograma extends React.Component {
                 {/* Cliente */}
                 <div className={'col-sm-2 form-group ' + (this.state.errores.errorIdCliente? 'has-error':'')}>
                     <label className="control-label" htmlFor="cliente">Cliente</label>
-                    <select className="form-control" name="cliente" defaultValue="-1" ref={ref=>this.inputIdCliente=ref} onChange={this.inputIdClienteChanged.bind(this)}>
+                    <select className="form-control"  name="cliente" defaultValue="-1" ref={ref=>this.inputIdCliente=ref} onChange={this.inputIdClienteChanged.bind(this)}>
                         <option value="-1" disabled>--</option>
                         {this.props.clientes.map((cliente, index)=>{
                             //return <option key={index} value={cliente.idCliente}>{"asdas" + cliente.nombre}</option
                             return <option key={index} value={cliente.idCliente}>{`${cliente.nombreCorto} - ${cliente.nombre}`}</option>
                         })}
                     </select>
-                    <span className="help-block">{this.state.errores.errorIdCliente}</span>
+                    <span className="help-block" style={{position:'absolute'}}>{this.state.errores.errorIdCliente}</span>
                 </div>
                 {/* Mes-Año  */}
                 <div className="col-sm-2 form-group">
                     <label className="control-label" htmlFor="fechaProgramada">Mes</label>
-                    <select className="form-control" name="fechaProgramada" ref={ref=>this.inputAnnoMes=ref}>
+                    <select className="form-control" name="fechaProgramada" ref={ref=>this.inputAnnoMesDia=ref} onChange={this.onSeleccionarMes.bind(this)}>
                         {this.props.meses.map((mes,i)=>{
                             return <option key={i} value={mes.valor}>{mes.texto}</option>
                         })}
@@ -194,7 +172,7 @@ class AgregarPrograma extends React.Component {
                     <div className={'col-sm-3 form-group ' + (this.state.errores.errorNumeroLocal? 'has-error':'')}>
                         <label className="control-label" htmlFor="locales">Local</label>
                         <input className="form-control" type="number" min='1' max='9999' name="locales" ref={ref=>this.inputNumeroLocal=ref} onChange={this.inputNumeroLocalChanged.bind(this)}  />
-                        <span className="help-block">{this.state.errores.errorNumeroLocal}</span>
+                        <span className="help-block" style={{position:'absolute'}}>{this.state.errores.errorNumeroLocal}</span>
                     </div>
                     {/* Boton Agregar */}
                     <div className="col-sm-2 form-group">
@@ -206,10 +184,9 @@ class AgregarPrograma extends React.Component {
                 {/* ========= OPCIONES PARA AGREGAR DESDE EXCEL ========= */}
                 <div style={{display: this.state.modoIngreso==='excel'? '':'none'}}>
                     {/* Locales */}
-                    <div className={'col-sm-3 form-group ' + (this.state.errores.errorInputPegar!==''? 'has-error':'')}>
+                    <div className='col-sm-3 form-group '>
                         <label className="control-label" htmlFor="locales">Locales</label>
-                        <input className="form-control" type="text" name="locales" placeholder="pegar aca los datos de Excel" onPaste={this.agregarLocalesAlPegarVIEJO.bind(this)}/>
-                        <span className="help-block">{this.state.errores.errorInputPegar}</span>
+                        <input className="form-control" type="text" name="locales" placeholder="pegar aca los datos de Excel" onPaste={this.agregarLocalesAlPegar.bind(this)}/>
 
                         <p style={{marginTop: '1em'}}>Abra Excel, seleccione los datos de la columna <b>CECO</b>, <b>COPIE</b> el contendo y <b>PEGUELO</b> en la cuandro de texto.</p>
                     </div>
@@ -263,6 +240,15 @@ class AgregarPrograma extends React.Component {
             </div>
         </div>
     }
+}
+
+AgregarPrograma.propTypes = {
+    clientes: React.PropTypes.array.isRequired,
+    meses: React.PropTypes.array.isRequired,
+    // Metodos
+    agregarInventario: React.PropTypes.func.isRequired,
+    agregarGrupoInventarios: React.PropTypes.func.isRequired,
+    onSeleccionarMes: React.PropTypes.func.isRequired
 }
 
 export default AgregarPrograma

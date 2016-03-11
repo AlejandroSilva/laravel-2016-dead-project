@@ -36,12 +36,21 @@
     margin: 0;
 }
 
+/* Hide */
+.shared__tooltipHide___2CzIE .tooltip-inner{
+    display: none;
+}
+.shared__tooltipHide___2CzIE .tooltip-arrow{
+    display: none;
+}
+/* Danger */
 .shared__tooltipDanger___3_QoZ .tooltip-inner{
     background-color: #d9534f;
 }
 .shared__tooltipDanger___3_QoZ .tooltip-arrow{
     border-left-color: #d9534f !important;
 }
+/* Warning*/
 .shared__tooltipWarning___38s1A .tooltip-inner{
     background-color: #f0ad4e;
 }

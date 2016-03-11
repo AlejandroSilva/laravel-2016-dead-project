@@ -12,15 +12,15 @@ axios.interceptors.response.use((response)=>{
 export default {
     locales: {
         get: (idLocal)=>{
-            return axios.get(`/locales/${idLocal}`)
+            return axios.get(`/api/locales/${idLocal}`)
         },
         getVerbose: (idLocal)=>{
-            return axios.get(`/locales/${idLocal}/verbose`)
+            return axios.get(`/api/locales/${idLocal}/verbose`)
         }
         // Demora artificial para probar los mensajes de carga
         //getVerbose: (idLocal)=>{
         //    return new Promise((resolve, reject)=>{
-        //        axios.get(`/locales/${idLocal}/verbose`)
+        //        axios.get(`/api/locales/${idLocal}/verbose`)
         //            .then(data=>{
         //                setTimeout(()=>{
         //                    resolve(data)
@@ -32,10 +32,13 @@ export default {
     },
     inventario: {
         nuevo: (datos)=>{
-            return axios.post(`/inventario/nuevo`, datos)
+            return axios.post(`/api/inventario/nuevo`, datos)
         },
         actualizar: (idInventario, datos)=>{
-            return axios.put(`/inventario/${idInventario}`, datos)
+            return axios.put(`/api/inventario/${idInventario}`, datos)
+        },
+        getPorMes: (annoMesDia)=>{
+            return axios.get(`/api/inventario/mes/${annoMesDia}`)
         }
     }
 }

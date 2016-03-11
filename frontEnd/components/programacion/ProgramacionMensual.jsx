@@ -19,7 +19,7 @@ class ProgramacionMensual extends React.Component{
         for (let desface = 0; desface < 12; desface++) {
             let mes = moment().add(desface, 'month')
             meses.push({
-                valor: mes.format('YYYY-MM'),
+                valor: mes.format('YYYY-MM-00'),
                 texto: mes.format('MMMM  YYYY')
             })
         }
@@ -30,18 +30,71 @@ class ProgramacionMensual extends React.Component{
         // MAGIA NEGRA!!
         this.blackbox = new Inventarios(this.props.clientes)
     }
-    componentDidMount(){
-        this.agregarInventario(2, this.props.clientes[1].locales[1].numero, '2016-07')
-        //this.agregarInventario(this.props.clientes[1].locales[2].numero, '2016-04')
-        this.agregarInventario(2, this.props.clientes[1].locales[4].numero, '2016-07')
-    //    this.agregarInventario(this.props.clientes[0].locales[5].numero, '2016-05')
-    //    this.agregarInventario(this.props.clientes[0].locales[6].numero, '2016-05')
-        this.agregarInventario(2, this.props.clientes[1].locales[8].numero, '2016-09')
-        this.agregarInventario(1, this.props.clientes[0].locales[12].numero, '2016-08')
-    }
+    //componentDidMount(){
+    //    this.agregarInventario(2, this.props.clientes[1].locales[1].numero, '2016-07-00')
+    //    //this.agregarInventario(this.props.clientes[1].locales[2].numero, '2016-04-00')
+    //    this.agregarInventario(2, this.props.clientes[1].locales[4].numero, '2016-07-00')
+    ////    this.agregarInventario(this.props.clientes[0].locales[5].numero, '2016-05-00')
+    ////    this.agregarInventario(this.props.clientes[0].locales[6].numero, '2016-05-00')
+    //    this.agregarInventario(2, this.props.clientes[1].locales[8].numero, '2016-09-00')
+    //    this.agregarInventario(1, this.props.clientes[0].locales[12].numero, '2016-08-00')
+    //}
 
-    agregarInventario(idCliente, numeroLocal, annoMes){
-        let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, numeroLocal, annoMes)
+    onSeleccionarMes(annoMesDia){
+        console.log('mes seleccionado ', annoMesDia)
+        // obtener todos los inventarios realizados en el mes seleccionado
+
+        api.inventario.getPorMes(annoMesDia)
+            .then(inventarios=>{
+                this.blackbox.reset()
+                let idLocalesToFetch = []
+                inventarios.forEach(inventario=>{
+                    // crear un dummy
+                    let nuevoInventario = this.blackbox.__crearDummy(annoMesDia, inventario.idLocal )
+                    this.blackbox.add(nuevoInventario)
+
+                    // actualizar los datos del inventario
+                    this.blackbox.actualizarDatosInventario(nuevoInventario, inventario)
+
+                    // los locales a los que se hara un fetch de los datos
+                    idLocalesToFetch.push(inventario.idLocal)
+                })
+                // actualizar el state
+                this.setState({
+                    inventariosFiltrados: this.blackbox.getListaFiltrada()
+                })
+
+                // pedir los datos del los locales de forma asincrona
+                this.fetchLocales(idLocalesToFetch)
+            })
+            //.catch(err=>console.error('error: ', err))
+
+    }
+    fetchLocales(idLocales){
+        let promesasFetch = []
+        idLocales.forEach(idLocal=> {
+            // pedir los datos de los locales
+            promesasFetch.push(
+                api.locales.getVerbose(idLocal)
+                    .then(local=>this.blackbox.actualizarDatosLocal(local))
+                    .catch(error=>console.error('error con :', error))
+            )
+        })
+        // en algun momento las promesas se van a cumplior, entonces actualizar el estado
+        Promise.all(promesasFetch)
+            .then(locales=>{
+                console.log('fetch de todos los locales correcto')
+                this.setState({inventariosFiltrados: this.blackbox.getListaFiltrada()})
+            })
+            .catch(datos=> {
+                // Todo: agregar bluebird para que esto no ocurra nunca
+                // todo, al fallar UNA promesa, no se cumple el resto
+                alert('error al buscar la información de los locales, (AgregarGrupoInventarios desde Excel: fetch de todos los locales correcto)')
+                this.setState({inventariosFiltrados: this.blackbox.getListaFiltrada()})
+            })
+    }
+    agregarInventario(idCliente, numeroLocal, annoMesDia){
+        let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, numeroLocal, annoMesDia)
         if(errores)
             return [errores, {}]
 
@@ -70,21 +123,16 @@ class ProgramacionMensual extends React.Component{
         return [null, {}]
     }
 
-    agregarGrupoInventarios(idCliente, idLocales, annoMes){
-        let promesasFetch = []
+    agregarGrupoInventarios(idCliente, idLocales, annoMesDia){
+        let idLocalesExistentes = []
         let pegadoConProblemas = []
         // se evalua y agrega cada uno de los elementos
         idLocales.forEach(idLocal=> {
-            let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, idLocal, annoMes)
+            let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, idLocal, annoMesDia)
             if (errores){
                 pegadoConProblemas.push(errores)
             }else{
-                // pedir los datos de los locales
-                promesasFetch.push(
-                    api.locales.getVerbose(nuevoInventario.local.idLocal)
-                        .then(local=>this.blackbox.actualizarDatosLocal(local))
-                        .catch(error=>console.error('error con :', error))
-                )
+                idLocalesExistentes.push(idLocal)
                 this.blackbox.add(nuevoInventario)
             }
         })
@@ -93,19 +141,8 @@ class ProgramacionMensual extends React.Component{
         this.setState({
             inventariosFiltrados: this.blackbox.getListaFiltrada()
         })
+        this.fetchLocales(idLocalesExistentes)
 
-        // en algun momento las promesas se van a cumplior, entonces actualizar el estado
-        Promise.all(promesasFetch)
-            .then(locales=>{
-                console.log('AgregarGrupoInventarios desde Excel: fetch de todos los locales correcto')
-                this.setState({inventariosFiltrados: this.blackbox.getListaFiltrada()})
-            })
-            .catch(datos=> {
-                // Todo: agregar bluebird para que esto no ocurra nunca
-                // todo, al fallar UNA promesa, no se cumple el resto
-                alert('error al buscar la información de los locales, (AgregarGrupoInventarios desde Excel: fetch de todos los locales correcto)')
-                this.setState({inventariosFiltrados: this.blackbox.getListaFiltrada()})
-            })
         return {
             pegadoConProblemas: pegadoConProblemas,
             conteoTotal: idLocales.length,
@@ -114,41 +151,31 @@ class ProgramacionMensual extends React.Component{
         }
     }
 
-    guardarOCrearInventario(){
-        //if(evt) evt.preventDefault()
-        //
-        //let jornada  = this.inputJornada.value
-        //console.log("guardar o crear: ", jornada)
-        //
-        //// Todo: validar esto
-        //const fechaEsValida = this.state.inputDia>=1 && this.state.inputDia<= 31//this.props.ultimoDiaMes
-        //if(fechaEsValida){
-        //    // ToDo: llamar al API
-        //    this.props.guardarOCrear({
-        //        idLocal: this.props.local.idLocal,
-        //        idJornada: jornada,
-        //        fechaProgramada: `${this.props.annoProgramado}-${this.props.mesProgramado}-${this.state.inputDia}`,
-        //        horaLlegada: '00:00',
-        //        stockTeorico: this.props.local.stock,
-        //        dotacionAsignada: 66,
-        //    }).then(res=>{
-        //        this.setState({
-        //            //guardado: true,
-        //            fechaValida: true,
-        //            estado: ESTADO.GUARDADO
-        //        })
-        //    }).catch(err=>{
-        //        console.error(err)
-        //    })
-        //}else {
-        //    this.setState({
-        //        //guardado: true,
-        //        fechaValida: false,
-        //        estado: ESTADO.FECHA_INVALIDA
-        //    })
-        //    console.log(`dia ${this.state.inputDia} incorrecto`)
-        //}
+    guardarOCrearInventario(formInventario){
+        if(formInventario.idInventario){
+            // Actualizar los datos del inventario
+            api.inventario.actualizar(formInventario.idInventario, formInventario)
+                .then(inventarioActualizado=>{
+                    console.log('inventario actualizado correctamente', inventarioActualizado)
+                    // actualizar los datos y el state de la app
+                    this.blackbox.actualizarDatosInventario(formInventario, inventarioActualizado)
+                    this.setState({
+                        inventariosFiltrados: this.blackbox.getListaFiltrada()
+                    })
+                })
+        }else{
+            // Crear los datos del inventario en el servidor
+            api.inventario.nuevo(formInventario)
+                .then(inventarioCreado=>{
+                    // actualizar los datos y el state de la app
+                    this.blackbox.actualizarDatosInventario(formInventario, inventarioCreado)
+                    this.setState({
+                        inventariosFiltrados: this.blackbox.getListaFiltrada()
+                    })
+                })
+        }
     }
+
     render(){
         return (
             <div>
@@ -159,6 +186,7 @@ class ProgramacionMensual extends React.Component{
                     meses={this.state.meses}
                     agregarInventario={this.agregarInventario.bind(this)}
                     agregarGrupoInventarios={this.agregarGrupoInventarios.bind(this)}
+                    onSeleccionarMes={this.onSeleccionarMes.bind(this)}
                 />
 
                 <div className="row">

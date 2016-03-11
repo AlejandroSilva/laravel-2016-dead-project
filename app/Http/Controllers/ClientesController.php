@@ -17,7 +17,7 @@ class ClientesController extends Controller {
      */
 
     // GET admin/clientes
-    public function verLista(){
+    public function show_Lista(){
         $clientes = Clientes::get();
 
         return view('operacional.clientes.clientes', [
@@ -31,13 +31,13 @@ class ClientesController extends Controller {
      * ##########################################################
      */
 
-    // GET clientes
-    public function getClientes_json(){
+    // GET api/clientes
+    public function api_getClientes(){
         return Clientes::all();
     }
 
-    // GET clientes/locales
-    public function getClientesWithLocales_json(){
+    // GET api/clientes/locales
+    public function api_getClientesWithLocales(){
         return Clientes::allWithSimpleLocales();
     }
 

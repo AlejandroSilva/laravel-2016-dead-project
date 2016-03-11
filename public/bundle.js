@@ -20348,15 +20348,15 @@
 	exports.default = {
 	    locales: {
 	        get: function get(idLocal) {
-	            return _axios2.default.get('/locales/' + idLocal);
+	            return _axios2.default.get('/api/locales/' + idLocal);
 	        },
 	        getVerbose: function getVerbose(idLocal) {
-	            return _axios2.default.get('/locales/' + idLocal + '/verbose');
+	            return _axios2.default.get('/api/locales/' + idLocal + '/verbose');
 	        }
 	        // Demora artificial para probar los mensajes de carga
 	        //getVerbose: (idLocal)=>{
 	        //    return new Promise((resolve, reject)=>{
-	        //        axios.get(`/locales/${idLocal}/verbose`)
+	        //        axios.get(`/api/locales/${idLocal}/verbose`)
 	        //            .then(data=>{
 	        //                setTimeout(()=>{
 	        //                    resolve(data)
@@ -20368,10 +20368,13 @@
 	    },
 	    inventario: {
 	        nuevo: function nuevo(datos) {
-	            return _axios2.default.post('/inventario/nuevo', datos);
+	            return _axios2.default.post('/api/inventario/nuevo', datos);
 	        },
 	        actualizar: function actualizar(idInventario, datos) {
-	            return _axios2.default.put('/inventario/' + idInventario, datos);
+	            return _axios2.default.put('/api/inventario/' + idInventario, datos);
+	        },
+	        getPorMes: function getPorMes(annoMesDia) {
+	            return _axios2.default.get('/api/inventario/mes/' + annoMesDia);
 	        }
 	    }
 	};
@@ -21762,7 +21765,7 @@
 	        for (var desface = 0; desface < 12; desface++) {
 	            var mes = (0, _moment2.default)().add(desface, 'month');
 	            meses.push({
-	                valor: mes.format('YYYY-MM'),
+	                valor: mes.format('YYYY-MM-00'),
 	                texto: mes.format('MMMM  YYYY')
 	            });
 	        }
@@ -21774,24 +21777,79 @@
 	        _this.blackbox = new _Inventarios2.default(_this.props.clientes);
 	        return _this;
 	    }
+	    //componentDidMount(){
+	    //    this.agregarInventario(2, this.props.clientes[1].locales[1].numero, '2016-07-00')
+	    //    //this.agregarInventario(this.props.clientes[1].locales[2].numero, '2016-04-00')
+	    //    this.agregarInventario(2, this.props.clientes[1].locales[4].numero, '2016-07-00')
+	    ////    this.agregarInventario(this.props.clientes[0].locales[5].numero, '2016-05-00')
+	    ////    this.agregarInventario(this.props.clientes[0].locales[6].numero, '2016-05-00')
+	    //    this.agregarInventario(2, this.props.clientes[1].locales[8].numero, '2016-09-00')
+	    //    this.agregarInventario(1, this.props.clientes[0].locales[12].numero, '2016-08-00')
+	    //}
 
 	    _createClass(ProgramacionMensual, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.agregarInventario(2, this.props.clientes[1].locales[1].numero, '2016-07');
-	            //this.agregarInventario(this.props.clientes[1].locales[2].numero, '2016-04')
-	            this.agregarInventario(2, this.props.clientes[1].locales[4].numero, '2016-07');
-	            //    this.agregarInventario(this.props.clientes[0].locales[5].numero, '2016-05')
-	            //    this.agregarInventario(this.props.clientes[0].locales[6].numero, '2016-05')
-	            this.agregarInventario(2, this.props.clientes[1].locales[8].numero, '2016-09');
-	            this.agregarInventario(1, this.props.clientes[0].locales[12].numero, '2016-08');
+	        key: 'onSeleccionarMes',
+	        value: function onSeleccionarMes(annoMesDia) {
+	            var _this2 = this;
+
+	            console.log('mes seleccionado ', annoMesDia);
+	            // obtener todos los inventarios realizados en el mes seleccionado
+
+	            _v2.default.inventario.getPorMes(annoMesDia).then(function (inventarios) {
+	                _this2.blackbox.reset();
+	                var idLocalesToFetch = [];
+	                inventarios.forEach(function (inventario) {
+	                    // crear un dummy
+	                    var nuevoInventario = _this2.blackbox.__crearDummy(annoMesDia, inventario.idLocal);
+	                    _this2.blackbox.add(nuevoInventario);
+
+	                    // actualizar los datos del inventario
+	                    _this2.blackbox.actualizarDatosInventario(nuevoInventario, inventario);
+
+	                    // los locales a los que se hara un fetch de los datos
+	                    idLocalesToFetch.push(inventario.idLocal);
+	                });
+	                // actualizar el state
+	                _this2.setState({
+	                    inventariosFiltrados: _this2.blackbox.getListaFiltrada()
+	                });
+
+	                // pedir los datos del los locales de forma asincrona
+	                _this2.fetchLocales(idLocalesToFetch);
+	            });
+	            //.catch(err=>console.error('error: ', err))
+	        }
+	    }, {
+	        key: 'fetchLocales',
+	        value: function fetchLocales(idLocales) {
+	            var _this3 = this;
+
+	            var promesasFetch = [];
+	            idLocales.forEach(function (idLocal) {
+	                // pedir los datos de los locales
+	                promesasFetch.push(_v2.default.locales.getVerbose(idLocal).then(function (local) {
+	                    return _this3.blackbox.actualizarDatosLocal(local);
+	                }).catch(function (error) {
+	                    return console.error('error con :', error);
+	                }));
+	            });
+	            // en algun momento las promesas se van a cumplior, entonces actualizar el estado
+	            Promise.all(promesasFetch).then(function (locales) {
+	                console.log('fetch de todos los locales correcto');
+	                _this3.setState({ inventariosFiltrados: _this3.blackbox.getListaFiltrada() });
+	            }).catch(function (datos) {
+	                // Todo: agregar bluebird para que esto no ocurra nunca
+	                // todo, al fallar UNA promesa, no se cumple el resto
+	                alert('error al buscar la información de los locales, (AgregarGrupoInventarios desde Excel: fetch de todos los locales correcto)');
+	                _this3.setState({ inventariosFiltrados: _this3.blackbox.getListaFiltrada() });
+	            });
 	        }
 	    }, {
 	        key: 'agregarInventario',
-	        value: function agregarInventario(idCliente, numeroLocal, annoMes) {
-	            var _this2 = this;
+	        value: function agregarInventario(idCliente, numeroLocal, annoMesDia) {
+	            var _this4 = this;
 
-	            var _blackbox$crearDummy = this.blackbox.crearDummy(idCliente, numeroLocal, annoMes);
+	            var _blackbox$crearDummy = this.blackbox.crearDummy(idCliente, numeroLocal, annoMesDia);
 
 	            var _blackbox$crearDummy2 = _slicedToArray(_blackbox$crearDummy, 2);
 
@@ -21810,10 +21868,10 @@
 
 	            // fetch de todos los datos, y actualizacion de la lista
 	            _v2.default.locales.getVerbose(nuevoInventario.local.idLocal).then(function (local) {
-	                _this2.blackbox.actualizarDatosLocal(local);
+	                _this4.blackbox.actualizarDatosLocal(local);
 
-	                _this2.setState({
-	                    inventariosFiltrados: _this2.blackbox.getListaFiltrada()
+	                _this4.setState({
+	                    inventariosFiltrados: _this4.blackbox.getListaFiltrada()
 	                });
 	            }).catch(function (error) {
 	                console.error('error al obtener los datos de ' + nuevoInventario.local.idLocal, error);
@@ -21824,14 +21882,14 @@
 	        }
 	    }, {
 	        key: 'agregarGrupoInventarios',
-	        value: function agregarGrupoInventarios(idCliente, idLocales, annoMes) {
-	            var _this3 = this;
+	        value: function agregarGrupoInventarios(idCliente, idLocales, annoMesDia) {
+	            var _this5 = this;
 
-	            var promesasFetch = [];
+	            var idLocalesExistentes = [];
 	            var pegadoConProblemas = [];
 	            // se evalua y agrega cada uno de los elementos
 	            idLocales.forEach(function (idLocal) {
-	                var _blackbox$crearDummy3 = _this3.blackbox.crearDummy(idCliente, idLocal, annoMes);
+	                var _blackbox$crearDummy3 = _this5.blackbox.crearDummy(idCliente, idLocal, annoMesDia);
 
 	                var _blackbox$crearDummy4 = _slicedToArray(_blackbox$crearDummy3, 2);
 
@@ -21841,13 +21899,8 @@
 	                if (errores) {
 	                    pegadoConProblemas.push(errores);
 	                } else {
-	                    // pedir los datos de los locales
-	                    promesasFetch.push(_v2.default.locales.getVerbose(nuevoInventario.local.idLocal).then(function (local) {
-	                        return _this3.blackbox.actualizarDatosLocal(local);
-	                    }).catch(function (error) {
-	                        return console.error('error con :', error);
-	                    }));
-	                    _this3.blackbox.add(nuevoInventario);
+	                    idLocalesExistentes.push(idLocal);
+	                    _this5.blackbox.add(nuevoInventario);
 	                }
 	            });
 
@@ -21855,17 +21908,8 @@
 	            this.setState({
 	                inventariosFiltrados: this.blackbox.getListaFiltrada()
 	            });
+	            this.fetchLocales(idLocalesExistentes);
 
-	            // en algun momento las promesas se van a cumplior, entonces actualizar el estado
-	            Promise.all(promesasFetch).then(function (locales) {
-	                console.log('AgregarGrupoInventarios desde Excel: fetch de todos los locales correcto');
-	                _this3.setState({ inventariosFiltrados: _this3.blackbox.getListaFiltrada() });
-	            }).catch(function (datos) {
-	                // Todo: agregar bluebird para que esto no ocurra nunca
-	                // todo, al fallar UNA promesa, no se cumple el resto
-	                alert('error al buscar la información de los locales, (AgregarGrupoInventarios desde Excel: fetch de todos los locales correcto)');
-	                _this3.setState({ inventariosFiltrados: _this3.blackbox.getListaFiltrada() });
-	            });
 	            return {
 	                pegadoConProblemas: pegadoConProblemas,
 	                conteoTotal: idLocales.length,
@@ -21875,45 +21919,34 @@
 	        }
 	    }, {
 	        key: 'guardarOCrearInventario',
-	        value: function guardarOCrearInventario() {
-	            //if(evt) evt.preventDefault()
-	            //
-	            //let jornada  = this.inputJornada.value
-	            //console.log("guardar o crear: ", jornada)
-	            //
-	            //// Todo: validar esto
-	            //const fechaEsValida = this.state.inputDia>=1 && this.state.inputDia<= 31//this.props.ultimoDiaMes
-	            //if(fechaEsValida){
-	            //    // ToDo: llamar al API
-	            //    this.props.guardarOCrear({
-	            //        idLocal: this.props.local.idLocal,
-	            //        idJornada: jornada,
-	            //        fechaProgramada: `${this.props.annoProgramado}-${this.props.mesProgramado}-${this.state.inputDia}`,
-	            //        horaLlegada: '00:00',
-	            //        stockTeorico: this.props.local.stock,
-	            //        dotacionAsignada: 66,
-	            //    }).then(res=>{
-	            //        this.setState({
-	            //            //guardado: true,
-	            //            fechaValida: true,
-	            //            estado: ESTADO.GUARDADO
-	            //        })
-	            //    }).catch(err=>{
-	            //        console.error(err)
-	            //    })
-	            //}else {
-	            //    this.setState({
-	            //        //guardado: true,
-	            //        fechaValida: false,
-	            //        estado: ESTADO.FECHA_INVALIDA
-	            //    })
-	            //    console.log(`dia ${this.state.inputDia} incorrecto`)
-	            //}
+	        value: function guardarOCrearInventario(formInventario) {
+	            var _this6 = this;
+
+	            if (formInventario.idInventario) {
+	                // Actualizar los datos del inventario
+	                _v2.default.inventario.actualizar(formInventario.idInventario, formInventario).then(function (inventarioActualizado) {
+	                    console.log('inventario actualizado correctamente', inventarioActualizado);
+	                    // actualizar los datos y el state de la app
+	                    _this6.blackbox.actualizarDatosInventario(formInventario, inventarioActualizado);
+	                    _this6.setState({
+	                        inventariosFiltrados: _this6.blackbox.getListaFiltrada()
+	                    });
+	                });
+	            } else {
+	                // Crear los datos del inventario en el servidor
+	                _v2.default.inventario.nuevo(formInventario).then(function (inventarioCreado) {
+	                    // actualizar los datos y el state de la app
+	                    _this6.blackbox.actualizarDatosInventario(formInventario, inventarioCreado);
+	                    _this6.setState({
+	                        inventariosFiltrados: _this6.blackbox.getListaFiltrada()
+	                    });
+	                });
+	            }
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this4 = this;
+	            var _this7 = this;
 
 	            return _react2.default.createElement(
 	                'div',
@@ -21927,7 +21960,8 @@
 	                    clientes: this.props.clientes,
 	                    meses: this.state.meses,
 	                    agregarInventario: this.agregarInventario.bind(this),
-	                    agregarGrupoInventarios: this.agregarGrupoInventarios.bind(this)
+	                    agregarGrupoInventarios: this.agregarGrupoInventarios.bind(this),
+	                    onSeleccionarMes: this.onSeleccionarMes.bind(this)
 	                }),
 	                _react2.default.createElement(
 	                    'div',
@@ -21941,7 +21975,7 @@
 	                        inventariosFiltrados: this.state.inventariosFiltrados,
 	                        guardarOCrearInventario: this.guardarOCrearInventario.bind(this),
 	                        ref: function ref(_ref) {
-	                            return _this4.TablaInventarios = _ref;
+	                            return _this7.TablaInventarios = _ref;
 	                        }
 	                    })
 	                )
@@ -35085,21 +35119,43 @@
 
 	        this.clientes = clientes;
 	        this.lista = [];
+	        this.idDummy = 1; // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
 	    }
-	    // Optimizar
-
 
 	    _createClass(Inventarios, [{
+	        key: 'reset',
+	        value: function reset() {
+	            this.lista = [];
+	            this.idDummy = 1;
+	        }
+	        // Optimizar
+
+	    }, {
 	        key: 'add',
 	        value: function add(inventario) {
 	            this.lista.push(inventario);
 	        }
 	    }, {
-	        key: 'existe',
-	        value: function existe(idLocal) {
-	            return this.lista.find(function (inventario) {
+	        key: 'yaExiste',
+	        value: function yaExiste(idLocal, annoMesDia) {
+	            var inventariosDelLocal = this.lista.filter(function (inventario) {
 	                return inventario.idLocal === idLocal;
-	            }) !== undefined;
+	            });
+	            // buscar si se tiene inventarios para este local
+	            if (inventariosDelLocal.length === 0) {
+	                return false;
+	            }
+	            // buscar si alguna fecha coincide
+	            var existe = false;
+	            inventariosDelLocal.forEach(function (inventario) {
+	                if (inventario.fechaProgramada === annoMesDia) {
+	                    // se tiene el mismo local, con la misma fecha inventariado
+	                    console.log('ya programado');
+	                    existe = true;
+	                    return true;
+	                }
+	            });
+	            return existe;
 	        }
 	    }, {
 	        key: 'getListaFiltrada',
@@ -35110,9 +35166,38 @@
 	        // Metodos de alto nivel
 
 	    }, {
+	        key: '__crearDummy',
+	        value: function __crearDummy(annoMesDia, idLocal) {
+	            return {
+	                idDummy: this.idDummy++, // asignar e incrementar
+	                idInventario: null,
+	                idLocal: idLocal,
+	                idJornada: null,
+	                fechaProgramada: annoMesDia,
+	                horaLlegada: "00:00:00",
+	                stockTeorico: 0,
+	                dotacionAsignada: null,
+	                local: {
+	                    idLocal: idLocal,
+	                    idJornadaSugerida: 4, // no definida
+	                    nombre: '-',
+	                    numero: '-',
+	                    stock: 0,
+	                    fechaStock: 'YYYY-MM-DD',
+	                    formato_local: {
+	                        produccionSugerida: 0
+	                    },
+	                    nombreCliente: '-',
+	                    nombreComuna: '-',
+	                    nombreProvincia: '-',
+	                    nombreRegion: '-',
+	                    dotacionSugerida: 0
+	                }
+	            };
+	        }
+	    }, {
 	        key: 'crearDummy',
-	        value: function crearDummy(idCliente, numeroLocal, annoMes) {
-	            var fechaProgramada = annoMes + '-00';
+	        value: function crearDummy(idCliente, numeroLocal, annoMesDia) {
 	            // ########### Revisar Cliente ###########
 	            // el usuario no selecciono uno en el formulario
 	            if (idCliente === '-1' || idCliente === '' || !idCliente) {
@@ -35148,45 +35233,25 @@
 	            }
 
 	            // revisar que no exista en la lista
-	            if (this.existe(local.idLocal)) {
+	            if (this.yaExiste(local.idLocal, annoMesDia)) {
 	                return [{
 	                    idCliente: idCliente,
 	                    numeroLocal: numeroLocal,
-	                    errorNumeroLocal: 'El local ' + numeroLocal + ' ya ha sido agendado.'
+	                    errorNumeroLocal: numeroLocal + ' ya ha sido agendado esa fecha.'
 	                }, null];
 	            }
 
 	            // ########### ok, se puede crear el inventario "vacio" ###########
-	            return [null, {
-	                idInventario: null,
-	                idLocal: local.idLocal,
-	                idJornada: 4, // no definida
-	                fechaProgramada: fechaProgramada,
-	                //horaLlegada: "00:00:00",
-	                stockTeorico: 0,
-	                dotacionAsignada: null,
-	                local: {
-	                    idLocal: local.idLocal,
-	                    nombre: '-',
-	                    numero: '-',
-	                    stock: 0,
-	                    fechaStock: 'YYYY-MM-DD',
-	                    formato_local: {
-	                        produccionSugerida: 0
-	                    },
-	                    nombreCliente: '-',
-	                    nombreComuna: '-',
-	                    nombreProvincia: '-',
-	                    nombreRegion: '-',
-	                    dotacionSugerida: 1
-	                }
-	            }];
+	            var dummy = this.__crearDummy(annoMesDia, local.idLocal);
+	            return [null, dummy];
 	        }
 	    }, {
 	        key: 'actualizarDatosLocal',
 	        value: function actualizarDatosLocal(local) {
+	            // actualizar los datos del local de todos los inventarios que lo tengan
 	            this.lista = this.lista.map(function (inventario) {
-	                if (inventario.local.idLocal === local.idLocal) {
+	                if (inventario.local.idLocal == local.idLocal) {
+
 	                    inventario.local = Object.assign(inventario.local, local);
 	                    // si no hay una dotacion asignada, ver la sugerida
 	                    if (inventario.dotacionAsignada === null) {
@@ -35196,9 +35261,19 @@
 	                return inventario;
 	            });
 	        }
+	    }, {
+	        key: 'actualizarDatosInventario',
+	        value: function actualizarDatosInventario(formInventario, inventarioActualizado) {
+	            this.lista = this.lista.map(function (inventario) {
+	                if (inventario.idDummy == formInventario.idDummy) {
+	                    inventario = Object.assign(inventario, inventarioActualizado);
+	                }
+	                return inventario;
+	            });
+	        }
 
 	        /*
-	        let filtroActualizado = this.generarFiltro(inventariosActualizados)
+	        let     filtroActualizado = this.generarFiltro(inventariosActualizados)
 	        let programasFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado)
 	         generarFiltro(inventarios){
 	            // TODO: simplificar este metodo, hay mucho codigo repetido
@@ -36100,6 +36175,14 @@
 	    }
 
 	    _createClass(TablaInventarios, [{
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            // cuando se pasa de mes a mes, se generand posiciones "vacias" en el arreglo inputFecha, esto lo soluciona
+	            this.inputFecha = this.inputFecha.filter(function (input) {
+	                return input !== null;
+	            });
+	        }
+	    }, {
 	        key: 'focusFilaSiguiente',
 	        value: function focusFilaSiguiente(indexActual, nombreElemento) {
 	            var nextIndex = (indexActual + 1) % this.inputFecha.length;
@@ -36113,44 +36196,6 @@
 	            var prevRow = this.inputFecha[prevIndex];
 	            prevRow.focusElemento(nombreElemento);
 	        }
-
-	        //guardarOCrear(request){
-	        //    let programa = this.state.programas.find(programa=>programa.idLocal===request.idLocal)
-	        //    if(!programa){
-	        //        return console.error(`inventario ${request.idLocal} no encontrado`)
-	        //    }
-	        //    // actualizar
-	        //    if(programa.idInventario){
-	        //        // actualizar el programa
-	        //        return new Promise((res, rej)=>{
-	        //            api.inventario.actualizar(programa.idInventario, request)
-	        //                .then(programaActualizado=>{
-	        //                    console.log('el servidor retorna ', programaActualizado.idJornada)
-	        //                    //todo Esto en la practica no va a hacer mucho, porque los cambios ya estan visialente escritos en los formularios
-	        //                    this.actualizarInventario(programa)
-	        //                    console.log(`programa ${programa.idInventario} actualizado`)
-	        //                    res(programa)
-	        //                })
-	        //                .catch(rej)
-	        //        })
-	        //    }else{
-	        //        // Crear el inventario
-	        //        return new Promise((res, rej)=>{
-	        //            api.inventario.nuevo(request)
-	        //                .then(inventarioCreado=>{
-	        //                    console.log(inventarioCreado.idJornada)
-	        //                    // buscar el inventario, por el id de local (en teorica nunca deberia estar repetido en esta instancia)
-	        //
-	        //                    inventario.idInventario = inventarioCreado.idInventario
-	        //                    this.actualizarInventario(inventario)
-	        //
-	        //                    console.log(`inventario ${inventarioCreado.idInventario} creado correctamente`)
-	        //                    res(inventarioCreado)
-	        //                })
-	        //                .catch(rej)
-	        //        })
-	        //    }
-	        //}
 
 	        // Reemplazar el filtro que es actualizado por la TableHeader
 	        //reemplazarFiltro(nombreFiltro, filtroActualizado) {
@@ -36262,7 +36307,8 @@
 
 	                                // Metodos
 	                                , focusFilaSiguiente: _this2.focusFilaSiguiente.bind(_this2),
-	                                focusFilaAnterior: _this2.focusFilaAnterior.bind(_this2)
+	                                focusFilaAnterior: _this2.focusFilaAnterior.bind(_this2),
+	                                guardarOCrearInventario: _this2.props.guardarOCrearInventario
 	                                //guardarOCrear={this.guardarOCrear.bind(this)}
 	                                , ref: function ref(_ref) {
 	                                    return _this2.inputFecha[index] = _ref;
@@ -37097,14 +37143,18 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var PropTypes = _react2.default.PropTypes;
-
 	// Componentes
 
 
 	// Styles
 
+
 	var ESTADO = {
+	    OCULTAR: {
+	        mensaje: 'Fecha Pendiente',
+	        className: '',
+	        tooltipClass: _shared2.default.tooltipHide
+	    },
 	    FECHA_PENDIENTE: {
 	        mensaje: 'Fecha Pendiente',
 	        className: 'label-danger',
@@ -37131,7 +37181,7 @@
 
 	        _this.state = {
 	            fechaValida: false,
-	            estado: ESTADO.FECHA_PENDIENTE
+	            estado: {}
 	        };
 	        // Refs disponibles: this.inputDia, this.inputMes, this.inputAnno, this.inputDotacion, this.inputJornada
 	        return _this;
@@ -37143,7 +37193,7 @@
 	            // fijar la dotacionSugerida
 	            var dotacionSugerida = this.props.inventario.local.dotacionSugerida;
 	            var dotacionAsignada = this.props.inventario.dotacionAsignada;
-	            if (dotacionAsignada) this.inputDotacion.value = dotacionAsignada;else this.inputDotacion.value = dotacionSugerida;
+	            this.inputDotacion.value = dotacionAsignada ? dotacionAsignada : dotacionSugerida;
 
 	            // fijar la fecha
 
@@ -37161,16 +37211,38 @@
 
 	            // fijar la jornada
 	            this.inputJornada.value = this.props.inventario.idJornada;
+
+	            this.validarDatos();
 	        }
 	    }, {
-	        key: 'componentWillUpdate',
-	        value: function componentWillUpdate(nextProps) {
-	            //if(this.inputDotacion.value===''){
-	            //    // si no se ha fijado, poner la dotacionSugerida del local
-	            //    this.inputDotacion.value = dotacionSugerida
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            //Actualizar dotacion
+	            //if(!this.inputDotacion.value || this.inputDotacion.value=='' || this.inputDotacion.value==0){
+	            // fijar la dotacionSugerida
+	            var dotacionSugerida = nextProps.inventario.local.dotacionSugerida;
+	            var dotacionAsignada = nextProps.inventario.dotacionAsignada;
+	            this.inputDotacion.value = dotacionAsignada ? dotacionAsignada : dotacionSugerida;
 	            //}
 
-	            //console.log(this.props.inventario.local.idJornadaSugerida, nextProps.inventario.local.idJornadaSugerida)
+	            // actualizar la fecha
+
+	            var _props$inventario$fec3 = this.props.inventario.fechaProgramada.split('-');
+
+	            var _props$inventario$fec4 = _slicedToArray(_props$inventario$fec3, 3);
+
+	            var anno = _props$inventario$fec4[0];
+	            var mes = _props$inventario$fec4[1];
+	            var dia = _props$inventario$fec4[2];
+
+	            this.inputDia.value = dia;
+	            this.inputMes.value = mes;
+	            this.inputAnno.value = anno;
+
+	            // actualizar la jornada
+	            var jornadaInventario = nextProps.inventario.idJornada;
+	            var jornadaLocal = nextProps.inventario.local.idJornadaSugerida;
+	            this.inputJornada.value = jornadaInventario ? jornadaInventario : jornadaLocal;
 	        }
 	    }, {
 	        key: 'focusElemento',
@@ -37179,6 +37251,14 @@
 	                this.inputDia.focus();
 	            } else if (elemento === 'dotacion') {
 	                this.inputDotacion.focus();
+	            }
+	        }
+	    }, {
+	        key: 'onFocusInputDia',
+	        value: function onFocusInputDia() {
+	            // si al hacer foco en el dia, el valor es "00", dejar el campo vacio con ""
+	            if (this.inputDia.value == 0) {
+	                this.inputDia.value = '';
 	            }
 	        }
 	    }, {
@@ -37195,27 +37275,57 @@
 	            }
 	        }
 	    }, {
-	        key: 'inputDiaHandler',
-	        value: function inputDiaHandler(evt) {
-	            //this.setState({inputDia: evt.target.value})
-	        }
-	    }, {
-	        key: 'inputJornadaHandler',
-	        value: function inputJornadaHandler(evt) {
-	            this.guardarOCrear();
-	        }
-	    }, {
-	        key: 'inputDotacionHandler',
-	        value: function inputDotacionHandler(evt) {
-	            //this.setState({inputDotacion: evt.target.value})
+	        key: 'validarDatos',
+	        value: function validarDatos() {
+	            var dia = this.inputDia.value;
+	            if ((dia == "00" || dia == "0") && this.props.inventario.idInventario === null) {
+	                this.setState({ fechaValida: false, estado: ESTADO.FECHA_PENDIENTE });
+	                return false;
+	            }
+	            if (dia < 1 || dia > 31) {
+	                this.setState({ fechaValida: false, estado: ESTADO.FECHA_INVALIDA });
+	                return false;
+	            }
+
+	            this.setState({ fechaValida: true, estado: ESTADO.OCULTAR });
+	            return true;
 	        }
 	    }, {
 	        key: 'guardarOCrear',
 	        value: function guardarOCrear() {
 	            var dotacion = this.inputDotacion.value;
 	            var jornada = this.inputJornada.value;
+	            var anno = this.inputAnno.value;
+	            var mes = this.inputMes.value;
 	            var dia = this.inputDia.value;
-	            console.log('dia ' + dia + ', dotacion ' + dotacion + ', jornada ' + jornada);
+	            if (dia == '') {
+	                this.inputDia.value = '00';
+	                dia = '00';
+	            }
+
+	            if (this.validarDatos()) {
+	                var fecha = anno + '-' + mes + '-' + dia;
+	                console.log('fecha ' + fecha + ', dotacion ' + dotacion + ', jornada ' + jornada);
+
+	                this.props.guardarOCrearInventario({
+	                    idInventario: this.props.inventario.idInventario,
+	                    idDummy: this.props.inventario.idDummy,
+	                    idLocal: this.props.inventario.local.idLocal,
+	                    idJornada: jornada,
+	                    fechaProgramada: fecha,
+	                    horaLlegada: this.props.inventario.horaLlegada,
+	                    stockTeorico: this.props.inventario.local.stock,
+	                    dotacionAsignada: dotacion
+	                });
+	                //.then(res=>{
+	                //    this.setState({
+	                //        //guardado: true,
+	                //        fechaValida: true,
+	                //        estado: ESTADO.GUARDADO
+	                //    })
+	            } else {
+	                    console.log('datos invalidos');
+	                }
 	        }
 	    }, {
 	        key: 'render',
@@ -37233,7 +37343,7 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: _TablaProgramas2.default.tdFecha },
-	                    this.state.estado !== ESTADO.GUARDADO ? _react2.default.createElement(
+	                    this.state.estado !== {} ? _react2.default.createElement(
 	                        _Tooltip2.default,
 	                        { placement: 'left', positionLeft: -120, id: 'xxxx', style: { width: '120px', zIndex: 0 },
 	                            className: "in " + this.state.estado.tooltipClass },
@@ -37244,8 +37354,8 @@
 	                        ref: function ref(_ref) {
 	                            return _this2.inputDia = _ref;
 	                        },
-	                        onChange: this.inputDiaHandler.bind(this),
 	                        onKeyDown: this.inputOnKeyDown.bind(this, 'dia'),
+	                        onFocus: this.onFocusInputDia.bind(this),
 	                        onBlur: this.guardarOCrear.bind(this) }),
 	                    _react2.default.createElement('input', { className: _TablaProgramas2.default.inputMes, type: 'number', disabled: true,
 	                        ref: function ref(_ref2) {
@@ -37374,7 +37484,6 @@
 	                            ref: function ref(_ref4) {
 	                                return _this2.inputDotacion = _ref4;
 	                            },
-	                            onChange: this.inputDotacionHandler.bind(this),
 	                            onKeyDown: this.inputOnKeyDown.bind(this, 'dotacion'),
 	                            onBlur: this.guardarOCrear.bind(this) })
 	                    )
@@ -37384,7 +37493,7 @@
 	                    { className: _TablaProgramas2.default.tdJornada },
 	                    _react2.default.createElement(
 	                        'select',
-	                        { onChange: this.inputJornadaHandler.bind(this), ref: function ref(_ref5) {
+	                        { onChange: this.guardarOCrear.bind(this), ref: function ref(_ref5) {
 	                                return _this2.inputJornada = _ref5;
 	                            } },
 	                        _react2.default.createElement(
@@ -37430,21 +37539,14 @@
 	    return RowInventario;
 	}(_react2.default.Component);
 
-	RowInventario.protTypes = {
-	    index: PropTypes.number.required,
-	    mesProgramado: PropTypes.string.required,
-	    annoProgramado: PropTypes.string.required,
-	    nombreCliente: PropTypes.string.required,
-	    region: PropTypes.string.required,
-	    comuna: PropTypes.string.required,
-	    stock: PropTypes.number.required,
-	    dotacionSugerida: PropTypes.number.required,
-	    //jornada: PropTypes.number.required,
-	    focusFilaSiguiente: PropTypes.func.required,
-	    focusFilaAnterior: PropTypes.func.required,
-	    guardarOCrear: PropTypes.func.required,
-
-	    local: PropTypes.object.required
+	RowInventario.propTypes = {
+	    // Objetos
+	    index: _react2.default.PropTypes.number.isRequired,
+	    inventario: _react2.default.PropTypes.object.isRequired,
+	    // Metodos
+	    focusFilaSiguiente: _react2.default.PropTypes.func.isRequired,
+	    focusFilaAnterior: _react2.default.PropTypes.func.isRequired,
+	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired
 	};
 
 	exports.default = RowInventario;
@@ -42985,7 +43087,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M","tooltipDanger":"shared__tooltipDanger___3_QoZ","tooltipWarning":"shared__tooltipWarning___38s1A"};
+	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M","tooltipHide":"shared__tooltipHide___2CzIE","tooltipDanger":"shared__tooltipDanger___3_QoZ","tooltipWarning":"shared__tooltipWarning___38s1A"};
 
 /***/ },
 /* 414 */
@@ -43035,8 +43137,7 @@
 	            locales: [],
 	            errores: {
 	                errorIdCliente: '',
-	                errorNumeroLocal: '',
-	                erorrInputPegar: ''
+	                errorNumeroLocal: ''
 	            },
 	            pegados: {
 	                pegadoConProblemas: [],
@@ -43051,12 +43152,21 @@
 	    }
 
 	    _createClass(AgregarPrograma, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            // seleccionar el primer mes por defecto
+	            this.props.onSeleccionarMes(this.props.meses[0].valor);
+	        }
+	    }, {
+	        key: 'onSeleccionarMes',
+	        value: function onSeleccionarMes(evt) {
+	            this.props.onSeleccionarMes(evt.target.value);
+	        }
+	    }, {
 	        key: 'setModoIngreso',
 	        value: function setModoIngreso(modo) {
 	            if (modo !== this.state.modoIngreso) {
-	                this.setState({
-	                    modoIngreso: this.state.modoIngreso === 'manual' ? 'excel' : 'manual'
-	                });
+	                this.setState({ modoIngreso: this.state.modoIngreso === 'manual' ? 'excel' : 'manual' });
 	            }
 	        }
 
@@ -43099,11 +43209,11 @@
 	            evt.preventDefault();
 	            var idCliente = this.inputIdCliente.value;
 	            var numeroLocal = this.inputNumeroLocal.value;
-	            var annoMes = this.inputAnnoMes.value;
+	            var annoMesDia = this.inputAnnoMesDia.value;
 
 	            this.inputNumeroLocal.value = '';
 
-	            var _props$agregarInventa = this.props.agregarInventario(idCliente, numeroLocal, annoMes);
+	            var _props$agregarInventa = this.props.agregarInventario(idCliente, numeroLocal, annoMesDia);
 
 	            var _props$agregarInventa2 = _slicedToArray(_props$agregarInventa, 2);
 
@@ -43120,8 +43230,8 @@
 	         */
 
 	    }, {
-	        key: 'agregarLocalesAlPegarVIEJO',
-	        value: function agregarLocalesAlPegarVIEJO(event) {
+	        key: 'agregarLocalesAlPegar',
+	        value: function agregarLocalesAlPegar(event) {
 	            var _this2 = this;
 
 	            event.preventDefault();
@@ -43156,35 +43266,7 @@
 	                    return row.trim().split('\t')[0];
 	                });
 
-	                // Agregar los locales
-	                //let resultado = celdas.map(row=>{
-	                //    let numeroLocal = row[0]
-	                //
-	                //    // buscar el local
-	                //    let local = this.state.locales.find(local=>local.numero===numeroLocal)
-	                //    if(local){
-	                //        // buscar los datos
-	                //        let localCreado = this.props.agregarInventario(local.idLocal, this.inputAnnoMes.value)
-	                //        // cliente, local, estado final
-	                //        return {
-	                //            cliente: this.state.clienteSeleccionado.nombreCorto,
-	                //            numeroLocal: numeroLocal,
-	                //            mensaje: localCreado? 'Ok' : 'Ya agendado',
-	                //            error: localCreado
-	                //        }
-	                //    }else{
-	                //        return {
-	                //            cliente: this.state.clienteSeleccionado.nombreCorto,
-	                //            numeroLocal: numeroLocal,
-	                //            mensaje: 'No existe',
-	                //            error: true
-	                //        }
-	                //    }
-	                //})
-	                // quitar los que fueron correctamente agregados
-	                //let pegadoConProblemas = resultado.filter(res=> res.mensaje!=='Ok')
-
-	                var resultadoPegar = _this2.props.agregarGrupoInventarios(idCliente, idLocales, _this2.inputAnnoMes.value);
+	                var resultadoPegar = _this2.props.agregarGrupoInventarios(idCliente, idLocales, _this2.inputAnnoMesDia.value);
 	                // guardar el resultado de agregar los elementos
 	                _this2.setState({
 	                    pegados: resultadoPegar
@@ -43272,7 +43354,7 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            'span',
-	                            { className: 'help-block' },
+	                            { className: 'help-block', style: { position: 'absolute' } },
 	                            this.state.errores.errorIdCliente
 	                        )
 	                    ),
@@ -43287,8 +43369,8 @@
 	                        _react2.default.createElement(
 	                            'select',
 	                            { className: 'form-control', name: 'fechaProgramada', ref: function ref(_ref2) {
-	                                    return _this3.inputAnnoMes = _ref2;
-	                                } },
+	                                    return _this3.inputAnnoMesDia = _ref2;
+	                                }, onChange: this.onSeleccionarMes.bind(this) },
 	                            this.props.meses.map(function (mes, i) {
 	                                return _react2.default.createElement(
 	                                    'option',
@@ -43314,7 +43396,7 @@
 	                                }, onChange: this.inputNumeroLocalChanged.bind(this) }),
 	                            _react2.default.createElement(
 	                                'span',
-	                                { className: 'help-block' },
+	                                { className: 'help-block', style: { position: 'absolute' } },
 	                                this.state.errores.errorNumeroLocal
 	                            )
 	                        ),
@@ -43334,18 +43416,13 @@
 	                        { style: { display: this.state.modoIngreso === 'excel' ? '' : 'none' } },
 	                        _react2.default.createElement(
 	                            'div',
-	                            { className: 'col-sm-3 form-group ' + (this.state.errores.errorInputPegar !== '' ? 'has-error' : '') },
+	                            { className: 'col-sm-3 form-group ' },
 	                            _react2.default.createElement(
 	                                'label',
 	                                { className: 'control-label', htmlFor: 'locales' },
 	                                'Locales'
 	                            ),
-	                            _react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'locales', placeholder: 'pegar aca los datos de Excel', onPaste: this.agregarLocalesAlPegarVIEJO.bind(this) }),
-	                            _react2.default.createElement(
-	                                'span',
-	                                { className: 'help-block' },
-	                                this.state.errores.errorInputPegar
-	                            ),
+	                            _react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'locales', placeholder: 'pegar aca los datos de Excel', onPaste: this.agregarLocalesAlPegar.bind(this) }),
 	                            _react2.default.createElement(
 	                                'p',
 	                                { style: { marginTop: '1em' } },
@@ -43525,6 +43602,15 @@
 
 	    return AgregarPrograma;
 	}(_react2.default.Component);
+
+	AgregarPrograma.propTypes = {
+	    clientes: _react2.default.PropTypes.array.isRequired,
+	    meses: _react2.default.PropTypes.array.isRequired,
+	    // Metodos
+	    agregarInventario: _react2.default.PropTypes.func.isRequired,
+	    agregarGrupoInventarios: _react2.default.PropTypes.func.isRequired,
+	    onSeleccionarMes: _react2.default.PropTypes.func.isRequired
+	};
 
 	exports.default = AgregarPrograma;
 

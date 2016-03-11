@@ -1,23 +1,69 @@
-
 export default class Inventarios{
     constructor(clientes){
         this.clientes = clientes
         this.lista = []
+        this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
+    }
+    reset(){
+        this.lista = []
+        this.idDummy = 1
     }
     // Optimizar
     add(inventario){
         this.lista.push(inventario)
     }
-    existe(idLocal){
-        return this.lista.find(inventario=>inventario.idLocal===idLocal)!==undefined
+    yaExiste(idLocal, annoMesDia){
+        let inventariosDelLocal = this.lista.filter(inventario=>inventario.idLocal===idLocal)
+        // buscar si se tiene inventarios para este local
+        if(inventariosDelLocal.length===0){
+            return false
+        }
+        // buscar si alguna fecha coincide
+        let existe = false
+        inventariosDelLocal.forEach(inventario=>{
+            if(inventario.fechaProgramada===annoMesDia){
+                // se tiene el mismo local, con la misma fecha inventariado
+                console.log('ya programado')
+                existe = true
+                return true
+            }
+        })
+        return existe
     }
     getListaFiltrada(){
         return this.lista
     }
 
     // Metodos de alto nivel
-    crearDummy(idCliente, numeroLocal, annoMes){
-        let fechaProgramada = `${annoMes}-00`
+    __crearDummy(annoMesDia, idLocal){
+        return {
+            idDummy: this.idDummy++,    // asignar e incrementar
+            idInventario: null,
+                idLocal: idLocal,
+                idJornada: null,
+            fechaProgramada: annoMesDia,
+            horaLlegada: "00:00:00",
+            stockTeorico: 0,
+            dotacionAsignada: null,
+            local: {
+                idLocal: idLocal,
+                idJornadaSugerida: 4, // no definida
+                nombre: '-',
+                numero: '-',
+                stock: 0,
+                fechaStock: 'YYYY-MM-DD',
+                formato_local: {
+                    produccionSugerida: 0
+                },
+                nombreCliente: '-',
+                nombreComuna: '-',
+                nombreProvincia: '-',
+                nombreRegion: '-',
+                dotacionSugerida: 0
+            }
+        }
+    }
+    crearDummy(idCliente, numeroLocal, annoMesDia){
         // ########### Revisar Cliente ###########
         // el usuario no selecciono uno en el formulario
         if(idCliente==='-1' || idCliente==='' || !idCliente){
@@ -49,45 +95,25 @@ export default class Inventarios{
         }
 
         // revisar que no exista en la lista
-        if( this.existe(local.idLocal) ) {
+        if( this.yaExiste(local.idLocal, annoMesDia) ) {
             return[{
                 idCliente,
                 numeroLocal,
-                errorNumeroLocal: `El local ${numeroLocal} ya ha sido agendado.`
+                errorNumeroLocal: `${numeroLocal} ya ha sido agendado esa fecha.`
             }, null]
         }
 
         // ########### ok, se puede crear el inventario "vacio" ###########
-        return[ null, {
-            idInventario: null,
-            idLocal: local.idLocal,
-            idJornada: 4, // no definida
-            fechaProgramada: fechaProgramada,
-            //horaLlegada: "00:00:00",
-            stockTeorico: 0,
-            dotacionAsignada: null,
-            local: {
-                idLocal: local.idLocal,
-                nombre: '-',
-                numero: '-',
-                stock: 0,
-                fechaStock: 'YYYY-MM-DD',
-                formato_local: {
-                    produccionSugerida: 0
-                },
-                nombreCliente: '-',
-                nombreComuna: '-',
-                nombreProvincia: '-',
-                nombreRegion: '-',
-                dotacionSugerida: 1
-            }
-        }]
+        let dummy = this.__crearDummy(annoMesDia, local.idLocal)
+        return[ null, dummy]
     }
 
 
     actualizarDatosLocal(local){
+        // actualizar los datos del local de todos los inventarios que lo tengan
         this.lista = this.lista.map(inventario=>{
-            if(inventario.local.idLocal===local.idLocal){
+            if(inventario.local.idLocal==local.idLocal){
+
                 inventario.local = Object.assign(inventario.local, local)
                 // si no hay una dotacion asignada, ver la sugerida
                 if(inventario.dotacionAsignada===null){
@@ -97,9 +123,17 @@ export default class Inventarios{
             return inventario
         })
     }
+    actualizarDatosInventario(formInventario, inventarioActualizado){
+        this.lista = this.lista.map(inventario=> {
+            if (inventario.idDummy == formInventario.idDummy) {
+                inventario = Object.assign(inventario, inventarioActualizado)
+            }
+            return inventario
+        })
+    }
 
     /*
-    let filtroActualizado = this.generarFiltro(inventariosActualizados)
+    let     filtroActualizado = this.generarFiltro(inventariosActualizados)
     let programasFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado)
 
     generarFiltro(inventarios){
