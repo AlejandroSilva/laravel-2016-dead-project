@@ -22,8 +22,9 @@ class LocalesController extends Controller {
      * ##########################################################
      */
 
+    // GET api/locales/{idLocal}
     // Entrega la informacion de un local, sin sus relaciones
-    public function getLocal_json($idLocal){
+    public function api_getLocal($idLocal){
         $local = Locales::find($idLocal);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
         if(!$local)
@@ -31,8 +32,9 @@ class LocalesController extends Controller {
         return response()->json($local);
     }
 
+    // GET api/locales/{idLocal}/verbose
     // Entrega la ifnormacion de un local, junto con sus relaciones
-    public function getLocalVerbose_json($idLocal){
+    public function api_getLocalVerbose($idLocal){
         $local = Locales::find($idLocal);
 
         // si no existe retorna un objeto vacio con statusCode 404 (not found)

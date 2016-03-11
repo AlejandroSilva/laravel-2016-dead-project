@@ -23,6 +23,14 @@ class AgregarPrograma extends React.Component {
             modoIngreso: 'manual' // 'manual'/'excel'
         }
     }
+    componentWillMount(){
+        // seleccionar el primer mes por defecto
+        this.props.onSeleccionarMes(this.props.meses[0].valor)
+    }
+    onSeleccionarMes(evt){
+        this.props.onSeleccionarMes(evt.target.value)
+    }
+
     setModoIngreso(modo){
        if(modo!==this.state.modoIngreso){
            this.setState({modoIngreso: this.state.modoIngreso==='manual'? 'excel' : 'manual'})
@@ -58,10 +66,10 @@ class AgregarPrograma extends React.Component {
         evt.preventDefault()
         let idCliente = this.inputIdCliente.value
         let numeroLocal = this.inputNumeroLocal.value
-        let annoMes = this.inputAnnoMes.value
+        let annoMesDia = this.inputAnnoMesDia.value
 
         this.inputNumeroLocal.value = ''
-        let [errores, objeto] = this.props.agregarInventario(idCliente, numeroLocal, `${annoMes}-00`)
+        let [errores, objeto] = this.props.agregarInventario(idCliente, numeroLocal, annoMesDia)
         this.setState({
             errores: errores || {}
         })
@@ -102,7 +110,7 @@ class AgregarPrograma extends React.Component {
             })
 
 
-            let resultadoPegar = this.props.agregarGrupoInventarios(idCliente, idLocales, `${this.inputAnnoMes.value}-00`)
+            let resultadoPegar = this.props.agregarGrupoInventarios(idCliente, idLocales, this.inputAnnoMesDia.value)
             // guardar el resultado de agregar los elementos
             this.setState({
                 pegados: resultadoPegar
@@ -151,7 +159,7 @@ class AgregarPrograma extends React.Component {
                 {/* Mes-Año  */}
                 <div className="col-sm-2 form-group">
                     <label className="control-label" htmlFor="fechaProgramada">Mes</label>
-                    <select className="form-control" name="fechaProgramada" ref={ref=>this.inputAnnoMes=ref}>
+                    <select className="form-control" name="fechaProgramada" ref={ref=>this.inputAnnoMesDia=ref} onChange={this.onSeleccionarMes.bind(this)}>
                         {this.props.meses.map((mes,i)=>{
                             return <option key={i} value={mes.valor}>{mes.texto}</option>
                         })}
@@ -232,6 +240,15 @@ class AgregarPrograma extends React.Component {
             </div>
         </div>
     }
+}
+
+AgregarPrograma.propTypes = {
+    clientes: React.PropTypes.array.isRequired,
+    meses: React.PropTypes.array.isRequired,
+    // Metodos
+    agregarInventario: React.PropTypes.func.isRequired,
+    agregarGrupoInventarios: React.PropTypes.func.isRequired,
+    onSeleccionarMes: React.PropTypes.func.isRequired
 }
 
 export default AgregarPrograma

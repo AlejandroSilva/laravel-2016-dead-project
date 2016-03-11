@@ -1,9 +1,12 @@
-
 export default class Inventarios{
     constructor(clientes){
         this.clientes = clientes
         this.lista = []
-        this.idDummy = 1   // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
+        this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
+    }
+    reset(){
+        this.lista = []
+        this.idDummy = 1
     }
     // Optimizar
     add(inventario){
@@ -32,6 +35,34 @@ export default class Inventarios{
     }
 
     // Metodos de alto nivel
+    __crearDummy(annoMesDia, idLocal){
+        return {
+            idDummy: this.idDummy++,    // asignar e incrementar
+            idInventario: null,
+                idLocal: idLocal,
+                idJornada: null,
+            fechaProgramada: annoMesDia,
+            horaLlegada: "00:00:00",
+            stockTeorico: 0,
+            dotacionAsignada: null,
+            local: {
+                idLocal: idLocal,
+                idJornadaSugerida: 4, // no definida
+                nombre: '-',
+                numero: '-',
+                stock: 0,
+                fechaStock: 'YYYY-MM-DD',
+                formato_local: {
+                    produccionSugerida: 0
+                },
+                nombreCliente: '-',
+                nombreComuna: '-',
+                nombreProvincia: '-',
+                nombreRegion: '-',
+                dotacionSugerida: 0
+            }
+        }
+    }
     crearDummy(idCliente, numeroLocal, annoMesDia){
         // ########### Revisar Cliente ###########
         // el usuario no selecciono uno en el formulario
@@ -73,39 +104,16 @@ export default class Inventarios{
         }
 
         // ########### ok, se puede crear el inventario "vacio" ###########
-        return[ null, {
-            idDummy: this.idDummy++,    // asignar e incrementar
-            idInventario: null,
-            idLocal: local.idLocal,
-            idJornada: null,
-            fechaProgramada: annoMesDia,
-            horaLlegada: "00:00:00",
-            stockTeorico: 0,
-            dotacionAsignada: null,
-            local: {
-                idLocal: local.idLocal,
-                idJornadaSugerida: 4, // no definida
-                nombre: '-',
-                numero: '-',
-                stock: 0,
-                fechaStock: 'YYYY-MM-DD',
-                formato_local: {
-                    produccionSugerida: 0
-                },
-                nombreCliente: '-',
-                nombreComuna: '-',
-                nombreProvincia: '-',
-                nombreRegion: '-',
-                dotacionSugerida: 0
-            }
-        }]
+        let dummy = this.__crearDummy(annoMesDia, local.idLocal)
+        return[ null, dummy]
     }
 
 
     actualizarDatosLocal(local){
         // actualizar los datos del local de todos los inventarios que lo tengan
         this.lista = this.lista.map(inventario=>{
-            if(inventario.local.idLocal===local.idLocal){
+            if(inventario.local.idLocal==local.idLocal){
+
                 inventario.local = Object.assign(inventario.local, local)
                 // si no hay una dotacion asignada, ver la sugerida
                 if(inventario.dotacionAsignada===null){
