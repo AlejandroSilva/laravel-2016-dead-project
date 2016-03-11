@@ -21882,14 +21882,15 @@
 	        }
 	    }, {
 	        key: 'agregarGrupoInventarios',
-	        value: function agregarGrupoInventarios(idCliente, idLocales, annoMesDia) {
+	        value: function agregarGrupoInventarios(idCliente, numerosLocales, annoMesDia) {
 	            var _this5 = this;
 
+	            console.log(numerosLocales);
 	            var idLocalesExistentes = [];
 	            var pegadoConProblemas = [];
 	            // se evalua y agrega cada uno de los elementos
-	            idLocales.forEach(function (idLocal) {
-	                var _blackbox$crearDummy3 = _this5.blackbox.crearDummy(idCliente, idLocal, annoMesDia);
+	            numerosLocales.forEach(function (numero) {
+	                var _blackbox$crearDummy3 = _this5.blackbox.crearDummy(idCliente, numero, annoMesDia);
 
 	                var _blackbox$crearDummy4 = _slicedToArray(_blackbox$crearDummy3, 2);
 
@@ -21899,7 +21900,7 @@
 	                if (errores) {
 	                    pegadoConProblemas.push(errores);
 	                } else {
-	                    idLocalesExistentes.push(idLocal);
+	                    idLocalesExistentes.push(nuevoInventario.idLocal);
 	                    _this5.blackbox.add(nuevoInventario);
 	                }
 	            });
@@ -21912,8 +21913,8 @@
 
 	            return {
 	                pegadoConProblemas: pegadoConProblemas,
-	                conteoTotal: idLocales.length,
-	                conteoCorrectos: idLocales.length - pegadoConProblemas.length,
+	                conteoTotal: numerosLocales.length,
+	                conteoCorrectos: numerosLocales.length - pegadoConProblemas.length,
 	                conteoProblemas: pegadoConProblemas.length
 	            };
 	        }
@@ -43262,11 +43263,11 @@
 	                rows = rows.filter(function (row) {
 	                    return row !== '';
 	                });
-	                var idLocales = rows.map(function (row) {
+	                var numerosLocales = rows.map(function (row) {
 	                    return row.trim().split('\t')[0];
 	                });
 
-	                var resultadoPegar = _this2.props.agregarGrupoInventarios(idCliente, idLocales, _this2.inputAnnoMesDia.value);
+	                var resultadoPegar = _this2.props.agregarGrupoInventarios(idCliente, numerosLocales, _this2.inputAnnoMesDia.value);
 	                // guardar el resultado de agregar los elementos
 	                _this2.setState({
 	                    pegados: resultadoPegar
