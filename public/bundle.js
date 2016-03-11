@@ -43071,8 +43071,7 @@
 	            locales: [],
 	            errores: {
 	                errorIdCliente: '',
-	                errorNumeroLocal: '',
-	                erorrInputPegar: ''
+	                errorNumeroLocal: ''
 	            },
 	            pegados: {
 	                pegadoConProblemas: [],
@@ -43090,9 +43089,7 @@
 	        key: 'setModoIngreso',
 	        value: function setModoIngreso(modo) {
 	            if (modo !== this.state.modoIngreso) {
-	                this.setState({
-	                    modoIngreso: this.state.modoIngreso === 'manual' ? 'excel' : 'manual'
-	                });
+	                this.setState({ modoIngreso: this.state.modoIngreso === 'manual' ? 'excel' : 'manual' });
 	            }
 	        }
 
@@ -43156,8 +43153,8 @@
 	         */
 
 	    }, {
-	        key: 'agregarLocalesAlPegarVIEJO',
-	        value: function agregarLocalesAlPegarVIEJO(event) {
+	        key: 'agregarLocalesAlPegar',
+	        value: function agregarLocalesAlPegar(event) {
 	            var _this2 = this;
 
 	            event.preventDefault();
@@ -43191,34 +43188,6 @@
 	                var idLocales = rows.map(function (row) {
 	                    return row.trim().split('\t')[0];
 	                });
-
-	                // Agregar los locales
-	                //let resultado = celdas.map(row=>{
-	                //    let numeroLocal = row[0]
-	                //
-	                //    // buscar el local
-	                //    let local = this.state.locales.find(local=>local.numero===numeroLocal)
-	                //    if(local){
-	                //        // buscar los datos
-	                //        let localCreado = this.props.agregarInventario(local.idLocal, this.inputAnnoMes.value)
-	                //        // cliente, local, estado final
-	                //        return {
-	                //            cliente: this.state.clienteSeleccionado.nombreCorto,
-	                //            numeroLocal: numeroLocal,
-	                //            mensaje: localCreado? 'Ok' : 'Ya agendado',
-	                //            error: localCreado
-	                //        }
-	                //    }else{
-	                //        return {
-	                //            cliente: this.state.clienteSeleccionado.nombreCorto,
-	                //            numeroLocal: numeroLocal,
-	                //            mensaje: 'No existe',
-	                //            error: true
-	                //        }
-	                //    }
-	                //})
-	                // quitar los que fueron correctamente agregados
-	                //let pegadoConProblemas = resultado.filter(res=> res.mensaje!=='Ok')
 
 	                var resultadoPegar = _this2.props.agregarGrupoInventarios(idCliente, idLocales, _this2.inputAnnoMes.value + '-00');
 	                // guardar el resultado de agregar los elementos
@@ -43308,7 +43277,7 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            'span',
-	                            { className: 'help-block' },
+	                            { className: 'help-block', style: { position: 'absolute' } },
 	                            this.state.errores.errorIdCliente
 	                        )
 	                    ),
@@ -43350,7 +43319,7 @@
 	                                }, onChange: this.inputNumeroLocalChanged.bind(this) }),
 	                            _react2.default.createElement(
 	                                'span',
-	                                { className: 'help-block' },
+	                                { className: 'help-block', style: { position: 'absolute' } },
 	                                this.state.errores.errorNumeroLocal
 	                            )
 	                        ),
@@ -43370,18 +43339,13 @@
 	                        { style: { display: this.state.modoIngreso === 'excel' ? '' : 'none' } },
 	                        _react2.default.createElement(
 	                            'div',
-	                            { className: 'col-sm-3 form-group ' + (this.state.errores.errorInputPegar !== '' ? 'has-error' : '') },
+	                            { className: 'col-sm-3 form-group ' },
 	                            _react2.default.createElement(
 	                                'label',
 	                                { className: 'control-label', htmlFor: 'locales' },
 	                                'Locales'
 	                            ),
-	                            _react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'locales', placeholder: 'pegar aca los datos de Excel', onPaste: this.agregarLocalesAlPegarVIEJO.bind(this) }),
-	                            _react2.default.createElement(
-	                                'span',
-	                                { className: 'help-block' },
-	                                this.state.errores.errorInputPegar
-	                            ),
+	                            _react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'locales', placeholder: 'pegar aca los datos de Excel', onPaste: this.agregarLocalesAlPegar.bind(this) }),
 	                            _react2.default.createElement(
 	                                'p',
 	                                { style: { marginTop: '1em' } },

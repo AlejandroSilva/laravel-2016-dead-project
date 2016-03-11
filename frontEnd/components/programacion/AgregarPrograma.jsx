@@ -11,8 +11,7 @@ class AgregarPrograma extends React.Component {
             locales: [],
             errores:{
                 errorIdCliente: '',
-                errorNumeroLocal: '',
-                erorrInputPegar: ''
+                errorNumeroLocal: ''
             },
             pegados: {
                 pegadoConProblemas: [],
@@ -26,9 +25,7 @@ class AgregarPrograma extends React.Component {
     }
     setModoIngreso(modo){
        if(modo!==this.state.modoIngreso){
-           this.setState({
-               modoIngreso: this.state.modoIngreso==='manual'? 'excel' : 'manual'
-           })
+           this.setState({modoIngreso: this.state.modoIngreso==='manual'? 'excel' : 'manual'})
        }
     }
 
@@ -73,7 +70,7 @@ class AgregarPrograma extends React.Component {
     /**
      * Enviar Al pegar
      */
-    agregarLocalesAlPegarVIEJO(event){
+    agregarLocalesAlPegar(event){
         event.preventDefault()
 
         // validar que exista un cliente seleccionado
@@ -104,33 +101,6 @@ class AgregarPrograma extends React.Component {
                 return row.trim().split('\t')[0]
             })
 
-            // Agregar los locales
-            //let resultado = celdas.map(row=>{
-            //    let numeroLocal = row[0]
-            //
-            //    // buscar el local
-            //    let local = this.state.locales.find(local=>local.numero===numeroLocal)
-            //    if(local){
-            //        // buscar los datos
-            //        let localCreado = this.props.agregarInventario(local.idLocal, this.inputAnnoMes.value)
-            //        // cliente, local, estado final
-            //        return {
-            //            cliente: this.state.clienteSeleccionado.nombreCorto,
-            //            numeroLocal: numeroLocal,
-            //            mensaje: localCreado? 'Ok' : 'Ya agendado',
-            //            error: localCreado
-            //        }
-            //    }else{
-            //        return {
-            //            cliente: this.state.clienteSeleccionado.nombreCorto,
-            //            numeroLocal: numeroLocal,
-            //            mensaje: 'No existe',
-            //            error: true
-            //        }
-            //    }
-            //})
-            // quitar los que fueron correctamente agregados
-            //let pegadoConProblemas = resultado.filter(res=> res.mensaje!=='Ok')
 
             let resultadoPegar = this.props.agregarGrupoInventarios(idCliente, idLocales, `${this.inputAnnoMes.value}-00`)
             // guardar el resultado de agregar los elementos
@@ -169,14 +139,14 @@ class AgregarPrograma extends React.Component {
                 {/* Cliente */}
                 <div className={'col-sm-2 form-group ' + (this.state.errores.errorIdCliente? 'has-error':'')}>
                     <label className="control-label" htmlFor="cliente">Cliente</label>
-                    <select className="form-control" name="cliente" defaultValue="-1" ref={ref=>this.inputIdCliente=ref} onChange={this.inputIdClienteChanged.bind(this)}>
+                    <select className="form-control"  name="cliente" defaultValue="-1" ref={ref=>this.inputIdCliente=ref} onChange={this.inputIdClienteChanged.bind(this)}>
                         <option value="-1" disabled>--</option>
                         {this.props.clientes.map((cliente, index)=>{
                             //return <option key={index} value={cliente.idCliente}>{"asdas" + cliente.nombre}</option
                             return <option key={index} value={cliente.idCliente}>{`${cliente.nombreCorto} - ${cliente.nombre}`}</option>
                         })}
                     </select>
-                    <span className="help-block">{this.state.errores.errorIdCliente}</span>
+                    <span className="help-block" style={{position:'absolute'}}>{this.state.errores.errorIdCliente}</span>
                 </div>
                 {/* Mes-Año  */}
                 <div className="col-sm-2 form-group">
@@ -194,7 +164,7 @@ class AgregarPrograma extends React.Component {
                     <div className={'col-sm-3 form-group ' + (this.state.errores.errorNumeroLocal? 'has-error':'')}>
                         <label className="control-label" htmlFor="locales">Local</label>
                         <input className="form-control" type="number" min='1' max='9999' name="locales" ref={ref=>this.inputNumeroLocal=ref} onChange={this.inputNumeroLocalChanged.bind(this)}  />
-                        <span className="help-block">{this.state.errores.errorNumeroLocal}</span>
+                        <span className="help-block" style={{position:'absolute'}}>{this.state.errores.errorNumeroLocal}</span>
                     </div>
                     {/* Boton Agregar */}
                     <div className="col-sm-2 form-group">
@@ -206,10 +176,9 @@ class AgregarPrograma extends React.Component {
                 {/* ========= OPCIONES PARA AGREGAR DESDE EXCEL ========= */}
                 <div style={{display: this.state.modoIngreso==='excel'? '':'none'}}>
                     {/* Locales */}
-                    <div className={'col-sm-3 form-group ' + (this.state.errores.errorInputPegar!==''? 'has-error':'')}>
+                    <div className='col-sm-3 form-group '>
                         <label className="control-label" htmlFor="locales">Locales</label>
-                        <input className="form-control" type="text" name="locales" placeholder="pegar aca los datos de Excel" onPaste={this.agregarLocalesAlPegarVIEJO.bind(this)}/>
-                        <span className="help-block">{this.state.errores.errorInputPegar}</span>
+                        <input className="form-control" type="text" name="locales" placeholder="pegar aca los datos de Excel" onPaste={this.agregarLocalesAlPegar.bind(this)}/>
 
                         <p style={{marginTop: '1em'}}>Abra Excel, seleccione los datos de la columna <b>CECO</b>, <b>COPIE</b> el contendo y <b>PEGUELO</b> en la cuandro de texto.</p>
                     </div>
