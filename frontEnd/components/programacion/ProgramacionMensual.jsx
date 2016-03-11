@@ -31,17 +31,17 @@ class ProgramacionMensual extends React.Component{
         this.blackbox = new Inventarios(this.props.clientes)
     }
     componentDidMount(){
-        this.agregarInventario(2, this.props.clientes[1].locales[1].numero, '2016-07')
-        //this.agregarInventario(this.props.clientes[1].locales[2].numero, '2016-04')
-        this.agregarInventario(2, this.props.clientes[1].locales[4].numero, '2016-07')
-    //    this.agregarInventario(this.props.clientes[0].locales[5].numero, '2016-05')
-    //    this.agregarInventario(this.props.clientes[0].locales[6].numero, '2016-05')
-        this.agregarInventario(2, this.props.clientes[1].locales[8].numero, '2016-09')
-        this.agregarInventario(1, this.props.clientes[0].locales[12].numero, '2016-08')
+        this.agregarInventario(2, this.props.clientes[1].locales[1].numero, '2016-07-00')
+        //this.agregarInventario(this.props.clientes[1].locales[2].numero, '2016-04-00')
+        this.agregarInventario(2, this.props.clientes[1].locales[4].numero, '2016-07-00')
+    //    this.agregarInventario(this.props.clientes[0].locales[5].numero, '2016-05-00')
+    //    this.agregarInventario(this.props.clientes[0].locales[6].numero, '2016-05-00')
+        this.agregarInventario(2, this.props.clientes[1].locales[8].numero, '2016-09-00')
+        this.agregarInventario(1, this.props.clientes[0].locales[12].numero, '2016-08-00')
     }
 
-    agregarInventario(idCliente, numeroLocal, annoMes){
-        let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, numeroLocal, annoMes)
+    agregarInventario(idCliente, numeroLocal, annoMesDia){
+        let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, numeroLocal, annoMesDia)
         if(errores)
             return [errores, {}]
 
@@ -70,12 +70,12 @@ class ProgramacionMensual extends React.Component{
         return [null, {}]
     }
 
-    agregarGrupoInventarios(idCliente, idLocales, annoMes){
+    agregarGrupoInventarios(idCliente, idLocales, annoMesDia){
         let promesasFetch = []
         let pegadoConProblemas = []
         // se evalua y agrega cada uno de los elementos
         idLocales.forEach(idLocal=> {
-            let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, idLocal, annoMes)
+            let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, idLocal, annoMesDia)
             if (errores){
                 pegadoConProblemas.push(errores)
             }else{
@@ -114,40 +114,29 @@ class ProgramacionMensual extends React.Component{
         }
     }
 
-    guardarOCrearInventario(){
-        //if(evt) evt.preventDefault()
-        //
-        //let jornada  = this.inputJornada.value
-        //console.log("guardar o crear: ", jornada)
-        //
-        //// Todo: validar esto
-        //const fechaEsValida = this.state.inputDia>=1 && this.state.inputDia<= 31//this.props.ultimoDiaMes
-        //if(fechaEsValida){
-        //    // ToDo: llamar al API
-        //    this.props.guardarOCrear({
-        //        idLocal: this.props.local.idLocal,
-        //        idJornada: jornada,
-        //        fechaProgramada: `${this.props.annoProgramado}-${this.props.mesProgramado}-${this.state.inputDia}`,
-        //        horaLlegada: '00:00',
-        //        stockTeorico: this.props.local.stock,
-        //        dotacionAsignada: 66,
-        //    }).then(res=>{
-        //        this.setState({
-        //            //guardado: true,
-        //            fechaValida: true,
-        //            estado: ESTADO.GUARDADO
-        //        })
-        //    }).catch(err=>{
-        //        console.error(err)
-        //    })
-        //}else {
-        //    this.setState({
-        //        //guardado: true,
-        //        fechaValida: false,
-        //        estado: ESTADO.FECHA_INVALIDA
-        //    })
-        //    console.log(`dia ${this.state.inputDia} incorrecto`)
-        //}
+    guardarOCrearInventario(formInventario){
+        if(formInventario.idInventario){
+            // Actualizar los datos del inventario
+            api.inventario.actualizar(formInventario.idInventario, formInventario)
+                .then(inventarioActualizado=>{
+                    console.log('inventario actualizado correctamente', inventarioActualizado)
+                    // actualizar los datos y el state de la app
+                    this.blackbox.actualizarDatosInventario(formInventario, inventarioActualizado)
+                    this.setState({
+                        inventariosFiltrados: this.blackbox.getListaFiltrada()
+                    })
+                })
+        }else{
+            // Crear los datos del inventario en el servidor
+            api.inventario.nuevo(formInventario)
+                .then(inventarioCreado=>{
+                    // actualizar los datos y el state de la app
+                    this.blackbox.actualizarDatosInventario(formInventario, inventarioCreado)
+                    this.setState({
+                        inventariosFiltrados: this.blackbox.getListaFiltrada()
+                    })
+                })
+        }
     }
     render(){
         return (

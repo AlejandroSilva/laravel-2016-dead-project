@@ -28,44 +28,6 @@ class TablaInventarios extends React.Component{
         prevRow.focusElemento(nombreElemento)
     }
 
-    //guardarOCrear(request){
-    //    let programa = this.state.programas.find(programa=>programa.idLocal===request.idLocal)
-    //    if(!programa){
-    //        return console.error(`inventario ${request.idLocal} no encontrado`)
-    //    }
-    //    // actualizar
-    //    if(programa.idInventario){
-    //        // actualizar el programa
-    //        return new Promise((res, rej)=>{
-    //            api.inventario.actualizar(programa.idInventario, request)
-    //                .then(programaActualizado=>{
-    //                    console.log('el servidor retorna ', programaActualizado.idJornada)
-    //                    //todo Esto en la practica no va a hacer mucho, porque los cambios ya estan visialente escritos en los formularios
-    //                    this.actualizarInventario(programa)
-    //                    console.log(`programa ${programa.idInventario} actualizado`)
-    //                    res(programa)
-    //                })
-    //                .catch(rej)
-    //        })
-    //    }else{
-    //        // Crear el inventario
-    //        return new Promise((res, rej)=>{
-    //            api.inventario.nuevo(request)
-    //                .then(inventarioCreado=>{
-    //                    console.log(inventarioCreado.idJornada)
-    //                    // buscar el inventario, por el id de local (en teorica nunca deberia estar repetido en esta instancia)
-    //
-    //                    inventario.idInventario = inventarioCreado.idInventario
-    //                    this.actualizarInventario(inventario)
-    //
-    //                    console.log(`inventario ${inventarioCreado.idInventario} creado correctamente`)
-    //                    res(inventarioCreado)
-    //                })
-    //                .catch(rej)
-    //        })
-    //    }
-    //}
-
     // Reemplazar el filtro que es actualizado por la TableHeader
     //reemplazarFiltro(nombreFiltro, filtroActualizado) {
     //    // se reemplaza el filtro indicado en 'nombreFiltro'
@@ -128,6 +90,7 @@ class TablaInventarios extends React.Component{
                             // Metodos
                             focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
                             focusFilaAnterior={this.focusFilaAnterior.bind(this)}
+                            guardarOCrearInventario={this.props.guardarOCrearInventario}
                             //guardarOCrear={this.guardarOCrear.bind(this)}
                             ref={ref=>this.inputFecha[index]=ref}
                         />

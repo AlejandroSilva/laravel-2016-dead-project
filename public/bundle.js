@@ -21778,20 +21778,20 @@
 	    _createClass(ProgramacionMensual, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            this.agregarInventario(2, this.props.clientes[1].locales[1].numero, '2016-07');
-	            //this.agregarInventario(this.props.clientes[1].locales[2].numero, '2016-04')
-	            this.agregarInventario(2, this.props.clientes[1].locales[4].numero, '2016-07');
-	            //    this.agregarInventario(this.props.clientes[0].locales[5].numero, '2016-05')
-	            //    this.agregarInventario(this.props.clientes[0].locales[6].numero, '2016-05')
-	            this.agregarInventario(2, this.props.clientes[1].locales[8].numero, '2016-09');
-	            this.agregarInventario(1, this.props.clientes[0].locales[12].numero, '2016-08');
+	            this.agregarInventario(2, this.props.clientes[1].locales[1].numero, '2016-07-00');
+	            //this.agregarInventario(this.props.clientes[1].locales[2].numero, '2016-04-00')
+	            this.agregarInventario(2, this.props.clientes[1].locales[4].numero, '2016-07-00');
+	            //    this.agregarInventario(this.props.clientes[0].locales[5].numero, '2016-05-00')
+	            //    this.agregarInventario(this.props.clientes[0].locales[6].numero, '2016-05-00')
+	            this.agregarInventario(2, this.props.clientes[1].locales[8].numero, '2016-09-00');
+	            this.agregarInventario(1, this.props.clientes[0].locales[12].numero, '2016-08-00');
 	        }
 	    }, {
 	        key: 'agregarInventario',
-	        value: function agregarInventario(idCliente, numeroLocal, annoMes) {
+	        value: function agregarInventario(idCliente, numeroLocal, annoMesDia) {
 	            var _this2 = this;
 
-	            var _blackbox$crearDummy = this.blackbox.crearDummy(idCliente, numeroLocal, annoMes);
+	            var _blackbox$crearDummy = this.blackbox.crearDummy(idCliente, numeroLocal, annoMesDia);
 
 	            var _blackbox$crearDummy2 = _slicedToArray(_blackbox$crearDummy, 2);
 
@@ -21824,14 +21824,14 @@
 	        }
 	    }, {
 	        key: 'agregarGrupoInventarios',
-	        value: function agregarGrupoInventarios(idCliente, idLocales, annoMes) {
+	        value: function agregarGrupoInventarios(idCliente, idLocales, annoMesDia) {
 	            var _this3 = this;
 
 	            var promesasFetch = [];
 	            var pegadoConProblemas = [];
 	            // se evalua y agrega cada uno de los elementos
 	            idLocales.forEach(function (idLocal) {
-	                var _blackbox$crearDummy3 = _this3.blackbox.crearDummy(idCliente, idLocal, annoMes);
+	                var _blackbox$crearDummy3 = _this3.blackbox.crearDummy(idCliente, idLocal, annoMesDia);
 
 	                var _blackbox$crearDummy4 = _slicedToArray(_blackbox$crearDummy3, 2);
 
@@ -21875,45 +21875,34 @@
 	        }
 	    }, {
 	        key: 'guardarOCrearInventario',
-	        value: function guardarOCrearInventario() {
-	            //if(evt) evt.preventDefault()
-	            //
-	            //let jornada  = this.inputJornada.value
-	            //console.log("guardar o crear: ", jornada)
-	            //
-	            //// Todo: validar esto
-	            //const fechaEsValida = this.state.inputDia>=1 && this.state.inputDia<= 31//this.props.ultimoDiaMes
-	            //if(fechaEsValida){
-	            //    // ToDo: llamar al API
-	            //    this.props.guardarOCrear({
-	            //        idLocal: this.props.local.idLocal,
-	            //        idJornada: jornada,
-	            //        fechaProgramada: `${this.props.annoProgramado}-${this.props.mesProgramado}-${this.state.inputDia}`,
-	            //        horaLlegada: '00:00',
-	            //        stockTeorico: this.props.local.stock,
-	            //        dotacionAsignada: 66,
-	            //    }).then(res=>{
-	            //        this.setState({
-	            //            //guardado: true,
-	            //            fechaValida: true,
-	            //            estado: ESTADO.GUARDADO
-	            //        })
-	            //    }).catch(err=>{
-	            //        console.error(err)
-	            //    })
-	            //}else {
-	            //    this.setState({
-	            //        //guardado: true,
-	            //        fechaValida: false,
-	            //        estado: ESTADO.FECHA_INVALIDA
-	            //    })
-	            //    console.log(`dia ${this.state.inputDia} incorrecto`)
-	            //}
+	        value: function guardarOCrearInventario(formInventario) {
+	            var _this4 = this;
+
+	            if (formInventario.idInventario) {
+	                // Actualizar los datos del inventario
+	                _v2.default.inventario.actualizar(formInventario.idInventario, formInventario).then(function (inventarioActualizado) {
+	                    console.log('inventario actualizado correctamente', inventarioActualizado);
+	                    // actualizar los datos y el state de la app
+	                    _this4.blackbox.actualizarDatosInventario(formInventario, inventarioActualizado);
+	                    _this4.setState({
+	                        inventariosFiltrados: _this4.blackbox.getListaFiltrada()
+	                    });
+	                });
+	            } else {
+	                // Crear los datos del inventario en el servidor
+	                _v2.default.inventario.nuevo(formInventario).then(function (inventarioCreado) {
+	                    // actualizar los datos y el state de la app
+	                    _this4.blackbox.actualizarDatosInventario(formInventario, inventarioCreado);
+	                    _this4.setState({
+	                        inventariosFiltrados: _this4.blackbox.getListaFiltrada()
+	                    });
+	                });
+	            }
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this4 = this;
+	            var _this5 = this;
 
 	            return _react2.default.createElement(
 	                'div',
@@ -21941,7 +21930,7 @@
 	                        inventariosFiltrados: this.state.inventariosFiltrados,
 	                        guardarOCrearInventario: this.guardarOCrearInventario.bind(this),
 	                        ref: function ref(_ref) {
-	                            return _this4.TablaInventarios = _ref;
+	                            return _this5.TablaInventarios = _ref;
 	                        }
 	                    })
 	                )
@@ -35085,6 +35074,7 @@
 
 	        this.clientes = clientes;
 	        this.lista = [];
+	        this.idDummy = 1; // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
 	    }
 	    // Optimizar
 
@@ -35095,11 +35085,26 @@
 	            this.lista.push(inventario);
 	        }
 	    }, {
-	        key: 'existe',
-	        value: function existe(idLocal) {
-	            return this.lista.find(function (inventario) {
+	        key: 'yaExiste',
+	        value: function yaExiste(idLocal, annoMesDia) {
+	            var inventariosDelLocal = this.lista.filter(function (inventario) {
 	                return inventario.idLocal === idLocal;
-	            }) !== undefined;
+	            });
+	            // buscar si se tiene inventarios para este local
+	            if (inventariosDelLocal.length === 0) {
+	                return false;
+	            }
+	            // buscar si alguna fecha coincide
+	            var existe = false;
+	            inventariosDelLocal.forEach(function (inventario) {
+	                if (inventario.fechaProgramada === annoMesDia) {
+	                    // se tiene el mismo local, con la misma fecha inventariado
+	                    console.log('ya programado');
+	                    existe = true;
+	                    return true;
+	                }
+	            });
+	            return existe;
 	        }
 	    }, {
 	        key: 'getListaFiltrada',
@@ -35111,8 +35116,7 @@
 
 	    }, {
 	        key: 'crearDummy',
-	        value: function crearDummy(idCliente, numeroLocal, annoMes) {
-	            var fechaProgramada = annoMes + '-00';
+	        value: function crearDummy(idCliente, numeroLocal, annoMesDia) {
 	            // ########### Revisar Cliente ###########
 	            // el usuario no selecciono uno en el formulario
 	            if (idCliente === '-1' || idCliente === '' || !idCliente) {
@@ -35148,21 +35152,22 @@
 	            }
 
 	            // revisar que no exista en la lista
-	            if (this.existe(local.idLocal)) {
+	            if (this.yaExiste(local.idLocal, annoMesDia)) {
 	                return [{
 	                    idCliente: idCliente,
 	                    numeroLocal: numeroLocal,
-	                    errorNumeroLocal: 'El local ' + numeroLocal + ' ya ha sido agendado.'
+	                    errorNumeroLocal: numeroLocal + ' ya ha sido agendado esa fecha.'
 	                }, null];
 	            }
 
 	            // ########### ok, se puede crear el inventario "vacio" ###########
 	            return [null, {
+	                idDummy: this.idDummy++, // asignar e incrementar
 	                idInventario: null,
 	                idLocal: local.idLocal,
 	                idJornada: null,
-	                fechaProgramada: fechaProgramada,
-	                //horaLlegada: "00:00:00",
+	                fechaProgramada: annoMesDia,
+	                horaLlegada: "00:00:00",
 	                stockTeorico: 0,
 	                dotacionAsignada: null,
 	                local: {
@@ -35186,6 +35191,7 @@
 	    }, {
 	        key: 'actualizarDatosLocal',
 	        value: function actualizarDatosLocal(local) {
+	            // actualizar los datos del local de todos los inventarios que lo tengan
 	            this.lista = this.lista.map(function (inventario) {
 	                if (inventario.local.idLocal === local.idLocal) {
 	                    inventario.local = Object.assign(inventario.local, local);
@@ -35197,9 +35203,19 @@
 	                return inventario;
 	            });
 	        }
+	    }, {
+	        key: 'actualizarDatosInventario',
+	        value: function actualizarDatosInventario(formInventario, inventarioActualizado) {
+	            this.lista = this.lista.map(function (inventario) {
+	                if (inventario.idDummy == formInventario.idDummy) {
+	                    inventario = Object.assign(inventario, inventarioActualizado);
+	                }
+	                return inventario;
+	            });
+	        }
 
 	        /*
-	        let filtroActualizado = this.generarFiltro(inventariosActualizados)
+	        let     filtroActualizado = this.generarFiltro(inventariosActualizados)
 	        let programasFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado)
 	         generarFiltro(inventarios){
 	            // TODO: simplificar este metodo, hay mucho codigo repetido
@@ -36115,44 +36131,6 @@
 	            prevRow.focusElemento(nombreElemento);
 	        }
 
-	        //guardarOCrear(request){
-	        //    let programa = this.state.programas.find(programa=>programa.idLocal===request.idLocal)
-	        //    if(!programa){
-	        //        return console.error(`inventario ${request.idLocal} no encontrado`)
-	        //    }
-	        //    // actualizar
-	        //    if(programa.idInventario){
-	        //        // actualizar el programa
-	        //        return new Promise((res, rej)=>{
-	        //            api.inventario.actualizar(programa.idInventario, request)
-	        //                .then(programaActualizado=>{
-	        //                    console.log('el servidor retorna ', programaActualizado.idJornada)
-	        //                    //todo Esto en la practica no va a hacer mucho, porque los cambios ya estan visialente escritos en los formularios
-	        //                    this.actualizarInventario(programa)
-	        //                    console.log(`programa ${programa.idInventario} actualizado`)
-	        //                    res(programa)
-	        //                })
-	        //                .catch(rej)
-	        //        })
-	        //    }else{
-	        //        // Crear el inventario
-	        //        return new Promise((res, rej)=>{
-	        //            api.inventario.nuevo(request)
-	        //                .then(inventarioCreado=>{
-	        //                    console.log(inventarioCreado.idJornada)
-	        //                    // buscar el inventario, por el id de local (en teorica nunca deberia estar repetido en esta instancia)
-	        //
-	        //                    inventario.idInventario = inventarioCreado.idInventario
-	        //                    this.actualizarInventario(inventario)
-	        //
-	        //                    console.log(`inventario ${inventarioCreado.idInventario} creado correctamente`)
-	        //                    res(inventarioCreado)
-	        //                })
-	        //                .catch(rej)
-	        //        })
-	        //    }
-	        //}
-
 	        // Reemplazar el filtro que es actualizado por la TableHeader
 	        //reemplazarFiltro(nombreFiltro, filtroActualizado) {
 	        //    // se reemplaza el filtro indicado en 'nombreFiltro'
@@ -36263,7 +36241,8 @@
 
 	                                // Metodos
 	                                , focusFilaSiguiente: _this2.focusFilaSiguiente.bind(_this2),
-	                                focusFilaAnterior: _this2.focusFilaAnterior.bind(_this2)
+	                                focusFilaAnterior: _this2.focusFilaAnterior.bind(_this2),
+	                                guardarOCrearInventario: _this2.props.guardarOCrearInventario
 	                                //guardarOCrear={this.guardarOCrear.bind(this)}
 	                                , ref: function ref(_ref) {
 	                                    return _this2.inputFecha[index] = _ref;
@@ -37098,14 +37077,18 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var PropTypes = _react2.default.PropTypes;
-
 	// Componentes
 
 
 	// Styles
 
+
 	var ESTADO = {
+	    OCULTAR: {
+	        mensaje: 'Fecha Pendiente',
+	        className: '',
+	        tooltipClass: _shared2.default.tooltipHide
+	    },
 	    FECHA_PENDIENTE: {
 	        mensaje: 'Fecha Pendiente',
 	        className: 'label-danger',
@@ -37132,7 +37115,7 @@
 
 	        _this.state = {
 	            fechaValida: false,
-	            estado: ESTADO.FECHA_PENDIENTE
+	            estado: {}
 	        };
 	        // Refs disponibles: this.inputDia, this.inputMes, this.inputAnno, this.inputDotacion, this.inputJornada
 	        return _this;
@@ -37162,6 +37145,8 @@
 
 	            // fijar la jornada
 	            this.inputJornada.value = this.props.inventario.idJornada;
+
+	            this.validarDatos();
 	        }
 	    }, {
 	        key: 'componentWillReceiveProps',
@@ -37203,6 +37188,14 @@
 	            }
 	        }
 	    }, {
+	        key: 'onFocusInputDia',
+	        value: function onFocusInputDia() {
+	            // si al hacer foco en el dia, el valor es "00", dejar el campo vacio con ""
+	            if (this.inputDia.value == 0) {
+	                this.inputDia.value = '';
+	            }
+	        }
+	    }, {
 	        key: 'inputOnKeyDown',
 	        value: function inputOnKeyDown(elemento, evt) {
 	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
@@ -37216,27 +37209,57 @@
 	            }
 	        }
 	    }, {
-	        key: 'inputDiaHandler',
-	        value: function inputDiaHandler(evt) {
-	            //this.setState({inputDia: evt.target.value})
-	        }
-	    }, {
-	        key: 'inputJornadaHandler',
-	        value: function inputJornadaHandler(evt) {
-	            this.guardarOCrear();
-	        }
-	    }, {
-	        key: 'inputDotacionHandler',
-	        value: function inputDotacionHandler(evt) {
-	            //this.setState({inputDotacion: evt.target.value})
+	        key: 'validarDatos',
+	        value: function validarDatos() {
+	            var dia = this.inputDia.value;
+	            if ((dia == "00" || dia == "0") && this.props.inventario.idInventario === null) {
+	                this.setState({ fechaValida: false, estado: ESTADO.FECHA_PENDIENTE });
+	                return false;
+	            }
+	            if (dia < 1 || dia > 31) {
+	                this.setState({ fechaValida: false, estado: ESTADO.FECHA_INVALIDA });
+	                return false;
+	            }
+
+	            this.setState({ fechaValida: true, estado: ESTADO.OCULTAR });
+	            return true;
 	        }
 	    }, {
 	        key: 'guardarOCrear',
 	        value: function guardarOCrear() {
 	            var dotacion = this.inputDotacion.value;
 	            var jornada = this.inputJornada.value;
+	            var anno = this.inputAnno.value;
+	            var mes = this.inputMes.value;
 	            var dia = this.inputDia.value;
-	            console.log('dia ' + dia + ', dotacion ' + dotacion + ', jornada ' + jornada);
+	            if (dia == '') {
+	                this.inputDia.value = '00';
+	                dia = '00';
+	            }
+
+	            if (this.validarDatos()) {
+	                var fecha = anno + '-' + mes + '-' + dia;
+	                console.log('fecha ' + fecha + ', dotacion ' + dotacion + ', jornada ' + jornada);
+
+	                this.props.guardarOCrearInventario({
+	                    idInventario: this.props.inventario.idInventario,
+	                    idDummy: this.props.inventario.idDummy,
+	                    idLocal: this.props.inventario.local.idLocal,
+	                    idJornada: jornada,
+	                    fechaProgramada: fecha,
+	                    horaLlegada: this.props.inventario.horaLlegada,
+	                    stockTeorico: this.props.inventario.local.stock,
+	                    dotacionAsignada: dotacion
+	                });
+	                //.then(res=>{
+	                //    this.setState({
+	                //        //guardado: true,
+	                //        fechaValida: true,
+	                //        estado: ESTADO.GUARDADO
+	                //    })
+	            } else {
+	                    console.log('datos invalidos');
+	                }
 	        }
 	    }, {
 	        key: 'render',
@@ -37254,7 +37277,7 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: _TablaProgramas2.default.tdFecha },
-	                    this.state.estado !== ESTADO.GUARDADO ? _react2.default.createElement(
+	                    this.state.estado !== {} ? _react2.default.createElement(
 	                        _Tooltip2.default,
 	                        { placement: 'left', positionLeft: -120, id: 'xxxx', style: { width: '120px', zIndex: 0 },
 	                            className: "in " + this.state.estado.tooltipClass },
@@ -37265,8 +37288,8 @@
 	                        ref: function ref(_ref) {
 	                            return _this2.inputDia = _ref;
 	                        },
-	                        onChange: this.inputDiaHandler.bind(this),
 	                        onKeyDown: this.inputOnKeyDown.bind(this, 'dia'),
+	                        onFocus: this.onFocusInputDia.bind(this),
 	                        onBlur: this.guardarOCrear.bind(this) }),
 	                    _react2.default.createElement('input', { className: _TablaProgramas2.default.inputMes, type: 'number', disabled: true,
 	                        ref: function ref(_ref2) {
@@ -37395,7 +37418,6 @@
 	                            ref: function ref(_ref4) {
 	                                return _this2.inputDotacion = _ref4;
 	                            },
-	                            onChange: this.inputDotacionHandler.bind(this),
 	                            onKeyDown: this.inputOnKeyDown.bind(this, 'dotacion'),
 	                            onBlur: this.guardarOCrear.bind(this) })
 	                    )
@@ -37405,7 +37427,7 @@
 	                    { className: _TablaProgramas2.default.tdJornada },
 	                    _react2.default.createElement(
 	                        'select',
-	                        { onChange: this.inputJornadaHandler.bind(this), ref: function ref(_ref5) {
+	                        { onChange: this.guardarOCrear.bind(this), ref: function ref(_ref5) {
 	                                return _this2.inputJornada = _ref5;
 	                            } },
 	                        _react2.default.createElement(
@@ -37451,21 +37473,14 @@
 	    return RowInventario;
 	}(_react2.default.Component);
 
-	RowInventario.protTypes = {
-	    index: PropTypes.number.required,
-	    mesProgramado: PropTypes.string.required,
-	    annoProgramado: PropTypes.string.required,
-	    nombreCliente: PropTypes.string.required,
-	    region: PropTypes.string.required,
-	    comuna: PropTypes.string.required,
-	    stock: PropTypes.number.required,
-	    dotacionSugerida: PropTypes.number.required,
-	    //jornada: PropTypes.number.required,
-	    focusFilaSiguiente: PropTypes.func.required,
-	    focusFilaAnterior: PropTypes.func.required,
-	    guardarOCrear: PropTypes.func.required,
-
-	    local: PropTypes.object.required
+	RowInventario.propTypes = {
+	    // Objetos
+	    index: _react2.default.PropTypes.number.isRequired,
+	    inventario: _react2.default.PropTypes.object.isRequired,
+	    // Metodos
+	    focusFilaSiguiente: _react2.default.PropTypes.func.isRequired,
+	    focusFilaAnterior: _react2.default.PropTypes.func.isRequired,
+	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired
 	};
 
 	exports.default = RowInventario;
@@ -43006,7 +43021,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M","tooltipDanger":"shared__tooltipDanger___3_QoZ","tooltipWarning":"shared__tooltipWarning___38s1A"};
+	module.exports = {"inputNumberAsText":"shared__inputNumberAsText___1Qr9M","tooltipHide":"shared__tooltipHide___2CzIE","tooltipDanger":"shared__tooltipDanger___3_QoZ","tooltipWarning":"shared__tooltipWarning___38s1A"};
 
 /***/ },
 /* 414 */
@@ -43124,7 +43139,7 @@
 
 	            this.inputNumeroLocal.value = '';
 
-	            var _props$agregarInventa = this.props.agregarInventario(idCliente, numeroLocal, annoMes);
+	            var _props$agregarInventa = this.props.agregarInventario(idCliente, numeroLocal, annoMes + '-00');
 
 	            var _props$agregarInventa2 = _slicedToArray(_props$agregarInventa, 2);
 
@@ -43205,7 +43220,7 @@
 	                // quitar los que fueron correctamente agregados
 	                //let pegadoConProblemas = resultado.filter(res=> res.mensaje!=='Ok')
 
-	                var resultadoPegar = _this2.props.agregarGrupoInventarios(idCliente, idLocales, _this2.inputAnnoMes.value);
+	                var resultadoPegar = _this2.props.agregarGrupoInventarios(idCliente, idLocales, _this2.inputAnnoMes.value + '-00');
 	                // guardar el resultado de agregar los elementos
 	                _this2.setState({
 	                    pegados: resultadoPegar

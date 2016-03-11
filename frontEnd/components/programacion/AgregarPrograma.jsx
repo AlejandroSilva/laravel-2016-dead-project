@@ -64,7 +64,7 @@ class AgregarPrograma extends React.Component {
         let annoMes = this.inputAnnoMes.value
 
         this.inputNumeroLocal.value = ''
-        let [errores, objeto] = this.props.agregarInventario(idCliente, numeroLocal, annoMes)
+        let [errores, objeto] = this.props.agregarInventario(idCliente, numeroLocal, `${annoMes}-00`)
         this.setState({
             errores: errores || {}
         })
@@ -132,7 +132,7 @@ class AgregarPrograma extends React.Component {
             // quitar los que fueron correctamente agregados
             //let pegadoConProblemas = resultado.filter(res=> res.mensaje!=='Ok')
 
-            let resultadoPegar = this.props.agregarGrupoInventarios(idCliente, idLocales, this.inputAnnoMes.value)
+            let resultadoPegar = this.props.agregarGrupoInventarios(idCliente, idLocales, `${this.inputAnnoMes.value}-00`)
             // guardar el resultado de agregar los elementos
             this.setState({
                 pegados: resultadoPegar
