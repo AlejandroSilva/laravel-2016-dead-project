@@ -123,16 +123,17 @@ class ProgramacionMensual extends React.Component{
         return [null, {}]
     }
 
-    agregarGrupoInventarios(idCliente, idLocales, annoMesDia){
+    agregarGrupoInventarios(idCliente, numerosLocales, annoMesDia){
+        console.log(numerosLocales)
         let idLocalesExistentes = []
         let pegadoConProblemas = []
         // se evalua y agrega cada uno de los elementos
-        idLocales.forEach(idLocal=> {
-            let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, idLocal, annoMesDia)
+        numerosLocales.forEach(numero=> {
+            let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, numero, annoMesDia)
             if (errores){
                 pegadoConProblemas.push(errores)
             }else{
-                idLocalesExistentes.push(idLocal)
+                idLocalesExistentes.push(nuevoInventario.idLocal)
                 this.blackbox.add(nuevoInventario)
             }
         })
@@ -145,8 +146,8 @@ class ProgramacionMensual extends React.Component{
 
         return {
             pegadoConProblemas: pegadoConProblemas,
-            conteoTotal: idLocales.length,
-            conteoCorrectos: idLocales.length - pegadoConProblemas.length,
+            conteoTotal: numerosLocales.length,
+            conteoCorrectos: numerosLocales.length - pegadoConProblemas.length,
             conteoProblemas: pegadoConProblemas.length
         }
     }
