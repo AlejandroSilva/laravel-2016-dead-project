@@ -58,6 +58,7 @@ class RowInventario extends React.Component{
         this.validarDatos()
     }
     componentWillReceiveProps(nextProps){
+        console.log('actualizando la row', nextProps)
          //Actualizar dotacion
         //if(!this.inputDotacion.value || this.inputDotacion.value=='' || this.inputDotacion.value==0){
             // fijar la dotacionSugerida
@@ -153,6 +154,10 @@ class RowInventario extends React.Component{
             console.log('datos invalidos')
         }
     }
+    quitarInventario(){
+        this.props.quitarInventario(this.props.inventario.idDummy)
+    }
+
 
     render(){
         return (
@@ -244,9 +249,9 @@ class RowInventario extends React.Component{
                 {/* Opciones    */}
                 <td className={styles.tdOpciones}>
                     <button className="btn btn-xs btn-primary" tabIndex="-1">Editar local</button>
-                    {this.props.idInventario?
+                    {this.props.inventario.idInventario?
                         <button className="btn btn-xs btn-primary" tabIndex="-1">Editar inventario</button>
-                        : null
+                        : <button className="btn btn-xs btn-danger" tabIndex="-1" onClick={this.quitarInventario.bind(this)}>X</button>
                     }
                 </td>
             </tr>
@@ -261,7 +266,8 @@ RowInventario.propTypes = {
     // Metodos
     focusFilaSiguiente: React.PropTypes.func.isRequired,
     focusFilaAnterior: React.PropTypes.func.isRequired,
-    guardarOCrearInventario: React.PropTypes.func.isRequired
+    guardarOCrearInventario: React.PropTypes.func.isRequired,
+    quitarInventario: React.PropTypes.func.isRequired
 }
 
 export default RowInventario

@@ -214,23 +214,26 @@ class AgregarPrograma extends React.Component {
                                 <tr><th>CECO</th><th>Estado</th></tr>
                                 </thead>
                                 <tbody>
-                                {this.state.pegados.pegadoConProblemas.map((error, index)=>{
-                                    return(
-                                        <tr key={index}>
-                                            {/*
-                                            <td className={style.tableCell}>
-                                                <p>{error.cliente}</p>
-                                            </td>
-                                            */}
-                                            <td className={style.tableCell}>
-                                                <p>{error.numeroLocal}</p>
-                                            </td>
-                                            <td className={style.tableCell}>
-                                                <p><small>{error.errorIdCliente || error.errorNumeroLocal}</small></p>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
+                                {this.state.pegados.pegadoConProblemas.length===0
+                                    ? <tr><td colSpan="2">Sin problemas detectados</td></tr>
+                                    : this.state.pegados.pegadoConProblemas.map((error, index)=>{
+                                        return(
+                                            <tr key={index}>
+                                                {/*
+                                                <td className={style.tableCell}>
+                                                    <p>{error.cliente}</p>
+                                                </td>
+                                                */}
+                                                <td className={style.tableCell}>
+                                                    <p>{error.numeroLocal}</p>
+                                                </td>
+                                                <td className={style.tableCell}>
+                                                    <p><small>{error.errorIdCliente || error.errorNumeroLocal}</small></p>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                }
                                 </tbody>
                             </table>
 

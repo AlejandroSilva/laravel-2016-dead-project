@@ -12,6 +12,10 @@ export default class Inventarios{
     add(inventario){
         this.lista.push(inventario)
     }
+    remove(idDummy){
+        let index = this.lista.findIndex(inventario=>inventario.idDummy===idDummy)
+        if(index>0) this.lista.splice(index, 1)
+    }
     yaExiste(idLocal, annoMesDia){
         let inventariosDelLocal = this.lista.filter(inventario=>inventario.idLocal===idLocal)
         // buscar si se tiene inventarios para este local

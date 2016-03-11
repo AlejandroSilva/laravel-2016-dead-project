@@ -177,6 +177,10 @@ class ProgramacionMensual extends React.Component{
         }
     }
 
+    quitarInventario(idDummy){
+        this.blackbox.remove(idDummy)
+        this.setState({inventariosFiltrados: this.blackbox.getListaFiltrada()})
+    }
     render(){
         return (
             <div>
@@ -195,6 +199,7 @@ class ProgramacionMensual extends React.Component{
                     <TablaProgramas
                         inventariosFiltrados={this.state.inventariosFiltrados}
                         guardarOCrearInventario={this.guardarOCrearInventario.bind(this)}
+                        quitarInventario={this.quitarInventario.bind(this)}
                         ref={ref=>this.TablaInventarios=ref}
                     />
                 </div>

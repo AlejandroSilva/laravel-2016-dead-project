@@ -21945,6 +21945,12 @@
 	            }
 	        }
 	    }, {
+	        key: 'quitarInventario',
+	        value: function quitarInventario(idDummy) {
+	            this.blackbox.remove(idDummy);
+	            this.setState({ inventariosFiltrados: this.blackbox.getListaFiltrada() });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var _this7 = this;
@@ -21975,6 +21981,7 @@
 	                    _react2.default.createElement(_TablaProgramas2.default, {
 	                        inventariosFiltrados: this.state.inventariosFiltrados,
 	                        guardarOCrearInventario: this.guardarOCrearInventario.bind(this),
+	                        quitarInventario: this.quitarInventario.bind(this),
 	                        ref: function ref(_ref) {
 	                            return _this7.TablaInventarios = _ref;
 	                        }
@@ -35137,6 +35144,14 @@
 	            this.lista.push(inventario);
 	        }
 	    }, {
+	        key: 'remove',
+	        value: function remove(idDummy) {
+	            var index = this.lista.findIndex(function (inventario) {
+	                return inventario.idDummy === idDummy;
+	            });
+	            if (index > 0) this.lista.splice(index, 1);
+	        }
+	    }, {
 	        key: 'yaExiste',
 	        value: function yaExiste(idLocal, annoMesDia) {
 	            var inventariosDelLocal = this.lista.filter(function (inventario) {
@@ -36321,7 +36336,8 @@
 	                                // Metodos
 	                                , focusFilaSiguiente: _this2.focusFilaSiguiente.bind(_this2),
 	                                focusFilaAnterior: _this2.focusFilaAnterior.bind(_this2),
-	                                guardarOCrearInventario: _this2.props.guardarOCrearInventario
+	                                guardarOCrearInventario: _this2.props.guardarOCrearInventario,
+	                                quitarInventario: _this2.props.quitarInventario
 	                                //guardarOCrear={this.guardarOCrear.bind(this)}
 	                                , ref: function ref(_ref) {
 	                                    return _this2.inputFecha[index] = _ref;
@@ -36339,7 +36355,8 @@
 
 	TablaInventarios.propTypes = {
 	    inventariosFiltrados: _react2.default.PropTypes.array.isRequired,
-	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired
+	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired,
+	    quitarInventario: _react2.default.PropTypes.func.isRequired
 	};
 	exports.default = TablaInventarios;
 
@@ -37230,6 +37247,7 @@
 	    }, {
 	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(nextProps) {
+	            console.log('actualizando la row', nextProps);
 	            //Actualizar dotacion
 	            //if(!this.inputDotacion.value || this.inputDotacion.value=='' || this.inputDotacion.value==0){
 	            // fijar la dotacionSugerida
@@ -37339,6 +37357,11 @@
 	            } else {
 	                    console.log('datos invalidos');
 	                }
+	        }
+	    }, {
+	        key: 'quitarInventario',
+	        value: function quitarInventario() {
+	            this.props.quitarInventario(this.props.inventario.idDummy);
 	        }
 	    }, {
 	        key: 'render',
@@ -37539,11 +37562,15 @@
 	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
 	                        'Editar local'
 	                    ),
-	                    this.props.idInventario ? _react2.default.createElement(
+	                    this.props.inventario.idInventario ? _react2.default.createElement(
 	                        'button',
 	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
 	                        'Editar inventario'
-	                    ) : null
+	                    ) : _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-danger', tabIndex: '-1', onClick: this.quitarInventario.bind(this) },
+	                        'X'
+	                    )
 	                )
 	            );
 	        }
@@ -37559,7 +37586,8 @@
 	    // Metodos
 	    focusFilaSiguiente: _react2.default.PropTypes.func.isRequired,
 	    focusFilaAnterior: _react2.default.PropTypes.func.isRequired,
-	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired
+	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired,
+	    quitarInventario: _react2.default.PropTypes.func.isRequired
 	};
 
 	exports.default = RowInventario;
@@ -43575,7 +43603,15 @@
 	                                    _react2.default.createElement(
 	                                        'tbody',
 	                                        null,
-	                                        this.state.pegados.pegadoConProblemas.map(function (error, index) {
+	                                        this.state.pegados.pegadoConProblemas.length === 0 ? _react2.default.createElement(
+	                                            'tr',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                { colSpan: '2' },
+	                                                'Sin problemas detectados'
+	                                            )
+	                                        ) : this.state.pegados.pegadoConProblemas.map(function (error, index) {
 	                                            return _react2.default.createElement(
 	                                                'tr',
 	                                                { key: index },

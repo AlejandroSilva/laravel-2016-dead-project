@@ -99,6 +99,7 @@ class TablaInventarios extends React.Component{
                                 focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
                                 focusFilaAnterior={this.focusFilaAnterior.bind(this)}
                                 guardarOCrearInventario={this.props.guardarOCrearInventario}
+                                quitarInventario={this.props.quitarInventario}
                                 //guardarOCrear={this.guardarOCrear.bind(this)}
                                 ref={ref=>this.inputFecha[index]=ref}
                             />
@@ -112,6 +113,7 @@ class TablaInventarios extends React.Component{
 }
 TablaInventarios.propTypes = {
     inventariosFiltrados: React.PropTypes.array.isRequired,
-    guardarOCrearInventario: React.PropTypes.func.isRequired
+    guardarOCrearInventario: React.PropTypes.func.isRequired,
+    quitarInventario: React.PropTypes.func.isRequired
 }
 export default TablaInventarios
