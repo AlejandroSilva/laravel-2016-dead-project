@@ -1,16 +1,29 @@
-export default class Inventarios{
+import R from 'ramda'
+
+export default class BlackBox{
     constructor(clientes){
         this.clientes = clientes
         this.lista = []
+        this.filtroClientes = []
+        this.filtroRegiones = []
         this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
     }
+    // Todo Modificar
     reset(){
         this.lista = []
+        this.filtroClientes = []
+        this.filtroRegiones = []
         this.idDummy = 1
     }
-    // Optimizar
+    // Todo: Optimizar
+    // Todo Modificar: el listado de clientes
     add(inventario){
         this.lista.push(inventario)
+    }
+    // Todo Modificar: el listado de clientes
+    remove(idDummy){
+        let index = this.lista.findIndex(inventario=>inventario.idDummy===idDummy)
+        if(index>0) this.lista.splice(index, 1)
     }
     yaExiste(idLocal, annoMesDia){
         let inventariosDelLocal = this.lista.filter(inventario=>inventario.idLocal===idLocal)
@@ -30,8 +43,34 @@ export default class Inventarios{
         })
         return existe
     }
+    //getListaFiltrada(){
     getListaFiltrada(){
-        return this.lista
+        // filtrar por clientes
+        let clientesSeleccionados = this.filtroClientes.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
+        let listaFiltrada1 = R.filter(inventario=>{
+            return R.contains(inventario.local.nombreCliente, clientesSeleccionados)
+        }, this.lista)
+
+        // filtrar por regiones
+        let regionesSeleccionadas = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
+        let listaFiltrada2 = R.filter(inventario=>{
+            return R.contains(inventario.local.nombreRegion, regionesSeleccionadas)
+        }, listaFiltrada1)
+
+        let orderByFechaProgramadaStock = (a,b)=>{
+            // si la fecha es la misma, ordenar por stock
+            let dateA = new Date(a.fechaProgramada)
+            let dateB = new Date(b.fechaProgramada)
+            if(dateA-dateB===0){
+                // stock, mayor a menor (B-A)
+                return b.local.stock - a.local.stock
+            }else{
+                // fecha, de menor a mayor (A-B)
+                return dateA - dateB
+            }
+        }
+        let listaOrdenada = R.sort(orderByFechaProgramadaStock, listaFiltrada2)
+        return listaOrdenada
     }
 
     // Metodos de alto nivel
@@ -108,7 +147,7 @@ export default class Inventarios{
         return[ null, dummy]
     }
 
-
+    // Todo modificar el listado de clientes
     actualizarDatosLocal(local){
         // actualizar los datos del local de todos los inventarios que lo tengan
         this.lista = this.lista.map(inventario=>{
@@ -122,7 +161,9 @@ export default class Inventarios{
             }
             return inventario
         })
+        this.actualizarFiltros()
     }
+    // Todo modificar el listado de clientes
     actualizarDatosInventario(formInventario, inventarioActualizado){
         this.lista = this.lista.map(inventario=> {
             if (inventario.idDummy == formInventario.idDummy) {
@@ -130,6 +171,36 @@ export default class Inventarios{
             }
             return inventario
         })
+    }
+
+    actualizarFiltros(){
+        // Clientes
+        let clientes = this.lista.map(inventario=>inventario.local.nombreCliente)
+        let clientesUnicos = R.uniq(clientes)
+        this.filtroClientes = clientesUnicos.map(textoUnico=>{
+            // si no existe la opcion, se crea y se selecciona por defecto
+            return this.filtroClientes.find(opc=>opc.texto===textoUnico)
+                || { texto: textoUnico, seleccionado: true}
+        })
+
+        // Regiones
+        let regiones = this.lista.map(inventario=>inventario.local.nombreRegion)
+        let regionesUnicas = R.uniq(regiones)
+        this.filtroRegiones = regionesUnicas.map(textoUnico=>{
+            // si no existe la opcion, se crea y se selecciona por defecto
+            return this.filtroRegiones.find(opc=> opc.texto===textoUnico)
+                || { texto: textoUnico, seleccionado: true}
+        })
+        return {
+            filtroClientes: this.filtroClientes,
+            filtroRegiones: this.filtroRegiones
+        }
+    }
+    reemplazarFiltroClientes(filtro){
+        this.filtroClientes = filtro
+    }
+    reemplazarFiltroRegiones(filtro){
+        this.filtroRegiones = filtro
     }
 
     /*

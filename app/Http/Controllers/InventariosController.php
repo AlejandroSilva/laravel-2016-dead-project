@@ -112,7 +112,10 @@ class InventariosController extends Controller {
             $resultado =  $inventario->save();
 
             if($resultado) {
-                return response()->json($inventario, 200);
+                // mostrar el dato tal cual como esta en la BD
+                return response()->json(
+                    Inventarios::find($inventario->idInventario),
+                    200);
             }else{
                 return response()->json([
                     'request'=>$request->all(),

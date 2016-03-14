@@ -207,30 +207,33 @@ class AgregarPrograma extends React.Component {
                         <div className={"col-sm-7 "}>
                             <label className="control-label" htmlFor="locales">Detalle</label>
                             <button className="btn btn-xs btn-primary pull-right" tabIndex="-1"onClick={this.limpiarProblemas.bind(this)}>
-                                Aceptar/Limpiar
+                                Aceptar/Ocultar
                             </button>
                             <table className="table table-bordered table-condensed">
                                 <thead>
                                 <tr><th>CECO</th><th>Estado</th></tr>
                                 </thead>
                                 <tbody>
-                                {this.state.pegados.pegadoConProblemas.map((error, index)=>{
-                                    return(
-                                        <tr key={index}>
-                                            {/*
-                                            <td className={style.tableCell}>
-                                                <p>{error.cliente}</p>
-                                            </td>
-                                            */}
-                                            <td className={style.tableCell}>
-                                                <p>{error.numeroLocal}</p>
-                                            </td>
-                                            <td className={style.tableCell}>
-                                                <p><small>{error.errorIdCliente || error.errorNumeroLocal}</small></p>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
+                                {this.state.pegados.pegadoConProblemas.length===0
+                                    ? <tr><td colSpan="2">Sin problemas detectados</td></tr>
+                                    : this.state.pegados.pegadoConProblemas.map((error, index)=>{
+                                        return(
+                                            <tr key={index}>
+                                                {/*
+                                                <td className={style.tableCell}>
+                                                    <p>{error.cliente}</p>
+                                                </td>
+                                                */}
+                                                <td className={style.tableCell}>
+                                                    <p>{error.numeroLocal}</p>
+                                                </td>
+                                                <td className={style.tableCell}>
+                                                    <p><small>{error.errorIdCliente || error.errorNumeroLocal}</small></p>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                }
                                 </tbody>
                             </table>
 

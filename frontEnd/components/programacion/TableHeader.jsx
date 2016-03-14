@@ -33,7 +33,9 @@ class TableHeader extends React.Component {
     // Elementos seleccionados
     revisarTodosSeleccionados(/*opciones*/){
         // todo mejorar esto
+
         let noSeleccionados = this.props.filtro.filter(opc=>!opc.seleccionado)
+        //console.log("todos seleccionados: ", noSeleccionados.length===0)
         return noSeleccionados.length===0
     }
     toggleTodos(){
@@ -42,8 +44,9 @@ class TableHeader extends React.Component {
         // si estan todos seleccionados, marcar ninguno
         // si falta uno por marcar, se marcan todos
         let filtroActualizado = this.props.filtro.map(opcion=>({texto: opcion.texto, seleccionado: !todosSeleccionados}))
+
         // informar la actualizacion al padre
-        this.props.onFiltroChanged(filtroActualizado)
+        this.props.actualizarFiltro(filtroActualizado)
     }
     checkboxSeleccionado(opcionSeleccionada){
         let filtroActualizado = this.props.filtro.map(opcion=>{
@@ -52,7 +55,7 @@ class TableHeader extends React.Component {
             return opcion
         })
         // informar la actualizacion al padre
-        this.props.onFiltroChanged(filtroActualizado)
+        this.props.actualizarFiltro(filtroActualizado)
     }
 
     render(){
@@ -83,7 +86,8 @@ class TableHeader extends React.Component {
 TableHeader.propTypes = {
     nombre: PropTypes.string,
     filtro: PropTypes.arrayOf(PropTypes.object).isRequired,
-    onFiltroChanged: PropTypes.func.isRequired
+    // Metodos
+    actualizarFiltro: PropTypes.func.isRequired
 }
 TableHeader.defaultProps = {
     nombre: '[sin nombre]'

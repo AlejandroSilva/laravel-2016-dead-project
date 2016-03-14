@@ -11,7 +11,7 @@ import RowInventario from './RowInventario.jsx'
 import sharedStyles from '../shared/shared.css'
 import styles from './TablaProgramas.css'
 
-class TablaInventarios extends React.Component{
+class TablaProgramas extends React.Component{
     constructor(props){
         super(props)
         // referencia a todos las entradas de fecha de los inventarios
@@ -33,18 +33,6 @@ class TablaInventarios extends React.Component{
         prevRow.focusElemento(nombreElemento)
     }
 
-    // Reemplazar el filtro que es actualizado por la TableHeader
-    //reemplazarFiltro(nombreFiltro, filtroActualizado) {
-    //    // se reemplaza el filtro indicado en 'nombreFiltro'
-    //    let nuevoFiltro = this.state.filtro
-    //    nuevoFiltro[nombreFiltro] = filtroActualizado
-    //
-    //    this.setState({
-    //        filtro: nuevoFiltro,
-    //        programasFiltrados: this.filtrarInventarios(this.state.programas, nuevoFiltro)
-    //    })
-    //}
-
     render(){
         return (
             <div>
@@ -61,20 +49,16 @@ class TablaInventarios extends React.Component{
                             <th className={styles.thFecha}>Fecha</th>
                             <th className={styles.thCliente}>
                                 <TableHeader nombre="Cliente"
-                                          //filtro={this.state.filtro.clientes}
-                                          //onFiltroChanged={this.reemplazarFiltro.bind(this, 'clientes')}
-                                             filtro={[]}
-                                             onFiltroChanged={()=>{}}
+                                             filtro={this.props.filtroClientes}
+                                             actualizarFiltro={this.props.actualizarFiltro.bind(this, 'cliente')}
                                 />
                             </th>
                             <th className={styles.thCeco}>Ceco</th>
                             <th className={styles.thLocal}>Local</th>
                             <th className={styles.thRegion}>
                                 <TableHeader nombre="Región"
-                                          //filtro={this.state.filtro.regiones}
-                                          //onFiltroChanged={this.reemplazarFiltro.bind(this, 'regiones')}
-                                             filtro={[]}
-                                             onFiltroChanged={()=>{}}
+                                             filtro={this.props.filtroRegiones}
+                                             actualizarFiltro={this.props.actualizarFiltro.bind(this, 'region')}
                                 />
                             </th>
                             <th className={styles.thComuna}>Comuna</th>
@@ -86,28 +70,39 @@ class TablaInventarios extends React.Component{
                         </Sticky>
                     </thead>
                     <tbody>
-                    {this.props.inventariosFiltrados.map((inventario, index)=>{
-                        return <RowInventario
-                            key={index}
-                            index={index}
-                            inventario={inventario}
+                    {}
+                    {this.props.inventariosFiltrados.length===0
+                        ? <tr><td colSpan="13" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                        : this.props.inventariosFiltrados.map((inventario, index)=>{
+                            return <RowInventario
+                                key={index}
+                                index={index}
+                                inventario={inventario}
 
-                            // Metodos
-                            focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
-                            focusFilaAnterior={this.focusFilaAnterior.bind(this)}
-                            guardarOCrearInventario={this.props.guardarOCrearInventario}
-                            //guardarOCrear={this.guardarOCrear.bind(this)}
-                            ref={ref=>this.inputFecha[index]=ref}
-                        />
-                    })}
+                                // Metodos
+                                focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
+                                focusFilaAnterior={this.focusFilaAnterior.bind(this)}
+                                guardarOCrearInventario={this.props.guardarOCrearInventario}
+                                quitarInventario={this.props.quitarInventario}
+                                //guardarOCrear={this.guardarOCrear.bind(this)}
+                                ref={ref=>this.inputFecha[index]=ref}
+                            />
+                        })
+                    }
                     </tbody>
                 </StickyContainer>
             </div>
         )
     }
 }
-TablaInventarios.propTypes = {
+TablaProgramas.propTypes = {
+    // Objetos
     inventariosFiltrados: React.PropTypes.array.isRequired,
-    guardarOCrearInventario: React.PropTypes.func.isRequired
+    filtroClientes: React.PropTypes.array.isRequired,
+    filtroRegiones: React.PropTypes.array.isRequired,
+    // Metodos
+    actualizarFiltro: React.PropTypes.func.isRequired,
+    guardarOCrearInventario: React.PropTypes.func.isRequired,
+    quitarInventario: React.PropTypes.func.isRequired
 }
-export default TablaInventarios
+export default TablaProgramas
