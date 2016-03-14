@@ -43,7 +43,7 @@ class TablaProgramas extends React.Component{
                         <Sticky
                             topOffset={-50}
                             type={React.DOM.tr}
-                            stickyStyle={{top: '50px'}}>
+                            stickyStyle={{top: '49x'}}>
 
                             <th className={styles.thCorrelativo}>#</th>
                             <th className={styles.thFecha}>Fecha</th>

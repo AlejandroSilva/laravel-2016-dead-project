@@ -59,8 +59,8 @@ export default class BlackBox{
 
         let orderByFechaProgramadaStock = (a,b)=>{
             // si la fecha es la misma, ordenar por stock
-            let dateA = new Date(a.fechaProgramada)
-            let dateB = new Date(b.fechaProgramada)
+            let dateA = new Date(a.fechaProgramada.replace("-00",""))
+            let dateB = new Date(b.fechaProgramada.replace("-00",""))
             if(dateA-dateB===0){
                 // stock, mayor a menor (B-A)
                 return b.local.stock - a.local.stock
