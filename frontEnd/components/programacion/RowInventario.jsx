@@ -57,15 +57,16 @@ class RowInventario extends React.Component{
 
         this.validarDatos()
     }
-    componentWillReceiveProps(nextProps){
-        console.log('actualizando la row', nextProps)
-         //Actualizar dotacion
-        //if(!this.inputDotacion.value || this.inputDotacion.value=='' || this.inputDotacion.value==0){
-            // fijar la dotacionSugerida
-            let dotacionSugerida = nextProps.inventario.local.dotacionSugerida
-            let dotacionAsignada = nextProps.inventario.dotacionAsignada
-            this.inputDotacion.value = dotacionAsignada? dotacionAsignada : dotacionSugerida
-        //}
+    componentDidUpdate(nextProps){
+        // Ojo: se cambian los valores de ref despues de hacer un render, por eso se usad "didUpdate"
+
+        if(this.props.inventario.local.numero===3)
+            console.log("nuevas props ", this.props.inventario.fechaProgramada.split('-')[2])
+
+        //Actualizar dotacion
+        let dotacionSugerida = nextProps.inventario.local.dotacionSugerida
+        let dotacionAsignada = nextProps.inventario.dotacionAsignada
+        this.inputDotacion.value = dotacionAsignada? dotacionAsignada : dotacionSugerida
 
         // actualizar la fecha
         let [anno, mes, dia] = this.props.inventario.fechaProgramada.split('-')
@@ -132,7 +133,6 @@ class RowInventario extends React.Component{
 
         if(this.validarDatos()){
             let fecha = `${anno}-${mes}-${dia}`
-            console.log(`fecha ${fecha}, dotacion ${dotacion}, jornada ${jornada}`)
 
             this.props.guardarOCrearInventario({
                 idInventario: this.props.inventario.idInventario,
@@ -157,7 +157,6 @@ class RowInventario extends React.Component{
     quitarInventario(){
         this.props.quitarInventario(this.props.inventario.idDummy)
     }
-
 
     render(){
         return (
@@ -249,8 +248,8 @@ class RowInventario extends React.Component{
                 {/* Opciones    */}
                 <td className={styles.tdOpciones}>
                     <button className="btn btn-xs btn-primary" tabIndex="-1">Editar local</button>
-                    {this.props.inventario.idInventario?
-                        <button className="btn btn-xs btn-primary" tabIndex="-1">Editar inventario</button>
+                    {this.props.inventario.idInventario
+                        ? <button className="btn btn-xs btn-primary" tabIndex="-1">Editar inventario</button>
                         : <button className="btn btn-xs btn-danger" tabIndex="-1" onClick={this.quitarInventario.bind(this)}>X</button>
                     }
                 </td>

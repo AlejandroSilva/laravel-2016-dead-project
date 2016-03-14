@@ -3,7 +3,7 @@ import React from 'react'
 import moment from 'moment'
 moment.locale('es')
 import api from '../../apiClient/v1'
-import Inventarios from './Inventarios.js'
+import BlackBox from './BlackBox.js'
 
 // Component
 //import Multiselect from 'react-widgets/lib/Multiselect'
@@ -25,20 +25,13 @@ class ProgramacionMensual extends React.Component{
         }
         this.state = {
             inventariosFiltrados: [],
+            filtroClientes: [],
+            filtroRegiones: [],
             meses
         }
         // MAGIA NEGRA!!
-        this.blackbox = new Inventarios(this.props.clientes)
+        this.blackbox = new BlackBox(this.props.clientes)
     }
-    //componentDidMount(){
-    //    this.agregarInventario(2, this.props.clientes[1].locales[1].numero, '2016-07-00')
-    //    //this.agregarInventario(this.props.clientes[1].locales[2].numero, '2016-04-00')
-    //    this.agregarInventario(2, this.props.clientes[1].locales[4].numero, '2016-07-00')
-    ////    this.agregarInventario(this.props.clientes[0].locales[5].numero, '2016-05-00')
-    ////    this.agregarInventario(this.props.clientes[0].locales[6].numero, '2016-05-00')
-    //    this.agregarInventario(2, this.props.clientes[1].locales[8].numero, '2016-09-00')
-    //    this.agregarInventario(1, this.props.clientes[0].locales[12].numero, '2016-08-00')
-    //}
 
     onSeleccionarMes(annoMesDia){
         console.log('mes seleccionado ', annoMesDia)
@@ -60,7 +53,10 @@ class ProgramacionMensual extends React.Component{
                     idLocalesToFetch.push(inventario.idLocal)
                 })
                 // actualizar el state
+                let filtros = this.blackbox.actualizarFiltros()
                 this.setState({
+                    filtroClientes: filtros.filtroClientes,
+                    filtroRegiones: filtros.filtroRegiones,
                     inventariosFiltrados: this.blackbox.getListaFiltrada()
                 })
 
@@ -84,13 +80,23 @@ class ProgramacionMensual extends React.Component{
         Promise.all(promesasFetch)
             .then(locales=>{
                 console.log('fetch de todos los locales correcto')
-                this.setState({inventariosFiltrados: this.blackbox.getListaFiltrada()})
+                let filtros = this.blackbox.actualizarFiltros()
+                this.setState({
+                    filtroClientes: filtros.filtroClientes,
+                    filtroRegiones: filtros.filtroRegiones,
+                    inventariosFiltrados: this.blackbox.getListaFiltrada()
+                })
             })
             .catch(datos=> {
                 // Todo: agregar bluebird para que esto no ocurra nunca
                 // todo, al fallar UNA promesa, no se cumple el resto
                 alert('error al buscar la información de los locales, (AgregarGrupoInventarios desde Excel: fetch de todos los locales correcto)')
-                this.setState({inventariosFiltrados: this.blackbox.getListaFiltrada()})
+                let filtros = this.blackbox.actualizarFiltros()
+                this.setState({
+                    filtroClientes: filtros.filtroClientes,
+                    filtroRegiones: filtros.filtroRegiones,
+                    inventariosFiltrados: this.blackbox.getListaFiltrada()
+                })
             })
     }
     agregarInventario(idCliente, numeroLocal, annoMesDia){
@@ -102,7 +108,10 @@ class ProgramacionMensual extends React.Component{
         this.blackbox.add(nuevoInventario)
 
         // actualizar la vista de la lista
+        let filtros = this.blackbox.actualizarFiltros()
         this.setState({
+            filtroClientes: filtros.filtroClientes,
+            filtroRegiones: filtros.filtroRegiones,
             inventariosFiltrados: this.blackbox.getListaFiltrada()
         })
 
@@ -111,7 +120,10 @@ class ProgramacionMensual extends React.Component{
             .then(local=>{
                 this.blackbox.actualizarDatosLocal(local)
 
+                let filtros = this.blackbox.actualizarFiltros()
                 this.setState({
+                    filtroClientes: filtros.filtroClientes,
+                    filtroRegiones: filtros.filtroRegiones,
                     inventariosFiltrados: this.blackbox.getListaFiltrada()
                 })
             })
@@ -139,7 +151,10 @@ class ProgramacionMensual extends React.Component{
         })
 
         // cuando terminen todos, se actualiza el state de la aplicacion
+        let filtros = this.blackbox.actualizarFiltros()
         this.setState({
+            filtroClientes: filtros.filtroClientes,
+            filtroRegiones: filtros.filtroRegiones,
             inventariosFiltrados: this.blackbox.getListaFiltrada()
         })
         this.fetchLocales(idLocalesExistentes)
@@ -157,10 +172,13 @@ class ProgramacionMensual extends React.Component{
             // Actualizar los datos del inventario
             api.inventario.actualizar(formInventario.idInventario, formInventario)
                 .then(inventarioActualizado=>{
-                    console.log('inventario actualizado correctamente', inventarioActualizado)
+                    console.log('inventario actualizado correctamente')
                     // actualizar los datos y el state de la app
                     this.blackbox.actualizarDatosInventario(formInventario, inventarioActualizado)
+                    let filtros = this.blackbox.actualizarFiltros()
                     this.setState({
+                        filtroClientes: filtros.filtroClientes,
+                        filtroRegiones: filtros.filtroRegiones,
                         inventariosFiltrados: this.blackbox.getListaFiltrada()
                     })
                 })
@@ -168,9 +186,12 @@ class ProgramacionMensual extends React.Component{
             // Crear los datos del inventario en el servidor
             api.inventario.nuevo(formInventario)
                 .then(inventarioCreado=>{
-                    // actualizar los datos y el state de la app
                     this.blackbox.actualizarDatosInventario(formInventario, inventarioCreado)
+                    // actualizar los datos y el state de la app
+                    let filtros = this.blackbox.actualizarFiltros()
                     this.setState({
+                        filtroClientes: filtros.filtroClientes,
+                        filtroRegiones: filtros.filtroRegiones,
                         inventariosFiltrados: this.blackbox.getListaFiltrada()
                     })
                 })
@@ -179,8 +200,36 @@ class ProgramacionMensual extends React.Component{
 
     quitarInventario(idDummy){
         this.blackbox.remove(idDummy)
-        this.setState({inventariosFiltrados: this.blackbox.getListaFiltrada()})
+        this.setState(
+            // {inventariosFiltrados, filtroClientes, filtroRegiones }
+            this.blackbox.getListaActualizada()
+        )
     }
+
+    actualizarFiltro(nombreFiltro, filtro){
+        if(nombreFiltro==='cliente'){
+            this.blackbox.reemplazarFiltroClientes(filtro)
+
+            let filtros = this.blackbox.actualizarFiltros()
+            this.setState({
+                filtroClientes: filtros.filtroClientes,
+                filtroRegiones: filtros.filtroRegiones,
+                inventariosFiltrados: this.blackbox.getListaFiltrada()
+            })
+        }
+        if(nombreFiltro==='region'){
+            this.blackbox.reemplazarFiltroRegiones(filtro)
+
+            let filtros = this.blackbox.actualizarFiltros()
+            this.setState({
+                filtroClientes: filtros.filtroClientes,
+                filtroRegiones: filtros.filtroRegiones,
+                inventariosFiltrados: this.blackbox.getListaFiltrada()
+            })
+        }
+
+    }
+
     render(){
         return (
             <div>
@@ -198,6 +247,9 @@ class ProgramacionMensual extends React.Component{
                     <h4 className="page-header" style={{marginTop: '1em'}}>Locales a programar:</h4>
                     <TablaProgramas
                         inventariosFiltrados={this.state.inventariosFiltrados}
+                        filtroClientes={this.state.filtroClientes}
+                        filtroRegiones={this.state.filtroRegiones}
+                        actualizarFiltro={this.actualizarFiltro.bind(this)}
                         guardarOCrearInventario={this.guardarOCrearInventario.bind(this)}
                         quitarInventario={this.quitarInventario.bind(this)}
                         ref={ref=>this.TablaInventarios=ref}
