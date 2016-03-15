@@ -21863,6 +21863,7 @@
 	                _this4.blackbox.actualizarDatosLocal(local);
 
 	                // actualizar los filtros, y la lista ordenada de locales
+	                console.log("actualizando los datos del local ingresado");
 	                _this4.setState(_this4.blackbox.getListaFiltrada());
 	            }).catch(function (error) {
 	                console.error('error al obtener los datos de ' + nuevoInventario.local.idLocal, error);
@@ -44721,7 +44722,7 @@
 
 	var _TableHeader2 = _interopRequireDefault(_TableHeader);
 
-	var _RowInventario = __webpack_require__(303);
+	var _RowInventario = __webpack_require__(417);
 
 	var _RowInventario2 = _interopRequireDefault(_RowInventario);
 
@@ -45690,448 +45691,7 @@
 	module.exports = {"container":"TableHeader__container___N1LYN","cell":"TableHeader__cell___qBAiu","menu":"TableHeader__menu___x-Ng6","contenedorValores":"TableHeader__contenedorValores___qZzS4"};
 
 /***/ },
-/* 303 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _numeral = __webpack_require__(304);
-
-	var _numeral2 = _interopRequireDefault(_numeral);
-
-	var _Tooltip = __webpack_require__(305);
-
-	var _Tooltip2 = _interopRequireDefault(_Tooltip);
-
-	var _OverlayTrigger = __webpack_require__(335);
-
-	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
-
-	var _RowInventario = __webpack_require__(413);
-
-	var _RowInventario2 = _interopRequireDefault(_RowInventario);
-
-	var _shared = __webpack_require__(414);
-
-	var _shared2 = _interopRequireDefault(_shared);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	// Componentes
-
-
-	// Styles
-
-
-	var RowInventario = function (_React$Component) {
-	    _inherits(RowInventario, _React$Component);
-
-	    function RowInventario() {
-	        _classCallCheck(this, RowInventario);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(RowInventario).apply(this, arguments));
-	    }
-
-	    _createClass(RowInventario, [{
-	        key: 'componentDidMount',
-
-	        // Refs disponibles: this.inputDia, this.inputMes, this.inputAnno, this.inputDotacion, this.inputJornada
-
-	        value: function componentDidMount() {
-	            // fijar la dotacionSugerida
-	            var dotacionSugerida = this.props.inventario.local.dotacionSugerida;
-	            var dotacionAsignada = this.props.inventario.dotacionAsignada;
-	            this.inputDotacion.value = dotacionAsignada ? dotacionAsignada : dotacionSugerida;
-
-	            // fijar la fecha
-
-	            var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
-
-	            var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
-
-	            var anno = _props$inventario$fec2[0];
-	            var mes = _props$inventario$fec2[1];
-	            var dia = _props$inventario$fec2[2];
-
-	            this.inputDia.value = dia;
-	            this.inputMes.value = mes;
-	            this.inputAnno.value = anno;
-
-	            // fijar la jornada
-	            this.inputJornada.value = this.props.inventario.idJornada;
-	        }
-	    }, {
-	        key: 'componentDidUpdate',
-	        value: function componentDidUpdate(nextProps) {
-	            // Ojo: se cambian los valores de ref despues de hacer un render, por eso se usad "didUpdate"
-
-	            if (this.props.inventario.local.numero === 3) console.log("nuevas props ", this.props.inventario.fechaProgramada.split('-')[2]);
-
-	            //Actualizar dotacion
-	            var dotacionSugerida = nextProps.inventario.local.dotacionSugerida;
-	            var dotacionAsignada = nextProps.inventario.dotacionAsignada;
-	            this.inputDotacion.value = dotacionAsignada ? dotacionAsignada : dotacionSugerida;
-
-	            // actualizar la fecha
-
-	            var _props$inventario$fec3 = this.props.inventario.fechaProgramada.split('-');
-
-	            var _props$inventario$fec4 = _slicedToArray(_props$inventario$fec3, 3);
-
-	            var anno = _props$inventario$fec4[0];
-	            var mes = _props$inventario$fec4[1];
-	            var dia = _props$inventario$fec4[2];
-
-	            this.inputDia.value = dia;
-	            this.inputMes.value = mes;
-	            this.inputAnno.value = anno;
-
-	            // actualizar la jornada
-	            var jornadaInventario = nextProps.inventario.idJornada;
-	            var jornadaLocal = nextProps.inventario.local.idJornadaSugerida;
-	            this.inputJornada.value = jornadaInventario ? jornadaInventario : jornadaLocal;
-	            //this.validarDatos() // cuelga la app
-	        }
-	    }, {
-	        key: 'focusElemento',
-	        value: function focusElemento(elemento) {
-	            if (elemento === 'dia') {
-	                this.inputDia.focus();
-	            } else if (elemento === 'dotacion') {
-	                this.inputDotacion.focus();
-	            }
-	        }
-	    }, {
-	        key: 'onFocusInputDia',
-	        value: function onFocusInputDia() {
-	            // si al hacer foco en el dia, el valor es "00", dejar el campo vacio con ""
-	            if (this.inputDia.value == 0) {
-	                this.inputDia.value = '';
-	            }
-	        }
-	    }, {
-	        key: 'inputOnKeyDown',
-	        value: function inputOnKeyDown(elemento, evt) {
-	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
-	                // 9 = tab, flechaAbajo = 40,  13 = enter
-	                evt.preventDefault();
-	                this.props.focusFilaSiguiente(this.props.index, elemento);
-	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
-	                // flechaArriba = 38, shift+tab
-	                this.props.focusFilaAnterior(this.props.index, elemento);
-	                evt.preventDefault();
-	            }
-	        }
-	    }, {
-	        key: 'fechaValida',
-	        value: function fechaValida() {
-	            if (!this.inputDia) return true;
-	            var dia = this.inputDia.value;
-	            if ((dia == "00" || dia == "0") && this.props.inventario.idInventario === null) return false;
-	            if (dia < 1 || dia > 31) return false;
-	            return true;
-	        }
-	    }, {
-	        key: 'guardarOCrear',
-	        value: function guardarOCrear() {
-	            var dotacion = this.inputDotacion.value;
-	            var jornada = this.inputJornada.value;
-	            var anno = this.inputAnno.value;
-	            var mes = this.inputMes.value;
-	            var dia = this.inputDia.value;
-	            if (dia == '') {
-	                this.inputDia.value = '00';
-	                dia = '00';
-	            }
-
-	            if (this.fechaValida()) {
-	                var fecha = anno + '-' + mes + '-' + dia;
-
-	                this.props.guardarOCrearInventario({
-	                    idInventario: this.props.inventario.idInventario,
-	                    idDummy: this.props.inventario.idDummy,
-	                    idLocal: this.props.inventario.local.idLocal,
-	                    idJornada: jornada,
-	                    fechaProgramada: fecha,
-	                    horaLlegada: this.props.inventario.horaLlegada,
-	                    stockTeorico: this.props.inventario.local.stock,
-	                    dotacionAsignada: dotacion
-	                });
-	            } else {
-	                console.log('datos invalidos');
-	            }
-	        }
-	    }, {
-	        key: 'quitarInventario',
-	        value: function quitarInventario() {
-	            this.props.quitarInventario(this.props.inventario.idDummy);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this2 = this;
-
-	            var tooltipFecha = null;
-	            if (this.inputDia && !this.fechaValida()) {
-	                // la fecha no es valida
-	                tooltipFecha = _react2.default.createElement(
-	                    _Tooltip2.default,
-	                    { placement: 'left', positionLeft: -120, id: 'xxxx', style: { width: '120px', zIndex: 0 },
-	                        className: "in " + _shared2.default.tooltipDanger },
-	                    'Fecha Invalida'
-	                );
-	            }
-	            if (this.inputDia && this.inputDia.value == 0) {
-	                tooltipFecha = _react2.default.createElement(
-	                    _Tooltip2.default,
-	                    { placement: 'left', positionLeft: -120, id: 'xxxx', style: { width: '120px', zIndex: 0 },
-	                        className: "in " + _shared2.default.tooltipWarning },
-	                    'Fecha Pendiente'
-	                );
-	            }
-
-	            return _react2.default.createElement(
-	                'tr',
-	                null,
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdCorrelativo },
-	                    this.props.index
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdFecha },
-	                    tooltipFecha,
-	                    _react2.default.createElement('input', { className: this.props.inventario.idInventario ? _RowInventario2.default.inputDia : _RowInventario2.default.inputDiaInvalido,
-	                        type: 'number', min: 0, max: 31,
-	                        ref: function ref(_ref) {
-	                            return _this2.inputDia = _ref;
-	                        },
-	                        onKeyDown: this.inputOnKeyDown.bind(this, 'dia'),
-	                        onFocus: this.onFocusInputDia.bind(this),
-	                        onBlur: this.guardarOCrear.bind(this) }),
-	                    _react2.default.createElement('input', { className: _RowInventario2.default.inputMes, type: 'number', disabled: true,
-	                        ref: function ref(_ref2) {
-	                            return _this2.inputMes = _ref2;
-	                        } }),
-	                    _react2.default.createElement('input', { className: _RowInventario2.default.inputAnno, type: 'number', disabled: true,
-	                        ref: function ref(_ref3) {
-	                            return _this2.inputAnno = _ref3;
-	                        } })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdCliente },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.inventario.local.nombreCliente
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdCeco },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            _react2.default.createElement(
-	                                'b',
-	                                null,
-	                                this.props.inventario.local.numero
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdLocal },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            _react2.default.createElement(
-	                                'b',
-	                                null,
-	                                this.props.inventario.local.nombre
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdRegion },
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { margin: 0 } },
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.inventario.local.nombreRegion
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdComuna },
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { margin: 0 } },
-	                        _react2.default.createElement(
-	                            'b',
-	                            null,
-	                            _react2.default.createElement(
-	                                'small',
-	                                null,
-	                                this.props.inventario.local.nombreComuna
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdStock },
-	                    _react2.default.createElement(
-	                        _OverlayTrigger2.default,
-	                        {
-	                            placement: 'left',
-	                            delay: 0,
-	                            overlay: _react2.default.createElement(
-	                                _Tooltip2.default,
-	                                { id: 'yyy' },
-	                                'Stock al ' + this.props.inventario.local.fechaStock
-	                            ) },
-	                        _react2.default.createElement(
-	                            'p',
-	                            null,
-	                            _react2.default.createElement(
-	                                'small',
-	                                null,
-	                                (0, _numeral2.default)(this.props.inventario.local.stock).format('0,0')
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdDotacion },
-	                    _react2.default.createElement(
-	                        _OverlayTrigger2.default,
-	                        {
-	                            placement: 'left',
-	                            delay: 0,
-	                            overlay: _react2.default.createElement(
-	                                _Tooltip2.default,
-	                                { id: 'yyy' },
-	                                'Produción ' + this.props.inventario.local.formato_local.produccionSugerida
-	                            ) },
-	                        _react2.default.createElement('input', { className: _RowInventario2.default.inputDotacionIngresada, type: 'number',
-	                            ref: function ref(_ref4) {
-	                                return _this2.inputDotacion = _ref4;
-	                            },
-	                            onKeyDown: this.inputOnKeyDown.bind(this, 'dotacion'),
-	                            onBlur: this.guardarOCrear.bind(this) })
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdJornada },
-	                    _react2.default.createElement(
-	                        'select',
-	                        { onChange: this.guardarOCrear.bind(this), ref: function ref(_ref5) {
-	                                return _this2.inputJornada = _ref5;
-	                            } },
-	                        _react2.default.createElement(
-	                            'option',
-	                            { value: '1' },
-	                            'día'
-	                        ),
-	                        _react2.default.createElement(
-	                            'option',
-	                            { value: '2' },
-	                            'noche'
-	                        ),
-	                        _react2.default.createElement(
-	                            'option',
-	                            { value: '3' },
-	                            'día y noche'
-	                        ),
-	                        _react2.default.createElement(
-	                            'option',
-	                            { value: '4' },
-	                            'no definido'
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdOpciones },
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
-	                        'Editar local'
-	                    ),
-	                    this.props.inventario.idInventario ? _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
-	                        'Editar inventario'
-	                    ) : _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-xs btn-danger', tabIndex: '-1', onClick: this.quitarInventario.bind(this) },
-	                        'X'
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return RowInventario;
-	}(_react2.default.Component);
-
-	RowInventario.propTypes = {
-	    // Objetos
-	    index: _react2.default.PropTypes.number.isRequired,
-	    inventario: _react2.default.PropTypes.object.isRequired,
-	    // Metodos
-	    focusFilaSiguiente: _react2.default.PropTypes.func.isRequired,
-	    focusFilaAnterior: _react2.default.PropTypes.func.isRequired,
-	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired,
-	    quitarInventario: _react2.default.PropTypes.func.isRequired
-	};
-
-	exports.default = RowInventario;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowInventario.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
+/* 303 */,
 /* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -51658,7 +51218,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"thCorrelativo":"RowInventario__thCorrelativo___jQKCi","tdCorrelativo":"RowInventario__tdCorrelativo___2yy4n RowInventario__thCorrelativo___jQKCi","thFecha":"RowInventario__thFecha___2Ew5A","tdFecha":"RowInventario__tdFecha___198QE RowInventario__thFecha___2Ew5A","thCliente":"RowInventario__thCliente___38e-N","tdCliente":"RowInventario__tdCliente___32hvf RowInventario__thCliente___38e-N","thCeco":"RowInventario__thCeco___3qVGS","tdCeco":"RowInventario__tdCeco___3eH2y RowInventario__thCeco___3qVGS","thLocal":"RowInventario__thLocal___3C1s9","tdLocal":"RowInventario__tdLocal___1kw8c RowInventario__thLocal___3C1s9","thZonaSei":"RowInventario__thZonaSei___F01Sp","tdZonaSei":"RowInventario__tdZonaSei___3cmQR RowInventario__thZonaSei___F01Sp","thRegion":"RowInventario__thRegion___2jB1d","tdRegion":"RowInventario__tdRegion___2JLGL RowInventario__thRegion___2jB1d","thComuna":"RowInventario__thComuna___3u1cQ","tdComuna":"RowInventario__tdComuna___3eBPd RowInventario__thComuna___3u1cQ","thStock":"RowInventario__thStock___15BwE","tdStock":"RowInventario__tdStock___3AT1n RowInventario__thStock___15BwE","thDotacion":"RowInventario__thDotacion___20iGu","tdDotacion":"RowInventario__tdDotacion___206TD RowInventario__thDotacion___20iGu","thJornada":"RowInventario__thJornada___3gyLP","tdJornada":"RowInventario__tdJornada___fSn5q RowInventario__thJornada___3gyLP","thEstado":"RowInventario__thEstado___1QpJR","tdEstado":"RowInventario__tdEstado___3UPcA RowInventario__thEstado___1QpJR","thOpciones":"RowInventario__thOpciones___2Gb26","tdOpciones":"RowInventario__tdOpciones___fmQaI RowInventario__thOpciones___2Gb26","inputDia":"RowInventario__inputDia___3VqP9 shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"RowInventario__inputDiaInvalido___3qyjq RowInventario__inputDia___3VqP9 shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"RowInventario__inputDiaPendiente___6jBmB RowInventario__inputDia___3VqP9 shared__inputNumberAsText___1Qr9M","inputMes":"RowInventario__inputMes___26ci_ shared__inputNumberAsText___1Qr9M","inputAnno":"RowInventario__inputAnno___MBMEV shared__inputNumberAsText___1Qr9M","inputDotacionSugerida":"RowInventario__inputDotacionSugerida___1G1cY shared__inputNumberAsText___1Qr9M","inputDotacionIngresada":"RowInventario__inputDotacionIngresada___1NKSd shared__inputNumberAsText___1Qr9M"};
+	module.exports = {"thCorrelativo":"RowInventario__thCorrelativo___jQKCi","tdCorrelativo":"RowInventario__tdCorrelativo___2yy4n RowInventario__thCorrelativo___jQKCi","thFecha":"RowInventario__thFecha___2Ew5A","tdFecha":"RowInventario__tdFecha___198QE RowInventario__thFecha___2Ew5A","thCliente":"RowInventario__thCliente___38e-N","tdCliente":"RowInventario__tdCliente___32hvf RowInventario__thCliente___38e-N","thCeco":"RowInventario__thCeco___3qVGS","tdCeco":"RowInventario__tdCeco___3eH2y RowInventario__thCeco___3qVGS","thLocal":"RowInventario__thLocal___3C1s9","tdLocal":"RowInventario__tdLocal___1kw8c RowInventario__thLocal___3C1s9","thZonaSei":"RowInventario__thZonaSei___F01Sp","tdZonaSei":"RowInventario__tdZonaSei___3cmQR RowInventario__thZonaSei___F01Sp","thRegion":"RowInventario__thRegion___2jB1d","tdRegion":"RowInventario__tdRegion___2JLGL RowInventario__thRegion___2jB1d","thComuna":"RowInventario__thComuna___3u1cQ","tdComuna":"RowInventario__tdComuna___3eBPd RowInventario__thComuna___3u1cQ","thStock":"RowInventario__thStock___15BwE","tdStock":"RowInventario__tdStock___3AT1n RowInventario__thStock___15BwE","thDotacion":"RowInventario__thDotacion___20iGu","tdDotacion":"RowInventario__tdDotacion___206TD RowInventario__thDotacion___20iGu","thJornada":"RowInventario__thJornada___3gyLP","tdJornada":"RowInventario__tdJornada___fSn5q RowInventario__thJornada___3gyLP","thEstado":"RowInventario__thEstado___1QpJR","tdEstado":"RowInventario__tdEstado___3UPcA RowInventario__thEstado___1QpJR","thOpciones":"RowInventario__thOpciones___2Gb26","tdOpciones":"RowInventario__tdOpciones___fmQaI RowInventario__thOpciones___2Gb26","inputDia":"RowInventario__inputDia___3VqP9 shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"RowInventario__inputDiaInvalido___3qyjq RowInventario__inputDia___3VqP9 shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"RowInventario__inputDiaPendiente___6jBmB RowInventario__inputDia___3VqP9 shared__inputNumberAsText___1Qr9M","inputMes":"RowInventario__inputMes___26ci_ shared__inputNumberAsText___1Qr9M","inputAnno":"RowInventario__inputAnno___MBMEV shared__inputNumberAsText___1Qr9M","inputDotacion":"RowInventario__inputDotacion___7Eh48 shared__inputNumberAsText___1Qr9M","inputDotacionInvalida":"RowInventario__inputDotacionInvalida___2sIMT RowInventario__inputDotacion___7Eh48 shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
 /* 414 */
@@ -52208,6 +51768,522 @@
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"tableCell":"AgregarPrograma__tableCell___Fw_r2"};
+
+/***/ },
+/* 417 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _numeral = __webpack_require__(304);
+
+	var _numeral2 = _interopRequireDefault(_numeral);
+
+	var _Tooltip = __webpack_require__(305);
+
+	var _Tooltip2 = _interopRequireDefault(_Tooltip);
+
+	var _OverlayTrigger = __webpack_require__(335);
+
+	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
+
+	var _RowInventario = __webpack_require__(413);
+
+	var _RowInventario2 = _interopRequireDefault(_RowInventario);
+
+	var _shared = __webpack_require__(414);
+
+	var _shared2 = _interopRequireDefault(_shared);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Componentes
+
+
+	// Styles
+
+
+	var RowInventario = function (_React$Component) {
+	    _inherits(RowInventario, _React$Component);
+
+	    function RowInventario(props) {
+	        _classCallCheck(this, RowInventario);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RowInventario).call(this, props));
+
+	        _this.state = {
+	            inputDia: 0,
+	            inputMes: 0,
+	            inputAnno: 0,
+	            inputDotacion: 0,
+	            selectJornada: 4,
+	            diaValido: _this._diaValido(0),
+	            dotacionValida: _this._dotacionValida(0)
+	        };
+	        // Refs disponibles: this.inputDia, this.inputDotacion
+	        return _this;
+	    }
+
+	    _createClass(RowInventario, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            // al montar el componente, fijas su state "inicial"
+
+	            var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
+
+	            var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
+
+	            var anno = _props$inventario$fec2[0];
+	            var mes = _props$inventario$fec2[1];
+	            var dia = _props$inventario$fec2[2];
+
+	            var dotacionSugerida = this.props.inventario.local.dotacionSugerida;
+	            var dotacionAsignada = this.props.inventario.dotacionAsignada;
+	            var jornadaInventario = this.props.inventario.idJornada;
+	            var jornadaLocal = this.props.inventario.local.idJornadaSugerida;
+	            console.log("will mount: dotacionAsignada, dotacionSugerida, (nombre) ", dotacionAsignada, dotacionSugerida, dotacionAsignada || dotacionSugerida);
+	            console.log("will mount comuna: ", this.props.inventario.local.nombreComuna); // no tienen la informacion, como se esperaba
+	            this.setState({
+	                inputDia: dia,
+	                inputMes: mes,
+	                inputAnno: anno,
+	                inputDotacion: dotacionAsignada || dotacionSugerida,
+	                selectJornada: jornadaInventario || jornadaLocal,
+	                diaValido: this._diaValido(dia),
+	                dotacionValida: this._dotacionValida(dotacionAsignada || dotacionSugerida)
+	            });
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            console.log("will receibeprops");
+
+	            var mismoInventario = this.props.inventario.idDummy === nextProps.inventario.idDummy;
+	            if (mismoInventario) {
+	                var newState = {};
+	                //if(this.props.inventario.idDummy==9) console.log("actualizando componente 9", this.props.inventario.fechaProgramada, nextProps.inventario.fechaProgramada)
+	                //console.log("nuevas props para ", this.props.inventario.idDummy)
+	                console.log("AAA prop.dotacionSugerida, nextprop.dotacionSugerida, state.inputDOtacion", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
+
+	                // Si es el mismo inventario, se revisa si se han actualizado los datos (y se reemplaza el state actual del usuario)
+
+	                // se recibio una nueva fecha?
+
+	                var _props$inventario$fec3 = this.props.inventario.fechaProgramada.split('-');
+
+	                var _props$inventario$fec4 = _slicedToArray(_props$inventario$fec3, 3);
+
+	                var anno1 = _props$inventario$fec4[0];
+	                var mes1 = _props$inventario$fec4[1];
+	                var dia1 = _props$inventario$fec4[2];
+
+	                var _nextProps$inventario = nextProps.inventario.fechaProgramada.split('-');
+
+	                var _nextProps$inventario2 = _slicedToArray(_nextProps$inventario, 3);
+
+	                var anno2 = _nextProps$inventario2[0];
+	                var mes2 = _nextProps$inventario2[1];
+	                var dia2 = _nextProps$inventario2[2];
+	                //if(dia1!==dia2 || mes1!==mes2 || anno1!==anno2 || this.state.inputDia!=dia2, this.state.inputMes!=mes2, this.state.inputAnno!=anno2)
+
+	                this.setState({ inputDia: dia2, inputMes: mes2, inputAnno: anno2, diaValido: this._diaValido(dia2) });
+
+	                // se recibio una nueva dotacion?
+	                var dotacion1 = this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida;
+	                var dotacion2 = nextProps.inventario.dotacionAsignada || nextProps.inventario.local.dotacionSugerida;
+	                console.log("AAAA dotacionAntigua, dotacionNueva,", dotacion1, dotacion2);
+	                //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
+	                this.setState({ inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2) });
+
+	                // se recibio una nueva jornada?
+	                var jornada1 = this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida;
+	                var jornada2 = nextProps.inventario.idJornada || nextProps.inventario.local.idJornadaSugerida;
+	                //if(jornada1!==jornada2 || this.state.selectJornada!==jornada2)
+	                this.setState({ selectJornada: jornada2 });
+
+	                this.setState(newState);
+	            } else {
+	                // Si el inventario cambio, se vuelven a poner los valores "por defecto"
+
+	                console.log("BBB", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
+
+	                var _nextProps$inventario3 = nextProps.inventario.fechaProgramada.split('-');
+
+	                var _nextProps$inventario4 = _slicedToArray(_nextProps$inventario3, 3);
+
+	                var anno = _nextProps$inventario4[0];
+	                var mes = _nextProps$inventario4[1];
+	                var dia = _nextProps$inventario4[2];
+
+	                var dotacionAsignada = nextProps.inventario.dotacionAsignada;
+	                var dotacionSugerida = nextProps.inventario.local.dotacionSugerida;
+	                var jornadaInventario = nextProps.inventario.idJornada;
+	                var jornadaLocal = nextProps.inventario.local.idJornadaSugerida;
+	                this.setState({
+	                    inputDia: dia,
+	                    inputMes: mes,
+	                    inputAnno: anno,
+	                    inputDotacion: dotacionAsignada || dotacionSugerida,
+	                    selectJornada: jornadaInventario || jornadaLocal,
+	                    diaValido: this._diaValido(dia),
+	                    dotacionValida: this._dotacionValida(dotacionAsignada || dotacionSugerida)
+	                });
+	                console.log("BBBB dotacionAsignada, dotacionSugerida", dotacionAsignada, dotacionSugerida);
+	            }
+	            //console.log(this.props.inventario.idDummy, nextProps.inventario.idDummy, mismoInventario)
+	            //console.log(this.props.inventario.idDummy, dotacionAsignada, dotacionSugerida)
+	        }
+	    }, {
+	        key: 'focusElemento',
+	        value: function focusElemento(elemento) {
+	            if (elemento === 'dia') {
+	                this.inputDia.focus();
+	            } else if (elemento === 'dotacion') {
+	                this.inputDotacion.focus();
+	            }
+	        }
+	    }, {
+	        key: 'inputOnKeyDown',
+	        value: function inputOnKeyDown(elemento, evt) {
+	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
+	                // 9 = tab, flechaAbajo = 40,  13 = enter
+	                evt.preventDefault();
+	                this.props.focusFilaSiguiente(this.props.index, elemento);
+	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
+	                // flechaArriba = 38, shift+tab
+	                this.props.focusFilaAnterior(this.props.index, elemento);
+	                evt.preventDefault();
+	            }
+	        }
+	    }, {
+	        key: 'onInputDiaChange',
+	        value: function onInputDiaChange(evt) {
+	            var dia = evt.target.value;
+	            this.setState({
+	                inputDia: dia,
+	                diaValido: this._diaValido(dia)
+	            });
+	        }
+	    }, {
+	        key: 'onInputDotacionChange',
+	        value: function onInputDotacionChange(evt) {
+	            var dotacion = evt.target.value;
+	            this.setState({
+	                inputDotacion: dotacion,
+	                dotacionValida: this._dotacionValida(dotacion)
+	            });
+	        }
+	    }, {
+	        key: 'onSelectJornadaChange',
+	        value: function onSelectJornadaChange(evt) {
+	            var jornada = evt.target.value;
+	            this.setState({ selectJornada: jornada });
+	            this.guardarOCrear();
+	        }
+	    }, {
+	        key: '_diaValido',
+	        value: function _diaValido(dia) {
+	            return dia > 0 && dia < 32;
+	        }
+	    }, {
+	        key: '_dotacionValida',
+	        value: function _dotacionValida(dotacion) {
+	            return dotacion > 0;
+	        }
+	    }, {
+	        key: 'isDirty',
+	        value: function isDirty() {
+	            var _props$inventario$fec5 = this.props.inventario.fechaProgramada.split('-');
+
+	            var _props$inventario$fec6 = _slicedToArray(_props$inventario$fec5, 3);
+
+	            var anno = _props$inventario$fec6[0];
+	            var mes = _props$inventario$fec6[1];
+	            var dia = _props$inventario$fec6[2];
+
+	            var isDirty = this.state.inputDia != dia || this.state.inputDotacion != (this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida) || this.state.selectJornada != (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida);
+	            //console.log("dia ", this.state.inputDia, dia, this.state.inputDia!==dia)
+	            //console.log("dotac ", this.state.inputDotacion, (this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida), this.state.inputDotacion!==(this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida) )
+	            //console.log("jornada ", this.state.selectJornada, (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida), this.state.selectJornada!==(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida))
+	            console.log("isDirty ", isDirty);
+	            return isDirty;
+	        }
+	    }, {
+	        key: 'guardarOCrear',
+	        value: function guardarOCrear() {
+	            // si no es dirty (no hay cambios) no se hace nada
+	            if (this.isDirty() === false) return;
+
+	            var dotacion = this.state.inputDotacion;
+	            var jornada = this.state.selectJornada;
+	            var anno = this.state.inputAnno;
+	            var mes = this.state.inputMes;
+	            var dia = this.state.inputDia;
+
+	            if (this.state.diaValido && this.state.dotacionValida) {
+	                var fecha = anno + '-' + mes + '-' + dia;
+
+	                this.props.guardarOCrearInventario({
+	                    idInventario: this.props.inventario.idInventario,
+	                    idDummy: this.props.inventario.idDummy,
+	                    idLocal: this.props.inventario.local.idLocal,
+	                    idJornada: jornada,
+	                    fechaProgramada: fecha,
+	                    horaLlegada: this.props.inventario.horaLlegada,
+	                    stockTeorico: this.props.inventario.local.stock,
+	                    dotacionAsignada: dotacion
+	                });
+	            } else {
+	                console.log('datos invalidos');
+	            }
+	        }
+	    }, {
+	        key: 'quitarInventario',
+	        value: function quitarInventario() {
+	            this.props.quitarInventario(this.props.inventario.idDummy);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            console.log("render: prop.local.dotSug, state.inputDot", this.props.inventario.local.dotacionSugerida, this.state.inputDotacion);
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdCorrelativo },
+	                    /*this.props.inventario.idDummy*/this.props.index
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdFecha },
+	                    _react2.default.createElement('input', { className: this.state.diaValido ? _RowInventario2.default.inputDia : _RowInventario2.default.inputDiaInvalido,
+	                        type: 'number', min: 0, max: 31,
+	                        ref: function ref(_ref) {
+	                            return _this2.inputDia = _ref;
+	                        },
+	                        value: this.state.inputDia,
+	                        onChange: this.onInputDiaChange.bind(this),
+	                        onKeyDown: this.inputOnKeyDown.bind(this, 'dia'),
+	                        onBlur: this.guardarOCrear.bind(this) }),
+	                    _react2.default.createElement('input', { className: _RowInventario2.default.inputMes, type: 'number', disabled: true,
+	                        value: this.state.inputMes }),
+	                    _react2.default.createElement('input', { className: _RowInventario2.default.inputAnno, type: 'number', disabled: true,
+	                        value: this.state.inputAnno })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdCliente },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.inventario.local.nombreCliente
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdCeco },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                this.props.inventario.local.numero
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdLocal },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                this.props.inventario.local.nombre
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdRegion },
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { margin: 0 } },
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.inventario.local.nombreRegion
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdComuna },
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { margin: 0 } },
+	                        _react2.default.createElement(
+	                            'b',
+	                            null,
+	                            _react2.default.createElement(
+	                                'small',
+	                                null,
+	                                this.props.inventario.local.nombreComuna
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdStock },
+	                    _react2.default.createElement(
+	                        _OverlayTrigger2.default,
+	                        {
+	                            placement: 'left',
+	                            delay: 0,
+	                            overlay: _react2.default.createElement(
+	                                _Tooltip2.default,
+	                                { id: 'yyy' },
+	                                'Stock al ' + this.props.inventario.local.fechaStock
+	                            ) },
+	                        _react2.default.createElement(
+	                            'p',
+	                            null,
+	                            _react2.default.createElement(
+	                                'small',
+	                                null,
+	                                (0, _numeral2.default)(this.props.inventario.local.stock).format('0,0')
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdDotacion },
+	                    _react2.default.createElement(
+	                        _OverlayTrigger2.default,
+	                        {
+	                            placement: 'right',
+	                            delay: 0,
+	                            overlay: _react2.default.createElement(
+	                                _Tooltip2.default,
+	                                { id: 'yyy' },
+	                                'Produción ' + this.props.inventario.local.formato_local.produccionSugerida
+	                            ) },
+	                        _react2.default.createElement('input', { className: this.state.dotacionValida ? _RowInventario2.default.inputDotacion : _RowInventario2.default.inputDotacionInvalida, type: 'number',
+	                            value: this.state.inputDotacion,
+	                            onChange: this.onInputDotacionChange.bind(this),
+	                            ref: function ref(_ref2) {
+	                                return _this2.inputDotacion = _ref2;
+	                            },
+	                            onKeyDown: this.inputOnKeyDown.bind(this, 'dotacion'),
+	                            onBlur: this.guardarOCrear.bind(this) })
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdJornada },
+	                    _react2.default.createElement(
+	                        'select',
+	                        { onChange: this.onSelectJornadaChange.bind(this), value: this.state.selectJornada },
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '1' },
+	                            'día'
+	                        ),
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '2' },
+	                            'noche'
+	                        ),
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '3' },
+	                            'día y noche'
+	                        ),
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '4' },
+	                            'no definido'
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdOpciones },
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
+	                        'Editar local'
+	                    ),
+	                    this.props.inventario.idInventario ? _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
+	                        'Editar inventario'
+	                    ) : _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-danger', tabIndex: '-1', onClick: this.quitarInventario.bind(this) },
+	                        'X'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return RowInventario;
+	}(_react2.default.Component);
+
+	RowInventario.propTypes = {
+	    // Objetos
+	    index: _react2.default.PropTypes.number.isRequired,
+	    inventario: _react2.default.PropTypes.object.isRequired,
+	    // Metodos
+	    focusFilaSiguiente: _react2.default.PropTypes.func.isRequired,
+	    focusFilaAnterior: _react2.default.PropTypes.func.isRequired,
+	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired,
+	    quitarInventario: _react2.default.PropTypes.func.isRequired
+	};
+
+	exports.default = RowInventario;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowInventario2.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 /******/ ]);
