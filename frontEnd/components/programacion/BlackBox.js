@@ -92,8 +92,8 @@ export default class BlackBox{
         return {
             idDummy: this.idDummy++,    // asignar e incrementar
             idInventario: null,
-                idLocal: idLocal,
-                idJornada: null,
+            idLocal: idLocal,
+            idJornada: null,
             fechaProgramada: annoMesDia,
             horaLlegada: "00:00:00",
             stockTeorico: 0,

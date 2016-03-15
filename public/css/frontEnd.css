@@ -202,12 +202,15 @@
 }
 
 /* Dotacion */
-.RowInventario__inputDotacionSugerida___1G1cY{
+.RowInventario__inputDotacion___7Eh48{
     width: 25px;
     margin: 0 0 2px 0;
 }
-.RowInventario__inputDotacionIngresada___1NKSd{
-    width: 35px;
+.RowInventario__inputDotacionInvalida___2sIMT{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
 }
 .AgregarPrograma__tableCell___Fw_r2 {
     padding: 0 !important;

@@ -104,6 +104,7 @@ class ProgramacionMensual extends React.Component{
                 this.blackbox.actualizarDatosLocal(local)
 
                 // actualizar los filtros, y la lista ordenada de locales
+                console.log("actualizando los datos del local ingresado")
                 this.setState(this.blackbox.getListaFiltrada())
             })
             .catch(error=>{

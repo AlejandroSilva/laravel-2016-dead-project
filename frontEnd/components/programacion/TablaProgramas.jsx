@@ -5,7 +5,7 @@ import moment from 'moment'
 import Sticky from '../shared/react-sticky/sticky.js'
 import StickyContainer from '../shared/react-sticky/container.js'
 import TableHeader from './TableHeader.jsx'
-import RowInventario from './RowInventario.jsx'
+import RowInventario from './RowInventario2.jsx'
 
 // Styles
 import sharedStyles from '../shared/shared.css'
