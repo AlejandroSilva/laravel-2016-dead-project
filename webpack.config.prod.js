@@ -29,8 +29,8 @@ module.exports = {
         ]
     },
     plugins: [
-        new ExtractTextPlugin('css/frontEnd.css', { allChunks: true }),
-        new webpack.optimize.UglifyJsPlugin()
+        new ExtractTextPlugin('css/frontEnd.css', { allChunks: true })
+        //new webpack.optimize.UglifyJsPlugin()
         //new webpack.DefinePlugin({
         //    APP_NAME: `'${appConfig.name}'`,
         //    APP_VERSION: `'${appConfig.version}'`,

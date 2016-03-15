@@ -6,40 +6,12 @@ import Tooltip from 'react-bootstrap/lib/Tooltip'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 // Styles
-import styles from './TablaProgramas.css'
+import styles from './RowInventario.css'
 import styleShared from '../shared/shared.css'
 
-const ESTADO = {
-    OCULTAR: {
-        mensaje: 'Fecha Pendiente',
-        className: '',
-        tooltipClass: styleShared.tooltipHide
-    },
-    FECHA_PENDIENTE: {
-        mensaje: 'Fecha Pendiente',
-        className: 'label-danger',
-        tooltipClass: styleShared.tooltipWarning
-    },
-    FECHA_INVALIDA: {
-        mensaje: 'Fecha Invalida',
-        className: 'label-danger',
-        tooltipClass: styleShared.tooltipDanger
-    },
-    GUARDADO: {
-        mensaje: 'Guardado',
-        className: 'label-success'
-    }
-}
-
 class RowInventario extends React.Component{
-    constructor(props){
-        super(props)
-        this.state = {
-            fechaValida: false,
-            estado: {}
-        }
-        // Refs disponibles: this.inputDia, this.inputMes, this.inputAnno, this.inputDotacion, this.inputJornada
-    }
+    // Refs disponibles: this.inputDia, this.inputMes, this.inputAnno, this.inputDotacion, this.inputJornada
+
     componentDidMount(){
         // fijar la dotacionSugerida
         let dotacionSugerida = this.props.inventario.local.dotacionSugerida
@@ -54,8 +26,6 @@ class RowInventario extends React.Component{
 
         // fijar la jornada
         this.inputJornada.value = this.props.inventario.idJornada
-
-        this.validarDatos()
     }
     componentDidUpdate(nextProps){
         // Ojo: se cambian los valores de ref despues de hacer un render, por eso se usad "didUpdate"
@@ -78,6 +48,7 @@ class RowInventario extends React.Component{
         let jornadaInventario = nextProps.inventario.idJornada
         let jornadaLocal = nextProps.inventario.local.idJornadaSugerida
         this.inputJornada.value = jornadaInventario? jornadaInventario : jornadaLocal
+        //this.validarDatos() // cuelga la app
     }
 
     focusElemento(elemento){
@@ -106,18 +77,14 @@ class RowInventario extends React.Component{
         }
     }
 
-    validarDatos(){
+    fechaValida(){
+        if(!this.inputDia)
+            return true
         let dia = this.inputDia.value
-        if((dia=="00" || dia=="0") && this.props.inventario.idInventario===null){
-            this.setState({fechaValida: false, estado: ESTADO.FECHA_PENDIENTE})
+        if((dia=="00" || dia=="0") && this.props.inventario.idInventario===null)
             return false
-        }
-        if(dia<1 || dia>31){
-            this.setState({fechaValida: false, estado: ESTADO.FECHA_INVALIDA})
+        if(dia<1 || dia>31)
             return false
-        }
-
-        this.setState({fechaValida: true, estado: ESTADO.OCULTAR})
         return true
     }
     guardarOCrear(){
@@ -131,7 +98,7 @@ class RowInventario extends React.Component{
             dia = '00'
         }
 
-        if(this.validarDatos()){
+        if(this.fechaValida()){
             let fecha = `${anno}-${mes}-${dia}`
 
             this.props.guardarOCrearInventario({
@@ -144,12 +111,6 @@ class RowInventario extends React.Component{
                 stockTeorico: this.props.inventario.local.stock,
                 dotacionAsignada: dotacion
             })
-                //.then(res=>{
-                //    this.setState({
-                //        //guardado: true,
-                //        fechaValida: true,
-                //        estado: ESTADO.GUARDADO
-                //    })
         }else{
             console.log('datos invalidos')
         }
@@ -159,6 +120,25 @@ class RowInventario extends React.Component{
     }
 
     render(){
+        var tooltipFecha = null
+        if(this.inputDia && !this.fechaValida()){
+            // la fecha no es valida
+            tooltipFecha = (
+                <Tooltip placement="left" positionLeft={-120} id="xxxx" style={{width: '120px', zIndex: 0}}
+                         className={"in "+styleShared.tooltipDanger}>
+                    Fecha Invalida
+                </Tooltip>
+            )
+        }
+        if(this.inputDia && this.inputDia.value==0){
+            tooltipFecha = (
+                <Tooltip placement="left" positionLeft={-120} id="xxxx" style={{width: '120px', zIndex: 0}}
+                         className={"in "+styleShared.tooltipWarning}>
+                    Fecha Pendiente
+                </Tooltip>
+            )
+        }
+
         return (
             <tr>
                 {/* Correlativo */}
@@ -167,15 +147,10 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Fecha */}
                 <td className={styles.tdFecha}>
-                    {this.state.estado!=={}?
 
-                        <Tooltip placement="left" positionLeft={-120} id="xxxx" style={{width: '120px', zIndex: 0}}
-                        className={"in "+this.state.estado.tooltipClass}>
-                            {this.state.estado.mensaje}
-                        </Tooltip>
-                        : null
-                    }
-                    <input className={this.state.fechaValida? styles.inputDia : styles.inputDiaInvalido}
+                    {tooltipFecha}
+
+                    <input className={this.props.inventario.idInventario? styles.inputDia : styles.inputDiaInvalido}
                            type="number" min={0} max={31}
                            ref={ref=>this.inputDia=ref}
                            onKeyDown={this.inputOnKeyDown.bind(this, 'dia')}
