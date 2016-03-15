@@ -43,8 +43,9 @@ export default class BlackBox{
         })
         return existe
     }
-    //getListaFiltrada(){
     getListaFiltrada(){
+        this.actualizarFiltros()
+
         // filtrar por clientes
         let clientesSeleccionados = this.filtroClientes.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
         let listaFiltrada1 = R.filter(inventario=>{
@@ -57,20 +58,33 @@ export default class BlackBox{
             return R.contains(inventario.local.nombreRegion, regionesSeleccionadas)
         }, listaFiltrada1)
 
+        // Hack: para ordenar por fechas, se van a separar las que estan "fijadas", de las que "no estan fijadas"
+        // se ordenaran las "fijadas", y las "no fijadas" quedan igual
+        let listaDiaFijado = listaFiltrada2.filter(inventario=>inventario.fechaProgramada.indexOf('-00')===-1)
+        let listaDiaNoFijado = listaFiltrada2.filter(inventario=>inventario.fechaProgramada.indexOf('-00')!==-1)
+
         let orderByFechaProgramadaStock = (a,b)=>{
-            // si la fecha es la misma, ordenar por stock
-            let dateA = new Date(a.fechaProgramada.replace("-00",""))
-            let dateB = new Date(b.fechaProgramada.replace("-00",""))
-            if(dateA-dateB===0){
-                // stock, mayor a menor (B-A)
+            let dateA = new Date(a.fechaProgramada)
+            let dateB = new Date(b.fechaProgramada)
+
+            if((dateA-dateB)===0){
+                // stock ordenado de mayor a menor (B-A)
                 return b.local.stock - a.local.stock
             }else{
-                // fecha, de menor a mayor (A-B)
+                // fecha ordenada de de menor a mayor (A-B)
                 return dateA - dateB
             }
         }
-        let listaOrdenada = R.sort(orderByFechaProgramadaStock, listaFiltrada2)
-        return listaOrdenada
+        let listaDiaFIjadoOrdenado = R.sort(orderByFechaProgramadaStock, listaDiaFijado)
+
+        return {
+            inventariosFiltrados: [
+                ...listaDiaNoFijado,
+                ...listaDiaFIjadoOrdenado
+            ],
+            filtroClientes: this.filtroClientes,
+            filtroRegiones: this.filtroRegiones,
+        }
     }
 
     // Metodos de alto nivel
@@ -191,10 +205,10 @@ export default class BlackBox{
             return this.filtroRegiones.find(opc=> opc.texto===textoUnico)
                 || { texto: textoUnico, seleccionado: true}
         })
-        return {
-            filtroClientes: this.filtroClientes,
-            filtroRegiones: this.filtroRegiones
-        }
+        //return {
+        //    filtroClientes: this.filtroClientes,
+        //    filtroRegiones: this.filtroRegiones
+        //}
     }
     reemplazarFiltroClientes(filtro){
         this.filtroClientes = filtro

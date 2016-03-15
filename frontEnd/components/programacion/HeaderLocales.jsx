@@ -6,7 +6,7 @@
 //import Cabecera from './TableHeader.jsx'
 //
 //// Styles
-//import styles from './TablaProgramas.css'
+//import styles from './RowInventario.css'
 //
 //class HeaderLocales extends React.Component{
 //    render(){

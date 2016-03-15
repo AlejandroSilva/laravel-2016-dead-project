@@ -1,2 +1,223 @@
-.TableHeader__container___N1LYN{position:relative}.TableHeader__menu___x-Ng6{background:#fff;position:absolute;width:100%;min-width:200px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px grey;padding:5px}.TableHeader__contenedorValores___qZzS4{height:130px;border:1px solid grey;border-radius:2px;overflow:auto;padding:5px}.TableHeader__menu___x-Ng6 label{display:block;margin-top:2px;margin-bottom:2px}.shared__inputNumberAsText___1Qr9M{-moz-appearance:textfield}.shared__inputNumberAsText___1Qr9M::-webkit-inner-spin-button,.shared__inputNumberAsText___1Qr9M::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.shared__tooltipHide___2CzIE .tooltip-arrow,.shared__tooltipHide___2CzIE .tooltip-inner{display:none}.shared__tooltipDanger___3_QoZ .tooltip-inner{background-color:#d9534f}.shared__tooltipDanger___3_QoZ .tooltip-arrow{border-left-color:#d9534f!important}.shared__tooltipWarning___38s1A .tooltip-inner{background-color:#f0ad4e}.shared__tooltipWarning___38s1A .tooltip-arrow{border-left-color:#f0ad4e!important}
-/*!* display: none; <- Crashes Chrome on hover *!*/.TablaProgramas__thCorrelativo___3NzKu{width:30px;background:#fff}.TablaProgramas__tdCorrelativo___3-WWy{vertical-align:middle!important}.TablaProgramas__thFecha___2Eby7{min-width:120px;background:#fff}.TablaProgramas__tdFecha___2GiOv{vertical-align:middle!important}.TablaProgramas__thCliente___ko7yb{width:120px;background:#fff}.TablaProgramas__tdCliente___36LDr{vertical-align:middle!important}.TablaProgramas__thCeco___6I29x{width:55px;background:#fff}.TablaProgramas__tdCeco___3b4K-{vertical-align:middle!important}.TablaProgramas__thLocal___1lZcg{width:200px;background:#fff}.TablaProgramas__tdLocal___2Ws36{vertical-align:middle!important}.TablaProgramas__thZonaSei___2_Bz_{width:150px;background:#fff}.TablaProgramas__tdZonaSei___1kQ8p{vertical-align:middle!important}.TablaProgramas__thRegion___2z44D{width:140px;background:#fff}.TablaProgramas__tdRegion___3fA1s{vertical-align:middle!important}.TablaProgramas__thComuna___2lkCv{width:140px;background:#fff}.TablaProgramas__tdComuna___1lVN_{vertical-align:middle!important}.TablaProgramas__thStock___2-lAz{width:60px;background:#fff}.TablaProgramas__tdStock___34Eem{vertical-align:middle!important}.TablaProgramas__thDotacion___3wkjn{width:80px;background:#fff}.TablaProgramas__tdDotacion___2crpd{vertical-align:middle!important}.TablaProgramas__thJornada___3xMvk{width:200px;background:#fff}.TablaProgramas__tdJornada___BDr2g{vertical-align:middle!important}.TablaProgramas__thEstado___21gDk{width:100px;background:#fff}.TablaProgramas__tdEstado___2W113{vertical-align:middle!important}.TablaProgramas__thOpciones___3yi_K{width:250px;background:#fff}.TablaProgramas__tdOpciones___RelBN{vertical-align:middle!important}.TablaProgramas__inputDia___3gS_m{width:30px;marginRight:2px}.TablaProgramas__inputDiaInvalido___1fRN_{border:2px solid #a94442;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;outline-color:#ce8483}.TablaProgramas__inputDiaPendiente___3n91q{border:2px solid #f0ad4e;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;outline-color:#ce8483}.TablaProgramas__inputMes___ulW5T{width:25px;marginRight:2px}.TablaProgramas__inputAnno___gVXq7{width:45px;marginRight:2px}.TablaProgramas__inputDotacionSugerida___FLU9S{width:25px;margin:0 0 2px}.TablaProgramas__inputDotacionIngresada___3T4HM{width:35px}.AgregarPrograma__tableCell___Fw_r2{padding:0!important;margin:0}.AgregarPrograma__tableCell___Fw_r2>p{margin:0}
+
+.TableHeader__container___N1LYN{
+    position: relative;
+}
+.TableHeader__cell___qBAiu{
+
+}
+.TableHeader__menu___x-Ng6{
+    background: white;
+    position: absolute;
+    width: 100%;
+    min-width: 200px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px grey;
+    padding: 5px;
+}
+.TableHeader__contenedorValores___qZzS4{
+    height: 130px;
+    border: 1px solid grey;
+    border-radius: 2px;
+    overflow: auto;
+    padding: 5px;
+}
+.TableHeader__menu___x-Ng6 label{
+    display: block;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}/*input[type="number"]*/
+/* FIREFOX */
+.shared__inputNumberAsText___1Qr9M {
+    -moz-appearance: textfield;
+}
+/* CHROME */
+.shared__inputNumberAsText___1Qr9M::-webkit-outer-spin-button,
+.shared__inputNumberAsText___1Qr9M::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide */
+.shared__tooltipHide___2CzIE .tooltip-inner{
+    display: none;
+}
+.shared__tooltipHide___2CzIE .tooltip-arrow{
+    display: none;
+}
+/* Danger */
+.shared__tooltipDanger___3_QoZ .tooltip-inner{
+    background-color: #d9534f;
+}
+.shared__tooltipDanger___3_QoZ .tooltip-arrow{
+    border-left-color: #d9534f !important;
+}
+/* Warning*/
+.shared__tooltipWarning___38s1A .tooltip-inner{
+    background-color: #f0ad4e;
+}
+.shared__tooltipWarning___38s1A .tooltip-arrow{
+    border-left-color: #f0ad4e !important;
+}
+
+
+
+/*input::-webkit-outer-spin-button,*/
+/*input::-webkit-inner-spin-button {*/
+/*!* display: none; <- Crashes Chrome on hover *!*/
+/*-webkit-appearance: none;*/
+/*margin: 0; !* <-- Apparently some margin are still there even though it's hidden *!*/
+/*}*//* TABLA
+ la tabla de locales, al tener un "sticky header", este pierde el ancho de
+ las "TD" y se descuadra cuando el sticky se vuelve activo, pasa solucionar
+ esto, es necesario que los anchos de las celdas sean fijos, no dinamicos
+ */
+/* correlativo */
+.RowInventario__thCorrelativo___jQKCi {
+    width: 30px;
+    background: white;
+}
+.RowInventario__tdCorrelativo___2yy4n {
+    vertical-align: middle !important;
+}
+/* Fecha */
+.RowInventario__thFecha___2Ew5A {
+    min-width: 120px;
+    background: white;
+}
+.RowInventario__tdFecha___198QE {
+    vertical-align: middle !important;
+}
+/* Cliente */
+.RowInventario__thCliente___38e-N {
+    width: 120px;
+    background: white;
+}
+.RowInventario__tdCliente___32hvf {
+    vertical-align: middle !important;
+}
+/* CECO */
+.RowInventario__thCeco___3qVGS {
+    width: 55px;
+    background: white;
+}
+.RowInventario__tdCeco___3eH2y {
+    vertical-align: middle !important;
+}
+/* Local */
+.RowInventario__thLocal___3C1s9 {
+    width: 200px;
+    background: white;
+}
+.RowInventario__tdLocal___1kw8c {
+    vertical-align: middle !important;
+}
+/* ZonaSei */
+.RowInventario__thZonaSei___F01Sp {
+    width: 150px;
+    background: white;
+}
+.RowInventario__tdZonaSei___3cmQR {
+    vertical-align: middle !important;
+}
+/* Region */
+.RowInventario__thRegion___2jB1d {
+    width: 140px;
+    background: white;
+}
+.RowInventario__tdRegion___2JLGL {
+    vertical-align: middle !important;
+}
+/* Comuna */
+.RowInventario__thComuna___3u1cQ {
+    width: 140px;
+    background: white;
+}
+.RowInventario__tdComuna___3eBPd {
+    vertical-align: middle !important;
+}
+/* Stock */
+.RowInventario__thStock___15BwE {
+    width: 60px;
+    background: white;
+}
+.RowInventario__tdStock___3AT1n {
+    vertical-align: middle !important;
+}
+/* Dotacion */
+.RowInventario__thDotacion___20iGu {
+    width: 80px;
+    background: white;
+}
+.RowInventario__tdDotacion___206TD {
+    vertical-align: middle !important;
+}
+/* Jornada */
+.RowInventario__thJornada___3gyLP {
+    width: 200px;
+    background: white;
+}
+.RowInventario__tdJornada___fSn5q {
+    vertical-align: middle !important;
+}
+/* Estado */
+.RowInventario__thEstado___1QpJR {
+    width: 100px;
+    background: white;
+}
+.RowInventario__tdEstado___3UPcA {
+    vertical-align: middle !important;
+}
+/* Opciones */
+.RowInventario__thOpciones___2Gb26 {
+    width: 250px;
+    background: white;
+}
+.RowInventario__tdOpciones___fmQaI {
+    vertical-align: middle !important;
+}
+
+/* FECHA */
+.RowInventario__inputDia___3VqP9{
+    width: 30px;
+    marginRight: 2px;
+}
+.RowInventario__inputDiaInvalido___3qyjq{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
+.RowInventario__inputDiaPendiente___6jBmB{
+    border: 2px solid #f0ad4e;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
+.RowInventario__inputMes___26ci_{
+    width: 25px;
+    marginRight: 2px;
+}
+.RowInventario__inputAnno___MBMEV{
+    width: 45px;
+    marginRight: 2px;
+}
+
+/* Dotacion */
+.RowInventario__inputDotacionSugerida___1G1cY{
+    width: 25px;
+    margin: 0 0 2px 0;
+}
+.RowInventario__inputDotacionIngresada___1NKSd{
+    width: 35px;
+}
+.AgregarPrograma__tableCell___Fw_r2 {
+    padding: 0 !important;
+    margin: 0;
+}
+.AgregarPrograma__tableCell___Fw_r2 > p {
+    margin: 0;
+}
+/*.tableCellInput {*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*border: 0;*/
+/*}*/

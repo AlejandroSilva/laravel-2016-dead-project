@@ -9,7 +9,7 @@ import RowInventario from './RowInventario.jsx'
 
 // Styles
 import sharedStyles from '../shared/shared.css'
-import styles from './TablaProgramas.css'
+import styles from './RowInventario.css'
 
 class TablaProgramas extends React.Component{
     constructor(props){
@@ -43,7 +43,7 @@ class TablaProgramas extends React.Component{
                         <Sticky
                             topOffset={-50}
                             type={React.DOM.tr}
-                            stickyStyle={{top: '49x'}}>
+                            stickyStyle={{top: '50px'}}>
 
                             <th className={styles.thCorrelativo}>#</th>
                             <th className={styles.thFecha}>Fecha</th>
@@ -86,6 +86,7 @@ class TablaProgramas extends React.Component{
                                 quitarInventario={this.props.quitarInventario}
                                 //guardarOCrear={this.guardarOCrear.bind(this)}
                                 ref={ref=>this.inputFecha[index]=ref}
+
                             />
                         })
                     }
