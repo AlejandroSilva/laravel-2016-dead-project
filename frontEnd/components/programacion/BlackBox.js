@@ -23,7 +23,7 @@ export default class BlackBox{
     // Todo Modificar: el listado de clientes
     remove(idDummy){
         let index = this.lista.findIndex(inventario=>inventario.idDummy===idDummy)
-        if(index>0) this.lista.splice(index, 1)
+        if(index>=0) this.lista.splice(index, 1)
     }
     yaExiste(idLocal, annoMesDia){
         let inventariosDelLocal = this.lista.filter(inventario=>inventario.idLocal===idLocal)

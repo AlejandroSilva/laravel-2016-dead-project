@@ -35170,7 +35170,7 @@
 	            var index = this.lista.findIndex(function (inventario) {
 	                return inventario.idDummy === idDummy;
 	            });
-	            if (index > 0) this.lista.splice(index, 1);
+	            if (index >= 0) this.lista.splice(index, 1);
 	        }
 	    }, {
 	        key: 'yaExiste',
