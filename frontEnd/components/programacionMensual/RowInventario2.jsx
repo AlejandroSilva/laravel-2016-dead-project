@@ -181,7 +181,7 @@ class RowInventario extends React.Component{
                 idLocal: this.props.inventario.local.idLocal,
                 idJornada: jornada,
                 fechaProgramada: fecha,
-                horaLlegada: this.props.inventario.horaLlegada,
+                horaLlegada: this.props.inventario.horaLlegada || this.props.inventario.local.horaLlegadaSugerida,
                 stockTeorico: this.props.inventario.local.stock,
                 dotacionAsignada: dotacion
             })

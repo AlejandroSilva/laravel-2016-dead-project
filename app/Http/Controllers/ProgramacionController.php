@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 // Modelos
 use App\Clientes;
+use App\Inventarios;
 
 class ProgramacionController extends Controller {
     /**
@@ -30,7 +31,14 @@ class ProgramacionController extends Controller {
 
     // GET programacion/semanal
     public function showSemanal(){
-        return view('operacional.programacion.programacion-semanal');
+        // buscar la menor fechaProgramada en los inventarios
+        $select = Inventarios::
+            selectRaw('min(fechaProgramada) as primerInventario, max(fechaProgramada) as ultimoInventario')
+            ->get();
+        $minymax = $select[0];
+
+        // buscar la mayor fechaProgramada en los ivventarios
+        return view('operacional.programacion.programacion-semanal', $minymax);
     }
 
     /**

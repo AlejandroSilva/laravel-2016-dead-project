@@ -37,8 +37,11 @@ export default {
         actualizar: (idInventario, datos)=>{
             return axios.put(`/api/inventario/${idInventario}`, datos)
         },
-        getPorMes: (annoMesDia)=>{
+        getPorMes: (annoMesDia)=> {
             return axios.get(`/api/inventario/mes/${annoMesDia}`)
+        },
+        getPorRango: (fechaInicio, fechaFin)=>{
+            return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}`)
         }
     }
 }

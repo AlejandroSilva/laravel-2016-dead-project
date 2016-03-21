@@ -95,7 +95,7 @@ export default class BlackBox{
             idLocal: idLocal,
             idJornada: null,
             fechaProgramada: annoMesDia,
-            horaLlegada: "00:00:00",
+            horaLlegada: null,
             stockTeorico: 0,
             dotacionAsignada: null,
             local: {
@@ -112,7 +112,8 @@ export default class BlackBox{
                 nombreComuna: '-',
                 nombreProvincia: '-',
                 nombreRegion: '-',
-                dotacionSugerida: 0
+                dotacionSugerida: 0,
+                horaLlegadaSugerida: "00:00:00"
             }
         }
     }
@@ -205,10 +206,6 @@ export default class BlackBox{
             return this.filtroRegiones.find(opc=> opc.texto===textoUnico)
                 || { texto: textoUnico, seleccionado: true}
         })
-        //return {
-        //    filtroClientes: this.filtroClientes,
-        //    filtroRegiones: this.filtroRegiones
-        //}
     }
     reemplazarFiltroClientes(filtro){
         this.filtroClientes = filtro
@@ -216,61 +213,4 @@ export default class BlackBox{
     reemplazarFiltroRegiones(filtro){
         this.filtroRegiones = filtro
     }
-
-    /*
-    let     filtroActualizado = this.generarFiltro(inventariosActualizados)
-    let programasFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado)
-
-    generarFiltro(inventarios){
-        // TODO: simplificar este metodo, hay mucho codigo repetido
-        const filtrarSoloUnicos = (valor, index, self)=>self.indexOf(valor)===index
-
-        // FILTRO CLIENTES
-        // obtener una lista de clientes sin repetir
-        const seleccionarNombreCliente = inventario=>inventario.nombreCliente || ''
-        let clientesUnicos = inventarios.map(seleccionarNombreCliente).filter(filtrarSoloUnicos)
-
-        // crear el filtro con los datos del filtro anterior
-        let filtroClientes = clientesUnicos.map(textoUnico=>{
-            let opcion = this.state.filtro.clientes.find(opc=> opc.texto===textoUnico)
-
-            // si no existe la opcion, se crea y se selecciona por defecto
-            return opcion || { texto: textoUnico, seleccionado: true}
-        })
-
-        // FILTRO REGIONES
-        const seleccionarNombreRegion = inventario=>inventario.nombreRegion || ''
-        let regionesUnicas = inventarios.map(seleccionarNombreRegion).filter(filtrarSoloUnicos)
-
-        // crear el filtro con los datos del filtro anterior
-        let filtroRegiones = regionesUnicas.map(textoUnico=>{
-            let opcion = this.state.filtro.regiones.find(opc=> opc.texto===textoUnico)
-
-            // si no existe la opcion, se crea y se selecciona por defecto
-            return opcion || { texto: textoUnico, seleccionado: true}
-        })
-
-        return {
-            clientes: filtroClientes,
-            regiones: filtroRegiones
-        }
-    }
-
-    filtrarInventarios(inventarios, filtros){
-        //console.log('filtros actualizado: ', filtros.clientes.map(op=>op.seleccionado))
-        //console.log('inventarios: ', inventarios.map(local=>local.nombreCliente))
-
-        // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
-        let programasFiltrados = inventarios.filter(inventario=>{
-            let textoBuscado = inventario.nombreCliente || ''  // si es undefined, es tratado como ''
-            return filtros.clientes.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
-        })
-        // por regiones
-        programasFiltrados = programasFiltrados.filter(inventario=>{
-            let textoBuscado = inventario.nombreRegion || ''  // si es undefined, es tratado como ''
-            return filtros.regiones.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
-        })
-        return programasFiltrados
-    }
-*/
 }

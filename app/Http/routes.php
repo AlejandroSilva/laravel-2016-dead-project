@@ -27,10 +27,11 @@ Route::get('programacion/semanal',          'ProgramacionController@showSemanal'
 Route::get('inventario',                    'InventariosController@showIndex');
 Route::get('inventario/nuevo',              'InventariosController@showNuevo');
 Route::get('inventario/lista',              'InventariosController@showLista');
-Route::post('api/inventario/nuevo',             'InventariosController@api_nuevo');
-Route::get('api/inventario/mes/{annoMesDia}',   'InventariosController@api_getPorMes');
-Route::get('api/inventario/{idInventario}',     'InventariosController@api_get');
-Route::put('api/inventario/{idInventario}',     'InventariosController@api_actualizar');
+Route::post('api/inventario/nuevo',                 'InventariosController@api_nuevo');
+Route::get('api/inventario/mes/{annoMesDia}',       'InventariosController@api_getPorMes');
+Route::get('api/inventario/{fecha1}/al/{fecha2}',   'InventariosController@api_getPorRango');
+Route::get('api/inventario/{idInventario}',         'InventariosController@api_get');
+Route::put('api/inventario/{idInventario}',         'InventariosController@api_actualizar');
 
 Route::get('nominas',               function(){return view('operacional.nominas.nominas-index');});
 Route::get('nomFinales',            function(){return view('operacional.nominasFinales.nominasFinales-index');});

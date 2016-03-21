@@ -9,7 +9,7 @@ import RowInventario from './RowInventario2.jsx'
 
 // Styles
 import sharedStyles from '../shared/shared.css'
-import styles from './RowInventario.css'
+import css from './RowInventario.css'
 
 class TablaProgramas extends React.Component{
     constructor(props){
@@ -45,28 +45,28 @@ class TablaProgramas extends React.Component{
                             type={React.DOM.tr}
                             stickyStyle={{top: '50px'}}>
 
-                            <th className={styles.thCorrelativo}>#</th>
-                            <th className={styles.thFecha}>Fecha</th>
-                            <th className={styles.thCliente}>
+                            <th className={css.thCorrelativo}>#</th>
+                            <th className={css.thFecha}>Fecha</th>
+                            <th className={css.thCliente}>
                                 <TableHeader nombre="Cliente"
                                              filtro={this.props.filtroClientes}
                                              actualizarFiltro={this.props.actualizarFiltro.bind(this, 'cliente')}
                                 />
                             </th>
-                            <th className={styles.thCeco}>Ceco</th>
-                            <th className={styles.thLocal}>Local</th>
-                            <th className={styles.thRegion}>
+                            <th className={css.thCeco}>Ceco</th>
+                            <th className={css.thLocal}>Local</th>
+                            <th className={css.thRegion}>
                                 <TableHeader nombre="Región"
                                              filtro={this.props.filtroRegiones}
                                              actualizarFiltro={this.props.actualizarFiltro.bind(this, 'region')}
                                 />
                             </th>
-                            <th className={styles.thComuna}>Comuna</th>
-                            <th className={styles.thStock}>Stock</th>
-                            <th className={styles.thDotacion}>Dotación</th>
-                            <th className={styles.thJornada}>Jornada</th>
-                            {/*<th className={styles.thEstado}>Estado</th>*/}
-                            <th className={styles.thOpciones}>Opciones</th>
+                            <th className={css.thComuna}>Comuna</th>
+                            <th className={css.thStock}>Stock</th>
+                            <th className={css.thDotacion}>Dotación</th>
+                            <th className={css.thJornada}>Jornada</th>
+                            {/*<th className={css.thEstado}>Estado</th>*/}
+                            <th className={css.thOpciones}>Opciones</th>
                         </Sticky>
                     </thead>
                     <tbody>

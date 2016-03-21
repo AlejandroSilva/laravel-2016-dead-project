@@ -218,7 +218,7 @@ class ProgramacionMensual extends React.Component{
     }
 }
 
-ProgramacionMensual.protoTypes = {
+ProgramacionMensual.propTypes = {
     clientes: React.PropTypes.array.isRequired
 }
 

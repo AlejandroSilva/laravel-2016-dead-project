@@ -71,28 +71,38 @@
 
 	var _ProgramacionMensual2 = _interopRequireDefault(_ProgramacionMensual);
 
+	var _ProgramacionSemanal = __webpack_require__(417);
+
+	var _ProgramacionSemanal2 = _interopRequireDefault(_ProgramacionSemanal);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Carga el componente dependiendo del elemento DOM en la pagina
-
+	var nuevoInventarioDOM = document.getElementById('nuevo-inventario');
 
 	// Componentes
 	// Librerias
-	var nuevoInventarioDOM = document.getElementById('nuevo-inventario');
-	var programacionMensualDOM = document.getElementById('sei-programacion-mensual');
+
+	var programacionMensualDOM = document.getElementById('react-programacion-mensual');
+	var programacionSemanalDOM = document.getElementById('react-programacion-semanal');
 
 	if (nuevoInventarioDOM) {
-	    console.log("es la pagina de inventario");
 	    _reactDom2.default.render(_react2.default.createElement(_InventarioForm2.default, {
 	        clientes: window.laravelClientes
 	    }), nuevoInventarioDOM);
 	}
 
 	if (programacionMensualDOM) {
-	    console.log("es la pagina de programacion mensual");
 	    _reactDom2.default.render(_react2.default.createElement(_ProgramacionMensual2.default, {
 	        clientes: window.laravelClientes
 	    }), programacionMensualDOM);
+	}
+
+	if (programacionSemanalDOM) {
+	    _reactDom2.default.render(_react2.default.createElement(_ProgramacionSemanal2.default, {
+	        primerInventario: window.laravelPrimerInventario,
+	        ultimoInventario: window.laravelUltimoInventario
+	    }), programacionSemanalDOM);
 	}
 
 	// http://jamesknelson.com/push-state-vs-hash-based-routing-with-react-js/
@@ -20375,6 +20385,9 @@
 	        },
 	        getPorMes: function getPorMes(annoMesDia) {
 	            return _axios2.default.get('/api/inventario/mes/' + annoMesDia);
+	        },
+	        getPorRango: function getPorRango(fechaInicio, fechaFin) {
+	            return _axios2.default.get('/api/inventario/' + fechaInicio + '/al/' + fechaFin);
 	        }
 	    }
 	};
@@ -21999,7 +22012,7 @@
 	    return ProgramacionMensual;
 	}(_react2.default.Component);
 
-	ProgramacionMensual.protoTypes = {
+	ProgramacionMensual.propTypes = {
 	    clientes: _react2.default.PropTypes.array.isRequired
 	};
 
@@ -35261,7 +35274,7 @@
 	                idLocal: idLocal,
 	                idJornada: null,
 	                fechaProgramada: annoMesDia,
-	                horaLlegada: "00:00:00",
+	                horaLlegada: null,
 	                stockTeorico: 0,
 	                dotacionAsignada: null,
 	                local: {
@@ -35278,7 +35291,8 @@
 	                    nombreComuna: '-',
 	                    nombreProvincia: '-',
 	                    nombreRegion: '-',
-	                    dotacionSugerida: 0
+	                    dotacionSugerida: 0,
+	                    horaLlegadaSugerida: "00:00:00"
 	                }
 	            };
 	        }
@@ -35392,10 +35406,6 @@
 	                    return opc.texto === textoUnico;
 	                }) || { texto: textoUnico, seleccionado: true };
 	            });
-	            //return {
-	            //    filtroClientes: this.filtroClientes,
-	            //    filtroRegiones: this.filtroRegiones
-	            //}
 	        }
 	    }, {
 	        key: 'reemplazarFiltroClientes',
@@ -35407,54 +35417,6 @@
 	        value: function reemplazarFiltroRegiones(filtro) {
 	            this.filtroRegiones = filtro;
 	        }
-
-	        /*
-	        let     filtroActualizado = this.generarFiltro(inventariosActualizados)
-	        let programasFiltrados = this.filtrarInventarios(inventariosActualizados, filtroActualizado)
-	         generarFiltro(inventarios){
-	            // TODO: simplificar este metodo, hay mucho codigo repetido
-	            const filtrarSoloUnicos = (valor, index, self)=>self.indexOf(valor)===index
-	             // FILTRO CLIENTES
-	            // obtener una lista de clientes sin repetir
-	            const seleccionarNombreCliente = inventario=>inventario.nombreCliente || ''
-	            let clientesUnicos = inventarios.map(seleccionarNombreCliente).filter(filtrarSoloUnicos)
-	             // crear el filtro con los datos del filtro anterior
-	            let filtroClientes = clientesUnicos.map(textoUnico=>{
-	                let opcion = this.state.filtro.clientes.find(opc=> opc.texto===textoUnico)
-	                 // si no existe la opcion, se crea y se selecciona por defecto
-	                return opcion || { texto: textoUnico, seleccionado: true}
-	            })
-	             // FILTRO REGIONES
-	            const seleccionarNombreRegion = inventario=>inventario.nombreRegion || ''
-	            let regionesUnicas = inventarios.map(seleccionarNombreRegion).filter(filtrarSoloUnicos)
-	             // crear el filtro con los datos del filtro anterior
-	            let filtroRegiones = regionesUnicas.map(textoUnico=>{
-	                let opcion = this.state.filtro.regiones.find(opc=> opc.texto===textoUnico)
-	                 // si no existe la opcion, se crea y se selecciona por defecto
-	                return opcion || { texto: textoUnico, seleccionado: true}
-	            })
-	             return {
-	                clientes: filtroClientes,
-	                regiones: filtroRegiones
-	            }
-	        }
-	         filtrarInventarios(inventarios, filtros){
-	            //console.log('filtros actualizado: ', filtros.clientes.map(op=>op.seleccionado))
-	            //console.log('inventarios: ', inventarios.map(local=>local.nombreCliente))
-	             // por cliente: cumple el criterio si la opcion con su nombre esta seleccionada
-	            let programasFiltrados = inventarios.filter(inventario=>{
-	                let textoBuscado = inventario.nombreCliente || ''  // si es undefined, es tratado como ''
-	                return filtros.clientes.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
-	            })
-	            // por regiones
-	            programasFiltrados = programasFiltrados.filter(inventario=>{
-	                let textoBuscado = inventario.nombreRegion || ''  // si es undefined, es tratado como ''
-	                return filtros.regiones.find( opcion=>(opcion.texto===textoBuscado && opcion.seleccionado===true) )
-	            })
-	            return programasFiltrados
-	        }
-	        */
-
 	    }]);
 
 	    return BlackBox;
@@ -44722,7 +44684,7 @@
 
 	var _TableHeader2 = _interopRequireDefault(_TableHeader);
 
-	var _RowInventario = __webpack_require__(417);
+	var _RowInventario = __webpack_require__(303);
 
 	var _RowInventario2 = _interopRequireDefault(_RowInventario);
 
@@ -45688,10 +45650,525 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"container":"TableHeader__container___N1LYN","cell":"TableHeader__cell___qBAiu","menu":"TableHeader__menu___x-Ng6","contenedorValores":"TableHeader__contenedorValores___qZzS4"};
+	module.exports = {"container":"TableHeader__container___3n5Ns","cell":"TableHeader__cell___36W2d","menu":"TableHeader__menu___3yRPw","contenedorValores":"TableHeader__contenedorValores___1xZ9-"};
 
 /***/ },
-/* 303 */,
+/* 303 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _numeral = __webpack_require__(304);
+
+	var _numeral2 = _interopRequireDefault(_numeral);
+
+	var _Tooltip = __webpack_require__(305);
+
+	var _Tooltip2 = _interopRequireDefault(_Tooltip);
+
+	var _OverlayTrigger = __webpack_require__(335);
+
+	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
+
+	var _RowInventario = __webpack_require__(413);
+
+	var _RowInventario2 = _interopRequireDefault(_RowInventario);
+
+	var _shared = __webpack_require__(414);
+
+	var _shared2 = _interopRequireDefault(_shared);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Componentes
+
+
+	// Styles
+
+
+	var RowInventario = function (_React$Component) {
+	    _inherits(RowInventario, _React$Component);
+
+	    function RowInventario(props) {
+	        _classCallCheck(this, RowInventario);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RowInventario).call(this, props));
+
+	        _this.state = {
+	            inputDia: 0,
+	            inputMes: 0,
+	            inputAnno: 0,
+	            inputDotacion: 0,
+	            selectJornada: 4,
+	            diaValido: _this._diaValido(0),
+	            dotacionValida: _this._dotacionValida(0)
+	        };
+	        // Refs disponibles: this.inputDia, this.inputDotacion
+	        return _this;
+	    }
+
+	    _createClass(RowInventario, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            // al montar el componente, fijas su state "inicial"
+
+	            var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
+
+	            var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
+
+	            var anno = _props$inventario$fec2[0];
+	            var mes = _props$inventario$fec2[1];
+	            var dia = _props$inventario$fec2[2];
+
+	            var dotacionSugerida = this.props.inventario.local.dotacionSugerida;
+	            var dotacionAsignada = this.props.inventario.dotacionAsignada;
+	            var jornadaInventario = this.props.inventario.idJornada;
+	            var jornadaLocal = this.props.inventario.local.idJornadaSugerida;
+	            console.log("will mount: dotacionAsignada, dotacionSugerida, (nombre) ", dotacionAsignada, dotacionSugerida, dotacionAsignada || dotacionSugerida);
+	            console.log("will mount comuna: ", this.props.inventario.local.nombreComuna); // no tienen la informacion, como se esperaba
+	            this.setState({
+	                inputDia: dia,
+	                inputMes: mes,
+	                inputAnno: anno,
+	                inputDotacion: dotacionAsignada || dotacionSugerida,
+	                selectJornada: jornadaInventario || jornadaLocal,
+	                diaValido: this._diaValido(dia),
+	                dotacionValida: this._dotacionValida(dotacionAsignada || dotacionSugerida)
+	            });
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            console.log("will receibeprops");
+
+	            var mismoInventario = this.props.inventario.idDummy === nextProps.inventario.idDummy;
+	            if (mismoInventario) {
+	                var newState = {};
+	                //if(this.props.inventario.idDummy==9) console.log("actualizando componente 9", this.props.inventario.fechaProgramada, nextProps.inventario.fechaProgramada)
+	                //console.log("nuevas props para ", this.props.inventario.idDummy)
+	                console.log("AAA prop.dotacionSugerida, nextprop.dotacionSugerida, state.inputDOtacion", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
+
+	                // Si es el mismo inventario, se revisa si se han actualizado los datos (y se reemplaza el state actual del usuario)
+
+	                // se recibio una nueva fecha?
+
+	                var _props$inventario$fec3 = this.props.inventario.fechaProgramada.split('-');
+
+	                var _props$inventario$fec4 = _slicedToArray(_props$inventario$fec3, 3);
+
+	                var anno1 = _props$inventario$fec4[0];
+	                var mes1 = _props$inventario$fec4[1];
+	                var dia1 = _props$inventario$fec4[2];
+
+	                var _nextProps$inventario = nextProps.inventario.fechaProgramada.split('-');
+
+	                var _nextProps$inventario2 = _slicedToArray(_nextProps$inventario, 3);
+
+	                var anno2 = _nextProps$inventario2[0];
+	                var mes2 = _nextProps$inventario2[1];
+	                var dia2 = _nextProps$inventario2[2];
+	                //if(dia1!==dia2 || mes1!==mes2 || anno1!==anno2 || this.state.inputDia!=dia2, this.state.inputMes!=mes2, this.state.inputAnno!=anno2)
+
+	                this.setState({ inputDia: dia2, inputMes: mes2, inputAnno: anno2, diaValido: this._diaValido(dia2) });
+
+	                // se recibio una nueva dotacion?
+	                var dotacion1 = this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida;
+	                var dotacion2 = nextProps.inventario.dotacionAsignada || nextProps.inventario.local.dotacionSugerida;
+	                console.log("AAAA dotacionAntigua, dotacionNueva,", dotacion1, dotacion2);
+	                //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
+	                this.setState({ inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2) });
+
+	                // se recibio una nueva jornada?
+	                var jornada1 = this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida;
+	                var jornada2 = nextProps.inventario.idJornada || nextProps.inventario.local.idJornadaSugerida;
+	                //if(jornada1!==jornada2 || this.state.selectJornada!==jornada2)
+	                this.setState({ selectJornada: jornada2 });
+
+	                this.setState(newState);
+	            } else {
+	                // Si el inventario cambio, se vuelven a poner los valores "por defecto"
+
+	                console.log("BBB", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
+
+	                var _nextProps$inventario3 = nextProps.inventario.fechaProgramada.split('-');
+
+	                var _nextProps$inventario4 = _slicedToArray(_nextProps$inventario3, 3);
+
+	                var anno = _nextProps$inventario4[0];
+	                var mes = _nextProps$inventario4[1];
+	                var dia = _nextProps$inventario4[2];
+
+	                var dotacionAsignada = nextProps.inventario.dotacionAsignada;
+	                var dotacionSugerida = nextProps.inventario.local.dotacionSugerida;
+	                var jornadaInventario = nextProps.inventario.idJornada;
+	                var jornadaLocal = nextProps.inventario.local.idJornadaSugerida;
+	                this.setState({
+	                    inputDia: dia,
+	                    inputMes: mes,
+	                    inputAnno: anno,
+	                    inputDotacion: dotacionAsignada || dotacionSugerida,
+	                    selectJornada: jornadaInventario || jornadaLocal,
+	                    diaValido: this._diaValido(dia),
+	                    dotacionValida: this._dotacionValida(dotacionAsignada || dotacionSugerida)
+	                });
+	                console.log("BBBB dotacionAsignada, dotacionSugerida", dotacionAsignada, dotacionSugerida);
+	            }
+	            //console.log(this.props.inventario.idDummy, nextProps.inventario.idDummy, mismoInventario)
+	            //console.log(this.props.inventario.idDummy, dotacionAsignada, dotacionSugerida)
+	        }
+	    }, {
+	        key: 'focusElemento',
+	        value: function focusElemento(elemento) {
+	            if (elemento === 'dia') {
+	                this.inputDia.focus();
+	            } else if (elemento === 'dotacion') {
+	                this.inputDotacion.focus();
+	            }
+	        }
+	    }, {
+	        key: 'inputOnKeyDown',
+	        value: function inputOnKeyDown(elemento, evt) {
+	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
+	                // 9 = tab, flechaAbajo = 40,  13 = enter
+	                evt.preventDefault();
+	                this.props.focusFilaSiguiente(this.props.index, elemento);
+	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
+	                // flechaArriba = 38, shift+tab
+	                this.props.focusFilaAnterior(this.props.index, elemento);
+	                evt.preventDefault();
+	            }
+	        }
+	    }, {
+	        key: 'onInputDiaChange',
+	        value: function onInputDiaChange(evt) {
+	            var dia = evt.target.value;
+	            this.setState({
+	                inputDia: dia,
+	                diaValido: this._diaValido(dia)
+	            });
+	        }
+	    }, {
+	        key: 'onInputDotacionChange',
+	        value: function onInputDotacionChange(evt) {
+	            var dotacion = evt.target.value;
+	            this.setState({
+	                inputDotacion: dotacion,
+	                dotacionValida: this._dotacionValida(dotacion)
+	            });
+	        }
+	    }, {
+	        key: 'onSelectJornadaChange',
+	        value: function onSelectJornadaChange(evt) {
+	            var jornada = evt.target.value;
+	            this.setState({ selectJornada: jornada });
+	            this.guardarOCrear();
+	        }
+	    }, {
+	        key: '_diaValido',
+	        value: function _diaValido(dia) {
+	            return dia > 0 && dia < 32;
+	        }
+	    }, {
+	        key: '_dotacionValida',
+	        value: function _dotacionValida(dotacion) {
+	            return dotacion > 0;
+	        }
+	    }, {
+	        key: 'isDirty',
+	        value: function isDirty() {
+	            var _props$inventario$fec5 = this.props.inventario.fechaProgramada.split('-');
+
+	            var _props$inventario$fec6 = _slicedToArray(_props$inventario$fec5, 3);
+
+	            var anno = _props$inventario$fec6[0];
+	            var mes = _props$inventario$fec6[1];
+	            var dia = _props$inventario$fec6[2];
+
+	            var isDirty = this.state.inputDia != dia || this.state.inputDotacion != (this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida) || this.state.selectJornada != (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida);
+	            //console.log("dia ", this.state.inputDia, dia, this.state.inputDia!==dia)
+	            //console.log("dotac ", this.state.inputDotacion, (this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida), this.state.inputDotacion!==(this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida) )
+	            //console.log("jornada ", this.state.selectJornada, (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida), this.state.selectJornada!==(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida))
+	            console.log("isDirty ", isDirty);
+	            return isDirty;
+	        }
+	    }, {
+	        key: 'guardarOCrear',
+	        value: function guardarOCrear() {
+	            // si no es dirty (no hay cambios) no se hace nada
+	            if (this.isDirty() === false) return;
+
+	            var dotacion = this.state.inputDotacion;
+	            var jornada = this.state.selectJornada;
+	            var anno = this.state.inputAnno;
+	            var mes = this.state.inputMes;
+	            var dia = this.state.inputDia;
+
+	            if (this.state.diaValido && this.state.dotacionValida) {
+	                var fecha = anno + '-' + mes + '-' + dia;
+
+	                this.props.guardarOCrearInventario({
+	                    idInventario: this.props.inventario.idInventario,
+	                    idDummy: this.props.inventario.idDummy,
+	                    idLocal: this.props.inventario.local.idLocal,
+	                    idJornada: jornada,
+	                    fechaProgramada: fecha,
+	                    horaLlegada: this.props.inventario.horaLlegada || this.props.inventario.local.horaLlegadaSugerida,
+	                    stockTeorico: this.props.inventario.local.stock,
+	                    dotacionAsignada: dotacion
+	                });
+	            } else {
+	                console.log('datos invalidos');
+	            }
+	        }
+	    }, {
+	        key: 'quitarInventario',
+	        value: function quitarInventario() {
+	            this.props.quitarInventario(this.props.inventario.idDummy);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            console.log("render: prop.local.dotSug, state.inputDot", this.props.inventario.local.dotacionSugerida, this.state.inputDotacion);
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdCorrelativo },
+	                    /*this.props.inventario.idDummy*/this.props.index
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdFecha },
+	                    _react2.default.createElement('input', { className: this.state.diaValido ? _RowInventario2.default.inputDia : _RowInventario2.default.inputDiaInvalido,
+	                        type: 'number', min: 0, max: 31,
+	                        ref: function ref(_ref) {
+	                            return _this2.inputDia = _ref;
+	                        },
+	                        value: this.state.inputDia,
+	                        onChange: this.onInputDiaChange.bind(this),
+	                        onKeyDown: this.inputOnKeyDown.bind(this, 'dia'),
+	                        onBlur: this.guardarOCrear.bind(this) }),
+	                    _react2.default.createElement('input', { className: _RowInventario2.default.inputMes, type: 'number', disabled: true,
+	                        value: this.state.inputMes }),
+	                    _react2.default.createElement('input', { className: _RowInventario2.default.inputAnno, type: 'number', disabled: true,
+	                        value: this.state.inputAnno })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdCliente },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.inventario.local.nombreCliente
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdCeco },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                this.props.inventario.local.numero
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdLocal },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                this.props.inventario.local.nombre
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdRegion },
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { margin: 0 } },
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.inventario.local.nombreRegion
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdComuna },
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { margin: 0 } },
+	                        _react2.default.createElement(
+	                            'b',
+	                            null,
+	                            _react2.default.createElement(
+	                                'small',
+	                                null,
+	                                this.props.inventario.local.nombreComuna
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdStock },
+	                    _react2.default.createElement(
+	                        _OverlayTrigger2.default,
+	                        {
+	                            placement: 'left',
+	                            delay: 0,
+	                            overlay: _react2.default.createElement(
+	                                _Tooltip2.default,
+	                                { id: 'yyy' },
+	                                'Stock al ' + this.props.inventario.local.fechaStock
+	                            ) },
+	                        _react2.default.createElement(
+	                            'p',
+	                            null,
+	                            _react2.default.createElement(
+	                                'small',
+	                                null,
+	                                (0, _numeral2.default)(this.props.inventario.local.stock).format('0,0')
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdDotacion },
+	                    _react2.default.createElement(
+	                        _OverlayTrigger2.default,
+	                        {
+	                            placement: 'right',
+	                            delay: 0,
+	                            overlay: _react2.default.createElement(
+	                                _Tooltip2.default,
+	                                { id: 'yyy' },
+	                                'Produción ' + this.props.inventario.local.formato_local.produccionSugerida
+	                            ) },
+	                        _react2.default.createElement('input', { className: this.state.dotacionValida ? _RowInventario2.default.inputDotacion : _RowInventario2.default.inputDotacionInvalida, type: 'number',
+	                            value: this.state.inputDotacion,
+	                            onChange: this.onInputDotacionChange.bind(this),
+	                            ref: function ref(_ref2) {
+	                                return _this2.inputDotacion = _ref2;
+	                            },
+	                            onKeyDown: this.inputOnKeyDown.bind(this, 'dotacion'),
+	                            onBlur: this.guardarOCrear.bind(this) })
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdJornada },
+	                    _react2.default.createElement(
+	                        'select',
+	                        { onChange: this.onSelectJornadaChange.bind(this), value: this.state.selectJornada },
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '1' },
+	                            'día'
+	                        ),
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '2' },
+	                            'noche'
+	                        ),
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '3' },
+	                            'día y noche'
+	                        ),
+	                        _react2.default.createElement(
+	                            'option',
+	                            { value: '4' },
+	                            'no definido'
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _RowInventario2.default.tdOpciones },
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
+	                        'Editar local'
+	                    ),
+	                    this.props.inventario.idInventario ? _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
+	                        'Editar inventario'
+	                    ) : _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-danger', tabIndex: '-1', onClick: this.quitarInventario.bind(this) },
+	                        'X'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return RowInventario;
+	}(_react2.default.Component);
+
+	RowInventario.propTypes = {
+	    // Objetos
+	    index: _react2.default.PropTypes.number.isRequired,
+	    inventario: _react2.default.PropTypes.object.isRequired,
+	    // Metodos
+	    focusFilaSiguiente: _react2.default.PropTypes.func.isRequired,
+	    focusFilaAnterior: _react2.default.PropTypes.func.isRequired,
+	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired,
+	    quitarInventario: _react2.default.PropTypes.func.isRequired
+	};
+
+	exports.default = RowInventario;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowInventario2.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
 /* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -51218,7 +51695,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"thCorrelativo":"RowInventario__thCorrelativo___jQKCi","tdCorrelativo":"RowInventario__tdCorrelativo___2yy4n RowInventario__thCorrelativo___jQKCi","thFecha":"RowInventario__thFecha___2Ew5A","tdFecha":"RowInventario__tdFecha___198QE RowInventario__thFecha___2Ew5A","thCliente":"RowInventario__thCliente___38e-N","tdCliente":"RowInventario__tdCliente___32hvf RowInventario__thCliente___38e-N","thCeco":"RowInventario__thCeco___3qVGS","tdCeco":"RowInventario__tdCeco___3eH2y RowInventario__thCeco___3qVGS","thLocal":"RowInventario__thLocal___3C1s9","tdLocal":"RowInventario__tdLocal___1kw8c RowInventario__thLocal___3C1s9","thZonaSei":"RowInventario__thZonaSei___F01Sp","tdZonaSei":"RowInventario__tdZonaSei___3cmQR RowInventario__thZonaSei___F01Sp","thRegion":"RowInventario__thRegion___2jB1d","tdRegion":"RowInventario__tdRegion___2JLGL RowInventario__thRegion___2jB1d","thComuna":"RowInventario__thComuna___3u1cQ","tdComuna":"RowInventario__tdComuna___3eBPd RowInventario__thComuna___3u1cQ","thStock":"RowInventario__thStock___15BwE","tdStock":"RowInventario__tdStock___3AT1n RowInventario__thStock___15BwE","thDotacion":"RowInventario__thDotacion___20iGu","tdDotacion":"RowInventario__tdDotacion___206TD RowInventario__thDotacion___20iGu","thJornada":"RowInventario__thJornada___3gyLP","tdJornada":"RowInventario__tdJornada___fSn5q RowInventario__thJornada___3gyLP","thEstado":"RowInventario__thEstado___1QpJR","tdEstado":"RowInventario__tdEstado___3UPcA RowInventario__thEstado___1QpJR","thOpciones":"RowInventario__thOpciones___2Gb26","tdOpciones":"RowInventario__tdOpciones___fmQaI RowInventario__thOpciones___2Gb26","inputDia":"RowInventario__inputDia___3VqP9 shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"RowInventario__inputDiaInvalido___3qyjq RowInventario__inputDia___3VqP9 shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"RowInventario__inputDiaPendiente___6jBmB RowInventario__inputDia___3VqP9 shared__inputNumberAsText___1Qr9M","inputMes":"RowInventario__inputMes___26ci_ shared__inputNumberAsText___1Qr9M","inputAnno":"RowInventario__inputAnno___MBMEV shared__inputNumberAsText___1Qr9M","inputDotacion":"RowInventario__inputDotacion___7Eh48 shared__inputNumberAsText___1Qr9M","inputDotacionInvalida":"RowInventario__inputDotacionInvalida___2sIMT RowInventario__inputDotacion___7Eh48 shared__inputNumberAsText___1Qr9M"};
+	module.exports = {"thCorrelativo":"RowInventario__thCorrelativo___1v1ba","tdCorrelativo":"RowInventario__tdCorrelativo___3raGR RowInventario__thCorrelativo___1v1ba","thFecha":"RowInventario__thFecha___Bb0VO","tdFecha":"RowInventario__tdFecha___3GUua RowInventario__thFecha___Bb0VO","thCliente":"RowInventario__thCliente___2fGHL","tdCliente":"RowInventario__tdCliente___2rfZ4 RowInventario__thCliente___2fGHL","thCeco":"RowInventario__thCeco___1KehK","tdCeco":"RowInventario__tdCeco___3n9cf RowInventario__thCeco___1KehK","thLocal":"RowInventario__thLocal___18FLG","tdLocal":"RowInventario__tdLocal___jiN30 RowInventario__thLocal___18FLG","thZonaSei":"RowInventario__thZonaSei___1KSeV","tdZonaSei":"RowInventario__tdZonaSei___LXFx9 RowInventario__thZonaSei___1KSeV","thRegion":"RowInventario__thRegion___28QBw","tdRegion":"RowInventario__tdRegion___2ZubF RowInventario__thRegion___28QBw","thComuna":"RowInventario__thComuna___7urgW","tdComuna":"RowInventario__tdComuna___2ZvVG RowInventario__thComuna___7urgW","thStock":"RowInventario__thStock___2zYoE","tdStock":"RowInventario__tdStock___3UH0Q RowInventario__thStock___2zYoE","thDotacion":"RowInventario__thDotacion___UASwj","tdDotacion":"RowInventario__tdDotacion___3VeWy RowInventario__thDotacion___UASwj","thJornada":"RowInventario__thJornada___iS7ji","tdJornada":"RowInventario__tdJornada___1ayMI RowInventario__thJornada___iS7ji","thEstado":"RowInventario__thEstado___k78a7","tdEstado":"RowInventario__tdEstado___iO83x RowInventario__thEstado___k78a7","thOpciones":"RowInventario__thOpciones___3ynK1","tdOpciones":"RowInventario__tdOpciones___2juk8 RowInventario__thOpciones___3ynK1","inputDia":"RowInventario__inputDia___3aWKe shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"RowInventario__inputDiaInvalido___19kC7 RowInventario__inputDia___3aWKe shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"RowInventario__inputDiaPendiente___9QF9l RowInventario__inputDia___3aWKe shared__inputNumberAsText___1Qr9M","inputMes":"RowInventario__inputMes___1pM8y shared__inputNumberAsText___1Qr9M","inputAnno":"RowInventario__inputAnno___1OpKn shared__inputNumberAsText___1Qr9M","inputDotacion":"RowInventario__inputDotacion___1b6ww shared__inputNumberAsText___1Qr9M","inputDotacionInvalida":"RowInventario__inputDotacionInvalida___1cJuN RowInventario__inputDotacion___1b6ww shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
 /* 414 */
@@ -51767,10 +52244,532 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"tableCell":"AgregarPrograma__tableCell___Fw_r2"};
+	module.exports = {"tableCell":"AgregarPrograma__tableCell___2PsDG"};
 
 /***/ },
 /* 417 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _moment = __webpack_require__(182);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	var _BlackBoxSemanal = __webpack_require__(418);
+
+	var _BlackBoxSemanal2 = _interopRequireDefault(_BlackBoxSemanal);
+
+	var _v = __webpack_require__(162);
+
+	var _v2 = _interopRequireDefault(_v);
+
+	var _TablaInventarios = __webpack_require__(419);
+
+	var _TablaInventarios2 = _interopRequireDefault(_TablaInventarios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
+
+
+	_moment2.default.locale('es');
+	// Componentes
+
+	//
+	var format = 'YYYY-MM-DD';
+
+	var ProgramacionSemanal = function (_React$Component) {
+	    _inherits(ProgramacionSemanal, _React$Component);
+
+	    function ProgramacionSemanal(props) {
+	        _classCallCheck(this, ProgramacionSemanal);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ProgramacionSemanal).call(this, props));
+
+	        _this.blackboxSemanal = new _BlackBoxSemanal2.default();
+
+	        var semanas = [];
+
+	        // Calcular el rango de semanas disponibles para seleccionar
+	        if (_this.props.primerInventario !== '' && _this.props.ultimoInventario !== '') {
+	            var fechaPrimerInventario = (0, _moment2.default)(_this.props.primerInventario);
+	            var fechaUltimoInventario = (0, _moment2.default)(_this.props.ultimoInventario);
+
+	            // lunes y domingo de la semana del primer inventario
+	            var lunes = (0, _moment2.default)(fechaPrimerInventario).day(1);
+	            var domingo = (0, _moment2.default)(fechaPrimerInventario).day(7);
+
+	            while (lunes <= fechaUltimoInventario) {
+	                //console.log(`semana del ${lunes.format(format)} al ${domingo.format(format)}`)
+	                semanas.push({
+	                    value: lunes.format(format) + '/' + domingo.format(format),
+	                    texto: lunes.format(format) + ' al ' + domingo.format(format)
+	                });
+	                lunes.add(1, 'w');
+	                domingo.add(1, 'w');
+	            }
+	        } else {
+	            // no hay un primer inventario (¿no hay ningun inventario?)
+	            console.error('no hay inventarios en el sistema? no se detecto correctamente la fecha del primero de ellos');
+	        }
+	        _this.state = {
+	            semanas: semanas,
+	            inventariosFiltrados: []
+	        };
+	        // seleccionar la primera semana
+	        if (semanas[0]) {
+	            var _semanas$0$value$spli = semanas[0].value.split('/');
+
+	            var _semanas$0$value$spli2 = _slicedToArray(_semanas$0$value$spli, 2);
+
+	            var fechaInicio = _semanas$0$value$spli2[0];
+	            var fechaFin = _semanas$0$value$spli2[1];
+
+	            _this.seleccionarSemana(fechaInicio, fechaFin);
+	        }
+	        return _this;
+	    }
+
+	    _createClass(ProgramacionSemanal, [{
+	        key: 'seleccionarSemana',
+	        value: function seleccionarSemana(fechaInicio, fechaFin) {
+	            var _this2 = this;
+
+	            _v2.default.inventario.getPorRango(fechaInicio, fechaFin).then(function (inventarios) {
+	                console.log('inventarios del rango ' + fechaInicio + ' a ' + fechaFin + ': ', inventarios);
+	                _this2.blackboxSemanal.reset();
+	                inventarios.forEach(function (inventario) {
+	                    return _this2.blackboxSemanal.add(inventario);
+	                });
+	                _this2.setState(_this2.blackboxSemanal.getListaFiltrada()); // {inventariosFiltrados: ...}
+	            });
+	        }
+	    }, {
+	        key: 'onChangeSelectSemana',
+	        value: function onChangeSelectSemana(evt) {
+	            var semana = evt.target.value;
+
+	            var _semana$split = semana.split('/');
+
+	            var _semana$split2 = _slicedToArray(_semana$split, 2);
+
+	            var fechaInicio = _semana$split2[0];
+	            var fechaFin = _semana$split2[1];
+
+	            this.seleccionarSemana(fechaInicio, fechaFin);
+	        }
+
+	        // Metodos de los hijos
+
+	    }, {
+	        key: 'guardarInventario',
+	        value: function guardarInventario(formInventario) {
+	            var _this3 = this;
+
+	            _v2.default.inventario.actualizar(formInventario.idInventario, formInventario).then(function (inventarioActualizado) {
+	                console.log('inventario actualizado correctamente');
+	                // actualizar los datos y el state de la app
+	                _this3.blackboxSemanal.actualizarInventario(inventarioActualizado);
+	                // actualizar los filtros, y la lista ordenada de locales
+	                _this3.setState(_this3.blackboxSemanal.getListaFiltrada()); // {inventariosFiltrados: ...}
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'h1',
+	                    null,
+	                    'Programación semanal'
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Semana a programar'
+	                ),
+	                _react2.default.createElement(
+	                    'select',
+	                    { name: '', id: '', onChange: this.onChangeSelectSemana.bind(this) },
+	                    this.state.semanas.length === 0 ? _react2.default.createElement(
+	                        'option',
+	                        { key: 0, value: '-1' },
+	                        'Sin inventarios'
+	                    ) : this.state.semanas.map(function (semana, index) {
+	                        return _react2.default.createElement(
+	                            'option',
+	                            { key: index, value: semana.value },
+	                            semana.texto
+	                        );
+	                    })
+	                ),
+	                _react2.default.createElement(_TablaInventarios2.default, {
+	                    inventarios: this.state.inventariosFiltrados,
+	                    guardarInventario: this.guardarInventario.bind(this)
+	                })
+	            );
+	        }
+	    }]);
+
+	    return ProgramacionSemanal;
+	}(_react2.default.Component);
+
+	ProgramacionSemanal.propTypes = {
+	    primerInventario: _react2.default.PropTypes.string.isRequired,
+	    ultimoInventario: _react2.default.PropTypes.string.isRequired
+	};
+
+	exports.default = ProgramacionSemanal;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "ProgramacionSemanal.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 418 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _ramda = __webpack_require__(283);
+
+	var _ramda2 = _interopRequireDefault(_ramda);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var BlackBoxSemanal = function () {
+	    function BlackBoxSemanal() {
+	        _classCallCheck(this, BlackBoxSemanal);
+
+	        this.lista = [];
+	    }
+
+	    _createClass(BlackBoxSemanal, [{
+	        key: 'reset',
+	        value: function reset() {
+	            this.lista = [];
+	        }
+	        // Todo: Optimizar
+	        // Todo Modificar: el listado de clientes
+
+	    }, {
+	        key: 'add',
+	        value: function add(inventario) {
+	            this.lista.push(inventario);
+	        }
+	    }, {
+	        key: 'getListaFiltrada',
+	        value: function getListaFiltrada() {
+	            //this.actualizarFiltros()
+
+	            // Todo: filtrar por clientes
+	            // Todo: filtrar por regiones
+
+	            var orderByFechaProgramadaStock = function orderByFechaProgramadaStock(a, b) {
+	                var dateA = new Date(a.fechaProgramada);
+	                var dateB = new Date(b.fechaProgramada);
+
+	                if (dateA - dateB === 0) {
+	                    // stock ordenado de mayor a menor (B-A)
+	                    return b.local.stock - a.local.stock;
+	                } else {
+	                    // fecha ordenada de de menor a mayor (A-B)
+	                    return dateA - dateB;
+	                }
+	            };
+	            var listaDiaFIjadoOrdenado = _ramda2.default.sort(orderByFechaProgramadaStock, this.lista);
+
+	            return {
+	                inventariosFiltrados: listaDiaFIjadoOrdenado
+	                // inventariosFiltrados: this.lista
+	            };
+	        }
+
+	        // Todo modificar el listado de clientes
+
+	    }, {
+	        key: 'actualizarInventario',
+	        value: function actualizarInventario(inventarioActualizado) {
+	            this.lista = this.lista.map(function (inventario) {
+	                if (inventario.idInventario == inventarioActualizado.idInventario) {
+	                    inventario = Object.assign(inventario, inventarioActualizado);
+	                }
+	                return inventario;
+	            });
+	        }
+	    }]);
+
+	    return BlackBoxSemanal;
+	}();
+
+	exports.default = BlackBoxSemanal;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "BlackBoxSemanal.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 419 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _RowInventario = __webpack_require__(420);
+
+	var _RowInventario2 = _interopRequireDefault(_RowInventario);
+
+	var _RowInventario3 = __webpack_require__(413);
+
+	var _RowInventario4 = _interopRequireDefault(_RowInventario3);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	//import moment from 'moment'
+
+	// Componentes
+	//import Sticky from '../shared/react-sticky/sticky.js'
+	//import StickyContainer from '../shared/react-sticky/container.js'
+	//import TableHeader from './TableHeader.jsx'
+
+
+	// Styles
+	//import sharedStyles from '../shared/shared.css'
+
+
+	var TablaInventarios = function (_React$Component) {
+	    _inherits(TablaInventarios, _React$Component);
+
+	    function TablaInventarios(props) {
+	        _classCallCheck(this, TablaInventarios);
+
+	        // referencia a todos las entradas de fecha de los inventarios
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TablaInventarios).call(this, props));
+
+	        _this.rows = [];
+	        return _this;
+	    }
+
+	    _createClass(TablaInventarios, [{
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            // cuando se pasa de mes a mes, se generand posiciones "vacias" en el arreglo inputFecha, esto lo soluciona
+	            this.rows = this.rows.filter(function (input) {
+	                return input !== null;
+	            });
+	        }
+	    }, {
+	        key: 'focusRow',
+	        value: function focusRow(index, nombreElemento) {
+	            var ultimoIndex = this.rows.length - 1;
+	            // seleccionar "antes de la primera"
+	            if (index < 0) index = ultimoIndex;
+	            if (index > ultimoIndex) index = index % this.rows.length;
+
+	            var nextRow = this.rows[index];
+	            nextRow.focusElemento(nombreElemento);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            return _react2.default.createElement(
+	                'table',
+	                { className: 'table table-bordered table-condensed' },
+	                _react2.default.createElement(
+	                    'thead',
+	                    null,
+	                    _react2.default.createElement(
+	                        'tr',
+	                        null,
+	                        _react2.default.createElement(
+	                            'th',
+	                            { className: _RowInventario4.default.thFecha },
+	                            'FECHA'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'CLIENTE'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'CEC'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'RG'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'COMUNA'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'TURNO'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'TIENDA'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'STOCK'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'Pro'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'DOTACION'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'LIDER'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'CAP1'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'Dot1'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'CAP2'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'Dot2'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'Horario Pres.'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'DIRECCION'
+	                        ),
+	                        _react2.default.createElement(
+	                            'th',
+	                            null,
+	                            'Opciones'
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'tbody',
+	                    null,
+	                    this.props.inventarios.length === 0 ? _react2.default.createElement(
+	                        'tr',
+	                        null,
+	                        _react2.default.createElement(
+	                            'td',
+	                            { colSpan: '13', style: { textAlign: 'center' } },
+	                            _react2.default.createElement(
+	                                'b',
+	                                null,
+	                                'No hay inventarios para mostrar en este periodo.'
+	                            )
+	                        )
+	                    ) : this.props.inventarios.map(function (inventario, index) {
+	                        return _react2.default.createElement(_RowInventario2.default, {
+	                            key: index,
+	                            index: index,
+	                            ref: function ref(_ref) {
+	                                return _this2.rows[index] = _ref;
+	                            },
+	                            inventario: inventario
+	                            // Metodos
+	                            , guardarInventario: _this2.props.guardarInventario,
+	                            focusRow: _this2.focusRow.bind(_this2)
+	                        });
+	                    })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return TablaInventarios;
+	}(_react2.default.Component);
+
+	TablaInventarios.propTypes = {
+	    // Objetos
+	    //inventariosFiltrados: React.PropTypes.array.isRequired,
+	    //filtroClientes: React.PropTypes.array.isRequired,
+	    //filtroRegiones: React.PropTypes.array.isRequired,
+	    // Metodos
+	    //actualizarFiltro: React.PropTypes.func.isRequired,
+	    guardarInventario: _react2.default.PropTypes.func.isRequired
+	};
+	exports.default = TablaInventarios;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TablaInventarios.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 420 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -51801,13 +52800,25 @@
 
 	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
 
-	var _RowInventario = __webpack_require__(413);
+	var _InputFecha = __webpack_require__(421);
 
-	var _RowInventario2 = _interopRequireDefault(_RowInventario);
+	var _InputFecha2 = _interopRequireDefault(_InputFecha);
 
-	var _shared = __webpack_require__(414);
+	var _InputDotacion = __webpack_require__(423);
 
-	var _shared2 = _interopRequireDefault(_shared);
+	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
+
+	var _SelectLider = __webpack_require__(425);
+
+	var _SelectLider2 = _interopRequireDefault(_SelectLider);
+
+	var _SelectCaptador = __webpack_require__(426);
+
+	var _SelectCaptador2 = _interopRequireDefault(_SelectCaptador);
+
+	var _InputDotacionCaptador = __webpack_require__(427);
+
+	var _InputDotacionCaptador2 = _interopRequireDefault(_InputDotacionCaptador);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51821,7 +52832,8 @@
 
 
 	// Styles
-
+	//import styles from './RowInventario.css'
+	//import styleShared from '../shared/shared.css'
 
 	var RowInventario = function (_React$Component) {
 	    _inherits(RowInventario, _React$Component);
@@ -51836,122 +52848,46 @@
 	            inputMes: 0,
 	            inputAnno: 0,
 	            inputDotacion: 0,
-	            selectJornada: 4,
-	            diaValido: _this._diaValido(0),
-	            dotacionValida: _this._dotacionValida(0)
+	            selectJornada: 4
 	        };
 	        // Refs disponibles: this.inputDia, this.inputDotacion
 	        return _this;
 	    }
 
 	    _createClass(RowInventario, [{
-	        key: 'componentWillMount',
-	        value: function componentWillMount() {
-	            // al montar el componente, fijas su state "inicial"
+	        key: 'guardarOCrear',
+	        value: function guardarOCrear() {
+	            // validar DIA
+	            var estadoInputDia = this.inputDia.getEstado();
+	            if (estadoInputDia.valid == false) return console.log('fecha ' + estadoInputDia.dia + ' invalida');
+	            // validar DOTACION
+	            var estadoInputDotacion = this.inputDotacion.getEstado();
+	            if (estadoInputDotacion.valid == false) return console.log('dotacion ' + estadoInputDotacion.dia + ' invalida');
 
-	            var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
+	            // almenos uno de los ementos debe estar "dirty" para guardar los cambios
+	            if (estadoInputDia.dirty === true || estadoInputDotacion.dirty === true) {
+	                var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
 
-	            var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
+	                var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
 
-	            var anno = _props$inventario$fec2[0];
-	            var mes = _props$inventario$fec2[1];
-	            var dia = _props$inventario$fec2[2];
+	                var anno = _props$inventario$fec2[0];
+	                var mes = _props$inventario$fec2[1];
+	                var _dia = _props$inventario$fec2[2];
 
-	            var dotacionSugerida = this.props.inventario.local.dotacionSugerida;
-	            var dotacionAsignada = this.props.inventario.dotacionAsignada;
-	            var jornadaInventario = this.props.inventario.idJornada;
-	            var jornadaLocal = this.props.inventario.local.idJornadaSugerida;
-	            console.log("will mount: dotacionAsignada, dotacionSugerida, (nombre) ", dotacionAsignada, dotacionSugerida, dotacionAsignada || dotacionSugerida);
-	            console.log("will mount comuna: ", this.props.inventario.local.nombreComuna); // no tienen la informacion, como se esperaba
-	            this.setState({
-	                inputDia: dia,
-	                inputMes: mes,
-	                inputAnno: anno,
-	                inputDotacion: dotacionAsignada || dotacionSugerida,
-	                selectJornada: jornadaInventario || jornadaLocal,
-	                diaValido: this._diaValido(dia),
-	                dotacionValida: this._dotacionValida(dotacionAsignada || dotacionSugerida)
-	            });
-	        }
-	    }, {
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            console.log("will receibeprops");
+	                var dia = estadoInputDia.dia;
+	                var dotacion = estadoInputDotacion.dotacion;
+	                console.log("guardando inventario");
 
-	            var mismoInventario = this.props.inventario.idDummy === nextProps.inventario.idDummy;
-	            if (mismoInventario) {
-	                var newState = {};
-	                //if(this.props.inventario.idDummy==9) console.log("actualizando componente 9", this.props.inventario.fechaProgramada, nextProps.inventario.fechaProgramada)
-	                //console.log("nuevas props para ", this.props.inventario.idDummy)
-	                console.log("AAA prop.dotacionSugerida, nextprop.dotacionSugerida, state.inputDOtacion", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
-
-	                // Si es el mismo inventario, se revisa si se han actualizado los datos (y se reemplaza el state actual del usuario)
-
-	                // se recibio una nueva fecha?
-
-	                var _props$inventario$fec3 = this.props.inventario.fechaProgramada.split('-');
-
-	                var _props$inventario$fec4 = _slicedToArray(_props$inventario$fec3, 3);
-
-	                var anno1 = _props$inventario$fec4[0];
-	                var mes1 = _props$inventario$fec4[1];
-	                var dia1 = _props$inventario$fec4[2];
-
-	                var _nextProps$inventario = nextProps.inventario.fechaProgramada.split('-');
-
-	                var _nextProps$inventario2 = _slicedToArray(_nextProps$inventario, 3);
-
-	                var anno2 = _nextProps$inventario2[0];
-	                var mes2 = _nextProps$inventario2[1];
-	                var dia2 = _nextProps$inventario2[2];
-	                //if(dia1!==dia2 || mes1!==mes2 || anno1!==anno2 || this.state.inputDia!=dia2, this.state.inputMes!=mes2, this.state.inputAnno!=anno2)
-
-	                this.setState({ inputDia: dia2, inputMes: mes2, inputAnno: anno2, diaValido: this._diaValido(dia2) });
-
-	                // se recibio una nueva dotacion?
-	                var dotacion1 = this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida;
-	                var dotacion2 = nextProps.inventario.dotacionAsignada || nextProps.inventario.local.dotacionSugerida;
-	                console.log("AAAA dotacionAntigua, dotacionNueva,", dotacion1, dotacion2);
-	                //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
-	                this.setState({ inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2) });
-
-	                // se recibio una nueva jornada?
-	                var jornada1 = this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida;
-	                var jornada2 = nextProps.inventario.idJornada || nextProps.inventario.local.idJornadaSugerida;
-	                //if(jornada1!==jornada2 || this.state.selectJornada!==jornada2)
-	                this.setState({ selectJornada: jornada2 });
-
-	                this.setState(newState);
-	            } else {
-	                // Si el inventario cambio, se vuelven a poner los valores "por defecto"
-
-	                console.log("BBB", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
-
-	                var _nextProps$inventario3 = nextProps.inventario.fechaProgramada.split('-');
-
-	                var _nextProps$inventario4 = _slicedToArray(_nextProps$inventario3, 3);
-
-	                var anno = _nextProps$inventario4[0];
-	                var mes = _nextProps$inventario4[1];
-	                var dia = _nextProps$inventario4[2];
-
-	                var dotacionAsignada = nextProps.inventario.dotacionAsignada;
-	                var dotacionSugerida = nextProps.inventario.local.dotacionSugerida;
-	                var jornadaInventario = nextProps.inventario.idJornada;
-	                var jornadaLocal = nextProps.inventario.local.idJornadaSugerida;
-	                this.setState({
-	                    inputDia: dia,
-	                    inputMes: mes,
-	                    inputAnno: anno,
-	                    inputDotacion: dotacionAsignada || dotacionSugerida,
-	                    selectJornada: jornadaInventario || jornadaLocal,
-	                    diaValido: this._diaValido(dia),
-	                    dotacionValida: this._dotacionValida(dotacionAsignada || dotacionSugerida)
+	                this.props.guardarInventario({
+	                    idInventario: this.props.inventario.idInventario,
+	                    fechaProgramada: anno + '-' + mes + '-' + dia,
+	                    //            horaLlegada: this.props.inventario.horaLlegada,
+	                    //            stockTeorico: this.props.inventario.local.stock,
+	                    dotacionAsignada: dotacion
 	                });
-	                console.log("BBBB dotacionAsignada, dotacionSugerida", dotacionAsignada, dotacionSugerida);
+	            } else {
+	                console.log('no han cambiado');
 	            }
-	            //console.log(this.props.inventario.idDummy, nextProps.inventario.idDummy, mismoInventario)
-	            //console.log(this.props.inventario.idDummy, dotacionAsignada, dotacionSugerida)
 	        }
 	    }, {
 	        key: 'focusElemento',
@@ -51963,189 +52899,61 @@
 	            }
 	        }
 	    }, {
-	        key: 'inputOnKeyDown',
-	        value: function inputOnKeyDown(elemento, evt) {
-	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
-	                // 9 = tab, flechaAbajo = 40,  13 = enter
-	                evt.preventDefault();
-	                this.props.focusFilaSiguiente(this.props.index, elemento);
-	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
-	                // flechaArriba = 38, shift+tab
-	                this.props.focusFilaAnterior(this.props.index, elemento);
-	                evt.preventDefault();
-	            }
-	        }
-	    }, {
-	        key: 'onInputDiaChange',
-	        value: function onInputDiaChange(evt) {
-	            var dia = evt.target.value;
-	            this.setState({
-	                inputDia: dia,
-	                diaValido: this._diaValido(dia)
-	            });
-	        }
-	    }, {
-	        key: 'onInputDotacionChange',
-	        value: function onInputDotacionChange(evt) {
-	            var dotacion = evt.target.value;
-	            this.setState({
-	                inputDotacion: dotacion,
-	                dotacionValida: this._dotacionValida(dotacion)
-	            });
-	        }
-	    }, {
-	        key: 'onSelectJornadaChange',
-	        value: function onSelectJornadaChange(evt) {
-	            var jornada = evt.target.value;
-	            this.setState({ selectJornada: jornada });
-	            this.guardarOCrear();
-	        }
-	    }, {
-	        key: '_diaValido',
-	        value: function _diaValido(dia) {
-	            return dia > 0 && dia < 32;
-	        }
-	    }, {
-	        key: '_dotacionValida',
-	        value: function _dotacionValida(dotacion) {
-	            return dotacion > 0;
-	        }
-	    }, {
-	        key: 'isDirty',
-	        value: function isDirty() {
-	            var _props$inventario$fec5 = this.props.inventario.fechaProgramada.split('-');
-
-	            var _props$inventario$fec6 = _slicedToArray(_props$inventario$fec5, 3);
-
-	            var anno = _props$inventario$fec6[0];
-	            var mes = _props$inventario$fec6[1];
-	            var dia = _props$inventario$fec6[2];
-
-	            var isDirty = this.state.inputDia != dia || this.state.inputDotacion != (this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida) || this.state.selectJornada != (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida);
-	            //console.log("dia ", this.state.inputDia, dia, this.state.inputDia!==dia)
-	            //console.log("dotac ", this.state.inputDotacion, (this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida), this.state.inputDotacion!==(this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida) )
-	            //console.log("jornada ", this.state.selectJornada, (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida), this.state.selectJornada!==(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida))
-	            console.log("isDirty ", isDirty);
-	            return isDirty;
-	        }
-	    }, {
-	        key: 'guardarOCrear',
-	        value: function guardarOCrear() {
-	            // si no es dirty (no hay cambios) no se hace nada
-	            if (this.isDirty() === false) return;
-
-	            var dotacion = this.state.inputDotacion;
-	            var jornada = this.state.selectJornada;
-	            var anno = this.state.inputAnno;
-	            var mes = this.state.inputMes;
-	            var dia = this.state.inputDia;
-
-	            if (this.state.diaValido && this.state.dotacionValida) {
-	                var fecha = anno + '-' + mes + '-' + dia;
-
-	                this.props.guardarOCrearInventario({
-	                    idInventario: this.props.inventario.idInventario,
-	                    idDummy: this.props.inventario.idDummy,
-	                    idLocal: this.props.inventario.local.idLocal,
-	                    idJornada: jornada,
-	                    fechaProgramada: fecha,
-	                    horaLlegada: this.props.inventario.horaLlegada,
-	                    stockTeorico: this.props.inventario.local.stock,
-	                    dotacionAsignada: dotacion
-	                });
-	            } else {
-	                console.log('datos invalidos');
-	            }
-	        }
-	    }, {
-	        key: 'quitarInventario',
-	        value: function quitarInventario() {
-	            this.props.quitarInventario(this.props.inventario.idDummy);
-	        }
-	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var _this2 = this;
 
-	            console.log("render: prop.local.dotSug, state.inputDot", this.props.inventario.local.dotacionSugerida, this.state.inputDotacion);
 	            return _react2.default.createElement(
 	                'tr',
 	                null,
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _RowInventario2.default.tdCorrelativo },
-	                    /*this.props.inventario.idDummy*/this.props.index
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdFecha },
-	                    _react2.default.createElement('input', { className: this.state.diaValido ? _RowInventario2.default.inputDia : _RowInventario2.default.inputDiaInvalido,
-	                        type: 'number', min: 0, max: 31,
+	                    { className: "asd" },
+	                    _react2.default.createElement(_InputFecha2.default, {
 	                        ref: function ref(_ref) {
 	                            return _this2.inputDia = _ref;
 	                        },
-	                        value: this.state.inputDia,
-	                        onChange: this.onInputDiaChange.bind(this),
-	                        onKeyDown: this.inputOnKeyDown.bind(this, 'dia'),
-	                        onBlur: this.guardarOCrear.bind(this) }),
-	                    _react2.default.createElement('input', { className: _RowInventario2.default.inputMes, type: 'number', disabled: true,
-	                        value: this.state.inputMes }),
-	                    _react2.default.createElement('input', { className: _RowInventario2.default.inputAnno, type: 'number', disabled: true,
-	                        value: this.state.inputAnno })
+	                        fecha: this.props.inventario.fechaProgramada,
+	                        guardarOCrear: this.guardarOCrear.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {
+	                            return _this2.props.focusRow(_this2.props.index - 1, 'dia');
+	                        },
+	                        focusRowSiguiente: function focusRowSiguiente() {
+	                            return _this2.props.focusRow(_this2.props.index + 1, 'dia');
+	                        } })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _RowInventario2.default.tdCliente },
+	                    { className: '' },
 	                    _react2.default.createElement(
 	                        'p',
 	                        null,
 	                        _react2.default.createElement(
 	                            'small',
 	                            null,
-	                            this.props.inventario.local.nombreCliente
+	                            this.props.inventario.local.cliente.nombreCorto
 	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _RowInventario2.default.tdCeco },
+	                    { className: '' },
 	                    _react2.default.createElement(
 	                        'p',
 	                        null,
 	                        _react2.default.createElement(
 	                            'small',
 	                            null,
-	                            _react2.default.createElement(
-	                                'b',
-	                                null,
-	                                this.props.inventario.local.numero
-	                            )
+	                            this.props.inventario.local.numero
 	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _RowInventario2.default.tdLocal },
+	                    { className: 'a' },
 	                    _react2.default.createElement(
 	                        'p',
 	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            _react2.default.createElement(
-	                                'b',
-	                                null,
-	                                this.props.inventario.local.nombre
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdRegion },
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { margin: 0 } },
 	                        _react2.default.createElement(
 	                            'small',
 	                            null,
@@ -52155,24 +52963,46 @@
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _RowInventario2.default.tdComuna },
+	                    { className: 'a' },
 	                    _react2.default.createElement(
 	                        'p',
-	                        { style: { margin: 0 } },
+	                        null,
 	                        _react2.default.createElement(
-	                            'b',
+	                            'small',
 	                            null,
-	                            _react2.default.createElement(
-	                                'small',
-	                                null,
-	                                this.props.inventario.local.nombreComuna
-	                            )
+	                            this.props.inventario.local.nombreComuna
 	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _RowInventario2.default.tdStock },
+	                    { className: 'a' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.inventario.turno || 'PEND'
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: 'a' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.inventario.local.nombre
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: 'a' },
 	                    _react2.default.createElement(
 	                        _OverlayTrigger2.default,
 	                        {
@@ -52196,71 +53026,93 @@
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _RowInventario2.default.tdDotacion },
+	                    { className: 'a' },
 	                    _react2.default.createElement(
-	                        _OverlayTrigger2.default,
-	                        {
-	                            placement: 'right',
-	                            delay: 0,
-	                            overlay: _react2.default.createElement(
-	                                _Tooltip2.default,
-	                                { id: 'yyy' },
-	                                'Produción ' + this.props.inventario.local.formato_local.produccionSugerida
-	                            ) },
-	                        _react2.default.createElement('input', { className: this.state.dotacionValida ? _RowInventario2.default.inputDotacion : _RowInventario2.default.inputDotacionInvalida, type: 'number',
-	                            value: this.state.inputDotacion,
-	                            onChange: this.onInputDotacionChange.bind(this),
-	                            ref: function ref(_ref2) {
-	                                return _this2.inputDotacion = _ref2;
-	                            },
-	                            onKeyDown: this.inputOnKeyDown.bind(this, 'dotacion'),
-	                            onBlur: this.guardarOCrear.bind(this) })
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _RowInventario2.default.tdJornada },
-	                    _react2.default.createElement(
-	                        'select',
-	                        { onChange: this.onSelectJornadaChange.bind(this), value: this.state.selectJornada },
+	                        'p',
+	                        null,
 	                        _react2.default.createElement(
-	                            'option',
-	                            { value: '1' },
-	                            'día'
-	                        ),
-	                        _react2.default.createElement(
-	                            'option',
-	                            { value: '2' },
-	                            'noche'
-	                        ),
-	                        _react2.default.createElement(
-	                            'option',
-	                            { value: '3' },
-	                            'día y noche'
-	                        ),
-	                        _react2.default.createElement(
-	                            'option',
-	                            { value: '4' },
-	                            'no definido'
+	                            'small',
+	                            null,
+	                            (0, _numeral2.default)(this.props.inventario.local.formato_local.produccionSugerida).format('0,0')
 	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    { className: _RowInventario2.default.tdOpciones },
+	                    { className: 'a' },
+	                    _react2.default.createElement(_InputDotacion2.default, {
+	                        ref: function ref(_ref2) {
+	                            return _this2.inputDotacion = _ref2;
+	                        },
+	                        asignada: this.props.inventario.dotacionAsignada,
+	                        guardarOCrear: this.guardarOCrear.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {
+	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
+	                        },
+	                        focusRowSiguiente: function focusRowSiguiente() {
+	                            return _this2.props.focusRow(_this2.props.index + 1, 'dotacion');
+	                        } })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: 'a' },
+	                    _react2.default.createElement(_SelectLider2.default, null)
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: 'a' },
+	                    _react2.default.createElement(_SelectCaptador2.default, null)
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: 'a' },
+	                    _react2.default.createElement(_InputDotacionCaptador2.default, {
+	                        asignada: '3' })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: 'a' },
+	                    _react2.default.createElement(_SelectCaptador2.default, null)
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: 'a' },
+	                    _react2.default.createElement(_InputDotacionCaptador2.default, {
+	                        asignada: '3' })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: 'a' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.inventario.horaLlegada
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: 'a' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.inventario.local.direccion.direccion
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: '' },
 	                    _react2.default.createElement(
 	                        'button',
 	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
 	                        'Editar local'
-	                    ),
-	                    this.props.inventario.idInventario ? _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
-	                        'Editar inventario'
-	                    ) : _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-xs btn-danger', tabIndex: '-1', onClick: this.quitarInventario.bind(this) },
-	                        'X'
 	                    )
 	                )
 	            );
@@ -52275,15 +53127,597 @@
 	    index: _react2.default.PropTypes.number.isRequired,
 	    inventario: _react2.default.PropTypes.object.isRequired,
 	    // Metodos
-	    focusFilaSiguiente: _react2.default.PropTypes.func.isRequired,
-	    focusFilaAnterior: _react2.default.PropTypes.func.isRequired,
-	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired,
-	    quitarInventario: _react2.default.PropTypes.func.isRequired
+	    guardarInventario: _react2.default.PropTypes.func.isRequired,
+	    focusRow: _react2.default.PropTypes.func.isRequired
 	};
 
 	exports.default = RowInventario;
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowInventario2.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowInventario.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 421 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _InputFecha = __webpack_require__(422);
+
+	var _InputFecha2 = _interopRequireDefault(_InputFecha);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
+
+	// Estilos
+
+
+	var InputFecha = function (_React$Component) {
+	    _inherits(InputFecha, _React$Component);
+
+	    function InputFecha(props) {
+	        _classCallCheck(this, InputFecha);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InputFecha).call(this, props));
+
+	        _this.state = {
+	            dia: '-',
+	            dirty: false,
+	            valid: true
+	        };
+	        return _this;
+	    }
+
+	    _createClass(InputFecha, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            var _props$fecha$split = this.props.fecha.split('-');
+
+	            var _props$fecha$split2 = _slicedToArray(_props$fecha$split, 3);
+
+	            var anno1 = _props$fecha$split2[0];
+	            var mes1 = _props$fecha$split2[1];
+	            var dia1 = _props$fecha$split2[2];
+
+	            this.setState({
+	                dia: dia1,
+	                dirty: false,
+	                valid: true
+	            });
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            // let [anno1, mes1, dia1] = this.props.fecha.split('-')
+
+	            var _nextProps$fecha$spli = nextProps.fecha.split('-');
+
+	            var _nextProps$fecha$spli2 = _slicedToArray(_nextProps$fecha$spli, 3);
+
+	            var anno2 = _nextProps$fecha$spli2[0];
+	            var mes2 = _nextProps$fecha$spli2[1];
+	            var dia2 = _nextProps$fecha$spli2[2];
+	            // if(dia1!==dia2){
+	            // si esto cambia, entonces se debe hacer un "reset" del estado con los nuevos valores
+
+	            this.setState({
+	                dia: dia2,
+	                dirty: false,
+	                valid: true
+	            });
+	            //    console.log("la fecha cambio ", dia1, dia2)
+	            // }
+	        }
+	    }, {
+	        key: 'inputOnKeyDown',
+	        value: function inputOnKeyDown(evt) {
+	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
+	                // 9 = tab, flechaAbajo = 40,  13 = enter
+	                evt.preventDefault();
+	                this.props.guardarOCrear();
+	                this.props.focusRowSiguiente();
+	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
+	                // flechaArriba = 38, shift+tab
+	                evt.preventDefault();
+	                this.props.guardarOCrear();
+	                this.props.focusRowAnterior();
+	            }
+	        }
+	    }, {
+	        key: 'onInputChange',
+	        value: function onInputChange(evt) {
+	            var dia = evt.target.value;
+
+	            var _props$fecha$split3 = this.props.fecha.split('-');
+
+	            var _props$fecha$split4 = _slicedToArray(_props$fecha$split3, 3);
+
+	            var anno1 = _props$fecha$split4[0];
+	            var mes1 = _props$fecha$split4[1];
+	            var dia1 = _props$fecha$split4[2];
+
+	            this.setState({
+	                dia: dia,
+	                dirty: dia1 != dia,
+	                valid: this._diaValido(dia)
+	            });
+	        }
+	    }, {
+	        key: '_diaValido',
+	        value: function _diaValido(dia) {
+	            return dia > 0 && dia < 32;
+	        }
+	    }, {
+	        key: 'getEstado',
+	        value: function getEstado() {
+	            return this.state;
+	        }
+	    }, {
+	        key: 'focus',
+	        value: function focus() {
+	            this.inputDia.focus();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            var _props$fecha$split5 = this.props.fecha.split('-');
+
+	            var _props$fecha$split6 = _slicedToArray(_props$fecha$split5, 3);
+
+	            var anno = _props$fecha$split6[0];
+	            var mes = _props$fecha$split6[1];
+	            var dia = _props$fecha$split6[2];
+
+	            var classname = this.state.valid ? this.state.dirty ? _InputFecha2.default.inputDiaDirty : _InputFecha2.default.inputDia : _InputFecha2.default.inputDiaInvalido;
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement('input', { className: classname,
+	                    ref: function ref(_ref) {
+	                        return _this2.inputDia = _ref;
+	                    },
+	                    value: this.state.dia,
+	                    onKeyDown: this.inputOnKeyDown.bind(this),
+	                    onChange: this.onInputChange.bind(this),
+	                    onBlur: function onBlur() {
+	                        return _this2.props.guardarOCrear();
+	                    }
+	                }),
+	                _react2.default.createElement('input', { className: _InputFecha2.default.inputMes, type: 'number', disabled: true,
+	                    value: mes }),
+	                _react2.default.createElement('input', { className: _InputFecha2.default.inputAnno, type: 'number', disabled: true,
+	                    value: anno })
+	            );
+	        }
+	    }]);
+
+	    return InputFecha;
+	}(_react2.default.Component);
+
+	InputFecha.propTypes = {
+	    // Objetos
+	    fecha: _react2.default.PropTypes.string.isRequired,
+	    // Metodos
+	    focusRowAnterior: _react2.default.PropTypes.func.isRequired,
+	    focusRowSiguiente: _react2.default.PropTypes.func.isRequired,
+	    guardarOCrear: _react2.default.PropTypes.func.isRequired
+	};
+	exports.default = InputFecha;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputFecha.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 422 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"inputDia":"InputFecha__inputDia___26G8W shared__inputNumberAsText___1Qr9M","inputDiaDirty":"InputFecha__inputDiaDirty___3aUzJ InputFecha__inputDia___26G8W shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"InputFecha__inputDiaInvalido___3vMMM InputFecha__inputDia___26G8W shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"InputFecha__inputDiaPendiente___1VNj- InputFecha__inputDia___26G8W shared__inputNumberAsText___1Qr9M","inputMes":"InputFecha__inputMes___3SGfR shared__inputNumberAsText___1Qr9M","inputAnno":"InputFecha__inputAnno___3nCrE shared__inputNumberAsText___1Qr9M"};
+
+/***/ },
+/* 423 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _InputDotacion = __webpack_require__(424);
+
+	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
+
+
+	// Estilos
+
+
+	var InputDotacion = function (_React$Component) {
+	    _inherits(InputDotacion, _React$Component);
+
+	    function InputDotacion(props) {
+	        _classCallCheck(this, InputDotacion);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InputDotacion).call(this, props));
+
+	        _this.state = {
+	            dotacion: '-',
+	            dirty: false,
+	            valid: true
+	        };
+	        return _this;
+	    }
+
+	    _createClass(InputDotacion, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this.setState({
+	                dotacion: this.props.asignada,
+	                dirty: false,
+	                valid: true
+	            });
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            var dotacion1 = this.props.asignada;
+	            var dotacion2 = nextProps.asignada;
+	            if (dotacion1 !== dotacion2) {
+	                // si esto cambia, entonces se debe hacer un "reset" del estado con los nuevos valores
+	                this.setState({
+	                    dotacion: dotacion2,
+	                    dirty: false,
+	                    valid: true
+	                });
+	            }
+	        }
+	    }, {
+	        key: 'inputOnKeyDown',
+	        value: function inputOnKeyDown(evt) {
+	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
+	                // 9 = tab, flechaAbajo = 40,  13 = enter
+	                evt.preventDefault();
+	                this.props.guardarOCrear();
+	                this.props.focusRowSiguiente();
+	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
+	                // flechaArriba = 38, shift+tab
+	                evt.preventDefault();
+	                this.props.guardarOCrear();
+	                this.props.focusRowAnterior();
+	            }
+	        }
+	    }, {
+	        key: 'onInputChange',
+	        value: function onInputChange(evt) {
+	            var dotacion = evt.target.value;
+	            this.setState({
+	                dotacion: dotacion,
+	                dirty: this.props.asignada != dotacion,
+	                valid: dotacion > 0
+	            });
+	        }
+	    }, {
+	        key: 'getEstado',
+	        value: function getEstado() {
+	            return this.state;
+	        }
+	    }, {
+	        key: 'focus',
+	        value: function focus() {
+	            this.inputDotacion.focus();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            var classname = this.state.valid ? this.state.dirty ? _InputDotacion2.default.inputDotacionDirty : _InputDotacion2.default.inputDotacion : _InputDotacion2.default.inputDotacionInvalida;
+	            return _react2.default.createElement('input', {
+	                className: classname,
+	                ref: function ref(_ref) {
+	                    return _this2.inputDotacion = _ref;
+	                },
+	                type: 'number',
+	                value: this.state.dotacion,
+	                onKeyDown: this.inputOnKeyDown.bind(this),
+	                onChange: this.onInputChange.bind(this),
+	                onBlur: function onBlur() {
+	                    return _this2.props.guardarOCrear();
+	                }
+	            });
+	        }
+	    }]);
+
+	    return InputDotacion;
+	}(_react2.default.Component);
+
+	InputDotacion.propTypes = {
+	    // Objetos
+	    asignada: _react2.default.PropTypes.string.isRequired,
+	    // Metodos
+	    focusRowAnterior: _react2.default.PropTypes.func.isRequired,
+	    focusRowSiguiente: _react2.default.PropTypes.func.isRequired,
+	    guardarOCrear: _react2.default.PropTypes.func.isRequired
+	};
+	exports.default = InputDotacion;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputDotacion.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 424 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"inputDotacion":"InputDotacion__inputDotacion___3JxlM shared__inputNumberAsText___1Qr9M","inputDotacionDirty":"InputDotacion__inputDotacionDirty___4ThKI InputDotacion__inputDotacion___3JxlM shared__inputNumberAsText___1Qr9M","inputDotacionInvalida":"InputDotacion__inputDotacionInvalida___3TtRl InputDotacion__inputDotacion___3JxlM shared__inputNumberAsText___1Qr9M"};
+
+/***/ },
+/* 425 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
+
+
+	// Estilos
+	//import css from './SelectLider.css'
+
+	var SelectLider = function (_React$Component) {
+	    _inherits(SelectLider, _React$Component);
+
+	    function SelectLider() {
+	        _classCallCheck(this, SelectLider);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(SelectLider).apply(this, arguments));
+	    }
+
+	    _createClass(SelectLider, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                _react2.default.createElement(
+	                    "select",
+	                    { name: "", id: "" },
+	                    _react2.default.createElement(
+	                        "option",
+	                        { value: "0" },
+	                        "-"
+	                    ),
+	                    _react2.default.createElement(
+	                        "option",
+	                        { value: "1" },
+	                        "Sup 1"
+	                    ),
+	                    _react2.default.createElement(
+	                        "option",
+	                        { value: "2" },
+	                        "Sup 2"
+	                    ),
+	                    _react2.default.createElement(
+	                        "option",
+	                        { value: "3" },
+	                        "Sup 3"
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return SelectLider;
+	}(_react2.default.Component);
+
+	SelectLider.propTypes = {
+	    // Objetos
+	    //fecha: React.PropTypes.string.isRequired
+	};
+	exports.default = SelectLider;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "SelectLider.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 426 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
+
+
+	// Estilos
+	//import css from './InputDotacion.css'
+
+	var SelectCaptador = function (_React$Component) {
+	    _inherits(SelectCaptador, _React$Component);
+
+	    function SelectCaptador() {
+	        _classCallCheck(this, SelectCaptador);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(SelectCaptador).apply(this, arguments));
+	    }
+
+	    _createClass(SelectCaptador, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "select",
+	                { name: "", id: "" },
+	                _react2.default.createElement(
+	                    "option",
+	                    { value: "0", disabled: true },
+	                    "-"
+	                ),
+	                _react2.default.createElement(
+	                    "option",
+	                    { value: "1" },
+	                    "Captador 1"
+	                ),
+	                _react2.default.createElement(
+	                    "option",
+	                    { value: "2" },
+	                    "Captador 2"
+	                ),
+	                _react2.default.createElement(
+	                    "option",
+	                    { value: "3" },
+	                    "Captador 3"
+	                )
+	            );
+	        }
+	    }]);
+
+	    return SelectCaptador;
+	}(_react2.default.Component);
+
+	SelectCaptador.propTypes = {
+	    // Objetos
+	    //fecha: React.PropTypes.string.isRequired
+	};
+	exports.default = SelectCaptador;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "SelectCaptador.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 427 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _InputDotacion = __webpack_require__(424);
+
+	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
+
+
+	// Estilos
+
+
+	//import styleShared from '../shared/shared.css'
+
+	var InputDotacionCaptador = function (_React$Component) {
+	    _inherits(InputDotacionCaptador, _React$Component);
+
+	    function InputDotacionCaptador() {
+	        _classCallCheck(this, InputDotacionCaptador);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(InputDotacionCaptador).apply(this, arguments));
+	    }
+
+	    _createClass(InputDotacionCaptador, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement('input', {
+	                className: _InputDotacion2.default.inputDotacion,
+	                type: 'number',
+	                defaultValue: this.props.asignada
+	                //onChange={this.onInputDotacionCaptadorChange.bind(this)}
+	                //onKeyDown={this.inputOnKeyDown.bind(this, 'asignada')}
+	                //onBlur={this.guardarOCrear.bind(this)}/>
+	            });
+	        }
+	    }]);
+
+	    return InputDotacionCaptador;
+	}(_react2.default.Component);
+
+	InputDotacionCaptador.propTypes = {
+	    // Objetos
+	    asignada: _react2.default.PropTypes.string.isRequired
+	};
+	exports.default = InputDotacionCaptador;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputDotacionCaptador.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 /******/ ]);

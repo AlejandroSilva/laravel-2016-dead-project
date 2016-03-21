@@ -3,8 +3,16 @@
 
 @section('content')
     <div class="row">
-        {{-- aca se montara el component 'NuevoInventario' de React --}}
-        <h>programacion semanal</h>
-        <div id="programacion-semanal"></div>
+
+        {{-- aca se montara el component 'ProgramacionSemanal' de React --}}
+        <div id="react-programacion-semanal">
+            <p>Cargando, espere unos segundos</p>
+        </div>
     </div>
+
+    <script>
+        {{-- Se entregan las fechas minimas y maximas --}}
+        window.laravelPrimerInventario = '{!! $primerInventario !!}';
+        window.laravelUltimoInventario = '{!! $ultimoInventario !!}';
+    </script>
 @stop
