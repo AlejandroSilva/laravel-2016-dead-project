@@ -45,6 +45,8 @@
             </div>
         </div>
     </nav>
+    {{-- Utilizado para montar el top menu con React --}}
+    {{-- <div id="rc-top-menu"></div> --}}
 @stop
 
 @section('hmtl-body')

@@ -134,11 +134,36 @@ class InventariosController extends Controller {
         $anno = $fecha[0];
         $mes  = $fecha[1];
         return response()->json(
-//            \DB::table('inventarios')
-            Inventarios::
+            Inventarios::   //\DB::table('inventarios')
                 whereRaw("extract(year from fechaProgramada) = ?", [$anno])
                 ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
                 ->get()
         , 200);
     }
+    // GET api/inventario/{fecha1}/al/{fecha2}
+    function api_getPorRango($annoMesDia1, $annoMesDia2){
+        $inventarios = Inventarios::with([
+            'local.cliente',
+            'local.formatoLocal',
+            'local.direccion.comuna.provincia.region'
+        ])
+            ->where('fechaProgramada', '>=', $annoMesDia1)
+            ->where('fechaProgramada', '<=', $annoMesDia2)
+            ->get();
+
+        // se modifican algunos campos para ser tratados mejor en el frontend
+        $inventariosMod = array_map(function($inventario){
+            $local = $inventario['local'];
+            $local['nombreCliente'] = $local['cliente']['nombreCorto'];
+            $local['nombreComuna'] = $local['direccion']['comuna']['nombre'];
+            $local['nombreProvincia'] = $local['direccion']['comuna']['provincia']['nombre'];
+            $local['nombreRegion'] = $local['direccion']['comuna']['provincia']['region']['numero'];
+            $inventario['local'] = $local;
+
+            return $inventario;
+        }, $inventarios->toArray());
+
+        return response()->json($inventariosMod, 200);
+    }
+
 }

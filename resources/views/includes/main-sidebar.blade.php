@@ -32,7 +32,21 @@
             </li>
         </ul>
 
-
+        {{-- Gestión de Personal --}}
+        <a href="#" data-toggle="collapse" data-target="#menu-personal" class="{{ Request::is('personal/*')? 'active': '' }}">Personal</a>
+        <ul class="nav nav-stacked collapse {{ Request::is('personal/*')? 'in': '' }}" id="menu-personal">
+            <li class="{{ Request::is('personal/lista')? 'active': '' }}">
+                <a href="{{ url('personal/lista') }}">Lista</a>
+            </li>
+            <li class="{{ Request::is('personal/nuevo')? 'active': '' }}">
+                <a href="{{ url('personal/nuevo') }}">Nuevo Inventario</a>
+            </li>
+        </ul>
+        {{--
+        <li class="{{ Request::is('personal/operadores') ? 'active' : '' }}">
+            <a href="{{ url('personal/operadores') }}">Operadores</a>
+        </li>
+        --}}
     </li>
 </ul>
 

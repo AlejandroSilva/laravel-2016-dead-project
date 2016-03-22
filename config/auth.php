@@ -68,6 +68,7 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\User::class,
+            'table' => 'users',
         ],
 
         // 'users' => [
@@ -103,5 +104,8 @@ return [
             'expire' => 60,
         ],
     ],
-
+    
+    // Las versiones viejas de Entrust necesitan estas variables fuera de 'providers'
+    'model' => App\User::class,
+    'table' => 'users',
 ];

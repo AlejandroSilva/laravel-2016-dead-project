@@ -1,11 +1,11 @@
 
-.TableHeader__container___N1LYN{
+.TableHeader__container___3n5Ns{
     position: relative;
 }
-.TableHeader__cell___qBAiu{
+.TableHeader__cell___36W2d{
 
 }
-.TableHeader__menu___x-Ng6{
+.TableHeader__menu___3yRPw{
     background: white;
     position: absolute;
     width: 100%;
@@ -13,14 +13,14 @@
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px grey;
     padding: 5px;
 }
-.TableHeader__contenedorValores___qZzS4{
+.TableHeader__contenedorValores___1xZ9-{
     height: 130px;
     border: 1px solid grey;
     border-radius: 2px;
     overflow: auto;
     padding: 5px;
 }
-.TableHeader__menu___x-Ng6 label{
+.TableHeader__menu___3yRPw label{
     display: block;
     margin-top: 2px;
     margin-bottom: 2px;
@@ -71,156 +71,202 @@
  esto, es necesario que los anchos de las celdas sean fijos, no dinamicos
  */
 /* correlativo */
-.RowInventario__thCorrelativo___jQKCi {
+.RowInventario__thCorrelativo___1v1ba {
     width: 30px;
     background: white;
 }
-.RowInventario__tdCorrelativo___2yy4n {
+.RowInventario__tdCorrelativo___3raGR {
     vertical-align: middle !important;
 }
 /* Fecha */
-.RowInventario__thFecha___2Ew5A {
+.RowInventario__thFecha___Bb0VO {
     min-width: 120px;
     background: white;
 }
-.RowInventario__tdFecha___198QE {
+.RowInventario__tdFecha___3GUua {
     vertical-align: middle !important;
 }
 /* Cliente */
-.RowInventario__thCliente___38e-N {
+.RowInventario__thCliente___2fGHL {
     width: 120px;
     background: white;
 }
-.RowInventario__tdCliente___32hvf {
+.RowInventario__tdCliente___2rfZ4 {
     vertical-align: middle !important;
 }
 /* CECO */
-.RowInventario__thCeco___3qVGS {
+.RowInventario__thCeco___1KehK {
     width: 55px;
     background: white;
 }
-.RowInventario__tdCeco___3eH2y {
+.RowInventario__tdCeco___3n9cf {
     vertical-align: middle !important;
 }
 /* Local */
-.RowInventario__thLocal___3C1s9 {
+.RowInventario__thLocal___18FLG {
     width: 200px;
     background: white;
 }
-.RowInventario__tdLocal___1kw8c {
+.RowInventario__tdLocal___jiN30 {
     vertical-align: middle !important;
 }
 /* ZonaSei */
-.RowInventario__thZonaSei___F01Sp {
+.RowInventario__thZonaSei___1KSeV {
     width: 150px;
     background: white;
 }
-.RowInventario__tdZonaSei___3cmQR {
+.RowInventario__tdZonaSei___LXFx9 {
     vertical-align: middle !important;
 }
 /* Region */
-.RowInventario__thRegion___2jB1d {
+.RowInventario__thRegion___28QBw {
     width: 140px;
     background: white;
 }
-.RowInventario__tdRegion___2JLGL {
+.RowInventario__tdRegion___2ZubF {
     vertical-align: middle !important;
 }
 /* Comuna */
-.RowInventario__thComuna___3u1cQ {
+.RowInventario__thComuna___7urgW {
     width: 140px;
     background: white;
 }
-.RowInventario__tdComuna___3eBPd {
+.RowInventario__tdComuna___2ZvVG {
     vertical-align: middle !important;
 }
 /* Stock */
-.RowInventario__thStock___15BwE {
+.RowInventario__thStock___2zYoE {
     width: 60px;
     background: white;
 }
-.RowInventario__tdStock___3AT1n {
+.RowInventario__tdStock___3UH0Q {
     vertical-align: middle !important;
 }
 /* Dotacion */
-.RowInventario__thDotacion___20iGu {
+.RowInventario__thDotacion___UASwj {
     width: 80px;
     background: white;
 }
-.RowInventario__tdDotacion___206TD {
+.RowInventario__tdDotacion___3VeWy {
     vertical-align: middle !important;
 }
 /* Jornada */
-.RowInventario__thJornada___3gyLP {
+.RowInventario__thJornada___iS7ji {
     width: 200px;
     background: white;
 }
-.RowInventario__tdJornada___fSn5q {
+.RowInventario__tdJornada___1ayMI {
     vertical-align: middle !important;
 }
 /* Estado */
-.RowInventario__thEstado___1QpJR {
+.RowInventario__thEstado___k78a7 {
     width: 100px;
     background: white;
 }
-.RowInventario__tdEstado___3UPcA {
+.RowInventario__tdEstado___iO83x {
     vertical-align: middle !important;
 }
 /* Opciones */
-.RowInventario__thOpciones___2Gb26 {
+.RowInventario__thOpciones___3ynK1 {
     width: 250px;
     background: white;
 }
-.RowInventario__tdOpciones___fmQaI {
+.RowInventario__tdOpciones___2juk8 {
     vertical-align: middle !important;
 }
 
 /* FECHA */
-.RowInventario__inputDia___3VqP9{
+.RowInventario__inputDia___3aWKe{
     width: 30px;
     marginRight: 2px;
 }
-.RowInventario__inputDiaInvalido___3qyjq{
+.RowInventario__inputDiaInvalido___19kC7{
     border: 2px solid #a94442;
     border-radius: 2px;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
     outline-color: #ce8483;
 }
-.RowInventario__inputDiaPendiente___6jBmB{
+.RowInventario__inputDiaPendiente___9QF9l{
     border: 2px solid #f0ad4e;
     border-radius: 2px;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
     outline-color: #ce8483;
 }
-.RowInventario__inputMes___26ci_{
+.RowInventario__inputMes___1pM8y{
     width: 25px;
     marginRight: 2px;
 }
-.RowInventario__inputAnno___MBMEV{
+.RowInventario__inputAnno___1OpKn{
     width: 45px;
     marginRight: 2px;
 }
 
 /* Dotacion */
-.RowInventario__inputDotacion___7Eh48{
+.RowInventario__inputDotacion___1b6ww{
     width: 25px;
     margin: 0 0 2px 0;
 }
-.RowInventario__inputDotacionInvalida___2sIMT{
+.RowInventario__inputDotacionInvalida___1cJuN{
     border: 2px solid #a94442;
     border-radius: 2px;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
     outline-color: #ce8483;
 }
-.AgregarPrograma__tableCell___Fw_r2 {
+.AgregarPrograma__tableCell___2PsDG {
     padding: 0 !important;
     margin: 0;
 }
-.AgregarPrograma__tableCell___Fw_r2 > p {
+.AgregarPrograma__tableCell___2PsDG > p {
     margin: 0;
 }
 /*.tableCellInput {*/
     /*width: 100%;*/
     /*height: 100%;*/
     /*border: 0;*/
-/*}*/
+/*}*//* FECHA */
+.InputFecha__inputDia___26G8W{
+    width: 30px;
+    marginRight: 2px;
+}
+.InputFecha__inputDiaDirty___3aUzJ{
+    border: 2px solid #381615;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;   /*plomo*/
+    outline-color: #4f3534;
+}
+.InputFecha__inputDiaInvalido___3vMMM{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
+.InputFecha__inputDiaPendiente___1VNj-{
+    border: 2px solid #f0ad4e;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
+.InputFecha__inputMes___3SGfR{
+    width: 25px;
+    marginRight: 2px;
+}
+.InputFecha__inputAnno___3nCrE{
+    width: 45px;
+    marginRight: 2px;
+}
+.InputDotacion__inputDotacion___3JxlM{
+    width: 25px;
+    margin: 0 0 2px 0;
+}
+.InputDotacion__inputDotacionDirty___4ThKI {
+    border: 2px solid #381615;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;   /*plomo*/
+    outline-color: #4f3534;
+}
+.InputDotacion__inputDotacionInvalida___3TtRl{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
