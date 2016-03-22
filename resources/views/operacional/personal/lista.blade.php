@@ -3,7 +3,12 @@
 @section('title', 'Personal')
 
 @section('content')
-    <h1 class="page-header">Personal</h1>
+    <h1 class="page-header">
+        Personal
+        <span class="pull-right">
+            <a href="{{ route('personal.nuevo') }}" class="btn btn-primary">Crear nuevo</a>
+        </span>
+    </h1>
 
     <table class="table">
         <thead>

@@ -39,7 +39,7 @@
                 <a href="{{ url('personal/lista') }}">Lista</a>
             </li>
             <li class="{{ Request::is('personal/nuevo')? 'active': '' }}">
-                <a href="{{ url('personal/nuevo') }}">Nuevo Inventario</a>
+                <a href="{{ route('personal.nuevo') }}">Crear nuevo</a>
             </li>
         </ul>
         {{--

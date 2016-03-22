@@ -63,8 +63,8 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
 
-    Route::get('personal/lista',       'PersonalController@show_listaPersonal');
-    Route::get('personal/nuevo',            'PersonalController@show_formulario');
+    Route::get('personal/lista',       'PersonalController@show_listaPersonal')->name('personal.lista');
+    Route::get('personal/nuevo',            'PersonalController@show_formulario')->name('personal.nuevo');
     Route::post('personal/nuevo',           'PersonalController@show_postFormulario');
     Route::get('personal/test',           'PersonalController@test');
     /*
