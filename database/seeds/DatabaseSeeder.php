@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder {
 //        $this->call(FormatoLocalesTableSeeder::class); // + direcciones
 //        $this->call(LocalesTableSeeder::class);
 //        $this->call(InventariosTableSeeder::class);
-        $this->call(RolesSeeder::class);
+//        $this->call(RolesSeeder::class);
+        $this->call(UsuariosSeeder::class);
     }
 
 }

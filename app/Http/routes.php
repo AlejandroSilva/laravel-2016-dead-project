@@ -54,8 +54,8 @@ Route::group(['middleware' => ['web']], function (){
     Route::get('api/inventario/{idInventario}',         'InventariosController@api_get');
     Route::put('api/inventario/{idInventario}',         'InventariosController@api_actualizar');
 
-    //Route::get('nominas',               function(){return view('operacional.nominas.nominas-index');});
-    //Route::get('nomFinales',            function(){return view('operacional.nominasFinales.nominasFinales-index');});
+    Route::get('nominas',               function(){return view('operacional.nominas.nominas-index');});
+    Route::get('nomFinales',            function(){return view('operacional.nominasFinales.nominasFinales-index');});
 
     /*
     |--------------------------------------------------------------------------

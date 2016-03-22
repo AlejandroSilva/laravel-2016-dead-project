@@ -27,8 +27,8 @@ class PersonalController extends Controller {
     // POST personal/nuevo
     function show_postFormulario(Request $request){
         $this->validate($request, [
-            'RUN' => 'required|max:15',
-            'email' => 'required|unique:users',
+            'RUN' => 'required|unique:users|max:15',
+            'email' => 'required',
             'nombre1' => 'required|min:3|max:20',
             'nombre2' => 'required|min:3|max:20',
             'apellidoPaterno' => 'required|min:3|max:20',
