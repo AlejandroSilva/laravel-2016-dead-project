@@ -91,6 +91,8 @@ class ProgramacionSemanal extends React.Component {
                 </select>
 
                 <TablaInventarios
+                    lideres={window.laravelLideres}
+                    captadores={window.laravelCaptadores}
                     inventarios={this.state.inventariosFiltrados}
                     guardarInventario={this.guardarInventario.bind(this)}
                 />

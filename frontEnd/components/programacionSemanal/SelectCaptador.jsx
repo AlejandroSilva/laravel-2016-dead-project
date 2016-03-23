@@ -7,17 +7,16 @@ import React from 'react'
 class SelectCaptador extends React.Component{
     render(){
         return(
-            <select name="" id="">
-                <option value="0" disabled>-</option>
-                <option value="1">Captador 1</option>
-                <option value="2">Captador 2</option>
-                <option value="3">Captador 3</option>
+            <select name="">
+                {this.props.captadores.map((cap, index)=>
+                    <option key={index} value={cap.id}>{`${cap.nombre1} ${cap.apellidoPaterno}`}</option>
+                )}
             </select>
         )
     }
 }
 SelectCaptador.propTypes = {
     // Objetos
-    //fecha: React.PropTypes.string.isRequired
+    captadores: React.PropTypes.array.isRequired
 }
 export default SelectCaptador

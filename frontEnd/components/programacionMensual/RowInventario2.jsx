@@ -264,10 +264,10 @@ class RowInventario extends React.Component{
                 {/* Jornada */}
                 <td className={styles.tdJornada}>
                     <select onChange={this.onSelectJornadaChange.bind(this)} value={this.state.selectJornada}>
-                        <option value="1">día</option>
-                        <option value="2">noche</option>
-                        <option value="3">día y noche</option>
-                        <option value="4">no definido</option>
+                        <option value="1">no definido</option>
+                        <option value="2">día</option>
+                        <option value="3">noche</option>
+                        <option value="4">día y noche</option>
                     </select>
                 </td>
                 {/* Opciones    */}

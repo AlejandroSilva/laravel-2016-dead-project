@@ -14,5 +14,7 @@
         {{-- Se entregan las fechas minimas y maximas --}}
         window.laravelPrimerInventario = '{!! $primerInventario !!}';
         window.laravelUltimoInventario = '{!! $ultimoInventario !!}';
+        window.laravelCaptadores = {!! $captadores!!};
+        window.laravelLideres = {!! $lideres !!};
     </script>
 @stop

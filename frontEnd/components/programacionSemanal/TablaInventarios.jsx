@@ -64,10 +64,13 @@ class TablaInventarios extends React.Component{
                         ? <tr><td colSpan="13" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.props.inventarios.map((inventario, index)=>{
                             return <RowInventario
+                                // Propiedades
                                 key={index}
                                 index={index}
                                 ref={ref=>this.rows[index]=ref}
                                 inventario={inventario}
+                                lideres={this.props.lideres}
+                                captadores={this.props.captadores}
                                 // Metodos
                                 guardarInventario={this.props.guardarInventario}
                                 focusRow={this.focusRow.bind(this)}

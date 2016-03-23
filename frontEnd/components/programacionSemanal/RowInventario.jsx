@@ -126,11 +126,14 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Lider */}
                 <td className={'a'}>
-                    <SelectLider />
+                    <SelectLider
+                        lideres={this.props.lideres}/>
                 </td>
                 {/* Captador 1 */}
                 <td className={'a'}>
-                    <SelectCaptador />
+                    <SelectCaptador
+                        captadores={this.props.captadores}
+                    />
                 </td>
                 {/* DotacionCaptador 1 */}
                 <td className={'a'}>
@@ -139,7 +142,9 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Captador 2 */}
                 <td className={'a'}>
-                    <SelectCaptador />
+                    <SelectCaptador
+                        captadores={this.props.captadores}
+                    />
                 </td>
                 {/* DotacionCaptador 2 */}
                 <td className={'a'}>
@@ -167,6 +172,8 @@ RowInventario.propTypes = {
     // Objetos
     index: React.PropTypes.number.isRequired,
     inventario: React.PropTypes.object.isRequired,
+    lideres: React.PropTypes.array.isRequired,
+    captadores: React.PropTypes.array.isRequired,
     // Metodos
     guardarInventario: React.PropTypes.func.isRequired,
     focusRow: React.PropTypes.func.isRequired

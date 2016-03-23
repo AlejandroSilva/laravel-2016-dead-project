@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 // Modelos
+use App\Role;
 use App\Clientes;
 use App\Inventarios;
 
@@ -37,8 +38,18 @@ class ProgramacionController extends Controller {
             ->get();
         $minymax = $select[0];
 
+        $rolCaptador = Role::where('name', 'Captador')->first();
+        $captadores = $rolCaptador!=null? $rolCaptador->users : '[]';
+        $rolLider = Role::where('name', 'Lider')->first();
+        $lideres = $rolLider!=null? $rolLider->users : '[]';
+
         // buscar la mayor fechaProgramada en los ivventarios
-        return view('operacional.programacion.programacion-semanal', $minymax);
+        return view('operacional.programacion.programacion-semanal', [
+            'primerInventario'=> $minymax->primerInventario,
+            'ultimoInventario'=> $minymax->ultimoInventario,
+            'captadores'=> $captadores,
+            'lideres'=> $lideres
+        ]);
     }
 
     /**

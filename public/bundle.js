@@ -46109,22 +46109,22 @@
 	                        _react2.default.createElement(
 	                            'option',
 	                            { value: '1' },
-	                            'día'
+	                            'no definido'
 	                        ),
 	                        _react2.default.createElement(
 	                            'option',
 	                            { value: '2' },
-	                            'noche'
+	                            'día'
 	                        ),
 	                        _react2.default.createElement(
 	                            'option',
 	                            { value: '3' },
-	                            'día y noche'
+	                            'noche'
 	                        ),
 	                        _react2.default.createElement(
 	                            'option',
 	                            { value: '4' },
-	                            'no definido'
+	                            'día y noche'
 	                        )
 	                    )
 	                ),
@@ -52425,6 +52425,8 @@
 	                    })
 	                ),
 	                _react2.default.createElement(_TablaInventarios2.default, {
+	                    lideres: window.laravelLideres,
+	                    captadores: window.laravelCaptadores,
 	                    inventarios: this.state.inventariosFiltrados,
 	                    guardarInventario: this.guardarInventario.bind(this)
 	                })
@@ -52735,13 +52737,16 @@
 	                            )
 	                        )
 	                    ) : this.props.inventarios.map(function (inventario, index) {
-	                        return _react2.default.createElement(_RowInventario2.default, {
-	                            key: index,
+	                        return _react2.default.createElement(_RowInventario2.default
+	                        // Propiedades
+	                        , { key: index,
 	                            index: index,
 	                            ref: function ref(_ref) {
 	                                return _this2.rows[index] = _ref;
 	                            },
-	                            inventario: inventario
+	                            inventario: inventario,
+	                            lideres: _this2.props.lideres,
+	                            captadores: _this2.props.captadores
 	                            // Metodos
 	                            , guardarInventario: _this2.props.guardarInventario,
 	                            focusRow: _this2.focusRow.bind(_this2)
@@ -53056,12 +53061,15 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
-	                    _react2.default.createElement(_SelectLider2.default, null)
+	                    _react2.default.createElement(_SelectLider2.default, {
+	                        lideres: this.props.lideres })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
-	                    _react2.default.createElement(_SelectCaptador2.default, null)
+	                    _react2.default.createElement(_SelectCaptador2.default, {
+	                        captadores: this.props.captadores
+	                    })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
@@ -53072,7 +53080,9 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
-	                    _react2.default.createElement(_SelectCaptador2.default, null)
+	                    _react2.default.createElement(_SelectCaptador2.default, {
+	                        captadores: this.props.captadores
+	                    })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
@@ -53126,6 +53136,8 @@
 	    // Objetos
 	    index: _react2.default.PropTypes.number.isRequired,
 	    inventario: _react2.default.PropTypes.object.isRequired,
+	    lideres: _react2.default.PropTypes.array.isRequired,
+	    captadores: _react2.default.PropTypes.array.isRequired,
 	    // Metodos
 	    guardarInventario: _react2.default.PropTypes.func.isRequired,
 	    focusRow: _react2.default.PropTypes.func.isRequired
@@ -53528,32 +53540,15 @@
 	        key: "render",
 	        value: function render() {
 	            return _react2.default.createElement(
-	                "div",
-	                null,
-	                _react2.default.createElement(
-	                    "select",
-	                    { name: "", id: "" },
-	                    _react2.default.createElement(
+	                "select",
+	                { name: "" },
+	                this.props.lideres.map(function (lid, index) {
+	                    return _react2.default.createElement(
 	                        "option",
-	                        { value: "0" },
-	                        "-"
-	                    ),
-	                    _react2.default.createElement(
-	                        "option",
-	                        { value: "1" },
-	                        "Sup 1"
-	                    ),
-	                    _react2.default.createElement(
-	                        "option",
-	                        { value: "2" },
-	                        "Sup 2"
-	                    ),
-	                    _react2.default.createElement(
-	                        "option",
-	                        { value: "3" },
-	                        "Sup 3"
-	                    )
-	                )
+	                        { key: index, value: lid.id },
+	                        lid.nombre1 + " " + lid.apellidoPaterno
+	                    );
+	                })
 	            );
 	        }
 	    }]);
@@ -53563,7 +53558,7 @@
 
 	SelectLider.propTypes = {
 	    // Objetos
-	    //fecha: React.PropTypes.string.isRequired
+	    lideres: _react2.default.PropTypes.array.isRequired
 	};
 	exports.default = SelectLider;
 
@@ -53613,27 +53608,14 @@
 	        value: function render() {
 	            return _react2.default.createElement(
 	                "select",
-	                { name: "", id: "" },
-	                _react2.default.createElement(
-	                    "option",
-	                    { value: "0", disabled: true },
-	                    "-"
-	                ),
-	                _react2.default.createElement(
-	                    "option",
-	                    { value: "1" },
-	                    "Captador 1"
-	                ),
-	                _react2.default.createElement(
-	                    "option",
-	                    { value: "2" },
-	                    "Captador 2"
-	                ),
-	                _react2.default.createElement(
-	                    "option",
-	                    { value: "3" },
-	                    "Captador 3"
-	                )
+	                { name: "" },
+	                this.props.captadores.map(function (cap, index) {
+	                    return _react2.default.createElement(
+	                        "option",
+	                        { key: index, value: cap.id },
+	                        cap.nombre1 + " " + cap.apellidoPaterno
+	                    );
+	                })
 	            );
 	        }
 	    }]);
@@ -53643,7 +53625,7 @@
 
 	SelectCaptador.propTypes = {
 	    // Objetos
-	    //fecha: React.PropTypes.string.isRequired
+	    captadores: _react2.default.PropTypes.array.isRequired
 	};
 	exports.default = SelectCaptador;
 

@@ -7,19 +7,16 @@ import React from 'react'
 class SelectLider extends React.Component{
     render(){
         return(
-            <div>
-                <select name="" id="">
-                    <option value="0">-</option>
-                    <option value="1">Sup 1</option>
-                    <option value="2">Sup 2</option>
-                    <option value="3">Sup 3</option>
-                </select>
-            </div>
+            <select name="">
+                {this.props.lideres.map((lid, index)=>
+                    <option key={index} value={lid.id}>{`${lid.nombre1} ${lid.apellidoPaterno}`}</option>
+                )}
+            </select>
         )
     }
 }
 SelectLider.propTypes = {
     // Objetos
-    //fecha: React.PropTypes.string.isRequired
+    lideres: React.PropTypes.array.isRequired
 }
 export default SelectLider
