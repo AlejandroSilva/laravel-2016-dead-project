@@ -17,7 +17,7 @@
                 <div class="form-group">
                     <label class="col-sm-2">RUN</label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" name="RUN" placeholder="RUN Ej. 12.345.987-K"
+                        <input type="text" class="form-control" name="RUN" placeholder="Ej. 12.345.987-K"
                                minlength="9"
                                maxlength="12"
                                required>

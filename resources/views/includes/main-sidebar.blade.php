@@ -1,3 +1,4 @@
+{{-- ESTA VISTA YA NO SE USA --}}
 <ul class="nav nav-stacked">
     <li class="nav-header">
         {{-- ######### Gestión de Inventarios ######### --}}
