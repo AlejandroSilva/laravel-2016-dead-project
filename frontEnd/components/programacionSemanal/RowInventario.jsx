@@ -6,10 +6,8 @@ import Tooltip from 'react-bootstrap/lib/Tooltip'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from './InputFecha.jsx'
 import InputDotacion from './InputDotacion.jsx'
-import SelectLider from './SelectLider.jsx'
-import SelectCaptador from './SelectCaptador.jsx'
-import SelectJornada from './SelectJornada.jsx'
 import InputDotacionCaptador from './InputDotacionCaptador.jsx'
+import Select from './Select.jsx'
 
 // Styles
 //import styles from './RowInventario.css'
@@ -70,8 +68,16 @@ class RowInventario extends React.Component{
     }
 
     render(){
-        //console.log("render: prop.local.dotSug, state.inputDot", this.props.inventario.local.dotacionSugerida, this.state.inputDotacion)
-        let idJornada = this.props.inventario.idJornada
+        const idJornada = this.props.inventario.idJornada
+        const inventarioDia = idJornada==2 || idJornada==4
+        const inventarioNoche = idJornada==3 || idJornada==4
+        const opcionesLideres = this.props.lideres.map(usuario=>{
+            return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
+        })
+        const opcionesSupervisores = []
+        const opcionesCaptadores = this.props.captadores.map(usuario=>{
+            return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
+        })
         return (
             <tr>
                 {/* Fecha */}
@@ -101,9 +107,15 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Turno */}
                 <td className={'a'}>
-                    <SelectJornada
+                    <Select
                         ref={ref=>this.selectJornada=ref}
                         onSelect={this.guardarOCrear.bind(this)}
+                        opciones={[
+                            {valor:'1', texto:'no definido'},
+                            {valor:'2', texto:'día'},
+                            {valor:'3', texto:'noche'},
+                            {valor:'4', texto:'día y noche'}
+                        ]}
                         seleccionada={this.props.inventario.idJornada}
                     />
                 </td>
@@ -121,14 +133,10 @@ class RowInventario extends React.Component{
 
                     </OverlayTrigger>
                 </td>
-                {/* Produccion */}
-                <td className={'a'}>
-                    <p><small>{numeral(this.props.inventario.local.formato_local.produccionSugerida).format('0,0')}</small></p>
-                </td>
-                {/* Dotacion */}
+                {/* Dotación Total */}
                 <td className={'a'}>
                     <InputDotacion
-                        style={{width: '100%', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
+                        style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputDotacion=ref}
                         asignada={this.props.inventario.dotacionAsignada}
                         guardarOCrear={this.guardarOCrear.bind(this)}
@@ -136,7 +144,7 @@ class RowInventario extends React.Component{
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}/>
 
                     <InputDotacion
-                        style={{width: '100%', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
+                        style={{display: inventarioNoche? 'block' : 'none'}}
                         ref={ref=>this.inputDotacion2=ref}
                         asignada={this.props.inventario.dotacionAsignada}
                         guardarOCrear={this.guardarOCrear.bind(this)}
@@ -145,71 +153,90 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Lider */}
                 <td className={'a'}>
-                    <SelectLider
-                        style={{width: '120px', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
-                        lideres={this.props.lideres}/>
-                    <SelectLider
-                        style={{width: '120px', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
-                        lideres={this.props.lideres}/>
+                    <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                            seleccionada={ ''+this.props.lideres[0].id}         // Todo: arreglar esto
+                            onSelect={this.guardarOCrear.bind(this)}
+                            opciones={opcionesLideres}
+                    />
+                    <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                            seleccionada={ ''+this.props.lideres[0].id}         // ToDo: arreglar esto
+                            onSelect={this.guardarOCrear.bind(this)}
+                            opciones={opcionesLideres}
+                    />
+                </td>
+                {/* Supervisor */}
+                <td className='a'>
+                    <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                            seleccionada={''}                                // ToDo: arreglar esto (agregar supervisores)
+                            onSelect={this.guardarOCrear.bind(this)}
+                            opciones={opcionesSupervisores}
+                    />
+                    <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                            seleccionada={''}                                // ToDo: arreglar esto (agregar supervisores)
+                            onSelect={this.guardarOCrear.bind(this)}
+                            opciones={opcionesSupervisores}
+                    />
                 </td>
                 {/* Captador 1 */}
                 <td className={'a'}>
-                    <SelectCaptador
-                        style={{width: '120px', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
-                        captadores={this.props.captadores}
+                    <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                            seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
+                            onSelect={this.guardarOCrear.bind(this)}
+                            opciones={opcionesCaptadores}
                     />
-                    <SelectCaptador
-                        style={{width: '120px', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
-                        captadores={this.props.captadores}
+                    <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                            seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
+                            onSelect={this.guardarOCrear.bind(this)}
+                            opciones={opcionesCaptadores}
                     />
                 </td>
                 {/* DotacionCaptador 1 */}
                 <td className={'a'}>
                     <InputDotacionCaptador
-                        style={{width: '100%', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
+                        style={{display: inventarioDia? 'block' : 'none'}}
                         asignada="3"/>
                     <InputDotacionCaptador
-                        style={{width: '100%', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
+                        style={{display: inventarioNoche? 'block' : 'none'}}
                         asignada="3"/>
                 </td>
                 {/* Captador 2 */}
                 <td className={'a'}>
-                    <SelectCaptador
-                        style={{width: '120px', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
-                        captadores={this.props.captadores}
+                    <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                            seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
+                            onSelect={this.guardarOCrear.bind(this)}
+                            opciones={opcionesCaptadores}
                     />
-                    <SelectCaptador
-                        style={{width: '120px', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
-                        captadores={this.props.captadores}
+                    <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                            seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
+                            onSelect={this.guardarOCrear.bind(this)}
+                            opciones={opcionesCaptadores}
                     />
                 </td>
                 {/* DotacionCaptador 2 */}
                 <td className={'a'}>
                     <InputDotacionCaptador
-                        style={{width: '100%', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
+                        style={{display: inventarioDia? 'block' : 'none'}}
                         asignada="3"/>
                     <InputDotacionCaptador
-                        style={{width: '100%', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
+                        style={{display: inventarioNoche? 'block' : 'none'}}
                         asignada="3"/>
                 </td>
-                {/* Hora llegada */}
+                {/* Hora Presentación */}
                 <td className={'a'}>
-                    <p style={{width: '100%', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}>
-                        <small>{this.props.inventario.horaLlegada}</small>
+                    <p style={{display: inventarioDia? 'block' : 'none'}}>
+                        <input type="time" defaultValue={this.props.inventario.horaLlegada}/>
                     </p>
-                    <p style={{width: '100%', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}>
-                        <small>{this.props.inventario.horaLlegada}</small>
+                    <p style={{display: inventarioNoche? 'block' : 'none'}}>
+                        <input type="time" defaultValue={this.props.inventario.horaLlegada}/>
                     </p>
                 </td>
-                {/* Direccion */}
+                {/* Dirección */}
                 <td className={'a'}>
                     <p><small>{this.props.inventario.local.direccion.direccion}</small></p>
                 </td>
-                {/* Opciones    */}
+                {/* Nómina*/}
                 <td className={''}>
-                    <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Editar local</button>
-                    <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Editar Inventario</button>
-                    <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Editar Nomina</button>
+                    <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Ver</button>
                 </td>
             </tr>
         )

@@ -52622,7 +52622,8 @@
 
 	            return _react2.default.createElement(
 	                'table',
-	                { className: 'table table-bordered table-condensed' },
+	                { className: 'table table-bordered table-condensed',
+	                    style: { overfow: 'overlay' } },
 	                _react2.default.createElement(
 	                    'thead',
 	                    null,
@@ -52632,12 +52633,12 @@
 	                        _react2.default.createElement(
 	                            'th',
 	                            { className: _RowInventario4.default.thFecha },
-	                            'FECHA'
+	                            'Fecha'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'CLIENTE'
+	                            'CL'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
@@ -52652,72 +52653,72 @@
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'COMUNA'
+	                            'Comuna'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'TURNO'
+	                            'Turno'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'TIENDA'
+	                            'Tienda'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'STOCK'
+	                            'Stock'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'Pro'
+	                            'Dot.Total'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'DOTACION'
+	                            'Lider'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'LIDER'
+	                            'Supervisor'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'CAP1'
+	                            'Captador 1'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'Dot1'
+	                            'Dot.Cap1'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'CAP2'
+	                            'Captador 2'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'Dot2'
+	                            'Dot.Cap.2'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'Horario Pres.'
+	                            'Hr.Present.'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'DIRECCION'
+	                            'Dirección'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
 	                            null,
-	                            'Opciones'
+	                            'Nómina'
 	                        )
 	                    )
 	                ),
@@ -52813,21 +52814,13 @@
 
 	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
 
-	var _SelectLider = __webpack_require__(425);
-
-	var _SelectLider2 = _interopRequireDefault(_SelectLider);
-
-	var _SelectCaptador = __webpack_require__(426);
-
-	var _SelectCaptador2 = _interopRequireDefault(_SelectCaptador);
-
-	var _SelectJornada = __webpack_require__(428);
-
-	var _SelectJornada2 = _interopRequireDefault(_SelectJornada);
-
-	var _InputDotacionCaptador = __webpack_require__(427);
+	var _InputDotacionCaptador = __webpack_require__(428);
 
 	var _InputDotacionCaptador2 = _interopRequireDefault(_InputDotacionCaptador);
+
+	var _Select = __webpack_require__(427);
+
+	var _Select2 = _interopRequireDefault(_Select);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -52916,8 +52909,16 @@
 	        value: function render() {
 	            var _this2 = this;
 
-	            //console.log("render: prop.local.dotSug, state.inputDot", this.props.inventario.local.dotacionSugerida, this.state.inputDotacion)
 	            var idJornada = this.props.inventario.idJornada;
+	            var inventarioDia = idJornada == 2 || idJornada == 4;
+	            var inventarioNoche = idJornada == 3 || idJornada == 4;
+	            var opcionesLideres = this.props.lideres.map(function (usuario) {
+	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
+	            });
+	            var opcionesSupervisores = [];
+	            var opcionesCaptadores = this.props.captadores.map(function (usuario) {
+	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
+	            });
 	            return _react2.default.createElement(
 	                'tr',
 	                null,
@@ -52992,11 +52993,12 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
-	                    _react2.default.createElement(_SelectJornada2.default, {
+	                    _react2.default.createElement(_Select2.default, {
 	                        ref: function ref(_ref2) {
 	                            return _this2.selectJornada = _ref2;
 	                        },
 	                        onSelect: this.guardarOCrear.bind(this),
+	                        opciones: [{ valor: '1', texto: 'no definido' }, { valor: '2', texto: 'día' }, { valor: '3', texto: 'noche' }, { valor: '4', texto: 'día y noche' }],
 	                        seleccionada: this.props.inventario.idJornada
 	                    })
 	                ),
@@ -53040,21 +53042,8 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            (0, _numeral2.default)(this.props.inventario.local.formato_local.produccionSugerida).format('0,0')
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: 'a' },
 	                    _react2.default.createElement(_InputDotacion2.default, {
-	                        style: { width: '100%', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
+	                        style: { display: inventarioDia ? 'block' : 'none' },
 	                        ref: function ref(_ref3) {
 	                            return _this2.inputDotacion = _ref3;
 	                        },
@@ -53067,7 +53056,7 @@
 	                            return _this2.props.focusRow(_this2.props.index + 1, 'dotacion');
 	                        } }),
 	                    _react2.default.createElement(_InputDotacion2.default, {
-	                        style: { width: '100%', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
+	                        style: { display: inventarioNoche ? 'block' : 'none' },
 	                        ref: function ref(_ref4) {
 	                            return _this2.inputDotacion2 = _ref4;
 	                        },
@@ -53083,55 +53072,77 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
-	                    _react2.default.createElement(_SelectLider2.default, {
-	                        style: { width: '120px', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
-	                        lideres: this.props.lideres }),
-	                    _react2.default.createElement(_SelectLider2.default, {
-	                        style: { width: '120px', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
-	                        lideres: this.props.lideres })
+	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioDia ? 'block' : 'none' },
+	                        seleccionada: '' + this.props.lideres[0].id // Todo: arreglar esto
+	                        , onSelect: this.guardarOCrear.bind(this),
+	                        opciones: opcionesLideres
+	                    }),
+	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioNoche ? 'block' : 'none' },
+	                        seleccionada: '' + this.props.lideres[0].id // ToDo: arreglar esto
+	                        , onSelect: this.guardarOCrear.bind(this),
+	                        opciones: opcionesLideres
+	                    })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
-	                    _react2.default.createElement(_SelectCaptador2.default, {
-	                        style: { width: '120px', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
-	                        captadores: this.props.captadores
+	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioDia ? 'block' : 'none' },
+	                        seleccionada: '' // ToDo: arreglar esto (agregar supervisores)
+	                        , onSelect: this.guardarOCrear.bind(this),
+	                        opciones: opcionesSupervisores
 	                    }),
-	                    _react2.default.createElement(_SelectCaptador2.default, {
-	                        style: { width: '120px', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
-	                        captadores: this.props.captadores
+	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioNoche ? 'block' : 'none' },
+	                        seleccionada: '' // ToDo: arreglar esto (agregar supervisores)
+	                        , onSelect: this.guardarOCrear.bind(this),
+	                        opciones: opcionesSupervisores
+	                    })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: 'a' },
+	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioDia ? 'block' : 'none' },
+	                        seleccionada: '' + this.props.captadores[0].id // ToDo: arreglar esto
+	                        , onSelect: this.guardarOCrear.bind(this),
+	                        opciones: opcionesCaptadores
+	                    }),
+	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioNoche ? 'block' : 'none' },
+	                        seleccionada: '' + this.props.captadores[0].id // ToDo: arreglar esto
+	                        , onSelect: this.guardarOCrear.bind(this),
+	                        opciones: opcionesCaptadores
 	                    })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_InputDotacionCaptador2.default, {
-	                        style: { width: '100%', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
+	                        style: { display: inventarioDia ? 'block' : 'none' },
 	                        asignada: '3' }),
 	                    _react2.default.createElement(_InputDotacionCaptador2.default, {
-	                        style: { width: '100%', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
+	                        style: { display: inventarioNoche ? 'block' : 'none' },
 	                        asignada: '3' })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
-	                    _react2.default.createElement(_SelectCaptador2.default, {
-	                        style: { width: '120px', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
-	                        captadores: this.props.captadores
+	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioDia ? 'block' : 'none' },
+	                        seleccionada: '' + this.props.captadores[0].id // ToDo: arreglar esto
+	                        , onSelect: this.guardarOCrear.bind(this),
+	                        opciones: opcionesCaptadores
 	                    }),
-	                    _react2.default.createElement(_SelectCaptador2.default, {
-	                        style: { width: '120px', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
-	                        captadores: this.props.captadores
+	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioNoche ? 'block' : 'none' },
+	                        seleccionada: '' + this.props.captadores[0].id // ToDo: arreglar esto
+	                        , onSelect: this.guardarOCrear.bind(this),
+	                        opciones: opcionesCaptadores
 	                    })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_InputDotacionCaptador2.default, {
-	                        style: { width: '100%', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
+	                        style: { display: inventarioDia ? 'block' : 'none' },
 	                        asignada: '3' }),
 	                    _react2.default.createElement(_InputDotacionCaptador2.default, {
-	                        style: { width: '100%', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
+	                        style: { display: inventarioNoche ? 'block' : 'none' },
 	                        asignada: '3' })
 	                ),
 	                _react2.default.createElement(
@@ -53139,21 +53150,13 @@
 	                    { className: 'a' },
 	                    _react2.default.createElement(
 	                        'p',
-	                        { style: { width: '100%', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' } },
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.inventario.horaLlegada
-	                        )
+	                        { style: { display: inventarioDia ? 'block' : 'none' } },
+	                        _react2.default.createElement('input', { type: 'time', defaultValue: this.props.inventario.horaLlegada })
 	                    ),
 	                    _react2.default.createElement(
 	                        'p',
-	                        { style: { width: '100%', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' } },
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.inventario.horaLlegada
-	                        )
+	                        { style: { display: inventarioNoche ? 'block' : 'none' } },
+	                        _react2.default.createElement('input', { type: 'time', defaultValue: this.props.inventario.horaLlegada })
 	                    )
 	                ),
 	                _react2.default.createElement(
@@ -53175,17 +53178,7 @@
 	                    _react2.default.createElement(
 	                        'button',
 	                        { className: 'btn btn-xs btn-primary btn-block', tabIndex: '-1' },
-	                        'Editar local'
-	                    ),
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-xs btn-primary btn-block', tabIndex: '-1' },
-	                        'Editar Inventario'
-	                    ),
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-xs btn-primary btn-block', tabIndex: '-1' },
-	                        'Editar Nomina'
+	                        'Ver'
 	                    )
 	                )
 	            );
@@ -53562,141 +53555,129 @@
 	module.exports = {"inputDotacion":"InputDotacion__inputDotacion___3JxlM shared__inputNumberAsText___1Qr9M","inputDotacionDirty":"InputDotacion__inputDotacionDirty___4ThKI InputDotacion__inputDotacion___3JxlM shared__inputNumberAsText___1Qr9M","inputDotacionInvalida":"InputDotacion__inputDotacionInvalida___3TtRl InputDotacion__inputDotacion___3JxlM shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 425 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
-
-
-	// Estilos
-	//import css from './SelectLider.css'
-
-	var SelectLider = function (_React$Component) {
-	    _inherits(SelectLider, _React$Component);
-
-	    function SelectLider() {
-	        _classCallCheck(this, SelectLider);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(SelectLider).apply(this, arguments));
-	    }
-
-	    _createClass(SelectLider, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement(
-	                "select",
-	                { name: "", style: this.props.style },
-	                this.props.lideres.map(function (lid, index) {
-	                    return _react2.default.createElement(
-	                        "option",
-	                        { key: index, value: lid.id },
-	                        lid.nombre1 + " " + lid.apellidoPaterno
-	                    );
-	                })
-	            );
-	        }
-	    }]);
-
-	    return SelectLider;
-	}(_react2.default.Component);
-
-	SelectLider.propTypes = {
-	    // Objetos
-	    lideres: _react2.default.PropTypes.array.isRequired
-	};
-	exports.default = SelectLider;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "SelectLider.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 426 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
-
-
-	// Estilos
-	//import css from './InputDotacion.css'
-
-	var SelectCaptador = function (_React$Component) {
-	    _inherits(SelectCaptador, _React$Component);
-
-	    function SelectCaptador() {
-	        _classCallCheck(this, SelectCaptador);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(SelectCaptador).apply(this, arguments));
-	    }
-
-	    _createClass(SelectCaptador, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement(
-	                "select",
-	                { name: "", style: this.props.style },
-	                this.props.captadores.map(function (cap, index) {
-	                    return _react2.default.createElement(
-	                        "option",
-	                        { key: index, value: cap.id },
-	                        cap.nombre1 + " " + cap.apellidoPaterno
-	                    );
-	                })
-	            );
-	        }
-	    }]);
-
-	    return SelectCaptador;
-	}(_react2.default.Component);
-
-	SelectCaptador.propTypes = {
-	    // Objetos
-	    captadores: _react2.default.PropTypes.array.isRequired
-	};
-	exports.default = SelectCaptador;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "SelectCaptador.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
+/* 425 */,
+/* 426 */,
 /* 427 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
+
+
+	// Estilos
+	//import css from './XXXXX.css'
+
+	var Select = function (_React$Component) {
+	    _inherits(Select, _React$Component);
+
+	    function Select(props) {
+	        _classCallCheck(this, Select);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Select).call(this, props));
+
+	        _this.state = {
+	            seleccionUsuario: '-',
+	            dirty: false
+	        };
+	        return _this;
+	    }
+
+	    _createClass(Select, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this.setState({
+	                seleccionUsuario: this.props.seleccionada,
+	                dirty: false
+	            });
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            var seleccionada1 = this.props.seleccionada;
+	            var seleccionada2 = nextProps.seleccionada;
+	            if (seleccionada1 !== seleccionada2) {
+	                // si esto cambia, entonces se debe hacer un "reset" del estado con los nuevos valores
+	                this.setState({ seleccionUsuario: seleccionada2, dirty: false });
+	            }
+	            if (seleccionada2 !== this.state.seleccionUsuario) {
+	                // si se reciben propiedades distintas al "state" actual, se reemplazan por las propiedades
+	                this.setState({ seleccionUsuario: seleccionada2, dirty: false });
+	            }
+	        }
+	    }, {
+	        key: 'onInputChange',
+	        value: function onInputChange(evt) {
+	            var _this2 = this;
+
+	            evt.preventDefault();
+	            var seleccionUsuario = evt.target.value;
+	            this.setState({
+	                seleccionUsuario: seleccionUsuario,
+	                dirty: this.props.seleccionada != seleccionUsuario
+	            }, function () {
+	                _this2.props.onSelect();
+	            });
+	        }
+	    }, {
+	        key: 'getEstado',
+	        value: function getEstado() {
+	            return this.state;
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'select',
+	                { name: '',
+	                    value: this.state.seleccionUsuario,
+	                    onChange: this.onInputChange.bind(this),
+	                    style: this.props.style },
+	                this.props.opciones.map(function (opcion, index) {
+	                    return _react2.default.createElement(
+	                        'option',
+	                        { key: index, value: opcion.valor },
+	                        opcion.texto
+	                    );
+	                })
+	            );
+	        }
+	    }]);
+
+	    return Select;
+	}(_react2.default.Component);
+
+	Select.propTypes = {
+	    // Objetos
+	    seleccionada: _react2.default.PropTypes.string.isRequired,
+	    opciones: _react2.default.PropTypes.array.isRequired,
+	    // Metodos
+	    onSelect: _react2.default.PropTypes.func.isRequired
+	};
+	exports.default = Select;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Select.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 428 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -53764,139 +53745,6 @@
 	exports.default = InputDotacionCaptador;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputDotacionCaptador.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 428 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Jornadas = __webpack_require__(161);
-
-	var _Jornadas2 = _interopRequireDefault(_Jornadas);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
-
-
-	// Estilos
-	//import css from './SelectJornada.css'
-
-	var SelectJornada = function (_React$Component) {
-	    _inherits(SelectJornada, _React$Component);
-
-	    function SelectJornada(props) {
-	        _classCallCheck(this, SelectJornada);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SelectJornada).call(this, props));
-
-	        _this.state = {
-	            seleccionUsuario: '-',
-	            dirty: false
-	        };
-	        return _this;
-	    }
-
-	    _createClass(SelectJornada, [{
-	        key: 'componentWillMount',
-	        value: function componentWillMount() {
-	            this.setState({
-	                seleccionUsuario: this.props.seleccionada,
-	                dirty: false
-	            });
-	        }
-	    }, {
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            var seleccionada1 = this.props.seleccionada;
-	            var seleccionada2 = nextProps.seleccionada;
-	            if (seleccionada1 !== seleccionada2) {
-	                // si esto cambia, entonces se debe hacer un "reset" del estado con los nuevos valores
-	                this.setState({ seleccionUsuario: seleccionada2, dirty: false });
-	            }
-	            if (seleccionada2 !== this.state.seleccionUsuario) {
-	                // si se reciben propiedades distintas al "state" actual, se reemplazan por las propiedades
-	                this.setState({ seleccionUsuario: seleccionada2, dirty: false });
-	            }
-	        }
-	    }, {
-	        key: 'onInputChange',
-	        value: function onInputChange(evt) {
-	            var _this2 = this;
-
-	            evt.preventDefault();
-	            var seleccionUsuario = evt.target.value;
-	            this.setState({
-	                seleccionUsuario: seleccionUsuario,
-	                dirty: this.props.seleccionada != seleccionUsuario
-	            }, function () {
-	                _this2.props.onSelect();
-	            });
-	        }
-	    }, {
-	        key: 'getEstado',
-	        value: function getEstado() {
-	            return this.state;
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'select',
-	                { name: '', value: this.state.seleccionUsuario, onChange: this.onInputChange.bind(this) },
-	                _react2.default.createElement(
-	                    'option',
-	                    { value: '1' },
-	                    'no definido'
-	                ),
-	                _react2.default.createElement(
-	                    'option',
-	                    { value: '2' },
-	                    'día'
-	                ),
-	                _react2.default.createElement(
-	                    'option',
-	                    { value: '3' },
-	                    'noche'
-	                ),
-	                _react2.default.createElement(
-	                    'option',
-	                    { value: '4' },
-	                    'día y noche'
-	                )
-	            );
-	        }
-	    }]);
-
-	    return SelectJornada;
-	}(_react2.default.Component);
-
-	SelectJornada.propTypes = {
-	    // Objetos
-	    seleccionada: _react2.default.PropTypes.string.isRequired,
-	    // Metodos
-	    onSelect: _react2.default.PropTypes.func.isRequired
-	};
-	exports.default = SelectJornada;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "SelectJornada.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 /******/ ]);

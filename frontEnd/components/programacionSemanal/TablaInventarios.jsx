@@ -36,27 +36,28 @@ class TablaInventarios extends React.Component{
     
     render(){
         return (
-            <table className="table table-bordered table-condensed">
+            <table className="table table-bordered table-condensed"
+                style={{overfow: 'overlay'}}>
                 <thead>
                     <tr>
-                        <th className={css.thFecha}>FECHA</th>
-                        <th>CLIENTE</th>
+                        <th className={css.thFecha}>Fecha</th>
+                        <th>CL</th>
                         <th>CEC</th>
                         <th>RG</th>
-                        <th>COMUNA</th>
-                        <th>TURNO</th>
-                        <th>TIENDA</th>
-                        <th>STOCK</th>
-                        <th>Pro</th>
-                        <th>DOTACION</th>
-                        <th>LIDER</th>
-                        <th>CAP1</th>
-                        <th>Dot1</th>
-                        <th>CAP2</th>
-                        <th>Dot2</th>
-                        <th>Horario Pres.</th>
-                        <th>DIRECCION</th>
-                        <th>Opciones</th>
+                        <th>Comuna</th>
+                        <th>Turno</th>
+                        <th>Tienda</th>
+                        <th>Stock</th>
+                        <th>Dot.Total</th>
+                        <th>Lider</th>
+                        <th>Supervisor</th>
+                        <th>Captador 1</th>
+                        <th>Dot.Cap1</th>
+                        <th>Captador 2</th>
+                        <th>Dot.Cap.2</th>
+                        <th>Hr.Present.</th>
+                        <th>Dirección</th>
+                        <th>Nómina</th>
                     </tr>
                 </thead>
                 <tbody>

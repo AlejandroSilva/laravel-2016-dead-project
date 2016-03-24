@@ -1,11 +1,10 @@
 // Librerias
 import React from 'react'
-import Jornadas from '../../models/Jornadas'
 
 // Estilos
-//import css from './SelectJornada.css'
+//import css from './XXXXX.css'
 
-class SelectJornada extends React.Component{
+class Select extends React.Component{
     constructor(props) {
         super(props)
         this.state = {
@@ -47,19 +46,22 @@ class SelectJornada extends React.Component{
     }
     render(){
         return(
-            <select name="" value={this.state.seleccionUsuario} onChange={this.onInputChange.bind(this)}>
-                <option value="1">no definido</option>
-                <option value="2">día</option>
-                <option value="3">noche</option>
-                <option value="4">día y noche</option>
+            <select name=""
+                    value={this.state.seleccionUsuario}
+                    onChange={this.onInputChange.bind(this)}
+                    style={this.props.style}>
+                {this.props.opciones.map((opcion, index)=>
+                    <option key={index} value={opcion.valor}>{opcion.texto}</option>
+                )}
             </select>
         )
     }
 }
-SelectJornada.propTypes = {
+Select.propTypes = {
     // Objetos
     seleccionada: React.PropTypes.string.isRequired,
+    opciones: React.PropTypes.array.isRequired,
     // Metodos
     onSelect: React.PropTypes.func.isRequired
 }
-export default SelectJornada
+export default Select
