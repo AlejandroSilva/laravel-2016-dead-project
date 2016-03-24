@@ -23,6 +23,7 @@
                 <th>Telefono1</th>
                 <th>Telefono2</th>
                 <th>Email</th>
+                <th>Opciones</th>
             </tr>
         </thead>
         <tbody>
@@ -44,6 +45,11 @@
                     <td>{{ $persona->telefono1 }}</td>
                     <td>{{ $persona->telefono2 }}</td>
                     <td>{{ $persona->email }}</td>
+                    <td>
+                        <a href="#" class="btn btn-primary btn-xs btn-block">
+                            Editar
+                        </a>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>SIG - @yield('title')</title>
+    <title>Oportunidad - @yield('title')</title>
     <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
     {{-- Styles --}}
