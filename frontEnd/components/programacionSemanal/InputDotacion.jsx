@@ -67,6 +67,7 @@ class InputDotacion extends React.Component{
             : css.inputDotacionInvalida
         return(
             <input
+                style={this.props.style}
                 className={classname}
                 ref={ref=>this.inputDotacion=ref}
                 type="number"

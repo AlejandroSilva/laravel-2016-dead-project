@@ -7,7 +7,7 @@ import React from 'react'
 class SelectLider extends React.Component{
     render(){
         return(
-            <select name="">
+            <select name="" style={this.props.style}>
                 {this.props.lideres.map((lid, index)=>
                     <option key={index} value={lid.id}>{`${lid.nombre1} ${lid.apellidoPaterno}`}</option>
                 )}

@@ -52821,6 +52821,10 @@
 
 	var _SelectCaptador2 = _interopRequireDefault(_SelectCaptador);
 
+	var _SelectJornada = __webpack_require__(428);
+
+	var _SelectJornada2 = _interopRequireDefault(_SelectJornada);
+
 	var _InputDotacionCaptador = __webpack_require__(427);
 
 	var _InputDotacionCaptador2 = _interopRequireDefault(_InputDotacionCaptador);
@@ -52869,8 +52873,11 @@
 	            var estadoInputDotacion = this.inputDotacion.getEstado();
 	            if (estadoInputDotacion.valid == false) return console.log('dotacion ' + estadoInputDotacion.dia + ' invalida');
 
+	            // "validar" Jornada
+	            var estadoSelectJornada = this.selectJornada.getEstado();
+
 	            // almenos uno de los ementos debe estar "dirty" para guardar los cambios
-	            if (estadoInputDia.dirty === true || estadoInputDotacion.dirty === true) {
+	            if (estadoInputDia.dirty === true || estadoInputDotacion.dirty === true || estadoSelectJornada.dirty === true) {
 	                var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
 
 	                var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
@@ -52886,6 +52893,7 @@
 	                this.props.guardarInventario({
 	                    idInventario: this.props.inventario.idInventario,
 	                    fechaProgramada: anno + '-' + mes + '-' + dia,
+	                    idJornada: estadoSelectJornada.seleccionUsuario,
 	                    //            horaLlegada: this.props.inventario.horaLlegada,
 	                    //            stockTeorico: this.props.inventario.local.stock,
 	                    dotacionAsignada: dotacion
@@ -52908,6 +52916,8 @@
 	        value: function render() {
 	            var _this2 = this;
 
+	            //console.log("render: prop.local.dotSug, state.inputDot", this.props.inventario.local.dotacionSugerida, this.state.inputDotacion)
+	            var idJornada = this.props.inventario.idJornada;
 	            return _react2.default.createElement(
 	                'tr',
 	                null,
@@ -52982,15 +52992,13 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.inventario.turno || 'PEND'
-	                        )
-	                    )
+	                    _react2.default.createElement(_SelectJornada2.default, {
+	                        ref: function ref(_ref2) {
+	                            return _this2.selectJornada = _ref2;
+	                        },
+	                        onSelect: this.guardarOCrear.bind(this),
+	                        seleccionada: this.props.inventario.idJornada
+	                    })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
@@ -53046,8 +53054,22 @@
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_InputDotacion2.default, {
-	                        ref: function ref(_ref2) {
-	                            return _this2.inputDotacion = _ref2;
+	                        style: { width: '100%', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
+	                        ref: function ref(_ref3) {
+	                            return _this2.inputDotacion = _ref3;
+	                        },
+	                        asignada: this.props.inventario.dotacionAsignada,
+	                        guardarOCrear: this.guardarOCrear.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {
+	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
+	                        },
+	                        focusRowSiguiente: function focusRowSiguiente() {
+	                            return _this2.props.focusRow(_this2.props.index + 1, 'dotacion');
+	                        } }),
+	                    _react2.default.createElement(_InputDotacion2.default, {
+	                        style: { width: '100%', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
+	                        ref: function ref(_ref4) {
+	                            return _this2.inputDotacion2 = _ref4;
 	                        },
 	                        asignada: this.props.inventario.dotacionAsignada,
 	                        guardarOCrear: this.guardarOCrear.bind(this),
@@ -53062,12 +53084,21 @@
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_SelectLider2.default, {
+	                        style: { width: '120px', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
+	                        lideres: this.props.lideres }),
+	                    _react2.default.createElement(_SelectLider2.default, {
+	                        style: { width: '120px', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
 	                        lideres: this.props.lideres })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_SelectCaptador2.default, {
+	                        style: { width: '120px', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
+	                        captadores: this.props.captadores
+	                    }),
+	                    _react2.default.createElement(_SelectCaptador2.default, {
+	                        style: { width: '120px', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
 	                        captadores: this.props.captadores
 	                    })
 	                ),
@@ -53075,12 +53106,21 @@
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_InputDotacionCaptador2.default, {
+	                        style: { width: '100%', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
+	                        asignada: '3' }),
+	                    _react2.default.createElement(_InputDotacionCaptador2.default, {
+	                        style: { width: '100%', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
 	                        asignada: '3' })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_SelectCaptador2.default, {
+	                        style: { width: '120px', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
+	                        captadores: this.props.captadores
+	                    }),
+	                    _react2.default.createElement(_SelectCaptador2.default, {
+	                        style: { width: '120px', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
 	                        captadores: this.props.captadores
 	                    })
 	                ),
@@ -53088,6 +53128,10 @@
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_InputDotacionCaptador2.default, {
+	                        style: { width: '100%', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' },
+	                        asignada: '3' }),
+	                    _react2.default.createElement(_InputDotacionCaptador2.default, {
+	                        style: { width: '100%', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' },
 	                        asignada: '3' })
 	                ),
 	                _react2.default.createElement(
@@ -53095,7 +53139,16 @@
 	                    { className: 'a' },
 	                    _react2.default.createElement(
 	                        'p',
-	                        null,
+	                        { style: { width: '100%', display: idJornada == 2 || idJornada == 4 ? 'block' : 'none' } },
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.inventario.horaLlegada
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { width: '100%', display: idJornada == 3 || idJornada == 4 ? 'block' : 'none' } },
 	                        _react2.default.createElement(
 	                            'small',
 	                            null,
@@ -53121,8 +53174,18 @@
 	                    { className: '' },
 	                    _react2.default.createElement(
 	                        'button',
-	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
+	                        { className: 'btn btn-xs btn-primary btn-block', tabIndex: '-1' },
 	                        'Editar local'
+	                    ),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-primary btn-block', tabIndex: '-1' },
+	                        'Editar Inventario'
+	                    ),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-primary btn-block', tabIndex: '-1' },
+	                        'Editar Nomina'
 	                    )
 	                )
 	            );
@@ -53460,6 +53523,7 @@
 
 	            var classname = this.state.valid ? this.state.dirty ? _InputDotacion2.default.inputDotacionDirty : _InputDotacion2.default.inputDotacion : _InputDotacion2.default.inputDotacionInvalida;
 	            return _react2.default.createElement('input', {
+	                style: this.props.style,
 	                className: classname,
 	                ref: function ref(_ref) {
 	                    return _this2.inputDotacion = _ref;
@@ -53541,7 +53605,7 @@
 	        value: function render() {
 	            return _react2.default.createElement(
 	                "select",
-	                { name: "" },
+	                { name: "", style: this.props.style },
 	                this.props.lideres.map(function (lid, index) {
 	                    return _react2.default.createElement(
 	                        "option",
@@ -53608,7 +53672,7 @@
 	        value: function render() {
 	            return _react2.default.createElement(
 	                "select",
-	                { name: "" },
+	                { name: "", style: this.props.style },
 	                this.props.captadores.map(function (cap, index) {
 	                    return _react2.default.createElement(
 	                        "option",
@@ -53679,7 +53743,7 @@
 	    _createClass(InputDotacionCaptador, [{
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement('input', {
+	            return _react2.default.createElement('input', { style: this.props.style,
 	                className: _InputDotacion2.default.inputDotacion,
 	                type: 'number',
 	                defaultValue: this.props.asignada
@@ -53700,6 +53764,139 @@
 	exports.default = InputDotacionCaptador;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputDotacionCaptador.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 428 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Jornadas = __webpack_require__(161);
+
+	var _Jornadas2 = _interopRequireDefault(_Jornadas);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
+
+
+	// Estilos
+	//import css from './SelectJornada.css'
+
+	var SelectJornada = function (_React$Component) {
+	    _inherits(SelectJornada, _React$Component);
+
+	    function SelectJornada(props) {
+	        _classCallCheck(this, SelectJornada);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SelectJornada).call(this, props));
+
+	        _this.state = {
+	            seleccionUsuario: '-',
+	            dirty: false
+	        };
+	        return _this;
+	    }
+
+	    _createClass(SelectJornada, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this.setState({
+	                seleccionUsuario: this.props.seleccionada,
+	                dirty: false
+	            });
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            var seleccionada1 = this.props.seleccionada;
+	            var seleccionada2 = nextProps.seleccionada;
+	            if (seleccionada1 !== seleccionada2) {
+	                // si esto cambia, entonces se debe hacer un "reset" del estado con los nuevos valores
+	                this.setState({ seleccionUsuario: seleccionada2, dirty: false });
+	            }
+	            if (seleccionada2 !== this.state.seleccionUsuario) {
+	                // si se reciben propiedades distintas al "state" actual, se reemplazan por las propiedades
+	                this.setState({ seleccionUsuario: seleccionada2, dirty: false });
+	            }
+	        }
+	    }, {
+	        key: 'onInputChange',
+	        value: function onInputChange(evt) {
+	            var _this2 = this;
+
+	            evt.preventDefault();
+	            var seleccionUsuario = evt.target.value;
+	            this.setState({
+	                seleccionUsuario: seleccionUsuario,
+	                dirty: this.props.seleccionada != seleccionUsuario
+	            }, function () {
+	                _this2.props.onSelect();
+	            });
+	        }
+	    }, {
+	        key: 'getEstado',
+	        value: function getEstado() {
+	            return this.state;
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'select',
+	                { name: '', value: this.state.seleccionUsuario, onChange: this.onInputChange.bind(this) },
+	                _react2.default.createElement(
+	                    'option',
+	                    { value: '1' },
+	                    'no definido'
+	                ),
+	                _react2.default.createElement(
+	                    'option',
+	                    { value: '2' },
+	                    'día'
+	                ),
+	                _react2.default.createElement(
+	                    'option',
+	                    { value: '3' },
+	                    'noche'
+	                ),
+	                _react2.default.createElement(
+	                    'option',
+	                    { value: '4' },
+	                    'día y noche'
+	                )
+	            );
+	        }
+	    }]);
+
+	    return SelectJornada;
+	}(_react2.default.Component);
+
+	SelectJornada.propTypes = {
+	    // Objetos
+	    seleccionada: _react2.default.PropTypes.string.isRequired,
+	    // Metodos
+	    onSelect: _react2.default.PropTypes.func.isRequired
+	};
+	exports.default = SelectJornada;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "SelectJornada.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 /******/ ]);

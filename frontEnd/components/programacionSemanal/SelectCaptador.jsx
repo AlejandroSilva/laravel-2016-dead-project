@@ -7,7 +7,7 @@ import React from 'react'
 class SelectCaptador extends React.Component{
     render(){
         return(
-            <select name="">
+            <select name="" style={this.props.style}>
                 {this.props.captadores.map((cap, index)=>
                     <option key={index} value={cap.id}>{`${cap.nombre1} ${cap.apellidoPaterno}`}</option>
                 )}

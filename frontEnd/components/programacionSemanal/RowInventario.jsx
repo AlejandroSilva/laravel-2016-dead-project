@@ -8,6 +8,7 @@ import InputFecha from './InputFecha.jsx'
 import InputDotacion from './InputDotacion.jsx'
 import SelectLider from './SelectLider.jsx'
 import SelectCaptador from './SelectCaptador.jsx'
+import SelectJornada from './SelectJornada.jsx'
 import InputDotacionCaptador from './InputDotacionCaptador.jsx'
 
 // Styles
@@ -37,8 +38,11 @@ class RowInventario extends React.Component{
         if(estadoInputDotacion.valid==false)
             return console.log(`dotacion ${estadoInputDotacion.dia} invalida`)
 
+        // "validar" Jornada
+        let estadoSelectJornada = this.selectJornada.getEstado()
+
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
-        if(estadoInputDia.dirty===true || estadoInputDotacion.dirty===true){
+        if(estadoInputDia.dirty===true || estadoInputDotacion.dirty===true || estadoSelectJornada.dirty===true){
             let [anno, mes, _dia] = this.props.inventario.fechaProgramada.split('-')
             let dia = estadoInputDia.dia
             let dotacion = estadoInputDotacion.dotacion
@@ -47,6 +51,7 @@ class RowInventario extends React.Component{
             this.props.guardarInventario({
                 idInventario: this.props.inventario.idInventario,
                 fechaProgramada: `${anno}-${mes}-${dia}`,
+                idJornada: estadoSelectJornada.seleccionUsuario,
     //            horaLlegada: this.props.inventario.horaLlegada,
     //            stockTeorico: this.props.inventario.local.stock,
                dotacionAsignada: dotacion
@@ -66,6 +71,7 @@ class RowInventario extends React.Component{
 
     render(){
         //console.log("render: prop.local.dotSug, state.inputDot", this.props.inventario.local.dotacionSugerida, this.state.inputDotacion)
+        let idJornada = this.props.inventario.idJornada
         return (
             <tr>
                 {/* Fecha */}
@@ -95,7 +101,11 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Turno */}
                 <td className={'a'}>
-                    <p><small>{this.props.inventario.turno || 'PEND'}</small></p>
+                    <SelectJornada
+                        ref={ref=>this.selectJornada=ref}
+                        onSelect={this.guardarOCrear.bind(this)}
+                        seleccionada={this.props.inventario.idJornada}
+                    />
                 </td>
                 {/* Tienda */}
                 <td className={'a'}>
@@ -118,7 +128,16 @@ class RowInventario extends React.Component{
                 {/* Dotacion */}
                 <td className={'a'}>
                     <InputDotacion
+                        style={{width: '100%', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
                         ref={ref=>this.inputDotacion=ref}
+                        asignada={this.props.inventario.dotacionAsignada}
+                        guardarOCrear={this.guardarOCrear.bind(this)}
+                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
+                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}/>
+
+                    <InputDotacion
+                        style={{width: '100%', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
+                        ref={ref=>this.inputDotacion2=ref}
                         asignada={this.props.inventario.dotacionAsignada}
                         guardarOCrear={this.guardarOCrear.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
@@ -127,33 +146,60 @@ class RowInventario extends React.Component{
                 {/* Lider */}
                 <td className={'a'}>
                     <SelectLider
+                        style={{width: '120px', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
+                        lideres={this.props.lideres}/>
+                    <SelectLider
+                        style={{width: '120px', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
                         lideres={this.props.lideres}/>
                 </td>
                 {/* Captador 1 */}
                 <td className={'a'}>
                     <SelectCaptador
+                        style={{width: '120px', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
+                        captadores={this.props.captadores}
+                    />
+                    <SelectCaptador
+                        style={{width: '120px', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
                         captadores={this.props.captadores}
                     />
                 </td>
                 {/* DotacionCaptador 1 */}
                 <td className={'a'}>
                     <InputDotacionCaptador
+                        style={{width: '100%', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
+                        asignada="3"/>
+                    <InputDotacionCaptador
+                        style={{width: '100%', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
                         asignada="3"/>
                 </td>
                 {/* Captador 2 */}
                 <td className={'a'}>
                     <SelectCaptador
+                        style={{width: '120px', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
+                        captadores={this.props.captadores}
+                    />
+                    <SelectCaptador
+                        style={{width: '120px', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
                         captadores={this.props.captadores}
                     />
                 </td>
                 {/* DotacionCaptador 2 */}
                 <td className={'a'}>
                     <InputDotacionCaptador
+                        style={{width: '100%', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}
+                        asignada="3"/>
+                    <InputDotacionCaptador
+                        style={{width: '100%', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}
                         asignada="3"/>
                 </td>
                 {/* Hora llegada */}
                 <td className={'a'}>
-                    <p><small>{this.props.inventario.horaLlegada}</small></p>
+                    <p style={{width: '100%', display: (idJornada==2 || idJornada==4)? 'block' : 'none'}}>
+                        <small>{this.props.inventario.horaLlegada}</small>
+                    </p>
+                    <p style={{width: '100%', display: (idJornada==3 || idJornada==4)? 'block' : 'none'}}>
+                        <small>{this.props.inventario.horaLlegada}</small>
+                    </p>
                 </td>
                 {/* Direccion */}
                 <td className={'a'}>
@@ -161,7 +207,9 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Opciones    */}
                 <td className={''}>
-                    <button className="btn btn-xs btn-primary" tabIndex="-1">Editar local</button>
+                    <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Editar local</button>
+                    <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Editar Inventario</button>
+                    <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Editar Nomina</button>
                 </td>
             </tr>
         )

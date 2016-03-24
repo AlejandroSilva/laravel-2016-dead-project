@@ -8,7 +8,7 @@ import css from './InputDotacion.css'
 class InputDotacionCaptador extends React.Component{
     render(){
         return(
-            <input
+            <input style={this.props.style}
                 className={css.inputDotacion}
                 type="number"
                 defaultValue={this.props.asignada}
