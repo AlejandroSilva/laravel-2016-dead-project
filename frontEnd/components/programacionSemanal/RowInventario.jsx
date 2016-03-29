@@ -6,7 +6,6 @@ import Tooltip from 'react-bootstrap/lib/Tooltip'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from './InputFecha.jsx'
 import InputDotacion from './InputDotacion.jsx'
-import InputDotacionCaptador from './InputDotacionCaptador.jsx'
 import Select from './Select.jsx'
 
 // Styles
@@ -65,7 +64,9 @@ class RowInventario extends React.Component{
             selectLider: this.selectLiderDia.getEstado(),
             selectSupervisor: this.selectSupervisorDia.getEstado(),
             selectCaptador1: this.selectCaptador1Dia.getEstado(),
-            selectCaptador2: this.selectCaptador2Dia.getEstado()
+            selectCaptador2: this.selectCaptador2Dia.getEstado(),
+            inputDotacionCaptador1: this.inputDotacionCaptador1Dia.getEstado(),
+            inputDotacionCaptador2: this.inputDotacionCaptador2Dia.getEstado()
         })
     }
     guardarNominaNoche(){
@@ -74,7 +75,9 @@ class RowInventario extends React.Component{
             selectLider: this.selectLiderNoche.getEstado(),
             selectSupervisor: this.selectSupervisorNoche.getEstado(),
             selectCaptador1: this.selectCaptador1Noche.getEstado(),
-            selectCaptador2: this.selectCaptador2Noche.getEstado()
+            selectCaptador2: this.selectCaptador2Noche.getEstado(),
+            inputDotacionCaptador1: this.inputDotacionCaptador1Noche.getEstado(),
+            inputDotacionCaptador2: this.inputDotacionCaptador2Noche.getEstado()
         })
     }
 
@@ -95,11 +98,28 @@ class RowInventario extends React.Component{
         
         // el SUPERVISOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
         if (estados.selectSupervisor.dirty) {
-            cambiosNomina.idLider = estados.selectSupervisor.seleccionUsuario
+            cambiosNomina.idSupervisor = estados.selectSupervisor.seleccionUsuario
         }
 
-        //queria seguir con select supervidor, pero no hay ningun supervisor disponible
-        
+        // el CAPTADOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
+        if (estados.selectCaptador1.dirty) {
+            cambiosNomina.idCaptador1 = estados.selectCaptador1.seleccionUsuario
+        }
+        if (estados.selectCaptador2.dirty) {
+            cambiosNomina.idCaptador2 = estados.selectCaptador2.seleccionUsuario
+        }
+
+        // La DOTACION del CAPTADOR es valida y ha cambiado?
+        if (estados.inputDotacionCaptador1.valid && estados.inputDotacionCaptador1.dirty) {
+            cambiosNomina.dotacionCaptador1 = estados.inputDotacionCaptador1.dotacion
+        } else if (estados.inputDotacionCaptador1.valid === false) {
+            return console.log(`dotacion del captador1: ${estados.inputDotacionCaptador1.dotacion} invalida`)
+        }
+        if (estados.inputDotacionCaptador2.valid && estados.inputDotacionCaptador2.dirty) {
+            cambiosNomina.dotacionCaptador2 = estados.inputDotacionCaptador2.dotacion
+        } else if (estados.inputDotacionCaptador2.valid === false) {
+            return console.log(`dotacion del captador2: ${estados.inputDotacionCaptador2.dotacion} invalida`)
+        }
 
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
         if(JSON.stringify(cambiosNomina)!=='{}'){
@@ -223,6 +243,7 @@ class RowInventario extends React.Component{
                             onSelect={this.guardarNominaDia.bind(this)}
                             opciones={opcionesLideres}
                             opcionNula={true}
+                            opcionNulaSeleccionable={true}
                     />
                     <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectLiderNoche=ref}
@@ -230,72 +251,105 @@ class RowInventario extends React.Component{
                             onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={opcionesLideres}
                             opcionNula={true}
+                            opcionNulaSeleccionable={true}
                     />
                 </td>
                 {/* Supervisor */}
                 <td className='a'>
                     <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectSupervisorDia=ref}
-                            seleccionada={''}                                // ToDo: arreglar esto (agregar supervisores)
+                            seleccionada={this.props.inventario.nomina_dia.idSupervisor || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
                             opciones={opcionesSupervisores}
                             opcionNula={true}
+                            opcionNulaSeleccionable={true}
                     />
                     <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectSupervisorNoche=ref}
-                            seleccionada={''}                                // ToDo: arreglar esto (agregar supervisores)
+                            seleccionada={this.props.inventario.nomina_noche.idSupervisor || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={opcionesSupervisores}
                             opcionNula={true}
+                            opcionNulaSeleccionable={true}
                     />
                 </td>
                 {/* Captador 1 */}
                 <td className={'a'}>
                     <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador1Dia=ref}
-                            seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
-                            onSelect={this.guardarInventario.bind(this)}
+                            seleccionada={this.props.inventario.nomina_dia.idCaptador1 || ''}
+                            onSelect={this.guardarNominaDia.bind(this)}
                             opciones={opcionesCaptadores}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
                     />
                     <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador1Noche=ref}
-                            seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
+                            seleccionada={this.props.inventario.nomina_noche.idCaptador1 || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={opcionesCaptadores}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
                     />
                 </td>
                 {/* DotacionCaptador 1 */}
                 <td className={'a'}>
-                    <InputDotacionCaptador
+                    <InputDotacion
                         style={{display: inventarioDia? 'block' : 'none'}}
-                        asignada="3"/>
-                    <InputDotacionCaptador
+                        ref={ref=>this.inputDotacionCaptador1Dia=ref}
+                        asignada={this.props.inventario.nomina_dia.dotacionCaptador1}
+                        onGuardar={this.guardarNominaDia.bind(this)}
+                        focusRowAnterior={()=>{}}
+                        focusRowSiguiente={()=>{}}
+                    />
+                    
+                    <InputDotacion
                         style={{display: inventarioNoche? 'block' : 'none'}}
-                        asignada="3"/>
+                        ref={ref=>this.inputDotacionCaptador1Noche=ref}
+                        asignada={this.props.inventario.nomina_noche.dotacionCaptador1}
+                        onGuardar={this.guardarNominaDia.bind(this)}
+                        focusRowAnterior={()=>{}}
+                        focusRowSiguiente={()=>{}}
+                    />
                 </td>
                 {/* Captador 2 */}
                 <td className={'a'}>
                     <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador2Dia=ref}
-                            seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
+                            seleccionada={this.props.inventario.nomina_dia.idCaptador2 || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
                             opciones={opcionesCaptadores}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
                     />
                     <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador2Noche=ref}
-                            seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
+                            seleccionada={this.props.inventario.nomina_noche.idCaptador2 || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={opcionesCaptadores}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
                     />
                 </td>
                 {/* DotacionCaptador 2 */}
                 <td className={'a'}>
-                    <InputDotacionCaptador
+                    <InputDotacion
                         style={{display: inventarioDia? 'block' : 'none'}}
-                        asignada="3"/>
-                    <InputDotacionCaptador
+                        ref={ref=>this.inputDotacionCaptador2Dia=ref}
+                        asignada={this.props.inventario.nomina_dia.dotacionCaptador2}
+                        onGuardar={this.guardarNominaDia.bind(this)}
+                        focusRowAnterior={()=>{}}
+                        focusRowSiguiente={()=>{}}
+                    />
+
+                    <InputDotacion
                         style={{display: inventarioNoche? 'block' : 'none'}}
-                        asignada="3"/>
+                        ref={ref=>this.inputDotacionCaptador2Noche=ref}
+                        asignada={this.props.inventario.nomina_noche.dotacionCaptador2}
+                        onGuardar={this.guardarNominaDia.bind(this)}
+                        focusRowAnterior={()=>{}}
+                        focusRowSiguiente={()=>{}}
+                    />
                 </td>
                 {/* Hora Presentación */}
                 <td className={'a'}>

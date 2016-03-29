@@ -51,7 +51,7 @@ class Select extends React.Component{
                     onChange={this.onInputChange.bind(this)}
                     style={this.props.style}>
                 {this.props.opcionNula
-                    ? <option value={''} disabled>--</option>
+                    ? <option value={''} disabled={this.props.opcionNulaSeleccionable===false}>--</option>
                     : null
                 }
                 {this.props.opciones.map((opcion, index)=>
@@ -66,10 +66,12 @@ Select.propTypes = {
     seleccionada: React.PropTypes.string.isRequired,
     opciones: React.PropTypes.array.isRequired,
     opcionNula: React.PropTypes.bool,
+    opcionNulaSeleccionable: React.PropTypes.bool,
     // Metodos
     onSelect: React.PropTypes.func.isRequired
 }
 Select.defaultProps = {
-    opcionNula: false
+    opcionNula: false,
+    opcionNulaSeleccionable: false
 }
 export default Select
