@@ -14,7 +14,7 @@
 }
 /* Fecha */
 .thFecha {
-    min-width: 120px;
+    width: 145px !important;
     background: white;
 }
 .tdFecha {
@@ -92,6 +92,9 @@
 .tdDotacion {
     composes: thDotacion;
     vertical-align: middle !important;
+}
+.tdDotacion > input{
+    width: 100%;
 }
 /* Jornada */
 .thJornada {

@@ -2,7 +2,7 @@
 import React from 'react'
 
 // Estilos
-//import css from './XXXXX.css'
+import css from './Select.css'
 
 class Select extends React.Component{
     constructor(props) {
@@ -47,6 +47,7 @@ class Select extends React.Component{
     render(){
         return(
             <select name=""
+                    className={(this.state.dirty? css.selectDirty : css.select)+' '+this.props.className}
                     value={this.state.seleccionUsuario}
                     onChange={this.onInputChange.bind(this)}
                     style={this.props.style}>

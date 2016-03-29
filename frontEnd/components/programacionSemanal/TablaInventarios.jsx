@@ -55,7 +55,8 @@ class TablaInventarios extends React.Component{
                         <th>Dot.Cap1</th>
                         <th>Captador 2</th>
                         <th>Dot.Cap.2</th>
-                        <th>Hr.Present.</th>
+                        <th>Hr.Pres.Lider</th>
+                        <th>Hr.Pres.Equipo</th>
                         <th>Dirección</th>
                         <th>Nómina</th>
                     </tr>

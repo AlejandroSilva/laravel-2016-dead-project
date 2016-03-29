@@ -5,6 +5,7 @@ import numeral from 'numeral'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from './InputFecha.jsx'
+import InputHora from './InputHora.jsx'
 import InputDotacion from './InputDotacion.jsx'
 import Select from './Select.jsx'
 
@@ -66,7 +67,9 @@ class RowInventario extends React.Component{
             selectCaptador1: this.selectCaptador1Dia.getEstado(),
             selectCaptador2: this.selectCaptador2Dia.getEstado(),
             inputDotacionCaptador1: this.inputDotacionCaptador1Dia.getEstado(),
-            inputDotacionCaptador2: this.inputDotacionCaptador2Dia.getEstado()
+            inputDotacionCaptador2: this.inputDotacionCaptador2Dia.getEstado(),
+            inputHoraPresentacionLider: this.inputHoraPresentacionLiderDia.getEstado(),
+            inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoDia.getEstado()
         })
     }
     guardarNominaNoche(){
@@ -77,7 +80,9 @@ class RowInventario extends React.Component{
             selectCaptador1: this.selectCaptador1Noche.getEstado(),
             selectCaptador2: this.selectCaptador2Noche.getEstado(),
             inputDotacionCaptador1: this.inputDotacionCaptador1Noche.getEstado(),
-            inputDotacionCaptador2: this.inputDotacionCaptador2Noche.getEstado()
+            inputDotacionCaptador2: this.inputDotacionCaptador2Noche.getEstado(),
+            inputHoraPresentacionLider: this.inputHoraPresentacionLiderNoche.getEstado(),
+            inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoNoche.getEstado()
         })
     }
 
@@ -85,41 +90,42 @@ class RowInventario extends React.Component{
         let cambiosNomina = {}
 
         // la DOTACION es valida y ha cambiado?
-        if (estados.inputDotacion.valid && estados.inputDotacion.dirty) {
+        if (estados.inputDotacion.valid && estados.inputDotacion.dirty)
             cambiosNomina.dotacionAsignada = estados.inputDotacion.dotacion
-        } else if (estados.inputDotacion.valid === false) {
+        else if (estados.inputDotacion.valid === false)
             return console.log(`dotacion de la nomina: ${estados.inputDotacion.dotacion} invalida`)
-        }
 
         // el LIDER es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
-        if (estados.selectLider.dirty) {
+        if (estados.selectLider.dirty)
             cambiosNomina.idLider = estados.selectLider.seleccionUsuario
-        }
         
         // el SUPERVISOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
-        if (estados.selectSupervisor.dirty) {
+        if (estados.selectSupervisor.dirty)
             cambiosNomina.idSupervisor = estados.selectSupervisor.seleccionUsuario
-        }
 
         // el CAPTADOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
-        if (estados.selectCaptador1.dirty) {
+        if (estados.selectCaptador1.dirty)
             cambiosNomina.idCaptador1 = estados.selectCaptador1.seleccionUsuario
-        }
-        if (estados.selectCaptador2.dirty) {
+        if (estados.selectCaptador2.dirty)
             cambiosNomina.idCaptador2 = estados.selectCaptador2.seleccionUsuario
-        }
 
         // La DOTACION del CAPTADOR es valida y ha cambiado?
-        if (estados.inputDotacionCaptador1.valid && estados.inputDotacionCaptador1.dirty) {
+        if (estados.inputDotacionCaptador1.valid && estados.inputDotacionCaptador1.dirty)
             cambiosNomina.dotacionCaptador1 = estados.inputDotacionCaptador1.dotacion
-        } else if (estados.inputDotacionCaptador1.valid === false) {
+        else if (estados.inputDotacionCaptador1.valid === false)
             return console.log(`dotacion del captador1: ${estados.inputDotacionCaptador1.dotacion} invalida`)
-        }
-        if (estados.inputDotacionCaptador2.valid && estados.inputDotacionCaptador2.dirty) {
+
+        if (estados.inputDotacionCaptador2.valid && estados.inputDotacionCaptador2.dirty)
             cambiosNomina.dotacionCaptador2 = estados.inputDotacionCaptador2.dotacion
-        } else if (estados.inputDotacionCaptador2.valid === false) {
+        else if (estados.inputDotacionCaptador2.valid === false)
             return console.log(`dotacion del captador2: ${estados.inputDotacionCaptador2.dotacion} invalida`)
-        }
+
+        // La HORA de llegada del equipo ha cambiado?
+        if(estados.inputHoraPresentacionLider.dirty)
+            cambiosNomina.horaPresentacionLider = estados.inputHoraPresentacionLider.hora
+        if(estados.inputHoraPresentacionEquipo.dirty)
+            cambiosNomina.horaPresentacionEquipo = estados.inputHoraPresentacionEquipo.hora
+
 
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
         if(JSON.stringify(cambiosNomina)!=='{}'){
@@ -351,14 +357,44 @@ class RowInventario extends React.Component{
                         focusRowSiguiente={()=>{}}
                     />
                 </td>
-                {/* Hora Presentación */}
+                {/* Hora Presentación Lider */}
                 <td className={'a'}>
-                    <p style={{display: inventarioDia? 'block' : 'none'}}>
-                        <input type="time" defaultValue={this.props.inventario.horaLlegada}/>
-                    </p>
-                    <p style={{display: inventarioNoche? 'block' : 'none'}}>
-                        <input type="time" defaultValue={this.props.inventario.horaLlegada}/>
-                    </p>
+                    <InputHora
+                        style={{display: inventarioDia? 'block' : 'none'}}
+                        ref={ref=>this.inputHoraPresentacionLiderDia=ref}
+                        asignada={this.props.inventario.nomina_dia.horaPresentacionLider}
+                        onGuardar={this.guardarNominaDia.bind(this)}
+                        focusRowAnterior={()=>{}}
+                        focusRowSiguiente={()=>{}}
+                    />
+                    <InputHora
+                        style={{display: inventarioNoche? 'block' : 'none'}}
+                        ref={ref=>this.inputHoraPresentacionLiderNoche=ref}
+                        asignada={this.props.inventario.nomina_noche.horaPresentacionLider}
+                        onGuardar={this.guardarNominaNoche.bind(this)}
+                        focusRowAnterior={()=>{}}
+                        focusRowSiguiente={()=>{}}
+                    />
+
+                </td>
+                {/* Hora Presentación Equipo*/}
+                <td className={'b'}>
+                    <InputHora
+                        style={{display: inventarioDia? 'block' : 'none'}}
+                        ref={ref=>this.inputHoraPresentacionEquipoDia=ref}
+                        asignada={this.props.inventario.nomina_dia.horaPresentacionEquipo}
+                        onGuardar={this.guardarNominaDia.bind(this)}
+                        focusRowAnterior={()=>{}}
+                        focusRowSiguiente={()=>{}}
+                    />
+                    <InputHora
+                        style={{display: inventarioNoche? 'block' : 'none'}}
+                        ref={ref=>this.inputHoraPresentacionEquipoNoche=ref}
+                        asignada={this.props.inventario.nomina_noche.horaPresentacionEquipo}
+                        onGuardar={this.guardarNominaNoche.bind(this)}
+                        focusRowAnterior={()=>{}}
+                        focusRowSiguiente={()=>{}}
+                    />
                 </td>
                 {/* Dirección */}
                 <td className={'a'}>

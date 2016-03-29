@@ -52,6 +52,12 @@ class NominasController extends Controller {
             //  Dotacion Captador 2
             if(isset($request->dotacionCaptador2))
                 $nomina->dotacionCaptador2 = $request->dotacionCaptador2;
+            // Hora llegada Lider
+            if(isset($request->horaPresentacionLider))
+                $nomina->horaPresentacionLider = $request->horaPresentacionLider;
+            // hora llegada Equipo
+            if(isset($request->horaPresentacionEquipo))
+                $nomina->horaPresentacionEquipo = $request->horaPresentacionEquipo;
 
             $nomina->save();
 
