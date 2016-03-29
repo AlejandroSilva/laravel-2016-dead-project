@@ -53185,7 +53185,7 @@
 	                        ref: function ref(_ref6) {
 	                            return _this2.selectLiderDia = _ref6;
 	                        },
-	                        seleccionada: this.props.inventario.nomina_dia.idLider || "-1",
+	                        seleccionada: this.props.inventario.nomina_dia.idLider || '',
 	                        onSelect: this.guardarNominaDia.bind(this),
 	                        opciones: opcionesLideres,
 	                        opcionNula: true
@@ -53194,7 +53194,7 @@
 	                        ref: function ref(_ref7) {
 	                            return _this2.selectLiderNoche = _ref7;
 	                        },
-	                        seleccionada: this.props.inventario.nomina_noche.idLider || "-1",
+	                        seleccionada: this.props.inventario.nomina_noche.idLider || '',
 	                        onSelect: this.guardarNominaNoche.bind(this),
 	                        opciones: opcionesLideres,
 	                        opcionNula: true

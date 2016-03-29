@@ -219,14 +219,14 @@ class RowInventario extends React.Component{
                 <td className={'a'}>
                     <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectLiderDia=ref}
-                            seleccionada={ this.props.inventario.nomina_dia.idLider || "-1"}
+                            seleccionada={ this.props.inventario.nomina_dia.idLider || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
                             opciones={opcionesLideres}
                             opcionNula={true}
                     />
                     <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectLiderNoche=ref}
-                            seleccionada={ this.props.inventario.nomina_noche.idLider || "-1"}
+                            seleccionada={ this.props.inventario.nomina_noche.idLider || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={opcionesLideres}
                             opcionNula={true}

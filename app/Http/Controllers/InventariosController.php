@@ -73,7 +73,7 @@ class InventariosController extends Controller {
             $inventario->idLocal = $request->idLocal;
             $inventario->idJornada = $request->idJornada;
             $inventario->fechaProgramada = $request->fechaProgramada;
-            $inventario->dotacionAsignadaTotal = $request->dotacionAsignadaTotal;
+            $inventario->dotacionAsignadaTotal = $local->dotacionSugerida();
             // todo $inventario->fechaStock = $request->fechaStock;
             // todo $inventario->stockTeorico = $request->stockTeorico;
 
