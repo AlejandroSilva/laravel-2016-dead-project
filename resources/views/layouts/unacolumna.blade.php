@@ -17,7 +17,7 @@
                 <ul class="nav navbar-nav">
                     <li class="{{ "dropdown " + (Request::is('inventario*') ? 'active' : '') }}">
                         {{-- MENU PRINCIPAL: GESTION OPERACIONAL --}}
-                        <a id="drop-operacional" href="{{ url('programacion') }}" class="dropdown-toggle" data-toggle="dropdown">
+                        <a id="drop-operacional" href="#" class="dropdown-toggle" data-toggle="dropdown">
                             Gestión Operacional <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="drop-operacional">
