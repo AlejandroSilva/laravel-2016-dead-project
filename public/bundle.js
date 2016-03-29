@@ -53066,7 +53066,7 @@
 	                        _react2.default.createElement(
 	                            'small',
 	                            null,
-	                            this.props.inventario.local.nombreRegion
+	                            this.props.inventario.local.direccion.comuna.provincia.region.numero
 	                        )
 	                    )
 	                ),
@@ -53079,7 +53079,7 @@
 	                        _react2.default.createElement(
 	                            'small',
 	                            null,
-	                            this.props.inventario.local.nombreComuna
+	                            this.props.inventario.local.direccion.comuna.nombre
 	                        )
 	                    )
 	                ),

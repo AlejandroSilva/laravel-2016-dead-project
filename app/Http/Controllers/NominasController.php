@@ -39,7 +39,7 @@ class NominasController extends Controller {
             $nomina->save();
 
             // entregar la informacion completa del inventario al que pertenece esta nomina
-            $inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
+            $inventarioPadre = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
             return response()->json(
                 Inventarios::with([
                     'local.cliente',
@@ -47,7 +47,7 @@ class NominasController extends Controller {
                     'local.direccion.comuna.provincia.region',
                     'nominaDia',
                     'nominaNoche'
-                ])->find($inventario->idInventario),
+                ])->find($inventarioPadre->idInventario),
                 200
             );
 

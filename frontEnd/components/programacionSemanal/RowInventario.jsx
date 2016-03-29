@@ -152,11 +152,11 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Region */}
                 <td className={'a'}>
-                    <p><small>{this.props.inventario.local.nombreRegion}</small></p>
+                    <p><small>{this.props.inventario.local.direccion.comuna.provincia.region.numero}</small></p>
                 </td>
                 {/* Comuna */}
                 <td className={'a'}>
-                    <p><small>{this.props.inventario.local.nombreComuna}</small></p>
+                    <p><small>{this.props.inventario.local.direccion.comuna.nombre}</small></p>
                 </td>
                 {/* Turno */}
                 <td className={'a'}>
