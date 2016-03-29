@@ -53,6 +53,8 @@ Route::group(['middleware' => ['web']], function (){
     Route::get('api/inventario/{fecha1}/al/{fecha2}',   'InventariosController@api_getPorRango');
     Route::get('api/inventario/{idInventario}',         'InventariosController@api_get');
     Route::put('api/inventario/{idInventario}',         'InventariosController@api_actualizar');
+    Route::get('api/nomina/{idNomina}',                 'NominasController@api_get');
+    Route::put('api/nomina/{idNomina}',                 'NominasController@api_actualizar');
 
     Route::get('nominas',               function(){return view('operacional.nominas.nominas-index');});
     Route::get('nomFinales',            function(){return view('operacional.nominasFinales.nominasFinales-index');});
@@ -79,5 +81,4 @@ Route::group(['middleware' => ['web']], function (){
     //        LocalesTableSeeder::parseAndInsert('/home/asilva/Escritorio/localesPreunic.csv');
     //    });
     //});
-
 });

@@ -146,7 +146,12 @@ class ProgramacionMensual extends React.Component{
     guardarOCrearInventario(formInventario){
         if(formInventario.idInventario){
             // Actualizar los datos del inventario
-            api.inventario.actualizar(formInventario.idInventario, formInventario)
+            api.inventario.actualizar(formInventario.idInventario, {
+                    idInventario: formInventario.idInventario,
+                    fechaProgramada: formInventario.fechaProgramada,
+                    dotacionAsignadaTotal: formInventario.dotacionAsignadaTotal,
+                    idJornada: formInventario.idJornada,
+                })
                 .then(inventarioActualizado=>{
                     console.log('inventario actualizado correctamente')
                     // actualizar los datos y el state de la app
@@ -155,8 +160,12 @@ class ProgramacionMensual extends React.Component{
                     this.setState(this.blackbox.getListaFiltrada())
                 })
         }else{
-            // Crear los datos del inventario en el servidor
-            api.inventario.nuevo(formInventario)
+            // Crear los datos del inventario en el servidor (quitar todos los campos que no interesan)
+            api.inventario.nuevo({
+                idLocal: formInventario.idLocal,
+                idJornada: formInventario.idJornada,
+                fechaProgramada: formInventario.fechaProgramada
+            })
                 .then(inventarioCreado=>{
                     this.blackbox.actualizarDatosInventario(formInventario, inventarioCreado)
                     // actualizar los datos y el state de la app

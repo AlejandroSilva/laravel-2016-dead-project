@@ -21,6 +21,8 @@ class InputFecha extends React.Component{
         })
     }
     componentWillReceiveProps(nextProps){
+        // apenas se reciba una nueva propiedad, reemplazar el estado independiente de su contenido
+
         // let [anno1, mes1, dia1] = this.props.fecha.split('-')
         let [anno2, mes2, dia2] = nextProps.fecha.split('-')
         // if(dia1!==dia2){
@@ -38,13 +40,13 @@ class InputFecha extends React.Component{
         if((evt.keyCode===9 && evt.shiftKey===false) || evt.keyCode===40 || evt.keyCode===13){
             // 9 = tab, flechaAbajo = 40,  13 = enter
             evt.preventDefault()
-            this.props.guardarOCrear()
+            this.props.onGuardar()
             this.props.focusRowSiguiente()
 
         }else if((evt.keyCode===9 && evt.shiftKey===true) || evt.keyCode===38) {
             // flechaArriba = 38, shift+tab
             evt.preventDefault()
-            this.props.guardarOCrear()
+            this.props.onGuardar()
             this.props.focusRowAnterior()
         }
     }
@@ -79,7 +81,7 @@ class InputFecha extends React.Component{
                        value={this.state.dia}
                        onKeyDown={this.inputOnKeyDown.bind(this)}
                        onChange={this.onInputChange.bind(this)}
-                       onBlur={()=>this.props.guardarOCrear()}
+                       onBlur={()=>this.props.onGuardar()}
                 />
                 <input className={css.inputMes} type="number" disabled
                        value={mes}/>
@@ -95,6 +97,6 @@ InputFecha.propTypes = {
     // Metodos
     focusRowAnterior: React.PropTypes.func.isRequired,
     focusRowSiguiente: React.PropTypes.func.isRequired,
-    guardarOCrear: React.PropTypes.func.isRequired
+    onGuardar: React.PropTypes.func.isRequired
 }
 export default InputFecha

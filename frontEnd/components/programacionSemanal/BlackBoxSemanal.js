@@ -43,7 +43,8 @@ export default class BlackBoxSemanal{
     actualizarInventario(inventarioActualizado){
         this.lista = this.lista.map(inventario=> {
             if (inventario.idInventario == inventarioActualizado.idInventario) {
-                inventario = Object.assign(inventario, inventarioActualizado)
+                //inventario = Object.assign(inventario, inventarioActualizado)
+                return inventarioActualizado
             }
             return inventario
         })

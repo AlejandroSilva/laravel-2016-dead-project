@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 // Modelos
 use App\Clientes;
 use App\Inventarios;
+use App\Locales;
+use App\Nominas;
 
 class InventariosController extends Controller {
     /**
@@ -49,24 +51,60 @@ class InventariosController extends Controller {
             'idJornada'=> 'required',
             // otros campos
             'fechaProgramada'=> 'required',
-            'horaLlegada'=> 'required',
-            'stockTeorico'=> 'required',
-            'dotacionAsignada'=> 'required'
+            //'horaLlegada'=> 'required',
+            //'stockTeorico'=> 'required',
+            //'dotacionAsignadaTotal'=> 'required'
         ]);
         if($validator->fails()){
             return response()->json([
                 'request'=> $request->all(),
                 'errors'=> $validator->errors()
             ], 400);
-//            return redirect('inventario/nuevo')->withInput()->withErrors($validator);
         }else{
+            $local = Locales::find($request->idLocal);
+            if(!$local){
+                return response()->json([
+                    'request'=> $request->all(),
+                    'errors'=> 'local no encontrado / no existe'
+                ], 404);
+            }
+
             $inventario = new Inventarios();
             $inventario->idLocal = $request->idLocal;
             $inventario->idJornada = $request->idJornada;
             $inventario->fechaProgramada = $request->fechaProgramada;
-            $inventario->horaLlegada = $request->horaLlegada;
-            $inventario->stockTeorico = $request->stockTeorico;
-            $inventario->dotacionAsignada = $request->dotacionAsignada;
+            $inventario->dotacionAsignadaTotal = $request->dotacionAsignadaTotal;
+            // todo $inventario->fechaStock = $request->fechaStock;
+            // todo $inventario->stockTeorico = $request->stockTeorico;
+
+            // Crear las dos nominas
+            $nominaDia = new Nominas();
+            // Lider, Captador1, Captador2 no se definen
+            $nominaDia->horaPresentacionLider = $local->llegadaSugeridaLider();
+            $nominaDia->horaPresentacionEquipo = $local->llegadaSugeridaPersonal();
+            // Todo: la dotacion sugerida deberia dividirse en dos cuando la jornada sea doble:
+            $nominaDia->dotacionAsignada = $local->dotacionSugerida();
+            $nominaDia->dotacionCaptador1 = 0;
+            $nominaDia->dotacionCaptador2 = 0;
+            $nominaDia->horaTermino = '';
+            $nominaDia->horaTerminoConteo = '';
+            $nominaDia->save();
+
+            $nominaNoche = new Nominas();
+            // Lider, Captador1, Captador2 no se definen
+            $nominaNoche->horaPresentacionLider = $local->llegadaSugeridaLider();
+            $nominaNoche->horaPresentacionEquipo = $local->llegadaSugeridaPersonal();
+            // Todo: la dotacion sugerida deberia dividirse en dos cuando la jornada sea doble:
+            $nominaNoche->dotacionAsignada = $local->dotacionSugerida();
+            $nominaNoche->dotacionCaptador1 = 0;
+            $nominaNoche->dotacionCaptador2 = 0;
+            $nominaNoche->horaTermino = '';
+            $nominaNoche->horaTerminoConteo = '';
+            $nominaNoche->save();
+
+            $inventario->nominaDia()->associate($nominaDia);
+            $inventario->nominaNoche()->associate($nominaNoche);
+
             $resultado =  $inventario->save();
 
             if($resultado){
@@ -79,7 +117,6 @@ class InventariosController extends Controller {
                     'inventario'=>$inventario
                 ], 400);
             }
-//            return view('operacional.inventario.inventario-nuevo-ok');
         }
     }
 
@@ -98,23 +135,25 @@ class InventariosController extends Controller {
         $inventario = Inventarios::find($idInventario);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
         if($inventario){
-            if(isset($request->idJornada))
-                $inventario->idJornada = $request->idJornada;
             if(isset($request->fechaProgramada))
                 $inventario->fechaProgramada = $request->fechaProgramada;
-            if(isset($request->horaLlegada))
-                $inventario->horaLlegada = $request->horaLlegada;
-            if(isset($request->stockTeorico))
-                $inventario->stockTeorico = $request->stockTeorico;
-            if(isset($request->dotacionAsignada))
-                $inventario->dotacionAsignada = $request->dotacionAsignada;
+            if(isset($request->dotacionAsignadaTotal))
+                $inventario->dotacionAsignadaTotal = $request->dotacionAsignadaTotal;
+            if(isset($request->idJornada))
+                $inventario->idJornada = $request->idJornada;
 
-            $resultado =  $inventario->save();
+            $resultado = $inventario->save();
 
             if($resultado) {
                 // mostrar el dato tal cual como esta en la BD
                 return response()->json(
-                    Inventarios::find($inventario->idInventario),
+                    Inventarios::with([
+                        'local.cliente',
+                        'local.formatoLocal',
+                        'local.direccion.comuna.provincia.region',
+                        'nominaDia',
+                        'nominaNoche'
+                    ])->find($inventario->idInventario),
                     200);
             }else{
                 return response()->json([
@@ -145,7 +184,9 @@ class InventariosController extends Controller {
         $inventarios = Inventarios::with([
             'local.cliente',
             'local.formatoLocal',
-            'local.direccion.comuna.provincia.region'
+            'local.direccion.comuna.provincia.region',
+            'nominaDia',
+            'nominaNoche'
         ])
             ->where('fechaProgramada', '>=', $annoMesDia1)
             ->where('fechaProgramada', '<=', $annoMesDia2)

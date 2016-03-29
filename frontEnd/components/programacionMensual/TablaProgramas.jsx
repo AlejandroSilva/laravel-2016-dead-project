@@ -63,7 +63,7 @@ class TablaProgramas extends React.Component{
                             </th>
                             <th className={css.thComuna}>Comuna</th>
                             <th className={css.thStock}>Stock</th>
-                            <th className={css.thDotacion}>Dotación</th>
+                            <th className={css.thDotacion}>Dot.Total</th>
                             <th className={css.thJornada}>Jornada</th>
                             {/*<th className={css.thEstado}>Estado</th>*/}
                             <th className={css.thOpciones}>Opciones</th>

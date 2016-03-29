@@ -20389,6 +20389,11 @@
 	        getPorRango: function getPorRango(fechaInicio, fechaFin) {
 	            return _axios2.default.get('/api/inventario/' + fechaInicio + '/al/' + fechaFin);
 	        }
+	    },
+	    nomina: {
+	        actualizar: function actualizar(idNomina, datos) {
+	            return _axios2.default.put('/api/nomina/' + idNomina, datos);
+	        }
 	    }
 	};
 
@@ -21929,7 +21934,12 @@
 
 	            if (formInventario.idInventario) {
 	                // Actualizar los datos del inventario
-	                _v2.default.inventario.actualizar(formInventario.idInventario, formInventario).then(function (inventarioActualizado) {
+	                _v2.default.inventario.actualizar(formInventario.idInventario, {
+	                    idInventario: formInventario.idInventario,
+	                    fechaProgramada: formInventario.fechaProgramada,
+	                    dotacionAsignadaTotal: formInventario.dotacionAsignadaTotal,
+	                    idJornada: formInventario.idJornada
+	                }).then(function (inventarioActualizado) {
 	                    console.log('inventario actualizado correctamente');
 	                    // actualizar los datos y el state de la app
 	                    _this6.blackbox.actualizarDatosInventario(formInventario, inventarioActualizado);
@@ -21937,8 +21947,12 @@
 	                    _this6.setState(_this6.blackbox.getListaFiltrada());
 	                });
 	            } else {
-	                // Crear los datos del inventario en el servidor
-	                _v2.default.inventario.nuevo(formInventario).then(function (inventarioCreado) {
+	                // Crear los datos del inventario en el servidor (quitar todos los campos que no interesan)
+	                _v2.default.inventario.nuevo({
+	                    idLocal: formInventario.idLocal,
+	                    idJornada: formInventario.idJornada,
+	                    fechaProgramada: formInventario.fechaProgramada
+	                }).then(function (inventarioCreado) {
 	                    _this6.blackbox.actualizarDatosInventario(formInventario, inventarioCreado);
 	                    // actualizar los datos y el state de la app
 	                    // actualizar los filtros, y la lista ordenada de locales
@@ -35291,8 +35305,7 @@
 	                    nombreComuna: '-',
 	                    nombreProvincia: '-',
 	                    nombreRegion: '-',
-	                    dotacionSugerida: 0,
-	                    horaLlegadaSugerida: "00:00:00"
+	                    dotacionSugerida: 0
 	                }
 	            };
 	        }
@@ -44815,7 +44828,7 @@
 	                            _react2.default.createElement(
 	                                'th',
 	                                { className: _RowInventario4.default.thDotacion },
-	                                'Dotación'
+	                                'Dot.Total'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
@@ -45741,19 +45754,19 @@
 	            var dia = _props$inventario$fec2[2];
 
 	            var dotacionSugerida = this.props.inventario.local.dotacionSugerida;
-	            var dotacionAsignada = this.props.inventario.dotacionAsignada;
+	            var dotacionAsignadaTotal = this.props.inventario.dotacionAsignadaTotal;
 	            var jornadaInventario = this.props.inventario.idJornada;
 	            var jornadaLocal = this.props.inventario.local.idJornadaSugerida;
-	            console.log("will mount: dotacionAsignada, dotacionSugerida, (nombre) ", dotacionAsignada, dotacionSugerida, dotacionAsignada || dotacionSugerida);
+	            console.log("will mount: dotacionAsignadaTotal, dotacionSugerida, (nombre) ", dotacionAsignadaTotal, dotacionSugerida, dotacionAsignadaTotal || dotacionSugerida);
 	            console.log("will mount comuna: ", this.props.inventario.local.nombreComuna); // no tienen la informacion, como se esperaba
 	            this.setState({
 	                inputDia: dia,
 	                inputMes: mes,
 	                inputAnno: anno,
-	                inputDotacion: dotacionAsignada || dotacionSugerida,
+	                inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
 	                selectJornada: jornadaInventario || jornadaLocal,
 	                diaValido: this._diaValido(dia),
-	                dotacionValida: this._dotacionValida(dotacionAsignada || dotacionSugerida)
+	                dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
 	            });
 	        }
 	    }, {
@@ -45792,8 +45805,8 @@
 	                this.setState({ inputDia: dia2, inputMes: mes2, inputAnno: anno2, diaValido: this._diaValido(dia2) });
 
 	                // se recibio una nueva dotacion?
-	                var dotacion1 = this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida;
-	                var dotacion2 = nextProps.inventario.dotacionAsignada || nextProps.inventario.local.dotacionSugerida;
+	                var dotacion1 = this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida;
+	                var dotacion2 = nextProps.inventario.dotacionAsignadaTotal || nextProps.inventario.local.dotacionSugerida;
 	                console.log("AAAA dotacionAntigua, dotacionNueva,", dotacion1, dotacion2);
 	                //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
 	                this.setState({ inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2) });
@@ -45818,7 +45831,7 @@
 	                var mes = _nextProps$inventario4[1];
 	                var dia = _nextProps$inventario4[2];
 
-	                var dotacionAsignada = nextProps.inventario.dotacionAsignada;
+	                var dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal;
 	                var dotacionSugerida = nextProps.inventario.local.dotacionSugerida;
 	                var jornadaInventario = nextProps.inventario.idJornada;
 	                var jornadaLocal = nextProps.inventario.local.idJornadaSugerida;
@@ -45826,12 +45839,12 @@
 	                    inputDia: dia,
 	                    inputMes: mes,
 	                    inputAnno: anno,
-	                    inputDotacion: dotacionAsignada || dotacionSugerida,
+	                    inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
 	                    selectJornada: jornadaInventario || jornadaLocal,
 	                    diaValido: this._diaValido(dia),
-	                    dotacionValida: this._dotacionValida(dotacionAsignada || dotacionSugerida)
+	                    dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
 	                });
-	                console.log("BBBB dotacionAsignada, dotacionSugerida", dotacionAsignada, dotacionSugerida);
+	                console.log("BBBB dotacionAsignadaTotal, dotacionSugerida", dotacionAsignadaTotal, dotacionSugerida);
 	            }
 	            //console.log(this.props.inventario.idDummy, nextProps.inventario.idDummy, mismoInventario)
 	            //console.log(this.props.inventario.idDummy, dotacionAsignada, dotacionSugerida)
@@ -45879,9 +45892,12 @@
 	    }, {
 	        key: 'onSelectJornadaChange',
 	        value: function onSelectJornadaChange(evt) {
+	            var _this2 = this;
+
 	            var jornada = evt.target.value;
-	            this.setState({ selectJornada: jornada });
-	            this.guardarOCrear();
+	            this.setState({ selectJornada: jornada }, function () {
+	                _this2.guardarOCrear();
+	            });
 	        }
 	    }, {
 	        key: '_diaValido',
@@ -45904,9 +45920,9 @@
 	            var mes = _props$inventario$fec6[1];
 	            var dia = _props$inventario$fec6[2];
 
-	            var isDirty = this.state.inputDia != dia || this.state.inputDotacion != (this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida) || this.state.selectJornada != (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida);
+	            var isDirty = this.state.inputDia != dia || this.state.inputDotacion != (this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) || this.state.selectJornada != (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida);
 	            //console.log("dia ", this.state.inputDia, dia, this.state.inputDia!==dia)
-	            //console.log("dotac ", this.state.inputDotacion, (this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida), this.state.inputDotacion!==(this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida) )
+	            //console.log("dotac ", this.state.inputDotacion, (this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida), this.state.inputDotacion!==(this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) )
 	            //console.log("jornada ", this.state.selectJornada, (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida), this.state.selectJornada!==(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida))
 	            console.log("isDirty ", isDirty);
 	            return isDirty;
@@ -45932,9 +45948,9 @@
 	                    idLocal: this.props.inventario.local.idLocal,
 	                    idJornada: jornada,
 	                    fechaProgramada: fecha,
-	                    horaLlegada: this.props.inventario.horaLlegada || this.props.inventario.local.horaLlegadaSugerida,
+	                    //horaLlegada: this.props.inventario.horaLlegada || this.props.inventario.local.horaLlegadaSugerida,
 	                    stockTeorico: this.props.inventario.local.stock,
-	                    dotacionAsignada: dotacion
+	                    dotacionAsignadaTotal: dotacion
 	                });
 	            } else {
 	                console.log('datos invalidos');
@@ -45948,7 +45964,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this2 = this;
+	            var _this3 = this;
 
 	            console.log("render: prop.local.dotSug, state.inputDot", this.props.inventario.local.dotacionSugerida, this.state.inputDotacion);
 	            return _react2.default.createElement(
@@ -45965,7 +45981,7 @@
 	                    _react2.default.createElement('input', { className: this.state.diaValido ? _RowInventario2.default.inputDia : _RowInventario2.default.inputDiaInvalido,
 	                        type: 'number', min: 0, max: 31,
 	                        ref: function ref(_ref) {
-	                            return _this2.inputDia = _ref;
+	                            return _this3.inputDia = _ref;
 	                        },
 	                        value: this.state.inputDia,
 	                        onChange: this.onInputDiaChange.bind(this),
@@ -46094,7 +46110,7 @@
 	                            value: this.state.inputDotacion,
 	                            onChange: this.onInputDotacionChange.bind(this),
 	                            ref: function ref(_ref2) {
-	                                return _this2.inputDotacion = _ref2;
+	                                return _this3.inputDotacion = _ref2;
 	                            },
 	                            onKeyDown: this.inputOnKeyDown.bind(this, 'dotacion'),
 	                            onBlur: this.guardarOCrear.bind(this) })
@@ -52382,15 +52398,28 @@
 
 	    }, {
 	        key: 'guardarInventario',
-	        value: function guardarInventario(formInventario) {
+	        value: function guardarInventario(idInventario, formInventario) {
 	            var _this3 = this;
 
-	            _v2.default.inventario.actualizar(formInventario.idInventario, formInventario).then(function (inventarioActualizado) {
+	            _v2.default.inventario.actualizar(idInventario, formInventario).then(function (inventarioActualizado) {
 	                console.log('inventario actualizado correctamente');
 	                // actualizar los datos y el state de la app
 	                _this3.blackboxSemanal.actualizarInventario(inventarioActualizado);
 	                // actualizar los filtros, y la lista ordenada de locales
 	                _this3.setState(_this3.blackboxSemanal.getListaFiltrada()); // {inventariosFiltrados: ...}
+	            });
+	        }
+	    }, {
+	        key: 'guardarNomina',
+	        value: function guardarNomina(idNomina, datos) {
+	            var _this4 = this;
+
+	            _v2.default.nomina.actualizar(idNomina, datos).then(function (inventarioActualizado) {
+	                console.log('nomina actualizada correctamente');
+	                // actualizar los datos y el state de la app
+	                _this4.blackboxSemanal.actualizarInventario(inventarioActualizado);
+	                // actualizar los filtros, y la lista ordenada de locales
+	                _this4.setState(_this4.blackboxSemanal.getListaFiltrada()); // {inventariosFiltrados: ...}
 	            });
 	        }
 	    }, {
@@ -52426,9 +52455,11 @@
 	                ),
 	                _react2.default.createElement(_TablaInventarios2.default, {
 	                    lideres: window.laravelLideres,
+	                    supervisores: window.laravelSupervisores,
 	                    captadores: window.laravelCaptadores,
 	                    inventarios: this.state.inventariosFiltrados,
-	                    guardarInventario: this.guardarInventario.bind(this)
+	                    guardarInventario: this.guardarInventario.bind(this),
+	                    guardarNomina: this.guardarNomina.bind(this)
 	                })
 	            );
 	        }
@@ -52523,7 +52554,8 @@
 	        value: function actualizarInventario(inventarioActualizado) {
 	            this.lista = this.lista.map(function (inventario) {
 	                if (inventario.idInventario == inventarioActualizado.idInventario) {
-	                    inventario = Object.assign(inventario, inventarioActualizado);
+	                    //inventario = Object.assign(inventario, inventarioActualizado)
+	                    return inventarioActualizado;
 	                }
 	                return inventario;
 	            });
@@ -52747,9 +52779,11 @@
 	                            },
 	                            inventario: inventario,
 	                            lideres: _this2.props.lideres,
+	                            supervisores: _this2.props.supervisores,
 	                            captadores: _this2.props.captadores
 	                            // Metodos
 	                            , guardarInventario: _this2.props.guardarInventario,
+	                            guardarNomina: _this2.props.guardarNomina,
 	                            focusRow: _this2.focusRow.bind(_this2)
 	                        });
 	                    })
@@ -52763,12 +52797,13 @@
 
 	TablaInventarios.propTypes = {
 	    // Objetos
-	    //inventariosFiltrados: React.PropTypes.array.isRequired,
-	    //filtroClientes: React.PropTypes.array.isRequired,
-	    //filtroRegiones: React.PropTypes.array.isRequired,
+	    lideres: _react2.default.PropTypes.array.isRequired,
+	    supervisores: _react2.default.PropTypes.array.isRequired,
+	    captadores: _react2.default.PropTypes.array.isRequired,
 	    // Metodos
 	    //actualizarFiltro: React.PropTypes.func.isRequired,
-	    guardarInventario: _react2.default.PropTypes.func.isRequired
+	    guardarInventario: _react2.default.PropTypes.func.isRequired,
+	    guardarNomina: _react2.default.PropTypes.func.isRequired
 	};
 	exports.default = TablaInventarios;
 
@@ -52814,11 +52849,11 @@
 
 	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
 
-	var _InputDotacionCaptador = __webpack_require__(428);
+	var _InputDotacionCaptador = __webpack_require__(425);
 
 	var _InputDotacionCaptador2 = _interopRequireDefault(_InputDotacionCaptador);
 
-	var _Select = __webpack_require__(427);
+	var _Select = __webpack_require__(426);
 
 	var _Select2 = _interopRequireDefault(_Select);
 
@@ -52857,20 +52892,13 @@
 	    }
 
 	    _createClass(RowInventario, [{
-	        key: 'guardarOCrear',
-	        value: function guardarOCrear() {
-	            // validar DIA
+	        key: 'guardarInventario',
+	        value: function guardarInventario() {
+	            var cambiosInventario = {};
+
+	            // el DIA es valido, y ha cambiado?
 	            var estadoInputDia = this.inputDia.getEstado();
-	            if (estadoInputDia.valid == false) return console.log('fecha ' + estadoInputDia.dia + ' invalida');
-	            // validar DOTACION
-	            var estadoInputDotacion = this.inputDotacion.getEstado();
-	            if (estadoInputDotacion.valid == false) return console.log('dotacion ' + estadoInputDotacion.dia + ' invalida');
-
-	            // "validar" Jornada
-	            var estadoSelectJornada = this.selectJornada.getEstado();
-
-	            // almenos uno de los ementos debe estar "dirty" para guardar los cambios
-	            if (estadoInputDia.dirty === true || estadoInputDotacion.dirty === true || estadoSelectJornada.dirty === true) {
+	            if (estadoInputDia.valid && estadoInputDia.dirty) {
 	                var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
 
 	                var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
@@ -52879,20 +52907,83 @@
 	                var mes = _props$inventario$fec2[1];
 	                var _dia = _props$inventario$fec2[2];
 
-	                var dia = estadoInputDia.dia;
-	                var dotacion = estadoInputDotacion.dotacion;
-	                console.log("guardando inventario");
+	                cambiosInventario.fechaProgramada = anno + '-' + mes + '-' + estadoInputDia.dia;
+	            } else if (estadoInputDia.valid === false) {
+	                return console.log('fecha ' + estadoInputDia.dia + ' invalida');
+	            }
 
-	                this.props.guardarInventario({
-	                    idInventario: this.props.inventario.idInventario,
-	                    fechaProgramada: anno + '-' + mes + '-' + dia,
-	                    idJornada: estadoSelectJornada.seleccionUsuario,
-	                    //            horaLlegada: this.props.inventario.horaLlegada,
-	                    //            stockTeorico: this.props.inventario.local.stock,
-	                    dotacionAsignada: dotacion
-	                });
+	            // la DOTACION es valida y ha cambiado?
+	            var estadoInputDotacionTotal = this.inputDotacionTotal.getEstado();
+	            if (estadoInputDotacionTotal.valid && estadoInputDotacionTotal.dirty) {
+	                cambiosInventario.dotacionAsignadaTotal = estadoInputDotacionTotal.dotacion;
+	            } else if (estadoInputDotacionTotal.valid === false) {
+	                return console.log('dotacion total: ' + estadoInputDotacionTotal.dotacion + ' invalida');
+	            }
+
+	            // la JORNADA es valida y ha cambiado
+	            var estadoSelectJornada = this.selectJornada.getEstado();
+	            if (estadoSelectJornada.dirty) cambiosInventario.idJornada = estadoSelectJornada.seleccionUsuario;
+
+	            // almenos uno de los ementos debe estar "dirty" para guardar los cambios
+	            if (JSON.stringify(cambiosInventario) !== "{}") {
+	                console.log(cambiosInventario);
+	                this.props.guardarInventario(this.props.inventario.idInventario, cambiosInventario);
 	            } else {
-	                console.log('no han cambiado');
+	                console.log('inventario sin cambios, no se actualiza');
+	            }
+	        }
+	    }, {
+	        key: 'guardarNominaDia',
+	        value: function guardarNominaDia() {
+	            this._guardarNomina(this.props.inventario.nomina_dia.idNomina, {
+	                inputDotacion: this.inputDotacionDia.getEstado(),
+	                selectLider: this.selectLiderDia.getEstado(),
+	                selectSupervisor: this.selectSupervisorDia.getEstado(),
+	                selectCaptador1: this.selectCaptador1Dia.getEstado(),
+	                selectCaptador2: this.selectCaptador2Dia.getEstado()
+	            });
+	        }
+	    }, {
+	        key: 'guardarNominaNoche',
+	        value: function guardarNominaNoche() {
+	            this._guardarNomina(this.props.inventario.nomina_noche.idNomina, {
+	                inputDotacion: this.inputDotacionNoche.getEstado(),
+	                selectLider: this.selectLiderNoche.getEstado(),
+	                selectSupervisor: this.selectSupervisorNoche.getEstado(),
+	                selectCaptador1: this.selectCaptador1Noche.getEstado(),
+	                selectCaptador2: this.selectCaptador2Noche.getEstado()
+	            });
+	        }
+	    }, {
+	        key: '_guardarNomina',
+	        value: function _guardarNomina(idNomina, estados) {
+	            var cambiosNomina = {};
+
+	            // la DOTACION es valida y ha cambiado?
+	            if (estados.inputDotacion.valid && estados.inputDotacion.dirty) {
+	                cambiosNomina.dotacionAsignada = estados.inputDotacion.dotacion;
+	            } else if (estados.inputDotacion.valid === false) {
+	                return console.log('dotacion de la nomina: ' + estados.inputDotacion.dotacion + ' invalida');
+	            }
+
+	            // el LIDER es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
+	            if (estados.selectLider.dirty) {
+	                cambiosNomina.idLider = estados.selectLider.seleccionUsuario;
+	            }
+
+	            // el SUPERVISOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
+	            if (estados.selectSupervisor.dirty) {
+	                cambiosNomina.idLider = estados.selectSupervisor.seleccionUsuario;
+	            }
+
+	            //queria seguir con select supervidor, pero no hay ningun supervisor disponible
+
+	            // almenos uno de los ementos debe estar "dirty" para guardar los cambios
+	            if (JSON.stringify(cambiosNomina) !== '{}') {
+	                console.log(cambiosNomina);
+	                this.props.guardarNomina(idNomina, cambiosNomina);
+	            } else {
+	                console.log('nomina sin cambios, no se actualiza');
 	            }
 	        }
 	    }, {
@@ -52901,7 +52992,7 @@
 	            if (elemento === 'dia') {
 	                this.inputDia.focus();
 	            } else if (elemento === 'dotacion') {
-	                this.inputDotacion.focus();
+	                this.inputDotacionTotal.focus();
 	            }
 	        }
 	    }, {
@@ -52915,7 +53006,9 @@
 	            var opcionesLideres = this.props.lideres.map(function (usuario) {
 	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
 	            });
-	            var opcionesSupervisores = [];
+	            var opcionesSupervisores = this.props.supervisores.map(function (usuario) {
+	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
+	            });
 	            var opcionesCaptadores = this.props.captadores.map(function (usuario) {
 	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
 	            });
@@ -52930,7 +53023,7 @@
 	                            return _this2.inputDia = _ref;
 	                        },
 	                        fecha: this.props.inventario.fechaProgramada,
-	                        guardarOCrear: this.guardarOCrear.bind(this),
+	                        onGuardar: this.guardarInventario.bind(this),
 	                        focusRowAnterior: function focusRowAnterior() {
 	                            return _this2.props.focusRow(_this2.props.index - 1, 'dia');
 	                        },
@@ -52997,7 +53090,7 @@
 	                        ref: function ref(_ref2) {
 	                            return _this2.selectJornada = _ref2;
 	                        },
-	                        onSelect: this.guardarOCrear.bind(this),
+	                        onSelect: this.guardarInventario.bind(this),
 	                        opciones: [{ valor: '1', texto: 'no definido' }, { valor: '2', texto: 'día' }, { valor: '3', texto: 'noche' }, { valor: '4', texto: 'día y noche' }],
 	                        seleccionada: this.props.inventario.idJornada
 	                    })
@@ -53042,13 +53135,28 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
+	                    _react2.default.createElement(_InputDotacion2.default
+	                    /*style={{display: (idJornada==2 || idJornada==3)? 'block' : 'none'}}*/
+	                    , { className: 'pull-left',
+	                        ref: function ref(_ref3) {
+	                            return _this2.inputDotacionTotal = _ref3;
+	                        },
+	                        asignada: this.props.inventario.dotacionAsignadaTotal,
+	                        onGuardar: this.guardarInventario.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {
+	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
+	                        },
+	                        focusRowSiguiente: function focusRowSiguiente() {
+	                            return _this2.props.focusRow(_this2.props.index + 1, 'dotacion');
+	                        } }),
 	                    _react2.default.createElement(_InputDotacion2.default, {
 	                        style: { display: inventarioDia ? 'block' : 'none' },
-	                        ref: function ref(_ref3) {
-	                            return _this2.inputDotacion = _ref3;
+	                        className: 'pull-right',
+	                        ref: function ref(_ref4) {
+	                            return _this2.inputDotacionDia = _ref4;
 	                        },
-	                        asignada: this.props.inventario.dotacionAsignada,
-	                        guardarOCrear: this.guardarOCrear.bind(this),
+	                        asignada: this.props.inventario.nomina_dia.dotacionAsignada,
+	                        onGuardar: this.guardarNominaDia.bind(this),
 	                        focusRowAnterior: function focusRowAnterior() {
 	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
 	                        },
@@ -53057,11 +53165,12 @@
 	                        } }),
 	                    _react2.default.createElement(_InputDotacion2.default, {
 	                        style: { display: inventarioNoche ? 'block' : 'none' },
-	                        ref: function ref(_ref4) {
-	                            return _this2.inputDotacion2 = _ref4;
+	                        className: 'pull-right',
+	                        ref: function ref(_ref5) {
+	                            return _this2.inputDotacionNoche = _ref5;
 	                        },
-	                        asignada: this.props.inventario.dotacionAsignada,
-	                        guardarOCrear: this.guardarOCrear.bind(this),
+	                        asignada: this.props.inventario.nomina_noche.dotacionAsignada,
+	                        onGuardar: this.guardarNominaNoche.bind(this),
 	                        focusRowAnterior: function focusRowAnterior() {
 	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
 	                        },
@@ -53073,41 +53182,63 @@
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioDia ? 'block' : 'none' },
-	                        seleccionada: '' + this.props.lideres[0].id // Todo: arreglar esto
-	                        , onSelect: this.guardarOCrear.bind(this),
-	                        opciones: opcionesLideres
+	                        ref: function ref(_ref6) {
+	                            return _this2.selectLiderDia = _ref6;
+	                        },
+	                        seleccionada: this.props.inventario.nomina_dia.idLider || "-1",
+	                        onSelect: this.guardarNominaDia.bind(this),
+	                        opciones: opcionesLideres,
+	                        opcionNula: true
 	                    }),
 	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioNoche ? 'block' : 'none' },
-	                        seleccionada: '' + this.props.lideres[0].id // ToDo: arreglar esto
-	                        , onSelect: this.guardarOCrear.bind(this),
-	                        opciones: opcionesLideres
+	                        ref: function ref(_ref7) {
+	                            return _this2.selectLiderNoche = _ref7;
+	                        },
+	                        seleccionada: this.props.inventario.nomina_noche.idLider || "-1",
+	                        onSelect: this.guardarNominaNoche.bind(this),
+	                        opciones: opcionesLideres,
+	                        opcionNula: true
 	                    })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioDia ? 'block' : 'none' },
+	                        ref: function ref(_ref8) {
+	                            return _this2.selectSupervisorDia = _ref8;
+	                        },
 	                        seleccionada: '' // ToDo: arreglar esto (agregar supervisores)
-	                        , onSelect: this.guardarOCrear.bind(this),
-	                        opciones: opcionesSupervisores
+	                        , onSelect: this.guardarNominaDia.bind(this),
+	                        opciones: opcionesSupervisores,
+	                        opcionNula: true
 	                    }),
 	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioNoche ? 'block' : 'none' },
+	                        ref: function ref(_ref9) {
+	                            return _this2.selectSupervisorNoche = _ref9;
+	                        },
 	                        seleccionada: '' // ToDo: arreglar esto (agregar supervisores)
-	                        , onSelect: this.guardarOCrear.bind(this),
-	                        opciones: opcionesSupervisores
+	                        , onSelect: this.guardarNominaNoche.bind(this),
+	                        opciones: opcionesSupervisores,
+	                        opcionNula: true
 	                    })
 	                ),
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioDia ? 'block' : 'none' },
+	                        ref: function ref(_ref10) {
+	                            return _this2.selectCaptador1Dia = _ref10;
+	                        },
 	                        seleccionada: '' + this.props.captadores[0].id // ToDo: arreglar esto
-	                        , onSelect: this.guardarOCrear.bind(this),
+	                        , onSelect: this.guardarInventario.bind(this),
 	                        opciones: opcionesCaptadores
 	                    }),
 	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioNoche ? 'block' : 'none' },
+	                        ref: function ref(_ref11) {
+	                            return _this2.selectCaptador1Noche = _ref11;
+	                        },
 	                        seleccionada: '' + this.props.captadores[0].id // ToDo: arreglar esto
-	                        , onSelect: this.guardarOCrear.bind(this),
+	                        , onSelect: this.guardarNominaNoche.bind(this),
 	                        opciones: opcionesCaptadores
 	                    })
 	                ),
@@ -53125,13 +53256,19 @@
 	                    'td',
 	                    { className: 'a' },
 	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioDia ? 'block' : 'none' },
+	                        ref: function ref(_ref12) {
+	                            return _this2.selectCaptador2Dia = _ref12;
+	                        },
 	                        seleccionada: '' + this.props.captadores[0].id // ToDo: arreglar esto
-	                        , onSelect: this.guardarOCrear.bind(this),
+	                        , onSelect: this.guardarNominaDia.bind(this),
 	                        opciones: opcionesCaptadores
 	                    }),
 	                    _react2.default.createElement(_Select2.default, { style: { width: '120px', display: inventarioNoche ? 'block' : 'none' },
+	                        ref: function ref(_ref13) {
+	                            return _this2.selectCaptador2Noche = _ref13;
+	                        },
 	                        seleccionada: '' + this.props.captadores[0].id // ToDo: arreglar esto
-	                        , onSelect: this.guardarOCrear.bind(this),
+	                        , onSelect: this.guardarNominaNoche.bind(this),
 	                        opciones: opcionesCaptadores
 	                    })
 	                ),
@@ -53196,6 +53333,7 @@
 	    captadores: _react2.default.PropTypes.array.isRequired,
 	    // Metodos
 	    guardarInventario: _react2.default.PropTypes.func.isRequired,
+	    guardarNomina: _react2.default.PropTypes.func.isRequired,
 	    focusRow: _react2.default.PropTypes.func.isRequired
 	};
 
@@ -53274,7 +53412,7 @@
 	    }, {
 	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(nextProps) {
-	            // let [anno1, mes1, dia1] = this.props.fecha.split('-')
+	            // apenas se reciba una nueva propiedad, reemplazar el estado independiente de su contenido
 
 	            var _nextProps$fecha$spli = nextProps.fecha.split('-');
 
@@ -53300,12 +53438,12 @@
 	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
 	                // 9 = tab, flechaAbajo = 40,  13 = enter
 	                evt.preventDefault();
-	                this.props.guardarOCrear();
+	                this.props.onGuardar();
 	                this.props.focusRowSiguiente();
 	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
 	                // flechaArriba = 38, shift+tab
 	                evt.preventDefault();
-	                this.props.guardarOCrear();
+	                this.props.onGuardar();
 	                this.props.focusRowAnterior();
 	            }
 	        }
@@ -53368,7 +53506,7 @@
 	                    onKeyDown: this.inputOnKeyDown.bind(this),
 	                    onChange: this.onInputChange.bind(this),
 	                    onBlur: function onBlur() {
-	                        return _this2.props.guardarOCrear();
+	                        return _this2.props.onGuardar();
 	                    }
 	                }),
 	                _react2.default.createElement('input', { className: _InputFecha2.default.inputMes, type: 'number', disabled: true,
@@ -53388,7 +53526,7 @@
 	    // Metodos
 	    focusRowAnterior: _react2.default.PropTypes.func.isRequired,
 	    focusRowSiguiente: _react2.default.PropTypes.func.isRequired,
-	    guardarOCrear: _react2.default.PropTypes.func.isRequired
+	    onGuardar: _react2.default.PropTypes.func.isRequired
 	};
 	exports.default = InputFecha;
 
@@ -53463,16 +53601,13 @@
 	    }, {
 	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(nextProps) {
-	            var dotacion1 = this.props.asignada;
+	            // apenas se reciba una nueva propiedad, reemplazar el estado independiente de su contenido
 	            var dotacion2 = nextProps.asignada;
-	            if (dotacion1 !== dotacion2) {
-	                // si esto cambia, entonces se debe hacer un "reset" del estado con los nuevos valores
-	                this.setState({
-	                    dotacion: dotacion2,
-	                    dirty: false,
-	                    valid: true
-	                });
-	            }
+	            this.setState({
+	                dotacion: dotacion2,
+	                dirty: false,
+	                valid: true
+	            });
 	        }
 	    }, {
 	        key: 'inputOnKeyDown',
@@ -53480,12 +53615,12 @@
 	            if (evt.keyCode === 9 && evt.shiftKey === false || evt.keyCode === 40 || evt.keyCode === 13) {
 	                // 9 = tab, flechaAbajo = 40,  13 = enter
 	                evt.preventDefault();
-	                this.props.guardarOCrear();
+	                this.props.onGuardar();
 	                this.props.focusRowSiguiente();
 	            } else if (evt.keyCode === 9 && evt.shiftKey === true || evt.keyCode === 38) {
 	                // flechaArriba = 38, shift+tab
 	                evt.preventDefault();
-	                this.props.guardarOCrear();
+	                this.props.onGuardar();
 	                this.props.focusRowAnterior();
 	            }
 	        }
@@ -53516,8 +53651,8 @@
 
 	            var classname = this.state.valid ? this.state.dirty ? _InputDotacion2.default.inputDotacionDirty : _InputDotacion2.default.inputDotacion : _InputDotacion2.default.inputDotacionInvalida;
 	            return _react2.default.createElement('input', {
+	                className: classname + " " + this.props.className,
 	                style: this.props.style,
-	                className: classname,
 	                ref: function ref(_ref) {
 	                    return _this2.inputDotacion = _ref;
 	                },
@@ -53526,7 +53661,7 @@
 	                onKeyDown: this.inputOnKeyDown.bind(this),
 	                onChange: this.onInputChange.bind(this),
 	                onBlur: function onBlur() {
-	                    return _this2.props.guardarOCrear();
+	                    return _this2.props.onGuardar();
 	                }
 	            });
 	        }
@@ -53541,7 +53676,7 @@
 	    // Metodos
 	    focusRowAnterior: _react2.default.PropTypes.func.isRequired,
 	    focusRowSiguiente: _react2.default.PropTypes.func.isRequired,
-	    guardarOCrear: _react2.default.PropTypes.func.isRequired
+	    onGuardar: _react2.default.PropTypes.func.isRequired
 	};
 	exports.default = InputDotacion;
 
@@ -53555,9 +53690,77 @@
 	module.exports = {"inputDotacion":"InputDotacion__inputDotacion___3JxlM shared__inputNumberAsText___1Qr9M","inputDotacionDirty":"InputDotacion__inputDotacionDirty___4ThKI InputDotacion__inputDotacion___3JxlM shared__inputNumberAsText___1Qr9M","inputDotacionInvalida":"InputDotacion__inputDotacionInvalida___3TtRl InputDotacion__inputDotacion___3JxlM shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 425 */,
-/* 426 */,
-/* 427 */
+/* 425 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _InputDotacion = __webpack_require__(424);
+
+	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
+
+
+	// Estilos
+
+
+	//import styleShared from '../shared/shared.css'
+
+	var InputDotacionCaptador = function (_React$Component) {
+	    _inherits(InputDotacionCaptador, _React$Component);
+
+	    function InputDotacionCaptador() {
+	        _classCallCheck(this, InputDotacionCaptador);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(InputDotacionCaptador).apply(this, arguments));
+	    }
+
+	    _createClass(InputDotacionCaptador, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement('input', { style: this.props.style,
+	                className: _InputDotacion2.default.inputDotacion,
+	                type: 'number',
+	                defaultValue: this.props.asignada
+	                //onChange={this.onInputDotacionCaptadorChange.bind(this)}
+	                //onKeyDown={this.inputOnKeyDown.bind(this, 'asignada')}
+	                //onBlur={this.guardarOCrear.bind(this)}/>
+	            });
+	        }
+	    }]);
+
+	    return InputDotacionCaptador;
+	}(_react2.default.Component);
+
+	InputDotacionCaptador.propTypes = {
+	    // Objetos
+	    asignada: _react2.default.PropTypes.string.isRequired
+	};
+	exports.default = InputDotacionCaptador;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputDotacionCaptador.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 426 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -53651,6 +53854,11 @@
 	                    value: this.state.seleccionUsuario,
 	                    onChange: this.onInputChange.bind(this),
 	                    style: this.props.style },
+	                this.props.opcionNula ? _react2.default.createElement(
+	                    'option',
+	                    { value: '', disabled: true },
+	                    '--'
+	                ) : null,
 	                this.props.opciones.map(function (opcion, index) {
 	                    return _react2.default.createElement(
 	                        'option',
@@ -53669,82 +53877,16 @@
 	    // Objetos
 	    seleccionada: _react2.default.PropTypes.string.isRequired,
 	    opciones: _react2.default.PropTypes.array.isRequired,
+	    opcionNula: _react2.default.PropTypes.bool,
 	    // Metodos
 	    onSelect: _react2.default.PropTypes.func.isRequired
+	};
+	Select.defaultProps = {
+	    opcionNula: false
 	};
 	exports.default = Select;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Select.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 428 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _InputDotacion = __webpack_require__(424);
-
-	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Librerias
-
-
-	// Estilos
-
-
-	//import styleShared from '../shared/shared.css'
-
-	var InputDotacionCaptador = function (_React$Component) {
-	    _inherits(InputDotacionCaptador, _React$Component);
-
-	    function InputDotacionCaptador() {
-	        _classCallCheck(this, InputDotacionCaptador);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(InputDotacionCaptador).apply(this, arguments));
-	    }
-
-	    _createClass(InputDotacionCaptador, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement('input', { style: this.props.style,
-	                className: _InputDotacion2.default.inputDotacion,
-	                type: 'number',
-	                defaultValue: this.props.asignada
-	                //onChange={this.onInputDotacionCaptadorChange.bind(this)}
-	                //onKeyDown={this.inputOnKeyDown.bind(this, 'asignada')}
-	                //onBlur={this.guardarOCrear.bind(this)}/>
-	            });
-	        }
-	    }]);
-
-	    return InputDotacionCaptador;
-	}(_react2.default.Component);
-
-	InputDotacionCaptador.propTypes = {
-	    // Objetos
-	    asignada: _react2.default.PropTypes.string.isRequired
-	};
-	exports.default = InputDotacionCaptador;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputDotacionCaptador.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 /******/ ]);

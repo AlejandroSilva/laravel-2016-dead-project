@@ -37,12 +37,20 @@ class Locales extends Model{
         return $this->belongsTo('App\Jornadas', 'idJornadaSugerida', 'idJornada');
     }
 
-    public function llegadaSugerida(){
-        // La hora de llegada sugerida corresponde a 1 hora y media antes del cierre de local
+    public function llegadaSugeridaLider(){
+        // La hora de llegada sugerida para el lider corresponde a 1 hora y media antes del cierre de local
         if($this->horaCierre=='00:00:00')
             return '00:00:00';
         else
             return date('H:i:s', strtotime($this->horaCierre)-5400); // 5400 = 90min * 60seg
+    }
+
+    public function llegadaSugeridaPersonal(){
+        // La hora de llegada sugerida para el lider corresponde a 1 hora y media antes del cierre de local
+        if($this->horaCierre=='00:00:00')
+            return '00:00:00';
+        else
+            return date('H:i:s', strtotime($this->horaCierre)-3600); // 3600 = 60min * 60seg
     }
 
     public function dotacionSugerida(){

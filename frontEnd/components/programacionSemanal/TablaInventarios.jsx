@@ -71,9 +71,11 @@ class TablaInventarios extends React.Component{
                                 ref={ref=>this.rows[index]=ref}
                                 inventario={inventario}
                                 lideres={this.props.lideres}
+                                supervisores={this.props.supervisores}
                                 captadores={this.props.captadores}
                                 // Metodos
                                 guardarInventario={this.props.guardarInventario}
+                                guardarNomina={this.props.guardarNomina}
                                 focusRow={this.focusRow.bind(this)}
                             />
                         })}
@@ -84,11 +86,12 @@ class TablaInventarios extends React.Component{
 }
 TablaInventarios.propTypes = {
     // Objetos
-    //inventariosFiltrados: React.PropTypes.array.isRequired,
-    //filtroClientes: React.PropTypes.array.isRequired,
-    //filtroRegiones: React.PropTypes.array.isRequired,
+    lideres: React.PropTypes.array.isRequired,
+    supervisores: React.PropTypes.array.isRequired,
+    captadores: React.PropTypes.array.isRequired,
     // Metodos
     //actualizarFiltro: React.PropTypes.func.isRequired,
-    guardarInventario: React.PropTypes.func.isRequired
+    guardarInventario: React.PropTypes.func.isRequired,
+    guardarNomina: React.PropTypes.func.isRequired
 }
 export default TablaInventarios

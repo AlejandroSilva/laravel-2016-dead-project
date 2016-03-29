@@ -15,6 +15,7 @@
         window.laravelPrimerInventario = '{!! $primerInventario !!}';
         window.laravelUltimoInventario = '{!! $ultimoInventario !!}';
         window.laravelCaptadores = {!! $captadores!!};
+        window.laravelSupervisores = {!! $supervisores !!};
         window.laravelLideres = {!! $lideres !!};
     </script>
 @stop

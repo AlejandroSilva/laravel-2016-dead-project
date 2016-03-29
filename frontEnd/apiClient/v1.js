@@ -43,5 +43,10 @@ export default {
         getPorRango: (fechaInicio, fechaFin)=>{
             return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}`)
         }
+    },
+    nomina: {
+        actualizar: (idNomina, datos)=>{
+            return axios.put(`/api/nomina/${idNomina}`, datos)
+        },
     }
 }

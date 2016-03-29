@@ -21,29 +21,26 @@ class InputDotacion extends React.Component{
         })
     }
     componentWillReceiveProps(nextProps){
-        let dotacion1 = this.props.asignada
+        // apenas se reciba una nueva propiedad, reemplazar el estado independiente de su contenido
         let dotacion2 = nextProps.asignada
-        if(dotacion1!==dotacion2){
-            // si esto cambia, entonces se debe hacer un "reset" del estado con los nuevos valores
-            this.setState({
-                dotacion: dotacion2,
-                dirty: false,
-                valid: true
-            })
-        }
+        this.setState({
+            dotacion: dotacion2,
+            dirty: false,
+            valid: true
+        })
     }
 
     inputOnKeyDown(evt){
         if((evt.keyCode===9 && evt.shiftKey===false) || evt.keyCode===40 || evt.keyCode===13){
             // 9 = tab, flechaAbajo = 40,  13 = enter
             evt.preventDefault()
-            this.props.guardarOCrear()
+            this.props.onGuardar()
             this.props.focusRowSiguiente()
 
         }else if((evt.keyCode===9 && evt.shiftKey===true) || evt.keyCode===38) {
             // flechaArriba = 38, shift+tab
             evt.preventDefault()
-            this.props.guardarOCrear()
+            this.props.onGuardar()
             this.props.focusRowAnterior()
         }
     }
@@ -67,14 +64,14 @@ class InputDotacion extends React.Component{
             : css.inputDotacionInvalida
         return(
             <input
+                className={classname + " " + this.props.className}
                 style={this.props.style}
-                className={classname}
                 ref={ref=>this.inputDotacion=ref}
                 type="number"
                 value={this.state.dotacion}
                 onKeyDown={this.inputOnKeyDown.bind(this)}
                 onChange={this.onInputChange.bind(this)}
-                onBlur={()=>this.props.guardarOCrear()}
+                onBlur={()=>this.props.onGuardar()}
             />
         )
     }
@@ -85,6 +82,6 @@ InputDotacion.propTypes = {
     // Metodos
     focusRowAnterior: React.PropTypes.func.isRequired,
     focusRowSiguiente: React.PropTypes.func.isRequired,
-    guardarOCrear: React.PropTypes.func.isRequired
+    onGuardar: React.PropTypes.func.isRequired
 }
 export default InputDotacion

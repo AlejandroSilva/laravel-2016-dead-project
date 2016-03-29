@@ -26,36 +26,87 @@ class RowInventario extends React.Component{
         // Refs disponibles: this.inputDia, this.inputDotacion
     }
 
-    guardarOCrear(){
-        // validar DIA
-        let estadoInputDia = this.inputDia.getEstado()
-        if(estadoInputDia.valid==false)
-            return console.log(`fecha ${estadoInputDia.dia} invalida`)
-        // validar DOTACION
-        let estadoInputDotacion = this.inputDotacion.getEstado()
-        if(estadoInputDotacion.valid==false)
-            return console.log(`dotacion ${estadoInputDotacion.dia} invalida`)
+    guardarInventario() {
+        let cambiosInventario = {}
 
-        // "validar" Jornada
+        // el DIA es valido, y ha cambiado?
+        let estadoInputDia = this.inputDia.getEstado()
+        if (estadoInputDia.valid && estadoInputDia.dirty) {
+            let [anno, mes, _dia] = this.props.inventario.fechaProgramada.split('-')
+            cambiosInventario.fechaProgramada = `${anno}-${mes}-${estadoInputDia.dia}`
+        } else if (estadoInputDia.valid === false) {
+            return console.log(`fecha ${estadoInputDia.dia} invalida`)
+        }
+
+        // la DOTACION es valida y ha cambiado?
+        let estadoInputDotacionTotal = this.inputDotacionTotal.getEstado()
+        if (estadoInputDotacionTotal.valid && estadoInputDotacionTotal.dirty) {
+            cambiosInventario.dotacionAsignadaTotal = estadoInputDotacionTotal.dotacion
+        } else if (estadoInputDotacionTotal.valid === false) {
+            return console.log(`dotacion total: ${estadoInputDotacionTotal.dotacion} invalida`)
+        }
+
+        // la JORNADA es valida y ha cambiado
         let estadoSelectJornada = this.selectJornada.getEstado()
+        if(estadoSelectJornada.dirty)
+            cambiosInventario.idJornada = estadoSelectJornada.seleccionUsuario
 
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
-        if(estadoInputDia.dirty===true || estadoInputDotacion.dirty===true || estadoSelectJornada.dirty===true){
-            let [anno, mes, _dia] = this.props.inventario.fechaProgramada.split('-')
-            let dia = estadoInputDia.dia
-            let dotacion = estadoInputDotacion.dotacion
-            console.log("guardando inventario")
-
-            this.props.guardarInventario({
-                idInventario: this.props.inventario.idInventario,
-                fechaProgramada: `${anno}-${mes}-${dia}`,
-                idJornada: estadoSelectJornada.seleccionUsuario,
-    //            horaLlegada: this.props.inventario.horaLlegada,
-    //            stockTeorico: this.props.inventario.local.stock,
-               dotacionAsignada: dotacion
-            })
+        if(JSON.stringify(cambiosInventario)!=="{}"){
+            console.log(cambiosInventario)
+            this.props.guardarInventario(this.props.inventario.idInventario, cambiosInventario)
         }else{
-            console.log('no han cambiado')
+            console.log('inventario sin cambios, no se actualiza')
+        }
+    }
+    guardarNominaDia() {
+        this._guardarNomina(this.props.inventario.nomina_dia.idNomina, {
+            inputDotacion: this.inputDotacionDia.getEstado(),
+            selectLider: this.selectLiderDia.getEstado(),
+            selectSupervisor: this.selectSupervisorDia.getEstado(),
+            selectCaptador1: this.selectCaptador1Dia.getEstado(),
+            selectCaptador2: this.selectCaptador2Dia.getEstado()
+        })
+    }
+    guardarNominaNoche(){
+        this._guardarNomina(this.props.inventario.nomina_noche.idNomina, {
+            inputDotacion: this.inputDotacionNoche.getEstado(),
+            selectLider: this.selectLiderNoche.getEstado(),
+            selectSupervisor: this.selectSupervisorNoche.getEstado(),
+            selectCaptador1: this.selectCaptador1Noche.getEstado(),
+            selectCaptador2: this.selectCaptador2Noche.getEstado()
+        })
+    }
+
+    _guardarNomina(idNomina, estados){
+        let cambiosNomina = {}
+
+        // la DOTACION es valida y ha cambiado?
+        if (estados.inputDotacion.valid && estados.inputDotacion.dirty) {
+            cambiosNomina.dotacionAsignada = estados.inputDotacion.dotacion
+        } else if (estados.inputDotacion.valid === false) {
+            return console.log(`dotacion de la nomina: ${estados.inputDotacion.dotacion} invalida`)
+        }
+
+        // el LIDER es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
+        if (estados.selectLider.dirty) {
+            cambiosNomina.idLider = estados.selectLider.seleccionUsuario
+        }
+        
+        // el SUPERVISOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
+        if (estados.selectSupervisor.dirty) {
+            cambiosNomina.idLider = estados.selectSupervisor.seleccionUsuario
+        }
+
+        //queria seguir con select supervidor, pero no hay ningun supervisor disponible
+        
+
+        // almenos uno de los ementos debe estar "dirty" para guardar los cambios
+        if(JSON.stringify(cambiosNomina)!=='{}'){
+            console.log(cambiosNomina)
+            this.props.guardarNomina(idNomina, cambiosNomina)
+        }else{
+            console.log('nomina sin cambios, no se actualiza')
         }
     }
 
@@ -63,7 +114,7 @@ class RowInventario extends React.Component{
         if(elemento==='dia'){
             this.inputDia.focus()
         }else if(elemento==='dotacion'){
-            this.inputDotacion.focus()
+            this.inputDotacionTotal.focus()
         }
     }
 
@@ -74,7 +125,9 @@ class RowInventario extends React.Component{
         const opcionesLideres = this.props.lideres.map(usuario=>{
             return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
         })
-        const opcionesSupervisores = []
+        const opcionesSupervisores = this.props.supervisores.map(usuario=>{
+            return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
+        })
         const opcionesCaptadores = this.props.captadores.map(usuario=>{
             return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
         })
@@ -85,7 +138,7 @@ class RowInventario extends React.Component{
                     <InputFecha
                         ref={ref=>this.inputDia=ref}
                         fecha={this.props.inventario.fechaProgramada}
-                        guardarOCrear={this.guardarOCrear.bind(this)}
+                        onGuardar={this.guardarInventario.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dia')}/>
                 </td>
@@ -109,7 +162,7 @@ class RowInventario extends React.Component{
                 <td className={'a'}>
                     <Select
                         ref={ref=>this.selectJornada=ref}
-                        onSelect={this.guardarOCrear.bind(this)}
+                        onSelect={this.guardarInventario.bind(this)}
                         opciones={[
                             {valor:'1', texto:'no definido'},
                             {valor:'2', texto:'día'},
@@ -136,57 +189,78 @@ class RowInventario extends React.Component{
                 {/* Dotación Total */}
                 <td className={'a'}>
                     <InputDotacion
+                        /*style={{display: (idJornada==2 || idJornada==3)? 'block' : 'none'}}*/
+                        className="pull-left"
+                        ref={ref=>this.inputDotacionTotal=ref}
+                        asignada={this.props.inventario.dotacionAsignadaTotal}
+                        onGuardar={this.guardarInventario.bind(this)}
+                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
+                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}/>
+
+                    <InputDotacion
                         style={{display: inventarioDia? 'block' : 'none'}}
-                        ref={ref=>this.inputDotacion=ref}
-                        asignada={this.props.inventario.dotacionAsignada}
-                        guardarOCrear={this.guardarOCrear.bind(this)}
+                        className="pull-right"
+                        ref={ref=>this.inputDotacionDia=ref}
+                        asignada={this.props.inventario.nomina_dia.dotacionAsignada}
+                        onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}/>
 
                     <InputDotacion
                         style={{display: inventarioNoche? 'block' : 'none'}}
-                        ref={ref=>this.inputDotacion2=ref}
-                        asignada={this.props.inventario.dotacionAsignada}
-                        guardarOCrear={this.guardarOCrear.bind(this)}
+                        className="pull-right"
+                        ref={ref=>this.inputDotacionNoche=ref}
+                        asignada={this.props.inventario.nomina_noche.dotacionAsignada}
+                        onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}/>
                 </td>
                 {/* Lider */}
                 <td className={'a'}>
                     <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
-                            seleccionada={ ''+this.props.lideres[0].id}         // Todo: arreglar esto
-                            onSelect={this.guardarOCrear.bind(this)}
+                            ref={ref=>this.selectLiderDia=ref}
+                            seleccionada={ this.props.inventario.nomina_dia.idLider || "-1"}
+                            onSelect={this.guardarNominaDia.bind(this)}
                             opciones={opcionesLideres}
+                            opcionNula={true}
                     />
                     <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
-                            seleccionada={ ''+this.props.lideres[0].id}         // ToDo: arreglar esto
-                            onSelect={this.guardarOCrear.bind(this)}
+                            ref={ref=>this.selectLiderNoche=ref}
+                            seleccionada={ this.props.inventario.nomina_noche.idLider || "-1"}
+                            onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={opcionesLideres}
+                            opcionNula={true}
                     />
                 </td>
                 {/* Supervisor */}
                 <td className='a'>
                     <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                            ref={ref=>this.selectSupervisorDia=ref}
                             seleccionada={''}                                // ToDo: arreglar esto (agregar supervisores)
-                            onSelect={this.guardarOCrear.bind(this)}
+                            onSelect={this.guardarNominaDia.bind(this)}
                             opciones={opcionesSupervisores}
+                            opcionNula={true}
                     />
                     <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                            ref={ref=>this.selectSupervisorNoche=ref}
                             seleccionada={''}                                // ToDo: arreglar esto (agregar supervisores)
-                            onSelect={this.guardarOCrear.bind(this)}
+                            onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={opcionesSupervisores}
+                            opcionNula={true}
                     />
                 </td>
                 {/* Captador 1 */}
                 <td className={'a'}>
                     <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                            ref={ref=>this.selectCaptador1Dia=ref}
                             seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
-                            onSelect={this.guardarOCrear.bind(this)}
+                            onSelect={this.guardarInventario.bind(this)}
                             opciones={opcionesCaptadores}
                     />
                     <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                            ref={ref=>this.selectCaptador1Noche=ref}
                             seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
-                            onSelect={this.guardarOCrear.bind(this)}
+                            onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={opcionesCaptadores}
                     />
                 </td>
@@ -202,13 +276,15 @@ class RowInventario extends React.Component{
                 {/* Captador 2 */}
                 <td className={'a'}>
                     <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                            ref={ref=>this.selectCaptador2Dia=ref}
                             seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
-                            onSelect={this.guardarOCrear.bind(this)}
+                            onSelect={this.guardarNominaDia.bind(this)}
                             opciones={opcionesCaptadores}
                     />
                     <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                            ref={ref=>this.selectCaptador2Noche=ref}
                             seleccionada={ ''+this.props.captadores[0].id}     // ToDo: arreglar esto
-                            onSelect={this.guardarOCrear.bind(this)}
+                            onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={opcionesCaptadores}
                     />
                 </td>
@@ -251,6 +327,7 @@ RowInventario.propTypes = {
     captadores: React.PropTypes.array.isRequired,
     // Metodos
     guardarInventario: React.PropTypes.func.isRequired,
+    guardarNomina: React.PropTypes.func.isRequired,
     focusRow: React.PropTypes.func.isRequired
 }
 

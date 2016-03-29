@@ -112,8 +112,7 @@ export default class BlackBox{
                 nombreComuna: '-',
                 nombreProvincia: '-',
                 nombreRegion: '-',
-                dotacionSugerida: 0,
-                horaLlegadaSugerida: "00:00:00"
+                dotacionSugerida: 0
             }
         }
     }

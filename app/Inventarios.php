@@ -22,7 +22,12 @@ class Inventarios extends Model {
 //        return $this->hasOne('App\Jornadas', 'idJornada', 'idJornada');
 //    }
 
-    public function nominas(){
-        // ToDo: por implementar
+    public function nominaDia(){
+//        return $this->hasOne('App\Nominas', 'idNomina', 'idNominaDia');
+        return $this->belongsTo('App\Nominas', 'idNominaDia', 'idNomina');
+    }
+    public function nominaNoche(){
+//        return $this->hasOne('App\Nominas', 'idNomina', 'idNominaNoche');
+        return $this->belongsTo('App\Nominas', 'idNominaNoche', 'idNomina');
     }
 }

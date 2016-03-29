@@ -38,8 +38,13 @@ class ProgramacionController extends Controller {
             ->get();
         $minymax = $select[0];
 
+        // Captadores
         $rolCaptador = Role::where('name', 'Captador')->first();
         $captadores = $rolCaptador!=null? $rolCaptador->users : '[]';
+        // Supervisores
+        $rolSupervisor = Role::where('name', 'Supervisor')->first();
+        $supervisores = $rolSupervisor!=null? $rolSupervisor->users : '[]';
+        // Lideres
         $rolLider = Role::where('name', 'Lider')->first();
         $lideres = $rolLider!=null? $rolLider->users : '[]';
 
@@ -48,6 +53,7 @@ class ProgramacionController extends Controller {
             'primerInventario'=> $minymax->primerInventario,
             'ultimoInventario'=> $minymax->ultimoInventario,
             'captadores'=> $captadores,
+            'supervisores'=> $supervisores,
             'lideres'=> $lideres
         ]);
     }

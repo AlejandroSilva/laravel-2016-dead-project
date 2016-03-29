@@ -28,19 +28,19 @@ class RowInventario extends React.Component{
         // al montar el componente, fijas su state "inicial"
         let [anno, mes, dia] = this.props.inventario.fechaProgramada.split('-')
         let dotacionSugerida = this.props.inventario.local.dotacionSugerida
-        let dotacionAsignada = this.props.inventario.dotacionAsignada
+        let dotacionAsignadaTotal = this.props.inventario.dotacionAsignadaTotal
         let jornadaInventario = this.props.inventario.idJornada
         let jornadaLocal = this.props.inventario.local.idJornadaSugerida
-        console.log("will mount: dotacionAsignada, dotacionSugerida, (nombre) ", dotacionAsignada, dotacionSugerida, dotacionAsignada||dotacionSugerida)
+        console.log("will mount: dotacionAsignadaTotal, dotacionSugerida, (nombre) ", dotacionAsignadaTotal, dotacionSugerida, dotacionAsignadaTotal||dotacionSugerida)
         console.log("will mount comuna: ", this.props.inventario.local.nombreComuna)    // no tienen la informacion, como se esperaba
         this.setState({
             inputDia: dia,
             inputMes: mes,
             inputAnno: anno,
-            inputDotacion: dotacionAsignada || dotacionSugerida,
+            inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
             selectJornada: jornadaInventario || jornadaLocal,
             diaValido: this._diaValido(dia),
-            dotacionValida: this._dotacionValida(dotacionAsignada || dotacionSugerida)
+            dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
         })
     }
 
@@ -63,8 +63,8 @@ class RowInventario extends React.Component{
                 this.setState({inputDia: dia2, inputMes: mes2, inputAnno: anno2, diaValido: this._diaValido(dia2)})
 
             // se recibio una nueva dotacion?
-            let dotacion1 = this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida
-            let dotacion2 = nextProps.inventario.dotacionAsignada || nextProps.inventario.local.dotacionSugerida
+            let dotacion1 = this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida
+            let dotacion2 = nextProps.inventario.dotacionAsignadaTotal || nextProps.inventario.local.dotacionSugerida
             console.log("AAAA dotacionAntigua, dotacionNueva,", dotacion1, dotacion2)
             //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
                 this.setState({inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2)})
@@ -83,7 +83,7 @@ class RowInventario extends React.Component{
 
             console.log("BBB", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
             let [anno, mes, dia] = nextProps.inventario.fechaProgramada.split('-')
-            let dotacionAsignada = nextProps.inventario.dotacionAsignada
+            let dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal
             let dotacionSugerida = nextProps.inventario.local.dotacionSugerida
             let jornadaInventario = nextProps.inventario.idJornada
             let jornadaLocal = nextProps.inventario.local.idJornadaSugerida
@@ -91,12 +91,12 @@ class RowInventario extends React.Component{
                 inputDia: dia,
                 inputMes: mes,
                 inputAnno: anno,
-                inputDotacion: dotacionAsignada || dotacionSugerida,
+                inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
                 selectJornada: jornadaInventario || jornadaLocal,
                 diaValido: this._diaValido(dia),
-                dotacionValida: this._dotacionValida(dotacionAsignada || dotacionSugerida)
+                dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
             })
-            console.log("BBBB dotacionAsignada, dotacionSugerida", dotacionAsignada, dotacionSugerida)
+            console.log("BBBB dotacionAsignadaTotal, dotacionSugerida", dotacionAsignadaTotal, dotacionSugerida)
         }
         //console.log(this.props.inventario.idDummy, nextProps.inventario.idDummy, mismoInventario)
         //console.log(this.props.inventario.idDummy, dotacionAsignada, dotacionSugerida)
@@ -138,8 +138,9 @@ class RowInventario extends React.Component{
     }
     onSelectJornadaChange(evt){
         let jornada = evt.target.value
-        this.setState({selectJornada: jornada})
-        this.guardarOCrear()
+        this.setState({selectJornada: jornada}, ()=>{
+            this.guardarOCrear()
+        })
     }
 
     _diaValido(dia){
@@ -152,11 +153,11 @@ class RowInventario extends React.Component{
         let [anno, mes, dia] = this.props.inventario.fechaProgramada.split('-')
         let isDirty = (
             this.state.inputDia!=dia ||
-            this.state.inputDotacion!=(this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida) ||
+            this.state.inputDotacion!=(this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) ||
             this.state.selectJornada!=(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida)
         )
         //console.log("dia ", this.state.inputDia, dia, this.state.inputDia!==dia)
-        //console.log("dotac ", this.state.inputDotacion, (this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida), this.state.inputDotacion!==(this.props.inventario.dotacionAsignada || this.props.inventario.local.dotacionSugerida) )
+        //console.log("dotac ", this.state.inputDotacion, (this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida), this.state.inputDotacion!==(this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) )
         //console.log("jornada ", this.state.selectJornada, (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida), this.state.selectJornada!==(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida))
         console.log("isDirty ", isDirty)
         return isDirty
@@ -181,9 +182,9 @@ class RowInventario extends React.Component{
                 idLocal: this.props.inventario.local.idLocal,
                 idJornada: jornada,
                 fechaProgramada: fecha,
-                horaLlegada: this.props.inventario.horaLlegada || this.props.inventario.local.horaLlegadaSugerida,
+                //horaLlegada: this.props.inventario.horaLlegada || this.props.inventario.local.horaLlegadaSugerida,
                 stockTeorico: this.props.inventario.local.stock,
-                dotacionAsignada: dotacion
+                dotacionAsignadaTotal: dotacion
             })
         }else{
             console.log('datos invalidos')

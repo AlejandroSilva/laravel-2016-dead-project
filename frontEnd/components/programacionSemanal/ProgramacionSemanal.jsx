@@ -65,10 +65,20 @@ class ProgramacionSemanal extends React.Component {
     }
 
     // Metodos de los hijos
-    guardarInventario(formInventario){
-        api.inventario.actualizar(formInventario.idInventario, formInventario)
+    guardarInventario(idInventario, formInventario){
+        api.inventario.actualizar(idInventario, formInventario)
             .then(inventarioActualizado=>{
                 console.log('inventario actualizado correctamente')
+                // actualizar los datos y el state de la app
+                this.blackboxSemanal.actualizarInventario(inventarioActualizado)
+                // actualizar los filtros, y la lista ordenada de locales
+                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {inventariosFiltrados: ...}
+            })
+    }
+    guardarNomina(idNomina, datos){
+        api.nomina.actualizar(idNomina, datos)
+            .then(inventarioActualizado=>{
+                console.log('nomina actualizada correctamente')
                 // actualizar los datos y el state de la app
                 this.blackboxSemanal.actualizarInventario(inventarioActualizado)
                 // actualizar los filtros, y la lista ordenada de locales
@@ -92,9 +102,11 @@ class ProgramacionSemanal extends React.Component {
 
                 <TablaInventarios
                     lideres={window.laravelLideres}
+                    supervisores={window.laravelSupervisores}
                     captadores={window.laravelCaptadores}
                     inventarios={this.state.inventariosFiltrados}
                     guardarInventario={this.guardarInventario.bind(this)}
+                    guardarNomina={this.guardarNomina.bind(this)}
                 />
             </div>
         )

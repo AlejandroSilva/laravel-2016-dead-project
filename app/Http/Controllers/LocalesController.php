@@ -62,7 +62,7 @@ class LocalesController extends Controller {
         $localAsArray['nombreComuna'] = $local->direccion->comuna->nombre;
         $localAsArray['nombreProvincia'] = $local->direccion->comuna->provincia->nombre;
         $localAsArray['nombreRegion'] = $local->direccion->comuna->provincia->region->numero;
-        $localAsArray['horaLlegadaSugerida'] = $local->llegadaSugerida();
+        $localAsArray['horaLlegadaSugerida'] = $local->llegadaSugeridaLider();
 
         // Calcular la dotacion sugerida
         $localAsArray['dotacionSugerida'] = $local->dotacionSugerida();
