@@ -10,7 +10,7 @@ import InputDotacion from './InputDotacion.jsx'
 import Select from './Select.jsx'
 
 // Styles
-import css from './TablaInventario.css'
+import css from './TablaSemanal.css'
 
 class RowInventario extends React.Component{
     constructor(props){

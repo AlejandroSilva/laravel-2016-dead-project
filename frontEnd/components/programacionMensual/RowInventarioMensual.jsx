@@ -6,10 +6,9 @@ import Tooltip from 'react-bootstrap/lib/Tooltip'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 // Styles
-import styles from './RowInventario.css'
-import styleShared from '../shared/shared.css'
+import * as css from './RowInventarioMensual.css'
 
-class RowInventario extends React.Component{
+class RowInventarioMensual extends React.Component{
     constructor(props){
         super(props)
         this.state = {
@@ -199,45 +198,45 @@ class RowInventario extends React.Component{
         return (
             <tr>
                 {/* Correlativo */}
-                <td className={styles.tdCorrelativo}>
+                <td className={css.tdCorrelativo}>
                     { /*this.props.inventario.idDummy*/this.props.index}
                 </td>
                 {/* Fecha */}
-                <td className={styles.tdFecha}>
-                    <input className={this.state.diaValido? styles.inputDia : styles.inputDiaInvalido}
+                <td className={css.tdFecha}>
+                    <input className={this.state.diaValido? css.inputDia : css.inputDiaInvalido}
                            type="number" min={0} max={31}
                            ref={ref=>this.inputDia=ref}
                            value={this.state.inputDia}
                            onChange={this.onInputDiaChange.bind(this)}
                            onKeyDown={this.inputOnKeyDown.bind(this, 'dia')}
                            onBlur={this.guardarOCrear.bind(this)}/>
-                    <input className={styles.inputMes} type="number" disabled
+                    <input className={css.inputMes} type="number" disabled
                            value={this.state.inputMes}/>
-                    <input className={styles.inputAnno} type="number" disabled
+                    <input className={css.inputAnno} type="number" disabled
                            value={this.state.inputAnno}/>
                 </td>
                 {/* Cliente*/}
-                <td className={styles.tdCliente}>
+                <td className={css.tdCliente}>
                     <p><small>{this.props.inventario.local.nombreCliente}</small></p>
                 </td>
                 {/* CECO */}
-                <td className={styles.tdCeco}>
+                <td className={css.tdCeco}>
                     <p><small><b>{this.props.inventario.local.numero}</b></small></p>
                 </td>
                 {/* Local */}
-                <td className={styles.tdLocal}>
+                <td className={css.tdLocal}>
                     <p><small><b>{this.props.inventario.local.nombre}</b></small></p>
                 </td>
                 {/* Region*/}
-                <td className={styles.tdRegion}>
+                <td className={css.tdRegion}>
                     <p style={{margin:0}}><small>{this.props.inventario.local.nombreRegion}</small></p>
                 </td>
                 {/* Comuna */}
-                <td className={styles.tdComuna}>
+                <td className={css.tdComuna}>
                     <p style={{margin:0}}><b><small>{this.props.inventario.local.nombreComuna}</small></b></p>
                 </td>
                 {/* Stock */}
-                <td className={styles.tdStock}>
+                <td className={css.tdStock}>
                     <OverlayTrigger
                         placement="left"
                         delay={0}
@@ -247,13 +246,13 @@ class RowInventario extends React.Component{
                     </OverlayTrigger>
                 </td>
                 {/* Dotación */}
-                <td className={styles.tdDotacion}>
+                <td className={css.tdDotacion}>
                     <OverlayTrigger
                         placement="right"
                         delay={0}
                         overlay={<Tooltip id="yyy">{'Produción '+this.props.inventario.local.formato_local.produccionSugerida}</Tooltip>}>
 
-                        <input className={this.state.dotacionValida? styles.inputDotacion : styles.inputDotacionInvalida } type="number"
+                        <input className={this.state.dotacionValida? css.inputDotacion : css.inputDotacionInvalida } type="number"
                                value={this.state.inputDotacion}
                                onChange={this.onInputDotacionChange.bind(this)}
                                ref={ref=>this.inputDotacion=ref}
@@ -263,7 +262,8 @@ class RowInventario extends React.Component{
                     </OverlayTrigger>
                 </td>
                 {/* Jornada */}
-                <td className={styles.tdJornada}>
+                {/*
+                <td className={css.tdJornada}>
                     <select onChange={this.onSelectJornadaChange.bind(this)} value={this.state.selectJornada}>
                         <option value="1">no definido</option>
                         <option value="2">día</option>
@@ -271,8 +271,9 @@ class RowInventario extends React.Component{
                         <option value="4">día y noche</option>
                     </select>
                 </td>
+                */}
                 {/* Opciones    */}
-                <td className={styles.tdOpciones}>
+                <td className={css.tdOpciones}>
                     <button className="btn btn-xs btn-primary" tabIndex="-1">Editar local</button>
                     {this.props.inventario.idInventario
                         ? <button className="btn btn-xs btn-primary" tabIndex="-1">Editar inventario</button>
@@ -284,7 +285,7 @@ class RowInventario extends React.Component{
     }
 }
 
-RowInventario.propTypes = {
+RowInventarioMensual.propTypes = {
     // Objetos
     index: React.PropTypes.number.isRequired,
     inventario: React.PropTypes.object.isRequired,
@@ -295,4 +296,4 @@ RowInventario.propTypes = {
     quitarInventario: React.PropTypes.func.isRequired
 }
 
-export default RowInventario
+export default RowInventarioMensual

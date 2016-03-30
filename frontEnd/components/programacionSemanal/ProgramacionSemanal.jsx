@@ -5,7 +5,7 @@ import BlackBoxSemanal from './BlackBoxSemanal'
 moment.locale('es')
 import api from '../../apiClient/v1'
 // Componentes
-import TablaInventarios from './TablaInventarios.jsx'
+import TablaInventarios from './TablaSemanal.jsx'
 
 //
 const format = 'YYYY-MM-DD'
@@ -19,8 +19,11 @@ class ProgramacionSemanal extends React.Component {
 
         // Calcular el rango de semanas disponibles para seleccionar
         if(this.props.primerInventario!=='' && this.props.ultimoInventario!==''){
-            let fechaPrimerInventario = moment(this.props.primerInventario)
-            let fechaUltimoInventario = moment(this.props.ultimoInventario)
+            // moment con 'dia' == '00' da problemas, entonces se modifica si es necesario
+            const [anno1, mes1, dia1]= this.props.primerInventario.split('-')
+            const [anno2, mes2, dia2]= this.props.ultimoInventario.split('-')
+            let fechaPrimerInventario = dia1!=='00'? moment(this.props.primerInventario) : moment(`${anno1}-${mes1}`)
+            let fechaUltimoInventario = dia2!=='00'? moment(this.props.ultimoInventario) : moment(`${anno2}-${mes2}`)
 
             // lunes y domingo de la semana del primer inventario
             let lunes = moment(fechaPrimerInventario).isoWeekday(1).day(1)

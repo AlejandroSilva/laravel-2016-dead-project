@@ -5,13 +5,13 @@ import moment from 'moment'
 import Sticky from '../shared/react-sticky/sticky.js'
 import StickyContainer from '../shared/react-sticky/container.js'
 import TableHeader from './TableHeader.jsx'
-import RowInventario from './RowInventario2.jsx'
+import RowInventario from './RowInventarioMensual.jsx'
 
 // Styles
-import sharedStyles from '../shared/shared.css'
-import css from './RowInventario.css'
+//import sharedStyles from '../shared/shared.css'
+import * as css from './RowInventarioMensual.css'
 
-class TablaProgramas extends React.Component{
+class TablaMensual extends React.Component{
     constructor(props){
         super(props)
         // referencia a todos las entradas de fecha de los inventarios
@@ -64,7 +64,7 @@ class TablaProgramas extends React.Component{
                             <th className={css.thComuna}>Comuna</th>
                             <th className={css.thStock}>Stock</th>
                             <th className={css.thDotacion}>Dot.Total</th>
-                            <th className={css.thJornada}>Jornada</th>
+                            {/*<th className={css.thJornada}>Jornada</th>*/}
                             {/*<th className={css.thEstado}>Estado</th>*/}
                             <th className={css.thOpciones}>Opciones</th>
                         </Sticky>
@@ -96,7 +96,7 @@ class TablaProgramas extends React.Component{
         )
     }
 }
-TablaProgramas.propTypes = {
+TablaMensual.propTypes = {
     // Objetos
     inventariosFiltrados: React.PropTypes.array.isRequired,
     filtroClientes: React.PropTypes.array.isRequired,
@@ -106,4 +106,4 @@ TablaProgramas.propTypes = {
     guardarOCrearInventario: React.PropTypes.func.isRequired,
     quitarInventario: React.PropTypes.func.isRequired
 }
-export default TablaProgramas
+export default TablaMensual

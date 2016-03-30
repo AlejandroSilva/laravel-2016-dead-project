@@ -61,7 +61,7 @@ class InputFecha extends React.Component{
         })
     }
     _diaValido(dia){
-        return dia>0 && dia<32
+        return dia>=0 && dia<32
     }
     getEstado(){
         return this.state

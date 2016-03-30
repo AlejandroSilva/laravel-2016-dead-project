@@ -3,12 +3,12 @@ import React from 'react'
 import moment from 'moment'
 moment.locale('es')
 import api from '../../apiClient/v1'
-import BlackBox from './BlackBox.js'
+import BlackBoxMensual from './BlackBoxMensual.js'
 
 // Component
 //import Multiselect from 'react-widgets/lib/Multiselect'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import TablaProgramas from './TablaProgramas.jsx'
+import TablaProgramas from './TablaMensual.jsx'
 import AgregarPrograma from './AgregarPrograma.jsx'
 
 class ProgramacionMensual extends React.Component{
@@ -30,7 +30,7 @@ class ProgramacionMensual extends React.Component{
             meses
         }
         // MAGIA NEGRA!!
-        this.blackbox = new BlackBox(this.props.clientes)
+        this.blackbox = new BlackBoxMensual(this.props.clientes)
     }
 
     onSeleccionarMes(annoMesDia){
