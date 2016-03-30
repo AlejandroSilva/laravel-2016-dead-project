@@ -3,6 +3,7 @@
     composes: inputNumberAsText from '../shared/shared.css';
     width: 30px;
     marginRight: 2px;
+    text-align: center;
 }
 .inputDiaDirty{
     composes: inputDia;
@@ -29,9 +30,11 @@
     composes: inputNumberAsText from '../shared/shared.css';
     width: 25px;
     marginRight: 2px;
+    text-align: center;
 }
 .inputAnno{
     composes: inputNumberAsText from '../shared/shared.css';
     width: 45px;
     marginRight: 2px;
+    text-align: center;
 }

@@ -9,7 +9,7 @@ import RowInventario from './RowInventario.jsx'
 
 // Styles
 //import sharedStyles from '../shared/shared.css'
-import css from '../programacionMensual/RowInventario.css'
+import css from '../programacionSemanal/TablaInventario.css'
 
 class TablaInventarios extends React.Component{
     constructor(props){
@@ -36,29 +36,29 @@ class TablaInventarios extends React.Component{
     
     render(){
         return (
-            <table className="table table-bordered table-condensed"
+            <table className={"table table-bordered table-condensed "+css.tableFixed}
                 style={{overfow: 'overlay'}}>
                 <thead>
                     <tr>
                         <th className={css.thFecha}>Fecha</th>
-                        <th>CL</th>
-                        <th>CEC</th>
-                        <th>RG</th>
-                        <th>Comuna</th>
-                        <th>Turno</th>
-                        <th>Tienda</th>
-                        <th>Stock</th>
-                        <th>Dot.Total</th>
-                        <th>Lider</th>
-                        <th>Supervisor</th>
-                        <th>Captador 1</th>
-                        <th>Dot.Cap1</th>
-                        <th>Captador 2</th>
-                        <th>Dot.Cap.2</th>
-                        <th>Hr.Pres.Lider</th>
-                        <th>Hr.Pres.Equipo</th>
-                        <th>Dirección</th>
-                        <th>Nómina</th>
+                        <th className={css.thCliente}>CL</th>
+                        <th className={css.thCeco}>CECO</th>
+                        <th className={css.thRegion}>RG</th>
+                        <th className={css.thComuna}>Comuna</th>
+                        <th className={css.thTurno}>Turno</th>
+                        <th className={css.thTienda}>Tienda</th>
+                        <th className={css.thStock}>Stock</th>
+                        <th className={css.thDotacionTotal}>Dot.Total</th>
+                        <th className={css.thLider}>Lider</th>
+                        <th className={css.thLider}>Supervisor</th>
+                        <th className={css.thLider}>Captador 1</th>
+                        {/* <th className={css.thDotacion}>Dot.Cap1</th> */}
+                        <th className={css.thLider}>Captador 2</th>
+                        {/* <th className={css.thDotacion}>Dot.Cap2</th> */}
+                        <th className={css.thHora}>Hr.P.Lider</th>
+                        <th className={css.thHora}>Hr.P.Equipo</th>
+                        <th className={css.thDireccion}>Dirección</th>
+                        <th className={css.thNomina}>Nómina</th>
                     </tr>
                 </thead>
                 <tbody>

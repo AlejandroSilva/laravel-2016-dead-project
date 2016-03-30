@@ -1,7 +1,8 @@
 .inputDotacion{
     composes: inputNumberAsText from '../shared/shared.css';
-    width: 25px;
+    width: 35px;
     margin: 0 0 2px 0;
+    text-align: center;
 }
 .inputDotacionDirty {
     composes: inputDotacion;

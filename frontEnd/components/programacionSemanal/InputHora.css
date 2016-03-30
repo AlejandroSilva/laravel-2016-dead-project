@@ -1,6 +1,5 @@
 .inputHora{
     composes: inputNumberAsText from '../shared/shared.css';
-    /*width: 25px;*/
     margin: 0 0 2px 0;
 }
 .inputHoraDirty {

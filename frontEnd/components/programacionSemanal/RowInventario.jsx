@@ -10,8 +10,7 @@ import InputDotacion from './InputDotacion.jsx'
 import Select from './Select.jsx'
 
 // Styles
-//import styles from './RowInventario.css'
-//import styleShared from '../shared/shared.css'
+import css from './TablaInventario.css'
 
 class RowInventario extends React.Component{
     constructor(props){
@@ -66,8 +65,8 @@ class RowInventario extends React.Component{
             selectSupervisor: this.selectSupervisorDia.getEstado(),
             selectCaptador1: this.selectCaptador1Dia.getEstado(),
             selectCaptador2: this.selectCaptador2Dia.getEstado(),
-            inputDotacionCaptador1: this.inputDotacionCaptador1Dia.getEstado(),
-            inputDotacionCaptador2: this.inputDotacionCaptador2Dia.getEstado(),
+            // inputDotacionCaptador1: this.inputDotacionCaptador1Dia.getEstado(),
+            // inputDotacionCaptador2: this.inputDotacionCaptador2Dia.getEstado(),
             inputHoraPresentacionLider: this.inputHoraPresentacionLiderDia.getEstado(),
             inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoDia.getEstado()
         })
@@ -79,8 +78,8 @@ class RowInventario extends React.Component{
             selectSupervisor: this.selectSupervisorNoche.getEstado(),
             selectCaptador1: this.selectCaptador1Noche.getEstado(),
             selectCaptador2: this.selectCaptador2Noche.getEstado(),
-            inputDotacionCaptador1: this.inputDotacionCaptador1Noche.getEstado(),
-            inputDotacionCaptador2: this.inputDotacionCaptador2Noche.getEstado(),
+            // inputDotacionCaptador1: this.inputDotacionCaptador1Noche.getEstado(),
+            // inputDotacionCaptador2: this.inputDotacionCaptador2Noche.getEstado(),
             inputHoraPresentacionLider: this.inputHoraPresentacionLiderNoche.getEstado(),
             inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoNoche.getEstado()
         })
@@ -115,10 +114,10 @@ class RowInventario extends React.Component{
         else if (estados.inputDotacionCaptador1.valid === false)
             return console.log(`dotacion del captador1: ${estados.inputDotacionCaptador1.dotacion} invalida`)
 
-        if (estados.inputDotacionCaptador2.valid && estados.inputDotacionCaptador2.dirty)
-            cambiosNomina.dotacionCaptador2 = estados.inputDotacionCaptador2.dotacion
-        else if (estados.inputDotacionCaptador2.valid === false)
-            return console.log(`dotacion del captador2: ${estados.inputDotacionCaptador2.dotacion} invalida`)
+        // if (estados.inputDotacionCaptador2.valid && estados.inputDotacionCaptador2.dirty)
+        //     cambiosNomina.dotacionCaptador2 = estados.inputDotacionCaptador2.dotacion
+        // else if (estados.inputDotacionCaptador2.valid === false)
+        //     return console.log(`dotacion del captador2: ${estados.inputDotacionCaptador2.dotacion} invalida`)
 
         // La HORA de llegada del equipo ha cambiado?
         if(estados.inputHoraPresentacionLider.dirty)
@@ -160,7 +159,7 @@ class RowInventario extends React.Component{
         return (
             <tr>
                 {/* Fecha */}
-                <td className={"asd"}>
+                <td className={css.tdFecha}>
                     <InputFecha
                         ref={ref=>this.inputDia=ref}
                         fecha={this.props.inventario.fechaProgramada}
@@ -169,23 +168,23 @@ class RowInventario extends React.Component{
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dia')}/>
                 </td>
                 {/* Cliente*/}
-                <td className={''}>
-                    <p><small>{this.props.inventario.local.cliente.nombreCorto}</small></p>
+                <td className={css.tdCliente}>
+                    <p>{this.props.inventario.local.cliente.nombreCorto}</p>
                 </td>
                 {/* CECO */}
-                <td className={''}>
-                    <p><small>{this.props.inventario.local.numero}</small></p>
+                <td className={css.tdCeco}>
+                    <p>{this.props.inventario.local.numero}</p>
                 </td>
                 {/* Region */}
-                <td className={'a'}>
-                    <p><small>{this.props.inventario.local.direccion.comuna.provincia.region.numero}</small></p>
+                <td className={css.tdRegion}>
+                    <p>{this.props.inventario.local.direccion.comuna.provincia.region.numero}</p>
                 </td>
                 {/* Comuna */}
-                <td className={'a'}>
-                    <p><small>{this.props.inventario.local.direccion.comuna.nombre}</small></p>
+                <td className={css.tdComuna}>
+                    <p>{this.props.inventario.local.direccion.comuna.nombre}</p>
                 </td>
                 {/* Turno */}
-                <td className={'a'}>
+                <td className={css.tdTurno}>
                     <Select
                         ref={ref=>this.selectJornada=ref}
                         onSelect={this.guardarInventario.bind(this)}
@@ -199,11 +198,11 @@ class RowInventario extends React.Component{
                     />
                 </td>
                 {/* Tienda */}
-                <td className={'a'}>
+                <td className={css.tdTienda}>
                     <p><small>{this.props.inventario.local.nombre}</small></p>
                 </td>
                 {/* Stock */}
-                <td className={'a'}>
+                <td className={css.tdStock}>
                     <OverlayTrigger
                         placement="left"
                         delay={0}
@@ -213,7 +212,7 @@ class RowInventario extends React.Component{
                     </OverlayTrigger>
                 </td>
                 {/* Dotación Total */}
-                <td className={'a'}>
+                <td className={css.tdDotacionTotal}>
                     <InputDotacion
                         /*style={{display: (idJornada==2 || idJornada==3)? 'block' : 'none'}}*/
                         className="pull-left"
@@ -222,7 +221,6 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarInventario.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}/>
-
                     <InputDotacion
                         style={{display: inventarioDia? 'block' : 'none'}}
                         className="pull-right"
@@ -231,7 +229,6 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}/>
-
                     <InputDotacion
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         className="pull-right"
@@ -242,8 +239,8 @@ class RowInventario extends React.Component{
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}/>
                 </td>
                 {/* Lider */}
-                <td className={'a'}>
-                    <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                <td className={css.tdLider}>
+                    <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectLiderDia=ref}
                             seleccionada={ this.props.inventario.nomina_dia.idLider || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
@@ -251,7 +248,7 @@ class RowInventario extends React.Component{
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
                     />
-                    <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectLiderNoche=ref}
                             seleccionada={ this.props.inventario.nomina_noche.idLider || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
@@ -261,8 +258,8 @@ class RowInventario extends React.Component{
                     />
                 </td>
                 {/* Supervisor */}
-                <td className='a'>
-                    <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                <td className={css.tdLider}>
+                    <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectSupervisorDia=ref}
                             seleccionada={this.props.inventario.nomina_dia.idSupervisor || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
@@ -270,7 +267,7 @@ class RowInventario extends React.Component{
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
                     />
-                    <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectSupervisorNoche=ref}
                             seleccionada={this.props.inventario.nomina_noche.idSupervisor || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
@@ -280,8 +277,8 @@ class RowInventario extends React.Component{
                     />
                 </td>
                 {/* Captador 1 */}
-                <td className={'a'}>
-                    <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                <td className={css.tdLider}>
+                    <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador1Dia=ref}
                             seleccionada={this.props.inventario.nomina_dia.idCaptador1 || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
@@ -289,7 +286,7 @@ class RowInventario extends React.Component{
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
                     />
-                    <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador1Noche=ref}
                             seleccionada={this.props.inventario.nomina_noche.idCaptador1 || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
@@ -299,7 +296,8 @@ class RowInventario extends React.Component{
                     />
                 </td>
                 {/* DotacionCaptador 1 */}
-                <td className={'a'}>
+                {/*
+                <td className={css.tdDotacion }>
                     <InputDotacion
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputDotacionCaptador1Dia=ref}
@@ -308,7 +306,6 @@ class RowInventario extends React.Component{
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
                     />
-                    
                     <InputDotacion
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         ref={ref=>this.inputDotacionCaptador1Noche=ref}
@@ -318,9 +315,10 @@ class RowInventario extends React.Component{
                         focusRowSiguiente={()=>{}}
                     />
                 </td>
+                 */}
                 {/* Captador 2 */}
-                <td className={'a'}>
-                    <Select style={{width: '120px', display: inventarioDia? 'block' : 'none'}}
+                <td className={css.tdLider}>
+                    <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador2Dia=ref}
                             seleccionada={this.props.inventario.nomina_dia.idCaptador2 || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
@@ -328,7 +326,7 @@ class RowInventario extends React.Component{
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
                     />
-                    <Select style={{width: '120px', display: inventarioNoche? 'block' : 'none'}}
+                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador2Noche=ref}
                             seleccionada={this.props.inventario.nomina_noche.idCaptador2 || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
@@ -338,7 +336,8 @@ class RowInventario extends React.Component{
                     />
                 </td>
                 {/* DotacionCaptador 2 */}
-                <td className={'a'}>
+                {/*
+                <td className={css.tdDotacion}>
                     <InputDotacion
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputDotacionCaptador2Dia=ref}
@@ -357,8 +356,9 @@ class RowInventario extends React.Component{
                         focusRowSiguiente={()=>{}}
                     />
                 </td>
+                 */}
                 {/* Hora Presentación Lider */}
-                <td className={'a'}>
+                <td className={css.tdHora}>
                     <InputHora
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionLiderDia=ref}
@@ -378,7 +378,7 @@ class RowInventario extends React.Component{
 
                 </td>
                 {/* Hora Presentación Equipo*/}
-                <td className={'b'}>
+                <td className={css.tdHora}>
                     <InputHora
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionEquipoDia=ref}
@@ -397,11 +397,11 @@ class RowInventario extends React.Component{
                     />
                 </td>
                 {/* Dirección */}
-                <td className={'a'}>
-                    <p><small>{this.props.inventario.local.direccion.direccion}</small></p>
+                <td className={css.tdDireccion}>
+                    <p>{this.props.inventario.local.direccion.direccion}</p>
                 </td>
                 {/* Nómina*/}
-                <td className={''}>
+                <td className={css.tdNomina}>
                     <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Ver</button>
                 </td>
             </tr>
