@@ -1,6 +1,6 @@
 .inputDotacion{
     composes: inputNumberAsText from '../shared/shared.css';
-    width: 35px;
+    width: 34px;
     margin: 0 0 2px 0;
     text-align: center;
 }

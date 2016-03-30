@@ -109,10 +109,10 @@ class RowInventario extends React.Component{
             cambiosNomina.idCaptador2 = estados.selectCaptador2.seleccionUsuario
 
         // La DOTACION del CAPTADOR es valida y ha cambiado?
-        if (estados.inputDotacionCaptador1.valid && estados.inputDotacionCaptador1.dirty)
-            cambiosNomina.dotacionCaptador1 = estados.inputDotacionCaptador1.dotacion
-        else if (estados.inputDotacionCaptador1.valid === false)
-            return console.log(`dotacion del captador1: ${estados.inputDotacionCaptador1.dotacion} invalida`)
+        // if (estados.inputDotacionCaptador1.valid && estados.inputDotacionCaptador1.dirty)
+        //     cambiosNomina.dotacionCaptador1 = estados.inputDotacionCaptador1.dotacion
+        // else if (estados.inputDotacionCaptador1.valid === false)
+        //     return console.log(`dotacion del captador1: ${estados.inputDotacionCaptador1.dotacion} invalida`)
 
         // if (estados.inputDotacionCaptador2.valid && estados.inputDotacionCaptador2.dirty)
         //     cambiosNomina.dotacionCaptador2 = estados.inputDotacionCaptador2.dotacion
