@@ -77,6 +77,11 @@ class TableHeader extends React.Component {
                         )}
                     </div>
                     <label><input type="checkbox" onChange={this.toggleTodos.bind(this)} checked={this.revisarTodosSeleccionados.call(this)}/>Todos</label>
+                    <a href="#"
+                       className="btn btn-block btn-sm btn-primary"
+                       onClick={this.closeMenu.bind(this)}>
+                        Aceptar
+                    </a>
                 </div>
             </div>
         )
