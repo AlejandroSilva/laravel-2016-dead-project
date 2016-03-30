@@ -21742,7 +21742,7 @@
 
 	var _v2 = _interopRequireDefault(_v);
 
-	var _BlackBoxMensual = __webpack_require__(429);
+	var _BlackBoxMensual = __webpack_require__(282);
 
 	var _BlackBoxMensual2 = _interopRequireDefault(_BlackBoxMensual);
 
@@ -21956,6 +21956,7 @@
 	                    _this6.blackbox.actualizarDatosInventario(formInventario, inventarioCreado);
 	                    // actualizar los datos y el state de la app
 	                    // actualizar los filtros, y la lista ordenada de locales
+	                    // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
 	                    _this6.setState(_this6.blackbox.getListaFiltrada());
 	                });
 	            }
@@ -35138,7 +35139,339 @@
 	}));
 
 /***/ },
-/* 282 */,
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _ramda = __webpack_require__(283);
+
+	var _ramda2 = _interopRequireDefault(_ramda);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var BlackBox = function () {
+	    function BlackBox(clientes) {
+	        _classCallCheck(this, BlackBox);
+
+	        this.clientes = clientes;
+	        this.lista = [];
+	        this.filtroClientes = [];
+	        this.filtroRegiones = [];
+	        this.idDummy = 1; // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
+	    }
+	    // Todo Modificar
+
+
+	    _createClass(BlackBox, [{
+	        key: 'reset',
+	        value: function reset() {
+	            this.lista = [];
+	            this.filtroClientes = [];
+	            this.filtroRegiones = [];
+	            this.idDummy = 1;
+	        }
+	        // Todo: Optimizar
+	        // Todo Modificar: el listado de clientes
+
+	    }, {
+	        key: 'add',
+	        value: function add(inventario) {
+	            this.lista.push(inventario);
+	        }
+	        // Todo Modificar: el listado de clientes
+
+	    }, {
+	        key: 'remove',
+	        value: function remove(idDummy) {
+	            var index = this.lista.findIndex(function (inventario) {
+	                return inventario.idDummy === idDummy;
+	            });
+	            if (index >= 0) this.lista.splice(index, 1);
+	        }
+	    }, {
+	        key: 'yaExiste',
+	        value: function yaExiste(idLocal, annoMesDia) {
+	            var inventariosDelLocal = this.lista.filter(function (inventario) {
+	                return inventario.idLocal === idLocal;
+	            });
+	            // buscar si se tiene inventarios para este local
+	            if (inventariosDelLocal.length === 0) {
+	                return false;
+	            }
+	            // buscar si alguna fecha coincide
+	            var existe = false;
+	            inventariosDelLocal.forEach(function (inventario) {
+	                if (inventario.fechaProgramada === annoMesDia) {
+	                    // se tiene el mismo local, con la misma fecha inventariado
+	                    console.log('ya programado');
+	                    existe = true;
+	                    return true;
+	                }
+	            });
+	            return existe;
+	        }
+	    }, {
+	        key: 'getListaFiltradaSinOrdenar',
+	        value: function getListaFiltradaSinOrdenar() {
+	            this.actualizarFiltros();
+
+	            // filtrar por clientes
+	            var clientesSeleccionados = this.filtroClientes.filter(function (opcion) {
+	                return opcion.seleccionado;
+	            }).map(function (opcion) {
+	                return opcion.texto;
+	            });
+	            var listaFiltrada1 = _ramda2.default.filter(function (inventario) {
+	                return _ramda2.default.contains(inventario.local.nombreCliente, clientesSeleccionados);
+	            }, this.lista);
+
+	            // filtrar por regiones
+	            var regionesSeleccionadas = this.filtroRegiones.filter(function (opcion) {
+	                return opcion.seleccionado;
+	            }).map(function (opcion) {
+	                return opcion.texto;
+	            });
+	            var listaFiltrada2 = _ramda2.default.filter(function (inventario) {
+	                return _ramda2.default.contains(inventario.local.nombreRegion, regionesSeleccionadas);
+	            }, listaFiltrada1);
+
+	            return {
+	                inventariosFiltrados: listaFiltrada2,
+	                filtroClientes: this.filtroClientes,
+	                filtroRegiones: this.filtroRegiones
+	            };
+	        }
+	    }, {
+	        key: 'getListaFiltrada',
+	        value: function getListaFiltrada() {
+	            this.actualizarFiltros();
+
+	            // filtrar por clientes
+	            var clientesSeleccionados = this.filtroClientes.filter(function (opcion) {
+	                return opcion.seleccionado;
+	            }).map(function (opcion) {
+	                return opcion.texto;
+	            });
+	            var listaFiltrada1 = _ramda2.default.filter(function (inventario) {
+	                return _ramda2.default.contains(inventario.local.nombreCliente, clientesSeleccionados);
+	            }, this.lista);
+
+	            // filtrar por regiones
+	            var regionesSeleccionadas = this.filtroRegiones.filter(function (opcion) {
+	                return opcion.seleccionado;
+	            }).map(function (opcion) {
+	                return opcion.texto;
+	            });
+	            var listaFiltrada2 = _ramda2.default.filter(function (inventario) {
+	                return _ramda2.default.contains(inventario.local.nombreRegion, regionesSeleccionadas);
+	            }, listaFiltrada1);
+
+	            // Hack: para ordenar por fechas, se van a separar las que estan "fijadas", de las que "no estan fijadas"
+	            // se ordenaran las "fijadas", y las "no fijadas" quedan igual
+	            var listaDiaFijado = listaFiltrada2.filter(function (inventario) {
+	                return inventario.fechaProgramada.indexOf('-00') === -1;
+	            });
+	            var listaDiaNoFijado = listaFiltrada2.filter(function (inventario) {
+	                return inventario.fechaProgramada.indexOf('-00') !== -1;
+	            });
+
+	            var orderByFechaProgramadaStock = function orderByFechaProgramadaStock(a, b) {
+	                var dateA = new Date(a.fechaProgramada);
+	                var dateB = new Date(b.fechaProgramada);
+
+	                if (dateA - dateB === 0) {
+	                    // stock ordenado de mayor a menor (B-A)
+	                    return b.local.stock - a.local.stock;
+	                } else {
+	                    // fecha ordenada de de menor a mayor (A-B)
+	                    return dateA - dateB;
+	                }
+	            };
+	            var listaDiaFIjadoOrdenado = _ramda2.default.sort(orderByFechaProgramadaStock, listaDiaFijado);
+
+	            return {
+	                inventariosFiltrados: [].concat(_toConsumableArray(listaDiaNoFijado), _toConsumableArray(listaDiaFIjadoOrdenado)),
+	                filtroClientes: this.filtroClientes,
+	                filtroRegiones: this.filtroRegiones
+	            };
+	        }
+
+	        // Metodos de alto nivel
+
+	    }, {
+	        key: '__crearDummy',
+	        value: function __crearDummy(annoMesDia, idLocal) {
+	            return {
+	                idDummy: this.idDummy++, // asignar e incrementar
+	                idInventario: null,
+	                idLocal: idLocal,
+	                idJornada: null,
+	                fechaProgramada: annoMesDia,
+	                horaLlegada: null,
+	                stockTeorico: 0,
+	                dotacionAsignada: null,
+	                local: {
+	                    idLocal: idLocal,
+	                    idJornadaSugerida: 4, // no definida
+	                    nombre: '-',
+	                    numero: '-',
+	                    stock: 0,
+	                    fechaStock: 'YYYY-MM-DD',
+	                    formato_local: {
+	                        produccionSugerida: 0
+	                    },
+	                    nombreCliente: '-',
+	                    nombreComuna: '-',
+	                    nombreProvincia: '-',
+	                    nombreRegion: '-',
+	                    dotacionSugerida: 0
+	                }
+	            };
+	        }
+	    }, {
+	        key: 'crearDummy',
+	        value: function crearDummy(idCliente, numeroLocal, annoMesDia) {
+	            // ########### Revisar Cliente ###########
+	            // el usuario no selecciono uno en el formulario
+	            if (idCliente === '-1' || idCliente === '' || !idCliente) {
+	                return [{
+	                    idCliente: idCliente,
+	                    numeroLocal: numeroLocal,
+	                    errorIdCliente: 'Seleccione un Cliente'
+	                }, null];
+	            }
+	            // dio un idCliente, pero no existe
+	            var cliente = this.clientes.find(function (cliente) {
+	                return cliente.idCliente == idCliente;
+	            });
+	            if (!cliente) {
+	                return [{
+	                    idCliente: idCliente,
+	                    numeroLocal: numeroLocal,
+	                    errorIdCliente: 'Cliente no Existe'
+	                }, null];
+	            }
+
+	            // ########### Revisar Local ###########
+	            // revisar que el local exista
+	            var local = cliente.locales.find(function (local) {
+	                return local.numero == numeroLocal;
+	            });
+	            if (local === undefined) {
+	                return [{
+	                    idCliente: idCliente,
+	                    numeroLocal: numeroLocal,
+	                    errorNumeroLocal: numeroLocal === '' ? 'Digite un numero de local.' : 'El local \'' + numeroLocal + '\' no existe.'
+	                }, null];
+	            }
+
+	            // revisar que no exista en la lista
+	            if (this.yaExiste(local.idLocal, annoMesDia)) {
+	                return [{
+	                    idCliente: idCliente,
+	                    numeroLocal: numeroLocal,
+	                    errorNumeroLocal: numeroLocal + ' ya ha sido agendado esa fecha.'
+	                }, null];
+	            }
+
+	            // ########### ok, se puede crear el inventario "vacio" ###########
+	            var dummy = this.__crearDummy(annoMesDia, local.idLocal);
+	            return [null, dummy];
+	        }
+
+	        // Todo modificar el listado de clientes
+
+	    }, {
+	        key: 'actualizarDatosLocal',
+	        value: function actualizarDatosLocal(local) {
+	            // actualizar los datos del local de todos los inventarios que lo tengan
+	            this.lista = this.lista.map(function (inventario) {
+	                if (inventario.local.idLocal == local.idLocal) {
+
+	                    inventario.local = Object.assign(inventario.local, local);
+	                    // si no hay una dotacion asignada, ver la sugerida
+	                    if (inventario.dotacionAsignada === null) {
+	                        inventario.dotacionAsignada = local.dotacionSugerida;
+	                    }
+	                }
+	                return inventario;
+	            });
+	            this.actualizarFiltros();
+	        }
+	        // Todo modificar el listado de clientes
+
+	    }, {
+	        key: 'actualizarDatosInventario',
+	        value: function actualizarDatosInventario(formInventario, inventarioActualizado) {
+	            this.lista = this.lista.map(function (inventario) {
+	                if (inventario.idDummy == formInventario.idDummy) {
+	                    inventario = Object.assign(inventario, inventarioActualizado);
+	                }
+	                return inventario;
+	            });
+	        }
+	    }, {
+	        key: 'actualizarFiltros',
+	        value: function actualizarFiltros() {
+	            var _this = this;
+
+	            // Clientes
+	            var clientes = this.lista.map(function (inventario) {
+	                return inventario.local.nombreCliente;
+	            });
+	            var clientesUnicos = _ramda2.default.uniq(clientes);
+	            this.filtroClientes = clientesUnicos.map(function (textoUnico) {
+	                // si no existe la opcion, se crea y se selecciona por defecto
+	                return _this.filtroClientes.find(function (opc) {
+	                    return opc.texto === textoUnico;
+	                }) || { texto: textoUnico, seleccionado: true };
+	            });
+
+	            // Regiones
+	            var regiones = this.lista.map(function (inventario) {
+	                return inventario.local.nombreRegion;
+	            });
+	            var regionesUnicas = _ramda2.default.uniq(regiones);
+	            this.filtroRegiones = regionesUnicas.map(function (textoUnico) {
+	                // si no existe la opcion, se crea y se selecciona por defecto
+	                return _this.filtroRegiones.find(function (opc) {
+	                    return opc.texto === textoUnico;
+	                }) || { texto: textoUnico, seleccionado: true };
+	            });
+	        }
+	    }, {
+	        key: 'reemplazarFiltroClientes',
+	        value: function reemplazarFiltroClientes(filtro) {
+	            this.filtroClientes = filtro;
+	        }
+	    }, {
+	        key: 'reemplazarFiltroRegiones',
+	        value: function reemplazarFiltroRegiones(filtro) {
+	            this.filtroRegiones = filtro;
+	        }
+	    }]);
+
+	    return BlackBox;
+	}();
+
+	exports.default = BlackBox;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "BlackBoxMensual.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
 /* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -44437,7 +44770,7 @@
 
 	    _createClass(TablaMensual, [{
 	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
+	        value: function componentWillReceiveProps() {
 	            // cuando se pasa de mes a mes, se generand posiciones "vacias" en el arreglo inputFecha, esto lo soluciona
 	            this.inputFecha = this.inputFecha.filter(function (input) {
 	                return input !== null;
@@ -44485,7 +44818,12 @@
 	                            _react2.default.createElement(
 	                                'th',
 	                                { className: css.thFecha },
-	                                'Fecha'
+	                                'Fecha',
+	                                _react2.default.createElement('span', { className: 'glyphicon glyphicon-sort-by-attributes pull-right',
+	                                    onClick: function onClick() {
+	                                        alert("PENDIENTE: ordenar los inventarios por fecha y stock");
+	                                    }
+	                                })
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
@@ -45329,6 +45667,13 @@
 	                        null,
 	                        _react2.default.createElement('input', { type: 'checkbox', onChange: this.toggleTodos.bind(this), checked: this.revisarTodosSeleccionados.call(this) }),
 	                        'Todos'
+	                    ),
+	                    _react2.default.createElement(
+	                        'a',
+	                        { href: '#',
+	                            className: 'btn btn-block btn-sm btn-primary',
+	                            onClick: this.closeMenu.bind(this) },
+	                        'Aceptar'
 	                    )
 	                )
 	            );
@@ -45612,9 +45957,6 @@
 	            var dia = _props$inventario$fec6[2];
 
 	            var isDirty = this.state.inputDia != dia || this.state.inputDotacion != (this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) || this.state.selectJornada != (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida);
-	            //console.log("dia ", this.state.inputDia, dia, this.state.inputDia!==dia)
-	            //console.log("dotac ", this.state.inputDotacion, (this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida), this.state.inputDotacion!==(this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) )
-	            //console.log("jornada ", this.state.selectJornada, (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida), this.state.selectJornada!==(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida))
 	            console.log("isDirty ", isDirty);
 	            return isDirty;
 	        }
@@ -45657,14 +45999,13 @@
 	        value: function render() {
 	            var _this3 = this;
 
-	            console.log("render: prop.local.dotSug, state.inputDot", this.props.inventario.local.dotacionSugerida, this.state.inputDotacion);
 	            return _react2.default.createElement(
 	                'tr',
 	                null,
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: css.tdCorrelativo },
-	                    /*this.props.inventario.idDummy*/this.props.index
+	                    this.props.index
 	                ),
 	                _react2.default.createElement(
 	                    'td',
@@ -45736,11 +46077,7 @@
 	                    _react2.default.createElement(
 	                        'p',
 	                        { style: { margin: 0 } },
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.inventario.local.direccion.comuna.provincia.region.numero
-	                        )
+	                        _react2.default.createElement('small', null)
 	                    )
 	                ),
 	                _react2.default.createElement(
@@ -45752,11 +46089,7 @@
 	                        _react2.default.createElement(
 	                            'b',
 	                            null,
-	                            _react2.default.createElement(
-	                                'small',
-	                                null,
-	                                this.props.inventario.local.direccion.comuna.nombre
-	                            )
+	                            _react2.default.createElement('small', null)
 	                        )
 	                    )
 	                ),
@@ -45812,11 +46145,19 @@
 	                    { className: css.tdOpciones },
 	                    this.props.inventario.idInventario ? _react2.default.createElement(
 	                        'button',
-	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
+	                        { className: 'btn btn-xs btn-primary',
+	                            tabIndex: '-1',
+	                            onClick: function onClick() {
+	                                alert("PEND: eliminar inventario");
+	                            }
+	                        },
 	                        'Eliminar inventario'
 	                    ) : _react2.default.createElement(
 	                        'button',
-	                        { className: 'btn btn-xs btn-danger', tabIndex: '-1', onClick: this.quitarInventario.bind(this) },
+	                        { className: 'btn btn-xs btn-danger',
+	                            tabIndex: '-1',
+	                            onClick: this.quitarInventario.bind(this)
+	                        },
 	                        'X'
 	                    )
 	                )
@@ -52256,9 +52597,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _RowInventario = __webpack_require__(419);
+	var _RowInventarioSemanal = __webpack_require__(430);
 
-	var _RowInventario2 = _interopRequireDefault(_RowInventario);
+	var _RowInventarioSemanal2 = _interopRequireDefault(_RowInventarioSemanal);
 
 	var _TablaSemanal = __webpack_require__(428);
 
@@ -52386,17 +52727,7 @@
 	                        _react2.default.createElement(
 	                            'th',
 	                            { className: css.thLider },
-	                            'Supervisor'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            { className: css.thLider },
 	                            'Captador 1'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            { className: css.thLider },
-	                            'Captador 2'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
@@ -52407,11 +52738,6 @@
 	                            'th',
 	                            { className: css.thHora },
 	                            'Hr.P.Equipo'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            { className: css.thDireccion },
-	                            'Dirección'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
@@ -52436,7 +52762,7 @@
 	                            )
 	                        )
 	                    ) : this.props.inventarios.map(function (inventario, index) {
-	                        return _react2.default.createElement(_RowInventario2.default
+	                        return _react2.default.createElement(_RowInventarioSemanal2.default
 	                        // Propiedades
 	                        , { key: index,
 	                            index: index,
@@ -52476,564 +52802,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TablaSemanal.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 419 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _numeral = __webpack_require__(304);
-
-	var _numeral2 = _interopRequireDefault(_numeral);
-
-	var _Tooltip = __webpack_require__(305);
-
-	var _Tooltip2 = _interopRequireDefault(_Tooltip);
-
-	var _OverlayTrigger = __webpack_require__(335);
-
-	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
-
-	var _InputFecha = __webpack_require__(420);
-
-	var _InputFecha2 = _interopRequireDefault(_InputFecha);
-
-	var _InputHora = __webpack_require__(422);
-
-	var _InputHora2 = _interopRequireDefault(_InputHora);
-
-	var _InputDotacion = __webpack_require__(424);
-
-	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
-
-	var _Select = __webpack_require__(426);
-
-	var _Select2 = _interopRequireDefault(_Select);
-
-	var _TablaSemanal = __webpack_require__(428);
-
-	var _TablaSemanal2 = _interopRequireDefault(_TablaSemanal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	// Componentes
-
-
-	// Styles
-
-
-	var RowInventario = function (_React$Component) {
-	    _inherits(RowInventario, _React$Component);
-
-	    function RowInventario(props) {
-	        _classCallCheck(this, RowInventario);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RowInventario).call(this, props));
-
-	        _this.state = {
-	            inputDia: 0,
-	            inputMes: 0,
-	            inputAnno: 0,
-	            inputDotacion: 0,
-	            selectJornada: 4
-	        };
-	        // Refs disponibles: this.inputDia, this.inputDotacion
-	        return _this;
-	    }
-
-	    _createClass(RowInventario, [{
-	        key: 'guardarInventario',
-	        value: function guardarInventario() {
-	            var cambiosInventario = {};
-
-	            // el DIA es valido, y ha cambiado?
-	            var estadoInputDia = this.inputDia.getEstado();
-	            if (estadoInputDia.valid && estadoInputDia.dirty) {
-	                var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
-
-	                var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
-
-	                var anno = _props$inventario$fec2[0];
-	                var mes = _props$inventario$fec2[1];
-	                var _dia = _props$inventario$fec2[2];
-
-	                cambiosInventario.fechaProgramada = anno + '-' + mes + '-' + estadoInputDia.dia;
-	            } else if (estadoInputDia.valid === false) {
-	                return console.log('fecha ' + estadoInputDia.dia + ' invalida');
-	            }
-
-	            // la DOTACION es valida y ha cambiado?
-	            var estadoInputDotacionTotal = this.inputDotacionTotal.getEstado();
-	            if (estadoInputDotacionTotal.valid && estadoInputDotacionTotal.dirty) {
-	                cambiosInventario.dotacionAsignadaTotal = estadoInputDotacionTotal.dotacion;
-	            } else if (estadoInputDotacionTotal.valid === false) {
-	                return console.log('dotacion total: ' + estadoInputDotacionTotal.dotacion + ' invalida');
-	            }
-
-	            // la JORNADA es valida y ha cambiado
-	            var estadoSelectJornada = this.selectJornada.getEstado();
-	            if (estadoSelectJornada.dirty) cambiosInventario.idJornada = estadoSelectJornada.seleccionUsuario;
-
-	            // almenos uno de los ementos debe estar "dirty" para guardar los cambios
-	            if (JSON.stringify(cambiosInventario) !== "{}") {
-	                console.log(cambiosInventario);
-	                this.props.guardarInventario(this.props.inventario.idInventario, cambiosInventario);
-	            } else {
-	                console.log('inventario sin cambios, no se actualiza');
-	            }
-	        }
-	    }, {
-	        key: 'guardarNominaDia',
-	        value: function guardarNominaDia() {
-	            this._guardarNomina(this.props.inventario.nomina_dia.idNomina, {
-	                inputDotacion: this.inputDotacionDia.getEstado(),
-	                selectLider: this.selectLiderDia.getEstado(),
-	                selectSupervisor: this.selectSupervisorDia.getEstado(),
-	                selectCaptador1: this.selectCaptador1Dia.getEstado(),
-	                selectCaptador2: this.selectCaptador2Dia.getEstado(),
-	                // inputDotacionCaptador1: this.inputDotacionCaptador1Dia.getEstado(),
-	                // inputDotacionCaptador2: this.inputDotacionCaptador2Dia.getEstado(),
-	                inputHoraPresentacionLider: this.inputHoraPresentacionLiderDia.getEstado(),
-	                inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoDia.getEstado()
-	            });
-	        }
-	    }, {
-	        key: 'guardarNominaNoche',
-	        value: function guardarNominaNoche() {
-	            this._guardarNomina(this.props.inventario.nomina_noche.idNomina, {
-	                inputDotacion: this.inputDotacionNoche.getEstado(),
-	                selectLider: this.selectLiderNoche.getEstado(),
-	                selectSupervisor: this.selectSupervisorNoche.getEstado(),
-	                selectCaptador1: this.selectCaptador1Noche.getEstado(),
-	                selectCaptador2: this.selectCaptador2Noche.getEstado(),
-	                // inputDotacionCaptador1: this.inputDotacionCaptador1Noche.getEstado(),
-	                // inputDotacionCaptador2: this.inputDotacionCaptador2Noche.getEstado(),
-	                inputHoraPresentacionLider: this.inputHoraPresentacionLiderNoche.getEstado(),
-	                inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoNoche.getEstado()
-	            });
-	        }
-	    }, {
-	        key: '_guardarNomina',
-	        value: function _guardarNomina(idNomina, estados) {
-	            var cambiosNomina = {};
-
-	            // la DOTACION es valida y ha cambiado?
-	            if (estados.inputDotacion.valid && estados.inputDotacion.dirty) cambiosNomina.dotacionAsignada = estados.inputDotacion.dotacion;else if (estados.inputDotacion.valid === false) return console.log('dotacion de la nomina: ' + estados.inputDotacion.dotacion + ' invalida');
-
-	            // el LIDER es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
-	            if (estados.selectLider.dirty) cambiosNomina.idLider = estados.selectLider.seleccionUsuario;
-
-	            // el SUPERVISOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
-	            if (estados.selectSupervisor.dirty) cambiosNomina.idSupervisor = estados.selectSupervisor.seleccionUsuario;
-
-	            // el CAPTADOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
-	            if (estados.selectCaptador1.dirty) cambiosNomina.idCaptador1 = estados.selectCaptador1.seleccionUsuario;
-	            if (estados.selectCaptador2.dirty) cambiosNomina.idCaptador2 = estados.selectCaptador2.seleccionUsuario;
-
-	            // La DOTACION del CAPTADOR es valida y ha cambiado?
-	            // if (estados.inputDotacionCaptador1.valid && estados.inputDotacionCaptador1.dirty)
-	            //     cambiosNomina.dotacionCaptador1 = estados.inputDotacionCaptador1.dotacion
-	            // else if (estados.inputDotacionCaptador1.valid === false)
-	            //     return console.log(`dotacion del captador1: ${estados.inputDotacionCaptador1.dotacion} invalida`)
-
-	            // if (estados.inputDotacionCaptador2.valid && estados.inputDotacionCaptador2.dirty)
-	            //     cambiosNomina.dotacionCaptador2 = estados.inputDotacionCaptador2.dotacion
-	            // else if (estados.inputDotacionCaptador2.valid === false)
-	            //     return console.log(`dotacion del captador2: ${estados.inputDotacionCaptador2.dotacion} invalida`)
-
-	            // La HORA de llegada del equipo ha cambiado?
-	            if (estados.inputHoraPresentacionLider.dirty) cambiosNomina.horaPresentacionLider = estados.inputHoraPresentacionLider.hora;
-	            if (estados.inputHoraPresentacionEquipo.dirty) cambiosNomina.horaPresentacionEquipo = estados.inputHoraPresentacionEquipo.hora;
-
-	            // almenos uno de los ementos debe estar "dirty" para guardar los cambios
-	            if (JSON.stringify(cambiosNomina) !== '{}') {
-	                console.log(cambiosNomina);
-	                this.props.guardarNomina(idNomina, cambiosNomina);
-	            } else {
-	                console.log('nomina sin cambios, no se actualiza');
-	            }
-	        }
-	    }, {
-	        key: 'focusElemento',
-	        value: function focusElemento(elemento) {
-	            if (elemento === 'dia') {
-	                this.inputDia.focus();
-	            } else if (elemento === 'dotacion') {
-	                this.inputDotacionTotal.focus();
-	            }
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this2 = this;
-
-	            var idJornada = this.props.inventario.idJornada;
-	            var inventarioDia = idJornada == 2 || idJornada == 4;
-	            var inventarioNoche = idJornada == 3 || idJornada == 4;
-	            var opcionesLideres = this.props.lideres.map(function (usuario) {
-	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
-	            });
-	            var opcionesSupervisores = this.props.supervisores.map(function (usuario) {
-	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
-	            });
-	            var opcionesCaptadores = this.props.captadores.map(function (usuario) {
-	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
-	            });
-	            return _react2.default.createElement(
-	                'tr',
-	                null,
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdFecha },
-	                    _react2.default.createElement(_InputFecha2.default, {
-	                        ref: function ref(_ref) {
-	                            return _this2.inputDia = _ref;
-	                        },
-	                        fecha: this.props.inventario.fechaProgramada,
-	                        onGuardar: this.guardarInventario.bind(this),
-	                        focusRowAnterior: function focusRowAnterior() {
-	                            return _this2.props.focusRow(_this2.props.index - 1, 'dia');
-	                        },
-	                        focusRowSiguiente: function focusRowSiguiente() {
-	                            return _this2.props.focusRow(_this2.props.index + 1, 'dia');
-	                        } })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdCliente },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        this.props.inventario.local.cliente.nombreCorto
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdCeco },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        this.props.inventario.local.numero
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdRegion },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        this.props.inventario.local.direccion.comuna.provincia.region.numero
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdComuna },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        this.props.inventario.local.direccion.comuna.nombre
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdTurno },
-	                    _react2.default.createElement(_Select2.default, {
-	                        ref: function ref(_ref2) {
-	                            return _this2.selectJornada = _ref2;
-	                        },
-	                        onSelect: this.guardarInventario.bind(this),
-	                        opciones: [{ valor: '1', texto: 'no definido' }, { valor: '2', texto: 'día' }, { valor: '3', texto: 'noche' }, { valor: '4', texto: 'día y noche' }],
-	                        seleccionada: this.props.inventario.idJornada
-	                    })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdTienda },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'small',
-	                            null,
-	                            this.props.inventario.local.nombre
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdStock },
-	                    _react2.default.createElement(
-	                        _OverlayTrigger2.default,
-	                        {
-	                            placement: 'left',
-	                            delay: 0,
-	                            overlay: _react2.default.createElement(
-	                                _Tooltip2.default,
-	                                { id: 'yyy' },
-	                                'Stock al ' + this.props.inventario.local.fechaStock
-	                            ) },
-	                        _react2.default.createElement(
-	                            'p',
-	                            null,
-	                            _react2.default.createElement(
-	                                'small',
-	                                null,
-	                                (0, _numeral2.default)(this.props.inventario.local.stock).format('0,0')
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdDotacionTotal },
-	                    _react2.default.createElement(_InputDotacion2.default
-	                    /*style={{display: (idJornada==2 || idJornada==3)? 'block' : 'none'}}*/
-	                    , { className: 'pull-left',
-	                        ref: function ref(_ref3) {
-	                            return _this2.inputDotacionTotal = _ref3;
-	                        },
-	                        asignada: this.props.inventario.dotacionAsignadaTotal,
-	                        onGuardar: this.guardarInventario.bind(this),
-	                        focusRowAnterior: function focusRowAnterior() {
-	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
-	                        },
-	                        focusRowSiguiente: function focusRowSiguiente() {
-	                            return _this2.props.focusRow(_this2.props.index + 1, 'dotacion');
-	                        } }),
-	                    _react2.default.createElement(_InputDotacion2.default, {
-	                        style: { display: inventarioDia ? 'block' : 'none' },
-	                        className: 'pull-right',
-	                        ref: function ref(_ref4) {
-	                            return _this2.inputDotacionDia = _ref4;
-	                        },
-	                        asignada: this.props.inventario.nomina_dia.dotacionAsignada,
-	                        onGuardar: this.guardarNominaDia.bind(this),
-	                        focusRowAnterior: function focusRowAnterior() {
-	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
-	                        },
-	                        focusRowSiguiente: function focusRowSiguiente() {
-	                            return _this2.props.focusRow(_this2.props.index + 1, 'dotacion');
-	                        } }),
-	                    _react2.default.createElement(_InputDotacion2.default, {
-	                        style: { display: inventarioNoche ? 'block' : 'none' },
-	                        className: 'pull-right',
-	                        ref: function ref(_ref5) {
-	                            return _this2.inputDotacionNoche = _ref5;
-	                        },
-	                        asignada: this.props.inventario.nomina_noche.dotacionAsignada,
-	                        onGuardar: this.guardarNominaNoche.bind(this),
-	                        focusRowAnterior: function focusRowAnterior() {
-	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
-	                        },
-	                        focusRowSiguiente: function focusRowSiguiente() {
-	                            return _this2.props.focusRow(_this2.props.index + 1, 'dotacion');
-	                        } })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdLider },
-	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioDia ? 'block' : 'none' },
-	                        ref: function ref(_ref6) {
-	                            return _this2.selectLiderDia = _ref6;
-	                        },
-	                        seleccionada: this.props.inventario.nomina_dia.idLider || '',
-	                        onSelect: this.guardarNominaDia.bind(this),
-	                        opciones: opcionesLideres,
-	                        opcionNula: true,
-	                        opcionNulaSeleccionable: true
-	                    }),
-	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioNoche ? 'block' : 'none' },
-	                        ref: function ref(_ref7) {
-	                            return _this2.selectLiderNoche = _ref7;
-	                        },
-	                        seleccionada: this.props.inventario.nomina_noche.idLider || '',
-	                        onSelect: this.guardarNominaNoche.bind(this),
-	                        opciones: opcionesLideres,
-	                        opcionNula: true,
-	                        opcionNulaSeleccionable: true
-	                    })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdLider },
-	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioDia ? 'block' : 'none' },
-	                        ref: function ref(_ref8) {
-	                            return _this2.selectSupervisorDia = _ref8;
-	                        },
-	                        seleccionada: this.props.inventario.nomina_dia.idSupervisor || '',
-	                        onSelect: this.guardarNominaDia.bind(this),
-	                        opciones: opcionesSupervisores,
-	                        opcionNula: true,
-	                        opcionNulaSeleccionable: true
-	                    }),
-	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioNoche ? 'block' : 'none' },
-	                        ref: function ref(_ref9) {
-	                            return _this2.selectSupervisorNoche = _ref9;
-	                        },
-	                        seleccionada: this.props.inventario.nomina_noche.idSupervisor || '',
-	                        onSelect: this.guardarNominaNoche.bind(this),
-	                        opciones: opcionesSupervisores,
-	                        opcionNula: true,
-	                        opcionNulaSeleccionable: true
-	                    })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdLider },
-	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioDia ? 'block' : 'none' },
-	                        ref: function ref(_ref10) {
-	                            return _this2.selectCaptador1Dia = _ref10;
-	                        },
-	                        seleccionada: this.props.inventario.nomina_dia.idCaptador1 || '',
-	                        onSelect: this.guardarNominaDia.bind(this),
-	                        opciones: opcionesCaptadores,
-	                        opcionNula: true,
-	                        opcionNulaSeleccionable: true
-	                    }),
-	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioNoche ? 'block' : 'none' },
-	                        ref: function ref(_ref11) {
-	                            return _this2.selectCaptador1Noche = _ref11;
-	                        },
-	                        seleccionada: this.props.inventario.nomina_noche.idCaptador1 || '',
-	                        onSelect: this.guardarNominaNoche.bind(this),
-	                        opciones: opcionesCaptadores,
-	                        opcionNula: true,
-	                        opcionNulaSeleccionable: true
-	                    })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdLider },
-	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioDia ? 'block' : 'none' },
-	                        ref: function ref(_ref12) {
-	                            return _this2.selectCaptador2Dia = _ref12;
-	                        },
-	                        seleccionada: this.props.inventario.nomina_dia.idCaptador2 || '',
-	                        onSelect: this.guardarNominaDia.bind(this),
-	                        opciones: opcionesCaptadores,
-	                        opcionNula: true,
-	                        opcionNulaSeleccionable: true
-	                    }),
-	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioNoche ? 'block' : 'none' },
-	                        ref: function ref(_ref13) {
-	                            return _this2.selectCaptador2Noche = _ref13;
-	                        },
-	                        seleccionada: this.props.inventario.nomina_noche.idCaptador2 || '',
-	                        onSelect: this.guardarNominaNoche.bind(this),
-	                        opciones: opcionesCaptadores,
-	                        opcionNula: true,
-	                        opcionNulaSeleccionable: true
-	                    })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdHora },
-	                    _react2.default.createElement(_InputHora2.default, {
-	                        style: { display: inventarioDia ? 'block' : 'none' },
-	                        ref: function ref(_ref14) {
-	                            return _this2.inputHoraPresentacionLiderDia = _ref14;
-	                        },
-	                        asignada: this.props.inventario.nomina_dia.horaPresentacionLider,
-	                        onGuardar: this.guardarNominaDia.bind(this),
-	                        focusRowAnterior: function focusRowAnterior() {},
-	                        focusRowSiguiente: function focusRowSiguiente() {}
-	                    }),
-	                    _react2.default.createElement(_InputHora2.default, {
-	                        style: { display: inventarioNoche ? 'block' : 'none' },
-	                        ref: function ref(_ref15) {
-	                            return _this2.inputHoraPresentacionLiderNoche = _ref15;
-	                        },
-	                        asignada: this.props.inventario.nomina_noche.horaPresentacionLider,
-	                        onGuardar: this.guardarNominaNoche.bind(this),
-	                        focusRowAnterior: function focusRowAnterior() {},
-	                        focusRowSiguiente: function focusRowSiguiente() {}
-	                    })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdHora },
-	                    _react2.default.createElement(_InputHora2.default, {
-	                        style: { display: inventarioDia ? 'block' : 'none' },
-	                        ref: function ref(_ref16) {
-	                            return _this2.inputHoraPresentacionEquipoDia = _ref16;
-	                        },
-	                        asignada: this.props.inventario.nomina_dia.horaPresentacionEquipo,
-	                        onGuardar: this.guardarNominaDia.bind(this),
-	                        focusRowAnterior: function focusRowAnterior() {},
-	                        focusRowSiguiente: function focusRowSiguiente() {}
-	                    }),
-	                    _react2.default.createElement(_InputHora2.default, {
-	                        style: { display: inventarioNoche ? 'block' : 'none' },
-	                        ref: function ref(_ref17) {
-	                            return _this2.inputHoraPresentacionEquipoNoche = _ref17;
-	                        },
-	                        asignada: this.props.inventario.nomina_noche.horaPresentacionEquipo,
-	                        onGuardar: this.guardarNominaNoche.bind(this),
-	                        focusRowAnterior: function focusRowAnterior() {},
-	                        focusRowSiguiente: function focusRowSiguiente() {}
-	                    })
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdDireccion },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        this.props.inventario.local.direccion.direccion
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    { className: _TablaSemanal2.default.tdNomina },
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-xs btn-primary btn-block', tabIndex: '-1' },
-	                        'Ver'
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return RowInventario;
-	}(_react2.default.Component);
-
-	RowInventario.propTypes = {
-	    // Objetos
-	    index: _react2.default.PropTypes.number.isRequired,
-	    inventario: _react2.default.PropTypes.object.isRequired,
-	    lideres: _react2.default.PropTypes.array.isRequired,
-	    captadores: _react2.default.PropTypes.array.isRequired,
-	    // Metodos
-	    guardarInventario: _react2.default.PropTypes.func.isRequired,
-	    guardarNomina: _react2.default.PropTypes.func.isRequired,
-	    focusRow: _react2.default.PropTypes.func.isRequired
-	};
-
-	exports.default = RowInventario;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowInventario.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
+/* 419 */,
 /* 420 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -53350,7 +53119,8 @@
 	                onChange: this.onInputChange.bind(this),
 	                onBlur: function onBlur() {
 	                    return _this2.props.onGuardar();
-	                }
+	                },
+	                required: true
 	            });
 	        }
 	    }]);
@@ -53678,7 +53448,8 @@
 	module.exports = {"tableFixed":"TablaSemanal__tableFixed___3cWli","thFecha":"TablaSemanal__thFecha___1z4uk","tdFecha":"TablaSemanal__tdFecha___9Xm8H","thCliente":"TablaSemanal__thCliente___27MFR","tdCliente":"TablaSemanal__tdCliente___2X_jo","thCeco":"TablaSemanal__thCeco___1sILb","tdCeco":"TablaSemanal__tdCeco___36yoq","thRegion":"TablaSemanal__thRegion___1Z3rO","tdRegion":"TablaSemanal__tdRegion___yGmes","thComuna":"TablaSemanal__thComuna___3efKw","tdComuna":"TablaSemanal__tdComuna___3bueM","thTurno":"TablaSemanal__thTurno___2VNe4","tdTurno":"TablaSemanal__tdTurno___2cZYl","thTienda":"TablaSemanal__thTienda___3c71i","tdTienda":"TablaSemanal__tdTienda___2SWQO","thStock":"TablaSemanal__thStock___2mqcj","tdStock":"TablaSemanal__tdStock___35x--","thDotacionTotal":"TablaSemanal__thDotacionTotal____NExu","tdDotacionTotal":"TablaSemanal__tdDotacionTotal___n6TrF","thLider":"TablaSemanal__thLider___Ya2TZ","tdLider":"TablaSemanal__tdLider___2ocAD","thDotacion":"TablaSemanal__thDotacion___xuzq6","tdDotacion":"TablaSemanal__tdDotacion___BNhpC","thHora":"TablaSemanal__thHora____0AKo","tdHora":"TablaSemanal__tdHora___irTF6","thDireccion":"TablaSemanal__thDireccion___3AQ3H","tdDireccion":"TablaSemanal__tdDireccion___3BsgD","thNomina":"TablaSemanal__thNomina___13psH","tdNomina":"TablaSemanal__tdNomina___32NOi"};
 
 /***/ },
-/* 429 */
+/* 429 */,
+/* 430 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -53689,295 +53460,496 @@
 	    value: true
 	});
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _ramda = __webpack_require__(283);
+	var _react = __webpack_require__(2);
 
-	var _ramda2 = _interopRequireDefault(_ramda);
+	var _react2 = _interopRequireDefault(_react);
+
+	var _numeral = __webpack_require__(304);
+
+	var _numeral2 = _interopRequireDefault(_numeral);
+
+	var _Tooltip = __webpack_require__(305);
+
+	var _Tooltip2 = _interopRequireDefault(_Tooltip);
+
+	var _OverlayTrigger = __webpack_require__(335);
+
+	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
+
+	var _InputFecha = __webpack_require__(420);
+
+	var _InputFecha2 = _interopRequireDefault(_InputFecha);
+
+	var _InputHora = __webpack_require__(422);
+
+	var _InputHora2 = _interopRequireDefault(_InputHora);
+
+	var _InputDotacion = __webpack_require__(424);
+
+	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
+
+	var _Select = __webpack_require__(426);
+
+	var _Select2 = _interopRequireDefault(_Select);
+
+	var _TablaSemanal = __webpack_require__(428);
+
+	var _TablaSemanal2 = _interopRequireDefault(_TablaSemanal);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var BlackBox = function () {
-	    function BlackBox(clientes) {
-	        _classCallCheck(this, BlackBox);
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	        this.clientes = clientes;
-	        this.lista = [];
-	        this.filtroClientes = [];
-	        this.filtroRegiones = [];
-	        this.idDummy = 1; // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Componentes
+
+
+	// Styles
+
+
+	var RowInventario = function (_React$Component) {
+	    _inherits(RowInventario, _React$Component);
+
+	    function RowInventario(props) {
+	        _classCallCheck(this, RowInventario);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RowInventario).call(this, props));
+
+	        _this.state = {
+	            inputDia: 0,
+	            inputMes: 0,
+	            inputAnno: 0,
+	            inputDotacion: 0,
+	            selectJornada: 4
+	        };
+	        // Refs disponibles: this.inputDia, this.inputDotacion
+	        return _this;
 	    }
-	    // Todo Modificar
 
+	    _createClass(RowInventario, [{
+	        key: 'guardarInventario',
+	        value: function guardarInventario() {
+	            var cambiosInventario = {};
 
-	    _createClass(BlackBox, [{
-	        key: 'reset',
-	        value: function reset() {
-	            this.lista = [];
-	            this.filtroClientes = [];
-	            this.filtroRegiones = [];
-	            this.idDummy = 1;
-	        }
-	        // Todo: Optimizar
-	        // Todo Modificar: el listado de clientes
+	            // el DIA es valido, y ha cambiado?
+	            var estadoInputDia = this.inputDia.getEstado();
+	            if (estadoInputDia.valid && estadoInputDia.dirty) {
+	                var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
 
-	    }, {
-	        key: 'add',
-	        value: function add(inventario) {
-	            this.lista.push(inventario);
-	        }
-	        // Todo Modificar: el listado de clientes
+	                var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
 
-	    }, {
-	        key: 'remove',
-	        value: function remove(idDummy) {
-	            var index = this.lista.findIndex(function (inventario) {
-	                return inventario.idDummy === idDummy;
-	            });
-	            if (index >= 0) this.lista.splice(index, 1);
-	        }
-	    }, {
-	        key: 'yaExiste',
-	        value: function yaExiste(idLocal, annoMesDia) {
-	            var inventariosDelLocal = this.lista.filter(function (inventario) {
-	                return inventario.idLocal === idLocal;
-	            });
-	            // buscar si se tiene inventarios para este local
-	            if (inventariosDelLocal.length === 0) {
-	                return false;
-	            }
-	            // buscar si alguna fecha coincide
-	            var existe = false;
-	            inventariosDelLocal.forEach(function (inventario) {
-	                if (inventario.fechaProgramada === annoMesDia) {
-	                    // se tiene el mismo local, con la misma fecha inventariado
-	                    console.log('ya programado');
-	                    existe = true;
-	                    return true;
-	                }
-	            });
-	            return existe;
-	        }
-	    }, {
-	        key: 'getListaFiltrada',
-	        value: function getListaFiltrada() {
-	            this.actualizarFiltros();
+	                var anno = _props$inventario$fec2[0];
+	                var mes = _props$inventario$fec2[1];
+	                var _dia = _props$inventario$fec2[2];
 
-	            // filtrar por clientes
-	            var clientesSeleccionados = this.filtroClientes.filter(function (opcion) {
-	                return opcion.seleccionado;
-	            }).map(function (opcion) {
-	                return opcion.texto;
-	            });
-	            var listaFiltrada1 = _ramda2.default.filter(function (inventario) {
-	                return _ramda2.default.contains(inventario.local.nombreCliente, clientesSeleccionados);
-	            }, this.lista);
-
-	            // filtrar por regiones
-	            var regionesSeleccionadas = this.filtroRegiones.filter(function (opcion) {
-	                return opcion.seleccionado;
-	            }).map(function (opcion) {
-	                return opcion.texto;
-	            });
-	            var listaFiltrada2 = _ramda2.default.filter(function (inventario) {
-	                return _ramda2.default.contains(inventario.local.nombreRegion, regionesSeleccionadas);
-	            }, listaFiltrada1);
-
-	            // Hack: para ordenar por fechas, se van a separar las que estan "fijadas", de las que "no estan fijadas"
-	            // se ordenaran las "fijadas", y las "no fijadas" quedan igual
-	            var listaDiaFijado = listaFiltrada2.filter(function (inventario) {
-	                return inventario.fechaProgramada.indexOf('-00') === -1;
-	            });
-	            var listaDiaNoFijado = listaFiltrada2.filter(function (inventario) {
-	                return inventario.fechaProgramada.indexOf('-00') !== -1;
-	            });
-
-	            var orderByFechaProgramadaStock = function orderByFechaProgramadaStock(a, b) {
-	                var dateA = new Date(a.fechaProgramada);
-	                var dateB = new Date(b.fechaProgramada);
-
-	                if (dateA - dateB === 0) {
-	                    // stock ordenado de mayor a menor (B-A)
-	                    return b.local.stock - a.local.stock;
-	                } else {
-	                    // fecha ordenada de de menor a mayor (A-B)
-	                    return dateA - dateB;
-	                }
-	            };
-	            var listaDiaFIjadoOrdenado = _ramda2.default.sort(orderByFechaProgramadaStock, listaDiaFijado);
-
-	            return {
-	                inventariosFiltrados: [].concat(_toConsumableArray(listaDiaNoFijado), _toConsumableArray(listaDiaFIjadoOrdenado)),
-	                filtroClientes: this.filtroClientes,
-	                filtroRegiones: this.filtroRegiones
-	            };
-	        }
-
-	        // Metodos de alto nivel
-
-	    }, {
-	        key: '__crearDummy',
-	        value: function __crearDummy(annoMesDia, idLocal) {
-	            return {
-	                idDummy: this.idDummy++, // asignar e incrementar
-	                idInventario: null,
-	                idLocal: idLocal,
-	                idJornada: null,
-	                fechaProgramada: annoMesDia,
-	                horaLlegada: null,
-	                stockTeorico: 0,
-	                dotacionAsignada: null,
-	                local: {
-	                    idLocal: idLocal,
-	                    idJornadaSugerida: 4, // no definida
-	                    nombre: '-',
-	                    numero: '-',
-	                    stock: 0,
-	                    fechaStock: 'YYYY-MM-DD',
-	                    formato_local: {
-	                        produccionSugerida: 0
-	                    },
-	                    nombreCliente: '-',
-	                    nombreComuna: '-',
-	                    nombreProvincia: '-',
-	                    nombreRegion: '-',
-	                    dotacionSugerida: 0
-	                }
-	            };
-	        }
-	    }, {
-	        key: 'crearDummy',
-	        value: function crearDummy(idCliente, numeroLocal, annoMesDia) {
-	            // ########### Revisar Cliente ###########
-	            // el usuario no selecciono uno en el formulario
-	            if (idCliente === '-1' || idCliente === '' || !idCliente) {
-	                return [{
-	                    idCliente: idCliente,
-	                    numeroLocal: numeroLocal,
-	                    errorIdCliente: 'Seleccione un Cliente'
-	                }, null];
-	            }
-	            // dio un idCliente, pero no existe
-	            var cliente = this.clientes.find(function (cliente) {
-	                return cliente.idCliente == idCliente;
-	            });
-	            if (!cliente) {
-	                return [{
-	                    idCliente: idCliente,
-	                    numeroLocal: numeroLocal,
-	                    errorIdCliente: 'Cliente no Existe'
-	                }, null];
+	                cambiosInventario.fechaProgramada = anno + '-' + mes + '-' + estadoInputDia.dia;
+	            } else if (estadoInputDia.valid === false) {
+	                return console.log('fecha ' + estadoInputDia.dia + ' invalida');
 	            }
 
-	            // ########### Revisar Local ###########
-	            // revisar que el local exista
-	            var local = cliente.locales.find(function (local) {
-	                return local.numero == numeroLocal;
-	            });
-	            if (local === undefined) {
-	                return [{
-	                    idCliente: idCliente,
-	                    numeroLocal: numeroLocal,
-	                    errorNumeroLocal: numeroLocal === '' ? 'Digite un numero de local.' : 'El local \'' + numeroLocal + '\' no existe.'
-	                }, null];
+	            // la DOTACION es valida y ha cambiado?
+	            var estadoInputDotacionTotal = this.inputDotacionTotal.getEstado();
+	            if (estadoInputDotacionTotal.valid && estadoInputDotacionTotal.dirty) {
+	                cambiosInventario.dotacionAsignadaTotal = estadoInputDotacionTotal.dotacion;
+	            } else if (estadoInputDotacionTotal.valid === false) {
+	                return console.log('dotacion total: ' + estadoInputDotacionTotal.dotacion + ' invalida');
 	            }
 
-	            // revisar que no exista en la lista
-	            if (this.yaExiste(local.idLocal, annoMesDia)) {
-	                return [{
-	                    idCliente: idCliente,
-	                    numeroLocal: numeroLocal,
-	                    errorNumeroLocal: numeroLocal + ' ya ha sido agendado esa fecha.'
-	                }, null];
+	            // la JORNADA es valida y ha cambiado
+	            var estadoSelectJornada = this.selectJornada.getEstado();
+	            if (estadoSelectJornada.dirty) cambiosInventario.idJornada = estadoSelectJornada.seleccionUsuario;
+
+	            // almenos uno de los ementos debe estar "dirty" para guardar los cambios
+	            if (JSON.stringify(cambiosInventario) !== "{}") {
+	                console.log(cambiosInventario);
+	                this.props.guardarInventario(this.props.inventario.idInventario, cambiosInventario);
+	            } else {
+	                console.log('inventario sin cambios, no se actualiza');
 	            }
-
-	            // ########### ok, se puede crear el inventario "vacio" ###########
-	            var dummy = this.__crearDummy(annoMesDia, local.idLocal);
-	            return [null, dummy];
 	        }
-
-	        // Todo modificar el listado de clientes
-
 	    }, {
-	        key: 'actualizarDatosLocal',
-	        value: function actualizarDatosLocal(local) {
-	            // actualizar los datos del local de todos los inventarios que lo tengan
-	            this.lista = this.lista.map(function (inventario) {
-	                if (inventario.local.idLocal == local.idLocal) {
-
-	                    inventario.local = Object.assign(inventario.local, local);
-	                    // si no hay una dotacion asignada, ver la sugerida
-	                    if (inventario.dotacionAsignada === null) {
-	                        inventario.dotacionAsignada = local.dotacionSugerida;
-	                    }
-	                }
-	                return inventario;
-	            });
-	            this.actualizarFiltros();
-	        }
-	        // Todo modificar el listado de clientes
-
-	    }, {
-	        key: 'actualizarDatosInventario',
-	        value: function actualizarDatosInventario(formInventario, inventarioActualizado) {
-	            this.lista = this.lista.map(function (inventario) {
-	                if (inventario.idDummy == formInventario.idDummy) {
-	                    inventario = Object.assign(inventario, inventarioActualizado);
-	                }
-	                return inventario;
+	        key: 'guardarNominaDia',
+	        value: function guardarNominaDia() {
+	            this._guardarNomina(this.props.inventario.nomina_dia.idNomina, {
+	                inputDotacion: this.inputDotacionDia.getEstado(),
+	                selectLider: this.selectLiderDia.getEstado(),
+	                // selectSupervisor: this.selectSupervisorDia.getEstado(),
+	                selectCaptador1: this.selectCaptador1Dia.getEstado(),
+	                // selectCaptador2: this.selectCaptador2Dia.getEstado(),
+	                // inputDotacionCaptador1: this.inputDotacionCaptador1Dia.getEstado(),
+	                // inputDotacionCaptador2: this.inputDotacionCaptador2Dia.getEstado(),
+	                inputHoraPresentacionLider: this.inputHoraPresentacionLiderDia.getEstado(),
+	                inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoDia.getEstado()
 	            });
 	        }
 	    }, {
-	        key: 'actualizarFiltros',
-	        value: function actualizarFiltros() {
-	            var _this = this;
-
-	            // Clientes
-	            var clientes = this.lista.map(function (inventario) {
-	                return inventario.local.nombreCliente;
-	            });
-	            var clientesUnicos = _ramda2.default.uniq(clientes);
-	            this.filtroClientes = clientesUnicos.map(function (textoUnico) {
-	                // si no existe la opcion, se crea y se selecciona por defecto
-	                return _this.filtroClientes.find(function (opc) {
-	                    return opc.texto === textoUnico;
-	                }) || { texto: textoUnico, seleccionado: true };
-	            });
-
-	            // Regiones
-	            var regiones = this.lista.map(function (inventario) {
-	                return inventario.local.nombreRegion;
-	            });
-	            var regionesUnicas = _ramda2.default.uniq(regiones);
-	            this.filtroRegiones = regionesUnicas.map(function (textoUnico) {
-	                // si no existe la opcion, se crea y se selecciona por defecto
-	                return _this.filtroRegiones.find(function (opc) {
-	                    return opc.texto === textoUnico;
-	                }) || { texto: textoUnico, seleccionado: true };
+	        key: 'guardarNominaNoche',
+	        value: function guardarNominaNoche() {
+	            this._guardarNomina(this.props.inventario.nomina_noche.idNomina, {
+	                inputDotacion: this.inputDotacionNoche.getEstado(),
+	                selectLider: this.selectLiderNoche.getEstado(),
+	                // selectSupervisor: this.selectSupervisorNoche.getEstado(),
+	                selectCaptador1: this.selectCaptador1Noche.getEstado(),
+	                // selectCaptador2: this.selectCaptador2Noche.getEstado(),
+	                // inputDotacionCaptador1: this.inputDotacionCaptador1Noche.getEstado(),
+	                // inputDotacionCaptador2: this.inputDotacionCaptador2Noche.getEstado(),
+	                inputHoraPresentacionLider: this.inputHoraPresentacionLiderNoche.getEstado(),
+	                inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoNoche.getEstado()
 	            });
 	        }
 	    }, {
-	        key: 'reemplazarFiltroClientes',
-	        value: function reemplazarFiltroClientes(filtro) {
-	            this.filtroClientes = filtro;
+	        key: '_guardarNomina',
+	        value: function _guardarNomina(idNomina, estados) {
+	            var cambiosNomina = {};
+
+	            // la DOTACION es valida y ha cambiado?
+	            if (estados.inputDotacion.valid && estados.inputDotacion.dirty) cambiosNomina.dotacionAsignada = estados.inputDotacion.dotacion;else if (estados.inputDotacion.valid === false) return console.log('dotacion de la nomina: ' + estados.inputDotacion.dotacion + ' invalida');
+
+	            // el LIDER es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
+	            if (estados.selectLider.dirty) cambiosNomina.idLider = estados.selectLider.seleccionUsuario;
+
+	            // el SUPERVISOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
+	            // if (estados.selectSupervisor.dirty)
+	            //     cambiosNomina.idSupervisor = estados.selectSupervisor.seleccionUsuario
+
+	            // el CAPTADOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
+	            if (estados.selectCaptador1.dirty) cambiosNomina.idCaptador1 = estados.selectCaptador1.seleccionUsuario;
+	            // if (estados.selectCaptador2.dirty)
+	            //     cambiosNomina.idCaptador2 = estados.selectCaptador2.seleccionUsuario
+
+	            // La DOTACION del CAPTADOR es valida y ha cambiado?
+	            // if (estados.inputDotacionCaptador1.valid && estados.inputDotacionCaptador1.dirty)
+	            //     cambiosNomina.dotacionCaptador1 = estados.inputDotacionCaptador1.dotacion
+	            // else if (estados.inputDotacionCaptador1.valid === false)
+	            //     return console.log(`dotacion del captador1: ${estados.inputDotacionCaptador1.dotacion} invalida`)
+
+	            // if (estados.inputDotacionCaptador2.valid && estados.inputDotacionCaptador2.dirty)
+	            //     cambiosNomina.dotacionCaptador2 = estados.inputDotacionCaptador2.dotacion
+	            // else if (estados.inputDotacionCaptador2.valid === false)
+	            //     return console.log(`dotacion del captador2: ${estados.inputDotacionCaptador2.dotacion} invalida`)
+
+	            // La HORA de llegada del equipo ha cambiado?
+	            if (estados.inputHoraPresentacionLider.dirty) cambiosNomina.horaPresentacionLider = estados.inputHoraPresentacionLider.hora;
+	            if (estados.inputHoraPresentacionEquipo.dirty) cambiosNomina.horaPresentacionEquipo = estados.inputHoraPresentacionEquipo.hora;
+
+	            // almenos uno de los ementos debe estar "dirty" para guardar los cambios
+	            if (JSON.stringify(cambiosNomina) !== '{}') {
+	                console.log(cambiosNomina);
+	                this.props.guardarNomina(idNomina, cambiosNomina);
+	            } else {
+	                console.log('nomina sin cambios, no se actualiza');
+	            }
 	        }
 	    }, {
-	        key: 'reemplazarFiltroRegiones',
-	        value: function reemplazarFiltroRegiones(filtro) {
-	            this.filtroRegiones = filtro;
+	        key: 'focusElemento',
+	        value: function focusElemento(elemento) {
+	            if (elemento === 'dia') {
+	                this.inputDia.focus();
+	            } else if (elemento === 'dotacion') {
+	                this.inputDotacionTotal.focus();
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            var idJornada = this.props.inventario.idJornada;
+	            var inventarioDia = idJornada == 2 || idJornada == 4;
+	            var inventarioNoche = idJornada == 3 || idJornada == 4;
+	            var opcionesLideres = this.props.lideres.map(function (usuario) {
+	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
+	            });
+	            var opcionesSupervisores = this.props.supervisores.map(function (usuario) {
+	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
+	            });
+	            var opcionesCaptadores = this.props.captadores.map(function (usuario) {
+	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
+	            });
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdFecha },
+	                    _react2.default.createElement(_InputFecha2.default, {
+	                        ref: function ref(_ref) {
+	                            return _this2.inputDia = _ref;
+	                        },
+	                        fecha: this.props.inventario.fechaProgramada,
+	                        onGuardar: this.guardarInventario.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {
+	                            return _this2.props.focusRow(_this2.props.index - 1, 'dia');
+	                        },
+	                        focusRowSiguiente: function focusRowSiguiente() {
+	                            return _this2.props.focusRow(_this2.props.index + 1, 'dia');
+	                        } })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdCliente },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        this.props.inventario.local.cliente.nombreCorto
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdCeco },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        this.props.inventario.local.numero
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdRegion },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        this.props.inventario.local.direccion.comuna.provincia.region.numero
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdComuna },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        this.props.inventario.local.direccion.comuna.nombre
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdTurno },
+	                    _react2.default.createElement(_Select2.default, {
+	                        ref: function ref(_ref2) {
+	                            return _this2.selectJornada = _ref2;
+	                        },
+	                        onSelect: this.guardarInventario.bind(this),
+	                        opciones: [{ valor: '1', texto: 'no definido' }, { valor: '2', texto: 'día' }, { valor: '3', texto: 'noche' }, { valor: '4', texto: 'día y noche' }],
+	                        seleccionada: this.props.inventario.idJornada
+	                    })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdTienda },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            this.props.inventario.local.nombre
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdStock },
+	                    _react2.default.createElement(
+	                        _OverlayTrigger2.default,
+	                        {
+	                            placement: 'left',
+	                            delay: 0,
+	                            overlay: _react2.default.createElement(
+	                                _Tooltip2.default,
+	                                { id: 'yyy' },
+	                                'Stock al ' + this.props.inventario.local.fechaStock
+	                            ) },
+	                        _react2.default.createElement(
+	                            'p',
+	                            null,
+	                            _react2.default.createElement(
+	                                'small',
+	                                null,
+	                                (0, _numeral2.default)(this.props.inventario.local.stock).format('0,0')
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdDotacionTotal },
+	                    _react2.default.createElement(_InputDotacion2.default
+	                    /*style={{display: (idJornada==2 || idJornada==3)? 'block' : 'none'}}*/
+	                    , { className: 'pull-left',
+	                        ref: function ref(_ref3) {
+	                            return _this2.inputDotacionTotal = _ref3;
+	                        },
+	                        asignada: this.props.inventario.dotacionAsignadaTotal,
+	                        onGuardar: this.guardarInventario.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {
+	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
+	                        },
+	                        focusRowSiguiente: function focusRowSiguiente() {
+	                            return _this2.props.focusRow(_this2.props.index + 1, 'dotacion');
+	                        } }),
+	                    _react2.default.createElement(_InputDotacion2.default, {
+	                        style: { display: inventarioDia ? 'block' : 'none' },
+	                        className: 'pull-right',
+	                        ref: function ref(_ref4) {
+	                            return _this2.inputDotacionDia = _ref4;
+	                        },
+	                        asignada: this.props.inventario.nomina_dia.dotacionAsignada,
+	                        onGuardar: this.guardarNominaDia.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {
+	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
+	                        },
+	                        focusRowSiguiente: function focusRowSiguiente() {
+	                            return _this2.props.focusRow(_this2.props.index + 1, 'dotacion');
+	                        } }),
+	                    _react2.default.createElement(_InputDotacion2.default, {
+	                        style: { display: inventarioNoche ? 'block' : 'none' },
+	                        className: 'pull-right',
+	                        ref: function ref(_ref5) {
+	                            return _this2.inputDotacionNoche = _ref5;
+	                        },
+	                        asignada: this.props.inventario.nomina_noche.dotacionAsignada,
+	                        onGuardar: this.guardarNominaNoche.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {
+	                            return _this2.props.focusRow(_this2.props.index - 1, 'dotacion');
+	                        },
+	                        focusRowSiguiente: function focusRowSiguiente() {
+	                            return _this2.props.focusRow(_this2.props.index + 1, 'dotacion');
+	                        } })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdLider },
+	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioDia ? 'block' : 'none' },
+	                        ref: function ref(_ref6) {
+	                            return _this2.selectLiderDia = _ref6;
+	                        },
+	                        seleccionada: this.props.inventario.nomina_dia.idLider || '',
+	                        onSelect: this.guardarNominaDia.bind(this),
+	                        opciones: opcionesLideres,
+	                        opcionNula: true,
+	                        opcionNulaSeleccionable: true
+	                    }),
+	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioNoche ? 'block' : 'none' },
+	                        ref: function ref(_ref7) {
+	                            return _this2.selectLiderNoche = _ref7;
+	                        },
+	                        seleccionada: this.props.inventario.nomina_noche.idLider || '',
+	                        onSelect: this.guardarNominaNoche.bind(this),
+	                        opciones: opcionesLideres,
+	                        opcionNula: true,
+	                        opcionNulaSeleccionable: true
+	                    })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdLider },
+	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioDia ? 'block' : 'none' },
+	                        ref: function ref(_ref8) {
+	                            return _this2.selectCaptador1Dia = _ref8;
+	                        },
+	                        seleccionada: this.props.inventario.nomina_dia.idCaptador1 || '',
+	                        onSelect: this.guardarNominaDia.bind(this),
+	                        opciones: opcionesCaptadores,
+	                        opcionNula: true,
+	                        opcionNulaSeleccionable: true
+	                    }),
+	                    _react2.default.createElement(_Select2.default, { style: { display: inventarioNoche ? 'block' : 'none' },
+	                        ref: function ref(_ref9) {
+	                            return _this2.selectCaptador1Noche = _ref9;
+	                        },
+	                        seleccionada: this.props.inventario.nomina_noche.idCaptador1 || '',
+	                        onSelect: this.guardarNominaNoche.bind(this),
+	                        opciones: opcionesCaptadores,
+	                        opcionNula: true,
+	                        opcionNulaSeleccionable: true
+	                    })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdHora },
+	                    _react2.default.createElement(_InputHora2.default, {
+	                        style: { display: inventarioDia ? 'block' : 'none' },
+	                        ref: function ref(_ref10) {
+	                            return _this2.inputHoraPresentacionLiderDia = _ref10;
+	                        },
+	                        asignada: this.props.inventario.nomina_dia.horaPresentacionLider,
+	                        onGuardar: this.guardarNominaDia.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {},
+	                        focusRowSiguiente: function focusRowSiguiente() {}
+	                    }),
+	                    _react2.default.createElement(_InputHora2.default, {
+	                        style: { display: inventarioNoche ? 'block' : 'none' },
+	                        ref: function ref(_ref11) {
+	                            return _this2.inputHoraPresentacionLiderNoche = _ref11;
+	                        },
+	                        asignada: this.props.inventario.nomina_noche.horaPresentacionLider,
+	                        onGuardar: this.guardarNominaNoche.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {},
+	                        focusRowSiguiente: function focusRowSiguiente() {}
+	                    })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdHora },
+	                    _react2.default.createElement(_InputHora2.default, {
+	                        style: { display: inventarioDia ? 'block' : 'none' },
+	                        ref: function ref(_ref12) {
+	                            return _this2.inputHoraPresentacionEquipoDia = _ref12;
+	                        },
+	                        asignada: this.props.inventario.nomina_dia.horaPresentacionEquipo,
+	                        onGuardar: this.guardarNominaDia.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {},
+	                        focusRowSiguiente: function focusRowSiguiente() {}
+	                    }),
+	                    _react2.default.createElement(_InputHora2.default, {
+	                        style: { display: inventarioNoche ? 'block' : 'none' },
+	                        ref: function ref(_ref13) {
+	                            return _this2.inputHoraPresentacionEquipoNoche = _ref13;
+	                        },
+	                        asignada: this.props.inventario.nomina_noche.horaPresentacionEquipo,
+	                        onGuardar: this.guardarNominaNoche.bind(this),
+	                        focusRowAnterior: function focusRowAnterior() {},
+	                        focusRowSiguiente: function focusRowSiguiente() {}
+	                    })
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    { className: _TablaSemanal2.default.tdNomina },
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-xs btn-primary btn-block', tabIndex: '-1' },
+	                        'Ver'
+	                    )
+	                )
+	            );
 	        }
 	    }]);
 
-	    return BlackBox;
-	}();
+	    return RowInventario;
+	}(_react2.default.Component);
 
-	exports.default = BlackBox;
+	RowInventario.propTypes = {
+	    // Objetos
+	    index: _react2.default.PropTypes.number.isRequired,
+	    inventario: _react2.default.PropTypes.object.isRequired,
+	    lideres: _react2.default.PropTypes.array.isRequired,
+	    captadores: _react2.default.PropTypes.array.isRequired,
+	    // Metodos
+	    guardarInventario: _react2.default.PropTypes.func.isRequired,
+	    guardarNomina: _react2.default.PropTypes.func.isRequired,
+	    focusRow: _react2.default.PropTypes.func.isRequired
+	};
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "BlackBoxMensual.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	exports.default = RowInventario;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowInventarioSemanal.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 /******/ ]);

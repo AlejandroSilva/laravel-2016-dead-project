@@ -155,9 +155,6 @@ class RowInventarioMensual extends React.Component{
             this.state.inputDotacion!=(this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) ||
             this.state.selectJornada!=(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida)
         )
-        //console.log("dia ", this.state.inputDia, dia, this.state.inputDia!==dia)
-        //console.log("dotac ", this.state.inputDotacion, (this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida), this.state.inputDotacion!==(this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) )
-        //console.log("jornada ", this.state.selectJornada, (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida), this.state.selectJornada!==(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida))
         console.log("isDirty ", isDirty)
         return isDirty
     }
@@ -194,12 +191,11 @@ class RowInventarioMensual extends React.Component{
     }
 
     render(){
-        console.log("render: prop.local.dotSug, state.inputDot", this.props.inventario.local.dotacionSugerida, this.state.inputDotacion)
         return (
             <tr>
                 {/* Correlativo */}
                 <td className={css.tdCorrelativo}>
-                    { /*this.props.inventario.idDummy*/this.props.index}
+                    {this.props.index}
                 </td>
                 {/* Fecha */}
                 <td className={css.tdFecha}>
@@ -229,11 +225,11 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* Region*/}
                 <td className={css.tdRegion}>
-                    <p style={{margin:0}}><small>{this.props.inventario.local.direccion.comuna.provincia.region.numero}</small></p>
+                    <p style={{margin:0}}><small>{/*this.props.inventario.local.direccion.comuna.provincia.region.numero*/}</small></p>
                 </td>
                 {/* Comuna */}
                 <td className={css.tdComuna}>
-                    <p style={{margin:0}}><b><small>{this.props.inventario.local.direccion.comuna.nombre}</small></b></p>
+                    <p style={{margin:0}}><b><small>{/*this.props.inventario.local.direccion.comuna.nombre*/}</small></b></p>
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
@@ -276,8 +272,14 @@ class RowInventarioMensual extends React.Component{
                 <td className={css.tdOpciones}>
                     {
                         this.props.inventario.idInventario
-                        ? <button className="btn btn-xs btn-primary" tabIndex="-1">Eliminar inventario</button>
-                        : <button className="btn btn-xs btn-danger" tabIndex="-1" onClick={this.quitarInventario.bind(this)}>X</button>
+                        ? <button className="btn btn-xs btn-primary"
+                                  tabIndex="-1"
+                                  onClick={()=>{ alert("PEND: eliminar inventario") } }
+                        >Eliminar inventario</button>
+                        : <button className="btn btn-xs btn-danger"
+                                  tabIndex="-1"
+                                  onClick={this.quitarInventario.bind(this)}
+                        >X</button>
                      }
                 </td>
             </tr>

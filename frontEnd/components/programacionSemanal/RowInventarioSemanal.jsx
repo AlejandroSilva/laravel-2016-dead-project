@@ -62,9 +62,9 @@ class RowInventario extends React.Component{
         this._guardarNomina(this.props.inventario.nomina_dia.idNomina, {
             inputDotacion: this.inputDotacionDia.getEstado(),
             selectLider: this.selectLiderDia.getEstado(),
-            selectSupervisor: this.selectSupervisorDia.getEstado(),
+            // selectSupervisor: this.selectSupervisorDia.getEstado(),
             selectCaptador1: this.selectCaptador1Dia.getEstado(),
-            selectCaptador2: this.selectCaptador2Dia.getEstado(),
+            // selectCaptador2: this.selectCaptador2Dia.getEstado(),
             // inputDotacionCaptador1: this.inputDotacionCaptador1Dia.getEstado(),
             // inputDotacionCaptador2: this.inputDotacionCaptador2Dia.getEstado(),
             inputHoraPresentacionLider: this.inputHoraPresentacionLiderDia.getEstado(),
@@ -75,9 +75,9 @@ class RowInventario extends React.Component{
         this._guardarNomina(this.props.inventario.nomina_noche.idNomina, {
             inputDotacion: this.inputDotacionNoche.getEstado(),
             selectLider: this.selectLiderNoche.getEstado(),
-            selectSupervisor: this.selectSupervisorNoche.getEstado(),
+            // selectSupervisor: this.selectSupervisorNoche.getEstado(),
             selectCaptador1: this.selectCaptador1Noche.getEstado(),
-            selectCaptador2: this.selectCaptador2Noche.getEstado(),
+            // selectCaptador2: this.selectCaptador2Noche.getEstado(),
             // inputDotacionCaptador1: this.inputDotacionCaptador1Noche.getEstado(),
             // inputDotacionCaptador2: this.inputDotacionCaptador2Noche.getEstado(),
             inputHoraPresentacionLider: this.inputHoraPresentacionLiderNoche.getEstado(),
@@ -99,14 +99,14 @@ class RowInventario extends React.Component{
             cambiosNomina.idLider = estados.selectLider.seleccionUsuario
         
         // el SUPERVISOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
-        if (estados.selectSupervisor.dirty)
-            cambiosNomina.idSupervisor = estados.selectSupervisor.seleccionUsuario
+        // if (estados.selectSupervisor.dirty)
+        //     cambiosNomina.idSupervisor = estados.selectSupervisor.seleccionUsuario
 
         // el CAPTADOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
         if (estados.selectCaptador1.dirty)
             cambiosNomina.idCaptador1 = estados.selectCaptador1.seleccionUsuario
-        if (estados.selectCaptador2.dirty)
-            cambiosNomina.idCaptador2 = estados.selectCaptador2.seleccionUsuario
+        // if (estados.selectCaptador2.dirty)
+        //     cambiosNomina.idCaptador2 = estados.selectCaptador2.seleccionUsuario
 
         // La DOTACION del CAPTADOR es valida y ha cambiado?
         // if (estados.inputDotacionCaptador1.valid && estados.inputDotacionCaptador1.dirty)
@@ -258,6 +258,7 @@ class RowInventario extends React.Component{
                     />
                 </td>
                 {/* Supervisor */}
+                {/*
                 <td className={css.tdLider}>
                     <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectSupervisorDia=ref}
@@ -276,6 +277,7 @@ class RowInventario extends React.Component{
                             opcionNulaSeleccionable={true}
                     />
                 </td>
+                 */}
                 {/* Captador 1 */}
                 <td className={css.tdLider}>
                     <Select style={{display: inventarioDia? 'block' : 'none'}}
@@ -317,6 +319,7 @@ class RowInventario extends React.Component{
                 </td>
                  */}
                 {/* Captador 2 */}
+                {/*
                 <td className={css.tdLider}>
                     <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador2Dia=ref}
@@ -335,6 +338,7 @@ class RowInventario extends React.Component{
                             opcionNulaSeleccionable={true}
                     />
                 </td>
+                 */}
                 {/* DotacionCaptador 2 */}
                 {/*
                 <td className={css.tdDotacion}>
@@ -397,9 +401,11 @@ class RowInventario extends React.Component{
                     />
                 </td>
                 {/* Dirección */}
+                {/*
                 <td className={css.tdDireccion}>
                     <p>{this.props.inventario.local.direccion.direccion}</p>
                 </td>
+                 */}
                 {/* Nómina*/}
                 <td className={css.tdNomina}>
                     <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Ver</button>

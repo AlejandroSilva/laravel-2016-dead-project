@@ -17,7 +17,7 @@ class TablaMensual extends React.Component{
         // referencia a todos las entradas de fecha de los inventarios
         this.inputFecha = []
     }
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(){
         // cuando se pasa de mes a mes, se generand posiciones "vacias" en el arreglo inputFecha, esto lo soluciona
         this.inputFecha = this.inputFecha.filter(input=>input!==null)
     }
@@ -46,7 +46,13 @@ class TablaMensual extends React.Component{
                             stickyStyle={{top: '50px'}}>
 
                             <th className={css.thCorrelativo}>#</th>
-                            <th className={css.thFecha}>Fecha</th>
+                            <th className={css.thFecha}>
+                                Fecha
+                                <span className={'glyphicon glyphicon-sort-by-attributes pull-right'}
+                                      onClick={()=>{  alert("PENDIENTE: ordenar los inventarios por fecha y stock") }}
+                                />
+                                {/*<span className={'glyphicon glyphicon-sort-by-attributes-alt pull-right'}></span>*/}
+                            </th>
                             <th className={css.thCliente}>
                                 <TableHeader nombre="Cliente"
                                              filtro={this.props.filtroClientes}

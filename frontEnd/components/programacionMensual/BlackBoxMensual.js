@@ -43,6 +43,27 @@ export default class BlackBox{
         })
         return existe
     }
+    getListaFiltradaSinOrdenar() {
+        this.actualizarFiltros()
+
+        // filtrar por clientes
+        let clientesSeleccionados = this.filtroClientes.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
+        let listaFiltrada1 = R.filter(inventario=> {
+            return R.contains(inventario.local.nombreCliente, clientesSeleccionados)
+        }, this.lista)
+
+        // filtrar por regiones
+        let regionesSeleccionadas = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
+        let listaFiltrada2 = R.filter(inventario=> {
+            return R.contains(inventario.local.nombreRegion, regionesSeleccionadas)
+        }, listaFiltrada1)
+
+        return {
+            inventariosFiltrados: listaFiltrada2,
+            filtroClientes: this.filtroClientes,
+            filtroRegiones: this.filtroRegiones
+        }
+    }
     getListaFiltrada(){
         this.actualizarFiltros()
 

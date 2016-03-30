@@ -5,7 +5,7 @@ import React from 'react'
 //import Sticky from '../shared/react-sticky/sticky.js'
 //import StickyContainer from '../shared/react-sticky/container.js'
 //import TableHeader from './TableHeader.jsx'
-import RowInventario from './RowInventario.jsx'
+import RowInventarioSemanal from './RowInventarioSemanal.jsx'
 
 // Styles
 //import sharedStyles from '../shared/shared.css'
@@ -50,14 +50,14 @@ class TablaInventarios extends React.Component{
                         <th className={css.thStock}>Stock</th>
                         <th className={css.thDotacionTotal}>Dot.Total</th>
                         <th className={css.thLider}>Lider</th>
-                        <th className={css.thLider}>Supervisor</th>
+                        {/* <th className={css.thLider}>Supervisor</th> */}
                         <th className={css.thLider}>Captador 1</th>
                         {/* <th className={css.thDotacion}>Dot.Cap1</th> */}
-                        <th className={css.thLider}>Captador 2</th>
+                        {/* <th className={css.thLider}>Captador 2</th> */}
                         {/* <th className={css.thDotacion}>Dot.Cap2</th> */}
                         <th className={css.thHora}>Hr.P.Lider</th>
                         <th className={css.thHora}>Hr.P.Equipo</th>
-                        <th className={css.thDireccion}>Dirección</th>
+                        {/* <th className={css.thDireccion}>Dirección</th> */}
                         <th className={css.thNomina}>Nómina</th>
                     </tr>
                 </thead>
@@ -65,7 +65,7 @@ class TablaInventarios extends React.Component{
                     {this.props.inventarios.length===0
                         ? <tr><td colSpan="13" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.props.inventarios.map((inventario, index)=>{
-                            return <RowInventario
+                            return <RowInventarioSemanal
                                 // Propiedades
                                 key={index}
                                 index={index}

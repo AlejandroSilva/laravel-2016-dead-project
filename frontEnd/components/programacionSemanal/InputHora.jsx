@@ -66,6 +66,7 @@ class InputHora extends React.Component{
                 onKeyDown={this.inputOnKeyDown.bind(this)}
                 onChange={this.onInputChange.bind(this)}
                 onBlur={()=>this.props.onGuardar()}
+                required
             />
         )
     }

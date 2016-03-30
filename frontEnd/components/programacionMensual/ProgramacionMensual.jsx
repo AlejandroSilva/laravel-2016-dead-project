@@ -170,6 +170,7 @@ class ProgramacionMensual extends React.Component{
                     this.blackbox.actualizarDatosInventario(formInventario, inventarioCreado)
                     // actualizar los datos y el state de la app
                     // actualizar los filtros, y la lista ordenada de locales
+                    // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
                     this.setState(this.blackbox.getListaFiltrada())
                 })
         }
