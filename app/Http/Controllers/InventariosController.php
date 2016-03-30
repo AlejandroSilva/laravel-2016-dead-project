@@ -122,7 +122,13 @@ class InventariosController extends Controller {
 
     // GET api/inventario/{idInventario}
     function api_get($idInventario){
-        $inventario = Inventarios::find($idInventario);
+        $inventario = Inventarios::with([
+            'local.cliente',
+            'local.formatoLocal',
+            'local.direccion.comuna.provincia.region',
+            'nominaDia',
+            'nominaNoche'
+        ])->find($idInventario);
         if($inventario){
             return response()->json($inventario, 200);
         }else{
@@ -174,7 +180,14 @@ class InventariosController extends Controller {
         $mes  = $fecha[1];
         return response()->json(
             Inventarios::   //\DB::table('inventarios')
-                whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+                with([
+                    'local.cliente',
+                    'local.formatoLocal',
+                    'local.direccion.comuna.provincia.region',
+                    'nominaDia',
+                    'nominaNoche'
+                ])
+                ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
                 ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
                 ->get()
         , 200);

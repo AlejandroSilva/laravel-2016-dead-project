@@ -45692,7 +45692,7 @@
 	                        _react2.default.createElement(
 	                            'small',
 	                            null,
-	                            this.props.inventario.local.nombreCliente
+	                            this.props.inventario.local.cliente.nombreCorto /*nombreCliente*/
 	                        )
 	                    )
 	                ),
@@ -45739,7 +45739,7 @@
 	                        _react2.default.createElement(
 	                            'small',
 	                            null,
-	                            this.props.inventario.local.nombreRegion
+	                            this.props.inventario.local.direccion.comuna.provincia.region.numero
 	                        )
 	                    )
 	                ),
@@ -45755,7 +45755,7 @@
 	                            _react2.default.createElement(
 	                                'small',
 	                                null,
-	                                this.props.inventario.local.nombreComuna
+	                                this.props.inventario.local.direccion.comuna.nombre
 	                            )
 	                        )
 	                    )
@@ -45810,15 +45810,10 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: css.tdOpciones },
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
-	                        'Editar local'
-	                    ),
 	                    this.props.inventario.idInventario ? _react2.default.createElement(
 	                        'button',
 	                        { className: 'btn btn-xs btn-primary', tabIndex: '-1' },
-	                        'Editar inventario'
+	                        'Eliminar inventario'
 	                    ) : _react2.default.createElement(
 	                        'button',
 	                        { className: 'btn btn-xs btn-danger', tabIndex: '-1', onClick: this.quitarInventario.bind(this) },

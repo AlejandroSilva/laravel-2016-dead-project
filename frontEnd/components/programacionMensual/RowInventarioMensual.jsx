@@ -217,7 +217,7 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* Cliente*/}
                 <td className={css.tdCliente}>
-                    <p><small>{this.props.inventario.local.nombreCliente}</small></p>
+                    <p><small>{this.props.inventario.local.cliente.nombreCorto /*nombreCliente*/}</small></p>
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
@@ -229,11 +229,11 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* Region*/}
                 <td className={css.tdRegion}>
-                    <p style={{margin:0}}><small>{this.props.inventario.local.nombreRegion}</small></p>
+                    <p style={{margin:0}}><small>{this.props.inventario.local.direccion.comuna.provincia.region.numero}</small></p>
                 </td>
                 {/* Comuna */}
                 <td className={css.tdComuna}>
-                    <p style={{margin:0}}><b><small>{this.props.inventario.local.nombreComuna}</small></b></p>
+                    <p style={{margin:0}}><b><small>{this.props.inventario.local.direccion.comuna.nombre}</small></b></p>
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
@@ -274,11 +274,11 @@ class RowInventarioMensual extends React.Component{
                 */}
                 {/* Opciones    */}
                 <td className={css.tdOpciones}>
-                    <button className="btn btn-xs btn-primary" tabIndex="-1">Editar local</button>
-                    {this.props.inventario.idInventario
-                        ? <button className="btn btn-xs btn-primary" tabIndex="-1">Editar inventario</button>
+                    {
+                        this.props.inventario.idInventario
+                        ? <button className="btn btn-xs btn-primary" tabIndex="-1">Eliminar inventario</button>
                         : <button className="btn btn-xs btn-danger" tabIndex="-1" onClick={this.quitarInventario.bind(this)}>X</button>
-                    }
+                     }
                 </td>
             </tr>
         )
