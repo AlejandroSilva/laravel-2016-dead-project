@@ -1,3 +1,15 @@
+.tableFixed{
+    table-layout: fixed;
+    font-size: 14px !important;
+}
+.tableFixed td {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+.tableFixed p {
+    margin-bottom: 0px;
+}
+
 /* TABLA
  la tabla de locales, al tener un "sticky header", este pierde el ancho de
  las "TD" y se descuadra cuando el sticky se vuelve activo, pasa solucionar
@@ -14,7 +26,8 @@
 }
 /* Fecha */
 .thFecha {
-    width: 145px !important;
+    min-width: 112px !important;
+    width: 112px !important;
     background: white;
 }
 .tdFecha {
@@ -23,7 +36,7 @@
 }
 /* Cliente */
 .thCliente {
-    width: 120px;
+    width: 75px;
     background: white;
 }
 .tdCliente {
@@ -32,7 +45,7 @@
 }
 /* CECO */
 .thCeco {
-    width: 55px;
+    width: 45px;
     background: white;
 }
 .tdCeco {
@@ -41,7 +54,7 @@
 }
 /* Local */
 .thLocal {
-    width: 200px;
+    width: 150px;
     background: white;
 }
 .tdLocal {
@@ -59,7 +72,7 @@
 }
 /* Region */
 .thRegion {
-    width: 140px;
+    width: 80px;
     background: white;
 }
 .tdRegion {
@@ -86,7 +99,7 @@
 }
 /* Dotacion */
 .thDotacion {
-    width: 80px;
+    width: 70px;
     background: white;
 }
 .tdDotacion {
@@ -98,12 +111,17 @@
 }
 /* Jornada */
 .thJornada {
-    width: 200px;
+    width: 110px;
+    max-width: 110px;
     background: white;
 }
 .tdJornada {
     composes: thJornada;
     vertical-align: middle !important;
+}
+.tdJornada > select{
+    display: block;
+    margin: 0 auto;
 }
 /* Estado */
 .thEstado {
@@ -116,7 +134,7 @@
 }
 /* Opciones */
 .thOpciones {
-    width: 250px;
+    width: 190px;
     background: white;
 }
 .tdOpciones {

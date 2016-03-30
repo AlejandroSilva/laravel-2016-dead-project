@@ -37,7 +37,7 @@ class TablaProgramas extends React.Component{
         return (
             <div>
                 {/* Table */}
-                <StickyContainer type={React.DOM.table}  className="table table-bordered table-condensed">
+                <StickyContainer type={React.DOM.table}  className={"table table-bordered table-condensed "+css.tableFixed}>
                     <thead>
                         {/* TR que se pega al top de la pagina, es una TR, con instancia de 'Sticky' */}
                         <Sticky
