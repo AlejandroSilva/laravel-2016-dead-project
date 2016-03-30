@@ -23,8 +23,8 @@ class ProgramacionSemanal extends React.Component {
             let fechaUltimoInventario = moment(this.props.ultimoInventario)
 
             // lunes y domingo de la semana del primer inventario
-            let lunes = moment(fechaPrimerInventario).day(1)
-            let domingo = moment(fechaPrimerInventario).day(7)
+            let lunes = moment(fechaPrimerInventario).isoWeekday(1).day(1)
+            let domingo = moment(fechaPrimerInventario).isoWeekday(1).day(7)
 
             while(lunes<=fechaUltimoInventario){
                 //console.log(`semana del ${lunes.format(format)} al ${domingo.format(format)}`)
