@@ -30,8 +30,6 @@ class RowInventarioMensual extends React.Component{
         let dotacionAsignadaTotal = this.props.inventario.dotacionAsignadaTotal
         let jornadaInventario = this.props.inventario.idJornada
         let jornadaLocal = this.props.inventario.local.idJornadaSugerida
-        console.log("will mount: dotacionAsignadaTotal, dotacionSugerida, (nombre) ", dotacionAsignadaTotal, dotacionSugerida, dotacionAsignadaTotal||dotacionSugerida)
-        console.log("will mount comuna: ", this.props.inventario.local.nombreComuna)    // no tienen la informacion, como se esperaba
         this.setState({
             inputDia: dia,
             inputMes: mes,
@@ -44,14 +42,13 @@ class RowInventarioMensual extends React.Component{
     }
 
     componentWillReceiveProps(nextProps){
-        console.log("will receibeprops")
 
         let mismoInventario = this.props.inventario.idDummy===nextProps.inventario.idDummy
         if(mismoInventario){
             let newState = {}
             //if(this.props.inventario.idDummy==9) console.log("actualizando componente 9", this.props.inventario.fechaProgramada, nextProps.inventario.fechaProgramada)
             //console.log("nuevas props para ", this.props.inventario.idDummy)
-            console.log("AAA prop.dotacionSugerida, nextprop.dotacionSugerida, state.inputDOtacion", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
+
 
             // Si es el mismo inventario, se revisa si se han actualizado los datos (y se reemplaza el state actual del usuario)
 
@@ -64,7 +61,7 @@ class RowInventarioMensual extends React.Component{
             // se recibio una nueva dotacion?
             let dotacion1 = this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida
             let dotacion2 = nextProps.inventario.dotacionAsignadaTotal || nextProps.inventario.local.dotacionSugerida
-            console.log("AAAA dotacionAntigua, dotacionNueva,", dotacion1, dotacion2)
+
             //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
                 this.setState({inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2)})
 
@@ -79,8 +76,6 @@ class RowInventarioMensual extends React.Component{
 
         }else{
             // Si el inventario cambio, se vuelven a poner los valores "por defecto"
-
-            console.log("BBB", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
             let [anno, mes, dia] = nextProps.inventario.fechaProgramada.split('-')
             let dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal
             let dotacionSugerida = nextProps.inventario.local.dotacionSugerida
@@ -95,7 +90,7 @@ class RowInventarioMensual extends React.Component{
                 diaValido: this._diaValido(dia),
                 dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
             })
-            console.log("BBBB dotacionAsignadaTotal, dotacionSugerida", dotacionAsignadaTotal, dotacionSugerida)
+
         }
         //console.log(this.props.inventario.idDummy, nextProps.inventario.idDummy, mismoInventario)
         //console.log(this.props.inventario.idDummy, dotacionAsignada, dotacionSugerida)

@@ -21811,7 +21811,7 @@
 	                inventarios.forEach(function (inventario) {
 	                    // crear un dummy
 	                    var nuevoInventario = _this2.blackbox.__crearDummy(annoMesDia, inventario.idLocal);
-	                    _this2.blackbox.add(nuevoInventario);
+	                    _this2.blackbox.addFinal(nuevoInventario);
 
 	                    // actualizar los datos del inventario
 	                    _this2.blackbox.actualizarDatosInventario(nuevoInventario, inventario);
@@ -21863,7 +21863,7 @@
 	            if (errores) return [errores, {}];
 
 	            // agregar al listado
-	            this.blackbox.addInicio(nuevoInventario);
+	            this.blackbox.addNuevo(nuevoInventario);
 
 	            // actualizar la vista de la lista
 	            // actualizar los filtros, y la lista ordenada de locales
@@ -21895,6 +21895,7 @@
 	            var idLocalesExistentes = [];
 	            var pegadoConProblemas = [];
 	            // se evalua y agrega cada uno de los elementos
+	            var nuevosInventarios = [];
 	            numerosLocales.forEach(function (numero) {
 	                var _blackbox$crearDummy3 = _this5.blackbox.crearDummy(idCliente, numero, annoMesDia);
 
@@ -21907,9 +21908,12 @@
 	                    pegadoConProblemas.push(errores);
 	                } else {
 	                    idLocalesExistentes.push(nuevoInventario.idLocal);
-	                    _this5.blackbox.addInicio(nuevoInventario);
+	                    // this.blackbox.addNuevo(nuevoInventario)
+	                    nuevosInventarios.push(nuevoInventario);
 	                }
 	            });
+	            // agregar el grupo completo de una vez (para hacer un poco mas rapido el proceso)
+	            this.blackbox.addNuevos(nuevosInventarios);
 
 	            // cuando terminen todos, se actualiza el state de la aplicacion
 	            // actualizar los filtros, y la lista ordenada de locales
@@ -35179,18 +35183,56 @@
 	            this.filtroRegiones = [];
 	            this.idDummy = 1;
 	        }
-	        // Todo: Optimizar
 	        // Todo Modificar: el listado de clientes
 
 	    }, {
-	        key: 'add',
-	        value: function add(inventario) {
-	            this.lista.push(inventario);
+	        key: 'addNuevo',
+	        value: function addNuevo(inventario) {
+	            // al agregar un elemento unico, se debe ubicar: DESPUES de los inventarios sin fecha, y ANTES que los inventarios con fecha
+	            // buscar el indice del primer inventario con fecha
+	            var indexConFecha = this.lista.findIndex(function (invent) {
+	                var dia = invent.fechaProgramada.split('-')[2];
+	                return dia !== '00';
+	            });
+	            if (indexConFecha >= 0) {
+	                // se encontro el indice
+	                this.lista.splice(indexConFecha, 0, inventario);
+	            } else {
+	                // no hay ninguno con fecha, agregar al final
+	                this.lista.push(inventario);
+	            }
+	        }
+	        // igual que el anterior, pero con un arreglo
+
+	    }, {
+	        key: 'addNuevos',
+	        value: function addNuevos(inventarios) {
+	            // al agregar un elemento unico, se debe ubicar: DESPUES de los inventarios sin fecha, y ANTES que los inventarios con fecha
+	            // buscar el indice del primer inventario con fecha
+	            var indexConFecha = this.lista.findIndex(function (invent) {
+	                var dia = invent.fechaProgramada.split('-')[2];
+	                return dia !== '00';
+	            });
+	            if (indexConFecha >= 0) {
+	                var _lista;
+
+	                // se encontro el indice
+	                (_lista = this.lista).splice.apply(_lista, [indexConFecha, 0].concat(_toConsumableArray(inventarios)));
+	            } else {
+	                // no hay ninguno con fecha, agregar al final
+	                this.lista = this.lista.concat(inventarios);
+	            }
 	        }
 	    }, {
 	        key: 'addInicio',
 	        value: function addInicio(inventario) {
+	            // unshift agrega un elemento al inicio del array
 	            this.lista.unshift(inventario);
+	        }
+	    }, {
+	        key: 'addFinal',
+	        value: function addFinal(inventario) {
+	            this.lista.push(inventario);
 	        }
 	        // Todo Modificar: el listado de clientes
 
@@ -45794,8 +45836,6 @@
 	            var dotacionAsignadaTotal = this.props.inventario.dotacionAsignadaTotal;
 	            var jornadaInventario = this.props.inventario.idJornada;
 	            var jornadaLocal = this.props.inventario.local.idJornadaSugerida;
-	            console.log("will mount: dotacionAsignadaTotal, dotacionSugerida, (nombre) ", dotacionAsignadaTotal, dotacionSugerida, dotacionAsignadaTotal || dotacionSugerida);
-	            console.log("will mount comuna: ", this.props.inventario.local.nombreComuna); // no tienen la informacion, como se esperaba
 	            this.setState({
 	                inputDia: dia,
 	                inputMes: mes,
@@ -45809,14 +45849,12 @@
 	    }, {
 	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(nextProps) {
-	            console.log("will receibeprops");
 
 	            var mismoInventario = this.props.inventario.idDummy === nextProps.inventario.idDummy;
 	            if (mismoInventario) {
 	                var newState = {};
 	                //if(this.props.inventario.idDummy==9) console.log("actualizando componente 9", this.props.inventario.fechaProgramada, nextProps.inventario.fechaProgramada)
 	                //console.log("nuevas props para ", this.props.inventario.idDummy)
-	                console.log("AAA prop.dotacionSugerida, nextprop.dotacionSugerida, state.inputDOtacion", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
 
 	                // Si es el mismo inventario, se revisa si se han actualizado los datos (y se reemplaza el state actual del usuario)
 
@@ -45844,7 +45882,7 @@
 	                // se recibio una nueva dotacion?
 	                var dotacion1 = this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida;
 	                var dotacion2 = nextProps.inventario.dotacionAsignadaTotal || nextProps.inventario.local.dotacionSugerida;
-	                console.log("AAAA dotacionAntigua, dotacionNueva,", dotacion1, dotacion2);
+
 	                //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
 	                this.setState({ inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2) });
 
@@ -45857,8 +45895,6 @@
 	                this.setState(newState);
 	            } else {
 	                // Si el inventario cambio, se vuelven a poner los valores "por defecto"
-
-	                console.log("BBB", this.props.inventario.local.dotacionSugerida, nextProps.inventario.local.dotacionSugerida, this.state.inputDotacion);
 
 	                var _nextProps$inventario3 = nextProps.inventario.fechaProgramada.split('-');
 
@@ -45881,7 +45917,6 @@
 	                    diaValido: this._diaValido(dia),
 	                    dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
 	                });
-	                console.log("BBBB dotacionAsignadaTotal, dotacionSugerida", dotacionAsignadaTotal, dotacionSugerida);
 	            }
 	            //console.log(this.props.inventario.idDummy, nextProps.inventario.idDummy, mismoInventario)
 	            //console.log(this.props.inventario.idDummy, dotacionAsignada, dotacionSugerida)

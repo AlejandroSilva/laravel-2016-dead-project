@@ -43,7 +43,7 @@ class ProgramacionMensual extends React.Component{
                 inventarios.forEach(inventario=>{
                     // crear un dummy
                     let nuevoInventario = this.blackbox.__crearDummy(annoMesDia, inventario.idLocal )
-                    this.blackbox.add(nuevoInventario)
+                    this.blackbox.addFinal(nuevoInventario)
 
                     // actualizar los datos del inventario
                     this.blackbox.actualizarDatosInventario(nuevoInventario, inventario)
@@ -85,7 +85,7 @@ class ProgramacionMensual extends React.Component{
             return [errores, {}]
 
         // agregar al listado
-        this.blackbox.addInicio(nuevoInventario)
+        this.blackbox.addNuevo(nuevoInventario)
 
         // actualizar la vista de la lista
         // actualizar los filtros, y la lista ordenada de locales
@@ -114,15 +114,19 @@ class ProgramacionMensual extends React.Component{
         let idLocalesExistentes = []
         let pegadoConProblemas = []
         // se evalua y agrega cada uno de los elementos
+        let nuevosInventarios = []
         numerosLocales.forEach(numero=> {
             let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, numero, annoMesDia)
             if (errores){
                 pegadoConProblemas.push(errores)
             }else{
                 idLocalesExistentes.push(nuevoInventario.idLocal)
-                this.blackbox.addInicio(nuevoInventario)
+                // this.blackbox.addNuevo(nuevoInventario)
+                nuevosInventarios.push(nuevoInventario)
             }
         })
+        // agregar el grupo completo de una vez (para hacer un poco mas rapido el proceso)
+        this.blackbox.addNuevos(nuevosInventarios)
 
         // cuando terminen todos, se actualiza el state de la aplicacion
         // actualizar los filtros, y la lista ordenada de locales

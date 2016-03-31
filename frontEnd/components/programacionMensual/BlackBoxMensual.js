@@ -15,13 +15,44 @@ export default class BlackBox{
         this.filtroRegiones = []
         this.idDummy = 1
     }
-    // Todo: Optimizar
     // Todo Modificar: el listado de clientes
-    add(inventario){
-        this.lista.push(inventario)
+    addNuevo(inventario){
+        // al agregar un elemento unico, se debe ubicar: DESPUES de los inventarios sin fecha, y ANTES que los inventarios con fecha
+        // buscar el indice del primer inventario con fecha
+        let indexConFecha = this.lista.findIndex(invent=>{
+            let dia = invent.fechaProgramada.split('-')[2]
+            return dia!=='00'
+        })
+        if(indexConFecha>=0){
+            // se encontro el indice
+            this.lista.splice(indexConFecha, 0, inventario)
+        }else{
+            // no hay ninguno con fecha, agregar al final
+            this.lista.push(inventario)
+        }
+    }
+    // igual que el anterior, pero con un arreglo
+    addNuevos(inventarios){
+        // al agregar un elemento unico, se debe ubicar: DESPUES de los inventarios sin fecha, y ANTES que los inventarios con fecha
+        // buscar el indice del primer inventario con fecha
+        let indexConFecha = this.lista.findIndex(invent=>{
+            let dia = invent.fechaProgramada.split('-')[2]
+            return dia!=='00'
+        })
+        if(indexConFecha>=0){
+            // se encontro el indice
+            this.lista.splice(indexConFecha, 0, ...inventarios)
+        }else{
+            // no hay ninguno con fecha, agregar al final
+            this.lista = this.lista.concat(inventarios)
+        }
     }
     addInicio(inventario){
+        // unshift agrega un elemento al inicio del array
         this.lista.unshift(inventario)
+    }
+    addFinal(inventario){
+        this.lista.push(inventario)
     }
     // Todo Modificar: el listado de clientes
     remove(idDummy){
