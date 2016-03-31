@@ -31,10 +31,9 @@ class RowInventario extends React.Component{
         // el DIA es valido, y ha cambiado?
         let estadoInputDia = this.inputDia.getEstado()
         if (estadoInputDia.valid && estadoInputDia.dirty) {
-            let [anno, mes, _dia] = this.props.inventario.fechaProgramada.split('-')
-            cambiosInventario.fechaProgramada = `${anno}-${mes}-${estadoInputDia.dia}`
+            cambiosInventario.fechaProgramada = estadoInputDia.fecha
         } else if (estadoInputDia.valid === false) {
-            return console.log(`fecha ${estadoInputDia.dia} invalida`)
+            return console.log(`fecha ${estadoInputDia.fecha} invalida`)
         }
 
         // la DOTACION es valida y ha cambiado?

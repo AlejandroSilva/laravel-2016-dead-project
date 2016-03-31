@@ -8,32 +8,44 @@ class InputFecha extends React.Component{
         super(props)
         this.state = {
             dia: '-',
-            dirty: false,
-            valid: true
+            mes: '-',
+            anno: '-',
+            diaDirty: false, mesDirty: false, annoDirty: false,
+            diaValid: true,  mesValid: true,  annoValid: true
         }
     }
     componentWillMount(){
         let [anno1, mes1, dia1] = this.props.fecha.split('-')
         this.setState({
             dia: dia1,
-            dirty: false,
-            valid: true
+            mes: mes1,
+            anno: anno1,
+            diaDirty: false, mesDirty: false, annoDirty: false,
+            diaValid: true,  mesValid: true,  annoValid: true
         })
     }
     componentWillReceiveProps(nextProps){
         // apenas se reciba una nueva propiedad, reemplazar el estado independiente de su contenido
-
-        // let [anno1, mes1, dia1] = this.props.fecha.split('-')
         let [anno2, mes2, dia2] = nextProps.fecha.split('-')
-        // if(dia1!==dia2){
-            // si esto cambia, entonces se debe hacer un "reset" del estado con los nuevos valores
             this.setState({
                 dia: dia2,
-                dirty: false,
-                valid: true
+                mes: mes2,
+                anno: anno2,
+                diaDirty: false, mesDirty: false, annoDirty: false,
+                diaValid: true,  mesValid: true,  annoValid: true
             })
-        //    console.log("la fecha cambio ", dia1, dia2)
-        // }
+    }
+
+    getEstado(){
+        return {
+            dirty: this.state.diaDirty || this.state.mesDirty || this.state.annoDirty,
+            valid: this.state.diaValid && this.state.mesValid && this.state.annoValid,
+            fecha: `${this.state.anno}-${this.state.mes}-${this.state.dia}`
+        }
+    }
+    focus(){
+        this.inputDia.focus()
+        this.inputDia.select()
     }
 
     inputOnKeyDown(evt){
@@ -51,44 +63,57 @@ class InputFecha extends React.Component{
         }
     }
 
-    onInputChange(evt){
-        let dia = evt.target.value
-        let [anno1, mes1, dia1] = this.props.fecha.split('-')
-        this.setState({
-            dia: dia,
-            dirty: dia1!=dia,
-            valid: this._diaValido(dia)
-        })
-    }
+
     _diaValido(dia){
         return dia>=0 && dia<32
     }
-    getEstado(){
-        return this.state
+    _mesValido(mes){
+        return mes=>0 && mes<=12
     }
-    focus(){
-        this.inputDia.focus()
-        this.inputDia.select()
+
+    onDiaChange(evt){
+        let dia = evt.target.value
+        let diaOriginal = this.props.fecha.split('-')[2]
+        this.setState({
+            dia: dia,
+            diaDirty: dia!=diaOriginal,
+            diaValid: this._diaValido(dia)
+        })
     }
+    onMesChange(evt){
+        let mes = evt.target.value
+        let mesOriginal = this.props.fecha.split('-')[1]
+        this.setState({
+            mes: mes,
+            mesDirty: mes!=mesOriginal,
+            mesValid: this._mesValido(mes)
+        })
+    }
+
     render(){
-        let [anno, mes, dia] = this.props.fecha.split('-')
-        let classname = this.state.valid
-            ? (this.state.dirty? css.inputDiaDirty : css.inputDia)
+        let classnameDia = this.state.diaValid
+            ? (this.state.diaDirty? css.inputDiaDirty : css.inputDia)
             : css.inputDiaInvalido
         return(
             <div>
-                <input className={classname}
+                <input className={classnameDia}
                        ref={ref=>this.inputDia=ref}
                        value={this.state.dia}
                        onKeyDown={this.inputOnKeyDown.bind(this)}
-                       onChange={this.onInputChange.bind(this)}
+                       onChange={this.onDiaChange.bind(this)}
                        onBlur={()=>this.props.onGuardar()}
                        onFocus={()=>{ this.inputDia.select() }}             // seleccionar el texto cuando se hace focus
                 />
-                <input className={css.inputMes} type="number" disabled
-                       value={mes}/>
+                <input className={css.inputMes} type="number"
+                       ref={ref=>this.inputMes=ref}
+                       value={this.state.mes}
+                       onKeyDown={this.inputOnKeyDown.bind(this)}
+                       onChange={this.onMesChange.bind(this)}
+                       onBlur={()=>this.props.onGuardar()}
+                       onFocus={()=>{ this.inputMes.select() }}             // seleccionar el texto cuando se hace focus
+                />
                 <input className={css.inputAnno} type="number" disabled
-                       value={anno}/>
+                       value={this.state.anno}/>
             </div>
         )
     }

@@ -52917,8 +52917,6 @@
 	    value: true
 	});
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
@@ -52998,17 +52996,9 @@
 	            // el DIA es valido, y ha cambiado?
 	            var estadoInputDia = this.inputDia.getEstado();
 	            if (estadoInputDia.valid && estadoInputDia.dirty) {
-	                var _props$inventario$fec = this.props.inventario.fechaProgramada.split('-');
-
-	                var _props$inventario$fec2 = _slicedToArray(_props$inventario$fec, 3);
-
-	                var anno = _props$inventario$fec2[0];
-	                var mes = _props$inventario$fec2[1];
-	                var _dia = _props$inventario$fec2[2];
-
-	                cambiosInventario.fechaProgramada = anno + '-' + mes + '-' + estadoInputDia.dia;
+	                cambiosInventario.fechaProgramada = estadoInputDia.fecha;
 	            } else if (estadoInputDia.valid === false) {
-	                return console.log('fecha ' + estadoInputDia.dia + ' invalida');
+	                return console.log('fecha ' + estadoInputDia.fecha + ' invalida');
 	            }
 
 	            // la DOTACION es valida y ha cambiado?
@@ -53453,8 +53443,10 @@
 
 	        _this.state = {
 	            dia: '-',
-	            dirty: false,
-	            valid: true
+	            mes: '-',
+	            anno: '-',
+	            diaDirty: false, mesDirty: false, annoDirty: false,
+	            diaValid: true, mesValid: true, annoValid: true
 	        };
 	        return _this;
 	    }
@@ -53472,8 +53464,10 @@
 
 	            this.setState({
 	                dia: dia1,
-	                dirty: false,
-	                valid: true
+	                mes: mes1,
+	                anno: anno1,
+	                diaDirty: false, mesDirty: false, annoDirty: false,
+	                diaValid: true, mesValid: true, annoValid: true
 	            });
 	        }
 	    }, {
@@ -53488,16 +53482,29 @@
 	            var anno2 = _nextProps$fecha$spli2[0];
 	            var mes2 = _nextProps$fecha$spli2[1];
 	            var dia2 = _nextProps$fecha$spli2[2];
-	            // if(dia1!==dia2){
-	            // si esto cambia, entonces se debe hacer un "reset" del estado con los nuevos valores
 
 	            this.setState({
 	                dia: dia2,
-	                dirty: false,
-	                valid: true
+	                mes: mes2,
+	                anno: anno2,
+	                diaDirty: false, mesDirty: false, annoDirty: false,
+	                diaValid: true, mesValid: true, annoValid: true
 	            });
-	            //    console.log("la fecha cambio ", dia1, dia2)
-	            // }
+	        }
+	    }, {
+	        key: 'getEstado',
+	        value: function getEstado() {
+	            return {
+	                dirty: this.state.diaDirty || this.state.mesDirty || this.state.annoDirty,
+	                valid: this.state.diaValid && this.state.mesValid && this.state.annoValid,
+	                fecha: this.state.anno + '-' + this.state.mes + '-' + this.state.dia
+	            };
+	        }
+	    }, {
+	        key: 'focus',
+	        value: function focus() {
+	            this.inputDia.focus();
+	            this.inputDia.select();
 	        }
 	    }, {
 	        key: 'inputOnKeyDown',
@@ -53515,64 +53522,55 @@
 	            }
 	        }
 	    }, {
-	        key: 'onInputChange',
-	        value: function onInputChange(evt) {
-	            var dia = evt.target.value;
-
-	            var _props$fecha$split3 = this.props.fecha.split('-');
-
-	            var _props$fecha$split4 = _slicedToArray(_props$fecha$split3, 3);
-
-	            var anno1 = _props$fecha$split4[0];
-	            var mes1 = _props$fecha$split4[1];
-	            var dia1 = _props$fecha$split4[2];
-
-	            this.setState({
-	                dia: dia,
-	                dirty: dia1 != dia,
-	                valid: this._diaValido(dia)
-	            });
-	        }
-	    }, {
 	        key: '_diaValido',
 	        value: function _diaValido(dia) {
 	            return dia >= 0 && dia < 32;
 	        }
 	    }, {
-	        key: 'getEstado',
-	        value: function getEstado() {
-	            return this.state;
+	        key: '_mesValido',
+	        value: function _mesValido(mes) {
+	            return function (mes) {
+	                return 0 && mes <= 12;
+	            };
 	        }
 	    }, {
-	        key: 'focus',
-	        value: function focus() {
-	            this.inputDia.focus();
-	            this.inputDia.select();
+	        key: 'onDiaChange',
+	        value: function onDiaChange(evt) {
+	            var dia = evt.target.value;
+	            var diaOriginal = this.props.fecha.split('-')[2];
+	            this.setState({
+	                dia: dia,
+	                diaDirty: dia != diaOriginal,
+	                diaValid: this._diaValido(dia)
+	            });
+	        }
+	    }, {
+	        key: 'onMesChange',
+	        value: function onMesChange(evt) {
+	            var mes = evt.target.value;
+	            var mesOriginal = this.props.fecha.split('-')[1];
+	            this.setState({
+	                mes: mes,
+	                mesDirty: mes != mesOriginal,
+	                mesValid: this._mesValido(mes)
+	            });
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var _this2 = this;
 
-	            var _props$fecha$split5 = this.props.fecha.split('-');
-
-	            var _props$fecha$split6 = _slicedToArray(_props$fecha$split5, 3);
-
-	            var anno = _props$fecha$split6[0];
-	            var mes = _props$fecha$split6[1];
-	            var dia = _props$fecha$split6[2];
-
-	            var classname = this.state.valid ? this.state.dirty ? _InputFecha2.default.inputDiaDirty : _InputFecha2.default.inputDia : _InputFecha2.default.inputDiaInvalido;
+	            var classnameDia = this.state.diaValid ? this.state.diaDirty ? _InputFecha2.default.inputDiaDirty : _InputFecha2.default.inputDia : _InputFecha2.default.inputDiaInvalido;
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement('input', { className: classname,
+	                _react2.default.createElement('input', { className: classnameDia,
 	                    ref: function ref(_ref) {
 	                        return _this2.inputDia = _ref;
 	                    },
 	                    value: this.state.dia,
 	                    onKeyDown: this.inputOnKeyDown.bind(this),
-	                    onChange: this.onInputChange.bind(this),
+	                    onChange: this.onDiaChange.bind(this),
 	                    onBlur: function onBlur() {
 	                        return _this2.props.onGuardar();
 	                    },
@@ -53580,10 +53578,22 @@
 	                        _this2.inputDia.select();
 	                    } // seleccionar el texto cuando se hace focus
 	                }),
-	                _react2.default.createElement('input', { className: _InputFecha2.default.inputMes, type: 'number', disabled: true,
-	                    value: mes }),
+	                _react2.default.createElement('input', { className: _InputFecha2.default.inputMes, type: 'number',
+	                    ref: function ref(_ref2) {
+	                        return _this2.inputMes = _ref2;
+	                    },
+	                    value: this.state.mes,
+	                    onKeyDown: this.inputOnKeyDown.bind(this),
+	                    onChange: this.onMesChange.bind(this),
+	                    onBlur: function onBlur() {
+	                        return _this2.props.onGuardar();
+	                    },
+	                    onFocus: function onFocus() {
+	                        _this2.inputMes.select();
+	                    } // seleccionar el texto cuando se hace focus
+	                }),
 	                _react2.default.createElement('input', { className: _InputFecha2.default.inputAnno, type: 'number', disabled: true,
-	                    value: anno })
+	                    value: this.state.anno })
 	            );
 	        }
 	    }]);
