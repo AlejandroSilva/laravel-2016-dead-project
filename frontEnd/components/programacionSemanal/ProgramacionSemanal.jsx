@@ -58,6 +58,8 @@ class ProgramacionSemanal extends React.Component {
                 console.log(`inventarios del rango ${fechaInicio} a ${fechaFin}: `, inventarios)
                 this.blackboxSemanal.reset()
                 inventarios.forEach(inventario=>this.blackboxSemanal.add(inventario))
+
+                this.blackboxSemanal.ordenarLista()
                 this.setState( this.blackboxSemanal.getListaFiltrada() )        // {inventariosFiltrados: ...}
             })
     }
@@ -88,6 +90,11 @@ class ProgramacionSemanal extends React.Component {
                 this.setState( this.blackboxSemanal.getListaFiltrada() )        // {inventariosFiltrados: ...}
             })
     }
+    ordenarInventarios(){
+        this.blackboxSemanal.ordenarLista()
+        this.setState( this.blackboxSemanal.getListaFiltrada() )
+    }
+
     render(){
         return(
             <div>
@@ -110,6 +117,7 @@ class ProgramacionSemanal extends React.Component {
                     inventarios={this.state.inventariosFiltrados}
                     guardarInventario={this.guardarInventario.bind(this)}
                     guardarNomina={this.guardarNomina.bind(this)}
+                    ordenarInventarios={this.ordenarInventarios.bind(this)}
                 />
             </div>
         )

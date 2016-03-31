@@ -8,7 +8,7 @@ import BlackBoxMensual from './BlackBoxMensual.js'
 // Component
 //import Multiselect from 'react-widgets/lib/Multiselect'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import TablaProgramas from './TablaMensual.jsx'
+import TablaMensual from './TablaMensual.jsx'
 import AgregarPrograma from './AgregarPrograma.jsx'
 
 class ProgramacionMensual extends React.Component{
@@ -49,10 +49,10 @@ class ProgramacionMensual extends React.Component{
                     this.blackbox.actualizarDatosInventario(nuevoInventario, inventario)
                 })
                 // actualizar los filtros, y la lista ordenada de locales
+                this.blackbox.ordenarLista()
                 this.setState(this.blackbox.getListaFiltrada())
             })
             //.catch(err=>console.error('error: ', err))
-
     }
     fetchLocales(idLocales){
         let promesasFetch = []
@@ -180,6 +180,11 @@ class ProgramacionMensual extends React.Component{
         this.setState(this.blackbox.getListaFiltrada())
     }
 
+    ordenarInventarios(){
+        this.blackbox.ordenarLista()
+        this.setState( this.blackbox.getListaFiltrada() )
+    }
+
     actualizarFiltro(nombreFiltro, filtro){
         if(nombreFiltro==='cliente'){
             this.blackbox.reemplazarFiltroClientes(filtro)
@@ -211,13 +216,14 @@ class ProgramacionMensual extends React.Component{
 
                 <div className="row">
                     <h4 className="page-header" style={{marginTop: '1em'}}>Locales a programar:</h4>
-                    <TablaProgramas
+                    <TablaMensual
                         inventariosFiltrados={this.state.inventariosFiltrados}
                         filtroClientes={this.state.filtroClientes}
                         filtroRegiones={this.state.filtroRegiones}
                         actualizarFiltro={this.actualizarFiltro.bind(this)}
                         guardarOCrearInventario={this.guardarOCrearInventario.bind(this)}
                         quitarInventario={this.quitarInventario.bind(this)}
+                        ordenarInventarios={this.ordenarInventarios.bind(this)}
                         //ref={ref=>this.TablaInventarios=ref}
                     />
                 </div>

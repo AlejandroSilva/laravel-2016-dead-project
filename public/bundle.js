@@ -21817,6 +21817,7 @@
 	                    _this2.blackbox.actualizarDatosInventario(nuevoInventario, inventario);
 	                });
 	                // actualizar los filtros, y la lista ordenada de locales
+	                _this2.blackbox.ordenarLista();
 	                _this2.setState(_this2.blackbox.getListaFiltrada());
 	            });
 	            //.catch(err=>console.error('error: ', err))
@@ -21969,6 +21970,12 @@
 	            this.setState(this.blackbox.getListaFiltrada());
 	        }
 	    }, {
+	        key: 'ordenarInventarios',
+	        value: function ordenarInventarios() {
+	            this.blackbox.ordenarLista();
+	            this.setState(this.blackbox.getListaFiltrada());
+	        }
+	    }, {
 	        key: 'actualizarFiltro',
 	        value: function actualizarFiltro(nombreFiltro, filtro) {
 	            if (nombreFiltro === 'cliente') {
@@ -22016,7 +22023,8 @@
 	                        filtroRegiones: this.state.filtroRegiones,
 	                        actualizarFiltro: this.actualizarFiltro.bind(this),
 	                        guardarOCrearInventario: this.guardarOCrearInventario.bind(this),
-	                        quitarInventario: this.quitarInventario.bind(this)
+	                        quitarInventario: this.quitarInventario.bind(this),
+	                        ordenarInventarios: this.ordenarInventarios.bind(this)
 	                        //ref={ref=>this.TablaInventarios=ref}
 	                    })
 	                )
@@ -35298,8 +35306,8 @@
 	            };
 	        }
 	    }, {
-	        key: 'getListaFiltradaOrdenada',
-	        value: function getListaFiltradaOrdenada() {
+	        key: '__getListaFiltradaOrdenada__por_ahora_no_se_ocupa',
+	        value: function __getListaFiltradaOrdenada__por_ahora_no_se_ocupa() {
 	            this.actualizarFiltros();
 
 	            // filtrar por clientes
@@ -35351,7 +35359,23 @@
 	                filtroRegiones: this.filtroRegiones
 	            };
 	        }
+	    }, {
+	        key: 'ordenarLista',
+	        value: function ordenarLista() {
+	            var orderByFechaProgramadaStock = function orderByFechaProgramadaStock(a, b) {
+	                var dateA = new Date(a.fechaProgramada);
+	                var dateB = new Date(b.fechaProgramada);
 
+	                if (dateA - dateB === 0) {
+	                    // stock ordenado de mayor a menor (B-A)
+	                    return b.local.stock - a.local.stock;
+	                } else {
+	                    // fecha ordenada de de menor a mayor (A-B)
+	                    return dateA - dateB;
+	                }
+	            };
+	            this.lista = _ramda2.default.sort(orderByFechaProgramadaStock, this.lista);
+	        }
 	        // Metodos de alto nivel
 
 	    }, {
@@ -44863,9 +44887,7 @@
 	                                { className: css.thFecha },
 	                                'Fecha',
 	                                _react2.default.createElement('span', { className: 'glyphicon glyphicon-sort-by-attributes pull-right',
-	                                    onClick: function onClick() {
-	                                        alert("PENDIENTE: ordenar los inventarios por fecha y stock");
-	                                    }
+	                                    onClick: this.props.ordenarInventarios
 	                                })
 	                            ),
 	                            _react2.default.createElement(
@@ -44966,7 +44988,8 @@
 	    // Metodos
 	    actualizarFiltro: _react2.default.PropTypes.func.isRequired,
 	    guardarOCrearInventario: _react2.default.PropTypes.func.isRequired,
-	    quitarInventario: _react2.default.PropTypes.func.isRequired
+	    quitarInventario: _react2.default.PropTypes.func.isRequired,
+	    ordenarInventarios: _react2.default.PropTypes.func.isRequired
 	};
 	exports.default = TablaMensual;
 
@@ -52437,6 +52460,8 @@
 	                inventarios.forEach(function (inventario) {
 	                    return _this2.blackboxSemanal.add(inventario);
 	                });
+
+	                _this2.blackboxSemanal.ordenarLista();
 	                _this2.setState(_this2.blackboxSemanal.getListaFiltrada()); // {inventariosFiltrados: ...}
 	            });
 	        }
@@ -52484,6 +52509,12 @@
 	            });
 	        }
 	    }, {
+	        key: 'ordenarInventarios',
+	        value: function ordenarInventarios() {
+	            this.blackboxSemanal.ordenarLista();
+	            this.setState(this.blackboxSemanal.getListaFiltrada());
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
@@ -52520,7 +52551,8 @@
 	                    captadores: window.laravelCaptadores,
 	                    inventarios: this.state.inventariosFiltrados,
 	                    guardarInventario: this.guardarInventario.bind(this),
-	                    guardarNomina: this.guardarNomina.bind(this)
+	                    guardarNomina: this.guardarNomina.bind(this),
+	                    ordenarInventarios: this.ordenarInventarios.bind(this)
 	                })
 	            );
 	        }
@@ -52588,6 +52620,28 @@
 	            // Todo: filtrar por clientes
 	            // Todo: filtrar por regiones
 
+	            // let orderByFechaProgramadaStock = (a,b)=>{
+	            //     let dateA = new Date(a.fechaProgramada)
+	            //     let dateB = new Date(b.fechaProgramada)
+	            //
+	            //     if((dateA-dateB)===0){
+	            //         // stock ordenado de mayor a menor (B-A)
+	            //         return b.local.stock - a.local.stock
+	            //     }else{
+	            //         // fecha ordenada de de menor a mayor (A-B)
+	            //         return dateA - dateB
+	            //     }
+	            // }
+	            // let listaDiaFIjadoOrdenado = R.sort(orderByFechaProgramadaStock, this.lista)
+
+	            return {
+	                // inventariosFiltrados: listaDiaFIjadoOrdenado
+	                inventariosFiltrados: this.lista
+	            };
+	        }
+	    }, {
+	        key: 'ordenarLista',
+	        value: function ordenarLista() {
 	            var orderByFechaProgramadaStock = function orderByFechaProgramadaStock(a, b) {
 	                var dateA = new Date(a.fechaProgramada);
 	                var dateB = new Date(b.fechaProgramada);
@@ -52600,12 +52654,7 @@
 	                    return dateA - dateB;
 	                }
 	            };
-	            var listaDiaFIjadoOrdenado = _ramda2.default.sort(orderByFechaProgramadaStock, this.lista);
-
-	            return {
-	                inventariosFiltrados: listaDiaFIjadoOrdenado
-	                // inventariosFiltrados: this.lista
-	            };
+	            this.lista = _ramda2.default.sort(orderByFechaProgramadaStock, this.lista);
 	        }
 
 	        // Todo modificar el listado de clientes
@@ -52728,7 +52777,10 @@
 	                        _react2.default.createElement(
 	                            'th',
 	                            { className: css.thFecha },
-	                            'Fecha'
+	                            'Fecha',
+	                            _react2.default.createElement('span', { className: 'glyphicon glyphicon-sort-by-attributes pull-right',
+	                                onClick: this.props.ordenarInventarios
+	                            })
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
@@ -52846,7 +52898,8 @@
 	    // Metodos
 	    //actualizarFiltro: React.PropTypes.func.isRequired,
 	    guardarInventario: _react2.default.PropTypes.func.isRequired,
-	    guardarNomina: _react2.default.PropTypes.func.isRequired
+	    guardarNomina: _react2.default.PropTypes.func.isRequired,
+	    ordenarInventarios: _react2.default.PropTypes.func.isRequired
 	};
 	exports.default = TablaInventarios;
 

@@ -19,6 +19,27 @@ export default class BlackBoxSemanal{
         // Todo: filtrar por clientes
         // Todo: filtrar por regiones
         
+        // let orderByFechaProgramadaStock = (a,b)=>{
+        //     let dateA = new Date(a.fechaProgramada)
+        //     let dateB = new Date(b.fechaProgramada)
+        //
+        //     if((dateA-dateB)===0){
+        //         // stock ordenado de mayor a menor (B-A)
+        //         return b.local.stock - a.local.stock
+        //     }else{
+        //         // fecha ordenada de de menor a mayor (A-B)
+        //         return dateA - dateB
+        //     }
+        // }
+        // let listaDiaFIjadoOrdenado = R.sort(orderByFechaProgramadaStock, this.lista)
+
+        return {
+            // inventariosFiltrados: listaDiaFIjadoOrdenado
+            inventariosFiltrados: this.lista
+        }
+    }
+
+    ordenarLista(){
         let orderByFechaProgramadaStock = (a,b)=>{
             let dateA = new Date(a.fechaProgramada)
             let dateB = new Date(b.fechaProgramada)
@@ -31,12 +52,7 @@ export default class BlackBoxSemanal{
                 return dateA - dateB
             }
         }
-        let listaDiaFIjadoOrdenado = R.sort(orderByFechaProgramadaStock, this.lista)
-
-        return {
-            inventariosFiltrados: listaDiaFIjadoOrdenado
-            // inventariosFiltrados: this.lista
-        }
+        this.lista = R.sort(orderByFechaProgramadaStock, this.lista)
     }
     
     // Todo modificar el listado de clientes

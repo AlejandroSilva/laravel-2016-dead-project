@@ -40,7 +40,12 @@ class TablaInventarios extends React.Component{
                 style={{overfow: 'overlay'}}>
                 <thead>
                     <tr>
-                        <th className={css.thFecha}>Fecha</th>
+                        <th className={css.thFecha}>
+                            Fecha
+                            <span className={'glyphicon glyphicon-sort-by-attributes pull-right'}
+                                  onClick={ this.props.ordenarInventarios }
+                            />
+                        </th>
                         <th className={css.thCliente}>CL</th>
                         <th className={css.thCeco}>CECO</th>
                         <th className={css.thRegion}>RG</th>
@@ -93,6 +98,7 @@ TablaInventarios.propTypes = {
     // Metodos
     //actualizarFiltro: React.PropTypes.func.isRequired,
     guardarInventario: React.PropTypes.func.isRequired,
-    guardarNomina: React.PropTypes.func.isRequired
+    guardarNomina: React.PropTypes.func.isRequired,
+    ordenarInventarios: React.PropTypes.func.isRequired
 }
 export default TablaInventarios

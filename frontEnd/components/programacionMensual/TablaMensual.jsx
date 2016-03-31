@@ -49,7 +49,7 @@ class TablaMensual extends React.Component{
                             <th className={css.thFecha}>
                                 Fecha
                                 <span className={'glyphicon glyphicon-sort-by-attributes pull-right'}
-                                      onClick={()=>{  alert("PENDIENTE: ordenar los inventarios por fecha y stock") }}
+                                      onClick={ this.props.ordenarInventarios }
                                 />
                                 {/*<span className={'glyphicon glyphicon-sort-by-attributes-alt pull-right'}></span>*/}
                             </th>
@@ -110,6 +110,7 @@ TablaMensual.propTypes = {
     // Metodos
     actualizarFiltro: React.PropTypes.func.isRequired,
     guardarOCrearInventario: React.PropTypes.func.isRequired,
-    quitarInventario: React.PropTypes.func.isRequired
+    quitarInventario: React.PropTypes.func.isRequired,
+    ordenarInventarios: React.PropTypes.func.isRequired
 }
 export default TablaMensual

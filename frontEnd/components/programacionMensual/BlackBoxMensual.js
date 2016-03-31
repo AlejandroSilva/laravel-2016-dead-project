@@ -98,7 +98,7 @@ export default class BlackBox{
             filtroRegiones: this.filtroRegiones
         }
     }
-    getListaFiltradaOrdenada(){
+    __getListaFiltradaOrdenada__por_ahora_no_se_ocupa(){
         this.actualizarFiltros()
 
         // filtrar por clientes
@@ -141,7 +141,21 @@ export default class BlackBox{
             filtroRegiones: this.filtroRegiones,
         }
     }
+    ordenarLista(){
+        let orderByFechaProgramadaStock = (a,b)=>{
+            let dateA = new Date(a.fechaProgramada)
+            let dateB = new Date(b.fechaProgramada)
 
+            if((dateA-dateB)===0){
+                // stock ordenado de mayor a menor (B-A)
+                return b.local.stock - a.local.stock
+            }else{
+                // fecha ordenada de de menor a mayor (A-B)
+                return dateA - dateB
+            }
+        }
+        this.lista  = R.sort(orderByFechaProgramadaStock, this.lista)
+    }
     // Metodos de alto nivel
     __crearDummy(annoMesDia, idLocal){
         return {
