@@ -40,7 +40,6 @@ class ProgramacionMensual extends React.Component{
         api.inventario.getPorMes(annoMesDia)
             .then(inventarios=>{
                 this.blackbox.reset()
-                let idLocalesToFetch = []
                 inventarios.forEach(inventario=>{
                     // crear un dummy
                     let nuevoInventario = this.blackbox.__crearDummy(annoMesDia, inventario.idLocal )
@@ -48,15 +47,9 @@ class ProgramacionMensual extends React.Component{
 
                     // actualizar los datos del inventario
                     this.blackbox.actualizarDatosInventario(nuevoInventario, inventario)
-
-                    // los locales a los que se hara un fetch de los datos
-                    idLocalesToFetch.push(inventario.idLocal)
                 })
                 // actualizar los filtros, y la lista ordenada de locales
                 this.setState(this.blackbox.getListaFiltrada())
-
-                // pedir los datos del los locales de forma asincrona
-                this.fetchLocales(idLocalesToFetch)
             })
             //.catch(err=>console.error('error: ', err))
 
@@ -92,7 +85,7 @@ class ProgramacionMensual extends React.Component{
             return [errores, {}]
 
         // agregar al listado
-        this.blackbox.add(nuevoInventario)
+        this.blackbox.addInicio(nuevoInventario)
 
         // actualizar la vista de la lista
         // actualizar los filtros, y la lista ordenada de locales
@@ -115,6 +108,7 @@ class ProgramacionMensual extends React.Component{
         return [null, {}]
     }
 
+    // Lista de inventarios que son "pegados desde excel"
     agregarGrupoInventarios(idCliente, numerosLocales, annoMesDia){
         console.log(numerosLocales)
         let idLocalesExistentes = []
@@ -126,7 +120,7 @@ class ProgramacionMensual extends React.Component{
                 pegadoConProblemas.push(errores)
             }else{
                 idLocalesExistentes.push(nuevoInventario.idLocal)
-                this.blackbox.add(nuevoInventario)
+                this.blackbox.addInicio(nuevoInventario)
             }
         })
 

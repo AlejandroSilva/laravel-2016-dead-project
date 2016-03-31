@@ -20,6 +20,9 @@ export default class BlackBox{
     add(inventario){
         this.lista.push(inventario)
     }
+    addInicio(inventario){
+        this.lista.unshift(inventario)
+    }
     // Todo Modificar: el listado de clientes
     remove(idDummy){
         let index = this.lista.findIndex(inventario=>inventario.idDummy===idDummy)
@@ -43,7 +46,7 @@ export default class BlackBox{
         })
         return existe
     }
-    getListaFiltradaSinOrdenar() {
+    getListaFiltrada(){
         this.actualizarFiltros()
 
         // filtrar por clientes
@@ -64,7 +67,7 @@ export default class BlackBox{
             filtroRegiones: this.filtroRegiones
         }
     }
-    getListaFiltrada(){
+    getListaFiltradaOrdenada(){
         this.actualizarFiltros()
 
         // filtrar por clientes

@@ -191,6 +191,9 @@ class RowInventarioMensual extends React.Component{
     }
 
     render(){
+        let nombreCliente = this.props.inventario.local.nombreCliente || this.props.inventario.local.cliente.nombreCorto
+        let nombreRegion = this.props.inventario.local.nombreRegion || this.props.inventario.local.direccion.comuna.provincia.region.numero
+        let nombreComuna = this.props.inventario.local.nombreComuna || this.props.inventario.local.direccion.comuna.nombre
         return (
             <tr>
                 {/* Correlativo */}
@@ -205,7 +208,9 @@ class RowInventarioMensual extends React.Component{
                            value={this.state.inputDia}
                            onChange={this.onInputDiaChange.bind(this)}
                            onKeyDown={this.inputOnKeyDown.bind(this, 'dia')}
-                           onBlur={this.guardarOCrear.bind(this)}/>
+                           onBlur={this.guardarOCrear.bind(this)}
+                           onFocus={()=>{this.inputDia.select()}}
+                    />
                     <input className={css.inputMes} type="number" disabled
                            value={this.state.inputMes}/>
                     <input className={css.inputAnno} type="number" disabled
@@ -213,7 +218,7 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* Cliente*/}
                 <td className={css.tdCliente}>
-                    <p><small>{this.props.inventario.local.cliente.nombreCorto /*nombreCliente*/}</small></p>
+                    <p><small>{ nombreCliente }</small></p>
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
@@ -225,11 +230,11 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* Region*/}
                 <td className={css.tdRegion}>
-                    <p style={{margin:0}}><small>{/*this.props.inventario.local.direccion.comuna.provincia.region.numero*/}</small></p>
+                    <p style={{margin:0}}><small>{ nombreRegion }</small></p>
                 </td>
                 {/* Comuna */}
                 <td className={css.tdComuna}>
-                    <p style={{margin:0}}><b><small>{/*this.props.inventario.local.direccion.comuna.nombre*/}</small></b></p>
+                    <p style={{margin:0}}><b><small>{ nombreComuna }</small></b></p>
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>

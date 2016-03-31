@@ -68,6 +68,7 @@ class InputFecha extends React.Component{
     }
     focus(){
         this.inputDia.focus()
+        this.inputDia.select()
     }
     render(){
         let [anno, mes, dia] = this.props.fecha.split('-')
@@ -82,6 +83,7 @@ class InputFecha extends React.Component{
                        onKeyDown={this.inputOnKeyDown.bind(this)}
                        onChange={this.onInputChange.bind(this)}
                        onBlur={()=>this.props.onGuardar()}
+                       onFocus={()=>{ this.inputDia.select() }}             // seleccionar el texto cuando se hace focus
                 />
                 <input className={css.inputMes} type="number" disabled
                        value={mes}/>
