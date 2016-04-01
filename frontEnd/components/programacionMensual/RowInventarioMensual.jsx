@@ -18,6 +18,7 @@ class RowInventarioMensual extends React.Component{
             inputDotacion: 0,
             selectJornada: 4,
             diaValido: this._diaValido(0),
+            mesValido: this._mesValido(0),
             dotacionValida: this._dotacionValida(0)
         }
         // Refs disponibles: this.inputDia, this.inputDotacion
@@ -37,44 +38,43 @@ class RowInventarioMensual extends React.Component{
             inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
             selectJornada: jornadaInventario || jornadaLocal,
             diaValido: this._diaValido(dia),
+            mesValido: this._mesValido(mes),
             dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
         })
     }
 
     componentWillReceiveProps(nextProps){
-
+/*
         let mismoInventario = this.props.inventario.idDummy===nextProps.inventario.idDummy
         if(mismoInventario){
-            let newState = {}
             //if(this.props.inventario.idDummy==9) console.log("actualizando componente 9", this.props.inventario.fechaProgramada, nextProps.inventario.fechaProgramada)
             //console.log("nuevas props para ", this.props.inventario.idDummy)
-
 
             // Si es el mismo inventario, se revisa si se han actualizado los datos (y se reemplaza el state actual del usuario)
 
             // se recibio una nueva fecha?
-            let [anno1, mes1, dia1] = this.props.inventario.fechaProgramada.split('-')
+            //let [anno1, mes1, dia1] = this.props.inventario.fechaProgramada.split('-')
             let [anno2, mes2, dia2] = nextProps.inventario.fechaProgramada.split('-')
-            //if(dia1!==dia2 || mes1!==mes2 || anno1!==anno2 || this.state.inputDia!=dia2, this.state.inputMes!=mes2, this.state.inputAnno!=anno2)
-                this.setState({inputDia: dia2, inputMes: mes2, inputAnno: anno2, diaValido: this._diaValido(dia2)})
+            this.setState({
+                inputDia: dia2, inputMes: mes2, inputAnno: anno2,
+                diaValido: this._diaValido(dia2), mesValido: this._mesValido(mes2)
+            })
 
             // se recibio una nueva dotacion?
-            let dotacion1 = this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida
+            //let dotacion1 = this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida
             let dotacion2 = nextProps.inventario.dotacionAsignadaTotal || nextProps.inventario.local.dotacionSugerida
 
             //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
-                this.setState({inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2)})
+            this.setState({inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2)})
 
 
             // se recibio una nueva jornada?
-            let jornada1 = this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida
+            //let jornada1 = this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida
             let jornada2 = nextProps.inventario.idJornada || nextProps.inventario.local.idJornadaSugerida
-            //if(jornada1!==jornada2 || this.state.selectJornada!==jornada2)
-                this.setState({selectJornada: jornada2})
-
-            this.setState(newState)
+            this.setState({selectJornada: jornada2})
 
         }else{
+*/
             // Si el inventario cambio, se vuelven a poner los valores "por defecto"
             let [anno, mes, dia] = nextProps.inventario.fechaProgramada.split('-')
             let dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal
@@ -88,12 +88,10 @@ class RowInventarioMensual extends React.Component{
                 inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
                 selectJornada: jornadaInventario || jornadaLocal,
                 diaValido: this._diaValido(dia),
+                mesValido: this._mesValido(mes),
                 dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
             })
-
-        }
-        //console.log(this.props.inventario.idDummy, nextProps.inventario.idDummy, mismoInventario)
-        //console.log(this.props.inventario.idDummy, dotacionAsignada, dotacionSugerida)
+/*        }*/
     }
 
     focusElemento(elemento){
@@ -123,6 +121,13 @@ class RowInventarioMensual extends React.Component{
             diaValido: this._diaValido(dia)
         })
     }
+    onInputMesChange(evt){
+        let mes = evt.target.value
+        this.setState({
+            inputMes: mes,
+            mesValido: this._mesValido(mes)
+        })
+    }
     onInputDotacionChange(evt){
         let dotacion = evt.target.value
         this.setState({
@@ -140,6 +145,10 @@ class RowInventarioMensual extends React.Component{
     _diaValido(dia){
         return dia>0 && dia<32
     }
+    _mesValido(mes){
+        console.log(mes, mes>=1, mes<=12)
+        return mes>=1 && mes<=12
+    }
     _dotacionValida(dotacion){
         return dotacion>0
     }
@@ -147,6 +156,7 @@ class RowInventarioMensual extends React.Component{
         let [anno, mes, dia] = this.props.inventario.fechaProgramada.split('-')
         let isDirty = (
             this.state.inputDia!=dia ||
+            this.state.inputMes!=mes ||
             this.state.inputDotacion!=(this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) ||
             this.state.selectJornada!=(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida)
         )
@@ -164,7 +174,7 @@ class RowInventarioMensual extends React.Component{
         let mes = this.state.inputMes
         let dia = this.state.inputDia
 
-        if(this.state.diaValido && this.state.dotacionValida){
+        if(this.state.diaValido && this.state.mesValido && this.state.dotacionValida){
             let fecha = `${anno}-${mes}-${dia}`
 
             this.props.guardarOCrearInventario({
@@ -207,6 +217,9 @@ class RowInventarioMensual extends React.Component{
                            onFocus={()=>{this.inputDia.select()}}
                     />
                     <input className={css.inputMes} type="number" disabled
+                           className={this.state.mesValido? css.inputDia : css.inputDiaInvalido}
+                           type="number" min={1} max={12}
+                           ref={ref=>this.inputMes=ref}
                            value={this.state.inputMes}/>
                     <input className={css.inputAnno} type="number" disabled
                            value={this.state.inputAnno}/>

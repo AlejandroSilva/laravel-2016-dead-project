@@ -45809,6 +45809,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -45836,6 +45838,7 @@
 	            inputDotacion: 0,
 	            selectJornada: 4,
 	            diaValido: _this._diaValido(0),
+	            mesValido: _this._mesValido(0),
 	            dotacionValida: _this._dotacionValida(0)
 	        };
 	        // Refs disponibles: this.inputDia, this.inputDotacion
@@ -45866,83 +45869,68 @@
 	                inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
 	                selectJornada: jornadaInventario || jornadaLocal,
 	                diaValido: this._diaValido(dia),
+	                mesValido: this._mesValido(mes),
 	                dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
 	            });
 	        }
 	    }, {
 	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(nextProps) {
+	            /*
+	                    let mismoInventario = this.props.inventario.idDummy===nextProps.inventario.idDummy
+	                    if(mismoInventario){
+	                        //if(this.props.inventario.idDummy==9) console.log("actualizando componente 9", this.props.inventario.fechaProgramada, nextProps.inventario.fechaProgramada)
+	                        //console.log("nuevas props para ", this.props.inventario.idDummy)
+	            
+	                        // Si es el mismo inventario, se revisa si se han actualizado los datos (y se reemplaza el state actual del usuario)
+	            
+	                        // se recibio una nueva fecha?
+	                        //let [anno1, mes1, dia1] = this.props.inventario.fechaProgramada.split('-')
+	                        let [anno2, mes2, dia2] = nextProps.inventario.fechaProgramada.split('-')
+	                        this.setState({
+	                            inputDia: dia2, inputMes: mes2, inputAnno: anno2,
+	                            diaValido: this._diaValido(dia2), mesValido: this._mesValido(mes2)
+	                        })
+	            
+	                        // se recibio una nueva dotacion?
+	                        //let dotacion1 = this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida
+	                        let dotacion2 = nextProps.inventario.dotacionAsignadaTotal || nextProps.inventario.local.dotacionSugerida
+	            
+	                        //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
+	                        this.setState({inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2)})
+	            
+	            
+	                        // se recibio una nueva jornada?
+	                        //let jornada1 = this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida
+	                        let jornada2 = nextProps.inventario.idJornada || nextProps.inventario.local.idJornadaSugerida
+	                        this.setState({selectJornada: jornada2})
+	            
+	                    }else{
+	            */
 
-	            var mismoInventario = this.props.inventario.idDummy === nextProps.inventario.idDummy;
-	            if (mismoInventario) {
-	                var newState = {};
-	                //if(this.props.inventario.idDummy==9) console.log("actualizando componente 9", this.props.inventario.fechaProgramada, nextProps.inventario.fechaProgramada)
-	                //console.log("nuevas props para ", this.props.inventario.idDummy)
+	            var _nextProps$inventario = nextProps.inventario.fechaProgramada.split('-');
 
-	                // Si es el mismo inventario, se revisa si se han actualizado los datos (y se reemplaza el state actual del usuario)
+	            var _nextProps$inventario2 = _slicedToArray(_nextProps$inventario, 3);
 
-	                // se recibio una nueva fecha?
+	            var anno = _nextProps$inventario2[0];
+	            var mes = _nextProps$inventario2[1];
+	            var dia = _nextProps$inventario2[2];
 
-	                var _props$inventario$fec3 = this.props.inventario.fechaProgramada.split('-');
-
-	                var _props$inventario$fec4 = _slicedToArray(_props$inventario$fec3, 3);
-
-	                var anno1 = _props$inventario$fec4[0];
-	                var mes1 = _props$inventario$fec4[1];
-	                var dia1 = _props$inventario$fec4[2];
-
-	                var _nextProps$inventario = nextProps.inventario.fechaProgramada.split('-');
-
-	                var _nextProps$inventario2 = _slicedToArray(_nextProps$inventario, 3);
-
-	                var anno2 = _nextProps$inventario2[0];
-	                var mes2 = _nextProps$inventario2[1];
-	                var dia2 = _nextProps$inventario2[2];
-	                //if(dia1!==dia2 || mes1!==mes2 || anno1!==anno2 || this.state.inputDia!=dia2, this.state.inputMes!=mes2, this.state.inputAnno!=anno2)
-
-	                this.setState({ inputDia: dia2, inputMes: mes2, inputAnno: anno2, diaValido: this._diaValido(dia2) });
-
-	                // se recibio una nueva dotacion?
-	                var dotacion1 = this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida;
-	                var dotacion2 = nextProps.inventario.dotacionAsignadaTotal || nextProps.inventario.local.dotacionSugerida;
-
-	                //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
-	                this.setState({ inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2) });
-
-	                // se recibio una nueva jornada?
-	                var jornada1 = this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida;
-	                var jornada2 = nextProps.inventario.idJornada || nextProps.inventario.local.idJornadaSugerida;
-	                //if(jornada1!==jornada2 || this.state.selectJornada!==jornada2)
-	                this.setState({ selectJornada: jornada2 });
-
-	                this.setState(newState);
-	            } else {
-	                // Si el inventario cambio, se vuelven a poner los valores "por defecto"
-
-	                var _nextProps$inventario3 = nextProps.inventario.fechaProgramada.split('-');
-
-	                var _nextProps$inventario4 = _slicedToArray(_nextProps$inventario3, 3);
-
-	                var anno = _nextProps$inventario4[0];
-	                var mes = _nextProps$inventario4[1];
-	                var dia = _nextProps$inventario4[2];
-
-	                var dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal;
-	                var dotacionSugerida = nextProps.inventario.local.dotacionSugerida;
-	                var jornadaInventario = nextProps.inventario.idJornada;
-	                var jornadaLocal = nextProps.inventario.local.idJornadaSugerida;
-	                this.setState({
-	                    inputDia: dia,
-	                    inputMes: mes,
-	                    inputAnno: anno,
-	                    inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
-	                    selectJornada: jornadaInventario || jornadaLocal,
-	                    diaValido: this._diaValido(dia),
-	                    dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
-	                });
-	            }
-	            //console.log(this.props.inventario.idDummy, nextProps.inventario.idDummy, mismoInventario)
-	            //console.log(this.props.inventario.idDummy, dotacionAsignada, dotacionSugerida)
+	            var dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal;
+	            var dotacionSugerida = nextProps.inventario.local.dotacionSugerida;
+	            var jornadaInventario = nextProps.inventario.idJornada;
+	            var jornadaLocal = nextProps.inventario.local.idJornadaSugerida;
+	            this.setState({
+	                inputDia: dia,
+	                inputMes: mes,
+	                inputAnno: anno,
+	                inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
+	                selectJornada: jornadaInventario || jornadaLocal,
+	                diaValido: this._diaValido(dia),
+	                mesValido: this._mesValido(mes),
+	                dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
+	            });
+	            /*        }*/
 	        }
 	    }, {
 	        key: 'focusElemento',
@@ -45976,6 +45964,15 @@
 	            });
 	        }
 	    }, {
+	        key: 'onInputMesChange',
+	        value: function onInputMesChange(evt) {
+	            var mes = evt.target.value;
+	            this.setState({
+	                inputMes: mes,
+	                mesValido: this._mesValido(mes)
+	            });
+	        }
+	    }, {
 	        key: 'onInputDotacionChange',
 	        value: function onInputDotacionChange(evt) {
 	            var dotacion = evt.target.value;
@@ -46000,6 +45997,12 @@
 	            return dia > 0 && dia < 32;
 	        }
 	    }, {
+	        key: '_mesValido',
+	        value: function _mesValido(mes) {
+	            console.log(mes, mes >= 1, mes <= 12);
+	            return mes >= 1 && mes <= 12;
+	        }
+	    }, {
 	        key: '_dotacionValida',
 	        value: function _dotacionValida(dotacion) {
 	            return dotacion > 0;
@@ -46007,15 +46010,15 @@
 	    }, {
 	        key: 'isDirty',
 	        value: function isDirty() {
-	            var _props$inventario$fec5 = this.props.inventario.fechaProgramada.split('-');
+	            var _props$inventario$fec3 = this.props.inventario.fechaProgramada.split('-');
 
-	            var _props$inventario$fec6 = _slicedToArray(_props$inventario$fec5, 3);
+	            var _props$inventario$fec4 = _slicedToArray(_props$inventario$fec3, 3);
 
-	            var anno = _props$inventario$fec6[0];
-	            var mes = _props$inventario$fec6[1];
-	            var dia = _props$inventario$fec6[2];
+	            var anno = _props$inventario$fec4[0];
+	            var mes = _props$inventario$fec4[1];
+	            var dia = _props$inventario$fec4[2];
 
-	            var isDirty = this.state.inputDia != dia || this.state.inputDotacion != (this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) || this.state.selectJornada != (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida);
+	            var isDirty = this.state.inputDia != dia || this.state.inputMes != mes || this.state.inputDotacion != (this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) || this.state.selectJornada != (this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida);
 	            console.log("isDirty ", isDirty);
 	            return isDirty;
 	        }
@@ -46031,7 +46034,7 @@
 	            var mes = this.state.inputMes;
 	            var dia = this.state.inputDia;
 
-	            if (this.state.diaValido && this.state.dotacionValida) {
+	            if (this.state.diaValido && this.state.mesValido && this.state.dotacionValida) {
 	                var fecha = anno + '-' + mes + '-' + dia;
 
 	                this.props.guardarOCrearInventario({
@@ -46056,7 +46059,8 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this3 = this;
+	            var _this3 = this,
+	                _React$createElement;
 
 	            var nombreCliente = this.props.inventario.local.nombreCliente || this.props.inventario.local.cliente.nombreCorto;
 	            var nombreRegion = this.props.inventario.local.nombreRegion || this.props.inventario.local.direccion.comuna.provincia.region.numero;
@@ -46085,8 +46089,10 @@
 	                            _this3.inputDia.select();
 	                        }
 	                    }),
-	                    _react2.default.createElement('input', { className: css.inputMes, type: 'number', disabled: true,
-	                        value: this.state.inputMes }),
+	                    _react2.default.createElement('input', (_React$createElement = { className: css.inputMes, type: 'number', disabled: true
+	                    }, _defineProperty(_React$createElement, 'className', this.state.mesValido ? css.inputDia : css.inputDiaInvalido), _defineProperty(_React$createElement, 'type', 'number'), _defineProperty(_React$createElement, 'min', 1), _defineProperty(_React$createElement, 'max', 12), _defineProperty(_React$createElement, 'ref', function ref(_ref2) {
+	                        return _this3.inputMes = _ref2;
+	                    }), _defineProperty(_React$createElement, 'value', this.state.inputMes), _React$createElement)),
 	                    _react2.default.createElement('input', { className: css.inputAnno, type: 'number', disabled: true,
 	                        value: this.state.inputAnno })
 	                ),
@@ -46207,8 +46213,8 @@
 	                        _react2.default.createElement('input', { className: this.state.dotacionValida ? css.inputDotacion : css.inputDotacionInvalida, type: 'number',
 	                            value: this.state.inputDotacion,
 	                            onChange: this.onInputDotacionChange.bind(this),
-	                            ref: function ref(_ref2) {
-	                                return _this3.inputDotacion = _ref2;
+	                            ref: function ref(_ref3) {
+	                                return _this3.inputDotacion = _ref3;
 	                            },
 	                            onKeyDown: this.inputOnKeyDown.bind(this, 'dotacion'),
 	                            onBlur: this.guardarOCrear.bind(this) })
@@ -53529,9 +53535,7 @@
 	    }, {
 	        key: '_mesValido',
 	        value: function _mesValido(mes) {
-	            return function (mes) {
-	                return 0 && mes <= 12;
-	            };
+	            return mes >= 1 && mes <= 12;
 	        }
 	    }, {
 	        key: 'onDiaChange',
@@ -53561,6 +53565,7 @@
 	            var _this2 = this;
 
 	            var classnameDia = this.state.diaValid ? this.state.diaDirty ? _InputFecha2.default.inputDiaDirty : _InputFecha2.default.inputDia : _InputFecha2.default.inputDiaInvalido;
+	            var classnameMes = this.state.mesValid ? this.state.diaDirty ? _InputFecha2.default.inputDiaDirty : _InputFecha2.default.inputDia : _InputFecha2.default.inputDiaInvalido;
 	            return _react2.default.createElement(
 	                'div',
 	                null,
@@ -53578,7 +53583,7 @@
 	                        _this2.inputDia.select();
 	                    } // seleccionar el texto cuando se hace focus
 	                }),
-	                _react2.default.createElement('input', { className: _InputFecha2.default.inputMes, type: 'number',
+	                _react2.default.createElement('input', { className: classnameMes, type: 'number',
 	                    ref: function ref(_ref2) {
 	                        return _this2.inputMes = _ref2;
 	                    },
