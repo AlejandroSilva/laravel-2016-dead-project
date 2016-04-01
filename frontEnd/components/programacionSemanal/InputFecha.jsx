@@ -68,7 +68,7 @@ class InputFecha extends React.Component{
         return dia>=0 && dia<32
     }
     _mesValido(mes){
-        return mes=>0 && mes<=12
+        return mes>=1 && mes<=12
     }
 
     onDiaChange(evt){
@@ -94,6 +94,9 @@ class InputFecha extends React.Component{
         let classnameDia = this.state.diaValid
             ? (this.state.diaDirty? css.inputDiaDirty : css.inputDia)
             : css.inputDiaInvalido
+        let classnameMes = this.state.mesValid
+            ? (this.state.diaDirty? css.inputDiaDirty : css.inputDia)
+            : css.inputDiaInvalido
         return(
             <div>
                 <input className={classnameDia}
@@ -104,7 +107,7 @@ class InputFecha extends React.Component{
                        onBlur={()=>this.props.onGuardar()}
                        onFocus={()=>{ this.inputDia.select() }}             // seleccionar el texto cuando se hace focus
                 />
-                <input className={css.inputMes} type="number"
+                <input className={classnameMes} type="number"
                        ref={ref=>this.inputMes=ref}
                        value={this.state.mes}
                        onKeyDown={this.inputOnKeyDown.bind(this)}
