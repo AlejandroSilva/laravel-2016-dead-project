@@ -44,6 +44,7 @@ Route::group(['middleware' => ['web']], function (){
     |*/
     Route::get('programacion',                  'ProgramacionController@showIndex');
     Route::get('programacion/mensual',          'ProgramacionController@showMensual');
+    Route::get('programacion/mensual/pdf/{mes}','ProgramacionController@descargarProgramaMensual');
     Route::get('programacion/semanal',          'ProgramacionController@showSemanal');
     Route::get('inventario',                    'InventariosController@showIndex');
     Route::get('inventario/nuevo',              'InventariosController@showNuevo');

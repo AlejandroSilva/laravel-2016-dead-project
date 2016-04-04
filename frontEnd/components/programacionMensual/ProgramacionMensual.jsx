@@ -24,6 +24,7 @@ class ProgramacionMensual extends React.Component{
             })
         }
         this.state = {
+            mesSeleccionado: '2016-01-00',
             inventariosFiltrados: [],
             filtroClientes: [],
             filtroRegiones: [],
@@ -35,6 +36,9 @@ class ProgramacionMensual extends React.Component{
 
     onSeleccionarMes(annoMesDia){
         console.log('mes seleccionado ', annoMesDia)
+        this.setState({
+            mesSeleccionado: annoMesDia
+        })
         // obtener todos los inventarios realizados en el mes seleccionado
 
         api.inventario.getPorMes(annoMesDia)
@@ -54,6 +58,7 @@ class ProgramacionMensual extends React.Component{
             })
             //.catch(err=>console.error('error: ', err))
     }
+
     fetchLocales(idLocales){
         let promesasFetch = []
         idLocales.forEach(idLocal=> {
@@ -79,6 +84,7 @@ class ProgramacionMensual extends React.Component{
                 this.setState(this.blackbox.getListaFiltrada())
             })
     }
+
     agregarInventario(idCliente, numeroLocal, annoMesDia){
         let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, numeroLocal, annoMesDia)
         if(errores)
@@ -215,7 +221,12 @@ class ProgramacionMensual extends React.Component{
                 />
 
                 <div className="row">
-                    <h4 className="page-header" style={{marginTop: '1em'}}>Locales a programar:</h4>
+                    <h4 className="page-header" style={{marginTop: '1em'}}>
+                        Locales a programar:
+                        <a className="btn btn-success btn-xs pull-right"
+                            href={`/programacion/mensual/pdf/${this.state.mesSeleccionado}`}
+                        >Exportar</a>
+                    </h4>
                     <TablaMensual
                         inventariosFiltrados={this.state.inventariosFiltrados}
                         filtroClientes={this.state.filtroClientes}

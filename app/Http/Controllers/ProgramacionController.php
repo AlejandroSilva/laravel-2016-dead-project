@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+// PHP Excel
+use PHPExcel;
+use PHPExcel_IOFactory;
 // Modelos
 use App\Role;
 use App\Clientes;
@@ -28,6 +31,60 @@ class ProgramacionController extends Controller {
         return view('operacional.programacion.programacion-mensual', [
             'clientes' => $clientesWithLocales
         ]);
+    }
+
+    // GET programacion/mensual/pdf/{mes}
+    public function descargarProgramaMensual($annoMesDia){
+        $fecha = explode('-', $annoMesDia);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+
+        // inventarios que se desean mostrar
+        $inventarios = Inventarios::with([
+            //'local',
+            'local.cliente',
+            'local.formatoLocal',
+            'local.direccion.comuna.provincia.region',
+            'nominaDia',
+            'nominaNoche'
+        ])
+        ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+        ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+        ->join('locales', 'locales.idLocal', '=', 'inventarios.idLocal')
+        ->orderBy('fechaProgramada', 'ASC')
+        ->orderBy('locales.stock', 'DESC')
+        ->get();
+
+        $inventariosHeader = ['#','Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Dotación Total'];
+        $inventariosArray = array_map(function($inventario){
+            return [
+                '',
+                $inventario['fechaProgramada'],
+                $inventario['local']['cliente']['nombreCorto'],
+                $inventario['local']['numero'],
+                $inventario['local']['nombre'],
+                $inventario['local']['direccion']['comuna']['provincia']['region']['numero'],
+                $inventario['local']['direccion']['comuna']['nombre'],
+                $inventario['local']['stock'],
+                $inventario['dotacionAsignadaTotal'],
+            ];
+        }, $inventarios->toArray());
+
+        // Nuevo archivo
+        $workbook = new PHPExcel();  // workbook
+        $sheet = $workbook->getActiveSheet();
+        // agregar datos
+        $sheet->setCellValue('A1', 'Programación mensual');
+        $sheet->fromArray($inventariosHeader, NULL, 'A4');
+        $sheet->fromArray($inventariosArray,  NULL, 'A5');
+
+        // guardar
+        $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+        $randomFileName = md5(uniqid(rand(), true));
+        $excelWritter->save($randomFileName);
+
+        // entregar la descarga al usuario
+        return response()->download($randomFileName, "programacion $annoMesDia.xlsx");
     }
 
     // GET programacion/semanal

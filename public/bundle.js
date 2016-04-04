@@ -21788,6 +21788,7 @@
 	            });
 	        }
 	        _this.state = {
+	            mesSeleccionado: '2016-01-00',
 	            inventariosFiltrados: [],
 	            filtroClientes: [],
 	            filtroRegiones: [],
@@ -21804,6 +21805,9 @@
 	            var _this2 = this;
 
 	            console.log('mes seleccionado ', annoMesDia);
+	            this.setState({
+	                mesSeleccionado: annoMesDia
+	            });
 	            // obtener todos los inventarios realizados en el mes seleccionado
 
 	            _v2.default.inventario.getPorMes(annoMesDia).then(function (inventarios) {
@@ -22015,7 +22019,14 @@
 	                    _react2.default.createElement(
 	                        'h4',
 	                        { className: 'page-header', style: { marginTop: '1em' } },
-	                        'Locales a programar:'
+	                        'Locales a programar:',
+	                        _react2.default.createElement(
+	                            'a',
+	                            { className: 'btn btn-success btn-xs pull-right',
+	                                href: '/programacion/mensual/pdf/' + this.state.mesSeleccionado
+	                            },
+	                            'Exportar'
+	                        )
 	                    ),
 	                    _react2.default.createElement(_TablaMensual2.default, {
 	                        inventariosFiltrados: this.state.inventariosFiltrados,
