@@ -16,3 +16,6 @@ node_modules/
 
 # .lock son archivos que se encuentran actualmente abiertos
 .~lock.*
+
+# arhivos dinamicamente creados para ser descargados por los usuarios, deben ser eliminados con un CRON...
+/public/pmensual_*.xlxs
