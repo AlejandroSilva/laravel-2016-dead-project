@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Locales;
 
 class LocalesTableSeeder extends Seeder {
     /**
@@ -17,7 +18,6 @@ class LocalesTableSeeder extends Seeder {
     }
 
     public static function parseAndInsert($file){
-        //public_path().'/csv/niger.csv';
         $data = CSVSeeder::csv_to_array($file);
 
         array_map(function ($row){
@@ -58,5 +58,30 @@ class LocalesTableSeeder extends Seeder {
             ];
             DB::table('direcciones')->insert($direccion);
         }, $data);
+    }
+
+    public static function actualizarStock($file){
+            $data = CSVSeeder::csv_to_array($file);
+
+            return array_map(function ($row){
+                $numero = $row['numero'];
+                $stock = $row['stock'];
+
+                // buscar el local (por "numero" y "cliente")
+                $local = DB::table('locales')
+                    ->where('idCliente','=', '2')
+                    ->where('numero','=', $numero)
+                    ->first();
+
+                //                if($local==null) throw new \PhpParser\Error("local $numero no encontrado");
+                if(!$local)
+                    dd($numero);
+                
+                // BUG WORKAROUND: where->fist no entrega una instancia de eloquent, se debe pedir nuevalemten el elemento 
+                $local = Locales::find($local->idLocal);
+                $local->stock = $stock;
+                $local->fechaStock = '2016-03-30';
+                $local->save();
+            }, $data);
     }
 }
