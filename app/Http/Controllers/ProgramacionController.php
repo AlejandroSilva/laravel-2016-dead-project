@@ -55,10 +55,9 @@ class ProgramacionController extends Controller {
         ->orderBy('locales.stock', 'DESC')
         ->get();
 
-        $inventariosHeader = ['#','Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Dotación Total'];
+        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Dotación Total'];
         $inventariosArray = array_map(function($inventario){
             return [
-                '',
                 $inventario['fechaProgramada'],
                 $inventario['local']['cliente']['nombreCorto'],
                 $inventario['local']['numero'],
@@ -80,7 +79,7 @@ class ProgramacionController extends Controller {
 
         // guardar
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-        $randomFileName = md5(uniqid(rand(), true));
+        $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
         $excelWritter->save($randomFileName);
 
         // entregar la descarga al usuario

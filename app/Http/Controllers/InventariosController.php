@@ -48,7 +48,7 @@ class InventariosController extends Controller {
             // FK
             'idLocal'=> 'required',
             // 'idCliente'=> 'required', // ignorar
-            'idJornada'=> 'required',
+            //'idJornada'=> 'required',
             // otros campos
             'fechaProgramada'=> 'required',
             //'horaLlegada'=> 'required',
@@ -71,7 +71,12 @@ class InventariosController extends Controller {
 
             $inventario = new Inventarios();
             $inventario->idLocal = $request->idLocal;
-            $inventario->idJornada = $request->idJornada;
+            // asignar la jornada entregada por parametros, o la que tenga por defecto el local 
+            if($request->idJornada) {
+                $inventario->idJornada = $request->idJornada;
+            }else{
+                $inventario->idJornada = $local->idJornadaSugerida;
+            }
             $inventario->fechaProgramada = $request->fechaProgramada;
             $inventario->dotacionAsignadaTotal = $local->dotacionSugerida();
             // todo $inventario->fechaStock = $request->fechaStock;
@@ -108,7 +113,15 @@ class InventariosController extends Controller {
             $resultado =  $inventario->save();
 
             if($resultado){
-                return response()->json($inventario, 201);
+                return response()->json(
+                    $inventario = Inventarios::with([
+                        'local.cliente',
+                        'local.formatoLocal',
+                        'local.direccion.comuna.provincia.region',
+                        'nominaDia',
+                        'nominaNoche'
+                    ])->find($inventario->idInventario)
+                    , 201);
             }else{
                 return response()->json([
                     'request'=> $request->all(),

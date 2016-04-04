@@ -21827,17 +21827,24 @@
 	            //.catch(err=>console.error('error: ', err))
 	        }
 	    }, {
-	        key: 'fetchLocales',
-	        value: function fetchLocales(idLocales) {
+	        key: 'crearGrupoInventarios',
+	        value: function crearGrupoInventarios(nuevosInventarios) {
 	            var _this3 = this;
 
 	            var promesasFetch = [];
-	            idLocales.forEach(function (idLocal) {
-	                // pedir los datos de los locales
-	                promesasFetch.push(_v2.default.locales.getVerbose(idLocal).then(function (local) {
-	                    return _this3.blackbox.actualizarDatosLocal(local);
-	                }).catch(function (error) {
-	                    return console.error('error con :', error);
+	            nuevosInventarios.forEach(function (nuevoInventario) {
+	                // crear todos los locales (y sus nominas)
+	                promesasFetch.push(_v2.default.inventario.nuevo({
+	                    idLocal: nuevoInventario.idLocal,
+	                    fechaProgramada: _this3.state.mesSeleccionado
+	                }).then(function (inventarioCreado) {
+	                    _this3.blackbox.actualizarDatosInventario({
+	                        idDummy: nuevoInventario.idDummy
+	                    }, inventarioCreado);
+	                    // actualizar los datos y el state de la app
+	                    // actualizar los filtros, y la lista ordenada de locales
+	                    // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
+	                    _this3.setState(_this3.blackbox.getListaFiltrada());
 	                }));
 	            });
 	            // en algun momento las promesas se van a cumplior, entonces actualizar el estado
@@ -21874,18 +21881,19 @@
 	            // actualizar los filtros, y la lista ordenada de locales
 	            this.setState(this.blackbox.getListaFiltrada());
 
-	            // fetch de todos los datos, y actualizacion de la lista
-	            _v2.default.locales.getVerbose(nuevoInventario.local.idLocal).then(function (local) {
-	                _this4.blackbox.actualizarDatosLocal(local);
-
+	            // cuando se agregar un inventario, se crea automaticamente (junto a su nomina)
+	            _v2.default.inventario.nuevo({
+	                idLocal: nuevoInventario.local.idLocal,
+	                fechaProgramada: this.state.mesSeleccionado
+	            }).then(function (inventarioCreado) {
+	                _this4.blackbox.actualizarDatosInventario({
+	                    idDummy: nuevoInventario.idDummy
+	                }, inventarioCreado);
+	                // actualizar los datos y el state de la app
 	                // actualizar los filtros, y la lista ordenada de locales
-	                console.log("actualizando los datos del local ingresado");
+	                // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
 	                _this4.setState(_this4.blackbox.getListaFiltrada());
-	            }).catch(function (error) {
-	                console.error('error al obtener los datos de ' + nuevoInventario.local.idLocal, error);
-	                alert('error al obtener los datos de ' + nuevoInventario.local.idLocal);
 	            });
-
 	            return [null, {}];
 	        }
 
@@ -21897,7 +21905,6 @@
 	            var _this5 = this;
 
 	            console.log(numerosLocales);
-	            var idLocalesExistentes = [];
 	            var pegadoConProblemas = [];
 	            // se evalua y agrega cada uno de los elementos
 	            var nuevosInventarios = [];
@@ -21912,7 +21919,6 @@
 	                if (errores) {
 	                    pegadoConProblemas.push(errores);
 	                } else {
-	                    idLocalesExistentes.push(nuevoInventario.idLocal);
 	                    // this.blackbox.addNuevo(nuevoInventario)
 	                    nuevosInventarios.push(nuevoInventario);
 	                }
@@ -21923,7 +21929,7 @@
 	            // cuando terminen todos, se actualiza el state de la aplicacion
 	            // actualizar los filtros, y la lista ordenada de locales
 	            this.setState(this.blackbox.getListaFiltrada());
-	            this.fetchLocales(idLocalesExistentes);
+	            this.crearGrupoInventarios(nuevosInventarios);
 
 	            return {
 	                pegadoConProblemas: pegadoConProblemas,
@@ -21936,6 +21942,9 @@
 	        key: 'guardarOCrearInventario',
 	        value: function guardarOCrearInventario(formInventario) {
 	            var _this6 = this;
+
+	            // Nota: agregarInventario() y fetchLocales() siempre crean el inventario y sus nominas, por lo que el metodo
+	            // api.inventario.nuevo() de abajo nunca deberia ser llamado.
 
 	            if (formInventario.idInventario) {
 	                // Actualizar los datos del inventario
@@ -21955,7 +21964,7 @@
 	                // Crear los datos del inventario en el servidor (quitar todos los campos que no interesan)
 	                _v2.default.inventario.nuevo({
 	                    idLocal: formInventario.idLocal,
-	                    idJornada: formInventario.idJornada,
+	                    //idJornada: formInventario.idJornada,      // deja que tome la jornada por defecto
 	                    fechaProgramada: formInventario.fechaProgramada
 	                }).then(function (inventarioCreado) {
 	                    _this6.blackbox.actualizarDatosInventario(formInventario, inventarioCreado);

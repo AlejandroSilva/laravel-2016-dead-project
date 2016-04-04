@@ -59,14 +59,24 @@ class ProgramacionMensual extends React.Component{
             //.catch(err=>console.error('error: ', err))
     }
 
-    fetchLocales(idLocales){
+    crearGrupoInventarios(nuevosInventarios){
         let promesasFetch = []
-        idLocales.forEach(idLocal=> {
-            // pedir los datos de los locales
+        nuevosInventarios.forEach(nuevoInventario=> {
+            // crear todos los locales (y sus nominas)
             promesasFetch.push(
-                api.locales.getVerbose(idLocal)
-                    .then(local=>this.blackbox.actualizarDatosLocal(local))
-                    .catch(error=>console.error('error con :', error))
+                api.inventario.nuevo({
+                        idLocal: nuevoInventario.idLocal,
+                        fechaProgramada: this.state.mesSeleccionado
+                    })
+                    .then(inventarioCreado=>{
+                        this.blackbox.actualizarDatosInventario({
+                            idDummy: nuevoInventario.idDummy
+                        }, inventarioCreado)
+                        // actualizar los datos y el state de la app
+                        // actualizar los filtros, y la lista ordenada de locales
+                        // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
+                        this.setState(this.blackbox.getListaFiltrada())
+                    })
             )
         })
         // en algun momento las promesas se van a cumplior, entonces actualizar el estado
@@ -97,27 +107,26 @@ class ProgramacionMensual extends React.Component{
         // actualizar los filtros, y la lista ordenada de locales
         this.setState(this.blackbox.getListaFiltrada())
 
-        // fetch de todos los datos, y actualizacion de la lista
-        api.locales.getVerbose(nuevoInventario.local.idLocal)
-            .then(local=>{
-                this.blackbox.actualizarDatosLocal(local)
-
+        // cuando se agregar un inventario, se crea automaticamente (junto a su nomina)
+        api.inventario.nuevo({
+            idLocal: nuevoInventario.local.idLocal,
+            fechaProgramada: this.state.mesSeleccionado
+        })
+            .then(inventarioCreado=>{
+                this.blackbox.actualizarDatosInventario({
+                    idDummy: nuevoInventario.idDummy
+                }, inventarioCreado)
+                // actualizar los datos y el state de la app
                 // actualizar los filtros, y la lista ordenada de locales
-                console.log("actualizando los datos del local ingresado")
+                // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
                 this.setState(this.blackbox.getListaFiltrada())
             })
-            .catch(error=>{
-                console.error(`error al obtener los datos de ${nuevoInventario.local.idLocal}`, error)
-                alert(`error al obtener los datos de ${nuevoInventario.local.idLocal}`)
-            })
-
         return [null, {}]
     }
 
     // Lista de inventarios que son "pegados desde excel"
     agregarGrupoInventarios(idCliente, numerosLocales, annoMesDia){
         console.log(numerosLocales)
-        let idLocalesExistentes = []
         let pegadoConProblemas = []
         // se evalua y agrega cada uno de los elementos
         let nuevosInventarios = []
@@ -126,7 +135,6 @@ class ProgramacionMensual extends React.Component{
             if (errores){
                 pegadoConProblemas.push(errores)
             }else{
-                idLocalesExistentes.push(nuevoInventario.idLocal)
                 // this.blackbox.addNuevo(nuevoInventario)
                 nuevosInventarios.push(nuevoInventario)
             }
@@ -137,7 +145,7 @@ class ProgramacionMensual extends React.Component{
         // cuando terminen todos, se actualiza el state de la aplicacion
         // actualizar los filtros, y la lista ordenada de locales
         this.setState(this.blackbox.getListaFiltrada())
-        this.fetchLocales(idLocalesExistentes)
+        this.crearGrupoInventarios(nuevosInventarios)
 
         return {
             pegadoConProblemas: pegadoConProblemas,
@@ -148,6 +156,9 @@ class ProgramacionMensual extends React.Component{
     }
 
     guardarOCrearInventario(formInventario){
+        // Nota: agregarInventario() y fetchLocales() siempre crean el inventario y sus nominas, por lo que el metodo
+        // api.inventario.nuevo() de abajo nunca deberia ser llamado.
+
         if(formInventario.idInventario){
             // Actualizar los datos del inventario
             api.inventario.actualizar(formInventario.idInventario, {
@@ -167,7 +178,7 @@ class ProgramacionMensual extends React.Component{
             // Crear los datos del inventario en el servidor (quitar todos los campos que no interesan)
             api.inventario.nuevo({
                 idLocal: formInventario.idLocal,
-                idJornada: formInventario.idJornada,
+                //idJornada: formInventario.idJornada,      // deja que tome la jornada por defecto
                 fechaProgramada: formInventario.fechaProgramada
             })
                 .then(inventarioCreado=>{
