@@ -78,7 +78,7 @@ class TablaMensual extends React.Component{
                     <tbody>
                     {}
                     {this.props.inventariosFiltrados.length===0
-                        ? <tr><td colSpan="13" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                        ? <tr><td colSpan="10" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.props.inventariosFiltrados.map((inventario, index)=>{
                             return <RowInventario
                                 key={index}

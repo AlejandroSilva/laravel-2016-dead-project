@@ -68,7 +68,7 @@ class TablaInventarios extends React.Component{
                 </thead>
                 <tbody>
                     {this.props.inventarios.length===0
-                        ? <tr><td colSpan="13" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                        ? <tr><td colSpan="14" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.props.inventarios.map((inventario, index)=>{
                             return <RowInventarioSemanal
                                 // Propiedades
