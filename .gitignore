@@ -4,6 +4,7 @@ node_modules/
 /public/*.xlsx
 # Laravel 4 specific
 #bootstrap/compiled.php
+
 #app/storage/
 
 # Laravel 5 & Lumen specific
@@ -12,3 +13,6 @@ node_modules/
 .env.*.php
 .env.php
 .env
+
+# .lock son archivos que se encuentran actualmente abiertos
+.~lock.*
