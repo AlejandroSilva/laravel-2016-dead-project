@@ -1,6 +1,6 @@
 .inputStock{
     composes: inputNumberAsText from '../shared/shared.css';
-    width: 32px;
+    width: 45px;
     margin: 0 0 2px 0;
     text-align: center;
     font-size: 12px;
