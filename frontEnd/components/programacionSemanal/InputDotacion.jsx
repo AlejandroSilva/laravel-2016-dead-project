@@ -57,6 +57,7 @@ class InputDotacion extends React.Component{
     }
     focus(){
         this.inputDotacion.focus()
+        this.inputDotacion.select()
     }
     render(){
         let classname = this.state.valid
@@ -72,6 +73,7 @@ class InputDotacion extends React.Component{
                 onKeyDown={this.inputOnKeyDown.bind(this)}
                 onChange={this.onInputChange.bind(this)}
                 onBlur={()=>this.props.onGuardar()}
+                onFocus={()=>{ this.inputDotacion.select() }}             // seleccionar el texto cuando se hace focus
             />
         )
     }
