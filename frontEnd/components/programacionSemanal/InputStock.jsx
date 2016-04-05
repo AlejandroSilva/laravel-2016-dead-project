@@ -70,7 +70,6 @@ class InputStock extends React.Component{
             placement="left"
             delay={0}
             overlay={<Tooltip id="yyy">{this.props.tooltipText}</Tooltip>}>
-            {/*<p><small>{numeral(this.props.inventario.local.stock).format('0,0')}</small></p>*/}
             <input
                 className={classname + " " + this.props.className}
                 style={this.props.style}

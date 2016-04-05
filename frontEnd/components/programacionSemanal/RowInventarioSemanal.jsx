@@ -210,6 +210,7 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
+                    <p><small>{numeral(this.props.inventario.local.stock).format('0,0')}</small></p>
                     <InputStock
                         ref={ref=>this.inputStock=ref}
                         asignada={this.props.inventario.stockTeorico}

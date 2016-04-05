@@ -1,2 +1,568 @@
-.TableHeader__container___3n5Ns{position:relative}.TableHeader__menu___3yRPw{background:#fff;position:absolute;width:100%;min-width:200px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px grey;padding:5px}.TableHeader__contenedorValores___1xZ9-{height:130px;border:1px solid grey;border-radius:2px;overflow:auto;padding:5px}.TableHeader__menu___3yRPw label{display:block;margin-top:2px;margin-bottom:2px}.shared__inputNumberAsText___1Qr9M{-moz-appearance:textfield}.shared__inputNumberAsText___1Qr9M::-webkit-inner-spin-button,.shared__inputNumberAsText___1Qr9M::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.shared__tooltipHide___2CzIE .tooltip-arrow,.shared__tooltipHide___2CzIE .tooltip-inner{display:none}.shared__tooltipDanger___3_QoZ .tooltip-inner{background-color:#d9534f}.shared__tooltipDanger___3_QoZ .tooltip-arrow{border-left-color:#d9534f!important}.shared__tooltipWarning___38s1A .tooltip-inner{background-color:#f0ad4e}.shared__tooltipWarning___38s1A .tooltip-arrow{border-left-color:#f0ad4e!important}
-/*!* display: none; <- Crashes Chrome on hover *!*/.RowInventarioMensual__tableFixed___13jia{table-layout:fixed;font-size:12px!important}.RowInventarioMensual__tableFixed___13jia td{padding-top:2px!important;padding-bottom:2px!important}.RowInventarioMensual__tableFixed___13jia p{margin-bottom:0}.RowInventarioMensual__thCorrelativo___2wRpk{width:30px;background:#fff}.RowInventarioMensual__tdCorrelativo___1MLUI{vertical-align:middle!important}.RowInventarioMensual__thFecha___2HRKT{min-width:112px!important;width:112px!important;background:#fff}.RowInventarioMensual__tdFecha___2uot9{vertical-align:middle!important}.RowInventarioMensual__thCliente___5ZBAZ{width:75px;background:#fff}.RowInventarioMensual__tdCliente___7yAmX{vertical-align:middle!important}.RowInventarioMensual__thCeco___2Lg1a{width:45px;background:#fff}.RowInventarioMensual__tdCeco___ZAjvF{vertical-align:middle!important}.RowInventarioMensual__thLocal___37S2I{width:150px;background:#fff}.RowInventarioMensual__tdLocal___JpGZ3{vertical-align:middle!important}.RowInventarioMensual__thZonaSei___2_UxI{width:150px;background:#fff}.RowInventarioMensual__tdZonaSei___1PBdc{vertical-align:middle!important}.RowInventarioMensual__thRegion___A9FYS{width:80px;background:#fff}.RowInventarioMensual__tdRegion___1w0a-{vertical-align:middle!important}.RowInventarioMensual__thComuna___1sv9S{width:140px;background:#fff}.RowInventarioMensual__tdComuna___3ic9F{vertical-align:middle!important}.RowInventarioMensual__thStock___mw9jr{width:60px;background:#fff}.RowInventarioMensual__tdStock___M1HWD{vertical-align:middle!important}.RowInventarioMensual__thDotacion___2lOnB{width:70px;background:#fff}.RowInventarioMensual__tdDotacion___3M55I{vertical-align:middle!important}.RowInventarioMensual__tdDotacion___3M55I>input{width:100%}.RowInventarioMensual__thJornada___1ZBbT{width:110px;max-width:110px;background:#fff}.RowInventarioMensual__tdJornada___3ryuk{vertical-align:middle!important}.RowInventarioMensual__tdJornada___3ryuk>select{display:block;margin:0 auto}.RowInventarioMensual__thEstado___3mcs3{width:100px;background:#fff}.RowInventarioMensual__tdEstado___2Cy5I{vertical-align:middle!important}.RowInventarioMensual__thOpciones___3ruHP{width:60px;background:#fff}.RowInventarioMensual__tdOpciones___2WKRl{vertical-align:middle!important}.RowInventarioMensual__inputDia___CwJot{width:30px;marginRight:2px;line-height:14px!important}.RowInventarioMensual__inputDiaInvalido___3H_gf{border:2px solid #a94442;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;outline-color:#ce8483}.RowInventarioMensual__inputDiaPendiente___1mmIT{border:2px solid #f0ad4e;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;outline-color:#ce8483}.RowInventarioMensual__inputMes___102r_{width:25px;marginRight:2px}.RowInventarioMensual__inputAnno___1FT1t{width:45px;marginRight:2px}.RowInventarioMensual__inputDotacion___aqbiq{width:25px;margin:0 0 2px}.RowInventarioMensual__inputDotacionInvalida___fN1PG{border:2px solid #a94442;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;outline-color:#ce8483}.AgregarPrograma__tableCell___2PsDG{padding:0!important;margin:0}.AgregarPrograma__tableCell___2PsDG>p{margin:0}.InputFecha__inputDia___26G8W{width:30px;marginRight:2px;text-align:center;line-height:14px!important}.InputFecha__inputDiaDirty___3aUzJ{border:2px solid #381615;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;outline-color:#4f3534}.InputFecha__inputDiaInvalido___3vMMM{border:2px solid #a94442;border-radius:2px}.InputFecha__inputDiaInvalido___3vMMM,.InputFecha__inputDiaPendiente___1VNj-{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;outline-color:#ce8483}.InputFecha__inputDiaPendiente___1VNj-{border:2px solid #f0ad4e;border-radius:2px}.InputFecha__inputMes___3SGfR{width:25px;marginRight:2px;text-align:center;line-height:14px!important}.InputFecha__inputAnno___3nCrE{width:45px;marginRight:2px;text-align:center;line-height:14px!important}.InputHora__inputHora___3nVzJ{margin:0 0 2px}.InputHora__inputHoraDirty___8JAx5{border:2px solid #381615;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;outline-color:#4f3534}.InputDotacion__inputDotacion___3JxlM{width:32px;margin:0 0 2px;text-align:center;font-size:12px;line-height:14px!important;padding:0}.InputDotacion__inputDotacionDirty___4ThKI{border:2px solid #381615;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;outline-color:#4f3534}.InputDotacion__inputDotacionInvalida___3TtRl{border:2px solid #a94442;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;outline-color:#ce8483}.InputStock__inputStock___26N2X{width:32px;margin:0 0 2px;text-align:center;font-size:12px;line-height:14px!important;padding:0}.InputStock__inputStockDirty___3akGL{border:2px solid #381615;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;outline-color:#4f3534}.InputStock__inputStockInvalida___30WPl{border:2px solid #a94442;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;outline-color:#ce8483}.Select__select___3B5qY{margin:0 0 2px}.Select__selectDirty___1qtZG{border:2px solid #381615;border-radius:2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;outline-color:#4f3534}.TablaSemanal__tableFixed___3cWli{table-layout:fixed;font-size:12px!important}.TablaSemanal__tableFixed___3cWli td{padding-top:2px!important;padding-bottom:2px!important}.TablaSemanal__tableFixed___3cWli p{margin-bottom:0}.TablaSemanal__tableFixed___3cWli>tbody>tr>td{padding:0!important}.TablaSemanal__tdFecha___9Xm8H,.TablaSemanal__thFecha___1z4uk{width:105px!important;background:#fff}.TablaSemanal__tdFecha___9Xm8H{vertical-align:middle!important;padding:0!important}.TablaSemanal__tdFecha___9Xm8H>div{display:block;margin:0 auto 1px}.TablaSemanal__tdCliente___2X_jo,.TablaSemanal__thCliente___27MFR{width:45px!important;background:#fff}.TablaSemanal__tdCliente___2X_jo{vertical-align:middle!important;font-size:12px!important}.TablaSemanal__tdCeco___36yoq,.TablaSemanal__thCeco___1sILb{width:55px!important;background:#fff}.TablaSemanal__tdCeco___36yoq{vertical-align:middle!important;font-size:12px!important}.TablaSemanal__tdRegion___yGmes,.TablaSemanal__thRegion___1Z3rO{width:35px!important;background:#fff}.TablaSemanal__tdRegion___yGmes{vertical-align:middle!important;font-size:12px!important}.TablaSemanal__tdComuna___3bueM,.TablaSemanal__thComuna___3efKw{width:85px!important;background:#fff}.TablaSemanal__tdComuna___3bueM{vertical-align:middle!important;font-size:12px!important}.TablaSemanal__tdTurno___2cZYl,.TablaSemanal__thTurno___2VNe4{width:95px!important;background:#fff}.TablaSemanal__tdTurno___2cZYl{vertical-align:middle!important;padding-left:0!important;padding-right:0!important;font-size:14px!important}.TablaSemanal__tdTurno___2cZYl>select{width:94px!important;display:block;margin:0 auto 1px;height:18px;font-size:12px;line-height:12px}.TablaSemanal__tdTienda___2SWQO,.TablaSemanal__thTienda___3c71i{width:100px!important;background:#fff}.TablaSemanal__tdTienda___2SWQO{vertical-align:middle!important}.TablaSemanal__tdStock___35x--,.TablaSemanal__thStock___2mqcj{width:30px!important;background:#fff}.TablaSemanal__tdStock___35x--{vertical-align:middle!important;padding-left:0!important;padding-right:0!important}.TablaSemanal__thDotacionTotal____NExu{width:70px!important;background:#fff}.TablaSemanal__tdDotacionTotal___n6TrF{width:70px!important;background:#fff;vertical-align:middle!important;padding-left:0!important;padding-right:0!important}.TablaSemanal__tdDotacionTotal___n6TrF>input{height:18px!important;padding:auto 0!important}.TablaSemanal__tdLider___2ocAD,.TablaSemanal__thLider___Ya2TZ{width:100px!important;background:#fff}.TablaSemanal__tdLider___2ocAD{vertical-align:middle!important;padding-left:0!important;padding-right:0!important}.TablaSemanal__tdLider___2ocAD>select{width:98px!important;height:18px;margin:0 auto 1px;font-size:10px;line-height:12px}.TablaSemanal__tdDotacion___BNhpC,.TablaSemanal__thDotacion___xuzq6{width:80px!important;background:#fff}.TablaSemanal__tdDotacion___BNhpC{vertical-align:middle!important;padding-left:5px!important;padding-right:5px!important}.TablaSemanal__tdDotacion___BNhpC>input{width:70px!important;height:22px!important;padding:auto 0!important}.TablaSemanal__tdHora___irTF6,.TablaSemanal__thHora____0AKo{width:94px!important;background:#fff}.TablaSemanal__tdHora___irTF6{vertical-align:middle!important;padding-left:2px!important;padding-right:2px!important}.TablaSemanal__tdHora___irTF6>input{width:90px!important;height:18px!important}.TablaSemanal__tdDireccion___3BsgD,.TablaSemanal__thDireccion___3AQ3H{width:130px!important;background:#fff}.TablaSemanal__tdDireccion___3BsgD{vertical-align:middle!important;padding-left:2px!important;padding-right:2px!important;font-size:12px}.TablaSemanal__tdNomina___32NOi,.TablaSemanal__thNomina___13psH{width:70px!important;background:#fff}.TablaSemanal__tdNomina___32NOi{vertical-align:middle!important;padding-left:0!important;padding-right:0!important}.TablaSemanal__tdNomina___32NOi>button{font-size:12px!important;line-height:12px!important;height:18px!important}
+
+.TableHeader__container___3n5Ns{
+    position: relative;
+}
+.TableHeader__cell___36W2d{
+
+}
+.TableHeader__menu___3yRPw{
+    background: white;
+    position: absolute;
+    width: 100%;
+    min-width: 200px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px grey;
+    padding: 5px;
+}
+.TableHeader__contenedorValores___1xZ9-{
+    height: 130px;
+    border: 1px solid grey;
+    border-radius: 2px;
+    overflow: auto;
+    padding: 5px;
+}
+.TableHeader__menu___3yRPw label{
+    display: block;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}/*input[type="number"]*/
+/* FIREFOX */
+.shared__inputNumberAsText___1Qr9M {
+    -moz-appearance: textfield;
+}
+/* CHROME */
+.shared__inputNumberAsText___1Qr9M::-webkit-outer-spin-button,
+.shared__inputNumberAsText___1Qr9M::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide */
+.shared__tooltipHide___2CzIE .tooltip-inner{
+    display: none;
+}
+.shared__tooltipHide___2CzIE .tooltip-arrow{
+    display: none;
+}
+/* Danger */
+.shared__tooltipDanger___3_QoZ .tooltip-inner{
+    background-color: #d9534f;
+}
+.shared__tooltipDanger___3_QoZ .tooltip-arrow{
+    border-left-color: #d9534f !important;
+}
+/* Warning*/
+.shared__tooltipWarning___38s1A .tooltip-inner{
+    background-color: #f0ad4e;
+}
+.shared__tooltipWarning___38s1A .tooltip-arrow{
+    border-left-color: #f0ad4e !important;
+}
+
+
+
+/*input::-webkit-outer-spin-button,*/
+/*input::-webkit-inner-spin-button {*/
+/*!* display: none; <- Crashes Chrome on hover *!*/
+/*-webkit-appearance: none;*/
+/*margin: 0; !* <-- Apparently some margin are still there even though it's hidden *!*/
+/*}*/.RowInventarioMensual__tableFixed___13jia{
+    table-layout: fixed;
+    font-size: 12px !important;
+}
+.RowInventarioMensual__tableFixed___13jia td {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+.RowInventarioMensual__tableFixed___13jia p {
+    margin-bottom: 0px;
+}
+
+/* TABLA
+ la tabla de locales, al tener un "sticky header", este pierde el ancho de
+ las "TD" y se descuadra cuando el sticky se vuelve activo, pasa solucionar
+ esto, es necesario que los anchos de las celdas sean fijos, no dinamicos
+ */
+/* correlativo */
+.RowInventarioMensual__thCorrelativo___2wRpk {
+    width: 30px;
+    background: white;
+}
+.RowInventarioMensual__tdCorrelativo___1MLUI {
+    vertical-align: middle !important;
+}
+/* Fecha */
+.RowInventarioMensual__thFecha___2HRKT {
+    min-width: 112px !important;
+    width: 112px !important;
+    background: white;
+}
+.RowInventarioMensual__tdFecha___2uot9 {
+    vertical-align: middle !important;
+}
+/* Cliente */
+.RowInventarioMensual__thCliente___5ZBAZ {
+    width: 75px;
+    background: white;
+}
+.RowInventarioMensual__tdCliente___7yAmX {
+    vertical-align: middle !important;
+}
+/* CECO */
+.RowInventarioMensual__thCeco___2Lg1a {
+    width: 45px;
+    background: white;
+}
+.RowInventarioMensual__tdCeco___ZAjvF {
+    vertical-align: middle !important;
+}
+/* Local */
+.RowInventarioMensual__thLocal___37S2I {
+    width: 150px;
+    background: white;
+}
+.RowInventarioMensual__tdLocal___JpGZ3 {
+    vertical-align: middle !important;
+}
+/* ZonaSei */
+.RowInventarioMensual__thZonaSei___2_UxI {
+    width: 150px;
+    background: white;
+}
+.RowInventarioMensual__tdZonaSei___1PBdc {
+    vertical-align: middle !important;
+}
+/* Region */
+.RowInventarioMensual__thRegion___A9FYS {
+    width: 80px;
+    background: white;
+}
+.RowInventarioMensual__tdRegion___1w0a- {
+    vertical-align: middle !important;
+}
+/* Comuna */
+.RowInventarioMensual__thComuna___1sv9S {
+    width: 140px;
+    background: white;
+}
+.RowInventarioMensual__tdComuna___3ic9F {
+    vertical-align: middle !important;
+}
+/* Stock */
+.RowInventarioMensual__thStock___mw9jr {
+    width: 60px;
+    background: white;
+}
+.RowInventarioMensual__tdStock___M1HWD {
+    vertical-align: middle !important;
+}
+/* Dotacion */
+.RowInventarioMensual__thDotacion___2lOnB {
+    width: 70px;
+    background: white;
+}
+.RowInventarioMensual__tdDotacion___3M55I {
+    vertical-align: middle !important;
+}
+.RowInventarioMensual__tdDotacion___3M55I > input{
+    width: 100%;
+}
+/* Jornada */
+.RowInventarioMensual__thJornada___1ZBbT {
+    width: 110px;
+    max-width: 110px;
+    background: white;
+}
+.RowInventarioMensual__tdJornada___3ryuk {
+    vertical-align: middle !important;
+}
+.RowInventarioMensual__tdJornada___3ryuk > select{
+    display: block;
+    margin: 0 auto;
+}
+/* Estado */
+.RowInventarioMensual__thEstado___3mcs3 {
+    width: 100px;
+    background: white;
+}
+.RowInventarioMensual__tdEstado___2Cy5I {
+    vertical-align: middle !important;
+}
+/* Opciones */
+.RowInventarioMensual__thOpciones___3ruHP {
+    width: 60px;
+    background: white;
+}
+.RowInventarioMensual__tdOpciones___2WKRl {
+    vertical-align: middle !important;
+}
+
+/* FECHA */
+.RowInventarioMensual__inputDia___CwJot{
+    width: 30px;
+    marginRight: 2px;
+    /*hei14px !important;*/
+    line-height: 14px !important;
+}
+.RowInventarioMensual__inputDiaInvalido___3H_gf{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
+.RowInventarioMensual__inputDiaPendiente___1mmIT{
+    border: 2px solid #f0ad4e;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
+.RowInventarioMensual__inputMes___102r_{
+    width: 25px;
+    marginRight: 2px;
+}
+.RowInventarioMensual__inputAnno___1FT1t{
+    width: 45px;
+    marginRight: 2px;
+}
+
+/* Dotacion */
+.RowInventarioMensual__inputDotacion___aqbiq{
+    width: 25px;
+    margin: 0 0 2px 0;
+}
+.RowInventarioMensual__inputDotacionInvalida___fN1PG{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
+.AgregarPrograma__tableCell___2PsDG {
+    padding: 0 !important;
+    margin: 0;
+}
+.AgregarPrograma__tableCell___2PsDG > p {
+    margin: 0;
+}
+/*.tableCellInput {*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*border: 0;*/
+/*}*//* FECHA */
+.InputFecha__inputDia___26G8W{
+    width: 30px;
+    marginRight: 2px;
+    text-align: center;
+    line-height: 14px !important;
+}
+.InputFecha__inputDiaDirty___3aUzJ{
+    border: 2px solid #381615;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;   /*plomo*/
+    outline-color: #4f3534;
+}
+.InputFecha__inputDiaInvalido___3vMMM{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
+.InputFecha__inputDiaPendiente___1VNj-{
+    border: 2px solid #f0ad4e;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}
+.InputFecha__inputMes___3SGfR{
+    width: 25px;
+    marginRight: 2px;
+    text-align: center;
+    line-height: 14px !important;
+}
+.InputFecha__inputAnno___3nCrE{
+    width: 45px;
+    marginRight: 2px;
+    text-align: center;
+    line-height: 14px !important;
+}
+.InputHora__inputHora___3nVzJ{
+    margin: 0 0 2px 0;
+}
+.InputHora__inputHoraDirty___8JAx5 {
+    border: 2px solid #381615;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;   /*plomo*/
+    outline-color: #4f3534;
+}.InputDotacion__inputDotacion___3JxlM{
+    width: 32px;
+    margin: 0 0 2px 0;
+    text-align: center;
+    font-size: 12px;
+    line-height: 14px !important;
+    padding: 0;
+}
+.InputDotacion__inputDotacionDirty___4ThKI {
+    border: 2px solid #381615;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;   /*plomo*/
+    outline-color: #4f3534;
+}
+.InputDotacion__inputDotacionInvalida___3TtRl{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}.InputStock__inputStock___26N2X{
+    width: 32px;
+    margin: 0 0 2px 0;
+    text-align: center;
+    font-size: 12px;
+    line-height: 14px !important;
+    padding: 0;
+}
+.InputStock__inputStockDirty___3akGL {
+    border: 2px solid #381615;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;   /*plomo*/
+    outline-color: #4f3534;
+}
+.InputStock__inputStockInvalida___30WPl{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}.Select__select___3B5qY{
+    margin: 0 0 2px 0;
+}
+.Select__selectDirty___1qtZG {
+    border: 2px solid #381615;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;   /*plomo*/
+    outline-color: #4f3534;
+}/* TABLA SEMANAL*/
+.TablaSemanal__tableFixed___3cWli{
+    table-layout: fixed;
+    font-size: 12px !important;
+}
+.TablaSemanal__tableFixed___3cWli td {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+.TablaSemanal__tableFixed___3cWli p {
+    margin-bottom: 0;
+}
+.TablaSemanal__tableFixed___3cWli > tbody > tr > td {
+    padding: 0 !important;
+}
+
+/* FECHA */
+.TablaSemanal__thFecha___1z4uk{
+    width: 105px !important;
+    background: white;
+}
+.TablaSemanal__tdFecha___9Xm8H{
+    width: 105px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding: 0px !important;
+}
+.TablaSemanal__tdFecha___9Xm8H > div{
+    display: block;
+    margin: 0 auto 1px auto;
+}
+
+/* CLIENTE */
+.TablaSemanal__thCliente___27MFR{
+    width: 45px !important;
+    background: white;
+}
+.TablaSemanal__tdCliente___2X_jo{
+    width: 45px !important;
+    background: white;
+    vertical-align: middle !important;
+    font-size: 12px !important;
+}
+
+/* CECO */
+.TablaSemanal__thCeco___1sILb{
+    width: 55px !important;
+    background: white;
+}
+.TablaSemanal__tdCeco___36yoq{
+    width: 55px !important;
+    background: white;
+    vertical-align: middle !important;
+    font-size: 12px !important;
+}
+
+/* REGIÓN */
+.TablaSemanal__thRegion___1Z3rO{
+    width: 35px !important;
+    background: white;
+}
+.TablaSemanal__tdRegion___yGmes{
+    width: 35px !important;
+    background: white;
+    vertical-align: middle !important;
+    font-size: 12px !important;
+}
+
+/* COMUNA */
+.TablaSemanal__thComuna___3efKw{
+    width: 85px !important;
+    background: white;
+}
+.TablaSemanal__tdComuna___3bueM{
+    width: 85px !important;
+    background: white;
+    vertical-align: middle !important;
+    font-size: 12px !important;
+}
+
+/* TURNO */
+.TablaSemanal__thTurno___2VNe4{
+    width: 95px !important;
+    background: white;
+}
+.TablaSemanal__tdTurno___2cZYl{
+    width: 95px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    font-size: 14px !important;
+}
+.TablaSemanal__tdTurno___2cZYl > select {
+    width: 94px !important;
+    display: block;
+    margin: 0 auto 1px auto;
+    height:18px;
+    font-size: 12px;
+    line-height: 12px;
+}
+
+/* TIENDA */
+.TablaSemanal__thTienda___3c71i{
+    width: 100px !important;
+    background: white;
+}
+.TablaSemanal__tdTienda___2SWQO{
+    width: 100px !important;
+    background: white;
+    vertical-align: middle !important;
+}
+
+/* STOCK */
+.TablaSemanal__thStock___2mqcj{
+    width: 30px !important;
+    background: white;
+}
+.TablaSemanal__tdStock___35x--{
+    width: 30px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* DOTACION TOTAL */
+.TablaSemanal__thDotacionTotal____NExu{
+    width: 70px !important;
+    background: white;
+}
+.TablaSemanal__tdDotacionTotal___n6TrF{
+    width: 70px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.TablaSemanal__tdDotacionTotal___n6TrF > input {
+    height: 18px !important;    /* para hacer que el input sea del mismo alto que un select */
+    padding: auto 0 !important;
+}
+
+/* LIDER / SUPERVISOR / CAPTADOR1 / CAPTADOR2 */
+.TablaSemanal__thLider___Ya2TZ{
+    width: 100px !important;
+    background: white;
+}
+.TablaSemanal__tdLider___2ocAD{
+    width: 100px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.TablaSemanal__tdLider___2ocAD > select {
+    width: 98px !important;
+    height: 18px;               /* misma altura de un input */
+    margin: 0 auto 1px auto;    /* mismos margenes de un input */
+    font-size: 10px;
+    line-height: 12px;
+}
+
+/* DOTACION SUP1 / DOTACION SUP2 */
+.TablaSemanal__thDotacion___xuzq6{
+    width: 80px !important;
+    background: white;
+}
+.TablaSemanal__tdDotacion___BNhpC{
+    width: 80px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}
+.TablaSemanal__tdDotacion___BNhpC > input {
+    width: 70px !important;
+    height: 22px !important;    /* para hacer que el input sea del mismo alto que un select */
+    padding: auto 0 !important;
+}
+
+/* HORA LLEGADA LIDER / HORA LLEGADA EQUIPO */
+.TablaSemanal__thHora____0AKo{
+    width: 94px !important;
+    background: white;
+}
+.TablaSemanal__tdHora___irTF6{
+    width: 94px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+}
+.TablaSemanal__tdHora___irTF6 > input {
+    width: 90px !important;
+    height: 18px !important;    /* misma altura que los select */
+}
+
+/* DIRECCION */
+.TablaSemanal__thDireccion___3AQ3H{
+    width: 130px !important;
+    background: white;
+}
+.TablaSemanal__tdDireccion___3BsgD{
+    width: 130px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+    font-size: 12px;
+}
+
+/* NOMINA */
+.TablaSemanal__thNomina___13psH{
+    width: 70px !important;
+    background: white;
+}
+.TablaSemanal__tdNomina___32NOi{
+    width: 70px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.TablaSemanal__tdNomina___32NOi > button {
+    font-size: 12px !important;
+    line-height: 12px !important;
+    height: 18px !important;
+}
