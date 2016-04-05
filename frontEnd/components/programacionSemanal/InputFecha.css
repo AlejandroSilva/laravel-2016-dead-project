@@ -4,6 +4,7 @@
     width: 30px;
     marginRight: 2px;
     text-align: center;
+    line-height: 14px !important;
 }
 .inputDiaDirty{
     composes: inputDia;
@@ -31,10 +32,12 @@
     width: 25px;
     marginRight: 2px;
     text-align: center;
+    line-height: 14px !important;
 }
 .inputAnno{
     composes: inputNumberAsText from '../shared/shared.css';
     width: 45px;
     marginRight: 2px;
     text-align: center;
+    line-height: 14px !important;
 }

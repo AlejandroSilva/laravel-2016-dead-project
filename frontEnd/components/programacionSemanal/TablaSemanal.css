@@ -1,14 +1,17 @@
 /* TABLA SEMANAL*/
 .tableFixed{
     table-layout: fixed;
-    font-size: 14px !important;
+    font-size: 12px !important;
 }
 .tableFixed td {
     padding-top: 2px !important;
     padding-bottom: 2px !important;
 }
 .tableFixed p {
-    margin-bottom: 0px;
+    margin-bottom: 0;
+}
+.tableFixed > tbody > tr > td {
+    padding: 0 !important;
 }
 
 /* FECHA */
@@ -92,6 +95,9 @@
     width: 94px !important;
     display: block;
     margin: 0 auto 1px auto;
+    height:18px;
+    font-size: 12px;
+    line-height: 12px;
 }
 
 /* TIENDA */
@@ -131,7 +137,7 @@
     padding-right: 0 !important;
 }
 .tdDotacionTotal > input {
-    height: 22px !important;    /* para hacer que el input sea del mismo alto que un select */
+    height: 18px !important;    /* para hacer que el input sea del mismo alto que un select */
     padding: auto 0 !important;
 }
 
@@ -149,8 +155,10 @@
 }
 .tdLider > select {
     width: 98px !important;
-    height: 22px;               /* misma altura de un input */
+    height: 18px;               /* misma altura de un input */
     margin: 0 auto 1px auto;    /* mismos margenes de un input */
+    font-size: 12px;
+    line-height: 12px;
 }
 
 /* DOTACION SUP1 / DOTACION SUP2 */
@@ -185,7 +193,7 @@
 }
 .tdHora > input {
     width: 90px !important;
-    height: 22px !important;    /* misma altura que los select */
+    height: 18px !important;    /* misma altura que los select */
 }
 
 /* DIRECCION */
@@ -211,6 +219,11 @@
     width: 70px !important;
     background: white;
     vertical-align: middle !important;
-    padding-left: 0px !important;
-    padding-right: 0px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.tdNomina > button {
+    font-size: 12px !important;
+    line-height: 12px !important;
+    height: 18px !important;
 }
