@@ -113,11 +113,11 @@
 
 /* STOCK */
 .thStock{
-    width: 55px !important;
+    width: 30px !important;
     background: white;
 }
 .tdStock{
-    width: 55px !important;
+    width: 30px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
@@ -157,7 +157,7 @@
     width: 98px !important;
     height: 18px;               /* misma altura de un input */
     margin: 0 auto 1px auto;    /* mismos margenes de un input */
-    font-size: 12px;
+    font-size: 10px;
     line-height: 12px;
 }
 
