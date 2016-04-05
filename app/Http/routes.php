@@ -78,9 +78,10 @@ Route::group(['middleware' => ['web']], function (){
     //Route::get('/map', function(){return view('maptest');});
     Route::get('import', function(){
         DB::transaction(function() {
-//          LocalesTableSeeder::parseAndInsert('/home/asilva/Escritorio/localesFCV.csv');
-//          LocalesTableSeeder::parseAndInsert('/home/asilva/Escritorio/localesPreunic.csv');
-            LocalesTableSeeder::actualizarStock( public_path('actualizarStock/Stock al 30-03-2016.xlsx - Stock al 30-03.csv'));
+//            LocalesTableSeeder::parseAndInsert('/home/asilva/Escritorio/localesFCV.csv');
+//            LocalesTableSeeder::parseAndInsert('/home/asilva/Escritorio/localesPreunic.csv');
+            LocalesTableSeeder::parseAndInsert(public_path('seedFiles/localesSalcobrand.csv'));
+//            LocalesTableSeeder::actualizarStock( public_path('actualizarStock/Stock al 30-03-2016.xlsx - Stock al 30-03.csv'));
         });
     });
 });
