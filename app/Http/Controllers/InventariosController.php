@@ -79,8 +79,8 @@ class InventariosController extends Controller {
             }
             $inventario->fechaProgramada = $request->fechaProgramada;
             $inventario->dotacionAsignadaTotal = $local->dotacionSugerida();
-            // todo $inventario->fechaStock = $request->fechaStock;
-            // todo $inventario->stockTeorico = $request->stockTeorico;
+            $inventario->stockTeorico = $local->stock;
+            $inventario->fechaStock =   $local->fechaStock;
 
             // Crear las dos nominas
             $nominaDia = new Nominas();
@@ -207,6 +207,7 @@ class InventariosController extends Controller {
                 ->get()
         , 200);
     }
+
     // GET api/inventario/{fecha1}/al/{fecha2}
     function api_getPorRango($annoMesDia1, $annoMesDia2){
         $inventarios = Inventarios::with([
