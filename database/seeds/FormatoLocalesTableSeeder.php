@@ -20,6 +20,16 @@ class FormatoLocalesTableSeeder extends Seeder {
             // Pre-Unic
             ['idFormatoLocal'=> 7, 'nombre'=>'Peatonales',    'siglas'=>'PEAT',   'produccionSugerida'=>8500, 'descripcion'=>'...'],
             ['idFormatoLocal'=> 8, 'nombre'=>'No peatonales', 'siglas'=>'NOPEAT', 'produccionSugerida'=>7000, 'descripcion'=>'...'],
+
+            // CKY
+            ['idFormatoLocal'=> 9, 'nombre'=>'CKY TEMP',      'siglas'=>'CKYTMP', 'produccionSugerida'=>2500, 'descripcion'=>'...'],
+            
+            // SALCOBRAND
+            ['idFormatoLocal'=>10, 'nombre'=>'Botica (SB)',                     'siglas'=>'BOT_SB', 'produccionSugerida'=>1234, 'descripcion'=>'...'],
+            ['idFormatoLocal'=>11, 'nombre'=>'Espacio SB',                      'siglas'=>'ESP_SB', 'produccionSugerida'=>1234, 'descripcion'=>'...'],
+            ['idFormatoLocal'=>12, 'nombre'=>'Multifuncional con Góndola (SB)', 'siglas'=>'MFG_SB', 'produccionSugerida'=>1234, 'descripcion'=>'...'],
+            ['idFormatoLocal'=>13, 'nombre'=>'Multifuncional (SB)',             'siglas'=>'MF_SB',  'produccionSugerida'=>1234, 'descripcion'=>'...'],
+            ['idFormatoLocal'=>14, 'nombre'=>'Store (SB)',                      'siglas'=>'ST_SB',  'produccionSugerida'=>1234, 'descripcion'=>'...'],
         ]);
     }
 }

@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder {
 //        $this->call(LocalesTableSeeder::class);
 //        $this->call(InventariosTableSeeder::class);
 //        $this->call(RolesSeeder::class);
-        $this->call(UsuariosSeeder::class);
+//        $this->call(UsuariosSeeder::class);
     }
 
 }
