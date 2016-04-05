@@ -249,8 +249,8 @@ class RowInventarioMensual extends React.Component{
                     <OverlayTrigger
                         placement="left"
                         delay={0}
-                        overlay={<Tooltip id="yyy">{'Stock al '+(this.props.inventario.local.fechaStock)}</Tooltip>}>
-                        <p><small>{numeral(this.props.inventario.local.stock).format('0,0')}</small></p>
+                        overlay={<Tooltip id="yyy">{'Stock al '+(this.props.inventario.fechaStock)}</Tooltip>}>
+                        <p><small>{numeral(this.props.inventario.stockTeorico).format('0,0')}</small></p>
 
                     </OverlayTrigger>
                 </td>

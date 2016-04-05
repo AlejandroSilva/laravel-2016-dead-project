@@ -124,7 +124,7 @@ export default class BlackBox{
 
             if((dateA-dateB)===0){
                 // stock ordenado de mayor a menor (B-A)
-                return b.local.stock - a.local.stock
+                return b.stockTeorico - a.stockTeorico
             }else{
                 // fecha ordenada de de menor a mayor (A-B)
                 return dateA - dateB
@@ -148,7 +148,7 @@ export default class BlackBox{
 
             if((dateA-dateB)===0){
                 // stock ordenado de mayor a menor (B-A)
-                return b.local.stock - a.local.stock
+                return b.stockTeorico - a.stockTeorico
             }else{
                 // fecha ordenada de de menor a mayor (A-B)
                 return dateA - dateB
