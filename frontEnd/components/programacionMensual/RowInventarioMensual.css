@@ -1,6 +1,6 @@
 .tableFixed{
     table-layout: fixed;
-    font-size: 14px !important;
+    font-size: 12px !important;
 }
 .tableFixed td {
     padding-top: 2px !important;
@@ -147,6 +147,8 @@
     composes: inputNumberAsText from '../shared/shared.css';
     width: 30px;
     marginRight: 2px;
+    /*hei14px !important;*/
+    line-height: 14px !important;
 }
 .inputDiaInvalido{
     composes: inputDia;

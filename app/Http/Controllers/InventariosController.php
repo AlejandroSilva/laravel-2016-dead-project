@@ -160,6 +160,8 @@ class InventariosController extends Controller {
                 $inventario->dotacionAsignadaTotal = $request->dotacionAsignadaTotal;
             if(isset($request->idJornada))
                 $inventario->idJornada = $request->idJornada;
+            if(isset($request->stockTeorico))
+                $inventario->stockTeorico = $request->stockTeorico;
 
             $resultado = $inventario->save();
 

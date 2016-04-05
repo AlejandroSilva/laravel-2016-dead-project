@@ -7,6 +7,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from './InputFecha.jsx'
 import InputHora from './InputHora.jsx'
 import InputDotacion from './InputDotacion.jsx'
+import InputStock from './InputStock.jsx'
 import Select from './Select.jsx'
 
 // Styles
@@ -49,6 +50,11 @@ class RowInventario extends React.Component{
         if(estadoSelectJornada.dirty)
             cambiosInventario.idJornada = estadoSelectJornada.seleccionUsuario
 
+        // el STOCK es valido y ha cambiado?
+        let estadoInputStock = this.inputStock.getEstado()
+        if (estadoInputStock.valid && estadoInputStock.dirty)
+            cambiosInventario.stockTeorico = estadoInputStock.valor
+
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
         if(JSON.stringify(cambiosInventario)!=="{}"){
             console.log(cambiosInventario)
@@ -90,8 +96,8 @@ class RowInventario extends React.Component{
         // la DOTACION es valida y ha cambiado?
         if (estados.inputDotacion.valid && estados.inputDotacion.dirty)
             cambiosNomina.dotacionAsignada = estados.inputDotacion.dotacion
-        else if (estados.inputDotacion.valid === false)
-            return console.log(`dotacion de la nomina: ${estados.inputDotacion.dotacion} invalida`)
+        //else if (estados.inputDotacion.valid === false)
+        //    return console.log(`dotacion de la nomina: ${estados.inputDotacion.dotacion} invalida`)
 
         // el LIDER es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
         if (estados.selectLider.dirty)
@@ -139,6 +145,8 @@ class RowInventario extends React.Component{
             this.inputDia.focus()
         }else if(elemento==='dotacion'){
             this.inputDotacionTotal.focus()
+        }else if(elemento==='stock'){
+            this.inputStock.focus()
         }
     }
 
@@ -202,13 +210,14 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
-                    <OverlayTrigger
-                        placement="left"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">{'Stock al '+(this.props.inventario.local.fechaStock)}</Tooltip>}>
-                        <p><small>{numeral(this.props.inventario.local.stock).format('0,0')}</small></p>
-
-                    </OverlayTrigger>
+                    <InputStock
+                        ref={ref=>this.inputStock=ref}
+                        asignada={this.props.inventario.stockTeorico}
+                        tooltipText={'Stock al ' +(this.props.inventario.local.fechaStock)}
+                        onGuardar={this.guardarInventario.bind(this)}
+                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'stock')}
+                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'stock')}
+                    />
                 </td>
                 {/* Dotación Total */}
                 <td className={css.tdDotacionTotal}>
