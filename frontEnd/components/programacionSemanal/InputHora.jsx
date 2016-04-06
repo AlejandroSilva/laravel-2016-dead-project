@@ -1,5 +1,7 @@
 // Librerias
 import React from 'react'
+import Tooltip from 'react-bootstrap/lib/Tooltip'
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 // Estilos
 import css from './InputHora.css'
@@ -57,6 +59,10 @@ class InputHora extends React.Component{
     }
     render(){
         return(
+        <OverlayTrigger
+            placement="left"
+            delay={0}
+            overlay={<Tooltip id="yyy">{this.props.tooltipText}</Tooltip>}>
             <input
                 type="time"
                 className={(this.state.dirty? css.inputHoraDirty : css.inputHora)+' '+this.props.className}
@@ -68,15 +74,20 @@ class InputHora extends React.Component{
                 onBlur={()=>this.props.onGuardar()}
                 required
             />
+        </OverlayTrigger>
         )
     }
 }
 InputHora.propTypes = {
     // Objetos
     asignada: React.PropTypes.string.isRequired,
+    tooltipText: React.PropTypes.string,
     // Metodos
     focusRowAnterior: React.PropTypes.func.isRequired,
     focusRowSiguiente: React.PropTypes.func.isRequired,
     onGuardar: React.PropTypes.func.isRequired
+}
+InputHora.defaultProps = {
+    tooltipText: '..'
 }
 export default InputHora

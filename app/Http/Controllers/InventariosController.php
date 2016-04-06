@@ -231,10 +231,10 @@ class InventariosController extends Controller {
             $inventario['local'] = $local;
 
             $local2 = Locales::find($local['idLocal']);
-            $inventario['hliderDia'] = $local2->llegadaSugeridaLiderDia();
-            $inventario['hliderNoche'] = $local2->llegadaSugeridaLiderNoche();
-            $inventario['hequipoDia'] = $local2->llegadaSugeridaPersonalDia();
-            $inventario['hequipoNoche'] = $local2->llegadaSugeridaPersonalNoche();
+//            $inventario['hliderDia'] = $local2->llegadaSugeridaLiderDia();
+//            $inventario['hliderNoche'] = $local2->llegadaSugeridaLiderNoche();
+//            $inventario['hequipoDia'] = $local2->llegadaSugeridaPersonalDia();
+//            $inventario['hequipoNoche'] = $local2->llegadaSugeridaPersonalNoche();
 
             return $inventario;
         }, $inventarios->toArray());

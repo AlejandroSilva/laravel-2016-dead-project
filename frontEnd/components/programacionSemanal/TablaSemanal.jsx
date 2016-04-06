@@ -47,7 +47,7 @@ class TablaInventarios extends React.Component{
                             />
                         </th>
                         <th className={css.thCliente}>CL</th>
-                        <th className={css.thCeco}>CECO</th>
+                        <th className={css.thCeco}>CE</th>
                         <th className={css.thRegion}>RG</th>
                         <th className={css.thComuna}>Comuna</th>
                         <th className={css.thTurno}>Turno</th>

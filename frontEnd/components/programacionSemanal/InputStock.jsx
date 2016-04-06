@@ -88,7 +88,7 @@ class InputStock extends React.Component{
 InputStock.propTypes = {
     // Objetos
     asignada: React.PropTypes.string.isRequired,
-    tooltipText: React.PropTypes.string.isRequired,
+    tooltipText: React.PropTypes.string,
     // Metodos
     focusRowAnterior: React.PropTypes.func.isRequired,
     focusRowSiguiente: React.PropTypes.func.isRequired,

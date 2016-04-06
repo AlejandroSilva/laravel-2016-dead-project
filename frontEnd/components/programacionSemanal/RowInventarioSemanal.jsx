@@ -164,6 +164,10 @@ class RowInventario extends React.Component{
         const opcionesCaptadores = this.props.captadores.map(usuario=>{
             return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
         })
+        let _hrApertura = this.props.inventario.local.horaApertura.split(':')
+        let txtHrApertura = `Apertura a las ${_hrApertura[0]}:${_hrApertura[1]}hrs`
+        let _hrCierre = this.props.inventario.local.horaCierre.split(':')
+        let txtHrCierre = `Cierre a las ${_hrCierre[0]}:${_hrCierre[1]}hrs`
         return (
             <tr>
                 {/* Fecha */}
@@ -374,20 +378,22 @@ class RowInventario extends React.Component{
                  */}
                 {/* Hora Presentación Lider */}
                 <td className={css.tdHora}>
-                    <p style={{display: inventarioDia? 'block' : 'none'}}>{this.props.inventario.hliderDia}</p>
+                    {/*<p style={{display: inventarioDia? 'block' : 'none'}}>{this.props.inventario.hliderDia}</p>*/}
                     <InputHora
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionLiderDia=ref}
                         asignada={this.props.inventario.nomina_dia.horaPresentacionLider}
+                        tooltipText={txtHrApertura}
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
                     />
-                    <p style={{display: inventarioNoche? 'block' : 'none'}}>{this.props.inventario.hliderNoche}</p>
+                    {/*<p style={{display: inventarioNoche? 'block' : 'none'}}>{this.props.inventario.hliderNoche}</p>*/}
                     <InputHora
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionLiderNoche=ref}
                         asignada={this.props.inventario.nomina_noche.horaPresentacionLider}
+                        tooltipText={txtHrCierre}
                         onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
@@ -396,20 +402,22 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Hora Presentación Equipo*/}
                 <td className={css.tdHora}>
-                    <p style={{display: inventarioDia? 'block' : 'none'}}>{this.props.inventario.hequipoDia}</p>
+                    {/*<p style={{display: inventarioDia? 'block' : 'none'}}>{this.props.inventario.hequipoDia}</p>*/}
                     <InputHora
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionEquipoDia=ref}
                         asignada={this.props.inventario.nomina_dia.horaPresentacionEquipo}
+                        tooltipText={txtHrApertura}
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
                     />
-                    <p style={{display: inventarioNoche? 'block' : 'none'}}>{this.props.inventario.hequipoNoche}</p>
+                    {/*<p style={{display: inventarioNoche? 'block' : 'none'}}>{this.props.inventario.hequipoNoche}</p>*/}
                     <InputHora
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionEquipoNoche=ref}
                         asignada={this.props.inventario.nomina_noche.horaPresentacionEquipo}
+                        tooltipText={txtHrCierre}
                         onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}

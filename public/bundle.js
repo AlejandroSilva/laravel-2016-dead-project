@@ -52866,7 +52866,7 @@
 	                        _react2.default.createElement(
 	                            'th',
 	                            { className: css.thCeco },
-	                            'CECO'
+	                            'CE'
 	                        ),
 	                        _react2.default.createElement(
 	                            'th',
@@ -53205,6 +53205,10 @@
 	            var opcionesCaptadores = this.props.captadores.map(function (usuario) {
 	                return { valor: usuario.id, texto: usuario.nombre1 + ' ' + usuario.apellidoPaterno };
 	            });
+	            var _hrApertura = this.props.inventario.local.horaApertura.split(':');
+	            var txtHrApertura = 'Apertura a las ' + _hrApertura[0] + ':' + _hrApertura[1] + 'hrs';
+	            var _hrCierre = this.props.inventario.local.horaCierre.split(':');
+	            var txtHrCierre = 'Cierre a las ' + _hrCierre[0] + ':' + _hrCierre[1] + 'hrs';
 	            return _react2.default.createElement(
 	                'tr',
 	                null,
@@ -53401,32 +53405,24 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: css.tdHora },
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { display: inventarioDia ? 'block' : 'none' } },
-	                        this.props.inventario.hliderDia
-	                    ),
 	                    _react2.default.createElement(_InputHora2.default, {
 	                        style: { display: inventarioDia ? 'block' : 'none' },
 	                        ref: function ref(_ref11) {
 	                            return _this2.inputHoraPresentacionLiderDia = _ref11;
 	                        },
 	                        asignada: this.props.inventario.nomina_dia.horaPresentacionLider,
+	                        tooltipText: txtHrApertura,
 	                        onGuardar: this.guardarNominaDia.bind(this),
 	                        focusRowAnterior: function focusRowAnterior() {},
 	                        focusRowSiguiente: function focusRowSiguiente() {}
 	                    }),
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { display: inventarioNoche ? 'block' : 'none' } },
-	                        this.props.inventario.hliderNoche
-	                    ),
 	                    _react2.default.createElement(_InputHora2.default, {
 	                        style: { display: inventarioNoche ? 'block' : 'none' },
 	                        ref: function ref(_ref12) {
 	                            return _this2.inputHoraPresentacionLiderNoche = _ref12;
 	                        },
 	                        asignada: this.props.inventario.nomina_noche.horaPresentacionLider,
+	                        tooltipText: txtHrCierre,
 	                        onGuardar: this.guardarNominaNoche.bind(this),
 	                        focusRowAnterior: function focusRowAnterior() {},
 	                        focusRowSiguiente: function focusRowSiguiente() {}
@@ -53435,32 +53431,24 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: css.tdHora },
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { display: inventarioDia ? 'block' : 'none' } },
-	                        this.props.inventario.hequipoDia
-	                    ),
 	                    _react2.default.createElement(_InputHora2.default, {
 	                        style: { display: inventarioDia ? 'block' : 'none' },
 	                        ref: function ref(_ref13) {
 	                            return _this2.inputHoraPresentacionEquipoDia = _ref13;
 	                        },
 	                        asignada: this.props.inventario.nomina_dia.horaPresentacionEquipo,
+	                        tooltipText: txtHrApertura,
 	                        onGuardar: this.guardarNominaDia.bind(this),
 	                        focusRowAnterior: function focusRowAnterior() {},
 	                        focusRowSiguiente: function focusRowSiguiente() {}
 	                    }),
-	                    _react2.default.createElement(
-	                        'p',
-	                        { style: { display: inventarioNoche ? 'block' : 'none' } },
-	                        this.props.inventario.hequipoNoche
-	                    ),
 	                    _react2.default.createElement(_InputHora2.default, {
 	                        style: { display: inventarioNoche ? 'block' : 'none' },
 	                        ref: function ref(_ref14) {
 	                            return _this2.inputHoraPresentacionEquipoNoche = _ref14;
 	                        },
 	                        asignada: this.props.inventario.nomina_noche.horaPresentacionEquipo,
+	                        tooltipText: txtHrCierre,
 	                        onGuardar: this.guardarNominaNoche.bind(this),
 	                        focusRowAnterior: function focusRowAnterior() {},
 	                        focusRowSiguiente: function focusRowSiguiente() {}
@@ -53745,6 +53733,14 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _Tooltip = __webpack_require__(305);
+
+	var _Tooltip2 = _interopRequireDefault(_Tooltip);
+
+	var _OverlayTrigger = __webpack_require__(335);
+
+	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
+
 	var _InputHora = __webpack_require__(424);
 
 	var _InputHora2 = _interopRequireDefault(_InputHora);
@@ -53834,21 +53830,32 @@
 	        value: function render() {
 	            var _this2 = this;
 
-	            return _react2.default.createElement('input', {
-	                type: 'time',
-	                className: (this.state.dirty ? _InputHora2.default.inputHoraDirty : _InputHora2.default.inputHora) + ' ' + this.props.className,
-	                style: this.props.style,
-	                ref: function ref(_ref) {
-	                    return _this2.inputHora = _ref;
-	                },
-	                value: this.state.hora,
-	                onKeyDown: this.inputOnKeyDown.bind(this),
-	                onChange: this.onInputChange.bind(this),
-	                onBlur: function onBlur() {
-	                    return _this2.props.onGuardar();
-	                },
-	                required: true
-	            });
+	            return _react2.default.createElement(
+	                _OverlayTrigger2.default,
+	                {
+	                    placement: 'left',
+	                    delay: 0,
+	                    overlay: _react2.default.createElement(
+	                        _Tooltip2.default,
+	                        { id: 'yyy' },
+	                        this.props.tooltipText
+	                    ) },
+	                _react2.default.createElement('input', {
+	                    type: 'time',
+	                    className: (this.state.dirty ? _InputHora2.default.inputHoraDirty : _InputHora2.default.inputHora) + ' ' + this.props.className,
+	                    style: this.props.style,
+	                    ref: function ref(_ref) {
+	                        return _this2.inputHora = _ref;
+	                    },
+	                    value: this.state.hora,
+	                    onKeyDown: this.inputOnKeyDown.bind(this),
+	                    onChange: this.onInputChange.bind(this),
+	                    onBlur: function onBlur() {
+	                        return _this2.props.onGuardar();
+	                    },
+	                    required: true
+	                })
+	            );
 	        }
 	    }]);
 
@@ -53858,10 +53865,14 @@
 	InputHora.propTypes = {
 	    // Objetos
 	    asignada: _react2.default.PropTypes.string.isRequired,
+	    tooltipText: _react2.default.PropTypes.string,
 	    // Metodos
 	    focusRowAnterior: _react2.default.PropTypes.func.isRequired,
 	    focusRowSiguiente: _react2.default.PropTypes.func.isRequired,
 	    onGuardar: _react2.default.PropTypes.func.isRequired
+	};
+	InputHora.defaultProps = {
+	    tooltipText: '..'
 	};
 	exports.default = InputHora;
 
@@ -54187,7 +54198,7 @@
 	InputStock.propTypes = {
 	    // Objetos
 	    asignada: _react2.default.PropTypes.string.isRequired,
-	    tooltipText: _react2.default.PropTypes.string.isRequired,
+	    tooltipText: _react2.default.PropTypes.string,
 	    // Metodos
 	    focusRowAnterior: _react2.default.PropTypes.func.isRequired,
 	    focusRowSiguiente: _react2.default.PropTypes.func.isRequired,
