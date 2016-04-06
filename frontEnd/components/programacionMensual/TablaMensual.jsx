@@ -9,7 +9,7 @@ import RowInventario from './RowInventarioMensual.jsx'
 
 // Styles
 //import sharedStyles from '../shared/shared.css'
-import * as css from './RowInventarioMensual.css'
+import * as css from './TablaMensual.css'
 
 class TablaMensual extends React.Component{
     constructor(props){

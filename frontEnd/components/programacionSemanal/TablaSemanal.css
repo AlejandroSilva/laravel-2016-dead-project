@@ -2,6 +2,7 @@
 .tableFixed{
     table-layout: fixed;
     font-size: 12px !important;
+    width: 100%;
 }
 .tableFixed td {
     padding-top: 2px !important;
@@ -16,18 +17,14 @@
 
 /* FECHA */
 .thFecha{
-    width: 105px !important;
+    width: 170px !important;
     background: white;
 }
 .tdFecha{
-    width: 105px !important;
+    width: 170px !important;
     background: white;
     vertical-align: middle !important;
     padding: 0px !important;
-}
-.tdFecha > div{
-    display: block;
-    margin: 0 auto 1px auto;
 }
 
 /* CLIENTE */
@@ -41,6 +38,9 @@
     vertical-align: middle !important;
     font-size: 12px !important;
 }
+.tdCliente p{
+    text-align: center;
+}
 
 /* CECO */
 .thCeco{
@@ -52,6 +52,9 @@
     background: white;
     vertical-align: middle !important;
     font-size: 12px !important;
+}
+.tdCeco p{
+    text-align: center;
 }
 
 /* REGIÓN */
@@ -65,14 +68,17 @@
     vertical-align: middle !important;
     font-size: 12px !important;
 }
+.tdRegion p{
+    text-align: center;
+}
 
 /* COMUNA */
 .thComuna{
-    width: 85px !important;
+    width: 95px !important;
     background: white;
 }
 .tdComuna{
-    width: 85px !important;
+    width: 95px !important;
     background: white;
     vertical-align: middle !important;
     font-size: 12px !important;
@@ -102,22 +108,22 @@
 
 /* TIENDA */
 .thTienda{
-    width: 100px !important;
+    width: 110px !important;
     background: white;
 }
 .tdTienda{
-    width: 100px !important;
+    width: 110px !important;
     background: white;
     vertical-align: middle !important;
 }
 
 /* STOCK */
 .thStock{
-    width: 30px !important;
+    width: 47px !important;
     background: white;
 }
 .tdStock{
-    width: 30px !important;
+    width: 47px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
@@ -143,11 +149,11 @@
 
 /* LIDER / SUPERVISOR / CAPTADOR1 / CAPTADOR2 */
 .thLider{
-    width: 100px !important;
+    width: 110px !important;
     background: white;
 }
 .tdLider{
-    width: 100px !important;
+    width: 110px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
@@ -212,17 +218,18 @@
 
 /* NOMINA */
 .thNomina{
-    width: 70px !important;
+    width: auto !important;
     background: white;
 }
 .tdNomina{
-    width: 70px !important;
+    width: auto !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
 .tdNomina > button {
+    width: 60px;
     font-size: 12px !important;
     line-height: 12px !important;
     height: 18px !important;

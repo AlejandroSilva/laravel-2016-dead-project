@@ -2,8 +2,10 @@
 @section('title', 'Programación Mensual')
 
 @section('content')
-    <div class="row">
+    {{-- Styles --}}
+    <link rel='stylesheet' href='/vendor/daterangepicker/daterangepicker.css'>
 
+    <div class="row">
         {{-- aca se montara el component 'ProgramacionSemanal' de React --}}
         <div id="react-programacion-semanal">
             <p>Cargando, espere unos segundos</p>

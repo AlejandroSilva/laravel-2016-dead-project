@@ -1,5 +1,6 @@
 import React from 'react'
-import numeral from 'numeral'
+import moment from 'moment'
+moment.locale('es')
 
 // Componentes
 import Tooltip from 'react-bootstrap/lib/Tooltip'
@@ -11,7 +12,7 @@ import InputStock from './InputStock.jsx'
 import Select from './Select.jsx'
 
 // Styles
-import css from './TablaSemanal.css'
+import * as css from './TablaSemanal.css'
 
 class RowInventario extends React.Component{
     constructor(props){
@@ -169,6 +170,7 @@ class RowInventario extends React.Component{
                 <td className={css.tdFecha}>
                     <InputFecha
                         ref={ref=>this.inputDia=ref}
+                        diaSemana={moment(this.props.inventario.fechaProgramada).format('dddd')}
                         fecha={this.props.inventario.fechaProgramada}
                         onGuardar={this.guardarInventario.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}

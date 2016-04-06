@@ -2,7 +2,7 @@ import React from 'react'
 let PropTypes = React.PropTypes
 
 // Styles
-import style from './TableHeader.css'
+import * as style from './TableHeader.css'
 
 class TableHeader extends React.Component {
     constructor(props){

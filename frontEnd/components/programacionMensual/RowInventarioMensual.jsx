@@ -1,12 +1,15 @@
 import React from 'react'
 import numeral from 'numeral'
+import moment from 'moment'
+moment.locale('es')
 
 // Componentes
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 // Styles
-import * as css from './RowInventarioMensual.css'
+import * as cssTabla from './TablaMensual.css'
+import * as cssInput from './Inputs.css'
 
 class RowInventarioMensual extends React.Component{
     constructor(props){
@@ -202,50 +205,53 @@ class RowInventarioMensual extends React.Component{
         return (
             <tr>
                 {/* Correlativo */}
-                <td className={css.tdCorrelativo}>
+                <td className={cssTabla.tdCorrelativo}>
                     {this.props.index}
                 </td>
                 {/* Fecha */}
-                <td className={css.tdFecha}>
-                    <input className={this.state.diaValido? css.inputDia : css.inputDiaInvalido}
-                           type="number" min={0} max={31}
-                           ref={ref=>this.inputDia=ref}
-                           value={this.state.inputDia}
-                           onChange={this.onInputDiaChange.bind(this)}
-                           onKeyDown={this.inputOnKeyDown.bind(this, 'dia')}
-                           onBlur={this.guardarOCrear.bind(this)}
-                           onFocus={()=>{this.inputDia.select()}}
-                    />
-                    <input className={css.inputMes} type="number" disabled
-                           className={this.state.mesValido? css.inputDia : css.inputDiaInvalido}
-                           type="number" min={1} max={12}
-                           ref={ref=>this.inputMes=ref}
-                           value={this.state.inputMes}/>
-                    <input className={css.inputAnno} type="number" disabled
-                           value={this.state.inputAnno}/>
+                <td className={cssTabla.tdFecha}>
+                    <div className='pull-right'>
+                        <p className={cssInput.diaSemana}>{moment(this.props.inventario.fechaProgramada).format('dddd')}</p>
+                        <input className={this.state.diaValido? cssInput.inputDia : cssInput.inputDiaInvalido}
+                               type="number" min={0} max={31}
+                               ref={ref=>this.inputDia=ref}
+                               value={this.state.inputDia}
+                               onChange={this.onInputDiaChange.bind(this)}
+                               onKeyDown={this.inputOnKeyDown.bind(this, 'dia')}
+                               onBlur={this.guardarOCrear.bind(this)}
+                               onFocus={()=>{this.inputDia.select()}}
+                        />
+                        <input className={cssInput.inputMes} type="number" disabled
+                               className={this.state.mesValido? cssInput.inputDia : cssInput.inputDiaInvalido}
+                               type="number" min={1} max={12}
+                               ref={ref=>this.inputMes=ref}
+                               value={this.state.inputMes}/>
+                        <input className={cssInput.inputAnno} type="number" disabled
+                               value={this.state.inputAnno}/>
+                    </div>
                 </td>
                 {/* Cliente*/}
-                <td className={css.tdCliente}>
+                <td className={cssTabla.tdCliente}>
                     <p><small>{ nombreCliente }</small></p>
                 </td>
                 {/* CECO */}
-                <td className={css.tdCeco}>
+                <td className={cssTabla.tdCeco}>
                     <p><small><b>{this.props.inventario.local.numero}</b></small></p>
                 </td>
                 {/* Local */}
-                <td className={css.tdLocal}>
+                <td className={cssTabla.tdLocal}>
                     <p><small><b>{this.props.inventario.local.nombre}</b></small></p>
                 </td>
                 {/* Region*/}
-                <td className={css.tdRegion}>
+                <td className={cssTabla.tdRegion}>
                     <p style={{margin:0}}><small>{ nombreRegion }</small></p>
                 </td>
                 {/* Comuna */}
-                <td className={css.tdComuna}>
+                <td className={cssTabla.tdComuna}>
                     <p style={{margin:0}}><b><small>{ nombreComuna }</small></b></p>
                 </td>
                 {/* Stock */}
-                <td className={css.tdStock}>
+                <td className={cssTabla.tdStock}>
                     <OverlayTrigger
                         placement="left"
                         delay={0}
@@ -255,13 +261,13 @@ class RowInventarioMensual extends React.Component{
                     </OverlayTrigger>
                 </td>
                 {/* Dotación */}
-                <td className={css.tdDotacion}>
+                <td className={cssTabla.tdDotacion}>
                     <OverlayTrigger
                         placement="right"
                         delay={0}
                         overlay={<Tooltip id="yyy">{'Produción '+this.props.inventario.local.formato_local.produccionSugerida}</Tooltip>}>
 
-                        <input className={this.state.dotacionValida? css.inputDotacion : css.inputDotacionInvalida } type="number"
+                        <input className={this.state.dotacionValida? cssInput.inputDotacion : cssInput.inputDotacionInvalida } type="number"
                                value={this.state.inputDotacion}
                                onChange={this.onInputDotacionChange.bind(this)}
                                ref={ref=>this.inputDotacion=ref}
@@ -272,7 +278,7 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* Jornada */}
                 {/*
-                <td className={css.tdJornada}>
+                <td className={cssTabla.tdJornada}>
                     <select onChange={this.onSelectJornadaChange.bind(this)} value={this.state.selectJornada}>
                         <option value="1">no definido</option>
                         <option value="2">día</option>
@@ -282,7 +288,7 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 */}
                 {/* Opciones    */}
-                <td className={css.tdOpciones}>
+                <td className={cssTabla.tdOpciones}>
                     {
                         this.props.inventario.idInventario
                         ? <button className="btn btn-xs btn-primary"

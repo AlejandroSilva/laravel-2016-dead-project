@@ -1,13 +1,14 @@
 // Librerias
 import React from 'react'
 import moment from 'moment'
-import BlackBoxSemanal from './BlackBoxSemanal'
 moment.locale('es')
 import api from '../../apiClient/v1'
 // Componentes
+import BlackBoxSemanal from './BlackBoxSemanal'
 import TablaInventarios from './TablaSemanal.jsx'
+import DateRangePicker from 'react-bootstrap-daterangepicker'
+//var DateRangePicker = require('react-bootstrap-daterangepicker');
 
-//
 const format = 'YYYY-MM-DD'
 
 class ProgramacionSemanal extends React.Component {
@@ -99,16 +100,32 @@ class ProgramacionSemanal extends React.Component {
         return(
             <div>
                 <h1>Programación semanal</h1>
-                <p>Semana a programar</p>
-                <select name="" id="" onChange={this.onChangeSelectSemana.bind(this)}>
-                    {this.state.semanas.length===0?
-                        <option key={0} value="-1">Sin inventarios</option>
-                        :
-                        this.state.semanas.map((semana, index)=>
-                            <option key={index} value={semana.value}>{semana.texto}</option>
-                        )
-                    }
-                </select>
+                <div className="row">
+                    <div className="col-md-3">
+                        <h4 className="page-header">Semana a programar</h4>
+                        <select name="" id="" onChange={this.onChangeSelectSemana.bind(this)}>
+                            {this.state.semanas.length===0?
+                                <option key={0} value="-1">Sin inventarios</option>
+                                :
+                                this.state.semanas.map((semana, index)=>
+                                    <option key={index} value={semana.value}>{semana.texto}</option>
+                                )
+                            }
+                        </select>
+                    </div>
+                    <div className="col-md-3">
+                        <h4 className="page-header">Rango de Fecha</h4>
+                        {/*
+                        <DateRangePicker
+                            //startDate={moment('2016-03-06', format)} endDate={moment('2016-04-06', format)}>
+                            startDate={'2016-03-06'} endDate={'2016-04-06'}>
+
+                            <div>Click Me To Open Picker!</div>
+                        </DateRangePicker>
+                         */}
+                    </div>
+
+                </div>
 
                 <TablaInventarios
                     lideres={window.laravelLideres}

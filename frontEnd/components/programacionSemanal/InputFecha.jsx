@@ -1,7 +1,7 @@
 // Librerias
 import React from 'react'
 // Estilos
-import css from './InputFecha.css'
+import * as css from './InputFecha.css'
 
 class InputFecha extends React.Component{
     constructor(props) {
@@ -98,7 +98,8 @@ class InputFecha extends React.Component{
             ? (this.state.diaDirty? css.inputDiaDirty : css.inputDia)
             : css.inputDiaInvalido
         return(
-            <div>
+            <div className={"pull-right "+css.divContenedor}>
+                <p className={css.diaSemana}>{this.props.diaSemana}</p>
                 <input className={classnameDia}
                        ref={ref=>this.inputDia=ref}
                        value={this.state.dia}
@@ -123,6 +124,7 @@ class InputFecha extends React.Component{
 }
 InputFecha.propTypes = {
     // Objetos
+    diaSemana: React.PropTypes.string.isRequired,
     fecha: React.PropTypes.string.isRequired,
     // Metodos
     focusRowAnterior: React.PropTypes.func.isRequired,
