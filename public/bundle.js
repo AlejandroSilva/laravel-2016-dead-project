@@ -46096,6 +46096,7 @@
 	            var nombreCliente = this.props.inventario.local.nombreCliente || this.props.inventario.local.cliente.nombreCorto;
 	            var nombreRegion = this.props.inventario.local.nombreRegion || this.props.inventario.local.direccion.comuna.provincia.region.numero;
 	            var nombreComuna = this.props.inventario.local.nombreComuna || this.props.inventario.local.direccion.comuna.nombre;
+	            var diaSemana = (0, _moment2.default)(this.props.inventario.fechaProgramada).format('dddd');
 	            return _react2.default.createElement(
 	                'tr',
 	                null,
@@ -46113,7 +46114,7 @@
 	                        _react2.default.createElement(
 	                            'p',
 	                            { className: cssInput.diaSemana },
-	                            (0, _moment2.default)(this.props.inventario.fechaProgramada).format('dddd')
+	                            diaSemana === 'Invalid date' ? '' : diaSemana
 	                        ),
 	                        _react2.default.createElement('input', { className: this.state.diaValido ? cssInput.inputDia : cssInput.inputDiaInvalido,
 	                            type: 'number', min: 0, max: 31,
@@ -53653,7 +53654,7 @@
 	                _react2.default.createElement(
 	                    'p',
 	                    { className: css.diaSemana },
-	                    this.props.diaSemana
+	                    this.props.diaSemana === 'Invalid date' ? '' : this.props.diaSemana
 	                ),
 	                _react2.default.createElement('input', { className: classnameDia,
 	                    ref: function ref(_ref) {

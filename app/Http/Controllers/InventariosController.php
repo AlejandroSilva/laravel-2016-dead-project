@@ -85,8 +85,8 @@ class InventariosController extends Controller {
             // Crear las dos nominas
             $nominaDia = new Nominas();
             // Lider, Captador1, Captador2 no se definen
-            $nominaDia->horaPresentacionLider = $local->llegadaSugeridaLider();
-            $nominaDia->horaPresentacionEquipo = $local->llegadaSugeridaPersonal();
+            $nominaDia->horaPresentacionLider = $local->llegadaSugeridaLiderDia();
+            $nominaDia->horaPresentacionEquipo = $local->llegadaSugeridaPersonalDia();
             // Todo: la dotacion sugerida deberia dividirse en dos cuando la jornada sea doble:
             $nominaDia->dotacionAsignada = $local->dotacionSugerida();
             $nominaDia->dotacionCaptador1 = 0;
@@ -97,8 +97,8 @@ class InventariosController extends Controller {
 
             $nominaNoche = new Nominas();
             // Lider, Captador1, Captador2 no se definen
-            $nominaNoche->horaPresentacionLider = $local->llegadaSugeridaLider();
-            $nominaNoche->horaPresentacionEquipo = $local->llegadaSugeridaPersonal();
+            $nominaNoche->horaPresentacionLider = $local->llegadaSugeridaLiderNoche();
+            $nominaNoche->horaPresentacionEquipo = $local->llegadaSugeridaPersonalNoche();
             // Todo: la dotacion sugerida deberia dividirse en dos cuando la jornada sea doble:
             $nominaNoche->dotacionAsignada = $local->dotacionSugerida();
             $nominaNoche->dotacionCaptador1 = 0;

@@ -202,6 +202,7 @@ class RowInventarioMensual extends React.Component{
         let nombreCliente = this.props.inventario.local.nombreCliente || this.props.inventario.local.cliente.nombreCorto
         let nombreRegion = this.props.inventario.local.nombreRegion || this.props.inventario.local.direccion.comuna.provincia.region.numero
         let nombreComuna = this.props.inventario.local.nombreComuna || this.props.inventario.local.direccion.comuna.nombre
+        let diaSemana = moment(this.props.inventario.fechaProgramada).format('dddd')
         return (
             <tr>
                 {/* Correlativo */}
@@ -211,7 +212,7 @@ class RowInventarioMensual extends React.Component{
                 {/* Fecha */}
                 <td className={cssTabla.tdFecha}>
                     <div className='pull-right'>
-                        <p className={cssInput.diaSemana}>{moment(this.props.inventario.fechaProgramada).format('dddd')}</p>
+                        <p className={cssInput.diaSemana}>{diaSemana==='Invalid date'? '': diaSemana}</p>
                         <input className={this.state.diaValido? cssInput.inputDia : cssInput.inputDiaInvalido}
                                type="number" min={0} max={31}
                                ref={ref=>this.inputDia=ref}
