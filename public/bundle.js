@@ -53003,14 +53003,6 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _Tooltip = __webpack_require__(305);
-
-	var _Tooltip2 = _interopRequireDefault(_Tooltip);
-
-	var _OverlayTrigger = __webpack_require__(335);
-
-	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
-
 	var _InputFecha = __webpack_require__(421);
 
 	var _InputFecha2 = _interopRequireDefault(_InputFecha);
@@ -53048,6 +53040,8 @@
 	_moment2.default.locale('es');
 
 	// Componentes
+	//import Tooltip from 'react-bootstrap/lib/Tooltip'
+	//import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 
 	// Styles
@@ -53407,6 +53401,11 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: css.tdHora },
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { display: inventarioDia ? 'block' : 'none' } },
+	                        this.props.inventario.hliderDia
+	                    ),
 	                    _react2.default.createElement(_InputHora2.default, {
 	                        style: { display: inventarioDia ? 'block' : 'none' },
 	                        ref: function ref(_ref11) {
@@ -53417,6 +53416,11 @@
 	                        focusRowAnterior: function focusRowAnterior() {},
 	                        focusRowSiguiente: function focusRowSiguiente() {}
 	                    }),
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { display: inventarioNoche ? 'block' : 'none' } },
+	                        this.props.inventario.hliderNoche
+	                    ),
 	                    _react2.default.createElement(_InputHora2.default, {
 	                        style: { display: inventarioNoche ? 'block' : 'none' },
 	                        ref: function ref(_ref12) {
@@ -53431,6 +53435,11 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    { className: css.tdHora },
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { display: inventarioDia ? 'block' : 'none' } },
+	                        this.props.inventario.hequipoDia
+	                    ),
 	                    _react2.default.createElement(_InputHora2.default, {
 	                        style: { display: inventarioDia ? 'block' : 'none' },
 	                        ref: function ref(_ref13) {
@@ -53441,6 +53450,11 @@
 	                        focusRowAnterior: function focusRowAnterior() {},
 	                        focusRowSiguiente: function focusRowSiguiente() {}
 	                    }),
+	                    _react2.default.createElement(
+	                        'p',
+	                        { style: { display: inventarioNoche ? 'block' : 'none' } },
+	                        this.props.inventario.hequipoNoche
+	                    ),
 	                    _react2.default.createElement(_InputHora2.default, {
 	                        style: { display: inventarioNoche ? 'block' : 'none' },
 	                        ref: function ref(_ref14) {

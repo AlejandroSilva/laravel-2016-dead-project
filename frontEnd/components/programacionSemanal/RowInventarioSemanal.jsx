@@ -3,8 +3,8 @@ import moment from 'moment'
 moment.locale('es')
 
 // Componentes
-import Tooltip from 'react-bootstrap/lib/Tooltip'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+//import Tooltip from 'react-bootstrap/lib/Tooltip'
+//import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from './InputFecha.jsx'
 import InputHora from './InputHora.jsx'
 import InputDotacion from './InputDotacion.jsx'
@@ -374,6 +374,7 @@ class RowInventario extends React.Component{
                  */}
                 {/* Hora Presentación Lider */}
                 <td className={css.tdHora}>
+                    <p style={{display: inventarioDia? 'block' : 'none'}}>{this.props.inventario.hliderDia}</p>
                     <InputHora
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionLiderDia=ref}
@@ -382,6 +383,7 @@ class RowInventario extends React.Component{
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
                     />
+                    <p style={{display: inventarioNoche? 'block' : 'none'}}>{this.props.inventario.hliderNoche}</p>
                     <InputHora
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionLiderNoche=ref}
@@ -394,6 +396,7 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Hora Presentación Equipo*/}
                 <td className={css.tdHora}>
+                    <p style={{display: inventarioDia? 'block' : 'none'}}>{this.props.inventario.hequipoDia}</p>
                     <InputHora
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionEquipoDia=ref}
@@ -402,6 +405,7 @@ class RowInventario extends React.Component{
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
                     />
+                    <p style={{display: inventarioNoche? 'block' : 'none'}}>{this.props.inventario.hequipoNoche}</p>
                     <InputHora
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionEquipoNoche=ref}
