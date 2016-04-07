@@ -36,6 +36,9 @@
 .TablaMensual__tableFixed___3hn-U p {
     margin-bottom: 0;
 }
+.TablaMensual__trSeparador___2udJv {
+    border-bottom: 2px black solid;
+}
 
 /* TABLA
  la tabla de locales, al tener un "sticky header", este pierde el ancho de

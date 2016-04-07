@@ -10,6 +10,9 @@
 .tableFixed p {
     margin-bottom: 0;
 }
+.trSeparador {
+    border-bottom: 2px black solid;
+}
 
 /* TABLA
  la tabla de locales, al tener un "sticky header", este pierde el ancho de

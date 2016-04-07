@@ -80,11 +80,16 @@ class TablaMensual extends React.Component{
                     {this.props.inventariosFiltrados.length===0
                         ? <tr><td colSpan="10" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.props.inventariosFiltrados.map((inventario, index)=>{
+                            let mostrarSeparador = false
+                            let sgteInventario = this.props.inventariosFiltrados[index+1]
+                            if(sgteInventario)
+                                mostrarSeparador = inventario.fechaProgramada!==sgteInventario.fechaProgramada
                             return <RowInventario
+                                // Propiedades
                                 key={index}
                                 index={index}
                                 inventario={inventario}
-
+                                mostrarSeparador={mostrarSeparador}
                                 // Metodos
                                 focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
                                 focusFilaAnterior={this.focusFilaAnterior.bind(this)}

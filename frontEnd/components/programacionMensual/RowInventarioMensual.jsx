@@ -204,7 +204,7 @@ class RowInventarioMensual extends React.Component{
         let nombreComuna = this.props.inventario.local.nombreComuna || this.props.inventario.local.direccion.comuna.nombre
         let diaSemana = moment(this.props.inventario.fechaProgramada).format('dddd')
         return (
-            <tr>
+            <tr className={this.props.mostrarSeparador? cssTabla.trSeparador: ''}>
                 {/* Correlativo */}
                 <td className={cssTabla.tdCorrelativo}>
                     {this.props.index}
@@ -311,11 +311,15 @@ RowInventarioMensual.propTypes = {
     // Objetos
     index: React.PropTypes.number.isRequired,
     inventario: React.PropTypes.object.isRequired,
+    mostrarSeparador: React.PropTypes.bool.isRequired,
     // Metodos
     focusFilaSiguiente: React.PropTypes.func.isRequired,
     focusFilaAnterior: React.PropTypes.func.isRequired,
     guardarOCrearInventario: React.PropTypes.func.isRequired,
     quitarInventario: React.PropTypes.func.isRequired
+}
+RowInventarioMensual.defaultProps = {
+    mostrarSeparador: false
 }
 
 export default RowInventarioMensual
