@@ -41,8 +41,22 @@ export default class BlackBoxSemanal{
 
     ordenarLista(){
         let orderByFechaProgramadaStock = (a,b)=>{
+            // si se parsea la fecha sin dia (EJ. 2016-01-00) resulta un 'Invalid Date'
+
             let dateA = new Date(a.fechaProgramada)
+            if(dateA=='Invalid Date'){
+                let [annoA, mesA, diaA] = a.fechaProgramada.split('-')
+                // OJO: (new Date('2016-04')) - (new Date('2016-03-31')), resulta en 0, y los ordena mal, por eso se resta 1
+                dateA = new Date(`${annoA}-${mesA}`) - 1
+                //if(dateA=='Invalid Date')  console.log('invalida :', `${annoA}-${mesA}`)
+            }
+
             let dateB = new Date(b.fechaProgramada)
+            if(dateB=='Invalid Date'){
+                let [annoB, mesB, diaB] = a.fechaProgramada.split('-')
+                dateB = new Date(`${annoB}-${mesB}`) - 1
+                //if(dateB=='Invalid Date')  console.log('invalida :', `${annoB}-${mesB}`)
+            }
 
             if((dateA-dateB)===0){
                 // stock ordenado de mayor a menor (B-A)
