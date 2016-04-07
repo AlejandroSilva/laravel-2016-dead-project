@@ -4,11 +4,9 @@ import React from 'react'
 // Componentes
 //import Sticky from '../shared/react-sticky/sticky.js'
 //import StickyContainer from '../shared/react-sticky/container.js'
-//import TableHeader from './TableHeader.jsx'
 import RowInventarioSemanal from './RowInventarioSemanal.jsx'
 
 // Styles
-//import sharedStyles from '../shared/shared.css'
 import * as css from './TablaSemanal.css'
 
 class TablaInventarios extends React.Component{
@@ -57,9 +55,6 @@ class TablaInventarios extends React.Component{
                         <th className={css.thLider}>Lider</th>
                         {/* <th className={css.thLider}>Supervisor</th> */}
                         <th className={css.thLider}>Captador 1</th>
-                        {/* <th className={css.thDotacion}>Dot.Cap1</th> */}
-                        {/* <th className={css.thLider}>Captador 2</th> */}
-                        {/* <th className={css.thDotacion}>Dot.Cap2</th> */}
                         <th className={css.thHora}>Hr.P.Lider</th>
                         <th className={css.thHora}>Hr.P.Equipo</th>
                         {/* <th className={css.thDireccion}>Dirección</th> */}
@@ -70,6 +65,10 @@ class TablaInventarios extends React.Component{
                     {this.props.inventarios.length===0
                         ? <tr><td colSpan="14" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.props.inventarios.map((inventario, index)=>{
+                            let mostrarSeparador = false
+                            let sgteInventario = this.props.inventarios[index+1]
+                            if(sgteInventario)
+                                mostrarSeparador = inventario.fechaProgramada!==sgteInventario.fechaProgramada
                             return <RowInventarioSemanal
                                 // Propiedades
                                 key={index}
@@ -79,6 +78,7 @@ class TablaInventarios extends React.Component{
                                 lideres={this.props.lideres}
                                 supervisores={this.props.supervisores}
                                 captadores={this.props.captadores}
+                                mostrarSeparador={mostrarSeparador}
                                 // Metodos
                                 guardarInventario={this.props.guardarInventario}
                                 guardarNomina={this.props.guardarNomina}

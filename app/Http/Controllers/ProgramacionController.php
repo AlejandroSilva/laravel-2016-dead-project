@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use PHPExcel;
 use PHPExcel_IOFactory;
 // Modelos
+use App\User;
 use App\Role;
 use App\Clientes;
 use App\Inventarios;

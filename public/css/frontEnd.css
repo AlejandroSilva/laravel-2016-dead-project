@@ -387,6 +387,9 @@
 .TablaSemanal__tableFixed___3cWli > tbody > tr > td {
     padding: 0 !important;
 }
+.TablaSemanal__trSeparador___3zbui {
+    border-bottom: 2px black solid;
+}
 
 /* FECHA */
 .TablaSemanal__thFecha___1z4uk{

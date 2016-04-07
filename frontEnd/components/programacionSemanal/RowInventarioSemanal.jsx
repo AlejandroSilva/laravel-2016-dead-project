@@ -169,7 +169,7 @@ class RowInventario extends React.Component{
         let _hrCierre = this.props.inventario.local.horaCierre.split(':')
         let txtHrCierre = `Cierre a las ${_hrCierre[0]}:${_hrCierre[1]}hrs`
         return (
-            <tr>
+            <tr className={this.props.mostrarSeparador? css.trSeparador: ''}>
                 {/* Fecha */}
                 <td className={css.tdFecha}>
                     <InputFecha
@@ -444,10 +444,14 @@ RowInventario.propTypes = {
     inventario: React.PropTypes.object.isRequired,
     lideres: React.PropTypes.array.isRequired,
     captadores: React.PropTypes.array.isRequired,
+    mostrarSeparador: React.PropTypes.bool.isRequired,
     // Metodos
     guardarInventario: React.PropTypes.func.isRequired,
     guardarNomina: React.PropTypes.func.isRequired,
     focusRow: React.PropTypes.func.isRequired
+}
+RowInventario.defaultProps = {
+    mostrarSeparador: false
 }
 
 export default RowInventario
