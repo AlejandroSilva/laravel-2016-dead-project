@@ -96,7 +96,7 @@ class AuditoriasController extends Controller {
             
             // actualizar auditor
             if(isset($request->idAuditor))
-                $auditoria->idAuditor = $request->idAuditor;
+                $auditoria->idAuditor = $request->idAuditor==0? null: $request->idAuditor;
 
             $resultado = $auditoria->save();
 
