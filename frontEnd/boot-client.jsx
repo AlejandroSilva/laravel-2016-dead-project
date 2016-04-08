@@ -4,14 +4,13 @@ import ReactDOM from 'react-dom'
 
 // Componentes
 import InventarioForm from './components/inventario/InventarioForm.jsx'
-import ProgramacionMensual from './components/programacionMensual/ProgramacionMensual.jsx'
-import ProgramacionSemanal from './components/programacionSemanal/ProgramacionSemanal.jsx'
+import ProgramacionIGMensual from './components/programacionIGMensual/ProgramacionIGMensual.jsx'
+import ProgramacionIGSemanal from './components/programacionIGSemanal/ProgramacionIGSemanal.jsx'
+import ProgramacionAIMensual from './components/programacionAIMensual/ProgramacionAIMensual.jsx'
+import ProgramacionAISemanal from './components/programacionAISemanal/ProgramacionAISemanal.jsx'
 
-// Carga el componente dependiendo del elemento DOM en la pagina
+/* FORMULARIO PARA LA CREACIÓN DE UN NUEVO FORMULARIO */
 let nuevoInventarioDOM = document.getElementById('nuevo-inventario')
-let programacionMensualDOM = document.getElementById('react-programacion-mensual')
-let programacionSemanalDOM = document.getElementById('react-programacion-semanal')
-
 if (nuevoInventarioDOM){
     ReactDOM.render(
         <InventarioForm
@@ -19,20 +18,40 @@ if (nuevoInventarioDOM){
         />, nuevoInventarioDOM)
 }
 
-if( programacionMensualDOM ){
+/* PROGRAMACIÓN INVENTARIO GENERAL */
+let programacionIGMensualDOM = document.getElementById('react-programacionIG-mensual')
+if( programacionIGMensualDOM ){
     ReactDOM.render(
-        <ProgramacionMensual
+        <ProgramacionIGMensual
             clientes={window.laravelClientes}
-        />, programacionMensualDOM)
+        />, programacionIGMensualDOM)
 }
-
-if( programacionSemanalDOM ){
+let programacionIGSemanalDOM = document.getElementById('react-programacionIG-semanal')
+if( programacionIGSemanalDOM ){
     ReactDOM.render(
-        <ProgramacionSemanal
+        <ProgramacionIGSemanal
             clientes={window.laravelClientes}
             primerInventario={window.laravelPrimerInventario}
             ultimoInventario={window.laravelUltimoInventario}
-        />, programacionSemanalDOM)
+        />, programacionIGSemanalDOM)
+}
+
+/* PROGRAMACIÓN AUDITORIA INVENTARIO */
+let programacionAIMensualDOM = document.getElementById('react-programacionAI-mensual')
+if( programacionAIMensualDOM ){
+    ReactDOM.render(
+        <ProgramacionAIMensual
+            clientes={window.laravelClientes}
+        />, programacionAIMensualDOM)
+}
+let programacionAISemanalDOM = document.getElementById('react-programacionAI-semanal')
+if( programacionAISemanalDOM ){
+    ReactDOM.render(
+        <ProgramacionAISemanal
+            clientes={window.laravelClientes}
+            primerInventario={window.laravelPrimerInventario}
+            ultimoInventario={window.laravelUltimoInventario}
+        />, programacionAISemanalDOM)
 }
 
 // http://jamesknelson.com/push-state-vs-hash-based-routing-with-react-js/

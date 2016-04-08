@@ -21,14 +21,24 @@
                             Gestión Operacional <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="drop-operacional">
-                            {{-- PROGRAMACIÓN --}}
-                            <li class="{{ Request::is('programacion/mensual')? 'active': '' }}">
-                                <a href="{{ url('programacion/mensual') }}">Programación mensual</a>
+                            {{-- PROGRAMACIÓN INVENTARIO GENERAL --}}
+                            <li class="{{ Request::is('programacionIG/mensual')? 'active': '' }}">
+                                <a href="{{ url('programacionIG/mensual') }}">Programación mensual IG</a>
                             </li>
-                            <li class="{{ Request::is('programacion/semanal')? 'active': '' }}">
-                                <a href="{{ url('programacion/semanal') }}">Programación semanal</a>
+                            <li class="{{ Request::is('programacionIG/semanal')? 'active': '' }}">
+                                <a href="{{ url('programacionIG/semanal') }}">Programación semanal IG</a>
                             </li>
                             <li role="separator" class="divider"></li>
+
+                            {{-- PROGRAMACIÓN AUDITORIA INVENTARIO   --}}
+                            <li class="{{ Request::is('programacionAI/mensual')? 'active': '' }}">
+                                <a href="{{ url('programacionAI/mensual') }}">Programación mensual AI</a>
+                            </li>
+                            <li class="{{ Request::is('programacionAI/semanal')? 'active': '' }}">
+                                <a href="{{ url('programacionAI/semanal') }}">Programación semanal AI</a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+
 
                             {{-- INVENTARIO --}}
                             <li class="{{ Request::is('inventario/lista')? 'active': '' }}">

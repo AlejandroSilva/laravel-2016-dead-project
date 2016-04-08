@@ -10,7 +10,7 @@ import SelectRange from './SelectRange.jsx'
 
 const format = 'YYYY-MM-DD'
 
-class ProgramacionSemanal extends React.Component {
+class ProgramacionIGSemanal extends React.Component {
     constructor(props) {
         super(props)
         this.blackboxSemanal = new BlackBoxSemanal()
@@ -167,7 +167,7 @@ class ProgramacionSemanal extends React.Component {
     render(){
         return(
             <div>
-                <h1>Programación semanal</h1>
+                <h1>Programación semanal IG</h1>
                 <div className="row">
                     {/* SELECTOR DE CLIENTE */}
                     <div className={'col-sm-2 form-group '}>
@@ -242,10 +242,10 @@ class ProgramacionSemanal extends React.Component {
     }
 }
 
-ProgramacionSemanal.propTypes = {
+ProgramacionIGSemanal.propTypes = {
     clientes: React.PropTypes.array.isRequired,
     primerInventario: React.PropTypes.string.isRequired,
     ultimoInventario: React.PropTypes.string.isRequired
 }
 
-export default ProgramacionSemanal
+export default ProgramacionIGSemanal

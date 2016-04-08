@@ -13,27 +13,27 @@ use App\Role;
 use App\Clientes;
 use App\Inventarios;
 
-class ProgramacionController extends Controller {
+class ProgramacionAIController extends Controller {
     /**
      * ##########################################################
      * Rutas que generan vistas
      * ##########################################################
      */
 
-    // GET programacionIG/
+    // GET programacionAI/
     public function showIndex(){
-        return view('operacional.programacionIG.programacionIG-index');
+        return view('operacional.programacionAI.programacion-index');
     }
 
-    // GET programacionIG/mensual
+    // GET programacionAI/mensual
     public function showMensual(){
         $clientesWithLocales = Clientes::allWithSimpleLocales();
-        return view('operacional.programacionIG.programacionIG-mensual', [
+        return view('operacional.programacionAI.programacion-mensual', [
             'clientes' => $clientesWithLocales
         ]);
     }
 
-    // GET programacionIG/mensual/pdf/{mes}
+    // GET programacionAI/mensual/pdf/{mes}
     public function descargarProgramaMensual($annoMesDia){
         $fecha = explode('-', $annoMesDia);
         $anno = $fecha[0];
@@ -48,12 +48,12 @@ class ProgramacionController extends Controller {
             'nominaDia',
             'nominaNoche'
         ])
-        ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-        ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
-        ->join('locales', 'locales.idLocal', '=', 'inventarios.idLocal')
-        ->orderBy('fechaProgramada', 'ASC')
-        ->orderBy('locales.stock', 'DESC')
-        ->get();
+            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+            ->join('locales', 'locales.idLocal', '=', 'inventarios.idLocal')
+            ->orderBy('fechaProgramada', 'ASC')
+            ->orderBy('locales.stock', 'DESC')
+            ->get();
 
         $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Dotación Total'];
         $inventariosArray = array_map(function($inventario){
@@ -86,14 +86,14 @@ class ProgramacionController extends Controller {
         return response()->download($randomFileName, "programacion $annoMesDia.xlsx");
     }
 
-    // GET programacionIG/semanal
+    // GET programacionAI/semanal
     public function showSemanal(){
         // buscar la menor fechaProgramada en los inventarios
         $select = Inventarios::
-            selectRaw('min(fechaProgramada) as primerInventario, max(fechaProgramada) as ultimoInventario')
+        selectRaw('min(fechaProgramada) as primerInventario, max(fechaProgramada) as ultimoInventario')
             ->get();
         $minymax = $select[0];
-        
+
         // Clientes
         $clientes  = Clientes::all();
         // Captadores
@@ -107,7 +107,7 @@ class ProgramacionController extends Controller {
         $lideres = $rolLider!=null? $rolLider->users : '[]';
 
         // buscar la mayor fechaProgramada en los iventarios
-        return view('operacional.programacionIG.programacionIG-semanal', [
+        return view('operacional.programacionAI.programacion-semanal', [
             'clientes' => $clientes,
             'primerInventario'=> $minymax->primerInventario,
             'ultimoInventario'=> $minymax->ultimoInventario,

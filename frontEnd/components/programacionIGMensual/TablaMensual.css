@@ -1,0 +1,149 @@
+.tableFixed{
+    table-layout: fixed;
+    font-size: 12px !important;
+    width: 100%;
+}
+.tableFixed td {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+.tableFixed p {
+    margin-bottom: 0;
+}
+.trSeparador {
+    border-bottom: 2px black solid;
+}
+
+/* TABLA
+ la tabla de locales, al tener un "sticky header", este pierde el ancho de
+ las "TD" y se descuadra cuando el sticky se vuelve activo, pasa solucionar
+ esto, es necesario que los anchos de las celdas sean fijos, no dinamicos
+ */
+/* correlativo */
+.thCorrelativo {
+    width: 30px;
+    background: white;
+}
+.tdCorrelativo {
+    width: 30px;
+    vertical-align: middle !important;
+}
+/* Fecha */
+.thFecha {
+    width: 180px !important;
+    background: white;
+}
+.tdFecha {
+    width: 180px !important;
+    vertical-align: middle !important;
+}
+
+/* Cliente */
+.thCliente {
+    width: 75px;
+    background: white;
+}
+.tdCliente {
+    composes: thCliente;
+    vertical-align: middle !important;
+}
+/* CECO */
+.thCeco {
+    width: 45px;
+    background: white;
+}
+.tdCeco {
+    composes: thCeco;
+    vertical-align: middle !important;
+}
+/* Local */
+.thLocal {
+    width: 150px;
+    background: white;
+}
+.tdLocal {
+    composes: thLocal;
+    vertical-align: middle !important;
+}
+/* ZonaSei */
+.thZonaSei {
+    width: 150px;
+    background: white;
+}
+.tdZonaSei {
+    composes: thZonaSei;
+    vertical-align: middle !important;
+}
+/* Region */
+.thRegion {
+    width: 80px;
+    background: white;
+}
+.tdRegion {
+    composes: thRegion;
+    vertical-align: middle !important;
+}
+/* Comuna */
+.thComuna {
+    width: 140px;
+    background: white;
+}
+.tdComuna {
+    composes: thComuna;
+    vertical-align: middle !important;
+}
+/* Stock */
+.thStock {
+    width: 60px;
+    background: white;
+}
+.tdStock {
+    composes: thStock;
+    vertical-align: middle !important;
+}
+/* Dotacion */
+.thDotacion {
+    width: 70px;
+    background: white;
+}
+.tdDotacion {
+    composes: thDotacion;
+    vertical-align: middle !important;
+}
+.tdDotacion > input{
+    width: 100%;
+}
+/* Jornada */
+.thJornada {
+    width: 110px;
+    max-width: 110px;
+    background: white;
+}
+.tdJornada {
+    composes: thJornada;
+    vertical-align: middle !important;
+}
+.tdJornada > select{
+    display: block;
+    margin: 0 auto;
+}
+
+/* Estado */
+.thEstado {
+    width: 100px;
+    background: white;
+}
+.tdEstado {
+    width: 100px;
+    vertical-align: middle !important;
+}
+
+/* Opciones */
+.thOpciones {
+    width: auto !important;
+    background: white;
+}
+.tdOpciones {
+    width: auto !important;
+    vertical-align: middle !important;
+}

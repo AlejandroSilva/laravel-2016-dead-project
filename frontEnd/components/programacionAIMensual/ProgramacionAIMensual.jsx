@@ -11,7 +11,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import TablaMensual from './TablaMensual.jsx'
 import AgregarPrograma from './AgregarPrograma.jsx'
 
-class ProgramacionMensual extends React.Component{
+class ProgramacionMensualAI extends React.Component{
     constructor(props) {
         super(props)
         // mostrar en el selector, los proximos 12 meses
@@ -221,7 +221,7 @@ class ProgramacionMensual extends React.Component{
     render(){
         return (
             <div>
-                <h1>Programación mensual</h1>
+                <h1>Programación mensual AI</h1>
 
                 <AgregarPrograma
                     clientes={this.props.clientes}
@@ -254,8 +254,8 @@ class ProgramacionMensual extends React.Component{
     }
 }
 
-ProgramacionMensual.propTypes = {
+ProgramacionMensualAI.propTypes = {
     clientes: React.PropTypes.array.isRequired
 }
 
-export default ProgramacionMensual
+export default ProgramacionMensualAI

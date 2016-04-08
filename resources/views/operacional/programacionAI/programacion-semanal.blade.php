@@ -7,7 +7,7 @@
 
     <div class="row">
         {{-- aca se montara el component 'ProgramacionSemanal' de React --}}
-        <div id="react-programacion-semanal">
+        <div id="react-programacionAI-semanal">
             <p>Cargando, espere unos segundos</p>
         </div>
     </div>

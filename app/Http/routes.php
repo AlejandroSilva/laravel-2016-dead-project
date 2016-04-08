@@ -39,13 +39,29 @@ Route::group(['middleware' => ['web']], function (){
 
     /*
     |--------------------------------------------------------------------------
+    | Programación de Inventarios Generales
+    |--------------------------------------------------------------------------
+    |*/
+    Route::get('programacionIG',                  'ProgramacionController@showIndex');
+    Route::get('programacionIG/mensual',          'ProgramacionController@showMensual');
+    Route::get('programacionIG/mensual/pdf/{mes}','ProgramacionController@descargarProgramaMensual');
+    Route::get('programacionIG/semanal',          'ProgramacionController@showSemanal');
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Programación de Auditoria de Inventarios
+    |--------------------------------------------------------------------------
+    |*/
+    Route::get('programacionAI',                  'ProgramacionAIController@showIndex');
+    Route::get('programacionAI/mensual',          'ProgramacionAIController@showMensual');
+    Route::get('programacionAI/mensual/pdf/{mes}','ProgramacionAIController@descargarProgramaMensual');
+    Route::get('programacionAI/semanal',          'ProgramacionAIController@showSemanal');
+    
+    /*
+    |--------------------------------------------------------------------------
     | Gestión de Inventarios
     |--------------------------------------------------------------------------
     |*/
-    Route::get('programacion',                  'ProgramacionController@showIndex');
-    Route::get('programacion/mensual',          'ProgramacionController@showMensual');
-    Route::get('programacion/mensual/pdf/{mes}','ProgramacionController@descargarProgramaMensual');
-    Route::get('programacion/semanal',          'ProgramacionController@showSemanal');
     Route::get('inventario',                    'InventariosController@showIndex');
     Route::get('inventario/nuevo',              'InventariosController@showNuevo');
     Route::get('inventario/lista',              'InventariosController@showLista');
