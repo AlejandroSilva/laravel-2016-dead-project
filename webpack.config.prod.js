@@ -22,7 +22,7 @@ module.exports = {
         ]
     },
     plugins: [
-        //new webpack.optimize.UglifyJsPlugin(),
+        new webpack.optimize.UglifyJsPlugin(),
         new ExtractTextPlugin('css/frontEnd.css', { allChunks: true })
     ]
 }
