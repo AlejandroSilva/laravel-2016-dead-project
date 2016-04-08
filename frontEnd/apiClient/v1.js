@@ -59,8 +59,8 @@ export default {
         },
     },
     nomina: {
-        actualizar: (idInventario, datos)=>{
-            return axios.put(`/api/inventario/${idInventario}`, datos)
+        actualizar: (idNomina, datos)=>{
+            return axios.put(`/api/nomina/${idNomina}`, datos)
         }
     }
 }
