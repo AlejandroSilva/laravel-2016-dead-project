@@ -235,7 +235,7 @@ class ProgramacionMensualAI extends React.Component{
                     <h4 className="page-header" style={{marginTop: '1em'}}>
                         Locales a programar:
                         <a className="btn btn-success btn-xs pull-right"
-                            href={`/programacion/mensual/pdf/${this.state.mesSeleccionado}`}
+                            href={`/programacionAI/mensual/pdf/${this.state.mesSeleccionado}`}
                         >Exportar</a>
                     </h4>
                     <TablaMensual
