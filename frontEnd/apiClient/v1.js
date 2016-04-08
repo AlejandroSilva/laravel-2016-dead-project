@@ -42,6 +42,9 @@ export default {
         },
         getPorRango: (fechaInicio, fechaFin)=>{
             return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}`)
+        },
+        getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>{
+            return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)
         }
     },
     nomina: {

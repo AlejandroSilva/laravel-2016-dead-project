@@ -94,7 +94,9 @@ class ProgramacionController extends Controller {
             selectRaw('min(fechaProgramada) as primerInventario, max(fechaProgramada) as ultimoInventario')
             ->get();
         $minymax = $select[0];
-
+        
+        // Clientes
+        $clientes  = Clientes::all();
         // Captadores
         $rolCaptador = Role::where('name', 'Captador')->first();
         $captadores = $rolCaptador!=null? $rolCaptador->users : '[]';
@@ -105,8 +107,9 @@ class ProgramacionController extends Controller {
         $rolLider = Role::where('name', 'Lider')->first();
         $lideres = $rolLider!=null? $rolLider->users : '[]';
 
-        // buscar la mayor fechaProgramada en los ivventarios
+        // buscar la mayor fechaProgramada en los iventarios
         return view('operacional.programacion.programacion-semanal', [
+            'clientes' => $clientes,
             'primerInventario'=> $minymax->primerInventario,
             'ultimoInventario'=> $minymax->ultimoInventario,
             'captadores'=> $captadores,

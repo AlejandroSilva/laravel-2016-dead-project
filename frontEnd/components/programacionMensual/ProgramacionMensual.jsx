@@ -14,8 +14,8 @@ import AgregarPrograma from './AgregarPrograma.jsx'
 class ProgramacionMensual extends React.Component{
     constructor(props) {
         super(props)
-        let meses = []
         // mostrar en el selector, los proximos 12 meses
+        let meses = []
         for (let desface = 0; desface < 12; desface++) {
             let mes = moment().add(desface, 'month')
             meses.push({

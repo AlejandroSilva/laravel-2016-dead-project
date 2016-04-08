@@ -29,6 +29,7 @@ if( programacionMensualDOM ){
 if( programacionSemanalDOM ){
     ReactDOM.render(
         <ProgramacionSemanal
+            clientes={window.laravelClientes}
             primerInventario={window.laravelPrimerInventario}
             ultimoInventario={window.laravelUltimoInventario}
         />, programacionSemanalDOM)

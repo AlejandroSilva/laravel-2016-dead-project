@@ -52,6 +52,7 @@ Route::group(['middleware' => ['web']], function (){
     Route::post('api/inventario/nuevo',                 'InventariosController@api_nuevo');
     Route::get('api/inventario/mes/{annoMesDia}',       'InventariosController@api_getPorMes');
     Route::get('api/inventario/{fecha1}/al/{fecha2}',   'InventariosController@api_getPorRango');
+    Route::get('api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}',   'InventariosController@api_getPorRangoYCliente');
     Route::get('api/inventario/{idInventario}',         'InventariosController@api_get');
     Route::put('api/inventario/{idInventario}',         'InventariosController@api_actualizar');
     Route::get('api/nomina/{idNomina}',                 'NominasController@api_get');

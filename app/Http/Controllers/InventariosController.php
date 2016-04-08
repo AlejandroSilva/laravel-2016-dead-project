@@ -229,17 +229,41 @@ class InventariosController extends Controller {
             $local['nombreProvincia'] = $local['direccion']['comuna']['provincia']['nombre'];
             $local['nombreRegion'] = $local['direccion']['comuna']['provincia']['region']['numero'];
             $inventario['local'] = $local;
-
-            $local2 = Locales::find($local['idLocal']);
-//            $inventario['hliderDia'] = $local2->llegadaSugeridaLiderDia();
-//            $inventario['hliderNoche'] = $local2->llegadaSugeridaLiderNoche();
-//            $inventario['hequipoDia'] = $local2->llegadaSugeridaPersonalDia();
-//            $inventario['hequipoNoche'] = $local2->llegadaSugeridaPersonalNoche();
-
             return $inventario;
         }, $inventarios->toArray());
 
         return response()->json($inventariosMod, 200);
+    }
+
+    // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}
+    function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
+        $inventarios = Inventarios::with([
+            'local.cliente',
+            'local.formatoLocal',
+            'local.direccion.comuna.provincia.region',
+            'nominaDia',
+            'nominaNoche'
+        ])
+        ->where('fechaProgramada', '>=', $annoMesDia1)
+        ->where('fechaProgramada', '<=', $annoMesDia2)
+        ->get();
+        $inventariosArray = $inventarios->toArray();
+
+        if($idCliente==0){
+            // No se realiza un filtro por clientes
+            return response()->json($inventariosArray, 200);
+        }
+        else{
+            // Se filtran por cliente
+            $inventariosDelCliente = array_filter($inventariosArray, function($inventario) use($idCliente){
+                $idClienteinventario = $inventario['local']['idCliente'];
+                return $idCliente===$idClienteinventario;
+            });
+
+            // TODO CRITICO: metodo wn esta retornando un objeto, no un array, no utiliza este metodo hasta que este listo
+            //return response()->json($inventariosDelCliente, 200);
+            return json_encode($inventariosDelCliente);
+        }
     }
 
 }
