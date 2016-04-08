@@ -77,6 +77,16 @@ Route::group(['middleware' => ['web']], function (){
     Route::get('nominas',               function(){return view('operacional.nominas.nominas-index');});
     Route::get('nomFinales',            function(){return view('operacional.nominasFinales.nominasFinales-index');});
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Gestión de Auditorias
+    |--------------------------------------------------------------------------
+    |*/
+    Route::post('api/auditoria/nuevo',                 'AuditoriasController@api_nuevo');
+    Route::get('api/auditoria/mes/{annoMesDia}',       'AuditoriasController@api_getPorMes');
+    Route::put('api/auditoria/{idAuditoria}',             'AuditoriasController@api_actualizar');
+
     /*
     |--------------------------------------------------------------------------
     | Gestion de Personal

@@ -47,9 +47,20 @@ export default {
             return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)
         }
     },
-    nomina: {
-        actualizar: (idNomina, datos)=>{
-            return axios.put(`/api/nomina/${idNomina}`, datos)
+    auditoria: {
+        nuevo: (datos)=>{
+            return axios.post(`/api/auditoria/nuevo`, datos)
         },
+        getPorMes: (annoMesDia)=> {
+            return axios.get(`/api/auditoria/mes/${annoMesDia}`)
+        },
+        actualizar: (idAuditoria, datos)=>{
+            return axios.put(`/api/auditoria/${idAuditoria}`, datos)
+        },
+    },
+    nomina: {
+        actualizar: (idInventario, datos)=>{
+            return axios.put(`/api/inventario/${idInventario}`, datos)
+        }
     }
 }

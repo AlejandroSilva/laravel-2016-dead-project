@@ -6,7 +6,7 @@ export default class BlackBox{
         this.lista = []
         this.filtroClientes = []
         this.filtroRegiones = []
-        this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
+        this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idAuditoria no ha sido fijado
     }
     // Todo Modificar
     reset(){
@@ -93,7 +93,7 @@ export default class BlackBox{
         }, listaFiltrada1)
 
         return {
-            inventariosFiltrados: listaFiltrada2,
+            auditoriasFiltradas: listaFiltrada2,
             filtroClientes: this.filtroClientes,
             filtroRegiones: this.filtroRegiones
         }
@@ -133,7 +133,7 @@ export default class BlackBox{
         let listaDiaFIjadoOrdenado = R.sort(orderByFechaProgramadaStock, listaDiaFijado)
 
         return {
-            inventariosFiltrados: [
+            auditoriasFiltradas: [
                 ...listaDiaNoFijado,
                 ...listaDiaFIjadoOrdenado
             ],
@@ -142,6 +142,7 @@ export default class BlackBox{
         }
     }
     ordenarLista(){
+        console.log('ordenando lista por fecha')
         let orderByFechaProgramadaStock = (a,b)=>{
             // si se parsea la fecha sin dia (EJ. 2016-01-00) resulta un 'Invalid Date'
 
@@ -174,13 +175,9 @@ export default class BlackBox{
     __crearDummy(annoMesDia, idLocal){
         return {
             idDummy: this.idDummy++,    // asignar e incrementar
-            idInventario: null,
+            idAuditoria: null,
             idLocal: idLocal,
-            idJornada: null,
             fechaProgramada: annoMesDia,
-            horaLlegada: null,
-            stockTeorico: 0,
-            dotacionAsignada: null,
             local: {
                 idLocal: idLocal,
                 idJornadaSugerida: 4, // no definida
@@ -188,14 +185,18 @@ export default class BlackBox{
                 numero: '-',
                 stock: 0,
                 fechaStock: 'YYYY-MM-DD',
-                formato_local: {
-                    produccionSugerida: 0
+                direccion: {
+                    comuna: {
+                        provincia:{
+                            region:{
+                                numero: ''
+                            }
+                        }
+                    }
                 },
-                nombreCliente: '-',
-                nombreComuna: '-',
-                nombreProvincia: '-',
-                nombreRegion: '-',
-                dotacionSugerida: 0
+                cliente: {
+                    nombreCorto: ''
+                }
             }
         }
     }
@@ -261,9 +262,9 @@ export default class BlackBox{
         this.actualizarFiltros()
     }
     // Todo modificar el listado de clientes
-    actualizarDatosInventario(formInventario, inventarioActualizado){
+    actualizarDatosAuditoria(idDummy, inventarioActualizado){
         this.lista = this.lista.map(inventario=> {
-            if (inventario.idDummy == formInventario.idDummy) {
+            if (inventario.idDummy == idDummy) {
                 inventario = Object.assign(inventario, inventarioActualizado)
             }
             return inventario

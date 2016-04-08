@@ -1,7 +1,7 @@
 // Libs
 import React from 'react'
 // Styles
-import style from './AgregarPrograma.css'
+import * as style from './AgregarAuditoria.css'
 
 class AgregarPrograma extends React.Component {
     constructor(props) {
@@ -69,7 +69,7 @@ class AgregarPrograma extends React.Component {
         let annoMesDia = this.inputAnnoMesDia.value
 
         this.inputNumeroLocal.value = ''
-        let [errores, objeto] = this.props.agregarInventario(idCliente, numeroLocal, annoMesDia)
+        let [errores, objeto] = this.props.agregarAuditoria(idCliente, numeroLocal, annoMesDia)
         this.setState({
             errores: errores || {}
         })
@@ -133,9 +133,10 @@ class AgregarPrograma extends React.Component {
 
     render(){
         return <div className="form">
-            <div className="row">
+            {/*<div className="row">
                 <h4 className="page-header" style={{marginTop: '1em'}}>Agregar locales a la programación:</h4>
             </div>
+            */}
             <div className="row" style={{marginBottom: '1em'}}>
                 <div className='col-sm-offset-4 col-sm-3'>
                     <button type="button" className={'btn btn-sm btn-default '+(this.state.modoIngreso==='manual'? 'active':'')} onClick={this.setModoIngreso.bind(this, 'manual')}>Manualmente</button>
@@ -249,7 +250,7 @@ AgregarPrograma.propTypes = {
     clientes: React.PropTypes.array.isRequired,
     meses: React.PropTypes.array.isRequired,
     // Metodos
-    agregarInventario: React.PropTypes.func.isRequired,
+    agregarAuditoria: React.PropTypes.func.isRequired,
     agregarGrupoInventarios: React.PropTypes.func.isRequired,
     onSeleccionarMes: React.PropTypes.func.isRequired
 }

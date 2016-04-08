@@ -16,5 +16,7 @@
             console.error('no se recibieron datos de clientes desde la vista');
             window.laravelClientes = [];
         @endif
+
+        window.laravelAuditores = {!! $auditores !!};
     </script>
 @stop

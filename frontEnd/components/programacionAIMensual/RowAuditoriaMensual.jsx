@@ -4,59 +4,60 @@ import moment from 'moment'
 moment.locale('es')
 
 // Componentes
-import Tooltip from 'react-bootstrap/lib/Tooltip'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+// import Tooltip from 'react-bootstrap/lib/Tooltip'
+// import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+import Select from './Select.jsx'
 
 // Styles
-import * as cssTabla from './TablaMensual.css'
+import * as cssTabla from './TablaMensualAI.css'
 import * as cssInput from './Inputs.css'
 
-class RowInventarioMensual extends React.Component{
+class RowAuditoriaMensual extends React.Component{
     constructor(props){
         super(props)
         this.state = {
             inputDia: 0,
             inputMes: 0,
             inputAnno: 0,
-            inputDotacion: 0,
-            selectJornada: 4,
+            // inputDotacion: 0,
+            // selectJornada: 4,
             diaValido: this._diaValido(0),
             mesValido: this._mesValido(0),
-            dotacionValida: this._dotacionValida(0)
+            // dotacionValida: this._dotacionValida(0)
         }
         // Refs disponibles: this.inputDia, this.inputDotacion
     }
 
     componentWillMount(){
         // al montar el componente, fijas su state "inicial"
-        let [anno, mes, dia] = this.props.inventario.fechaProgramada.split('-')
-        let dotacionSugerida = this.props.inventario.local.dotacionSugerida
-        let dotacionAsignadaTotal = this.props.inventario.dotacionAsignadaTotal
-        let jornadaInventario = this.props.inventario.idJornada
-        let jornadaLocal = this.props.inventario.local.idJornadaSugerida
+        let [anno, mes, dia] = this.props.auditoria.fechaProgramada.split('-')
+        // let dotacionSugerida = this.props.auditoria.local.dotacionSugerida
+        // let dotacionAsignadaTotal = this.props.auditoria.dotacionAsignadaTotal
+        // let jornadaInventario = this.props.auditoria.idJornada
+        // let jornadaLocal = this.props.auditoria.local.idJornadaSugerida
         this.setState({
             inputDia: dia,
             inputMes: mes,
             inputAnno: anno,
-            inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
-            selectJornada: jornadaInventario || jornadaLocal,
+            // inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
+            // selectJornada: jornadaInventario || jornadaLocal,
             diaValido: this._diaValido(dia),
             mesValido: this._mesValido(mes),
-            dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
+            // dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
         })
     }
 
     componentWillReceiveProps(nextProps){
 /*
-        let mismoInventario = this.props.inventario.idDummy===nextProps.inventario.idDummy
+        let mismoInventario = this.props.auditoria.idDummy===nextProps.inventario.idDummy
         if(mismoInventario){
-            //if(this.props.inventario.idDummy==9) console.log("actualizando componente 9", this.props.inventario.fechaProgramada, nextProps.inventario.fechaProgramada)
-            //console.log("nuevas props para ", this.props.inventario.idDummy)
+            //if(this.props.auditoria.idDummy==9) console.log("actualizando componente 9", this.props.auditoria.fechaProgramada, nextProps.inventario.fechaProgramada)
+            //console.log("nuevas props para ", this.props.auditoria.idDummy)
 
             // Si es el mismo inventario, se revisa si se han actualizado los datos (y se reemplaza el state actual del usuario)
 
             // se recibio una nueva fecha?
-            //let [anno1, mes1, dia1] = this.props.inventario.fechaProgramada.split('-')
+            //let [anno1, mes1, dia1] = this.props.auditoria.fechaProgramada.split('-')
             let [anno2, mes2, dia2] = nextProps.inventario.fechaProgramada.split('-')
             this.setState({
                 inputDia: dia2, inputMes: mes2, inputAnno: anno2,
@@ -64,7 +65,7 @@ class RowInventarioMensual extends React.Component{
             })
 
             // se recibio una nueva dotacion?
-            //let dotacion1 = this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida
+            //let dotacion1 = this.props.auditoria.dotacionAsignadaTotal || this.props.auditoria.local.dotacionSugerida
             let dotacion2 = nextProps.inventario.dotacionAsignadaTotal || nextProps.inventario.local.dotacionSugerida
 
             //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
@@ -72,27 +73,27 @@ class RowInventarioMensual extends React.Component{
 
 
             // se recibio una nueva jornada?
-            //let jornada1 = this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida
+            //let jornada1 = this.props.auditoria.idJornada || this.props.auditoria.local.idJornadaSugerida
             let jornada2 = nextProps.inventario.idJornada || nextProps.inventario.local.idJornadaSugerida
             this.setState({selectJornada: jornada2})
 
         }else{
 */
             // Si el inventario cambio, se vuelven a poner los valores "por defecto"
-            let [anno, mes, dia] = nextProps.inventario.fechaProgramada.split('-')
-            let dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal
-            let dotacionSugerida = nextProps.inventario.local.dotacionSugerida
-            let jornadaInventario = nextProps.inventario.idJornada
-            let jornadaLocal = nextProps.inventario.local.idJornadaSugerida
+            let [anno, mes, dia] = nextProps.auditoria.fechaProgramada.split('-')
+            // let dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal
+            // let dotacionSugerida = nextProps.inventario.local.dotacionSugerida
+            // let jornadaInventario = nextProps.inventario.idJornada
+            // let jornadaLocal = nextProps.inventario.local.idJornadaSugerida
             this.setState({
                 inputDia: dia,
                 inputMes: mes,
                 inputAnno: anno,
-                inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
-                selectJornada: jornadaInventario || jornadaLocal,
+                // inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
+                // selectJornada: jornadaInventario || jornadaLocal,
                 diaValido: this._diaValido(dia),
                 mesValido: this._mesValido(mes),
-                dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
+                // dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
             })
 /*        }*/
     }
@@ -100,9 +101,10 @@ class RowInventarioMensual extends React.Component{
     focusElemento(elemento){
         if(elemento==='dia'){
             this.inputDia.focus()
-        }else if(elemento==='dotacion'){
-            this.inputDotacion.focus()
         }
+        // else if(elemento==='dotacion'){
+        //     this.inputDotacion.focus()
+        // }
     }
     inputOnKeyDown(elemento, evt){
         if((evt.keyCode===9 && evt.shiftKey===false) || evt.keyCode===40 || evt.keyCode===13){
@@ -131,78 +133,76 @@ class RowInventarioMensual extends React.Component{
             mesValido: this._mesValido(mes)
         })
     }
-    onInputDotacionChange(evt){
-        let dotacion = evt.target.value
-        this.setState({
-            inputDotacion: dotacion,
-            dotacionValida: this._dotacionValida(dotacion)
-        })
-    }
-    onSelectJornadaChange(evt){
-        let jornada = evt.target.value
-        this.setState({selectJornada: jornada}, ()=>{
-            this.guardarOCrear()
-        })
-    }
+    // onInputDotacionChange(evt){
+    //     let dotacion = evt.target.value
+    //     this.setState({
+    //         inputDotacion: dotacion,
+    //         dotacionValida: this._dotacionValida(dotacion)
+    //     })
+    // }
+    // onSelectJornadaChange(evt){
+    //     let jornada = evt.target.value
+    //     this.setState({selectJornada: jornada}, ()=>{
+    //         this.guardarAuditoria()
+    //     })
+    // }
 
     _diaValido(dia){
         return dia>0 && dia<32
     }
     _mesValido(mes){
-        console.log(mes, mes>=1, mes<=12)
         return mes>=1 && mes<=12
     }
-    _dotacionValida(dotacion){
-        return dotacion>0
-    }
+    // _dotacionValida(dotacion){
+    //     return dotacion>0
+    // }
     isDirty(){
-        let [anno, mes, dia] = this.props.inventario.fechaProgramada.split('-')
+        let [anno, mes, dia] = this.props.auditoria.fechaProgramada.split('-')
         let isDirty = (
             this.state.inputDia!=dia ||
-            this.state.inputMes!=mes ||
-            this.state.inputDotacion!=(this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) ||
-            this.state.selectJornada!=(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida)
+            this.state.inputMes!=mes
+            // this.state.inputDotacion!=(this.props.auditoria.dotacionAsignadaTotal || this.props.auditoria.local.dotacionSugerida) ||
+            // this.state.selectJornada!=(this.props.auditoria.idJornada || this.props.auditoria.local.idJornadaSugerida)
         )
         console.log("isDirty ", isDirty)
         return isDirty
     }
-    guardarOCrear(){
-        // si no es dirty (no hay cambios) no se hace nada
-        if(this.isDirty()===false)
-            return
+    guardarAuditoria(){
+        let cambiosAuditoria = {}
 
-        let dotacion = this.state.inputDotacion
-        let jornada = this.state.selectJornada
-        let anno = this.state.inputAnno
-        let mes = this.state.inputMes
-        let dia = this.state.inputDia
+        // la FECHA es valida y ha cambiado?
+        console.log(this.state.diaValido, this.state.mesValido, this.isDirty())
+        if(this.state.diaValido && this.state.mesValido && this.isDirty()) {
+            let anno = this.state.inputAnno
+            let mes = this.state.inputMes
+            let dia = this.state.inputDia
+            cambiosAuditoria.fechaProgramada = `${anno}-${mes}-${dia}`
+        }
 
-        if(this.state.diaValido && this.state.mesValido && this.state.dotacionValida){
-            let fecha = `${anno}-${mes}-${dia}`
+        // el AUDITOR ha cambiado?
+        let estadoSelectAuditor = this.selectAuditor.getEstado()
+        if(estadoSelectAuditor.dirty)
+            cambiosAuditoria.idAuditor = estadoSelectAuditor.seleccionUsuario
 
-            this.props.guardarOCrearInventario({
-                idInventario: this.props.inventario.idInventario,
-                idDummy: this.props.inventario.idDummy,
-                idLocal: this.props.inventario.local.idLocal,
-                idJornada: jornada,
-                fechaProgramada: fecha,
-                //horaLlegada: this.props.inventario.horaLlegada || this.props.inventario.local.horaLlegadaSugerida,
-                stockTeorico: this.props.inventario.local.stock,
-                dotacionAsignadaTotal: dotacion
-            })
+        // almenos uno de los ementos debe estar "dirty" para guardar los cambios
+        if(JSON.stringify(cambiosAuditoria)!=='{}'){
+            console.log('cambiosAuditoria ', cambiosAuditoria)
+            this.props.actualizarAuditoria(this.props.auditoria.idAuditoria, cambiosAuditoria, this.props.auditoria.idDummy)
         }else{
-            console.log('datos invalidos')
+            console.log('auditoria sin cambios, no se actualiza')
         }
     }
     quitarInventario(){
-        this.props.quitarInventario(this.props.inventario.idDummy)
+        this.props.quitarInventario(this.props.auditoria.idDummy)
     }
 
     render(){
-        let nombreCliente = this.props.inventario.local.nombreCliente || this.props.inventario.local.cliente.nombreCorto
-        let nombreRegion = this.props.inventario.local.nombreRegion || this.props.inventario.local.direccion.comuna.provincia.region.numero
-        let nombreComuna = this.props.inventario.local.nombreComuna || this.props.inventario.local.direccion.comuna.nombre
-        let diaSemana = moment(this.props.inventario.fechaProgramada).format('dddd')
+        let diaSemana = moment(this.props.auditoria.fechaProgramada).format('dddd')
+        const auditores = this.props.auditores.map(usuario=>{
+            return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
+        })
+
+
         return (
             <tr className={this.props.mostrarSeparador? cssTabla.trSeparador: ''}>
                 {/* Correlativo */}
@@ -219,7 +219,7 @@ class RowInventarioMensual extends React.Component{
                                value={this.state.inputDia}
                                onChange={this.onInputDiaChange.bind(this)}
                                onKeyDown={this.inputOnKeyDown.bind(this, 'dia')}
-                               onBlur={this.guardarOCrear.bind(this)}
+                               onBlur={this.guardarAuditoria.bind(this)}
                                onFocus={()=>{this.inputDia.select()}}
                         />
                         <input className={cssInput.inputMes} type="number" disabled
@@ -233,50 +233,66 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* Cliente*/}
                 <td className={cssTabla.tdCliente}>
-                    <p><small>{ nombreCliente }</small></p>
+                    <p><small>{this.props.auditoria.local.cliente.nombreCorto}</small></p>
                 </td>
                 {/* CECO */}
                 <td className={cssTabla.tdCeco}>
-                    <p><small><b>{this.props.inventario.local.numero}</b></small></p>
+                    <p><small><b>{this.props.auditoria.local.numero}</b></small></p>
                 </td>
                 {/* Local */}
                 <td className={cssTabla.tdLocal}>
-                    <p><small><b>{this.props.inventario.local.nombre}</b></small></p>
+                    <p><small><b>{this.props.auditoria.local.nombre}</b></small></p>
                 </td>
                 {/* Region*/}
                 <td className={cssTabla.tdRegion}>
-                    <p style={{margin:0}}><small>{ nombreRegion }</small></p>
+                    <p style={{margin:0}}><small>{ this.props.auditoria.local.direccion.comuna.provincia.region.numero }</small></p>
                 </td>
                 {/* Comuna */}
                 <td className={cssTabla.tdComuna}>
-                    <p style={{margin:0}}><b><small>{ nombreComuna }</small></b></p>
+                    <p style={{margin:0}}><b><small>{ this.props.auditoria.local.direccion.comuna.nombre }</small></b></p>
                 </td>
+                {/* Auditor */}
+                <td className={cssTabla.tdLider}>
+                    <Select
+                            ref={ref=>this.selectAuditor=ref}
+                            seleccionada={ this.props.auditoria.idAuditor || ''}
+                            onSelect={this.guardarAuditoria.bind(this)}
+                            opciones={auditores}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
+                    />
+                </td>
+                            
                 {/* Stock */}
+                {/*
                 <td className={cssTabla.tdStock}>
                     <OverlayTrigger
                         placement="left"
                         delay={0}
-                        overlay={<Tooltip id="yyy">{'Stock al '+(this.props.inventario.fechaStock)}</Tooltip>}>
-                        <p><small>{numeral(this.props.inventario.stockTeorico).format('0,0')}</small></p>
+                        overlay={<Tooltip id="yyy">{'Stock al '+(this.props.auditoria.fechaStock)}</Tooltip>}>
+                        <p><small>{numeral(this.props.auditoria.stockTeorico).format('0,0')}</small></p>
 
                     </OverlayTrigger>
                 </td>
+                 */}
                 {/* Dotación */}
+                {/*
                 <td className={cssTabla.tdDotacion}>
                     <OverlayTrigger
                         placement="right"
                         delay={0}
-                        overlay={<Tooltip id="yyy">{'Produción '+this.props.inventario.local.formato_local.produccionSugerida}</Tooltip>}>
+                        overlay={<Tooltip id="yyy">{'Produción '+this.props.auditoria.local.formato_local.produccionSugerida}</Tooltip>}>
 
                         <input className={this.state.dotacionValida? cssInput.inputDotacion : cssInput.inputDotacionInvalida } type="number"
                                value={this.state.inputDotacion}
                                onChange={this.onInputDotacionChange.bind(this)}
                                ref={ref=>this.inputDotacion=ref}
                                onKeyDown={this.inputOnKeyDown.bind(this, 'dotacion')}
-                               onBlur={this.guardarOCrear.bind(this)}/>
+                               onBlur={this.guardarAuditoria.bind(this)}/>
 
                     </OverlayTrigger>
                 </td>
+                 */}
                 {/* Jornada */}
                 {/*
                 <td className={cssTabla.tdJornada}>
@@ -291,11 +307,12 @@ class RowInventarioMensual extends React.Component{
                 {/* Opciones    */}
                 <td className={cssTabla.tdOpciones}>
                     {
-                        this.props.inventario.idInventario
+                        this.props.auditoria.idAuditoria
                         ? <button className="btn btn-xs btn-primary"
                                   tabIndex="-1"
                                   onClick={()=>{ alert("PEND: eliminar inventario") } }
-                        >Eliminar inventario</button>
+                                  disabled
+                        >Eliminar auditoria</button>
                         : <button className="btn btn-xs btn-danger"
                                   tabIndex="-1"
                                   onClick={this.quitarInventario.bind(this)}
@@ -307,19 +324,20 @@ class RowInventarioMensual extends React.Component{
     }
 }
 
-RowInventarioMensual.propTypes = {
+RowAuditoriaMensual.propTypes = {
     // Objetos
     index: React.PropTypes.number.isRequired,
-    inventario: React.PropTypes.object.isRequired,
+    auditoria: React.PropTypes.object.isRequired,
     mostrarSeparador: React.PropTypes.bool.isRequired,
+    auditores: React.PropTypes.array.isRequired,
     // Metodos
     focusFilaSiguiente: React.PropTypes.func.isRequired,
     focusFilaAnterior: React.PropTypes.func.isRequired,
-    guardarOCrearInventario: React.PropTypes.func.isRequired,
+    actualizarAuditoria: React.PropTypes.func.isRequired,
     quitarInventario: React.PropTypes.func.isRequired
 }
-RowInventarioMensual.defaultProps = {
+RowAuditoriaMensual.defaultProps = {
     mostrarSeparador: false
 }
 
-export default RowInventarioMensual
+export default RowAuditoriaMensual

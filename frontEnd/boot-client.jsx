@@ -42,6 +42,7 @@ if( programacionAIMensualDOM ){
     ReactDOM.render(
         <ProgramacionAIMensual
             clientes={window.laravelClientes}
+            auditores={window.laravelAuditores}
         />, programacionAIMensualDOM)
 }
 let programacionAISemanalDOM = document.getElementById('react-programacionAI-semanal')

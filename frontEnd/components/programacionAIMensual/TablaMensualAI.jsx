@@ -5,13 +5,13 @@ import moment from 'moment'
 import Sticky from '../shared/react-sticky/sticky.js'
 import StickyContainer from '../shared/react-sticky/container.js'
 import TableHeader from './TableHeader.jsx'
-import RowInventario from './RowInventarioMensual.jsx'
+import RowAuditoriaMensual from './RowAuditoriaMensual.jsx'
 
 // Styles
 //import sharedStyles from '../shared/shared.css'
-import * as css from './TablaMensual.css'
+import * as css from './TablaMensualAI.css'
 
-class TablaMensual extends React.Component{
+class TablaMensualAI extends React.Component{
     constructor(props){
         super(props)
         // referencia a todos las entradas de fecha de los inventarios
@@ -49,7 +49,7 @@ class TablaMensual extends React.Component{
                             <th className={css.thFecha}>
                                 Fecha
                                 <span className={'glyphicon glyphicon-sort-by-attributes pull-right'}
-                                      onClick={ this.props.ordenarInventarios }
+                                      onClick={ this.props.ordenarAuditorias }
                                 />
                                 {/*<span className={'glyphicon glyphicon-sort-by-attributes-alt pull-right'}></span>*/}
                             </th>
@@ -68,8 +68,9 @@ class TablaMensual extends React.Component{
                                 />
                             </th>
                             <th className={css.thComuna}>Comuna</th>
-                            <th className={css.thStock}>Stock</th>
-                            <th className={css.thDotacion}>Dot.Total</th>
+                            <th className={css.thLider}>Auditor</th>
+                            {/*<th className={css.thStock}>Stock</th>*/}
+                            {/*<th className={css.thDotacion}>Dot.Total</th>*/}
                             {/*<th className={css.thJornada}>Jornada</th>*/}
                             {/*<th className={css.thEstado}>Estado</th>*/}
                             <th className={css.thOpciones}>Opciones</th>
@@ -77,23 +78,24 @@ class TablaMensual extends React.Component{
                     </thead>
                     <tbody>
                     {}
-                    {this.props.inventariosFiltrados.length===0
+                    {this.props.auditoriasFiltradas.length===0
                         ? <tr><td colSpan="10" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
-                        : this.props.inventariosFiltrados.map((inventario, index)=>{
+                        : this.props.auditoriasFiltradas.map((auditoria, index)=>{
                             let mostrarSeparador = false
-                            let sgteInventario = this.props.inventariosFiltrados[index+1]
-                            if(sgteInventario)
-                                mostrarSeparador = inventario.fechaProgramada!==sgteInventario.fechaProgramada
-                            return <RowInventario
+                            let sgteAuditoria = this.props.auditoriasFiltradas[index+1]
+                            if(sgteAuditoria)
+                                mostrarSeparador = auditoria.fechaProgramada!==sgteAuditoria.fechaProgramada
+                            return <RowAuditoriaMensual
                                 // Propiedades
                                 key={index}
                                 index={index}
-                                inventario={inventario}
+                                auditoria={auditoria}
                                 mostrarSeparador={mostrarSeparador}
+                                auditores={this.props.auditores}
                                 // Metodos
                                 focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
                                 focusFilaAnterior={this.focusFilaAnterior.bind(this)}
-                                guardarOCrearInventario={this.props.guardarOCrearInventario}
+                                actualizarAuditoria={this.props.actualizarAuditoria}
                                 quitarInventario={this.props.quitarInventario}
                                 //guardarOCrear={this.guardarOCrear.bind(this)}
                                 ref={ref=>this.inputFecha[index]=ref}
@@ -107,15 +109,16 @@ class TablaMensual extends React.Component{
         )
     }
 }
-TablaMensual.propTypes = {
+TablaMensualAI.propTypes = {
     // Objetos
-    inventariosFiltrados: React.PropTypes.array.isRequired,
+    auditoriasFiltradas: React.PropTypes.array.isRequired,
+    auditores: React.PropTypes.array.isRequired,
     filtroClientes: React.PropTypes.array.isRequired,
     filtroRegiones: React.PropTypes.array.isRequired,
     // Metodos
     actualizarFiltro: React.PropTypes.func.isRequired,
-    guardarOCrearInventario: React.PropTypes.func.isRequired,
+    actualizarAuditoria: React.PropTypes.func.isRequired,
     quitarInventario: React.PropTypes.func.isRequired,
-    ordenarInventarios: React.PropTypes.func.isRequired
+    ordenarAuditorias: React.PropTypes.func.isRequired
 }
-export default TablaMensual
+export default TablaMensualAI

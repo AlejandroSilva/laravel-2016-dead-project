@@ -3,13 +3,13 @@ import React from 'react'
 import moment from 'moment'
 moment.locale('es')
 import api from '../../apiClient/v1'
-import BlackBoxMensual from './BlackBoxMensual.js'
+import BlackBoxMensualAI from './BlackBoxMensualAI.js'
 
 // Component
 //import Multiselect from 'react-widgets/lib/Multiselect'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import TablaMensual from './TablaMensual.jsx'
-import AgregarPrograma from './AgregarPrograma.jsx'
+import TablaMensualAI from './TablaMensualAI.jsx'
+import AgregarAuditoria from './AgregarAuditoria.jsx'
 
 class ProgramacionMensualAI extends React.Component{
     constructor(props) {
@@ -25,13 +25,13 @@ class ProgramacionMensualAI extends React.Component{
         }
         this.state = {
             mesSeleccionado: '2016-01-00',
-            inventariosFiltrados: [],
+            auditoriasFiltradas: [],
             filtroClientes: [],
             filtroRegiones: [],
             meses
         }
         // MAGIA NEGRA!!
-        this.blackbox = new BlackBoxMensual(this.props.clientes)
+        this.blackbox = new BlackBoxMensualAI(this.props.clientes)
     }
 
     onSeleccionarMes(annoMesDia){
@@ -41,16 +41,16 @@ class ProgramacionMensualAI extends React.Component{
         })
         // obtener todos los inventarios realizados en el mes seleccionado
 
-        api.inventario.getPorMes(annoMesDia)
-            .then(inventarios=>{
+        api.auditoria.getPorMes(annoMesDia)
+            .then(auditorias=>{
                 this.blackbox.reset()
-                inventarios.forEach(inventario=>{
+                auditorias.forEach(auditoria=>{
                     // crear un dummy
-                    let nuevoInventario = this.blackbox.__crearDummy(annoMesDia, inventario.idLocal )
-                    this.blackbox.addFinal(nuevoInventario)
+                    let auditoriaDummy = this.blackbox.__crearDummy(annoMesDia, auditoria.idLocal )
+                    this.blackbox.addFinal(auditoriaDummy)
 
-                    // actualizar los datos del inventario
-                    this.blackbox.actualizarDatosInventario(nuevoInventario, inventario)
+                    // actualizar los datos del auditoria
+                    this.blackbox.actualizarDatosAuditoria(auditoriaDummy.idDummy, auditoria)
                 })
                 // actualizar los filtros, y la lista ordenada de locales
                 this.blackbox.ordenarLista()
@@ -59,19 +59,17 @@ class ProgramacionMensualAI extends React.Component{
             //.catch(err=>console.error('error: ', err))
     }
 
-    crearGrupoInventarios(nuevosInventarios){
+    crearGrupoInventarios(nuevasAuditorias){
         let promesasFetch = []
-        nuevosInventarios.forEach(nuevoInventario=> {
+        nuevasAuditorias.forEach(nuevaAuditoria=> {
             // crear todos los locales (y sus nominas)
             promesasFetch.push(
-                api.inventario.nuevo({
-                        idLocal: nuevoInventario.idLocal,
+                api.auditoria.nuevo({
+                        idLocal: nuevaAuditoria.idLocal,
                         fechaProgramada: this.state.mesSeleccionado
                     })
-                    .then(inventarioCreado=>{
-                        this.blackbox.actualizarDatosInventario({
-                            idDummy: nuevoInventario.idDummy
-                        }, inventarioCreado)
+                    .then(auditoriaCreada=>{
+                        this.blackbox.actualizarDatosAuditoria(nuevaAuditoria.idDummy, auditoriaCreada)
                         // actualizar los datos y el state de la app
                         // actualizar los filtros, y la lista ordenada de locales
                         // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
@@ -95,27 +93,25 @@ class ProgramacionMensualAI extends React.Component{
             })
     }
 
-    agregarInventario(idCliente, numeroLocal, annoMesDia){
-        let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, numeroLocal, annoMesDia)
+    agregarAuditoria(idCliente, numeroLocal, annoMesDia){
+        let [errores, auditoriaDummy] = this.blackbox.crearDummy(idCliente, numeroLocal, annoMesDia)
         if(errores)
             return [errores, {}]
 
         // agregar al listado
-        this.blackbox.addNuevo(nuevoInventario)
+        this.blackbox.addNuevo(auditoriaDummy)
 
         // actualizar la vista de la lista
         // actualizar los filtros, y la lista ordenada de locales
         this.setState(this.blackbox.getListaFiltrada())
 
         // cuando se agregar un inventario, se crea automaticamente (junto a su nomina)
-        api.inventario.nuevo({
-            idLocal: nuevoInventario.local.idLocal,
+        api.auditoria.nuevo({
+            idLocal: auditoriaDummy.local.idLocal,
             fechaProgramada: this.state.mesSeleccionado
         })
-            .then(inventarioCreado=>{
-                this.blackbox.actualizarDatosInventario({
-                    idDummy: nuevoInventario.idDummy
-                }, inventarioCreado)
+            .then(auditoriaCreada=>{
+                this.blackbox.actualizarDatosAuditoria(auditoriaDummy.idDummy, auditoriaCreada)
                 // actualizar los datos y el state de la app
                 // actualizar los filtros, y la lista ordenada de locales
                 // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
@@ -155,40 +151,16 @@ class ProgramacionMensualAI extends React.Component{
         }
     }
 
-    guardarOCrearInventario(formInventario){
-        // Nota: agregarInventario() y fetchLocales() siempre crean el inventario y sus nominas, por lo que el metodo
-        // api.inventario.nuevo() de abajo nunca deberia ser llamado.
-
-        if(formInventario.idInventario){
-            // Actualizar los datos del inventario
-            api.inventario.actualizar(formInventario.idInventario, {
-                    idInventario: formInventario.idInventario,
-                    fechaProgramada: formInventario.fechaProgramada,
-                    dotacionAsignadaTotal: formInventario.dotacionAsignadaTotal,
-                    idJornada: formInventario.idJornada,
-                })
-                .then(inventarioActualizado=>{
-                    console.log('inventario actualizado correctamente')
-                    // actualizar los datos y el state de la app
-                    this.blackbox.actualizarDatosInventario(formInventario, inventarioActualizado)
-                    // actualizar los filtros, y la lista ordenada de locales
-                    this.setState(this.blackbox.getListaFiltrada())
-                })
-        }else{
-            // Crear los datos del inventario en el servidor (quitar todos los campos que no interesan)
-            api.inventario.nuevo({
-                idLocal: formInventario.idLocal,
-                //idJornada: formInventario.idJornada,      // deja que tome la jornada por defecto
-                fechaProgramada: formInventario.fechaProgramada
+    actualizarAuditoria(idAuditoria, formAuditoria, idDummy){
+        // Actualizar los datos del inventario
+        api.auditoria.actualizar(idAuditoria, formAuditoria)
+            .then(auditoriaActualizada=>{
+                console.log('inventario actualizado correctamente')
+                // actualizar los datos y el state de la app
+                this.blackbox.actualizarDatosAuditoria(idDummy, auditoriaActualizada)
+                // actualizar los filtros, y la lista ordenada de locales
+                this.setState(this.blackbox.getListaFiltrada())
             })
-                .then(inventarioCreado=>{
-                    this.blackbox.actualizarDatosInventario(formInventario, inventarioCreado)
-                    // actualizar los datos y el state de la app
-                    // actualizar los filtros, y la lista ordenada de locales
-                    // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
-                    this.setState(this.blackbox.getListaFiltrada())
-                })
-        }
     }
 
     quitarInventario(idDummy){
@@ -197,7 +169,7 @@ class ProgramacionMensualAI extends React.Component{
         this.setState(this.blackbox.getListaFiltrada())
     }
 
-    ordenarInventarios(){
+    ordenarAuditorias(){
         this.blackbox.ordenarLista()
         this.setState( this.blackbox.getListaFiltrada() )
     }
@@ -223,29 +195,29 @@ class ProgramacionMensualAI extends React.Component{
             <div>
                 <h1>Programación mensual AI</h1>
 
-                <AgregarPrograma
+                <AgregarAuditoria
                     clientes={this.props.clientes}
                     meses={this.state.meses}
-                    agregarInventario={this.agregarInventario.bind(this)}
+                    agregarAuditoria={this.agregarAuditoria.bind(this)}
                     agregarGrupoInventarios={this.agregarGrupoInventarios.bind(this)}
                     onSeleccionarMes={this.onSeleccionarMes.bind(this)}
                 />
 
                 <div className="row">
                     <h4 className="page-header" style={{marginTop: '1em'}}>
-                        Locales a programar:
-                        <a className="btn btn-success btn-xs pull-right"
+                        {/*<a className="btn btn-success btn-xs pull-right"
                             href={`/programacionAI/mensual/pdf/${this.state.mesSeleccionado}`}
-                        >Exportar</a>
+                        >Exportar</a>*/}
                     </h4>
-                    <TablaMensual
-                        inventariosFiltrados={this.state.inventariosFiltrados}
+                    <TablaMensualAI
+                        auditoriasFiltradas={this.state.auditoriasFiltradas}
+                        auditores={this.props.auditores}
                         filtroClientes={this.state.filtroClientes}
                         filtroRegiones={this.state.filtroRegiones}
                         actualizarFiltro={this.actualizarFiltro.bind(this)}
-                        guardarOCrearInventario={this.guardarOCrearInventario.bind(this)}
+                        actualizarAuditoria={this.actualizarAuditoria.bind(this)}
                         quitarInventario={this.quitarInventario.bind(this)}
-                        ordenarInventarios={this.ordenarInventarios.bind(this)}
+                        ordenarAuditorias={this.ordenarAuditorias.bind(this)}
                         //ref={ref=>this.TablaInventarios=ref}
                     />
                 </div>
@@ -255,7 +227,8 @@ class ProgramacionMensualAI extends React.Component{
 }
 
 ProgramacionMensualAI.propTypes = {
-    clientes: React.PropTypes.array.isRequired
+    clientes: React.PropTypes.array.isRequired,
+    auditores: React.PropTypes.array.isRequired
 }
 
 export default ProgramacionMensualAI

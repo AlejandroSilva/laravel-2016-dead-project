@@ -92,6 +92,26 @@
     composes: thComuna;
     vertical-align: middle !important;
 }
+/* Auditor */
+.thLider{
+    width: 110px !important;
+    background: white;
+}
+.tdLider{
+    width: 110px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.tdLider > select {
+    width: 98px !important;
+    height: 18px;               /* misma altura de un input */
+    margin: 0 auto 1px auto;    /* mismos margenes de un input */
+    font-size: 10px;
+    line-height: 12px;
+}
+
 /* Stock */
 .thStock {
     width: 60px;

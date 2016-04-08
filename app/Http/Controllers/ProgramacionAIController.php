@@ -27,12 +27,18 @@ class ProgramacionAIController extends Controller {
 
     // GET programacionAI/mensual
     public function showMensual(){
+        // Array de Clientes
         $clientesWithLocales = Clientes::allWithSimpleLocales();
+        // Array Auditores
+        $rolAuditor = Role::where('name', 'Auditor')->first();
+        $auditores = $rolAuditor!=null? $rolAuditor->users : '[]';
         return view('operacional.programacionAI.programacion-mensual', [
-            'clientes' => $clientesWithLocales
+            'clientes' => $clientesWithLocales,
+            'auditores' => $auditores
         ]);
     }
-
+    
+    /*
     // GET programacionAI/mensual/pdf/{mes}
     public function descargarProgramaMensual($annoMesDia){
         $fecha = explode('-', $annoMesDia);
@@ -85,7 +91,8 @@ class ProgramacionAIController extends Controller {
         // entregar la descarga al usuario
         return response()->download($randomFileName, "programacion $annoMesDia.xlsx");
     }
-
+    */
+    
     // GET programacionAI/semanal
     public function showSemanal(){
         // buscar la menor fechaProgramada en los inventarios
