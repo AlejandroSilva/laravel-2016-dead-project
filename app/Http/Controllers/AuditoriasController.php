@@ -32,7 +32,7 @@ class AuditoriasController extends Controller {
         if($validator->fails()){
             return response()->json([
                 'request'=> $request->all(),
-                'errors'=> $validator->errors()
+                'this.props.auditoria.errors'=> $validator->errors()
             ], 400);
         }else{
             $local = Locales::find($request->idLocal);
@@ -45,8 +45,8 @@ class AuditoriasController extends Controller {
 
             $auditoria = new Auditorias();
             $auditoria->idLocal = $request->idLocal;
-            // asignar la jornada entregada por parametros, o la que tenga por defecto el local
             $auditoria->fechaProgramada = $request->fechaProgramada;
+            $auditoria->horaPresentacionAuditor = $local->llegadaSugeridaLiderDia();
 
 
             $resultado =  $auditoria->save();
@@ -97,6 +97,9 @@ class AuditoriasController extends Controller {
             // actualizar auditor
             if(isset($request->idAuditor))
                 $auditoria->idAuditor = $request->idAuditor==0? null: $request->idAuditor;
+            // actualizar hora de presentacion de auditor
+            if(isset($request->horaPresentacionAuditor))
+                $auditoria->horaPresentacionAuditor = $request->horaPresentacionAuditor==0? null: $request->horaPresentacionAuditor;
 
             $resultado = $auditoria->save();
 
@@ -133,7 +136,16 @@ class AuditoriasController extends Controller {
             // No se realiza un filtro por clientes
             $auditorias = $query->get();
 
-            return response()->json($auditorias->toArray(), 200);
+            //**** TODO TEMPORAL; ELIMINAR
+            $auditorias2 = array_map(function($auditoria) {
+                $local = Locales::find($auditoria['idLocal']);
+                $auditoria['HORAAUDITOR'] = $local->llegadaSugeridaLiderDia();
+                return $auditoria;
+            }, $auditorias->toArray());
+            return response()->json($auditorias2, 200);
+            ///********************
+            
+//            return response()->json($auditorias->toArray(), 200);
         }
         else{
             // Se filtran por cliente

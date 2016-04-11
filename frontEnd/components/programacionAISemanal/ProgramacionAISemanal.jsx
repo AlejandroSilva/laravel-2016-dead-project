@@ -42,27 +42,17 @@ class ProgramacionAISemanal extends React.Component {
     }
 
     // Metodos de los hijos
-    guardarInventario(idInventario, formInventario){
-        api.inventario.actualizar(idInventario, formInventario)
-            .then(inventarioActualizado=>{
-                console.log('inventario actualizado correctamente')
+    guardarAuditoria(idAuditoria, formInventario){
+        api.auditoria.actualizar(idAuditoria, formInventario)
+            .then(auditoriaActualizada=>{
+                console.log('auditoria actualizada correctamente')
                 // actualizar los datos y el state de la app
-                this.blackboxSemanal.actualizarInventario(inventarioActualizado)
+                this.blackboxSemanal.actualizarAuditoria(auditoriaActualizada)
                 // actualizar los filtros, y la lista ordenada de locales
                 this.setState( this.blackboxSemanal.getListaFiltrada() )        // {auditoriasFiltradas: ...}
             })
     }
-    guardarNomina(idNomina, datos){
-        api.nomina.actualizar(idNomina, datos)
-            .then(inventarioActualizado=>{
-                console.log('nomina actualizada correctamente')
-                // actualizar los datos y el state de la app
-                this.blackboxSemanal.actualizarInventario(inventarioActualizado)
-                // actualizar los filtros, y la lista ordenada de locales
-                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {auditoriasFiltradas: ...}
-            })
-    }
-    ordenarInventarios(){
+    ordenarAuditorias(){
         this.blackboxSemanal.ordenarLista()
         this.setState( this.blackboxSemanal.getListaFiltrada() )
     }
@@ -167,12 +157,12 @@ class ProgramacionAISemanal extends React.Component {
     render(){
         return(
             <div>
-                <h1>Programación Semanal IG</h1>
+                <h1>Programación Semanal AI</h1>
                 <div className="row">
                     {/* SELECTOR DE CLIENTE */}
                     <div className={'col-sm-2 form-group '}>
                         <label className="control-label" htmlFor="selectCliente">Cliente</label>
-                        <select className="form-control"  name="selectCliente" disabled
+                        <select className="form-control"  name="selectCliente"
                                 ref={ref=>this.inputIdCliente=ref}
                                 value={this.state.idCliente}
                                 onChange={this.onSelectClienteChanged.bind(this)}>
@@ -233,9 +223,8 @@ class ProgramacionAISemanal extends React.Component {
                     // supervisores={window.laravelSupervisores}
                     // captadores={window.laravelCaptadores}
                     auditorias={this.state.auditoriasFiltradas}
-                    guardarInventario={this.guardarInventario.bind(this)}
-                    guardarNomina={this.guardarNomina.bind(this)}
-                    ordenarInventarios={this.ordenarInventarios.bind(this)}
+                    guardarAuditoria={this.guardarAuditoria.bind(this)}
+                    ordenarAuditorias={this.ordenarAuditorias.bind(this)}
                 />
             </div>
         )

@@ -69,13 +69,13 @@ export default class BlackBoxSemanal{
     }
     
     // Todo modificar el listado de clientes
-    actualizarInventario(inventarioActualizado){
-        this.lista = this.lista.map(inventario=> {
-            if (inventario.idInventario == inventarioActualizado.idInventario) {
-                //inventario = Object.assign(inventario, inventarioActualizado)
-                return inventarioActualizado
+    actualizarAuditoria(auditoriaActualizada){
+        this.lista = this.lista.map(auditoria=> {
+            if (auditoria.idAuditoria == auditoriaActualizada.idAuditoria) {
+                //auditoria = Object.assign(auditoria, auditoriaActualizada)
+                return auditoriaActualizada
             }
-            return inventario
+            return auditoria
         })
     }
 }

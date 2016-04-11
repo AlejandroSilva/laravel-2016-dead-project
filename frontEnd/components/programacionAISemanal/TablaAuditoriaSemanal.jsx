@@ -41,7 +41,7 @@ class TablaAuditoriaSemanal extends React.Component{
                         <th className={css.thFecha}>
                             Fecha
                             <span className={'glyphicon glyphicon-sort-by-attributes pull-right'}
-                                  onClick={ this.props.ordenarInventarios }
+                                  onClick={ this.props.ordenarAuditorias }
                             />
                         </th>
                         <th className={css.thCliente}>CL</th>
@@ -50,13 +50,12 @@ class TablaAuditoriaSemanal extends React.Component{
                         <th className={css.thComuna}>Comuna</th>
                         {/*<th className={css.thTurno}>Turno</th>*/}
                         <th className={css.thTienda}>Tienda</th>
+                        <th className={css.thHora}>Hr.Lider</th>
                         {/*<th className={css.thStock}>Stock</th>*/}
                         {/*<th className={css.thDotacionTotal}>Dot.Total</th>*/}
                         {/*<th className={css.thLider}>Lider</th>*/}
                         {/* <th className={css.thLider}>Supervisor</th> */}
                         {/*<th className={css.thLider}>Captador 1</th>*/}
-                        {/*<th className={css.thHora}>Hr.P.Lider</th>*/}
-                        {/*<th className={css.thHora}>Hr.P.Equipo</th>*/}
                         <th className={css.thDireccion}>Dirección</th>
                         <th className={css.thNomina}>Nómina</th>
                     </tr>
@@ -80,8 +79,7 @@ class TablaAuditoriaSemanal extends React.Component{
                                 // captadores={this.props.captadores}
                                 mostrarSeparador={mostrarSeparador}
                                 // Metodos
-                                guardarInventario={this.props.guardarInventario}
-                                guardarNomina={this.props.guardarNomina}
+                                guardarAuditoria={this.props.guardarAuditoria}
                                 focusRow={this.focusRow.bind(this)}
                             />
                         })}
@@ -97,8 +95,7 @@ TablaAuditoriaSemanal.propTypes = {
     // captadores: React.PropTypes.array.isRequired,
     // Metodos
     //actualizarFiltro: React.PropTypes.func.isRequired,
-    guardarInventario: React.PropTypes.func.isRequired,
-    guardarNomina: React.PropTypes.func.isRequired,
-    ordenarInventarios: React.PropTypes.func.isRequired
+    guardarAuditoria: React.PropTypes.func.isRequired,
+    ordenarAuditorias: React.PropTypes.func.isRequired
 }
 export default TablaAuditoriaSemanal
