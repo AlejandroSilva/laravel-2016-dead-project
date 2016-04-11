@@ -172,7 +172,7 @@ class ProgramacionIGSemanal extends React.Component {
                     {/* SELECTOR DE CLIENTE */}
                     <div className={'col-sm-2 form-group '}>
                         <label className="control-label" htmlFor="selectCliente">Cliente</label>
-                        <select className="form-control"  name="selectCliente" disabled
+                        <select className="form-control"  name="selectCliente"
                                 ref={ref=>this.inputIdCliente=ref}
                                 value={this.state.idCliente}
                                 onChange={this.onSelectClienteChanged.bind(this)}>

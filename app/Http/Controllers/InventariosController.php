@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 // Modelos
 use App\Clientes;
@@ -237,32 +236,31 @@ class InventariosController extends Controller {
 
     // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}
     function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
-        $inventarios = Inventarios::with([
+        $query = Inventarios::with([
             'local.cliente',
             'local.formatoLocal',
             'local.direccion.comuna.provincia.region',
             'nominaDia',
             'nominaNoche'
         ])
-        ->where('fechaProgramada', '>=', $annoMesDia1)
-        ->where('fechaProgramada', '<=', $annoMesDia2)
-        ->get();
-        $inventariosArray = $inventarios->toArray();
+            ->where('fechaProgramada', '>=', $annoMesDia1)
+            ->where('fechaProgramada', '<=', $annoMesDia2);
 
         if($idCliente==0){
             // No se realiza un filtro por clientes
-            return response()->json($inventariosArray, 200);
+            $inventarios = $query->get();
+
+            return response()->json($inventarios->toArray(), 200);
         }
         else{
             // Se filtran por cliente
-            $inventariosDelCliente = array_filter($inventariosArray, function($inventario) use($idCliente){
-                $idClienteinventario = $inventario['local']['idCliente'];
-                return $idCliente===$idClienteinventario;
-            });
+            $inventarios = $query
+                ->whereHas('local', function($query) use ($idCliente){
+                    $query->where('idCliente', '=', $idCliente);
+                })
+                ->get();
 
-            // TODO CRITICO: metodo wn esta retornando un objeto, no un array, no utiliza este metodo hasta que este listo
-            //return response()->json($inventariosDelCliente, 200);
-            return json_encode($inventariosDelCliente);
+            return json_encode($inventarios->toArray());
         }
     }
 

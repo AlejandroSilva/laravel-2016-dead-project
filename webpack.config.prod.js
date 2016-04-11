@@ -21,7 +21,11 @@ module.exports = {
             {test: /\.jsx?$/, exclude: [/node_modules/, /public/], loader: 'babel' }
         ]
     },
+    devtool: 'source-map',
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {'NODE_ENV': JSON.stringify('production')}
+        }),
         new webpack.optimize.UglifyJsPlugin(),
         new ExtractTextPlugin('css/frontEnd.css', { allChunks: true })
     ]
