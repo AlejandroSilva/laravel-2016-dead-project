@@ -57,6 +57,9 @@ export default {
         actualizar: (idAuditoria, datos)=>{
             return axios.put(`/api/auditoria/${idAuditoria}`, datos)
         },
+        getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>{
+            return axios.get(`/api/auditoria/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)
+        }
     },
     nomina: {
         actualizar: (idNomina, datos)=>{

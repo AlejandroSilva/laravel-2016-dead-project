@@ -9,8 +9,8 @@ export default class BlackBoxSemanal{
     }
     // Todo: Optimizar
     // Todo Modificar: el listado de clientes
-    add(inventario){
-        this.lista.push(inventario)
+    add(auditoria){
+        this.lista.push(auditoria)
     }
     
     getListaFiltrada(){
@@ -34,8 +34,7 @@ export default class BlackBoxSemanal{
         // let listaDiaFIjadoOrdenado = R.sort(orderByFechaProgramadaStock, this.lista)
 
         return {
-            // inventariosFiltrados: listaDiaFIjadoOrdenado
-            inventariosFiltrados: this.lista
+            auditoriasFiltradas: this.lista
         }
     }
 

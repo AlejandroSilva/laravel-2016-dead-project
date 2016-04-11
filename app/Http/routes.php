@@ -83,9 +83,10 @@ Route::group(['middleware' => ['web']], function (){
     | Gestión de Auditorias
     |--------------------------------------------------------------------------
     |*/
-    Route::post('api/auditoria/nuevo',                 'AuditoriasController@api_nuevo');
-    Route::get('api/auditoria/mes/{annoMesDia}',       'AuditoriasController@api_getPorMes');
-    Route::put('api/auditoria/{idAuditoria}',             'AuditoriasController@api_actualizar');
+    Route::post('api/auditoria/nuevo',                      'AuditoriasController@api_nuevo');
+    Route::get('api/auditoria/mes/{annoMesDia}',            'AuditoriasController@api_getPorMes');
+    Route::put('api/auditoria/{idAuditoria}',               'AuditoriasController@api_actualizar');
+    Route::get('api/auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}',   'AuditoriasController@api_getPorRangoYCliente');
 
     /*
     |--------------------------------------------------------------------------

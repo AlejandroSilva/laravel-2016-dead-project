@@ -5,7 +5,7 @@ moment.locale('es')
 import api from '../../apiClient/v1'
 // Componentes
 import BlackBoxSemanal from './BlackBoxSemanal'
-import TablaInventarios from './TablaSemanal.jsx'
+import TablaAuditoriaSemanal from './TablaAuditoriaSemanal.jsx'
 import SelectRange from './SelectRange.jsx'
 
 const format = 'YYYY-MM-DD'
@@ -28,7 +28,7 @@ class ProgramacionAISemanal extends React.Component {
         this.state = {
             meses,
             semanas: [],
-            inventariosFiltrados: [],
+            auditoriasFiltradas: [],
             idCliente: 0,
             mesSeleccionado: '',
             semanaSeleccionada: '',
@@ -49,7 +49,7 @@ class ProgramacionAISemanal extends React.Component {
                 // actualizar los datos y el state de la app
                 this.blackboxSemanal.actualizarInventario(inventarioActualizado)
                 // actualizar los filtros, y la lista ordenada de locales
-                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {inventariosFiltrados: ...}
+                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {auditoriasFiltradas: ...}
             })
     }
     guardarNomina(idNomina, datos){
@@ -59,7 +59,7 @@ class ProgramacionAISemanal extends React.Component {
                 // actualizar los datos y el state de la app
                 this.blackboxSemanal.actualizarInventario(inventarioActualizado)
                 // actualizar los filtros, y la lista ordenada de locales
-                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {inventariosFiltrados: ...}
+                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {auditoriasFiltradas: ...}
             })
     }
     ordenarInventarios(){
@@ -154,14 +154,14 @@ class ProgramacionAISemanal extends React.Component {
         let fechaInicio = this.state.fechaInicialSeleccionada.format(format)
         let fechaFin = this.state.fechaFinalSeleccionada.format(format)
 
-        api.inventario.getPorRangoYCliente(fechaInicio, fechaFin, idCliente)
-            .then(inventarios=>{
-                console.log(`inventarios del rango ${fechaInicio} a ${fechaFin}, y cliente ${idCliente}`, inventarios)
+        api.auditoria.getPorRangoYCliente(fechaInicio, fechaFin, idCliente)
+            .then(auditorias=>{
+                console.log(`auditorias del rango ${fechaInicio} a ${fechaFin}, y cliente ${idCliente}`, auditorias)
                 this.blackboxSemanal.reset()
-                inventarios.forEach(inventario=>this.blackboxSemanal.add(inventario))
+                auditorias.forEach(auditoria=>this.blackboxSemanal.add(auditoria))
 
                 this.blackboxSemanal.ordenarLista()
-                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {inventariosFiltrados: ...}
+                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {auditoriasFiltradas: ...}
             })
     }
     render(){
@@ -228,11 +228,11 @@ class ProgramacionAISemanal extends React.Component {
                     </div>
                 </div>
 
-                <TablaInventarios
-                    lideres={window.laravelLideres}
-                    supervisores={window.laravelSupervisores}
-                    captadores={window.laravelCaptadores}
-                    inventarios={this.state.inventariosFiltrados}
+                <TablaAuditoriaSemanal
+                    // lideres={window.laravelLideres}
+                    // supervisores={window.laravelSupervisores}
+                    // captadores={window.laravelCaptadores}
+                    auditorias={this.state.auditoriasFiltradas}
                     guardarInventario={this.guardarInventario.bind(this)}
                     guardarNomina={this.guardarNomina.bind(this)}
                     ordenarInventarios={this.ordenarInventarios.bind(this)}
@@ -243,9 +243,7 @@ class ProgramacionAISemanal extends React.Component {
 }
 
 ProgramacionAISemanal.propTypes = {
-    clientes: React.PropTypes.array.isRequired,
-    primerInventario: React.PropTypes.string.isRequired,
-    ultimoInventario: React.PropTypes.string.isRequired
+    clientes: React.PropTypes.array.isRequired
 }
 
 export default ProgramacionAISemanal

@@ -119,4 +119,32 @@ class AuditoriasController extends Controller {
             return response()->json([], 404);
         }
     }
+
+    // GET api/auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}
+    function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
+        $query = Auditorias::with([
+            'local.cliente',
+            'local.direccion.comuna.provincia.region'
+        ])
+            ->where('fechaProgramada', '>=', $annoMesDia1)
+            ->where('fechaProgramada', '<=', $annoMesDia2);
+
+        if($idCliente==0){
+            // No se realiza un filtro por clientes
+            $auditorias = $query->get();
+
+            return response()->json($auditorias->toArray(), 200);
+        }
+        else{
+            // Se filtran por cliente
+            $auditorias = $query
+                ->whereHas('local', function($query) use ($idCliente){
+                    $query->where('idCliente', '=', $idCliente);
+                })
+                ->get();
+
+            return json_encode($auditorias->toArray());
+        }
+    }
+
 }
