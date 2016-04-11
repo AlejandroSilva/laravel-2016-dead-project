@@ -3,8 +3,8 @@ import moment from 'moment'
 moment.locale('es')
 
 // Componentes
-//import Tooltip from 'react-bootstrap/lib/Tooltip'
-//import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+import Tooltip from 'react-bootstrap/lib/Tooltip'
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from './InputFecha.jsx'
 import InputHora from './InputHora.jsx'
 import InputDotacion from './InputDotacion.jsx'
@@ -186,7 +186,12 @@ class RowInventario extends React.Component{
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
-                    <p>{this.props.inventario.local.numero}</p>
+                    <OverlayTrigger
+                        placement="left"
+                        delay={0}
+                        overlay={<Tooltip id="yyy">{`Tipo de local: ${this.props.inventario.local.formato_local.nombre}`}</Tooltip>}>
+                        <p>{this.props.inventario.local.numero}</p>
+                    </OverlayTrigger>
                 </td>
                 {/* Region */}
                 <td className={css.tdRegion}>

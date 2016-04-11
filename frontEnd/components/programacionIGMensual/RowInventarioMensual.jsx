@@ -237,7 +237,12 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* CECO */}
                 <td className={cssTabla.tdCeco}>
-                    <p><small><b>{this.props.inventario.local.numero}</b></small></p>
+                    <OverlayTrigger
+                        placement="left"
+                        delay={0}
+                        overlay={<Tooltip id="yyy">{`Tipo de local: ${this.props.inventario.local.formato_local.nombre}`}</Tooltip>}>
+                        <p><small><b>{this.props.inventario.local.numero}</b></small></p>
+                    </OverlayTrigger>
                 </td>
                 {/* Local */}
                 <td className={cssTabla.tdLocal}>
@@ -249,7 +254,13 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* Comuna */}
                 <td className={cssTabla.tdComuna}>
-                    <p style={{margin:0}}><b><small>{ nombreComuna }</small></b></p>
+                    <OverlayTrigger
+                        placement="left"
+                        delay={0}
+                        overlay={<Tooltip id="yyy">{'Dirección: '+(this.props.inventario.local.direccion.direccion)}</Tooltip>}>
+                        <p style={{margin:0}}><b><small>{ nombreComuna }</small></b></p>
+                    </OverlayTrigger>
+
                 </td>
                 {/* Stock */}
                 <td className={cssTabla.tdStock}>
@@ -258,7 +269,6 @@ class RowInventarioMensual extends React.Component{
                         delay={0}
                         overlay={<Tooltip id="yyy">{'Stock al '+(this.props.inventario.fechaStock)}</Tooltip>}>
                         <p><small>{numeral(this.props.inventario.stockTeorico).format('0,0')}</small></p>
-
                     </OverlayTrigger>
                 </td>
                 {/* Dotación */}
