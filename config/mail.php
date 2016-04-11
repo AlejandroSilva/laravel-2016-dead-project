@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => 'no-responder@seiconsultores.cl', 'name' => 'no-responder@seiconsultores.cl'],
 
     /*
     |--------------------------------------------------------------------------

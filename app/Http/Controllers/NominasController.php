@@ -11,6 +11,21 @@ class NominasController extends Controller {
 
     /**
      * ##########################################################
+     * Rutas que generan vistas
+     * ##########################################################
+     */
+    
+    function showNominas(){
+        return view('operacional.nominas.nominas-index');
+    }
+    
+    function showNominasFinales(){
+        return view('operacional.nominasFinales.nominasFinales-index');
+    }
+    
+    
+    /**
+     * ##########################################################
      * Rutas para consumo del API REST
      * ##########################################################
      */

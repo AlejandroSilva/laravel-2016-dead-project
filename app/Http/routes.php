@@ -11,25 +11,24 @@
 */
 
 Route::group(['middleware' => ['web']], function (){
-    Route::get('/', function () {return redirect('/inventario');});
+    Route::get('/',             'HomeController@index');
 
     /*
     |--------------------------------------------------------------------------
     | Autorización y Autenticación
     |--------------------------------------------------------------------------
     |*/
-    Route::get('auth/login',    'AuthController@show_Login')->name('auth.login');
-    Route::get('auth/logout',   'AuthController@show_Logout')->name('auth.logout');
-    Route::get('auth/test',     'AuthController@show_Test')->name('auth.test');
+    Route::auth();
 
     /*
     |--------------------------------------------------------------------------
     | Administracion de Clientes y sus locales
     |--------------------------------------------------------------------------
     |*/
-    // VISTAS
-    Route::get('admin/clientes', 'ClientesController@show_Lista')->name('admin.clientes.lista');
-    //Route::get('admin/locales', function(){return view('operacional.clientes.locales');});
+    Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function(){
+        Route::get('clientes', 'ClientesController@show_Lista')->name('admin.clientes.lista');
+        //Route::get('locales', function(){return view('operacional.clientes.locales');});
+    });
 
     // API REST
     Route::get('api/clientes', 'ClientesController@api_getClientes');
@@ -42,29 +41,36 @@ Route::group(['middleware' => ['web']], function (){
     | Programación de Inventarios Generales
     |--------------------------------------------------------------------------
     |*/
-    Route::get('programacionIG',                  'ProgramacionController@showIndex');
-    Route::get('programacionIG/mensual',          'ProgramacionController@showMensual');
-    Route::get('programacionIG/mensual/pdf/{mes}','ProgramacionController@descargarProgramaMensual');
-    Route::get('programacionIG/semanal',          'ProgramacionController@showSemanal');
+    Route::group(['prefix' => 'programacionIG', 'middleware' => ['auth']], function(){
+        Route::get('/',                  'ProgramacionController@showIndex');
+        Route::get('/mensual',          'ProgramacionController@showMensual');
+        Route::get('/mensual/pdf/{mes}','ProgramacionController@descargarProgramaMensual');
+        Route::get('/semanal',          'ProgramacionController@showSemanal');
+    });
+
     
     /*
     |--------------------------------------------------------------------------
     | Programación de Auditoria de Inventarios
     |--------------------------------------------------------------------------
     |*/
-    Route::get('programacionAI',                  'ProgramacionAIController@showIndex');
-    Route::get('programacionAI/mensual',          'ProgramacionAIController@showMensual');
-    Route::get('programacionAI/mensual/pdf/{mes}','ProgramacionAIController@descargarProgramaMensual');
-    Route::get('programacionAI/semanal',          'ProgramacionAIController@showSemanal');
+    Route::group(['prefix' => 'programacionAI', 'middleware' => ['auth']], function() {
+        Route::get('/',                 'ProgramacionAIController@showIndex');
+        Route::get('/mensual',          'ProgramacionAIController@showMensual');
+        Route::get('/mensual/pdf/{mes}', 'ProgramacionAIController@descargarProgramaMensual');
+        Route::get('/semanal',          'ProgramacionAIController@showSemanal');
+    });
     
     /*
     |--------------------------------------------------------------------------
     | Gestión de Inventarios
     |--------------------------------------------------------------------------
     |*/
-    Route::get('inventario',                    'InventariosController@showIndex');
-    Route::get('inventario/nuevo',              'InventariosController@showNuevo');
-    Route::get('inventario/lista',              'InventariosController@showLista');
+    Route::group(['prefix' => 'inventario', 'middleware' => ['auth']], function() {
+        Route::get('/',                 'InventariosController@showIndex');
+        Route::get('/nuevo',            'InventariosController@showNuevo');
+        Route::get('/lista',            'InventariosController@showLista');
+    });
     Route::post('api/inventario/nuevo',                 'InventariosController@api_nuevo');
     Route::get('api/inventario/mes/{annoMesDia}',       'InventariosController@api_getPorMes');
     Route::get('api/inventario/{fecha1}/al/{fecha2}',   'InventariosController@api_getPorRango');
@@ -74,9 +80,13 @@ Route::group(['middleware' => ['web']], function (){
     Route::get('api/nomina/{idNomina}',                 'NominasController@api_get');
     Route::put('api/nomina/{idNomina}',                 'NominasController@api_actualizar');
 
-    Route::get('nominas',               function(){return view('operacional.nominas.nominas-index');});
-    Route::get('nomFinales',            function(){return view('operacional.nominasFinales.nominasFinales-index');});
 
+    Route::group(['prefix' => 'nominas', 'middleware' => ['auth']], function() {
+        Route::get('/',               'NominasController@showNominas');
+    });
+    Route::group(['prefix' => 'nomFinales', 'middleware' => ['auth']], function() {
+        Route::get('/',            'NominasController@showNominasFinales');
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -93,11 +103,12 @@ Route::group(['middleware' => ['web']], function (){
     | Gestion de Personal
     |--------------------------------------------------------------------------
     |*/
-
-    Route::get('personal/lista',       'PersonalController@show_listaPersonal')->name('personal.lista');
-    Route::get('personal/nuevo',            'PersonalController@show_formulario')->name('personal.nuevo');
-    Route::post('personal/nuevo',           'PersonalController@show_postFormulario');
-    Route::get('personal/test',           'PersonalController@test');
+    Route::group(['prefix' => 'personal', 'middleware' => ['auth']], function() {
+        Route::get('lista',       'PersonalController@show_listaPersonal')->name('personal.lista');
+        Route::get('nuevo',       'PersonalController@show_formulario')->name('personal.nuevo');
+        Route::post('nuevo',      'PersonalController@show_postFormulario');
+        Route::get('test',        'PersonalController@test');
+    });
     /*
     |--------------------------------------------------------------------------
     | Otros

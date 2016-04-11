@@ -21,13 +21,4 @@ class AuthController extends Controller {
         // volver a INICIO
         return Redirect::to('/');
     }
-
-    // GET auth/test
-    function show_Test(){
-        if( Auth::check() ){
-            echo "is auth";
-        }else{
-            echo "no auth";
-        }
-    }
 }

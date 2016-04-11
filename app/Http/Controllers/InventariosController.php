@@ -243,6 +243,9 @@ class InventariosController extends Controller {
             'nominaDia',
             'nominaNoche'
         ])
+            ->whereHas('local', function($query) use ($idCliente){
+                $query->where('idCliente', '=', $idCliente);
+            })
             ->where('fechaProgramada', '>=', $annoMesDia1)
             ->where('fechaProgramada', '<=', $annoMesDia2);
 
