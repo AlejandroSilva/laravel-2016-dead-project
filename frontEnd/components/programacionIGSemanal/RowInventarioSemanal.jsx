@@ -424,11 +424,9 @@ class RowInventario extends React.Component{
                     />
                 </td>
                 {/* Dirección */}
-                {/*
                 <td className={css.tdDireccion}>
                     <p>{this.props.inventario.local.direccion.direccion}</p>
                 </td>
-                 */}
                 {/* Nómina*/}
                 <td className={css.tdNomina}>
                     <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Ver</button>

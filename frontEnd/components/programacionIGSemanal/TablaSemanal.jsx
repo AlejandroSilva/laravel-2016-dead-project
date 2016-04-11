@@ -55,9 +55,9 @@ class TablaInventarios extends React.Component{
                         <th className={css.thLider}>Lider</th>
                         {/* <th className={css.thLider}>Supervisor</th> */}
                         <th className={css.thLider}>Captador 1</th>
-                        <th className={css.thHora}>Hr.P.Lider</th>
-                        <th className={css.thHora}>Hr.P.Equipo</th>
-                        {/* <th className={css.thDireccion}>Dirección</th> */}
+                        <th className={css.thHora}>Hr.Lider</th>
+                        <th className={css.thHora}>Hr.Equipo</th>
+                        <th className={css.thDireccion}>Dirección</th>
                         <th className={css.thNomina}>Nómina</th>
                     </tr>
                 </thead>

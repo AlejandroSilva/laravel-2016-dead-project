@@ -207,16 +207,16 @@
 
 /* DIRECCION */
 .thDireccion{
-    width: 130px !important;
+    width: 220px !important;
     background: white;
 }
 .tdDireccion{
-    width: 130px !important;
+    width: 220px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 2px !important;
     padding-right: 2px !important;
-    font-size: 12px;
+    font-size: 10px;
 }
 
 /* NOMINA */
