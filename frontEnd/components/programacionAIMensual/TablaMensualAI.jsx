@@ -79,7 +79,7 @@ class TablaMensualAI extends React.Component{
                     <tbody>
                     {}
                     {this.props.auditoriasFiltradas.length===0
-                        ? <tr><td colSpan="10" style={{textAlign: 'center'}}><b>No hay auditorias para mostrar en este periodo.</b></td></tr>
+                        ? <tr><td colSpan="13" style={{textAlign: 'center'}}><b>No hay auditorias para mostrar en este periodo.</b></td></tr>
                         : this.props.auditoriasFiltradas.map((auditoria, index)=>{
                             let mostrarSeparador = false
                             let sgteAuditoria = this.props.auditoriasFiltradas[index+1]

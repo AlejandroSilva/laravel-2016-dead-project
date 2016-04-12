@@ -61,7 +61,7 @@ class TablaAuditoriaSemanal extends React.Component{
                 </thead>
                 <tbody>
                     {this.props.auditorias.length===0
-                        ? <tr><td colSpan="14" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                        ? <tr><td colSpan="13" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.props.auditorias.map((auditoria, index)=>{
                             let mostrarSeparador = false
                             let sgteInventario = this.props.auditorias[index+1]
