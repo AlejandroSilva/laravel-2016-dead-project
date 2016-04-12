@@ -219,9 +219,7 @@ class ProgramacionAISemanal extends React.Component {
                 </div>
 
                 <TablaAuditoriaSemanal
-                    // lideres={window.laravelLideres}
-                    // supervisores={window.laravelSupervisores}
-                    // captadores={window.laravelCaptadores}
+                    auditores={this.props.auditores}
                     auditorias={this.state.auditoriasFiltradas}
                     guardarAuditoria={this.guardarAuditoria.bind(this)}
                     ordenarAuditorias={this.ordenarAuditorias.bind(this)}
@@ -232,7 +230,8 @@ class ProgramacionAISemanal extends React.Component {
 }
 
 ProgramacionAISemanal.propTypes = {
-    clientes: React.PropTypes.array.isRequired
+    clientes: React.PropTypes.array.isRequired,
+    auditores: React.PropTypes.array.isRequired
 }
 
 export default ProgramacionAISemanal

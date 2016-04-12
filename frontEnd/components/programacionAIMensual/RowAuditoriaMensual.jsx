@@ -4,8 +4,8 @@ import moment from 'moment'
 moment.locale('es')
 
 // Componentes
-// import Tooltip from 'react-bootstrap/lib/Tooltip'
-// import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+import Tooltip from 'react-bootstrap/lib/Tooltip'
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Select from './Select.jsx'
 
 // Styles
@@ -22,7 +22,7 @@ class RowAuditoriaMensual extends React.Component{
             // inputDotacion: 0,
             // selectJornada: 4,
             diaValido: this._diaValido(0),
-            mesValido: this._mesValido(0),
+            mesValido: this._mesValido(0)
             // dotacionValida: this._dotacionValida(0)
         }
         // Refs disponibles: this.inputDia, this.inputDotacion
@@ -42,7 +42,7 @@ class RowAuditoriaMensual extends React.Component{
             // inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
             // selectJornada: jornadaInventario || jornadaLocal,
             diaValido: this._diaValido(dia),
-            mesValido: this._mesValido(mes),
+            mesValido: this._mesValido(mes)
             // dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
         })
     }
@@ -92,7 +92,7 @@ class RowAuditoriaMensual extends React.Component{
                 // inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
                 // selectJornada: jornadaInventario || jornadaLocal,
                 diaValido: this._diaValido(dia),
-                mesValido: this._mesValido(mes),
+                mesValido: this._mesValido(mes)
                 // dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
             })
 /*        }*/
@@ -202,7 +202,6 @@ class RowAuditoriaMensual extends React.Component{
             return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
         })
 
-
         return (
             <tr className={this.props.mostrarSeparador? cssTabla.trSeparador: ''}>
                 {/* Correlativo */}
@@ -239,10 +238,6 @@ class RowAuditoriaMensual extends React.Component{
                 <td className={cssTabla.tdCeco}>
                     <p><small><b>{this.props.auditoria.local.numero}</b></small></p>
                 </td>
-                {/* Local */}
-                <td className={cssTabla.tdLocal}>
-                    <p><small><b>{this.props.auditoria.local.nombre}</b></small></p>
-                </td>
                 {/* Region*/}
                 <td className={cssTabla.tdRegion}>
                     <p style={{margin:0}}><small>{ this.props.auditoria.local.direccion.comuna.provincia.region.numero }</small></p>
@@ -251,6 +246,21 @@ class RowAuditoriaMensual extends React.Component{
                 <td className={cssTabla.tdComuna}>
                     <p style={{margin:0}}><b><small>{ this.props.auditoria.local.direccion.comuna.nombre }</small></b></p>
                 </td>
+                {/* Local */}
+                <td className={cssTabla.tdLocal}>
+                    <p><small><b>{this.props.auditoria.local.nombre}</b></small></p>
+                </td>
+
+                {/* Stock */}
+                 <td className={cssTabla.tdStock}>
+                     <OverlayTrigger
+                         placement="left"
+                         delay={0}
+                         overlay={<Tooltip id="yyy">{'Stock al '+(this.props.auditoria.local.fechaStock)}</Tooltip>}>
+                         <p><small>{numeral(this.props.auditoria.local.stock).format('0,0')}</small></p>
+                     </OverlayTrigger>
+                 </td>
+
                 {/* Auditor */}
                 <td className={cssTabla.tdLider}>
                     <Select
@@ -262,62 +272,31 @@ class RowAuditoriaMensual extends React.Component{
                             opcionNulaSeleccionable={true}
                     />
                 </td>
-                            
-                {/* Stock */}
-                {/*
-                <td className={cssTabla.tdStock}>
-                    <OverlayTrigger
-                        placement="left"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">{'Stock al '+(this.props.auditoria.fechaStock)}</Tooltip>}>
-                        <p><small>{numeral(this.props.auditoria.stockTeorico).format('0,0')}</small></p>
-
-                    </OverlayTrigger>
+                {/* Hora de Apertura del local */}
+                <td className={cssTabla.tdAperturaCierre}>
+                    <input type="time"
+                           value={this.props.auditoria.local.horaApertura}
+                           disabled/>
                 </td>
-                 */}
-                {/* Dotación */}
-                {/*
-                <td className={cssTabla.tdDotacion}>
-                    <OverlayTrigger
-                        placement="right"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">{'Produción '+this.props.auditoria.local.formato_local.produccionSugerida}</Tooltip>}>
-
-                        <input className={this.state.dotacionValida? cssInput.inputDotacion : cssInput.inputDotacionInvalida } type="number"
-                               value={this.state.inputDotacion}
-                               onChange={this.onInputDotacionChange.bind(this)}
-                               ref={ref=>this.inputDotacion=ref}
-                               onKeyDown={this.inputOnKeyDown.bind(this, 'dotacion')}
-                               onBlur={this.guardarAuditoria.bind(this)}/>
-
-                    </OverlayTrigger>
+                {/* hora de Cierre de local */}
+                <td className={cssTabla.tdAperturaCierre}>
+                    <input type="time"
+                           value={this.props.auditoria.local.horaCierre}
+                           disabled/>
                 </td>
-                 */}
-                {/* Jornada */}
-                {/*
+
+                {/* Direccion */}
                 <td className={cssTabla.tdJornada}>
-                    <select onChange={this.onSelectJornadaChange.bind(this)} value={this.state.selectJornada}>
-                        <option value="1">no definido</option>
-                        <option value="2">día</option>
-                        <option value="3">noche</option>
-                        <option value="4">día y noche</option>
-                    </select>
+                    <p>{this.props.auditoria.local.direccion.direccion}</p>
                 </td>
-                */}
                 {/* Opciones    */}
                 <td className={cssTabla.tdOpciones}>
-                    {
-                        this.props.auditoria.idAuditoria
-                        ? <button className="btn btn-xs btn-primary"
-                                  tabIndex="-1"
-                                  onClick={()=>{ alert("PEND: eliminar inventario") } }
-                                  disabled
-                        >Eliminar auditoria</button>
-                        : <button className="btn btn-xs btn-danger"
-                                  tabIndex="-1"
-                                  onClick={this.quitarInventario.bind(this)}
-                        >X</button>
-                     }
+                    <button className="btn btn-xs btn-primary"
+                            tabIndex="-1"
+                            onClick={()=>{ alert("PEND: eliminar inventario") } }
+                            disabled>
+                        Eliminar
+                    </button>
                 </td>
             </tr>
         )

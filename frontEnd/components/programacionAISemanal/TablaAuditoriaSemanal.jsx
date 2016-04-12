@@ -38,6 +38,7 @@ class TablaAuditoriaSemanal extends React.Component{
                 style={{overfow: 'overlay'}}>
                 <thead>
                     <tr>
+                        <th className={css.thCorrelativo}>#</th>
                         <th className={css.thFecha}>
                             Fecha
                             <span className={'glyphicon glyphicon-sort-by-attributes pull-right'}
@@ -48,16 +49,14 @@ class TablaAuditoriaSemanal extends React.Component{
                         <th className={css.thCeco}>CE</th>
                         <th className={css.thRegion}>RG</th>
                         <th className={css.thComuna}>Comuna</th>
-                        {/*<th className={css.thTurno}>Turno</th>*/}
                         <th className={css.thTienda}>Tienda</th>
-                        <th className={css.thHora}>Hr.Lider</th>
-                        {/*<th className={css.thStock}>Stock</th>*/}
-                        {/*<th className={css.thDotacionTotal}>Dot.Total</th>*/}
-                        {/*<th className={css.thLider}>Lider</th>*/}
-                        {/* <th className={css.thLider}>Supervisor</th> */}
-                        {/*<th className={css.thLider}>Captador 1</th>*/}
+                        <th className={css.thStock}>Stock</th>
+                        <th className={css.thLider}>Auditor</th>
+                        {/*<th className={css.thHora}>Hr.Lider</th>*/}
+                        <th className={css.thAperturaCierre}>Hr.Apertura</th>
+                        <th className={css.thAperturaCierre}>Hr.Cierre</th>
                         <th className={css.thDireccion}>Dirección</th>
-                        <th className={css.thNomina}>Nómina</th>
+                        <th className={css.thNomina}>Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,6 +77,7 @@ class TablaAuditoriaSemanal extends React.Component{
                                 // supervisores={this.props.supervisores}
                                 // captadores={this.props.captadores}
                                 mostrarSeparador={mostrarSeparador}
+                                auditores={this.props.auditores}
                                 // Metodos
                                 guardarAuditoria={this.props.guardarAuditoria}
                                 focusRow={this.focusRow.bind(this)}
@@ -91,6 +91,7 @@ class TablaAuditoriaSemanal extends React.Component{
 TablaAuditoriaSemanal.propTypes = {
     // Objetos
     auditorias: React.PropTypes.array.isRequired,
+    auditores: React.PropTypes.array.isRequired,
     // supervisores: React.PropTypes.array.isRequired,
     // captadores: React.PropTypes.array.isRequired,
     // Metodos

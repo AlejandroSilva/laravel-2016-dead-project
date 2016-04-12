@@ -11,7 +11,7 @@
     margin-bottom: 0;
 }
 .trSeparador {
-    border-bottom: 2px black solid;
+    border-bottom: 2px black solid !important;
 }
 
 /* TABLA

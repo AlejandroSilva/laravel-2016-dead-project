@@ -15,7 +15,17 @@
     padding: 0 !important;
 }
 .trSeparador {
-    border-bottom: 2px black solid;
+    border-bottom: 2px black solid !important;
+}
+
+/* CORRELATIVO */
+.thCorrelativo {
+    width: 30px;
+    background: white;
+}
+.tdCorrelativo {
+    width: 30px;
+    vertical-align: middle !important;
 }
 
 /* FECHA */
@@ -132,6 +142,9 @@
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+.tdStock > p{
+    text-align: right;
+}
 
 /* DOTACION TOTAL */
 .thDotacionTotal{
@@ -205,6 +218,25 @@
     height: 18px !important;    /* misma altura que los select */
 }
 
+/* APERTURA/CIERRE DE LOCAL */
+.thAperturaCierre {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 70px;
+    background: white;
+}
+.tdAperturaCierre {
+    width: 70px;
+    vertical-align: middle !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.tdAperturaCierre > input {
+    margin: auto;
+    width: 65px;
+    height: 18px;
+}
+
 /* DIRECCION */
 .thDireccion{
     width: 220px !important;
@@ -218,20 +250,20 @@
     padding-right: 2px !important;
     font-size: 10px;
 }
+.tdDireccion > p {
+    font-size: 10px !important;
+}
 
-/* NOMINA */
-.thNomina{
+/* Opciones */
+.thOpciones {
     width: auto !important;
     background: white;
 }
-.tdNomina{
+.tdOpciones {
     width: auto !important;
-    background: white;
     vertical-align: middle !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
 }
-.tdNomina > button {
+.tdOpciones > button {
     width: 60px;
     font-size: 12px !important;
     line-height: 12px !important;

@@ -50,8 +50,7 @@ if( programacionAISemanalDOM ){
     ReactDOM.render(
         <ProgramacionAISemanal
             clientes={window.laravelClientes}
-            primerInventario={window.laravelPrimerInventario}
-            ultimoInventario={window.laravelUltimoInventario}
+            auditores={window.laravelAuditores}
         />, programacionAISemanalDOM)
 }
 

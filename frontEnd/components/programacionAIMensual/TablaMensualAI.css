@@ -11,7 +11,7 @@
     margin-bottom: 0;
 }
 .trSeparador {
-    border-bottom: 2px black solid;
+    border-bottom: 2px black solid !important;
 }
 
 /* TABLA
@@ -121,6 +121,10 @@
     composes: thStock;
     vertical-align: middle !important;
 }
+.tdStock > p{
+    text-align: right;
+}
+
 /* Dotacion */
 .thDotacion {
     width: 70px;
@@ -133,6 +137,7 @@
 .tdDotacion > input{
     width: 100%;
 }
+
 /* Jornada */
 .thJornada {
     width: 110px;
@@ -156,6 +161,40 @@
 .tdEstado {
     width: 100px;
     vertical-align: middle !important;
+}
+/* Hora de Apertura / Cierre */
+.thAperturaCierre {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 70px;
+    background: white;
+}
+.tdAperturaCierre {
+    width: 70px;
+    vertical-align: middle !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.tdAperturaCierre > input {
+    margin: auto;
+    width: 65px;
+    height: 18px;
+}
+
+.thDireccion{
+    width: 220px !important;
+    background: white;
+}
+.tdDireccion{
+    width: 220px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+    font-size: 10px;
+}
+.tdDireccion > p {
+    font-size: 10px !important;
 }
 
 /* Opciones */

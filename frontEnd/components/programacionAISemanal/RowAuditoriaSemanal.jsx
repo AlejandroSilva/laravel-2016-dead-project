@@ -1,10 +1,11 @@
 import React from 'react'
+import numeral from 'numeral'
 import moment from 'moment'
 moment.locale('es')
 
 // Componentes
-//import Tooltip from 'react-bootstrap/lib/Tooltip'
-//import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+import Tooltip from 'react-bootstrap/lib/Tooltip'
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from './InputFecha.jsx'
 import InputHora from './InputHora.jsx'
 import InputDotacion from './InputDotacion.jsx'
@@ -38,11 +39,16 @@ class RowAuditoriaSemanal extends React.Component{
             return console.log(`fecha ${estadoInputDia.fecha} invalida`)
         }
 
+        // el AUDITOR ha cambiado?
+        let estadoSelectAuditor = this.selectAuditor.getEstado()
+        if(estadoSelectAuditor.dirty)
+            cambiosAuditoria.idAuditor = estadoSelectAuditor.seleccionUsuario
+
         // la HORA DE LLEGADA DEL AUDITOR es valida y ha cambiado?
-        let estadoHoraAuditor = this.inputHoraAuditor.getEstado()
-        console.log('hora auditor ', estadoHoraAuditor)
-        if (estadoHoraAuditor.dirty)
-            cambiosAuditoria.horaPresentacionAuditor = estadoHoraAuditor.hora
+        // let estadoHoraAuditor = this.inputHoraAuditor.getEstado()
+        // console.log('hora auditor ', estadoHoraAuditor)
+        // if (estadoHoraAuditor.dirty)
+        //     cambiosAuditoria.horaPresentacionAuditor = estadoHoraAuditor.hora
 
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
         if(JSON.stringify(cambiosAuditoria)!=="{}"){
@@ -64,23 +70,19 @@ class RowAuditoriaSemanal extends React.Component{
     }
 
     render(){
-        //const idJornada = this.props.auditoria.idJornada
-        //const inventarioDia = idJornada==2 || idJornada==4
-        //const inventarioNoche = idJornada==3 || idJornada==4
-        // const opcionesLideres = this.props.lideres.map(usuario=>{
-        //     return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
-        // })
-        // const opcionesSupervisores = this.props.supervisores.map(usuario=>{
-        //     return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
-        // })
-        // const opcionesCaptadores = this.props.captadores.map(usuario=>{
-        //     return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
-        // })
+        const opcionesAuditores = this.props.auditores.map(usuario=>{
+            return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
+        })
+
         //let _hrApertura = this.props.auditoria.local.horaApertura.split(':')
         //let _hrCierre = this.props.auditoria.local.horaCierre.split(':')
         //let txtHrCierre = `Cierre a las ${_hrCierre[0]}:${_hrCierre[1]}hrs`
         return (
             <tr className={this.props.mostrarSeparador? css.trSeparador: ''}>
+                {/* Correlativo */}
+                <td className={css.tdCorrelativo}>
+                    {this.props.index}
+                </td>
                 {/* Fecha */}
                 <td className={css.tdFecha}>
                     <InputFecha
@@ -97,7 +99,7 @@ class RowAuditoriaSemanal extends React.Component{
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
-                    <p>{this.props.auditoria.local.numero}</p>
+                    <p><small><b>{this.props.auditoria.local.numero}</b></small></p>
                 </td>
                 {/* Region */}
                 <td className={css.tdRegion}>
@@ -105,7 +107,7 @@ class RowAuditoriaSemanal extends React.Component{
                 </td>
                 {/* Comuna */}
                 <td className={css.tdComuna}>
-                    <p>{this.props.auditoria.local.direccion.comuna.nombre}</p>
+                    <p style={{margin:0}}><b><small>{this.props.auditoria.local.direccion.comuna.nombre}</small></b></p>
                 </td>
                 {/* Turno */}
                 {/*
@@ -123,47 +125,48 @@ class RowAuditoriaSemanal extends React.Component{
                     />
                 </td>
                 */}
-                {/* Tienda */}
+                {/* Local */}
                 <td className={css.tdTienda}>
-                    <p><small>{this.props.auditoria.local.nombre}</small></p>
+                    <p><small><b>{this.props.auditoria.local.nombre}</b></small></p>
                 </td>
                 {/* Stock */}
-                {/*
                 <td className={css.tdStock}>
-                    <InputStock
-                        ref={ref=>this.inputStock=ref}
-                        asignada={this.props.auditoria.stockTeorico}
-                        tooltipText={'Stock al ' +(this.props.auditoria.fechaStock)}
-                        onGuardar={this.guardarAuditoria.bind(this)}
-                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'stock')}
-                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'stock')}
-                    />
+                    <OverlayTrigger
+                        placement="left"
+                        delay={0}
+                        overlay={<Tooltip id="yyy">{'Stock al '+(this.props.auditoria.local.fechaStock)}</Tooltip>}>
+                        <p><small>{numeral(this.props.auditoria.local.stock).format('0,0')}</small></p>
+                    </OverlayTrigger>
                 </td>
-                 */}
-                {/* Supervisor */}
-                {/*
+                {/* Auditor */}
                 <td className={css.tdLider}>
-                    <Select style={{display: inventarioDia? 'block' : 'none'}}
-                            ref={ref=>this.selectSupervisorDia=ref}
-                            seleccionada={this.props.auditoria.nomina_dia.idSupervisor || ''}
+                    <Select
+                            ref={ref=>this.selectAuditor=ref}
+                            seleccionada={this.props.auditoria.idAuditor || ''}
                             onSelect={this.guardarAuditoria.bind(this)}
-                            opciones={opcionesSupervisores}
-                            opcionNula={true}
-                            opcionNulaSeleccionable={true}
-                    />
-                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
-                            ref={ref=>this.selectSupervisorNoche=ref}
-                            seleccionada={this.props.auditoria.nomina_noche.idSupervisor || ''}
-                            onSelect={this.guardarNominaNoche.bind(this)}
-                            opciones={opcionesSupervisores}
+                            opciones={opcionesAuditores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
                     />
                 </td>
-                 */}
+
+                {/* Hora de Apertura del local */}
+                <td className={css.tdAperturaCierre}>
+                    <input type="time"
+                           value={this.props.auditoria.local.horaApertura}
+                           disabled/>
+                </td>
+                {/* hora de Cierre de local */}
+                <td className={css.tdAperturaCierre}>
+                    <input type="time"
+                           value={this.props.auditoria.local.horaCierre}
+                           disabled/>
+                </td>
+                
                 {/* Hora Presentación Auditoria */}
+                {/*
                 <td className={css.tdHora}>
-                    {/*<p>{this.props.auditoria.HORAAUDITOR}</p>*/}
+                    <p>{this.props.auditoria.HORAAUDITOR}</p>
                     <InputHora
                         ref={ref=>this.inputHoraAuditor=ref}
                         asignada={this.props.auditoria.horaPresentacionAuditor}
@@ -173,13 +176,17 @@ class RowAuditoriaSemanal extends React.Component{
                         focusRowSiguiente={()=>{}}
                     />
                 </td>
+                */}
                 {/* Dirección */}
                 <td className={css.tdDireccion}>
                     <p>{this.props.auditoria.local.direccion.direccion}</p>
                 </td>
-                {/* Nómina*/}
-                <td className={css.tdNomina}>
-                    <button className="btn btn-xs btn-primary btn-block" tabIndex="-1">Ver</button>
+                {/* Opciones */}
+                <td className={css.tdOpciones}>
+                    <button className="btn btn-xs btn-primary btn-block"
+                            tabIndex="-1"
+                            disabled
+                    >Eliminar</button>
                 </td>
             </tr>
         )
@@ -190,6 +197,7 @@ RowAuditoriaSemanal.propTypes = {
     // Objetos
     index: React.PropTypes.number.isRequired,
     auditoria: React.PropTypes.object.isRequired,
+    auditores: React.PropTypes.array.isRequired,
     // lideres: React.PropTypes.array.isRequired,
     // captadores: React.PropTypes.array.isRequired,
     mostrarSeparador: React.PropTypes.bool.isRequired,

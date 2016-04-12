@@ -60,7 +60,6 @@ class TablaMensualAI extends React.Component{
                                 />
                             </th>
                             <th className={css.thCeco}>Ceco</th>
-                            <th className={css.thLocal}>Local</th>
                             <th className={css.thRegion}>
                                 <TableHeader nombre="Región"
                                              filtro={this.props.filtroRegiones}
@@ -68,11 +67,12 @@ class TablaMensualAI extends React.Component{
                                 />
                             </th>
                             <th className={css.thComuna}>Comuna</th>
+                            <th className={css.thLocal}>Local</th>
+                            <th className={css.thStock}>Stock</th>
                             <th className={css.thLider}>Auditor</th>
-                            {/*<th className={css.thStock}>Stock</th>*/}
-                            {/*<th className={css.thDotacion}>Dot.Total</th>*/}
-                            {/*<th className={css.thJornada}>Jornada</th>*/}
-                            {/*<th className={css.thEstado}>Estado</th>*/}
+                            <th className={css.thAperturaCierre}>Hr.Apertura</th>
+                            <th className={css.thAperturaCierre}>Hr.Cierre</th>
+                            <th className={css.thDireccion}>Dirección</th>
                             <th className={css.thOpciones}>Opciones</th>
                         </Sticky>
                     </thead>

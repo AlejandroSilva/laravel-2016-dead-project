@@ -101,26 +101,18 @@ class ProgramacionAIController extends Controller {
             ->get();
         $minymax = $select[0];
 
-        // Clientes
+        // Array de Clientes
         $clientes  = Clientes::all();
-        // Captadores
-        $rolCaptador = Role::where('name', 'Captador')->first();
-        $captadores = $rolCaptador!=null? $rolCaptador->users : '[]';
-        // Supervisores
-        $rolSupervisor = Role::where('name', 'Supervisor')->first();
-        $supervisores = $rolSupervisor!=null? $rolSupervisor->users : '[]';
-        // Lideres
-        $rolLider = Role::where('name', 'Lider')->first();
-        $lideres = $rolLider!=null? $rolLider->users : '[]';
+        // Array Auditores
+        $rolAuditor = Role::where('name', 'Auditor')->first();
+        $auditores = $rolAuditor!=null? $rolAuditor->users : '[]';
 
         // buscar la mayor fechaProgramada en los iventarios
         return view('operacional.programacionAI.programacion-semanal', [
             'clientes' => $clientes,
             'primerInventario'=> $minymax->primerInventario,
             'ultimoInventario'=> $minymax->ultimoInventario,
-            'captadores'=> $captadores,
-            'supervisores'=> $supervisores,
-            'lideres'=> $lideres
+            'auditores'=> $auditores,
         ]);
     }
 

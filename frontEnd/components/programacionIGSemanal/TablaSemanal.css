@@ -15,7 +15,7 @@
     padding: 0 !important;
 }
 .trSeparador {
-    border-bottom: 2px black solid;
+    border-bottom: 2px black solid !important;
 }
 
 /* FECHA */
