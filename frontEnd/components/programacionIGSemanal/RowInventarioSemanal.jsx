@@ -170,6 +170,10 @@ class RowInventario extends React.Component{
         let txtHrCierre = `Cierre a las ${_hrCierre[0]}:${_hrCierre[1]}hrs`
         return (
             <tr className={this.props.mostrarSeparador? css.trSeparador: ''}>
+                {/* Correlativo */}
+                <td className={css.tdCorrelativo}>
+                    {this.props.index}
+                </td>
                 {/* Fecha */}
                 <td className={css.tdFecha}>
                     <InputFecha

@@ -38,6 +38,7 @@ class TablaInventarios extends React.Component{
                 style={{overfow: 'overlay'}}>
                 <thead>
                     <tr>
+                        <th className={css.thCorrelativo}>#</th>
                         <th className={css.thFecha}>
                             Fecha
                             <span className={'glyphicon glyphicon-sort-by-attributes pull-right'}

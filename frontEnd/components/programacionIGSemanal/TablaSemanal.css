@@ -18,6 +18,16 @@
     border-bottom: 2px black solid !important;
 }
 
+/* CORRELATIVO */
+.thCorrelativo {
+    width: 30px;
+    background: white;
+}
+.tdCorrelativo {
+    width: 30px;
+    vertical-align: middle !important;
+}
+
 /* FECHA */
 .thFecha{
     width: 170px !important;
