@@ -244,7 +244,8 @@ class InventariosController extends Controller {
             'nominaNoche'
         ])
             ->where('fechaProgramada', '>=', $annoMesDia1)
-            ->where('fechaProgramada', '<=', $annoMesDia2);
+            ->where('fechaProgramada', '<=', $annoMesDia2)
+            ->orderBy('fechaProgramada', 'asc');
 
         if($idCliente==0){
             // No se realiza un filtro por clientes
