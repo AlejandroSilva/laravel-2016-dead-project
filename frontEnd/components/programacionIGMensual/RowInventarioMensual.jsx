@@ -202,6 +202,8 @@ class RowInventarioMensual extends React.Component{
         let nombreCliente = this.props.inventario.local.nombreCliente || this.props.inventario.local.cliente.nombreCorto
         let nombreRegion = this.props.inventario.local.nombreRegion || this.props.inventario.local.direccion.comuna.provincia.region.numero
         let nombreComuna = this.props.inventario.local.nombreComuna || this.props.inventario.local.direccion.comuna.nombre
+        if(this.props.inventario.local.direccion)
+            console.log("direccion no encontrada ", this.props.inventario)
         let diaSemana = moment(this.props.inventario.fechaProgramada).format('dddd')
         return (
             <tr className={this.props.mostrarSeparador? cssTabla.trSeparador: ''}>

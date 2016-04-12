@@ -188,14 +188,17 @@ export default class BlackBox{
                 numero: '-',
                 stock: 0,
                 fechaStock: 'YYYY-MM-DD',
-                formato_local: {
-                    produccionSugerida: 0
-                },
                 nombreCliente: '-',
                 nombreComuna: '-',
                 nombreProvincia: '-',
                 nombreRegion: '-',
-                dotacionSugerida: 0
+                dotacionSugerida: 0,
+                formato_local: {
+                    produccionSugerida: 0
+                },
+                direccion: {
+                    direccion: ''
+                }
             }
         }
     }
