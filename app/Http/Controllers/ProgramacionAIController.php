@@ -39,6 +39,8 @@ class ProgramacionAIController extends Controller {
         $rolAuditor = Role::where('name', 'Auditor')->first();
         $auditores = $rolAuditor!=null? $rolAuditor->users : '[]';
         return view('operacional.programacionAI.programacion-mensual', [
+            'puedeAgregarAuditorias'   => $user->can('programaAuditorias_agregar')? "true":"false",
+            'puedeModificarAuditorias' => $user->can('programaAuditorias_modificar')? "true":"false",
             'clientes' => $clientesWithLocales,
             'auditores' => $auditores
         ]);
@@ -120,6 +122,7 @@ class ProgramacionAIController extends Controller {
 
         // buscar la mayor fechaProgramada en los iventarios
         return view('operacional.programacionAI.programacion-semanal', [
+            'puedeModificarAuditorias' => $user->can('programaAuditorias_modificar')? "true":"false",
             'clientes' => $clientes,
             'primerInventario'=> $minymax->primerInventario,
             'ultimoInventario'=> $minymax->ultimoInventario,

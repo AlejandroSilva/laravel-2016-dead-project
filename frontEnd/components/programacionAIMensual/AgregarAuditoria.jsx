@@ -64,6 +64,9 @@ class AgregarPrograma extends React.Component {
      */
     agregarLocalManualmente(evt) {
         evt.preventDefault()
+        if(!this.props.puedeAgregar)
+            return alert("no tiene los permisos necesarios para agregar una auditoria")
+
         let idCliente = this.inputIdCliente.value
         let numeroLocal = this.inputNumeroLocal.value
         let annoMesDia = this.inputAnnoMesDia.value
@@ -80,6 +83,8 @@ class AgregarPrograma extends React.Component {
      */
     agregarLocalesAlPegar(event){
         event.preventDefault()
+        if(!this.props.puedeAgregar)
+            return alert("no tiene los permisos necesarios para agregar una auditoria")
 
         // validar que exista un cliente seleccionado
         let idCliente = this.inputIdCliente.value
@@ -172,13 +177,17 @@ class AgregarPrograma extends React.Component {
                     {/* Locales */}
                     <div className={'col-sm-3 form-group ' + (this.state.errores.errorNumeroLocal? 'has-error':'')}>
                         <label className="control-label" htmlFor="locales">Local</label>
-                        <input className="form-control" type="number" min='1' max='9999' name="locales" ref={ref=>this.inputNumeroLocal=ref} onChange={this.inputNumeroLocalChanged.bind(this)}  />
+                        <input className="form-control" type="number" min='1' max='9999' name="locales"
+                               ref={ref=>this.inputNumeroLocal=ref}
+                               onChange={this.inputNumeroLocalChanged.bind(this)}
+                               disabled={this.props.puedeAgregar? '':'disabled'}/>
                         <span className="help-block" style={{position:'absolute'}}>{this.state.errores.errorNumeroLocal}</span>
                     </div>
                     {/* Boton Agregar */}
                     <div className="col-sm-2 form-group">
                         <label className="control-label">{'\u00A0'}</label>
-                        <input type="submit" className="form-control btn btn-primary" value="Agregar local"/>
+                        <input type="submit" className="form-control btn btn-primary" value="Agregar local"
+                               disabled={this.props.puedeAgregar? '':'disabled'}/>
                     </div>
                 </form>
 
@@ -187,8 +196,9 @@ class AgregarPrograma extends React.Component {
                     {/* Locales */}
                     <div className='col-sm-3 form-group '>
                         <label className="control-label" htmlFor="locales">Locales</label>
-                        <input className="form-control" type="text" name="locales" placeholder="pegar aca los datos de Excel" onPaste={this.agregarLocalesAlPegar.bind(this)}/>
-
+                        <input className="form-control" type="text" name="locales" placeholder="pegar aca los datos de Excel"
+                               onPaste={this.agregarLocalesAlPegar.bind(this)}
+                               disabled={this.props.puedeAgregar? '':'disabled'}/>
                         <p style={{marginTop: '1em'}}>Abra Excel, seleccione los datos de la columna <b>CECO</b>, <b>COPIE</b> el contendo y <b>PEGUELO</b> en la cuandro de texto.</p>
                     </div>
 
@@ -247,6 +257,7 @@ class AgregarPrograma extends React.Component {
 }
 
 AgregarPrograma.propTypes = {
+    puedeAgregar: React.PropTypes.bool.isRequired,
     clientes: React.PropTypes.array.isRequired,
     meses: React.PropTypes.array.isRequired,
     // Metodos

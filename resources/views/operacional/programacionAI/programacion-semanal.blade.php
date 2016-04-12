@@ -13,7 +13,7 @@
     </div>
 
     <script>
-        {{-- Se entregan las fechas minimas y maximas --}}
+        window.laravelPuedeModificarAuditorias = {!! $puedeModificarAuditorias !!};
         window.laravelClientes = {!! $clientes !!};
         window.laravelAuditores = {!! $auditores !!};
     </script>

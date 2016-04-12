@@ -219,6 +219,7 @@ class ProgramacionAISemanal extends React.Component {
                 </div>
 
                 <TablaAuditoriaSemanal
+                    puedeModificar={this.props.puedeModificar}
                     auditores={this.props.auditores}
                     auditorias={this.state.auditoriasFiltradas}
                     guardarAuditoria={this.guardarAuditoria.bind(this)}
@@ -230,6 +231,7 @@ class ProgramacionAISemanal extends React.Component {
 }
 
 ProgramacionAISemanal.propTypes = {
+    puedeModificar: React.PropTypes.bool.isRequired,
     clientes: React.PropTypes.array.isRequired,
     auditores: React.PropTypes.array.isRequired
 }

@@ -220,14 +220,16 @@ class RowAuditoriaMensual extends React.Component{
                                onKeyDown={this.inputOnKeyDown.bind(this, 'dia')}
                                onBlur={this.guardarAuditoria.bind(this)}
                                onFocus={()=>{this.inputDia.select()}}
-                        />
-                        <input className={cssInput.inputMes} type="number" disabled
+                               disabled={this.props.puedeModificar? '':'disabled'}/>
+                        <input className={cssInput.inputMes} type="number"
                                className={this.state.mesValido? cssInput.inputDia : cssInput.inputDiaInvalido}
                                type="number" min={1} max={12}
                                ref={ref=>this.inputMes=ref}
-                               value={this.state.inputMes}/>
-                        <input className={cssInput.inputAnno} type="number" disabled
-                               value={this.state.inputAnno}/>
+                               value={this.state.inputMes}
+                               disabled/>
+                        <input className={cssInput.inputAnno} type="number"
+                               value={this.state.inputAnno}
+                               disabled/>
                     </div>
                 </td>
                 {/* Cliente*/}
@@ -270,6 +272,7 @@ class RowAuditoriaMensual extends React.Component{
                             opciones={auditores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
+                            puedeModificar={this.props.puedeModificar}
                     />
                 </td>
                 {/* Hora de Apertura del local */}
@@ -305,6 +308,7 @@ class RowAuditoriaMensual extends React.Component{
 
 RowAuditoriaMensual.propTypes = {
     // Objetos
+    puedeModificar: React.PropTypes.bool.isRequired,
     index: React.PropTypes.number.isRequired,
     auditoria: React.PropTypes.object.isRequired,
     mostrarSeparador: React.PropTypes.bool.isRequired,

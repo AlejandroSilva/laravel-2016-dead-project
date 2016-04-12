@@ -201,6 +201,7 @@ class ProgramacionMensualAI extends React.Component{
                     agregarAuditoria={this.agregarAuditoria.bind(this)}
                     agregarGrupoInventarios={this.agregarGrupoInventarios.bind(this)}
                     onSeleccionarMes={this.onSeleccionarMes.bind(this)}
+                    puedeAgregar={this.props.puedeAgregar}
                 />
 
                 <div className="row">
@@ -210,6 +211,7 @@ class ProgramacionMensualAI extends React.Component{
                         >Exportar</a>*/}
                     </h4>
                     <TablaMensualAI
+                        puedeModificar={this.props.puedeModificar}
                         auditoriasFiltradas={this.state.auditoriasFiltradas}
                         auditores={this.props.auditores}
                         filtroClientes={this.state.filtroClientes}
@@ -227,6 +229,8 @@ class ProgramacionMensualAI extends React.Component{
 }
 
 ProgramacionMensualAI.propTypes = {
+    puedeModificar: React.PropTypes.bool.isRequired,
+    puedeAgregar: React.PropTypes.bool.isRequired,
     clientes: React.PropTypes.array.isRequired,
     auditores: React.PropTypes.array.isRequired
 }

@@ -69,6 +69,7 @@ class TablaAuditoriaSemanal extends React.Component{
                                 mostrarSeparador = auditoria.fechaProgramada!==sgteInventario.fechaProgramada
                             return <RowAuditoriaSemanal
                                 // Propiedades
+                                puedeModificar={this.props.puedeModificar}
                                 key={index}
                                 index={index}
                                 ref={ref=>this.rows[index]=ref}
@@ -90,6 +91,7 @@ class TablaAuditoriaSemanal extends React.Component{
 }
 TablaAuditoriaSemanal.propTypes = {
     // Objetos
+    puedeModificar: React.PropTypes.bool.isRequired,
     auditorias: React.PropTypes.array.isRequired,
     auditores: React.PropTypes.array.isRequired,
     // supervisores: React.PropTypes.array.isRequired,

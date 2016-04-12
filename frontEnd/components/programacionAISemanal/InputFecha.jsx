@@ -107,6 +107,7 @@ class InputFecha extends React.Component{
                        onChange={this.onDiaChange.bind(this)}
                        onBlur={()=>this.props.onGuardar()}
                        onFocus={()=>{ this.inputDia.select() }}             // seleccionar el texto cuando se hace focus
+                       disabled={this.props.puedeModificar? '':'disabled'}
                 />
                 <input className={classnameMes} type="number"
                        ref={ref=>this.inputMes=ref}
@@ -115,6 +116,7 @@ class InputFecha extends React.Component{
                        onChange={this.onMesChange.bind(this)}
                        onBlur={()=>this.props.onGuardar()}
                        onFocus={()=>{ this.inputMes.select() }}             // seleccionar el texto cuando se hace focus
+                       disabled={this.props.puedeModificar? '':'disabled'}
                 />
                 <input className={css.inputAnno} type="number" disabled
                        value={this.state.anno}/>
@@ -124,6 +126,7 @@ class InputFecha extends React.Component{
 }
 InputFecha.propTypes = {
     // Objetos
+    puedeModificar: React.PropTypes.bool.isRequired,
     diaSemana: React.PropTypes.string.isRequired,
     fecha: React.PropTypes.string.isRequired,
     // Metodos

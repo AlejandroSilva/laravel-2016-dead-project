@@ -87,6 +87,7 @@ class TablaMensualAI extends React.Component{
                                 mostrarSeparador = auditoria.fechaProgramada!==sgteAuditoria.fechaProgramada
                             return <RowAuditoriaMensual
                                 // Propiedades
+                                puedeModificar={this.props.puedeModificar}
                                 key={index}
                                 index={index}
                                 auditoria={auditoria}
@@ -111,6 +112,7 @@ class TablaMensualAI extends React.Component{
 }
 TablaMensualAI.propTypes = {
     // Objetos
+    puedeModificar: React.PropTypes.bool.isRequired,
     auditoriasFiltradas: React.PropTypes.array.isRequired,
     auditores: React.PropTypes.array.isRequired,
     filtroClientes: React.PropTypes.array.isRequired,

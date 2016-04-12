@@ -45,6 +45,8 @@ let programacionAIMensualDOM = document.getElementById('react-programacionAI-men
 if( programacionAIMensualDOM ){
     ReactDOM.render(
         <ProgramacionAIMensual
+            puedeModificar={ window.laravelPuedeModificarAuditorias }
+            puedeAgregar={ window.laravelPuedeAgregarAuditorias }
             clientes={window.laravelClientes}
             auditores={window.laravelAuditores}
         />, programacionAIMensualDOM)
@@ -53,6 +55,7 @@ let programacionAISemanalDOM = document.getElementById('react-programacionAI-sem
 if( programacionAISemanalDOM ){
     ReactDOM.render(
         <ProgramacionAISemanal
+            puedeModificar={ window.laravelPuedeModificarAuditorias }
             clientes={window.laravelClientes}
             auditores={window.laravelAuditores}
         />, programacionAISemanalDOM)
