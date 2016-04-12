@@ -8,7 +8,8 @@ use App\Http\Requests;
 use PHPExcel;
 use PHPExcel_IOFactory;
 // Modelos
-use App\User;
+use Auth;
+use Redirect;
 use App\Role;
 use App\Clientes;
 use App\Inventarios;
@@ -27,10 +28,18 @@ class ProgramacionController extends Controller {
 
     // GET programacionIG/mensual
     public function showMensual(){
+        // validar de que el usuario tenga los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('programaInventarios_ver'))
+            return view('errors.403');
+
         $clientesWithLocales = Clientes::allWithSimpleLocales();
         return view('operacional.programacionIG.programacionIG-mensual', [
-            'clientes' => $clientesWithLocales
+            'puedeAgregarInventarios'   => $user->can('programaInventarios_agregar')? "true":"false",
+            'puedeModificarInventarios' => $user->can('programaInventarios_modificar')? "true":"false",
+            'clientes' => $clientesWithLocales,
         ]);
+
     }
 
     // GET programacionIG/mensual/pdf/{mes}
@@ -88,12 +97,11 @@ class ProgramacionController extends Controller {
 
     // GET programacionIG/semanal
     public function showSemanal(){
-        // buscar la menor fechaProgramada en los inventarios
-        $select = Inventarios::
-            selectRaw('min(fechaProgramada) as primerInventario, max(fechaProgramada) as ultimoInventario')
-            ->get();
-        $minymax = $select[0];
-        
+        // validar de que el usuario tenga los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('programaInventarios_ver'))
+            return view('errors.403');
+
         // Clientes
         $clientes  = Clientes::all();
         // Captadores
@@ -108,9 +116,8 @@ class ProgramacionController extends Controller {
 
         // buscar la mayor fechaProgramada en los iventarios
         return view('operacional.programacionIG.programacionIG-semanal', [
+            'puedeModificarInventarios' => $user->can('programaInventarios_modificar')? "true":"false",
             'clientes' => $clientes,
-            'primerInventario'=> $minymax->primerInventario,
-            'ultimoInventario'=> $minymax->ultimoInventario,
             'captadores'=> $captadores,
             'supervisores'=> $supervisores,
             'lideres'=> $lideres

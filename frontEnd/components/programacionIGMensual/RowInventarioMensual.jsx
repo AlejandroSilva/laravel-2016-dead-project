@@ -167,6 +167,9 @@ class RowInventarioMensual extends React.Component{
         return isDirty
     }
     guardarOCrear(){
+        if(!this.props.puedeModificar)
+            return alert("no tiene permitido modificar el inventario")
+
         // si no es dirty (no hay cambios) no se hace nada
         if(this.isDirty()===false)
             return
@@ -223,13 +226,16 @@ class RowInventarioMensual extends React.Component{
                                onKeyDown={this.inputOnKeyDown.bind(this, 'dia')}
                                onBlur={this.guardarOCrear.bind(this)}
                                onFocus={()=>{this.inputDia.select()}}
+                               disabled={this.props.puedeModificar? '':'disabled'}
                         />
-                        <input className={cssInput.inputMes} type="number" disabled
+                        <input className={cssInput.inputMes} type="number"
                                className={this.state.mesValido? cssInput.inputDia : cssInput.inputDiaInvalido}
                                type="number" min={1} max={12}
                                ref={ref=>this.inputMes=ref}
-                               value={this.state.inputMes}/>
-                        <input className={cssInput.inputAnno} type="number" disabled
+                               value={this.state.inputMes}
+                               disabled/>
+                        <input className={cssInput.inputAnno} type="number"
+                               disabled
                                value={this.state.inputAnno}/>
                     </div>
                 </td>
@@ -285,8 +291,8 @@ class RowInventarioMensual extends React.Component{
                                onChange={this.onInputDotacionChange.bind(this)}
                                ref={ref=>this.inputDotacion=ref}
                                onKeyDown={this.inputOnKeyDown.bind(this, 'dotacion')}
-                               onBlur={this.guardarOCrear.bind(this)}/>
-
+                               onBlur={this.guardarOCrear.bind(this)}
+                               disabled={this.props.puedeModificar? '':'disabled'}/>
                     </OverlayTrigger>
                 </td>
                 {/* Jornada */}
@@ -307,6 +313,7 @@ class RowInventarioMensual extends React.Component{
                         ? <button className="btn btn-xs btn-primary"
                                   tabIndex="-1"
                                   onClick={()=>{ alert("PEND: eliminar inventario") } }
+                                  disabled={this.props.puedeModificar? '':'disabled'}
                         >Eliminar inventario</button>
                         : <button className="btn btn-xs btn-danger"
                                   tabIndex="-1"
@@ -324,6 +331,7 @@ RowInventarioMensual.propTypes = {
     index: React.PropTypes.number.isRequired,
     inventario: React.PropTypes.object.isRequired,
     mostrarSeparador: React.PropTypes.bool.isRequired,
+    puedeModificar: React.PropTypes.bool.isRequired,
     // Metodos
     focusFilaSiguiente: React.PropTypes.func.isRequired,
     focusFilaAnterior: React.PropTypes.func.isRequired,

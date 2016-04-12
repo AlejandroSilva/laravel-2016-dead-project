@@ -74,6 +74,7 @@ class InputDotacion extends React.Component{
                 onChange={this.onInputChange.bind(this)}
                 onBlur={()=>this.props.onGuardar()}
                 onFocus={()=>{ this.inputDotacion.select() }}             // seleccionar el texto cuando se hace focus
+                disabled={this.props.puedeModificar? '':'disabled'}
             />
         )
     }
@@ -81,6 +82,7 @@ class InputDotacion extends React.Component{
 InputDotacion.propTypes = {
     // Objetos
     asignada: React.PropTypes.string.isRequired,
+    puedeModificar: React.PropTypes.bool.isRequired,
     // Metodos
     focusRowAnterior: React.PropTypes.func.isRequired,
     focusRowSiguiente: React.PropTypes.func.isRequired,

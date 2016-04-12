@@ -8,7 +8,7 @@ use App\Http\Requests;
 use PHPExcel;
 use PHPExcel_IOFactory;
 // Modelos
-use App\User;
+use Auth;
 use App\Role;
 use App\Clientes;
 use App\Inventarios;
@@ -27,6 +27,12 @@ class ProgramacionAIController extends Controller {
 
     // GET programacionAI/mensual
     public function showMensual(){
+        // validar de que el usuario tenga los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('programaAuditorias_ver'))
+            return view('errors.403');
+
+
         // Array de Clientes
         $clientesWithLocales = Clientes::allWithSimpleLocales();
         // Array Auditores
@@ -95,6 +101,11 @@ class ProgramacionAIController extends Controller {
     
     // GET programacionAI/semanal
     public function showSemanal(){
+        // validar de que el usuario tenga los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('programaAuditorias_ver'))
+            return view('errors.403');
+
         // buscar la menor fechaProgramada en los inventarios
         $select = Inventarios::
         selectRaw('min(fechaProgramada) as primerInventario, max(fechaProgramada) as ultimoInventario')

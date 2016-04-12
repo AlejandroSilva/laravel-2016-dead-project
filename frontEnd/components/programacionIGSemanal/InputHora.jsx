@@ -73,6 +73,7 @@ class InputHora extends React.Component{
                 onChange={this.onInputChange.bind(this)}
                 onBlur={()=>this.props.onGuardar()}
                 required
+                disabled={this.props.puedeModificar? '':'disabled'}
             />
         </OverlayTrigger>
         )
@@ -82,6 +83,7 @@ InputHora.propTypes = {
     // Objetos
     asignada: React.PropTypes.string.isRequired,
     tooltipText: React.PropTypes.string,
+    puedeModificar: React.PropTypes.bool.isRequired,
     // Metodos
     focusRowAnterior: React.PropTypes.func.isRequired,
     focusRowSiguiente: React.PropTypes.func.isRequired,

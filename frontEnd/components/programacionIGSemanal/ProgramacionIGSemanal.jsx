@@ -5,7 +5,7 @@ moment.locale('es')
 import api from '../../apiClient/v1'
 // Componentes
 import BlackBoxSemanal from './BlackBoxSemanal'
-import TablaInventarios from './TablaSemanal.jsx'
+import TablaSemanal from './TablaSemanal.jsx'
 import SelectRange from './SelectRange.jsx'
 
 const format = 'YYYY-MM-DD'
@@ -228,10 +228,11 @@ class ProgramacionIGSemanal extends React.Component {
                     </div>
                 </div>
 
-                <TablaInventarios
-                    lideres={window.laravelLideres}
-                    supervisores={window.laravelSupervisores}
-                    captadores={window.laravelCaptadores}
+                <TablaSemanal
+                    puedeModificar={this.props.puedeModificar}
+                    lideres={this.props.lideres}
+                    supervisores={this.props.supervisores}
+                    captadores={this.props.captadores}
                     inventarios={this.state.inventariosFiltrados}
                     guardarInventario={this.guardarInventario.bind(this)}
                     guardarNomina={this.guardarNomina.bind(this)}
@@ -243,9 +244,13 @@ class ProgramacionIGSemanal extends React.Component {
 }
 
 ProgramacionIGSemanal.propTypes = {
+    puedeModificar: React.PropTypes.bool.isRequired,
     clientes: React.PropTypes.array.isRequired,
-    primerInventario: React.PropTypes.string.isRequired,
-    ultimoInventario: React.PropTypes.string.isRequired
+    captadores: React.PropTypes.array.isRequired,
+    supervisores: React.PropTypes.array.isRequired,
+    lideres: React.PropTypes.array.isRequired
 }
-
+ProgramacionIGSemanal.defaultProps = {
+    puedeModificar: false
+}
 export default ProgramacionIGSemanal

@@ -72,6 +72,7 @@ class TablaInventarios extends React.Component{
                                 mostrarSeparador = inventario.fechaProgramada!==sgteInventario.fechaProgramada
                             return <RowInventarioSemanal
                                 // Propiedades
+                                puedeModificar={this.props.puedeModificar}
                                 key={index}
                                 index={index}
                                 ref={ref=>this.rows[index]=ref}
@@ -93,6 +94,7 @@ class TablaInventarios extends React.Component{
 }
 TablaInventarios.propTypes = {
     // Objetos
+    puedeModificar: React.PropTypes.bool.isRequired,
     lideres: React.PropTypes.array.isRequired,
     supervisores: React.PropTypes.array.isRequired,
     captadores: React.PropTypes.array.isRequired,

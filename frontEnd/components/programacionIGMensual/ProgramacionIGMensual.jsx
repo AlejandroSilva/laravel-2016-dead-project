@@ -224,6 +224,7 @@ class ProgramacionIGMensual extends React.Component{
                 <h1>Programación mensual IG</h1>
 
                 <AgregarPrograma
+                    puedeAgregar={this.props.puedeAgregar}
                     clientes={this.props.clientes}
                     meses={this.state.meses}
                     agregarInventario={this.agregarInventario.bind(this)}
@@ -239,6 +240,7 @@ class ProgramacionIGMensual extends React.Component{
                         >Exportar</a>
                     </h4>
                     <TablaMensual
+                        puedeModificar={this.props.puedeModificar}
                         inventariosFiltrados={this.state.inventariosFiltrados}
                         filtroClientes={this.state.filtroClientes}
                         filtroRegiones={this.state.filtroRegiones}
@@ -255,6 +257,8 @@ class ProgramacionIGMensual extends React.Component{
 }
 
 ProgramacionIGMensual.propTypes = {
+    puedeModificar: React.PropTypes.bool.isRequired,
+    puedeAgregar: React.PropTypes.bool.isRequired,
     clientes: React.PropTypes.array.isRequired
 }
 

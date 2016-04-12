@@ -80,6 +80,7 @@ class InputStock extends React.Component{
                 onChange={this.onInputChange.bind(this)}
                 onBlur={()=>this.props.onGuardar()}
                 onFocus={()=>{ this.inputStock.select() }}             // seleccionar el texto cuando se hace focus
+                disabled={this.props.puedeModificar? '':'disabled'}
             />
         </OverlayTrigger>
         )
@@ -87,6 +88,7 @@ class InputStock extends React.Component{
 }
 InputStock.propTypes = {
     // Objetos
+    puedeModificar: React.PropTypes.bool.isRequired,
     asignada: React.PropTypes.string.isRequired,
     tooltipText: React.PropTypes.string,
     // Metodos

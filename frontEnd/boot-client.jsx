@@ -23,6 +23,8 @@ let programacionIGMensualDOM = document.getElementById('react-programacionIG-men
 if( programacionIGMensualDOM ){
     ReactDOM.render(
         <ProgramacionIGMensual
+            puedeModificar={ window.laravelPuedeModificarInventarios }
+            puedeAgregar={ window.laravelPuedeAgregarInventarios }
             clientes={window.laravelClientes}
         />, programacionIGMensualDOM)
 }
@@ -30,9 +32,11 @@ let programacionIGSemanalDOM = document.getElementById('react-programacionIG-sem
 if( programacionIGSemanalDOM ){
     ReactDOM.render(
         <ProgramacionIGSemanal
+            puedeModificar={ window.laravelPuedeModificarInventarios }
             clientes={window.laravelClientes}
-            primerInventario={window.laravelPrimerInventario}
-            ultimoInventario={window.laravelUltimoInventario}
+            lideres={window.laravelLideres}
+            supervisores={window.laravelSupervisores}
+            captadores={window.laravelCaptadores}
         />, programacionIGSemanalDOM)
 }
 

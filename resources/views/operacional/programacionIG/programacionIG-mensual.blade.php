@@ -16,5 +16,7 @@
             console.error('no se recibieron datos de clientes desde la vista');
             window.laravelClientes = [];
         @endif
+        window.laravelPuedeModificarInventarios = {!! $puedeModificarInventarios !!};
+        window.laravelPuedeAgregarInventarios   = {!! $puedeAgregarInventarios !!};
     </script>
 @stop

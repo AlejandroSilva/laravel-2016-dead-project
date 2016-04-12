@@ -50,6 +50,7 @@ class Select extends React.Component{
                     className={(this.state.dirty? css.selectDirty : css.select)+' '+this.props.className}
                     value={this.state.seleccionUsuario}
                     onChange={this.onInputChange.bind(this)}
+                    disabled={this.props.puedeModificar? '':'disabled'}
                     style={this.props.style}>
                 {this.props.opcionNula
                     ? <option value={''} disabled={this.props.opcionNulaSeleccionable===false}>--</option>
@@ -64,6 +65,7 @@ class Select extends React.Component{
 }
 Select.propTypes = {
     // Objetos
+    puedeModificar: React.PropTypes.bool.isRequired,
     seleccionada: React.PropTypes.string.isRequired,
     opciones: React.PropTypes.array.isRequired,
     opcionNula: React.PropTypes.bool,
