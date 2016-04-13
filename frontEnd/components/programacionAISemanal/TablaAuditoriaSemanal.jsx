@@ -2,8 +2,8 @@ import React from 'react'
 //import moment from 'moment'
 
 // Componentes
-//import Sticky from '../shared/react-sticky/sticky.js'
-//import StickyContainer from '../shared/react-sticky/container.js'
+import Sticky from '../shared/react-sticky/sticky.js'
+import StickyContainer from '../shared/react-sticky/container.js'
 import RowAuditoriaSemanal from './RowAuditoriaSemanal.jsx'
 
 // Styles
@@ -34,10 +34,29 @@ class TablaAuditoriaSemanal extends React.Component{
     
     render(){
         return (
-            <table className={"table table-bordered table-condensed "+css.tableFixed}
-                style={{overfow: 'overlay'}}>
+            <StickyContainer type={React.DOM.table}  className={"table table-bordered table-condensed "+css.tableFixed}>
+                <colgroup>
+                    <col className={css.thCorrelativo}/>
+                    <col className={css.thFecha}/>
+                    <col className={css.thCliente}/>
+                    <col className={css.thCeco}/>
+                    <col className={css.thRegion}/>
+                    <col className={css.thComuna}/>
+                    <col className={css.thTienda}/>
+                    <col className={css.thStock}/>
+                    <col className={css.thLider}/>
+                    <col className={css.thAperturaCierre}/>
+                    <col className={css.thAperturaCierre}/>
+                    <col className={css.thDireccion}/>
+                    <col className={css.thNomina}/>
+                </colgroup>
                 <thead>
-                    <tr>
+                    {/* TR que se pega al top de la pagina, es una TR, con instancia de 'Sticky' */}
+                    <Sticky
+                        topOffset={-50}
+                        type={React.DOM.tr}
+                        stickyStyle={{top: '50px'}}>
+
                         <th className={css.thCorrelativo}>#</th>
                         <th className={css.thFecha}>
                             Fecha
@@ -57,7 +76,7 @@ class TablaAuditoriaSemanal extends React.Component{
                         <th className={css.thAperturaCierre}>Hr.Cierre</th>
                         <th className={css.thDireccion}>Dirección</th>
                         <th className={css.thNomina}>Opciones</th>
-                    </tr>
+                    </Sticky>
                 </thead>
                 <tbody>
                     {this.props.auditorias.length===0
@@ -85,7 +104,7 @@ class TablaAuditoriaSemanal extends React.Component{
                             />
                         })}
                 </tbody>
-            </table>
+            </StickyContainer>
         )
     }
 }
