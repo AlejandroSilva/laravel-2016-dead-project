@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 // Modelos
 use App\Clientes;
 use App\Inventarios;
@@ -182,6 +183,26 @@ class InventariosController extends Controller {
                     'inventario'=>$inventario
                 ], 400);
             }
+        }else{
+            return response()->json([], 404);
+        }
+    }
+
+    // DELETE api/inventario/{idInventario}
+    function api_eliminar($idInventario, Request $request){
+        $inventario = Inventarios::find($idInventario);
+        if($inventario){
+            DB::transaction(function() use($inventario){
+                // eliminar sus jornadas
+
+                $inventario->delete();
+                $nominaDia = $inventario->nominaDia;
+                $nominaDia->delete();
+                $nominaNoche = $inventario->nominaNoche;
+                $nominaNoche->delete();
+                return response()->json([], 204);
+            });
+
         }else{
             return response()->json([], 404);
         }

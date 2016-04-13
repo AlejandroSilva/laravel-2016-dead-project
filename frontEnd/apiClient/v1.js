@@ -37,6 +37,9 @@ export default {
         actualizar: (idInventario, datos)=>{
             return axios.put(`/api/inventario/${idInventario}`, datos)
         },
+        eliminar: (idInventario)=>{
+            return axios.delete(`/api/inventario/${idInventario}`)
+        },
         getPorMes: (annoMesDia)=> {
             return axios.get(`/api/inventario/mes/${annoMesDia}`)
         },

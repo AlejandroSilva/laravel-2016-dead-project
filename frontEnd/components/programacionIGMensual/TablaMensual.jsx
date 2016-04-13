@@ -108,6 +108,7 @@ class TablaMensual extends React.Component{
                                 focusFilaAnterior={this.focusFilaAnterior.bind(this)}
                                 guardarOCrearInventario={this.props.guardarOCrearInventario}
                                 quitarInventario={this.props.quitarInventario}
+                                eliminarInventario={this.props.eliminarInventario}
                                 //guardarOCrear={this.guardarOCrear.bind(this)}
                                 ref={ref=>this.inputFecha[index]=ref}
 
@@ -130,6 +131,7 @@ TablaMensual.propTypes = {
     actualizarFiltro: React.PropTypes.func.isRequired,
     guardarOCrearInventario: React.PropTypes.func.isRequired,
     quitarInventario: React.PropTypes.func.isRequired,
+    eliminarInventario: React.PropTypes.func.isRequired,
     ordenarInventarios: React.PropTypes.func.isRequired
 }
 export default TablaMensual

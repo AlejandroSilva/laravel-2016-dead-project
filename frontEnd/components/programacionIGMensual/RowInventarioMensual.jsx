@@ -47,54 +47,22 @@ class RowInventarioMensual extends React.Component{
     }
 
     componentWillReceiveProps(nextProps){
-/*
-        let mismoInventario = this.props.inventario.idDummy===nextProps.inventario.idDummy
-        if(mismoInventario){
-            //if(this.props.inventario.idDummy==9) console.log("actualizando componente 9", this.props.inventario.fechaProgramada, nextProps.inventario.fechaProgramada)
-            //console.log("nuevas props para ", this.props.inventario.idDummy)
-
-            // Si es el mismo inventario, se revisa si se han actualizado los datos (y se reemplaza el state actual del usuario)
-
-            // se recibio una nueva fecha?
-            //let [anno1, mes1, dia1] = this.props.inventario.fechaProgramada.split('-')
-            let [anno2, mes2, dia2] = nextProps.inventario.fechaProgramada.split('-')
-            this.setState({
-                inputDia: dia2, inputMes: mes2, inputAnno: anno2,
-                diaValido: this._diaValido(dia2), mesValido: this._mesValido(mes2)
-            })
-
-            // se recibio una nueva dotacion?
-            //let dotacion1 = this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida
-            let dotacion2 = nextProps.inventario.dotacionAsignadaTotal || nextProps.inventario.local.dotacionSugerida
-
-            //if(dotacion1!==dotacion2 || this.state.inputDotacion!==dotacion2)
-            this.setState({inputDotacion: dotacion2, dotacionValida: this._dotacionValida(dotacion2)})
-
-
-            // se recibio una nueva jornada?
-            //let jornada1 = this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida
-            let jornada2 = nextProps.inventario.idJornada || nextProps.inventario.local.idJornadaSugerida
-            this.setState({selectJornada: jornada2})
-
-        }else{
-*/
-            // Si el inventario cambio, se vuelven a poner los valores "por defecto"
-            let [anno, mes, dia] = nextProps.inventario.fechaProgramada.split('-')
-            let dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal
-            let dotacionSugerida = nextProps.inventario.local.dotacionSugerida
-            let jornadaInventario = nextProps.inventario.idJornada
-            let jornadaLocal = nextProps.inventario.local.idJornadaSugerida
-            this.setState({
-                inputDia: dia,
-                inputMes: mes,
-                inputAnno: anno,
-                inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
-                selectJornada: jornadaInventario || jornadaLocal,
-                diaValido: this._diaValido(dia),
-                mesValido: this._mesValido(mes),
-                dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
-            })
-/*        }*/
+      // Si el inventario cambio, se vuelven a poner los valores "por defecto"
+        let [anno, mes, dia] = nextProps.inventario.fechaProgramada.split('-')
+        let dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal
+        let dotacionSugerida = nextProps.inventario.local.dotacionSugerida
+        let jornadaInventario = nextProps.inventario.idJornada
+        let jornadaLocal = nextProps.inventario.local.idJornadaSugerida
+        this.setState({
+            inputDia: dia,
+            inputMes: mes,
+            inputAnno: anno,
+            inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
+            selectJornada: jornadaInventario || jornadaLocal,
+            diaValido: this._diaValido(dia),
+            mesValido: this._mesValido(mes),
+            dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
+        })
     }
 
     focusElemento(elemento){
@@ -200,13 +168,15 @@ class RowInventarioMensual extends React.Component{
     quitarInventario(){
         this.props.quitarInventario(this.props.inventario.idDummy)
     }
+    eliminarInventario(){
+        console.log("this.props.inventario")
+        this.props.eliminarInventario(this.props.inventario)
+    }
 
     render(){
         let nombreCliente = this.props.inventario.local.nombreCliente || this.props.inventario.local.cliente.nombreCorto
         let nombreRegion = this.props.inventario.local.nombreRegion || this.props.inventario.local.direccion.comuna.provincia.region.numero
         let nombreComuna = this.props.inventario.local.nombreComuna || this.props.inventario.local.direccion.comuna.nombre
-        if(this.props.inventario.local.direccion)
-            console.log("direccion no encontrada ", this.props.inventario)
         let diaSemana = moment(this.props.inventario.fechaProgramada).format('dddd')
         return (
             <tr className={this.props.mostrarSeparador? cssTabla.trSeparador: ''}>
@@ -312,7 +282,7 @@ class RowInventarioMensual extends React.Component{
                         this.props.inventario.idInventario
                         ? <button className="btn btn-xs btn-primary"
                                   tabIndex="-1"
-                                  onClick={()=>{ alert("PEND: eliminar inventario") } }
+                                  onClick={this.eliminarInventario.bind(this)}
                                   disabled={this.props.puedeModificar? '':'disabled'}
                         >Eliminar inventario</button>
                         : <button className="btn btn-xs btn-danger"
@@ -336,7 +306,8 @@ RowInventarioMensual.propTypes = {
     focusFilaSiguiente: React.PropTypes.func.isRequired,
     focusFilaAnterior: React.PropTypes.func.isRequired,
     guardarOCrearInventario: React.PropTypes.func.isRequired,
-    quitarInventario: React.PropTypes.func.isRequired
+    quitarInventario: React.PropTypes.func.isRequired,
+    eliminarInventario: React.PropTypes.func.isRequired
 }
 RowInventarioMensual.defaultProps = {
     mostrarSeparador: false

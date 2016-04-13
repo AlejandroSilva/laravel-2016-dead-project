@@ -197,6 +197,17 @@ class ProgramacionIGMensual extends React.Component{
         this.setState(this.blackbox.getListaFiltrada())
     }
 
+    eliminarInventario(inventario){
+        api.inventario.eliminar(inventario.idInventario)
+            .then(resp=>{
+                console.log(resp)
+                this.blackbox.remove(inventario.idDummy)
+                // actualizar los filtros, y la lista ordenada de locales
+                this.setState(this.blackbox.getListaFiltrada())
+            })
+            .error(resp=>console.error)
+    }
+
     ordenarInventarios(){
         this.blackbox.ordenarLista()
         this.setState( this.blackbox.getListaFiltrada() )
@@ -247,6 +258,7 @@ class ProgramacionIGMensual extends React.Component{
                         actualizarFiltro={this.actualizarFiltro.bind(this)}
                         guardarOCrearInventario={this.guardarOCrearInventario.bind(this)}
                         quitarInventario={this.quitarInventario.bind(this)}
+                        eliminarInventario={this.eliminarInventario.bind(this)}
                         ordenarInventarios={this.ordenarInventarios.bind(this)}
                         //ref={ref=>this.TablaInventarios=ref}
                     />
