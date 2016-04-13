@@ -112,7 +112,8 @@ class TablaMensualAI extends React.Component{
                                 focusFilaSiguiente={this.focusFilaSiguiente.bind(this)}
                                 focusFilaAnterior={this.focusFilaAnterior.bind(this)}
                                 actualizarAuditoria={this.props.actualizarAuditoria}
-                                quitarInventario={this.props.quitarInventario}
+                                quitarAuditoria={this.props.quitarAuditoria}
+                                eliminarAuditoria={this.props.eliminarAuditoria}
                                 //guardarOCrear={this.guardarOCrear.bind(this)}
                                 ref={ref=>this.inputFecha[index]=ref}
 
@@ -135,7 +136,8 @@ TablaMensualAI.propTypes = {
     // Metodos
     actualizarFiltro: React.PropTypes.func.isRequired,
     actualizarAuditoria: React.PropTypes.func.isRequired,
-    quitarInventario: React.PropTypes.func.isRequired,
+    quitarAuditoria: React.PropTypes.func.isRequired,
+    eliminarAuditoria: React.PropTypes.func.isRequired,
     ordenarAuditorias: React.PropTypes.func.isRequired
 }
 export default TablaMensualAI

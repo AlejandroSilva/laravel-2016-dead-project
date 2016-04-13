@@ -163,10 +163,20 @@ class ProgramacionMensualAI extends React.Component{
             })
     }
 
-    quitarInventario(idDummy){
+    quitarAuditoria(idDummy){
         this.blackbox.remove(idDummy)
         // actualizar los filtros, y la lista ordenada de locales
         this.setState(this.blackbox.getListaFiltrada())
+    }
+    eliminarAuditoria(auditoria){
+        console.log('eliminando ', auditoria)
+        api.auditoria.eliminar(auditoria.idAuditoria)
+            .then((resp)=>{
+                this.blackbox.remove(auditoria.idDummy)
+                // actualizar los filtros, y la lista ordenada de locales
+                this.setState(this.blackbox.getListaFiltrada())
+            })
+            .catch(resp=>console.error)
     }
 
     ordenarAuditorias(){
@@ -218,7 +228,8 @@ class ProgramacionMensualAI extends React.Component{
                         filtroRegiones={this.state.filtroRegiones}
                         actualizarFiltro={this.actualizarFiltro.bind(this)}
                         actualizarAuditoria={this.actualizarAuditoria.bind(this)}
-                        quitarInventario={this.quitarInventario.bind(this)}
+                        quitarAuditoria={this.quitarAuditoria.bind(this)}
+                        eliminarAuditoria={this.eliminarAuditoria.bind(this)}
                         ordenarAuditorias={this.ordenarAuditorias.bind(this)}
                         //ref={ref=>this.TablaInventarios=ref}
                     />

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Auditorias;
 use App\Locales;
@@ -119,6 +120,19 @@ class AuditoriasController extends Controller {
                 ], 400);
             }
         }else{
+            return response()->json([], 404);
+        }
+    }
+
+    // DELETE api/auditorias/{idAuditoria}
+    function api_eliminar($idAuditoria) {
+        $auditoria = Auditorias::find($idAuditoria);
+        if ($auditoria) {
+            DB::transaction(function () use ($auditoria) {
+                $auditoria->delete();
+                return response()->json([], 204);
+            });
+        } else {
             return response()->json([], 404);
         }
     }

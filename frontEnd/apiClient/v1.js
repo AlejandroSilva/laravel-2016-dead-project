@@ -17,18 +17,6 @@ export default {
         getVerbose: (idLocal)=>{
             return axios.get(`/api/locales/${idLocal}/verbose`)
         }
-        // Demora artificial para probar los mensajes de carga
-        //getVerbose: (idLocal)=>{
-        //    return new Promise((resolve, reject)=>{
-        //        axios.get(`/api/locales/${idLocal}/verbose`)
-        //            .then(data=>{
-        //                setTimeout(()=>{
-        //                    resolve(data)
-        //                }, Math.random()*2000)
-        //            })
-        //            .catch(err=>reject(err))
-        //    })
-        //}
     },
     inventario: {
         nuevo: (datos)=>{
@@ -59,6 +47,9 @@ export default {
         },
         actualizar: (idAuditoria, datos)=>{
             return axios.put(`/api/auditoria/${idAuditoria}`, datos)
+        },
+        eliminar: (idAuditoria)=>{
+            return axios.delete(`/api/auditoria/${idAuditoria}`)
         },
         getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>{
             return axios.get(`/api/auditoria/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)

@@ -200,12 +200,11 @@ class ProgramacionIGMensual extends React.Component{
     eliminarInventario(inventario){
         api.inventario.eliminar(inventario.idInventario)
             .then(resp=>{
-                console.log(resp)
                 this.blackbox.remove(inventario.idDummy)
                 // actualizar los filtros, y la lista ordenada de locales
                 this.setState(this.blackbox.getListaFiltrada())
             })
-            .error(resp=>console.error)
+            .catch(resp=>console.error)
     }
 
     ordenarInventarios(){

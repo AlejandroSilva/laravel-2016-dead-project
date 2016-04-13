@@ -168,6 +168,9 @@ class RowAuditoriaMensual extends React.Component{
         return isDirty
     }
     guardarAuditoria(){
+        if(!this.props.puedeModificar)
+            return alert('no tiene permisos para realizar esta acción')
+
         let cambiosAuditoria = {}
 
         // la FECHA es valida y ha cambiado?
@@ -192,8 +195,14 @@ class RowAuditoriaMensual extends React.Component{
             console.log('auditoria sin cambios, no se actualiza')
         }
     }
-    quitarInventario(){
-        this.props.quitarInventario(this.props.auditoria.idDummy)
+    quitarAuditoria(){
+        this.props.quitarAuditoria(this.props.auditoria.idDummy)
+    }
+    eliminarAuditoria(){
+        if(!this.props.puedeModificar)
+            return alert('no tiene permisos para realizar esta acción')
+
+        this.props.eliminarAuditoria(this.props.auditoria)
     }
 
     render(){
@@ -294,12 +303,15 @@ class RowAuditoriaMensual extends React.Component{
                 </td>
                 {/* Opciones    */}
                 <td className={cssTabla.tdOpciones}>
-                    <button className="btn btn-xs btn-primary"
-                            tabIndex="-1"
-                            onClick={()=>{ alert("PEND: eliminar inventario") } }
-                            disabled>
-                        Eliminar
-                    </button>
+                    {this.props.puedeModificar===true?
+                        <button className="btn btn-xs btn-primary"
+                                tabIndex="-1"
+                                onClick={this.eliminarAuditoria.bind(this)}>
+                            Eliminar
+                        </button>
+                        :
+                        null
+                    }
                 </td>
             </tr>
         )
@@ -317,7 +329,8 @@ RowAuditoriaMensual.propTypes = {
     focusFilaSiguiente: React.PropTypes.func.isRequired,
     focusFilaAnterior: React.PropTypes.func.isRequired,
     actualizarAuditoria: React.PropTypes.func.isRequired,
-    quitarInventario: React.PropTypes.func.isRequired
+    quitarAuditoria: React.PropTypes.func.isRequired,
+    eliminarAuditoria: React.PropTypes.func.isRequired
 }
 RowAuditoriaMensual.defaultProps = {
     mostrarSeparador: false

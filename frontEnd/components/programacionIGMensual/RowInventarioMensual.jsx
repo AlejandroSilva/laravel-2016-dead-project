@@ -169,7 +169,8 @@ class RowInventarioMensual extends React.Component{
         this.props.quitarInventario(this.props.inventario.idDummy)
     }
     eliminarInventario(){
-        console.log("this.props.inventario")
+        if(!this.props.puedeModificar)
+            return alert("no tiene permitido eliminar el inventario")
         this.props.eliminarInventario(this.props.inventario)
     }
 
@@ -279,16 +280,25 @@ class RowInventarioMensual extends React.Component{
                 {/* Opciones    */}
                 <td className={cssTabla.tdOpciones}>
                     {
-                        this.props.inventario.idInventario
-                        ? <button className="btn btn-xs btn-primary"
-                                  tabIndex="-1"
-                                  onClick={this.eliminarInventario.bind(this)}
-                                  disabled={this.props.puedeModificar? '':'disabled'}
-                        >Eliminar inventario</button>
-                        : <button className="btn btn-xs btn-danger"
-                                  tabIndex="-1"
-                                  onClick={this.quitarInventario.bind(this)}
-                        >X</button>
+                        this.props.inventario.idInventario ? (
+                            // si esta creado, puede eliminar el inventario
+                            this.props.puedeModificar===true?
+                                <button className="btn btn-xs btn-primary"
+                                        tabIndex="-1"
+                                        onClick={this.eliminarInventario.bind(this)}
+                                        disabled>
+                                    Eliminar inventario
+                                </button>
+                                :
+                                null
+                        )
+                        :
+                            // si no esta creado, solo puede quitarlo de la lista
+                            <button className="btn btn-xs btn-danger"
+                                      tabIndex="-1"
+                                      onClick={this.quitarInventario.bind(this)}>
+                                X
+                            </button>
                      }
                 </td>
             </tr>
