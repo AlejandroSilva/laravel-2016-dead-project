@@ -1,7 +1,6 @@
 .tableFixed{
     table-layout: fixed;
     font-size: 12px !important;
-    width: 100%;
 }
 .tableFixed td {
     padding-top: 2px !important;
@@ -141,6 +140,7 @@
 /* Opciones */
 .thOpciones {
     width: auto !important;
+    min-width: 300px;
     background: white;
 }
 .tdOpciones {

@@ -38,6 +38,16 @@ class TablaMensual extends React.Component{
             <div>
                 {/* Table */}
                 <StickyContainer type={React.DOM.table}  className={"table table-bordered table-condensed "+css.tableFixed}>
+                    <col className={css.thCorrelativo}/>
+                    <col className={css.thFecha}/>
+                    <col className={css.thCliente}/>
+                    <col className={css.thCeco}/>
+                    <col className={css.thLocal}/>
+                    <col className={css.thRegion}/>
+                    <col className={css.thComuna}/>
+                    <col className={css.thStock}/>
+                    <col className={css.thDotacion}/>
+                    <col className={css.thOpciones}/>
                     <thead>
                         {/* TR que se pega al top de la pagina, es una TR, con instancia de 'Sticky' */}
                         <Sticky
