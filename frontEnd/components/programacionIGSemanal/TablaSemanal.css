@@ -232,6 +232,7 @@
 /* NOMINA */
 .thNomina{
     width: auto !important;
+    min-width: 100px;
     background: white;
 }
 .tdNomina{

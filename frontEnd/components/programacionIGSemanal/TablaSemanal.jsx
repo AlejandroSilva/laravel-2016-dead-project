@@ -2,8 +2,8 @@ import React from 'react'
 //import moment from 'moment'
 
 // Componentes
-//import Sticky from '../shared/react-sticky/sticky.js'
-//import StickyContainer from '../shared/react-sticky/container.js'
+import Sticky from '../shared/react-sticky/sticky.js'
+import StickyContainer from '../shared/react-sticky/container.js'
 import RowInventarioSemanal from './RowInventarioSemanal.jsx'
 
 // Styles
@@ -34,10 +34,32 @@ class TablaInventarios extends React.Component{
     
     render(){
         return (
-            <table className={"table table-bordered table-condensed "+css.tableFixed}
-                style={{overfow: 'overlay'}}>
+            <StickyContainer type={React.DOM.table} className={"table table-bordered table-condensed "+css.tableFixed}>
+                <colgroup>
+                    <col className={css.thCorrelativo}/>
+                    <col className={css.thFecha}/>
+                    <col className={css.thCliente}/>
+                    <col className={css.thCeco}/>
+                    <col className={css.thRegion}/>
+                    <col className={css.thComuna}/>
+                    <col className={css.thTurno}/>
+                    <col className={css.thTienda}/>
+                    <col className={css.thStock}/>
+                    <col className={css.thDotacionTotal}/>
+                    <col className={css.thLider}/>
+                    <col className={css.thLider}/>
+                    <col className={css.thHora}/>
+                    <col className={css.thHora}/>
+                    <col className={css.thDireccion}/>
+                    <col className={css.thNomina}/>
+                </colgroup>
                 <thead>
-                    <tr>
+                    {/* TR que se pega al top de la pagina, es una TR, con instancia de 'Sticky' */}
+                    <Sticky
+                        topOffset={-50}
+                        type={React.DOM.tr}
+                        stickyStyle={{top: '50px'}}>
+
                         <th className={css.thCorrelativo}>#</th>
                         <th className={css.thFecha}>
                             Fecha
@@ -60,11 +82,11 @@ class TablaInventarios extends React.Component{
                         <th className={css.thHora}>Hr.Equipo</th>
                         <th className={css.thDireccion}>Dirección</th>
                         <th className={css.thNomina}>Nómina</th>
-                    </tr>
+                    </Sticky>
                 </thead>
                 <tbody>
                     {this.props.inventarios.length===0
-                        ? <tr><td colSpan="14" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                        ? <tr><td colSpan="16" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.props.inventarios.map((inventario, index)=>{
                             let mostrarSeparador = false
                             let sgteInventario = this.props.inventarios[index+1]
@@ -88,7 +110,7 @@ class TablaInventarios extends React.Component{
                             />
                         })}
                 </tbody>
-            </table>
+            </StickyContainer>
         )
     }
 }
