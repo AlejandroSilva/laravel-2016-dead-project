@@ -200,6 +200,7 @@
 /* Opciones */
 .thOpciones {
     width: auto !important;
+    min-width: 200px;
     background: white;
 }
 .tdOpciones {
