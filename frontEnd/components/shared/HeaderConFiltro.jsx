@@ -60,7 +60,10 @@ class HeaderConFiltro extends React.Component {
                  ref={ref=>this.node=ref}>
                 <div onClick={this.toggleMenu.bind(this)}>
                     {this.props.nombre}
-                    <span className={"glyphicon pull-right "+(this.state.open? 'glyphicon-triangle-top': 'glyphicon-triangle-bottom')}></span>
+                     <span className={'glyphicon pull-right '+
+                        (this.state.open? 'glyphicon-triangle-top ': 'glyphicon-triangle-bottom ')+
+                        (this.revisarTodosSeleccionados()? '': css.filtroColoreado)
+                    }></span>
                 </div>
                 <div className={css.menu} style={{display: this.state.open? '': 'none'}}>
                     <div className={css.contenedorValores}>
