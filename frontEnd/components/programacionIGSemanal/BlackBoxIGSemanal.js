@@ -100,7 +100,6 @@ export default class BlackBoxIGSemanal{
     actualizarInventario(inventarioActualizado) {
         this.lista = this.lista.map(inventario=> {
             if (inventario.idInventario == inventarioActualizado.idInventario) {
-                //inventario = Object.assign(inventario, inventarioActualizado)
                 return inventarioActualizado
             }
             return inventario
