@@ -262,7 +262,9 @@ class InventariosController extends Controller {
             'local.formatoLocal',
             'local.direccion.comuna.provincia.region',
             'nominaDia',
-            'nominaNoche'
+            'nominaNoche',
+            'nominaDia.lider',
+            'nominaNoche.lider'
         ])
             ->where('fechaProgramada', '>=', $annoMesDia1)
             ->where('fechaProgramada', '<=', $annoMesDia2)

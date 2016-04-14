@@ -13,14 +13,16 @@ class Nominas extends Model {
 
     // #### Relaciones
         public function inventario1() {
+            //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
             return $this->hasOne('App\Inventarios', 'idNominaDia', 'idNomina');
         }
         public function inventario2(){
-            //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
-//            return $this->belongsTo('App\Inventarios'/*, 'idLocal', 'idLocal'*/);
-
-//            return $this->hasOne('App\Inventarios', 'idNominaDia', 'idNomina');
-//            dd($this->hasOne('App\Inventarios', 'idNominaNoche', 'idNomina'));
+            //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
             return $this->hasOne('App\Inventarios', 'idNominaNoche', 'idNomina');
+        }
+
+        public function lider(){
+            //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
+            return $this->hasOne('App\User', 'id', 'idLider');
         }
 }
