@@ -171,7 +171,6 @@ class ProgramacionIGSemanal extends React.Component {
     
     actualizarFiltro(nombreFiltro, filtro){
         this.blackbox.reemplazarFiltro(nombreFiltro, filtro)
-
         // actualizar los filtros, y la lista ordenada de locales
         this.setState(this.blackbox.getListaFiltrada())
     }

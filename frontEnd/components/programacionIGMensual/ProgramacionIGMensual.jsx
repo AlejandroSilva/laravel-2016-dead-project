@@ -28,6 +28,7 @@ class ProgramacionIGMensual extends React.Component{
             inventariosFiltrados: [],
             filtroClientes: [],
             filtroRegiones: [],
+            filtroLocales: [],
             meses
         }
         // MAGIA NEGRA!!
@@ -211,21 +212,11 @@ class ProgramacionIGMensual extends React.Component{
         this.blackbox.ordenarLista()
         this.setState( this.blackbox.getListaFiltrada() )
     }
-
+    
     actualizarFiltro(nombreFiltro, filtro){
-        if(nombreFiltro==='cliente'){
-            this.blackbox.reemplazarFiltroClientes(filtro)
-
-            // actualizar los filtros, y la lista ordenada de locales
-            this.setState(this.blackbox.getListaFiltrada())
-        }
-        if(nombreFiltro==='region'){
-            this.blackbox.reemplazarFiltroRegiones(filtro)
-
-            // actualizar los filtros, y la lista ordenada de locales
-            this.setState(this.blackbox.getListaFiltrada())
-        }
-        
+        this.blackbox.reemplazarFiltro(nombreFiltro, filtro)
+        // actualizar los filtros, y la lista ordenada de locales
+        this.setState(this.blackbox.getListaFiltrada())
     }
 
     render(){
@@ -254,6 +245,7 @@ class ProgramacionIGMensual extends React.Component{
                         inventariosFiltrados={this.state.inventariosFiltrados}
                         filtroClientes={this.state.filtroClientes}
                         filtroRegiones={this.state.filtroRegiones}
+                        filtroLocales={this.state.filtroLocales}
                         actualizarFiltro={this.actualizarFiltro.bind(this)}
                         guardarOCrearInventario={this.guardarOCrearInventario.bind(this)}
                         quitarInventario={this.quitarInventario.bind(this)}

@@ -6,6 +6,7 @@ export default class BlackBox{
         this.lista = []
         this.filtroClientes = []
         this.filtroRegiones = []
+        this.filtroLocales = []
         this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
     }
     // Todo Modificar
@@ -13,6 +14,7 @@ export default class BlackBox{
         this.lista = []
         this.filtroClientes = []
         this.filtroRegiones = []
+        this.filtroLocales = []
         this.idDummy = 1
     }
     // Todo Modificar: el listado de clientes
@@ -81,21 +83,28 @@ export default class BlackBox{
         this.actualizarFiltros()
 
         // filtrar por clientes
-        let clientesSeleccionados = this.filtroClientes.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltrada1 = R.filter(inventario=> {
-            return R.contains(inventario.local.nombreCliente, clientesSeleccionados)
+        // let clientesSeleccionados = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
+        // let listaFiltradaPorRegiones = R.filter(inventario=>{
+        //     return R.contains(inventario.local.direccion.comuna.provincia.region.numero, clientesSeleccionados)
+        // }, this.lista)
+
+        // Filtrar por Regiones
+        let regionesSeleccionadas = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
+        let listaFiltradaPorRegiones = R.filter(inventario=>{
+            return R.contains(inventario.local.direccion.comuna.provincia.region.numero, regionesSeleccionadas)
         }, this.lista)
 
-        // filtrar por regiones
-        let regionesSeleccionadas = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltrada2 = R.filter(inventario=> {
-            return R.contains(inventario.local.nombreRegion, regionesSeleccionadas)
-        }, listaFiltrada1)
+        // Filtro por Local
+        let localesSeleccionados = this.filtroLocales.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
+        let listaFiltradaPorLocales = R.filter(inventario=>{
+            return R.contains(inventario.local.numero, localesSeleccionados)
+        }, listaFiltradaPorRegiones)
 
         return {
-            inventariosFiltrados: listaFiltrada2,
+            inventariosFiltrados: listaFiltradaPorLocales,
             filtroClientes: this.filtroClientes,
-            filtroRegiones: this.filtroRegiones
+            filtroRegiones: this.filtroRegiones,
+            filtroLocales: this.filtroLocales
         }
     }
     __getListaFiltradaOrdenada__por_ahora_no_se_ocupa(){
@@ -197,7 +206,14 @@ export default class BlackBox{
                     produccionSugerida: 0
                 },
                 direccion: {
-                    direccion: ''
+                    direccion: '-',
+                    comuna: {
+                        provincia:{
+                            region:{
+                                numero: '-'
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -276,27 +292,37 @@ export default class BlackBox{
     actualizarFiltros(){
         // Clientes
         // let clientes = this.lista.map(inventario=>inventario.local.cliente.nombre)
-        let clientes = this.lista.map(inventario=>inventario.local.XASDASDASDASDASDASDASDASD)
-        let clientesUnicos = R.uniq(clientes)
-        this.filtroClientes = clientesUnicos.map(textoUnico=>{
+        // let clientes = this.lista.map(inventario=>inventario.local.XASDASDASDASDASDASDASDASD)
+        // let clientesUnicos = R.uniq(clientes)
+        // this.filtroClientes = clientesUnicos.map(textoUnico=>{
+        //     // si no existe la opcion, se crea y se selecciona por defecto
+        //     return this.filtroClientes.find(opc=>opc.texto===textoUnico)
+        //         || { texto: textoUnico, seleccionado: true}
+        // })
+
+        // ##### Filtro Regiones
+        let regiones = this.lista.map(inventario=>inventario.local.direccion.comuna.provincia.region.numero)
+        let regionesOrdenadas = R.uniq(regiones).sort((a, b)=>a>b)
+        this.filtroRegiones = regionesOrdenadas.map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
-            return this.filtroClientes.find(opc=>opc.texto===textoUnico)
-                || { texto: textoUnico, seleccionado: true}
+            return this.filtroRegiones.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
         })
 
-        // Regiones
-        let regiones = this.lista.map(inventario=>inventario.local.nombreRegion)
-        let regionesUnicas = R.uniq(regiones)
-        this.filtroRegiones = regionesUnicas.map(textoUnico=>{
+        // ##### Filtro Numero de Local
+        let locales = this.lista.map(inventario=>inventario.local.numero)
+        // convierte el texto a numero, y los ordena de menor a mayor
+        let localesOrdenados = R.uniq(locales).sort((a, b)=>{ return (isNaN(a*1) || isNaN(b*1))? (a>b) : (a*1>b*1) })
+/** */  console.log("inventario semanal: ", locales, localesOrdenados)
+        this.filtroLocales = localesOrdenados.map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
-            return this.filtroRegiones.find(opc=> opc.texto===textoUnico)
-                || { texto: textoUnico, seleccionado: true}
+            return this.filtroLocales.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
         })
     }
-    reemplazarFiltroClientes(filtro){
-        this.filtroClientes = filtro
-    }
-    reemplazarFiltroRegiones(filtro){
-        this.filtroRegiones = filtro
+    reemplazarFiltro(nombreFiltro, filtroActualizado) {
+        if(this[nombreFiltro]) {
+            this[nombreFiltro] = filtroActualizado
+        }else{
+            console.error(`Filtro ${nombreFiltro} no existe.`)
+        }
     }
 }

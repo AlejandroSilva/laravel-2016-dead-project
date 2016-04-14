@@ -1,14 +1,13 @@
 import React from 'react'
-import moment from 'moment'
+//import moment from 'moment'
 
 // Componentes
 import Sticky from '../shared/react-sticky/sticky.js'
 import StickyContainer from '../shared/react-sticky/container.js'
-import TableHeader from './TableHeader.jsx'
-import RowInventario from './RowInventarioMensual.jsx'
+import HeaderConFiltro from '../shared/HeaderConFiltro.jsx'
+import RowInventarioMensual from './RowInventarioMensual.jsx'
 
 // Styles
-//import sharedStyles from '../shared/shared.css'
 import * as css from './TablaMensual.css'
 
 class TablaMensual extends React.Component{
@@ -65,18 +64,20 @@ class TablaMensual extends React.Component{
                                 />
                                 {/*<span className={'glyphicon glyphicon-sort-by-attributes-alt pull-right'}></span>*/}
                             </th>
-                            <th className={css.thCliente}>
-                                <TableHeader nombre="Cliente"
-                                             filtro={this.props.filtroClientes}
-                                             actualizarFiltro={this.props.actualizarFiltro.bind(this, 'cliente')}
+                            <th className={css.thCliente}>Cliente</th>
+                            <th className={css.thCeco}>
+                                <HeaderConFiltro
+                                    nombre="Ceco"
+                                    filtro={this.props.filtroLocales}
+                                    actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLocales')}
                                 />
                             </th>
-                            <th className={css.thCeco}>Ceco</th>
                             <th className={css.thLocal}>Local</th>
                             <th className={css.thRegion}>
-                                <TableHeader nombre="Región"
-                                             filtro={this.props.filtroRegiones}
-                                             actualizarFiltro={this.props.actualizarFiltro.bind(this, 'region')}
+                                <HeaderConFiltro
+                                    nombre="Región"
+                                    filtro={this.props.filtroRegiones}
+                                    actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRegiones')}
                                 />
                             </th>
                             <th className={css.thComuna}>Comuna</th>
@@ -96,7 +97,7 @@ class TablaMensual extends React.Component{
                             let sgteInventario = this.props.inventariosFiltrados[index+1]
                             if(sgteInventario)
                                 mostrarSeparador = inventario.fechaProgramada!==sgteInventario.fechaProgramada
-                            return <RowInventario
+                            return <RowInventarioMensual
                                 // Propiedades
                                 puedeModificar={this.props.puedeModificar}
                                 key={index}
@@ -127,6 +128,7 @@ TablaMensual.propTypes = {
     inventariosFiltrados: React.PropTypes.array.isRequired,
     filtroClientes: React.PropTypes.array.isRequired,
     filtroRegiones: React.PropTypes.array.isRequired,
+    filtroLocales: React.PropTypes.array.isRequired,
     // Metodos
     actualizarFiltro: React.PropTypes.func.isRequired,
     guardarOCrearInventario: React.PropTypes.func.isRequired,

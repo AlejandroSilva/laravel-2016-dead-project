@@ -35,19 +35,27 @@ export default class BlackBoxIGSemanal{
         // Filtrar por Lideres (hay lideres en dos nominas: nominaDia y nominaNoche
         let lideresSeleccionados = this.filtroLideres.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
         let listaFiltradaPorLideres = R.filter(inventario=>{
-            if(inventario.idJornada=='2' || inventario.idJornada=='4'){
+            if(inventario.idJornada=='1'){
+                // la jornada no ha sido seleccionada, no hay ninguna nomina activa, entonces no hay lider seleccionado
+                //return R.contains('-- NO FIJADO --', lideresSeleccionados)
+                return true
+            }else if(inventario.idJornada=='2'){
                 // si la jornada es de dia, revisar si el lider esta en la nomina_dia
                 let liderDia = inventario.nomina_dia.lider
                 let nombreLiderDia = liderDia? `${liderDia.nombre1} ${liderDia.apellidoPaterno}` : '-- NO FIJADO --'
                 return R.contains(nombreLiderDia, lideresSeleccionados)
-            }else if(inventario.idJornada=='2' || inventario.idJornada=='3'){
-                // si la jornada es de noche, revisar si el lider esta en la nomina_noche
+            }else if(inventario.idJornada=='3'){
+                // si la jornada es 'noche', se debe buscar el lider en la nomina_noche
                 let liderNoche = inventario.nomina_noche.lider
                 let nombreLiderNoche = liderNoche? `${liderNoche.nombre1} ${liderNoche.apellidoPaterno}` : '-- NO FIJADO --'
                 return R.contains(nombreLiderNoche, lideresSeleccionados)
-            }else{
-                // la jornada no ha sido seleccionada, no hay ninguna nomina activa, entonces no hay lider seleccionado
-                return false
+            }else if(inventario.idJornada=='4'){
+                // si la jornada es 'dia y noche', se debe buscar el lider en la nomina_dia y nomina_noche
+                let liderDia = inventario.nomina_dia.lider
+                let liderNoche = inventario.nomina_noche.lider
+                let nombreLiderDia = liderDia? `${liderDia.nombre1} ${liderDia.apellidoPaterno}` : '-- NO FIJADO --'
+                let nombreLiderNoche = liderNoche? `${liderNoche.nombre1} ${liderNoche.apellidoPaterno}` : '-- NO FIJADO --'
+                return R.contains(nombreLiderNoche, lideresSeleccionados) || R.contains(nombreLiderDia, lideresSeleccionados)
             }
         }, listaFiltradaPorRegiones)
 
@@ -119,7 +127,8 @@ export default class BlackBoxIGSemanal{
 
         // ##### Filtro Regiones
         let regiones = this.lista.map(inventario=>inventario.local.direccion.comuna.provincia.region.numero)
-        this.filtroRegiones = R.uniq(regiones).map(textoUnico=>{
+        let regionesOrdenadas = R.uniq(regiones).sort((a, b)=>a>b)
+        this.filtroRegiones = regionesOrdenadas.map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
             return this.filtroRegiones.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
         })
@@ -143,7 +152,7 @@ export default class BlackBoxIGSemanal{
             })
         // unir lideres de dia + lideres de noche, ordenarlos alfabeticamente
         let lideresDiaNoche = ['-- NO FIJADO --'].concat(lideresDia, lideresNoche)
-        let lideresUnicos = R.uniq( lideresDiaNoche ).sort((a,b)=>a>b)
+        let lideresUnicos = R.uniq(lideresDiaNoche).sort((a,b)=>a>b)
         this.filtroLideres = lideresUnicos.map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
             return this.filtroLideres.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
@@ -153,6 +162,7 @@ export default class BlackBoxIGSemanal{
         let locales = this.lista.map(inventario=>inventario.local.numero)
         // convierte el texto a numero, y los ordena de menor a mayor
         let localesOrdenados = R.uniq(locales).sort((a, b)=>{ return (isNaN(a*1) || isNaN(b*1))? (a>b) : (a*1>b*1) })
+/** */  console.log("(orden no funciona) inventario semanal: ", locales, localesOrdenados)
         this.filtroLocales = localesOrdenados.map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
             return this.filtroLocales.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
