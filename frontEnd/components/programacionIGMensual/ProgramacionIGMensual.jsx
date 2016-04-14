@@ -225,7 +225,7 @@ class ProgramacionIGMensual extends React.Component{
             // actualizar los filtros, y la lista ordenada de locales
             this.setState(this.blackbox.getListaFiltrada())
         }
-
+        
     }
 
     render(){

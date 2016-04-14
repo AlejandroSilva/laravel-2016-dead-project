@@ -285,8 +285,7 @@ class RowInventarioMensual extends React.Component{
                             this.props.puedeModificar===true?
                                 <button className="btn btn-xs btn-primary"
                                         tabIndex="-1"
-                                        onClick={this.eliminarInventario.bind(this)}
-                                        disabled>
+                                        onClick={this.eliminarInventario.bind(this)}>
                                     Eliminar inventario
                                 </button>
                                 :

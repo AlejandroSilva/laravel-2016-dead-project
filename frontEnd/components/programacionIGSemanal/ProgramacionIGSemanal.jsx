@@ -4,7 +4,7 @@ import moment from 'moment'
 moment.locale('es')
 import api from '../../apiClient/v1'
 // Componentes
-import BlackBoxSemanal from './BlackBoxSemanal'
+import BlackBoxIGSemanal from './BlackBoxIGSemanal.js'
 import TablaSemanal from './TablaSemanal.jsx'
 import SelectRange from './SelectRange.jsx'
 
@@ -13,7 +13,7 @@ const format = 'YYYY-MM-DD'
 class ProgramacionIGSemanal extends React.Component {
     constructor(props) {
         super(props)
-        this.blackboxSemanal = new BlackBoxSemanal()
+        this.blackbox = new BlackBoxIGSemanal()
 
         // mostrar en el selector, los proximos 12 meses
         let meses = []
@@ -33,7 +33,12 @@ class ProgramacionIGSemanal extends React.Component {
             mesSeleccionado: '',
             semanaSeleccionada: '',
             fechaInicialSeleccionada: moment(),
-            fechaFinalSeleccionada: moment().add(7, 'days')
+            fechaFinalSeleccionada: moment().add(7, 'days'),
+            // Filtros
+            // filtroClientes: [],
+            filtroRegiones: [],
+            filtroLideres: [],
+            filtroLocales: []
         }
     }
     componentWillMount(){
@@ -47,9 +52,9 @@ class ProgramacionIGSemanal extends React.Component {
             .then(inventarioActualizado=>{
                 console.log('inventario actualizado correctamente')
                 // actualizar los datos y el state de la app
-                this.blackboxSemanal.actualizarInventario(inventarioActualizado)
+                this.blackbox.actualizarInventario(inventarioActualizado)
                 // actualizar los filtros, y la lista ordenada de locales
-                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {inventariosFiltrados: ...}
+                this.setState( this.blackbox.getListaFiltrada() )        // {inventariosFiltrados: ...}
             })
     }
     guardarNomina(idNomina, datos){
@@ -57,14 +62,14 @@ class ProgramacionIGSemanal extends React.Component {
             .then(inventarioActualizado=>{
                 console.log('nomina actualizada correctamente')
                 // actualizar los datos y el state de la app
-                this.blackboxSemanal.actualizarInventario(inventarioActualizado)
+                this.blackbox.actualizarInventario(inventarioActualizado)
                 // actualizar los filtros, y la lista ordenada de locales
-                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {inventariosFiltrados: ...}
+                this.setState( this.blackbox.getListaFiltrada() )        // {inventariosFiltrados: ...}
             })
     }
     ordenarInventarios(){
-        this.blackboxSemanal.ordenarLista()
-        this.setState( this.blackboxSemanal.getListaFiltrada() )
+        this.blackbox.ordenarLista()
+        this.setState( this.blackbox.getListaFiltrada() )
     }
 
     // Select de Cliente seleccionado
@@ -147,7 +152,6 @@ class ProgramacionIGSemanal extends React.Component {
         })
     }
 
-
     // Todo: recibir el idCliente desde los metodos que lo llamen
     buscarInventarios(){
         let idCliente = this.state.idCliente
@@ -157,13 +161,21 @@ class ProgramacionIGSemanal extends React.Component {
         api.inventario.getPorRangoYCliente(fechaInicio, fechaFin, idCliente)
             .then(inventarios=>{
                 console.log(`inventarios del rango ${fechaInicio} a ${fechaFin}, y cliente ${idCliente}`, inventarios)
-                this.blackboxSemanal.reset()
-                inventarios.forEach(inventario=>this.blackboxSemanal.add(inventario))
+                this.blackbox.reset()
+                inventarios.forEach(inventario=>this.blackbox.add(inventario))
 
-                this.blackboxSemanal.ordenarLista()
-                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {inventariosFiltrados: ...}
+                this.blackbox.ordenarLista()
+                this.setState( this.blackbox.getListaFiltrada() )        // {inventariosFiltrados: ...}
             })
     }
+    
+    actualizarFiltro(nombreFiltro, filtro){
+        this.blackbox.reemplazarFiltro(nombreFiltro, filtro)
+
+        // actualizar los filtros, y la lista ordenada de locales
+        this.setState(this.blackbox.getListaFiltrada())
+    }
+    
     render(){
         return(
             <div>
@@ -237,6 +249,11 @@ class ProgramacionIGSemanal extends React.Component {
                     guardarInventario={this.guardarInventario.bind(this)}
                     guardarNomina={this.guardarNomina.bind(this)}
                     ordenarInventarios={this.ordenarInventarios.bind(this)}
+                    // Filtros
+                    filtroRegiones={this.state.filtroRegiones}
+                    filtroLocales={this.state.filtroLocales}
+                    filtroLideres={this.state.filtroLideres}
+                    actualizarFiltro={this.actualizarFiltro.bind(this)}
                 />
             </div>
         )

@@ -4,6 +4,7 @@ import React from 'react'
 // Componentes
 import Sticky from '../shared/react-sticky/sticky.js'
 import StickyContainer from '../shared/react-sticky/container.js'
+import HeaderConFiltro from '../shared/HeaderConFiltro.jsx'
 import RowInventarioSemanal from './RowInventarioSemanal.jsx'
 
 // Styles
@@ -68,14 +69,32 @@ class TablaInventarios extends React.Component{
                             />
                         </th>
                         <th className={css.thCliente}>CL</th>
-                        <th className={css.thCeco}>CE</th>
-                        <th className={css.thRegion}>RG</th>
+                        <th className={css.thCeco}>
+                            <HeaderConFiltro
+                                nombre='CE'
+                                filtro={this.props.filtroLocales}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLocales')}
+                            />
+                        </th>
+                        <th className={css.thRegion}>
+                            <HeaderConFiltro
+                                nombre='RG'
+                                filtro={this.props.filtroRegiones}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRegiones')}
+                            />
+                        </th>
                         <th className={css.thComuna}>Comuna</th>
                         <th className={css.thTurno}>Turno</th>
                         <th className={css.thTienda}>Tienda</th>
                         <th className={css.thStock}>Stock</th>
                         <th className={css.thDotacionTotal}>Dot.Total</th>
-                        <th className={css.thLider}>Lider</th>
+                        <th className={css.thLider}>
+                            <HeaderConFiltro
+                                nombre='Lider'
+                                filtro={this.props.filtroLideres}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLocales')}
+                            />
+                        </th>
                         {/* <th className={css.thLider}>Supervisor</th> */}
                         <th className={css.thLider}>Captador 1</th>
                         <th className={css.thHora}>Hr.Lider</th>
@@ -124,6 +143,11 @@ TablaInventarios.propTypes = {
     //actualizarFiltro: React.PropTypes.func.isRequired,
     guardarInventario: React.PropTypes.func.isRequired,
     guardarNomina: React.PropTypes.func.isRequired,
-    ordenarInventarios: React.PropTypes.func.isRequired
+    ordenarInventarios: React.PropTypes.func.isRequired,
+    // Filtros
+    filtroRegiones: React.PropTypes.array.isRequired,
+    filtroLocales: React.PropTypes.array.isRequired,
+    filtroLideres: React.PropTypes.array.isRequired,
+    actualizarFiltro: React.PropTypes.func.isRequired
 }
 export default TablaInventarios

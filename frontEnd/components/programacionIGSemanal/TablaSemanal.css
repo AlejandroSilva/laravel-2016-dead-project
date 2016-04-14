@@ -57,11 +57,11 @@
 
 /* CECO */
 .thCeco{
-    width: 30px !important;
+    width: 45px !important;
     background: white;
 }
 .tdCeco{
-    width: 30px !important;
+    width: 45px !important;
     background: white;
     vertical-align: middle !important;
     font-size: 12px !important;
@@ -72,11 +72,11 @@
 
 /* REGIÓN */
 .thRegion{
-    width: 35px !important;
+    width: 45px !important;
     background: white;
 }
 .tdRegion{
-    width: 35px !important;
+    width: 45px !important;
     background: white;
     vertical-align: middle !important;
     font-size: 12px !important;

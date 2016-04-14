@@ -275,7 +275,8 @@ export default class BlackBox{
 
     actualizarFiltros(){
         // Clientes
-        let clientes = this.lista.map(inventario=>inventario.local.nombreCliente)
+        // let clientes = this.lista.map(inventario=>inventario.local.cliente.nombre)
+        let clientes = this.lista.map(inventario=>inventario.local.XASDASDASDASDASDASDASDASD)
         let clientesUnicos = R.uniq(clientes)
         this.filtroClientes = clientesUnicos.map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
