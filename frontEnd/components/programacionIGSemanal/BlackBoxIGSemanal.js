@@ -142,8 +142,8 @@ export default class BlackBoxIGSemanal{
                 let lider = inventario.nomina_noche.lider
                 return lider? `${lider.nombre1} ${lider.apellidoPaterno}` : '-- NO FIJADO --'
             })
-        // unir ambos arreglos
-        let lideresDiaNoche = ['-- NO FIJADO --'].concat(lideresDia, lideresNoche)
+        // unir lideres de dia + lideres de noche, ordenarlos alfabeticamente
+        let lideresDiaNoche = ['-- NO FIJADO --'].concat(lideresDia, lideresNoche).sort((a,b)=>a>b)
 
         this.filtroLideres = R.uniq( lideresDiaNoche ).map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
@@ -151,7 +151,10 @@ export default class BlackBoxIGSemanal{
         })
 
         // ##### Filtro Numero de Local
-        let locales = this.lista.map(inventario=>inventario.local.numero)
+        let locales = this.lista
+            .map(inventario=>inventario.local.numero)
+            // convierte el texto a numero, y los ordena de menor a mayor
+            .sort((a, b)=>{ return (isNaN(a*1) || isNaN(b*1))? (a>b) : (a*1>b*1) })
         this.filtroLocales = R.uniq(locales).map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
             return this.filtroLocales.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}

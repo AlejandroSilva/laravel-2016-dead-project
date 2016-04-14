@@ -140,7 +140,9 @@ class InventariosController extends Controller {
             'local.formatoLocal',
             'local.direccion.comuna.provincia.region',
             'nominaDia',
-            'nominaNoche'
+            'nominaNoche',
+            'nominaDia.lider',
+            'nominaNoche.lider'
         ])->find($idInventario);
         if($inventario){
             return response()->json($inventario, 200);
@@ -173,7 +175,9 @@ class InventariosController extends Controller {
                         'local.formatoLocal',
                         'local.direccion.comuna.provincia.region',
                         'nominaDia',
-                        'nominaNoche'
+                        'nominaNoche',
+                        'nominaDia.lider',
+                        'nominaNoche.lider'
                     ])->find($inventario->idInventario),
                     200);
             }else{
@@ -220,7 +224,9 @@ class InventariosController extends Controller {
                     'local.formatoLocal',
                     'local.direccion.comuna.provincia.region',
                     'nominaDia',
-                    'nominaNoche'
+                    'nominaNoche',
+                    'nominaDia.lider',
+                    'nominaNoche.lider'
                 ])
                 ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
                 ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
@@ -235,7 +241,9 @@ class InventariosController extends Controller {
             'local.formatoLocal',
             'local.direccion.comuna.provincia.region',
             'nominaDia',
-            'nominaNoche'
+            'nominaNoche',
+            'nominaDia.lider',
+            'nominaNoche.lider'
         ])
             ->where('fechaProgramada', '>=', $annoMesDia1)
             ->where('fechaProgramada', '<=', $annoMesDia2)
@@ -273,7 +281,6 @@ class InventariosController extends Controller {
         if($idCliente==0){
             // No se realiza un filtro por clientes
             $inventarios = $query->get();
-
             return response()->json($inventarios->toArray(), 200);
         }
         else{
@@ -283,7 +290,6 @@ class InventariosController extends Controller {
                     $query->where('idCliente', '=', $idCliente);
                 })
                 ->get();
-
             return json_encode($inventarios->toArray());
         }
     }

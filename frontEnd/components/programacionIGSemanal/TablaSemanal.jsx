@@ -92,7 +92,7 @@ class TablaInventarios extends React.Component{
                             <HeaderConFiltro
                                 nombre='Lider'
                                 filtro={this.props.filtroLideres}
-                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLocales')}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLideres')}
                             />
                         </th>
                         {/* <th className={css.thLider}>Supervisor</th> */}

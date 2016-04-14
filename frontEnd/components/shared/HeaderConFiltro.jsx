@@ -33,14 +33,10 @@ class HeaderConFiltro extends React.Component {
 
     // Elementos seleccionados
     revisarTodosSeleccionados(/*opciones*/){
-        // todo mejorar esto
-
-        let noSeleccionados = this.props.filtro.filter(opc=>!opc.seleccionado)
-        return noSeleccionados.length===0
+        return this.props.filtro.filter(opc=>opc.seleccionado===false).length===0
     }
     toggleTodos(){
         let todosSeleccionados = this.revisarTodosSeleccionados()
-
         // si estan todos seleccionados, marcar ninguno
         // si falta uno por marcar, se marcan todos
         let filtroActualizado = this.props.filtro.map(opcion=>({texto: opcion.texto, seleccionado: !todosSeleccionados}))

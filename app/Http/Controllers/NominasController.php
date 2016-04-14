@@ -84,11 +84,12 @@ class NominasController extends Controller {
                     'local.formatoLocal',
                     'local.direccion.comuna.provincia.region',
                     'nominaDia',
-                    'nominaNoche'
+                    'nominaNoche',
+                    'nominaDia.lider',
+                        'nominaNoche.lider'
                 ])->find($inventarioPadre->idInventario),
                 200
             );
-
 
         }else{
             return response()->json([], 404);
