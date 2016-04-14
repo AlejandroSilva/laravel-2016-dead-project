@@ -27,14 +27,15 @@ Route::group(['middleware' => ['web']], function (){
     |*/
     Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function(){
         Route::get('clientes', 'ClientesController@show_Lista')->name('admin.clientes.lista');
-        //Route::get('locales', function(){return view('operacional.clientes.locales');});
+        Route::get('locales',  'LocalesController@show_mantenedor')->name('admin.locales.lista');
     });
 
     // API REST
-    Route::get('api/clientes', 'ClientesController@api_getClientes');
-    Route::get('api/clientes/locales', 'ClientesController@api_getClientesWithLocales');
-    Route::get('api/locales/{idLocal}', 'LocalesController@api_getLocal');
-    Route::get('api/locales/{idLocal}/verbose', 'LocalesController@api_getLocalVerbose');
+    Route::get('api/clientes',                      'ClientesController@api_getClientes');
+    Route::get('api/cliente/{idCliente}/locales',   'ClientesController@api_getLocales');
+    Route::get('api/clientes/locales',              'ClientesController@api_getClientesWithLocales');
+    Route::get('api/locales/{idLocal}',             'LocalesController@api_getLocal');
+    Route::get('api/locales/{idLocal}/verbose',     'LocalesController@api_getLocalVerbose');
 
     /*
     |--------------------------------------------------------------------------

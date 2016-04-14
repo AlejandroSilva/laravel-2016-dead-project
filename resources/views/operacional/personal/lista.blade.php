@@ -46,7 +46,7 @@
                     <td>{{ $persona->telefono2 }}</td>
                     <td>{{ $persona->email }}</td>
                     <td>
-                        <a href="#" class="btn btn-primary btn-xs btn-block">
+                        <a href="#" class="btn btn-primary btn-xs btn-block" disabled>
                             Editar
                         </a>
                     </td>

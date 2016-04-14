@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 // Modelos
 use App\Clientes;
+use App\Locales;
 
 class ClientesController extends Controller {
     /**
@@ -34,6 +35,21 @@ class ClientesController extends Controller {
     // GET api/clientes
     public function api_getClientes(){
         return Clientes::all();
+    }
+
+    // GET api/cliente/{idCliente}/locales
+    public function api_getLocales($idCliente){
+        $cliente = Clientes::find($idCliente);
+        if($cliente){
+            $locales = Locales::with([
+                'direccion'
+            ])
+            ->where('idCliente', '=', $idCliente)
+            ->get();
+            return response()->json($locales, 200);
+        }else{
+            return response()->json([], 404);
+        }
     }
 
     // GET api/clientes/locales

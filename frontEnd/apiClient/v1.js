@@ -10,6 +10,11 @@ axios.interceptors.response.use((response)=>{
 })
 
 export default {
+    cliente: {
+        getLocales: (idCliente)=>{
+            return axios.get(`/api/cliente/${idCliente}/locales`)
+        }
+    },
     locales: {
         get: (idLocal)=>{
             return axios.get(`/api/locales/${idLocal}`)

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\FormatoLocales;
+use App\Jornadas;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-// Modelos
-use App\Locales;
 use Symfony\Component\HttpFoundation\Response;
+// Modelos
+use Auth;
+use App\Locales;
+use App\Clientes;
 
 class LocalesController extends Controller {
     /**
@@ -15,6 +19,22 @@ class LocalesController extends Controller {
      * Rutas que generan vistas
      * ##########################################################
      */
+    // GET admin/locales
+    function show_mantenedor(){
+        // validar de que el usuario tenga los permisos
+        $user = Auth::user();
+        if(!$user || !$user->hasRole('Administrador'))
+            return view('errors.403');
+
+        $clientes = Clientes::all();
+        $jornadas = Jornadas::all();
+        $formatos = FormatoLocales::all();
+        return view('operacional.locales.mantenedorLocales', [
+            'clientes'=>$clientes,
+            'jornadas'=>$jornadas,
+            'formatoLocales'=>$formatos
+        ]);
+    }
 
     /**
      * ##########################################################

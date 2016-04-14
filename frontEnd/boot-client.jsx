@@ -8,8 +8,9 @@ import ProgramacionIGMensual from './components/programacionIGMensual/Programaci
 import ProgramacionIGSemanal from './components/programacionIGSemanal/ProgramacionIGSemanal.jsx'
 import ProgramacionAIMensual from './components/programacionAIMensual/ProgramacionAIMensual.jsx'
 import ProgramacionAISemanal from './components/programacionAISemanal/ProgramacionAISemanal.jsx'
+import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.jsx'
 
-/* FORMULARIO PARA LA CREACIÓN DE UN NUEVO FORMULARIO */
+/** FORMULARIO PARA LA CREACIÓN DE UN NUEVO FORMULARIO */
 let nuevoInventarioDOM = document.getElementById('nuevo-inventario')
 if (nuevoInventarioDOM){
     ReactDOM.render(
@@ -18,7 +19,7 @@ if (nuevoInventarioDOM){
         />, nuevoInventarioDOM)
 }
 
-/* PROGRAMACIÓN INVENTARIO GENERAL */
+/** PROGRAMACIÓN INVENTARIO GENERAL */
 let programacionIGMensualDOM = document.getElementById('react-programacionIG-mensual')
 if( programacionIGMensualDOM ){
     ReactDOM.render(
@@ -40,7 +41,7 @@ if( programacionIGSemanalDOM ){
         />, programacionIGSemanalDOM)
 }
 
-/* PROGRAMACIÓN AUDITORIA INVENTARIO */
+/** PROGRAMACIÓN AUDITORIA INVENTARIO */
 let programacionAIMensualDOM = document.getElementById('react-programacionAI-mensual')
 if( programacionAIMensualDOM ){
     ReactDOM.render(
@@ -59,6 +60,17 @@ if( programacionAISemanalDOM ){
             clientes={window.laravelClientes}
             auditores={window.laravelAuditores}
         />, programacionAISemanalDOM)
+}
+
+/** MANTENEDOR LOCALES **/
+let mantenedorLocalesDOM = document.getElementById('react-mantenedor-locales')
+if( mantenedorLocalesDOM ){
+    ReactDOM.render(
+        <MantenedorLocales
+            clientes={window.laravelClientes}
+            jornadas={window.laravelJornadas}
+            formatoLocales={window.laravelFormatoLocales}
+        />, mantenedorLocalesDOM)
 }
 
 // http://jamesknelson.com/push-state-vs-hash-based-routing-with-react-js/
