@@ -35648,13 +35648,13 @@
 	            // })
 
 	            // ##### Filtro Regiones
-	            var regiones = this.lista.map(function (inventario) {
+	            var regiones = this.lista.sort(function (inv1, inv2) {
+	                return inv1.local.direccion.comuna.provincia.region.cutRegion - inv2.local.direccion.comuna.provincia.region.cutRegion;
+	            }).map(function (inventario) {
 	                return inventario.local.direccion.comuna.provincia.region.numero;
 	            });
-	            var regionesOrdenadas = _ramda2.default.uniq(regiones).sort(function (a, b) {
-	                return a >= b;
-	            });
-	            this.filtroRegiones = regionesOrdenadas.map(function (textoUnico) {
+	            var regionesUnicasOrdenadas = _ramda2.default.uniq(regiones);
+	            this.filtroRegiones = regionesUnicasOrdenadas.map(function (textoUnico) {
 	                // si no existe la opcion, se crea y se selecciona por defecto
 	                return _this.filtroRegiones.find(function (opc) {
 	                    return opc.texto === textoUnico;
@@ -53184,13 +53184,13 @@
 	            // })
 
 	            // ##### Filtro Regiones
-	            var regiones = this.lista.map(function (inventario) {
+	            var regiones = this.lista.sort(function (inv1, inv2) {
+	                return inv1.local.direccion.comuna.provincia.region.cutRegion - inv2.local.direccion.comuna.provincia.region.cutRegion;
+	            }).map(function (inventario) {
 	                return inventario.local.direccion.comuna.provincia.region.numero;
 	            });
-	            var regionesOrdenadas = _ramda2.default.uniq(regiones).sort(function (a, b) {
-	                return a >= b;
-	            });
-	            this.filtroRegiones = regionesOrdenadas.map(function (textoUnico) {
+	            var regionesUnicasOrdenadas = _ramda2.default.uniq(regiones);
+	            this.filtroRegiones = regionesUnicasOrdenadas.map(function (textoUnico) {
 	                // si no existe la opcion, se crea y se selecciona por defecto
 	                return _this.filtroRegiones.find(function (opc) {
 	                    return opc.texto === textoUnico;
@@ -53220,11 +53220,9 @@
 	            });
 	            // unir lideres de dia + lideres de noche, ordenarlos alfabeticamente
 	            var lideresDiaNoche = ['-- NO FIJADO --'].concat(lideresDia, lideresNoche);
-	            var lideresUnicos = _ramda2.default.uniq(lideresDiaNoche);
-	            var lideresOrdenados = lideresUnicos.sort(function (a, b) {
+	            var lideresUnicos = _ramda2.default.uniq(lideresDiaNoche).sort(function (a, b) {
 	                return a >= b;
 	            });
-	            /** */console.log("(orden no funciona) lideres: ", lideresUnicos, lideresOrdenados);
 	            this.filtroLideres = lideresUnicos.map(function (textoUnico) {
 	                // si no existe la opcion, se crea y se selecciona por defecto
 	                return _this.filtroLideres.find(function (opc) {
