@@ -302,7 +302,7 @@ export default class BlackBox{
 
         // ##### Filtro Regiones
         let regiones = this.lista.map(inventario=>inventario.local.direccion.comuna.provincia.region.numero)
-        let regionesOrdenadas = R.uniq(regiones).sort((a, b)=>a>b)
+        let regionesOrdenadas = R.uniq(regiones).sort((a, b)=>a<b)
         this.filtroRegiones = regionesOrdenadas.map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
             return this.filtroRegiones.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
