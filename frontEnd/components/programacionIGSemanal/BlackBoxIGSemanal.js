@@ -127,7 +127,7 @@ export default class BlackBoxIGSemanal{
 
         // ##### Filtro Regiones
         let regiones = this.lista.map(inventario=>inventario.local.direccion.comuna.provincia.region.numero)
-        let regionesOrdenadas = R.uniq(regiones).sort((a, b)=>a<b)
+        let regionesOrdenadas = R.uniq(regiones).sort((a, b)=>a>=b)
         this.filtroRegiones = regionesOrdenadas.map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
             return this.filtroRegiones.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
@@ -153,7 +153,7 @@ export default class BlackBoxIGSemanal{
         // unir lideres de dia + lideres de noche, ordenarlos alfabeticamente
         let lideresDiaNoche = ['-- NO FIJADO --'].concat(lideresDia, lideresNoche)
         let lideresUnicos = R.uniq(lideresDiaNoche)
-        let lideresOrdenados = lideresUnicos.sort((a,b)=>a<b)
+        let lideresOrdenados = lideresUnicos.sort((a,b)=>a>=b)
 /** */  console.log("(orden no funciona) lideres: ", lideresUnicos, lideresOrdenados)
         this.filtroLideres = lideresUnicos.map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto
