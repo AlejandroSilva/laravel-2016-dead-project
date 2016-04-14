@@ -311,7 +311,7 @@ export default class BlackBox{
         // ##### Filtro Numero de Local
         let locales = this.lista.map(inventario=>inventario.local.numero)
         // convierte el texto a numero, y los ordena de menor a mayor
-        let localesOrdenados = R.uniq(locales).sort((a, b)=>{ return (isNaN(a*1) || isNaN(b*1))? (a>b) : (a*1>b*1) })
+        let localesOrdenados = R.uniq(locales).sort((a, b)=>{ return (isNaN(a*1) || isNaN(b*1))? (a>b) : (a*1-b*1) })
 /** */  console.log("inventario semanal: ", locales, localesOrdenados)
         this.filtroLocales = localesOrdenados.map(textoUnico=>{
             // si no existe la opcion, se crea y se selecciona por defecto

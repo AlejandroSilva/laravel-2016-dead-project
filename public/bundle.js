@@ -75,15 +75,15 @@
 
 	var _ProgramacionIGSemanal2 = _interopRequireDefault(_ProgramacionIGSemanal);
 
-	var _ProgramacionAIMensual = __webpack_require__(444);
+	var _ProgramacionAIMensual = __webpack_require__(442);
 
 	var _ProgramacionAIMensual2 = _interopRequireDefault(_ProgramacionAIMensual);
 
-	var _ProgramacionAISemanal = __webpack_require__(456);
+	var _ProgramacionAISemanal = __webpack_require__(454);
 
 	var _ProgramacionAISemanal2 = _interopRequireDefault(_ProgramacionAISemanal);
 
-	var _MantenedorLocales = __webpack_require__(472);
+	var _MantenedorLocales = __webpack_require__(470);
 
 	var _MantenedorLocales2 = _interopRequireDefault(_MantenedorLocales);
 
@@ -35667,7 +35667,7 @@
 	            });
 	            // convierte el texto a numero, y los ordena de menor a mayor
 	            var localesOrdenados = _ramda2.default.uniq(locales).sort(function (a, b) {
-	                return isNaN(a * 1) || isNaN(b * 1) ? a > b : a * 1 > b * 1;
+	                return isNaN(a * 1) || isNaN(b * 1) ? a > b : a * 1 - b * 1;
 	            });
 	            /** */console.log("inventario semanal: ", locales, localesOrdenados);
 	            this.filtroLocales = localesOrdenados.map(function (textoUnico) {
@@ -44945,7 +44945,7 @@
 
 	var _container2 = _interopRequireDefault(_container);
 
-	var _HeaderConFiltro = __webpack_require__(420);
+	var _HeaderConFiltro = __webpack_require__(301);
 
 	var _HeaderConFiltro2 = _interopRequireDefault(_HeaderConFiltro);
 
@@ -45758,8 +45758,197 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 301 */,
-/* 302 */,
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _HeaderConFiltro = __webpack_require__(302);
+
+	var css = _interopRequireWildcard(_HeaderConFiltro);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	// Styles
+
+	var HeaderConFiltro = function (_React$Component) {
+	    _inherits(HeaderConFiltro, _React$Component);
+
+	    function HeaderConFiltro(props) {
+	        _classCallCheck(this, HeaderConFiltro);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(HeaderConFiltro).call(this, props));
+
+	        _this.state = {
+	            open: false
+	        };
+	        return _this;
+	    }
+	    // Metodos para controlar el display del menu, ocultar y mostrar los elementos
+
+
+	    _createClass(HeaderConFiltro, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            document.addEventListener('click', this.onClickHandler.bind(this));
+	        }
+	    }, {
+	        key: 'componentWillUnMount',
+	        value: function componentWillUnMount() {
+	            document.removeEventListener('click', this.onClickHandler.bind(this));
+	        }
+	    }, {
+	        key: 'onClickHandler',
+	        value: function onClickHandler(evt) {
+	            // detecta cuando se hace un click fuera de este componente, cuando eso pasa y el menu es visible, lo oculta
+	            if (!this.node.contains(evt.target) && this.state.open) this.closeMenu();
+	        }
+	    }, {
+	        key: 'closeMenu',
+	        value: function closeMenu() {
+	            this.setState({ open: false });
+	        }
+	    }, {
+	        key: 'toggleMenu',
+	        value: function toggleMenu() {
+	            this.setState({ open: !this.state.open });
+	        }
+
+	        // Elementos seleccionados
+
+	    }, {
+	        key: 'revisarTodosSeleccionados',
+	        value: function revisarTodosSeleccionados() /*opciones*/{
+	            return this.props.filtro.filter(function (opc) {
+	                return opc.seleccionado === false;
+	            }).length === 0;
+	        }
+	    }, {
+	        key: 'toggleTodos',
+	        value: function toggleTodos() {
+	            var todosSeleccionados = this.revisarTodosSeleccionados();
+	            // si estan todos seleccionados, marcar ninguno
+	            // si falta uno por marcar, se marcan todos
+	            var filtroActualizado = this.props.filtro.map(function (opcion) {
+	                return { texto: opcion.texto, seleccionado: !todosSeleccionados };
+	            });
+
+	            // informar la actualizacion al padre
+	            this.props.actualizarFiltro(filtroActualizado);
+	        }
+	    }, {
+	        key: 'checkboxSeleccionado',
+	        value: function checkboxSeleccionado(opcionSeleccionada) {
+	            var filtroActualizado = this.props.filtro.map(function (opcion) {
+	                if (opcion === opcionSeleccionada) opcion.seleccionado = !opcion.seleccionado;
+	                return opcion;
+	            });
+	            // informar la actualizacion al padre
+	            this.props.actualizarFiltro(filtroActualizado);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: css.container,
+	                    ref: function ref(_ref) {
+	                        return _this2.node = _ref;
+	                    } },
+	                _react2.default.createElement(
+	                    'div',
+	                    { onClick: this.toggleMenu.bind(this) },
+	                    this.props.nombre,
+	                    _react2.default.createElement('span', { className: 'glyphicon pull-right ' + (this.state.open ? 'glyphicon-triangle-top ' : 'glyphicon-triangle-bottom ') + (this.revisarTodosSeleccionados() ? '' : css.filtroColoreado) })
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: css.menu, style: { display: this.state.open ? '' : 'none' } },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: css.contenedorValores },
+	                        this.props.filtro.map(function (opcion, index) {
+	                            return _react2.default.createElement(
+	                                'label',
+	                                { key: index },
+	                                _react2.default.createElement('input', { type: 'checkbox',
+	                                    onChange: _this2.checkboxSeleccionado.bind(_this2, opcion),
+	                                    checked: opcion.seleccionado
+	                                }),
+	                                ' ',
+	                                opcion.texto
+	                            );
+	                        })
+	                    ),
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        _react2.default.createElement('input', { type: 'checkbox',
+	                            onChange: this.toggleTodos.bind(this),
+	                            checked: this.revisarTodosSeleccionados.call(this)
+	                        }),
+	                        'Todos'
+	                    ),
+	                    _react2.default.createElement(
+	                        'a',
+	                        { href: '#',
+	                            className: 'btn btn-block btn-sm btn-primary',
+	                            onClick: this.closeMenu.bind(this) },
+	                        'Aceptar'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return HeaderConFiltro;
+	}(_react2.default.Component);
+
+	HeaderConFiltro.propTypes = {
+	    nombre: PropTypes.string,
+	    filtro: PropTypes.arrayOf(PropTypes.object).isRequired,
+	    // Metodos
+	    actualizarFiltro: PropTypes.func.isRequired
+	};
+	HeaderConFiltro.defaultProps = {
+	    nombre: '[sin nombre]'
+	};
+	exports.default = HeaderConFiltro;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "HeaderConFiltro.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 302 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"container":"HeaderConFiltro__container___3D6jc","menu":"HeaderConFiltro__menu___nr1GQ","contenedorValores":"HeaderConFiltro__contenedorValores___2Q55Q","filtroColoreado":"HeaderConFiltro__filtroColoreado___2gAqi"};
+
+/***/ },
 /* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -52409,7 +52598,7 @@
 
 	var _TablaSemanal2 = _interopRequireDefault(_TablaSemanal);
 
-	var _SelectRange = __webpack_require__(434);
+	var _SelectRange = __webpack_require__(432);
 
 	var _SelectRange2 = _interopRequireDefault(_SelectRange);
 
@@ -53031,9 +53220,11 @@
 	            });
 	            // unir lideres de dia + lideres de noche, ordenarlos alfabeticamente
 	            var lideresDiaNoche = ['-- NO FIJADO --'].concat(lideresDia, lideresNoche);
-	            var lideresUnicos = _ramda2.default.uniq(lideresDiaNoche).sort(function (a, b) {
-	                return a > b;
+	            var lideresUnicos = _ramda2.default.uniq(lideresDiaNoche);
+	            var lideresOrdenados = lideresUnicos.sort(function (a, b) {
+	                return a - b;
 	            });
+	            /** */console.log("(orden no funciona) lideres: ", lideresUnicos, lideresOrdenados);
 	            this.filtroLideres = lideresUnicos.map(function (textoUnico) {
 	                // si no existe la opcion, se crea y se selecciona por defecto
 	                return _this.filtroLideres.find(function (opc) {
@@ -53047,9 +53238,8 @@
 	            });
 	            // convierte el texto a numero, y los ordena de menor a mayor
 	            var localesOrdenados = _ramda2.default.uniq(locales).sort(function (a, b) {
-	                return isNaN(a * 1) || isNaN(b * 1) ? a > b : a * 1 > b * 1;
+	                return isNaN(a * 1) || isNaN(b * 1) ? a > b : a * 1 - b * 1;
 	            });
-	            /** */console.log("(orden no funciona) inventario semanal: ", locales, localesOrdenados);
 	            this.filtroLocales = localesOrdenados.map(function (textoUnico) {
 	                // si no existe la opcion, se crea y se selecciona por defecto
 	                return _this.filtroLocales.find(function (opc) {
@@ -53104,15 +53294,15 @@
 
 	var _container2 = _interopRequireDefault(_container);
 
-	var _HeaderConFiltro = __webpack_require__(420);
+	var _HeaderConFiltro = __webpack_require__(301);
 
 	var _HeaderConFiltro2 = _interopRequireDefault(_HeaderConFiltro);
 
-	var _RowInventarioSemanal = __webpack_require__(422);
+	var _RowInventarioSemanal = __webpack_require__(420);
 
 	var _RowInventarioSemanal2 = _interopRequireDefault(_RowInventarioSemanal);
 
-	var _TablaSemanal = __webpack_require__(433);
+	var _TablaSemanal = __webpack_require__(431);
 
 	var css = _interopRequireWildcard(_TablaSemanal);
 
@@ -53385,197 +53575,6 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _HeaderConFiltro = __webpack_require__(421);
-
-	var css = _interopRequireWildcard(_HeaderConFiltro);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	// Styles
-
-	var HeaderConFiltro = function (_React$Component) {
-	    _inherits(HeaderConFiltro, _React$Component);
-
-	    function HeaderConFiltro(props) {
-	        _classCallCheck(this, HeaderConFiltro);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(HeaderConFiltro).call(this, props));
-
-	        _this.state = {
-	            open: false
-	        };
-	        return _this;
-	    }
-	    // Metodos para controlar el display del menu, ocultar y mostrar los elementos
-
-
-	    _createClass(HeaderConFiltro, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            document.addEventListener('click', this.onClickHandler.bind(this));
-	        }
-	    }, {
-	        key: 'componentWillUnMount',
-	        value: function componentWillUnMount() {
-	            document.removeEventListener('click', this.onClickHandler.bind(this));
-	        }
-	    }, {
-	        key: 'onClickHandler',
-	        value: function onClickHandler(evt) {
-	            // detecta cuando se hace un click fuera de este componente, cuando eso pasa y el menu es visible, lo oculta
-	            if (!this.node.contains(evt.target) && this.state.open) this.closeMenu();
-	        }
-	    }, {
-	        key: 'closeMenu',
-	        value: function closeMenu() {
-	            this.setState({ open: false });
-	        }
-	    }, {
-	        key: 'toggleMenu',
-	        value: function toggleMenu() {
-	            this.setState({ open: !this.state.open });
-	        }
-
-	        // Elementos seleccionados
-
-	    }, {
-	        key: 'revisarTodosSeleccionados',
-	        value: function revisarTodosSeleccionados() /*opciones*/{
-	            return this.props.filtro.filter(function (opc) {
-	                return opc.seleccionado === false;
-	            }).length === 0;
-	        }
-	    }, {
-	        key: 'toggleTodos',
-	        value: function toggleTodos() {
-	            var todosSeleccionados = this.revisarTodosSeleccionados();
-	            // si estan todos seleccionados, marcar ninguno
-	            // si falta uno por marcar, se marcan todos
-	            var filtroActualizado = this.props.filtro.map(function (opcion) {
-	                return { texto: opcion.texto, seleccionado: !todosSeleccionados };
-	            });
-
-	            // informar la actualizacion al padre
-	            this.props.actualizarFiltro(filtroActualizado);
-	        }
-	    }, {
-	        key: 'checkboxSeleccionado',
-	        value: function checkboxSeleccionado(opcionSeleccionada) {
-	            var filtroActualizado = this.props.filtro.map(function (opcion) {
-	                if (opcion === opcionSeleccionada) opcion.seleccionado = !opcion.seleccionado;
-	                return opcion;
-	            });
-	            // informar la actualizacion al padre
-	            this.props.actualizarFiltro(filtroActualizado);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this2 = this;
-
-	            return _react2.default.createElement(
-	                'div',
-	                { className: css.container,
-	                    ref: function ref(_ref) {
-	                        return _this2.node = _ref;
-	                    } },
-	                _react2.default.createElement(
-	                    'div',
-	                    { onClick: this.toggleMenu.bind(this) },
-	                    this.props.nombre,
-	                    _react2.default.createElement('span', { className: 'glyphicon pull-right ' + (this.state.open ? 'glyphicon-triangle-top ' : 'glyphicon-triangle-bottom ') + (this.revisarTodosSeleccionados() ? '' : css.filtroColoreado) })
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: css.menu, style: { display: this.state.open ? '' : 'none' } },
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: css.contenedorValores },
-	                        this.props.filtro.map(function (opcion, index) {
-	                            return _react2.default.createElement(
-	                                'label',
-	                                { key: index },
-	                                _react2.default.createElement('input', { type: 'checkbox',
-	                                    onChange: _this2.checkboxSeleccionado.bind(_this2, opcion),
-	                                    checked: opcion.seleccionado
-	                                }),
-	                                ' ',
-	                                opcion.texto
-	                            );
-	                        })
-	                    ),
-	                    _react2.default.createElement(
-	                        'label',
-	                        null,
-	                        _react2.default.createElement('input', { type: 'checkbox',
-	                            onChange: this.toggleTodos.bind(this),
-	                            checked: this.revisarTodosSeleccionados.call(this)
-	                        }),
-	                        'Todos'
-	                    ),
-	                    _react2.default.createElement(
-	                        'a',
-	                        { href: '#',
-	                            className: 'btn btn-block btn-sm btn-primary',
-	                            onClick: this.closeMenu.bind(this) },
-	                        'Aceptar'
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return HeaderConFiltro;
-	}(_react2.default.Component);
-
-	HeaderConFiltro.propTypes = {
-	    nombre: PropTypes.string,
-	    filtro: PropTypes.arrayOf(PropTypes.object).isRequired,
-	    // Metodos
-	    actualizarFiltro: PropTypes.func.isRequired
-	};
-	HeaderConFiltro.defaultProps = {
-	    nombre: '[sin nombre]'
-	};
-	exports.default = HeaderConFiltro;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "HeaderConFiltro.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 421 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-	module.exports = {"container":"HeaderConFiltro__container___3D6jc","menu":"HeaderConFiltro__menu___nr1GQ","contenedorValores":"HeaderConFiltro__contenedorValores___2Q55Q","filtroColoreado":"HeaderConFiltro__filtroColoreado___2gAqi"};
-
-/***/ },
-/* 422 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
 	var _moment = __webpack_require__(182);
 
 	var _moment2 = _interopRequireDefault(_moment);
@@ -53588,27 +53587,27 @@
 
 	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
 
-	var _InputFecha = __webpack_require__(423);
+	var _InputFecha = __webpack_require__(421);
 
 	var _InputFecha2 = _interopRequireDefault(_InputFecha);
 
-	var _InputHora = __webpack_require__(425);
+	var _InputHora = __webpack_require__(423);
 
 	var _InputHora2 = _interopRequireDefault(_InputHora);
 
-	var _InputDotacion = __webpack_require__(427);
+	var _InputDotacion = __webpack_require__(425);
 
 	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
 
-	var _InputStock = __webpack_require__(429);
+	var _InputStock = __webpack_require__(427);
 
 	var _InputStock2 = _interopRequireDefault(_InputStock);
 
-	var _Select = __webpack_require__(431);
+	var _Select = __webpack_require__(429);
 
 	var _Select2 = _interopRequireDefault(_Select);
 
-	var _TablaSemanal = __webpack_require__(433);
+	var _TablaSemanal = __webpack_require__(431);
 
 	var css = _interopRequireWildcard(_TablaSemanal);
 
@@ -54114,7 +54113,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowInventarioSemanal.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 423 */
+/* 421 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -54133,7 +54132,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _InputFecha = __webpack_require__(424);
+	var _InputFecha = __webpack_require__(422);
 
 	var css = _interopRequireWildcard(_InputFecha);
 
@@ -54339,14 +54338,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputFecha.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 424 */
+/* 422 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputNumberAsText":"InputFecha__inputNumberAsText___21H-u","divContenedor":"InputFecha__divContenedor___28P7R","inputDia":"InputFecha__inputDia___3U_ot InputFecha__inputNumberAsText___21H-u","inputDiaDirty":"InputFecha__inputDiaDirty___IZjp_ InputFecha__inputDia___3U_ot InputFecha__inputNumberAsText___21H-u","inputDiaInvalido":"InputFecha__inputDiaInvalido___1BPmr InputFecha__inputDia___3U_ot InputFecha__inputNumberAsText___21H-u","inputDiaPendiente":"InputFecha__inputDiaPendiente___adHVB InputFecha__inputDia___3U_ot InputFecha__inputNumberAsText___21H-u","inputMes":"InputFecha__inputMes___vqcfQ InputFecha__inputNumberAsText___21H-u","inputAnno":"InputFecha__inputAnno___12Ghs InputFecha__inputNumberAsText___21H-u","diaSemana":"InputFecha__diaSemana___2qfYV"};
 
 /***/ },
-/* 425 */
+/* 423 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -54371,7 +54370,7 @@
 
 	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
 
-	var _InputHora = __webpack_require__(426);
+	var _InputHora = __webpack_require__(424);
 
 	var _InputHora2 = _interopRequireDefault(_InputHora);
 
@@ -54511,14 +54510,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputHora.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 426 */
+/* 424 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputHora":"InputHora__inputHora___2ywZV shared__inputNumberAsText___1Qr9M","inputHoraDirty":"InputHora__inputHoraDirty___3EeMf InputHora__inputHora___2ywZV shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 427 */
+/* 425 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -54535,7 +54534,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _InputDotacion = __webpack_require__(428);
+	var _InputDotacion = __webpack_require__(426);
 
 	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
 
@@ -54667,14 +54666,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputDotacion.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 428 */
+/* 426 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputDotacion":"InputDotacion__inputDotacion___33vhB shared__inputNumberAsText___1Qr9M","inputDotacionDirty":"InputDotacion__inputDotacionDirty___w9GsP InputDotacion__inputDotacion___33vhB shared__inputNumberAsText___1Qr9M","inputDotacionInvalida":"InputDotacion__inputDotacionInvalida___2pp6D InputDotacion__inputDotacion___33vhB shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 429 */
+/* 427 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -54699,7 +54698,7 @@
 
 	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
 
-	var _InputStock = __webpack_require__(430);
+	var _InputStock = __webpack_require__(428);
 
 	var css = _interopRequireWildcard(_InputStock);
 
@@ -54848,14 +54847,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputStock.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 430 */
+/* 428 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputStock":"InputStock__inputStock___2MKp2 shared__inputNumberAsText___1Qr9M","inputStockDirty":"InputStock__inputStockDirty___2q4lM InputStock__inputStock___2MKp2 shared__inputNumberAsText___1Qr9M","inputStockInvalida":"InputStock__inputStockInvalida___3RGow InputStock__inputStock___2MKp2 shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 431 */
+/* 429 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -54872,7 +54871,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Select = __webpack_require__(432);
+	var _Select = __webpack_require__(430);
 
 	var _Select2 = _interopRequireDefault(_Select);
 
@@ -54993,21 +54992,21 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Select.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 432 */
+/* 430 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"select":"Select__select___3cj0v shared__inputNumberAsText___1Qr9M","selectDirty":"Select__selectDirty___23L-r Select__select___3cj0v shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 433 */
+/* 431 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"tableFixed":"TablaSemanal__tableFixed___3ulyc","trSeparador":"TablaSemanal__trSeparador___2hls8","thCorrelativo":"TablaSemanal__thCorrelativo___2HC6S","tdCorrelativo":"TablaSemanal__tdCorrelativo___Y-q5H","thFecha":"TablaSemanal__thFecha___3Olb_","tdFecha":"TablaSemanal__tdFecha___32UwQ","thCliente":"TablaSemanal__thCliente___3eBtN","tdCliente":"TablaSemanal__tdCliente___2y18i","thCeco":"TablaSemanal__thCeco___QDgho","tdCeco":"TablaSemanal__tdCeco___SaL_2","thRegion":"TablaSemanal__thRegion___1kSJQ","tdRegion":"TablaSemanal__tdRegion___2FAhz","thComuna":"TablaSemanal__thComuna___1CiBT","tdComuna":"TablaSemanal__tdComuna___1xgsP","thTurno":"TablaSemanal__thTurno___3TZ7m","tdTurno":"TablaSemanal__tdTurno___1JhVC","thTienda":"TablaSemanal__thTienda___JR2jw","tdTienda":"TablaSemanal__tdTienda___C9IFV","thStock":"TablaSemanal__thStock___2hbyg","tdStock":"TablaSemanal__tdStock___1JQXd","thDotacionTotal":"TablaSemanal__thDotacionTotal___3dTIG","tdDotacionTotal":"TablaSemanal__tdDotacionTotal___3kqvN","thLider":"TablaSemanal__thLider___15VuZ","tdLider":"TablaSemanal__tdLider___3nxrO","thDotacion":"TablaSemanal__thDotacion___1k08d","tdDotacion":"TablaSemanal__tdDotacion___b9CB9","thHora":"TablaSemanal__thHora___2y8O3","tdHora":"TablaSemanal__tdHora___3HO6y","thDireccion":"TablaSemanal__thDireccion___2Q-qH","tdDireccion":"TablaSemanal__tdDireccion___jGN_7","thNomina":"TablaSemanal__thNomina___30w-P","tdNomina":"TablaSemanal__tdNomina___3w_kT"};
 
 /***/ },
-/* 434 */
+/* 432 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -55028,7 +55027,7 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _reactDateRange = __webpack_require__(435);
+	var _reactDateRange = __webpack_require__(433);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -55202,7 +55201,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "SelectRange.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 435 */
+/* 433 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55213,15 +55212,15 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _DateRangeJs = __webpack_require__(436);
+	var _DateRangeJs = __webpack_require__(434);
 
 	var _DateRangeJs2 = _interopRequireDefault(_DateRangeJs);
 
-	var _CalendarJs = __webpack_require__(438);
+	var _CalendarJs = __webpack_require__(436);
 
 	var _CalendarJs2 = _interopRequireDefault(_CalendarJs);
 
-	var _defaultRangesJs = __webpack_require__(443);
+	var _defaultRangesJs = __webpack_require__(441);
 
 	var _defaultRangesJs2 = _interopRequireDefault(_defaultRangesJs);
 
@@ -55229,7 +55228,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 436 */
+/* 434 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55258,19 +55257,19 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _utilsParseInputJs = __webpack_require__(437);
+	var _utilsParseInputJs = __webpack_require__(435);
 
 	var _utilsParseInputJs2 = _interopRequireDefault(_utilsParseInputJs);
 
-	var _CalendarJs = __webpack_require__(438);
+	var _CalendarJs = __webpack_require__(436);
 
 	var _CalendarJs2 = _interopRequireDefault(_CalendarJs);
 
-	var _PredefinedRangesJs = __webpack_require__(442);
+	var _PredefinedRangesJs = __webpack_require__(440);
 
 	var _PredefinedRangesJs2 = _interopRequireDefault(_PredefinedRangesJs);
 
-	var _stylesJs = __webpack_require__(441);
+	var _stylesJs = __webpack_require__(439);
 
 	var _stylesJs2 = _interopRequireDefault(_stylesJs);
 
@@ -55483,7 +55482,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 437 */
+/* 435 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55518,7 +55517,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 438 */
+/* 436 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55547,15 +55546,15 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _utilsParseInputJs = __webpack_require__(437);
+	var _utilsParseInputJs = __webpack_require__(435);
 
 	var _utilsParseInputJs2 = _interopRequireDefault(_utilsParseInputJs);
 
-	var _DayCellJs = __webpack_require__(439);
+	var _DayCellJs = __webpack_require__(437);
 
 	var _DayCellJs2 = _interopRequireDefault(_DayCellJs);
 
-	var _stylesJs = __webpack_require__(441);
+	var _stylesJs = __webpack_require__(439);
 
 	var _stylesJs2 = _interopRequireDefault(_stylesJs);
 
@@ -55876,7 +55875,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 439 */
+/* 437 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55903,11 +55902,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames2 = __webpack_require__(440);
+	var _classnames2 = __webpack_require__(438);
 
 	var _classnames3 = _interopRequireDefault(_classnames2);
 
-	var _stylesJs = __webpack_require__(441);
+	var _stylesJs = __webpack_require__(439);
 
 	var DayCell = (function (_Component) {
 	  _inherits(DayCell, _Component);
@@ -56055,7 +56054,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 440 */
+/* 438 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -56109,7 +56108,7 @@
 
 
 /***/ },
-/* 441 */
+/* 439 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56352,7 +56351,7 @@
 	};
 
 /***/ },
-/* 442 */
+/* 440 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56381,11 +56380,11 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _utilsParseInputJs = __webpack_require__(437);
+	var _utilsParseInputJs = __webpack_require__(435);
 
 	var _utilsParseInputJs2 = _interopRequireDefault(_utilsParseInputJs);
 
-	var _stylesJs = __webpack_require__(441);
+	var _stylesJs = __webpack_require__(439);
 
 	var PredefinedRanges = (function (_Component) {
 	  _inherits(PredefinedRanges, _Component);
@@ -56479,7 +56478,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 443 */
+/* 441 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56527,7 +56526,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 444 */
+/* 442 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -56554,17 +56553,17 @@
 
 	var _v2 = _interopRequireDefault(_v);
 
-	var _BlackBoxMensualAI = __webpack_require__(445);
+	var _BlackBoxMensualAI = __webpack_require__(443);
 
 	var _BlackBoxMensualAI2 = _interopRequireDefault(_BlackBoxMensualAI);
 
 	var _reactTabs = __webpack_require__(284);
 
-	var _TablaMensualAI = __webpack_require__(446);
+	var _TablaMensualAI = __webpack_require__(444);
 
 	var _TablaMensualAI2 = _interopRequireDefault(_TablaMensualAI);
 
-	var _AgregarAuditoria = __webpack_require__(454);
+	var _AgregarAuditoria = __webpack_require__(452);
 
 	var _AgregarAuditoria2 = _interopRequireDefault(_AgregarAuditoria);
 
@@ -56860,7 +56859,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "ProgramacionAIMensual.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 445 */
+/* 443 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -57283,7 +57282,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "BlackBoxMensualAI.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 446 */
+/* 444 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -57312,15 +57311,15 @@
 
 	var _container2 = _interopRequireDefault(_container);
 
-	var _TableHeader = __webpack_require__(447);
+	var _TableHeader = __webpack_require__(445);
 
 	var _TableHeader2 = _interopRequireDefault(_TableHeader);
 
-	var _RowAuditoriaMensual = __webpack_require__(449);
+	var _RowAuditoriaMensual = __webpack_require__(447);
 
 	var _RowAuditoriaMensual2 = _interopRequireDefault(_RowAuditoriaMensual);
 
-	var _TablaMensualAI = __webpack_require__(452);
+	var _TablaMensualAI = __webpack_require__(450);
 
 	var css = _interopRequireWildcard(_TablaMensualAI);
 
@@ -57558,7 +57557,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TablaMensualAI.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 447 */
+/* 445 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -57575,7 +57574,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TableHeader = __webpack_require__(448);
+	var _TableHeader = __webpack_require__(446);
 
 	var style = _interopRequireWildcard(_TableHeader);
 
@@ -57743,14 +57742,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TableHeader.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 448 */
+/* 446 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"container":"TableHeader__container___3Hcgx","cell":"TableHeader__cell___3kjoe","menu":"TableHeader__menu___2Ly21","contenedorValores":"TableHeader__contenedorValores___1ViuX"};
 
 /***/ },
-/* 449 */
+/* 447 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -57785,15 +57784,15 @@
 
 	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
 
-	var _Select = __webpack_require__(450);
+	var _Select = __webpack_require__(448);
 
 	var _Select2 = _interopRequireDefault(_Select);
 
-	var _TablaMensualAI = __webpack_require__(452);
+	var _TablaMensualAI = __webpack_require__(450);
 
 	var cssTabla = _interopRequireWildcard(_TablaMensualAI);
 
-	var _Inputs = __webpack_require__(453);
+	var _Inputs = __webpack_require__(451);
 
 	var cssInput = _interopRequireWildcard(_Inputs);
 
@@ -58284,7 +58283,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowAuditoriaMensual.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 450 */
+/* 448 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -58301,7 +58300,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Select = __webpack_require__(451);
+	var _Select = __webpack_require__(449);
 
 	var _Select2 = _interopRequireDefault(_Select);
 
@@ -58422,28 +58421,28 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Select.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 451 */
+/* 449 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"select":"Select__select___AGZIV shared__inputNumberAsText___1Qr9M","selectDirty":"Select__selectDirty___re1Yv Select__select___AGZIV shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 452 */
+/* 450 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"tableFixed":"TablaMensualAI__tableFixed___1JXew","trSeparador":"TablaMensualAI__trSeparador___HT8hM","thCorrelativo":"TablaMensualAI__thCorrelativo___HiQgB","tdCorrelativo":"TablaMensualAI__tdCorrelativo___3_hKr","thFecha":"TablaMensualAI__thFecha___qxufS","tdFecha":"TablaMensualAI__tdFecha___8Ger0","thCliente":"TablaMensualAI__thCliente___1eUFD","tdCliente":"TablaMensualAI__tdCliente___1nuej TablaMensualAI__thCliente___1eUFD","thCeco":"TablaMensualAI__thCeco___jaSLi","tdCeco":"TablaMensualAI__tdCeco___1nUXk TablaMensualAI__thCeco___jaSLi","thLocal":"TablaMensualAI__thLocal___3Ckwd","tdLocal":"TablaMensualAI__tdLocal___2JLc2 TablaMensualAI__thLocal___3Ckwd","thZonaSei":"TablaMensualAI__thZonaSei___1EJHc","tdZonaSei":"TablaMensualAI__tdZonaSei___1BSLU TablaMensualAI__thZonaSei___1EJHc","thRegion":"TablaMensualAI__thRegion___3tAOf","tdRegion":"TablaMensualAI__tdRegion___5DQ_W TablaMensualAI__thRegion___3tAOf","thComuna":"TablaMensualAI__thComuna___3BYty","tdComuna":"TablaMensualAI__tdComuna___klDBo TablaMensualAI__thComuna___3BYty","thLider":"TablaMensualAI__thLider___3oIWX","tdLider":"TablaMensualAI__tdLider___GRCj9","thStock":"TablaMensualAI__thStock___2Et3t","tdStock":"TablaMensualAI__tdStock___W6i2_ TablaMensualAI__thStock___2Et3t","thDotacion":"TablaMensualAI__thDotacion___3wuhb","tdDotacion":"TablaMensualAI__tdDotacion___1RpAY TablaMensualAI__thDotacion___3wuhb","thJornada":"TablaMensualAI__thJornada___2bgDp","tdJornada":"TablaMensualAI__tdJornada___2mvqu TablaMensualAI__thJornada___2bgDp","thEstado":"TablaMensualAI__thEstado___2hqV4","tdEstado":"TablaMensualAI__tdEstado___38zv5","thAperturaCierre":"TablaMensualAI__thAperturaCierre___3Y99t","tdAperturaCierre":"TablaMensualAI__tdAperturaCierre___1uBRw","thDireccion":"TablaMensualAI__thDireccion___dOiaq","tdDireccion":"TablaMensualAI__tdDireccion___3puD7","thOpciones":"TablaMensualAI__thOpciones___9BB2v","tdOpciones":"TablaMensualAI__tdOpciones___MxWBO"};
 
 /***/ },
-/* 453 */
+/* 451 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"diaSemana":"Inputs__diaSemana___FvF5e","inputDia":"Inputs__inputDia___2aLIH shared__inputNumberAsText___1Qr9M","inputDiaInvalido":"Inputs__inputDiaInvalido___zrS3k Inputs__inputDia___2aLIH shared__inputNumberAsText___1Qr9M","inputDiaPendiente":"Inputs__inputDiaPendiente___1tP2- Inputs__inputDia___2aLIH shared__inputNumberAsText___1Qr9M","inputMes":"Inputs__inputMes___1CK3B shared__inputNumberAsText___1Qr9M","inputAnno":"Inputs__inputAnno___1JgK0 shared__inputNumberAsText___1Qr9M","inputDotacion":"Inputs__inputDotacion___65Te1 shared__inputNumberAsText___1Qr9M","inputDotacionInvalida":"Inputs__inputDotacionInvalida___1UXB1 Inputs__inputDotacion___65Te1 shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 454 */
+/* 452 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -58462,7 +58461,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _AgregarAuditoria = __webpack_require__(455);
+	var _AgregarAuditoria = __webpack_require__(453);
 
 	var style = _interopRequireWildcard(_AgregarAuditoria);
 
@@ -58981,14 +58980,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AgregarAuditoria.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 455 */
+/* 453 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"tableCell":"AgregarAuditoria__tableCell___NLQOb"};
 
 /***/ },
-/* 456 */
+/* 454 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -59015,15 +59014,15 @@
 
 	var _v2 = _interopRequireDefault(_v);
 
-	var _BlackBoxSemanal = __webpack_require__(457);
+	var _BlackBoxSemanal = __webpack_require__(455);
 
 	var _BlackBoxSemanal2 = _interopRequireDefault(_BlackBoxSemanal);
 
-	var _TablaAuditoriaSemanal = __webpack_require__(458);
+	var _TablaAuditoriaSemanal = __webpack_require__(456);
 
 	var _TablaAuditoriaSemanal2 = _interopRequireDefault(_TablaAuditoriaSemanal);
 
-	var _SelectRange = __webpack_require__(471);
+	var _SelectRange = __webpack_require__(469);
 
 	var _SelectRange2 = _interopRequireDefault(_SelectRange);
 
@@ -59379,7 +59378,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "ProgramacionAISemanal.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 457 */
+/* 455 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -59517,7 +59516,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "BlackBoxSemanal.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 458 */
+/* 456 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -59542,11 +59541,11 @@
 
 	var _container2 = _interopRequireDefault(_container);
 
-	var _RowAuditoriaSemanal = __webpack_require__(459);
+	var _RowAuditoriaSemanal = __webpack_require__(457);
 
 	var _RowAuditoriaSemanal2 = _interopRequireDefault(_RowAuditoriaSemanal);
 
-	var _TablaAuditoriaSemanal = __webpack_require__(470);
+	var _TablaAuditoriaSemanal = __webpack_require__(468);
 
 	var css = _interopRequireWildcard(_TablaAuditoriaSemanal);
 
@@ -59767,7 +59766,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TablaAuditoriaSemanal.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 459 */
+/* 457 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -59800,27 +59799,27 @@
 
 	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
 
-	var _InputFecha = __webpack_require__(460);
+	var _InputFecha = __webpack_require__(458);
 
 	var _InputFecha2 = _interopRequireDefault(_InputFecha);
 
-	var _InputHora = __webpack_require__(462);
+	var _InputHora = __webpack_require__(460);
 
 	var _InputHora2 = _interopRequireDefault(_InputHora);
 
-	var _InputDotacion = __webpack_require__(464);
+	var _InputDotacion = __webpack_require__(462);
 
 	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
 
-	var _InputStock = __webpack_require__(466);
+	var _InputStock = __webpack_require__(464);
 
 	var _InputStock2 = _interopRequireDefault(_InputStock);
 
-	var _Select = __webpack_require__(468);
+	var _Select = __webpack_require__(466);
 
 	var _Select2 = _interopRequireDefault(_Select);
 
-	var _TablaAuditoriaSemanal = __webpack_require__(470);
+	var _TablaAuditoriaSemanal = __webpack_require__(468);
 
 	var css = _interopRequireWildcard(_TablaAuditoriaSemanal);
 
@@ -60111,7 +60110,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowAuditoriaSemanal.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 460 */
+/* 458 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -60130,7 +60129,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _InputFecha = __webpack_require__(461);
+	var _InputFecha = __webpack_require__(459);
 
 	var css = _interopRequireWildcard(_InputFecha);
 
@@ -60336,14 +60335,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputFecha.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 461 */
+/* 459 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputNumberAsText":"InputFecha__inputNumberAsText___U-00O","divContenedor":"InputFecha__divContenedor___2BS--","inputDia":"InputFecha__inputDia___2SNvj InputFecha__inputNumberAsText___U-00O","inputDiaDirty":"InputFecha__inputDiaDirty___Ze2rk InputFecha__inputDia___2SNvj InputFecha__inputNumberAsText___U-00O","inputDiaInvalido":"InputFecha__inputDiaInvalido___1MkQ1 InputFecha__inputDia___2SNvj InputFecha__inputNumberAsText___U-00O","inputDiaPendiente":"InputFecha__inputDiaPendiente___gUITv InputFecha__inputDia___2SNvj InputFecha__inputNumberAsText___U-00O","inputMes":"InputFecha__inputMes___2e-5N InputFecha__inputNumberAsText___U-00O","inputAnno":"InputFecha__inputAnno___1D-lE InputFecha__inputNumberAsText___U-00O","diaSemana":"InputFecha__diaSemana___199g-"};
 
 /***/ },
-/* 462 */
+/* 460 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -60368,7 +60367,7 @@
 
 	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
 
-	var _InputHora = __webpack_require__(463);
+	var _InputHora = __webpack_require__(461);
 
 	var _InputHora2 = _interopRequireDefault(_InputHora);
 
@@ -60506,14 +60505,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputHora.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 463 */
+/* 461 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputHora":"InputHora__inputHora___2iz6J shared__inputNumberAsText___1Qr9M","inputHoraDirty":"InputHora__inputHoraDirty___1xmf8 InputHora__inputHora___2iz6J shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 464 */
+/* 462 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -60530,7 +60529,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _InputDotacion = __webpack_require__(465);
+	var _InputDotacion = __webpack_require__(463);
 
 	var _InputDotacion2 = _interopRequireDefault(_InputDotacion);
 
@@ -60660,14 +60659,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputDotacion.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 465 */
+/* 463 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputDotacion":"InputDotacion__inputDotacion___1YdT- shared__inputNumberAsText___1Qr9M","inputDotacionDirty":"InputDotacion__inputDotacionDirty___3GECV InputDotacion__inputDotacion___1YdT- shared__inputNumberAsText___1Qr9M","inputDotacionInvalida":"InputDotacion__inputDotacionInvalida___29IqS InputDotacion__inputDotacion___1YdT- shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 466 */
+/* 464 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -60692,7 +60691,7 @@
 
 	var _OverlayTrigger2 = _interopRequireDefault(_OverlayTrigger);
 
-	var _InputStock = __webpack_require__(467);
+	var _InputStock = __webpack_require__(465);
 
 	var css = _interopRequireWildcard(_InputStock);
 
@@ -60842,14 +60841,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputStock.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 467 */
+/* 465 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"inputStock":"InputStock__inputStock___1rJL5 shared__inputNumberAsText___1Qr9M","inputStockDirty":"InputStock__inputStockDirty___3FZm5 InputStock__inputStock___1rJL5 shared__inputNumberAsText___1Qr9M","inputStockInvalida":"InputStock__inputStockInvalida___CjpSR InputStock__inputStock___1rJL5 shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 468 */
+/* 466 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -60866,7 +60865,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Select = __webpack_require__(469);
+	var _Select = __webpack_require__(467);
 
 	var _Select2 = _interopRequireDefault(_Select);
 
@@ -60987,21 +60986,21 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Select.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 469 */
+/* 467 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"select":"Select__select___114oK shared__inputNumberAsText___1Qr9M","selectDirty":"Select__selectDirty___3aeyQ Select__select___114oK shared__inputNumberAsText___1Qr9M"};
 
 /***/ },
-/* 470 */
+/* 468 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"tableFixed":"TablaAuditoriaSemanal__tableFixed___yEC_o","trSeparador":"TablaAuditoriaSemanal__trSeparador___3HwN4","thCorrelativo":"TablaAuditoriaSemanal__thCorrelativo___2KYI_","tdCorrelativo":"TablaAuditoriaSemanal__tdCorrelativo___2Y7HS","thFecha":"TablaAuditoriaSemanal__thFecha___1Hcvb","tdFecha":"TablaAuditoriaSemanal__tdFecha___2MFEg","thCliente":"TablaAuditoriaSemanal__thCliente___2CPUA","tdCliente":"TablaAuditoriaSemanal__tdCliente___1qEPn","thCeco":"TablaAuditoriaSemanal__thCeco___1WIqZ","tdCeco":"TablaAuditoriaSemanal__tdCeco___d-Mj8","thRegion":"TablaAuditoriaSemanal__thRegion___1h_HP","tdRegion":"TablaAuditoriaSemanal__tdRegion___2Xg24","thComuna":"TablaAuditoriaSemanal__thComuna___18nsO","tdComuna":"TablaAuditoriaSemanal__tdComuna___34cXO","thTurno":"TablaAuditoriaSemanal__thTurno___OuXNs","tdTurno":"TablaAuditoriaSemanal__tdTurno___2eyVj","thTienda":"TablaAuditoriaSemanal__thTienda___2ytl7","tdTienda":"TablaAuditoriaSemanal__tdTienda___WfgWb","thStock":"TablaAuditoriaSemanal__thStock___2yuf1","tdStock":"TablaAuditoriaSemanal__tdStock___3zZRp","thDotacionTotal":"TablaAuditoriaSemanal__thDotacionTotal___3UvvW","tdDotacionTotal":"TablaAuditoriaSemanal__tdDotacionTotal___3KHsv","thLider":"TablaAuditoriaSemanal__thLider___SOcaC","tdLider":"TablaAuditoriaSemanal__tdLider___2dz7q","thDotacion":"TablaAuditoriaSemanal__thDotacion___f9b61","tdDotacion":"TablaAuditoriaSemanal__tdDotacion___1-gSA","thHora":"TablaAuditoriaSemanal__thHora___3t_96","tdHora":"TablaAuditoriaSemanal__tdHora___2WqCM","thAperturaCierre":"TablaAuditoriaSemanal__thAperturaCierre___34SL6","tdAperturaCierre":"TablaAuditoriaSemanal__tdAperturaCierre___36yNa","thDireccion":"TablaAuditoriaSemanal__thDireccion___157f2","tdDireccion":"TablaAuditoriaSemanal__tdDireccion___3rGpQ","thOpciones":"TablaAuditoriaSemanal__thOpciones___31b7R","tdOpciones":"TablaAuditoriaSemanal__tdOpciones___1hfeA"};
 
 /***/ },
-/* 471 */
+/* 469 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -61022,7 +61021,7 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _reactDateRange = __webpack_require__(435);
+	var _reactDateRange = __webpack_require__(433);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -61196,7 +61195,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "SelectRange.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 472 */
+/* 470 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -61221,15 +61220,15 @@
 
 	var _v2 = _interopRequireDefault(_v);
 
-	var _BlackBoxLocales = __webpack_require__(473);
+	var _BlackBoxLocales = __webpack_require__(471);
 
 	var _BlackBoxLocales2 = _interopRequireDefault(_BlackBoxLocales);
 
-	var _TablaLocales = __webpack_require__(474);
+	var _TablaLocales = __webpack_require__(472);
 
 	var _TablaLocales2 = _interopRequireDefault(_TablaLocales);
 
-	var _AgregarLocal = __webpack_require__(477);
+	var _AgregarLocal = __webpack_require__(475);
 
 	var _AgregarLocal2 = _interopRequireDefault(_AgregarLocal);
 
@@ -61339,7 +61338,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "MantenedorLocales.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 473 */
+/* 471 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -61405,7 +61404,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "BlackBoxLocales.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 474 */
+/* 472 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -61430,11 +61429,11 @@
 
 	var _container2 = _interopRequireDefault(_container);
 
-	var _RowLocales = __webpack_require__(475);
+	var _RowLocales = __webpack_require__(473);
 
 	var _RowLocales2 = _interopRequireDefault(_RowLocales);
 
-	var _TablaLocales = __webpack_require__(476);
+	var _TablaLocales = __webpack_require__(474);
 
 	var css = _interopRequireWildcard(_TablaLocales);
 
@@ -61603,7 +61602,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TablaLocales.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 475 */
+/* 473 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -61620,7 +61619,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TablaLocales = __webpack_require__(476);
+	var _TablaLocales = __webpack_require__(474);
 
 	var css = _interopRequireWildcard(_TablaLocales);
 
@@ -61738,14 +61737,14 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "RowLocales.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 476 */
+/* 474 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"tableFixed":"TablaLocales__tableFixed___KmXK6","id":"TablaLocales__id___wTfQN","formatoLocal":"TablaLocales__formatoLocal___TBeAC","jornada":"TablaLocales__jornada___2Gx5c","numero":"TablaLocales__numero___1rqaf","nombre":"TablaLocales__nombre___1ZT6n","horaApertura":"TablaLocales__horaApertura___11vee","horaCierre":"TablaLocales__horaCierre___29gdF","emailContacto":"TablaLocales__emailContacto___2yQYw","telefono1":"TablaLocales__telefono1___EdYl3","telefono2":"TablaLocales__telefono2___14O8W","stock":"TablaLocales__stock___Y1CZI","fechaStock":"TablaLocales__fechaStock___1jhSu","comuna":"TablaLocales__comuna___1DknC","direccion":"TablaLocales__direccion___KjpCK"};
 
 /***/ },
-/* 477 */
+/* 475 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/asilva/PhpstormProjects/sig/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
