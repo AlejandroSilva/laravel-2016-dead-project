@@ -44,20 +44,24 @@ if( programacionIGSemanalDOM ){
 /** PROGRAMACIÓN AUDITORIA INVENTARIO */
 let programacionAIMensualDOM = document.getElementById('react-programacionAI-mensual')
 if( programacionAIMensualDOM ){
+    /** IMPORANTE: POR EL MOMENTO SOLO SE MUESTRAN AUDITORIAS DE FCV **/
+    let clienteFCV = window.laravelClientes.filter(cliente=>cliente.nombreCorto==='FCV')
     ReactDOM.render(
         <ProgramacionAIMensual
             puedeModificar={ window.laravelPuedeModificarAuditorias }
             puedeAgregar={ window.laravelPuedeAgregarAuditorias }
-            clientes={window.laravelClientes}
+            clientes={clienteFCV}
             auditores={window.laravelAuditores}
         />, programacionAIMensualDOM)
 }
 let programacionAISemanalDOM = document.getElementById('react-programacionAI-semanal')
 if( programacionAISemanalDOM ){
+    /** IMPORANTE: POR EL MOMENTO SOLO SE MUESTRAN AUDITORIAS DE FCV **/
+    let clienteFCV = window.laravelClientes.filter(cliente=>cliente.nombreCorto==='FCV')
     ReactDOM.render(
         <ProgramacionAISemanal
             puedeModificar={ window.laravelPuedeModificarAuditorias }
-            clientes={window.laravelClientes}
+            clientes={clienteFCV}
             auditores={window.laravelAuditores}
         />, programacionAISemanalDOM)
 }

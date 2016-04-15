@@ -56,7 +56,8 @@ class AuditoriasController extends Controller {
                 return response()->json(
                     $auditoria = Auditorias::with([
                         'local.cliente',
-                        'local.direccion.comuna.provincia.region'
+                        'local.direccion.comuna.provincia.region',
+                        'auditor'
                     ])->find($auditoria->idAuditoria)
                     , 201);
             }else{
@@ -79,7 +80,8 @@ class AuditoriasController extends Controller {
             Auditorias::   //\DB::table('auditorias')
             with([
                 'local.cliente',
-                'local.direccion.comuna.provincia.region'
+                'local.direccion.comuna.provincia.region',
+                'auditor'
             ])
                 ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
                 ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
@@ -98,9 +100,14 @@ class AuditoriasController extends Controller {
             // actualizar auditor
             if(isset($request->idAuditor))
                 $auditoria->idAuditor = $request->idAuditor==0? null: $request->idAuditor;
+            if(isset($request->realizada))
+                $auditoria->realizada = $request->realizada;
+            if(isset($request->aprovada))
+                $auditoria->aprovada = $request->aprovada;
             // actualizar hora de presentacion de auditor
             if(isset($request->horaPresentacionAuditor))
                 $auditoria->horaPresentacionAuditor = $request->horaPresentacionAuditor==0? null: $request->horaPresentacionAuditor;
+
 
             $resultado = $auditoria->save();
 
@@ -109,7 +116,8 @@ class AuditoriasController extends Controller {
                 return response()->json(
                     Auditorias::with([
                         'local.cliente',
-                        'local.direccion.comuna.provincia.region'
+                        'local.direccion.comuna.provincia.region',
+                        'auditor'
                     ])->find($auditoria->idAuditoria),
                     200);
             }else{
@@ -141,7 +149,8 @@ class AuditoriasController extends Controller {
     function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
         $query = Auditorias::with([
             'local.cliente',
-            'local.direccion.comuna.provincia.region'
+            'local.direccion.comuna.provincia.region',
+            'auditor'
         ])
             ->where('fechaProgramada', '>=', $annoMesDia1)
             ->where('fechaProgramada', '<=', $annoMesDia2);
@@ -149,17 +158,7 @@ class AuditoriasController extends Controller {
         if($idCliente==0){
             // No se realiza un filtro por clientes
             $auditorias = $query->get();
-
-            //**** TODO TEMPORAL; ELIMINAR
-            $auditorias2 = array_map(function($auditoria) {
-                $local = Locales::find($auditoria['idLocal']);
-                $auditoria['HORAAUDITOR'] = $local->llegadaSugeridaLiderDia();
-                return $auditoria;
-            }, $auditorias->toArray());
-            return response()->json($auditorias2, 200);
-            ///********************
-            
-//            return response()->json($auditorias->toArray(), 200);
+            return response()->json($auditorias->toArray(), 200);
         }
         else{
             // Se filtran por cliente

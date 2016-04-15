@@ -215,7 +215,7 @@ class RowAuditoriaMensual extends React.Component{
             <tr className={this.props.mostrarSeparador? cssTabla.trSeparador: ''}>
                 {/* Correlativo */}
                 <td className={cssTabla.tdCorrelativo}>
-                    {this.props.index}
+                    {this.props.index+1}
                 </td>
                 {/* Fecha */}
                 <td className={cssTabla.tdFecha}>

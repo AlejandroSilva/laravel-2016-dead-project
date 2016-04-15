@@ -164,19 +164,39 @@
 }
 
 /* LIDER / SUPERVISOR / CAPTADOR1 / CAPTADOR2 */
-.thLider{
+.thAuditor{
     width: 110px !important;
     background: white;
 }
-.tdLider{
+.tdAuditor{
     width: 110px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.tdLider > select {
+.tdAuditor > select {
     width: 98px !important;
+    height: 18px;               /* misma altura de un input */
+    margin: 0 auto 1px auto;    /* mismos margenes de un input */
+    font-size: 10px;
+    line-height: 12px;
+}
+
+/* Estados: REALIZADA / APROVADA */
+.thRealizadaAprovada {
+    width: 80px !important;
+    background: white;
+}
+.tdRealizadaAprovada {
+    width: 80px !important;
+    background: white;
+    vertical-align: middle !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.tdRealizadaAprovada > select {
+    width: 78px !important;
     height: 18px;               /* misma altura de un input */
     margin: 0 auto 1px auto;    /* mismos margenes de un input */
     font-size: 10px;
@@ -199,23 +219,6 @@
     width: 70px !important;
     height: 22px !important;    /* para hacer que el input sea del mismo alto que un select */
     padding: auto 0 !important;
-}
-
-/* HORA LLEGADA LIDER / HORA LLEGADA EQUIPO */
-.thHora{
-    width: 94px !important;
-    background: white;
-}
-.tdHora{
-    width: 94px !important;
-    background: white;
-    vertical-align: middle !important;
-    padding-left: 2px !important;
-    padding-right: 2px !important;
-}
-.tdHora > input {
-    width: 90px !important;
-    height: 18px !important;    /* misma altura que los select */
 }
 
 /* APERTURA/CIERRE DE LOCAL */

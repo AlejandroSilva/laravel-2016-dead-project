@@ -18,8 +18,8 @@ class Auditorias extends Model {
     }
 
     public function auditor(){
-        //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
-//        return $this->belongsTo('App\Locales', 'idLocal', 'idLocal');
+        //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
+        return $this->hasOne('App\User', 'id', 'idAuditor');
     }
     
 }

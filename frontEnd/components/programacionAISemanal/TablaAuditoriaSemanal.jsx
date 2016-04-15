@@ -1,37 +1,13 @@
 import React from 'react'
-//import moment from 'moment'
 
 // Componentes
 import Sticky from '../shared/react-sticky/sticky.js'
 import StickyContainer from '../shared/react-sticky/container.js'
-import RowAuditoriaSemanal from './RowAuditoriaSemanal.jsx'
 
 // Styles
 import * as css from './TablaAuditoriaSemanal.css'
 
 class TablaAuditoriaSemanal extends React.Component{
-    constructor(props){
-        super(props)
-        // referencia a todos las entradas de fecha de los inventarios
-        this.rows = []
-    }
-    
-    componentWillReceiveProps(nextProps){
-        // cuando se pasa de mes a mes, se generand posiciones "vacias" en el arreglo inputFecha, esto lo soluciona
-        this.rows = this.rows.filter(input=>input!==null)
-    }
-    focusRow(index, nombreElemento){
-        let ultimoIndex = this.rows.length-1
-        // seleccionar "antes de la primera"
-        if(index<0)
-            index = ultimoIndex
-        if(index>ultimoIndex)
-            index = index%this.rows.length
-        
-        let nextRow = this.rows[index]
-        nextRow.focusElemento(nombreElemento)
-    }
-    
     render(){
         return (
             <StickyContainer type={React.DOM.table}  className={"table table-bordered table-condensed "+css.tableFixed}>
@@ -44,11 +20,13 @@ class TablaAuditoriaSemanal extends React.Component{
                     <col className={css.thComuna}/>
                     <col className={css.thTienda}/>
                     <col className={css.thStock}/>
-                    <col className={css.thLider}/>
+                    <col className={css.thAuditor}/>
+                    <col className={css.thRealizadaAprovada}/>
+                    <col className={css.thRealizadaAprovada}/>
                     <col className={css.thAperturaCierre}/>
                     <col className={css.thAperturaCierre}/>
                     <col className={css.thDireccion}/>
-                    <col className={css.thNomina}/>
+                    <col className={css.thOpciones}/>
                 </colgroup>
                 <thead>
                     {/* TR que se pega al top de la pagina, es una TR, con instancia de 'Sticky' */}
@@ -70,54 +48,23 @@ class TablaAuditoriaSemanal extends React.Component{
                         <th className={css.thComuna}>Comuna</th>
                         <th className={css.thTienda}>Tienda</th>
                         <th className={css.thStock}>Stock</th>
-                        <th className={css.thLider}>Auditor</th>
-                        {/*<th className={css.thHora}>Hr.Lider</th>*/}
+                        <th className={css.thAuditor}>Auditor</th>
+                        <th className={css.thRealizadaAprovada}>Realizada</th>
+                        <th className={css.thRealizadaAprovada}>Aprovada</th>
                         <th className={css.thAperturaCierre}>Hr.Apertura</th>
                         <th className={css.thAperturaCierre}>Hr.Cierre</th>
                         <th className={css.thDireccion}>Dirección</th>
-                        <th className={css.thNomina}>Opciones</th>
+                        <th className={css.thOpciones}>Opciones</th>
                     </Sticky>
                 </thead>
                 <tbody>
-                    {this.props.auditorias.length===0
-                        ? <tr><td colSpan="13" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
-                        : this.props.auditorias.map((auditoria, index)=>{
-                            let mostrarSeparador = false
-                            let sgteInventario = this.props.auditorias[index+1]
-                            if(sgteInventario)
-                                mostrarSeparador = auditoria.fechaProgramada!==sgteInventario.fechaProgramada
-                            return <RowAuditoriaSemanal
-                                // Propiedades
-                                puedeModificar={this.props.puedeModificar}
-                                key={index}
-                                index={index}
-                                ref={ref=>this.rows[index]=ref}
-                                auditoria={auditoria}
-                                // lideres={this.props.lideres}
-                                // supervisores={this.props.supervisores}
-                                // captadores={this.props.captadores}
-                                mostrarSeparador={mostrarSeparador}
-                                auditores={this.props.auditores}
-                                // Metodos
-                                guardarAuditoria={this.props.guardarAuditoria}
-                                focusRow={this.focusRow.bind(this)}
-                            />
-                        })}
+                    {this.props.children}
                 </tbody>
             </StickyContainer>
         )
     }
 }
 TablaAuditoriaSemanal.propTypes = {
-    // Objetos
-    puedeModificar: React.PropTypes.bool.isRequired,
-    auditorias: React.PropTypes.array.isRequired,
-    auditores: React.PropTypes.array.isRequired,
-    // supervisores: React.PropTypes.array.isRequired,
-    // captadores: React.PropTypes.array.isRequired,
-    // Metodos
-    //actualizarFiltro: React.PropTypes.func.isRequired,
-    guardarAuditoria: React.PropTypes.func.isRequired,
     ordenarAuditorias: React.PropTypes.func.isRequired
 }
 export default TablaAuditoriaSemanal
