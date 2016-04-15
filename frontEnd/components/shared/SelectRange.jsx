@@ -77,7 +77,7 @@ class SelectRange extends React.Component{
                 theme={{
                     DateRange: {
                         position: 'absolute',
-                        width: '560px'
+                        width: '280px'
                     }
                 }}
                 startDate={this.state.startDate}
