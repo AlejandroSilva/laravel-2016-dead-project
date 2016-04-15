@@ -79,106 +79,7 @@ export default class BlackBox{
         })
         return existe
     }
-    getListaFiltrada(){
-        this.actualizarFiltros()
-
-        // filtrar por clientes
-        // let clientesSeleccionados = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        // let listaFiltradaPorRegiones = R.filter(inventario=>{
-        //     return R.contains(inventario.local.direccion.comuna.provincia.region.numero, clientesSeleccionados)
-        // }, this.lista)
-
-        // Filtrar por Regiones
-        let regionesSeleccionadas = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltradaPorRegiones = R.filter(inventario=>{
-            return R.contains(inventario.local.direccion.comuna.provincia.region.numero, regionesSeleccionadas)
-        }, this.lista)
-
-        // Filtro por Local
-        let localesSeleccionados = this.filtroLocales.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltradaPorLocales = R.filter(inventario=>{
-            return R.contains(inventario.local.numero, localesSeleccionados)
-        }, listaFiltradaPorRegiones)
-
-        return {
-            inventariosFiltrados: listaFiltradaPorLocales,
-            filtroClientes: this.filtroClientes,
-            filtroRegiones: this.filtroRegiones,
-            filtroLocales: this.filtroLocales
-        }
-    }
-    __getListaFiltradaOrdenada__por_ahora_no_se_ocupa(){
-        this.actualizarFiltros()
-
-        // filtrar por clientes
-        let clientesSeleccionados = this.filtroClientes.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltrada1 = R.filter(inventario=>{
-            return R.contains(inventario.local.nombreCliente, clientesSeleccionados)
-        }, this.lista)
-
-        // filtrar por regiones
-        let regionesSeleccionadas = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltrada2 = R.filter(inventario=>{
-            return R.contains(inventario.local.nombreRegion, regionesSeleccionadas)
-        }, listaFiltrada1)
-
-        // Hack: para ordenar por fechas, se van a separar las que estan "fijadas", de las que "no estan fijadas"
-        // se ordenaran las "fijadas", y las "no fijadas" quedan igual
-        let listaDiaFijado = listaFiltrada2.filter(inventario=>inventario.fechaProgramada.indexOf('-00')===-1)
-        let listaDiaNoFijado = listaFiltrada2.filter(inventario=>inventario.fechaProgramada.indexOf('-00')!==-1)
-
-        let orderByFechaProgramadaStock = (a,b)=>{
-            let dateA = new Date(a.fechaProgramada)
-            let dateB = new Date(b.fechaProgramada)
-
-            if((dateA-dateB)===0){
-                // stock ordenado de mayor a menor (B-A)
-                return b.stockTeorico - a.stockTeorico
-            }else{
-                // fecha ordenada de de menor a mayor (A-B)
-                return dateA - dateB
-            }
-        }
-        let listaDiaFIjadoOrdenado = R.sort(orderByFechaProgramadaStock, listaDiaFijado)
-
-        return {
-            inventariosFiltrados: [
-                ...listaDiaNoFijado,
-                ...listaDiaFIjadoOrdenado
-            ],
-            filtroClientes: this.filtroClientes,
-            filtroRegiones: this.filtroRegiones,
-        }
-    }
-    ordenarLista(){
-        let orderByFechaProgramadaStock = (a,b)=>{
-            // si se parsea la fecha sin dia (EJ. 2016-01-00) resulta un 'Invalid Date'
-
-            let dateA = new Date(a.fechaProgramada)
-            if(dateA=='Invalid Date'){
-                let [annoA, mesA, diaA] = a.fechaProgramada.split('-')
-                // OJO: (new Date('2016-04')) - (new Date('2016-03-31')), resulta en 0, y los ordena mal, por eso se resta 1
-                dateA = new Date(`${annoA}-${mesA}`) - 1
-                //if(dateA=='Invalid Date')  console.log('invalida :', `${annoA}-${mesA}`)
-            }
-
-            let dateB = new Date(b.fechaProgramada)
-            if(dateB=='Invalid Date'){
-                let [annoB, mesB, diaB] = a.fechaProgramada.split('-')
-                dateB = new Date(`${annoB}-${mesB}`) - 1
-                //if(dateB=='Invalid Date')  console.log('invalida :', `${annoB}-${mesB}`)
-            }
-
-            if((dateA-dateB)===0){
-                // stock ordenado de mayor a menor (B-A)
-                return b.stockTeorico - a.stockTeorico
-            }else{
-                // fecha ordenada de de menor a mayor (A-B)
-                return dateA - dateB
-            }
-        }
-        this.lista  = R.sort(orderByFechaProgramadaStock, this.lista)
-    }
+    
     // Metodos de alto nivel
     __crearDummy(annoMesDia, idLocal){
         return {
@@ -288,7 +189,72 @@ export default class BlackBox{
             return inventario
         })
     }
+    
+    // ORDENAR Y FILTRAR
+    orderByFechaProgramadaStock(a,b){
+        // si se parsea la fecha sin dia (EJ. 2016-01-00) resulta un 'Invalid Date'
 
+        let dateA = new Date(a.fechaProgramada)
+        if(dateA=='Invalid Date'){
+            let [annoA, mesA, diaA] = a.fechaProgramada.split('-')
+            // OJO: (new Date('2016-04')) - (new Date('2016-03-31')), resulta en 0, y los ordena mal, por eso se resta 1
+            dateA = new Date(`${annoA}-${mesA}`) - 1
+            //if(dateA=='Invalid Date')  console.log('invalida :', `${annoA}-${mesA}`)
+        }
+
+        let dateB = new Date(b.fechaProgramada)
+        if(dateB=='Invalid Date'){
+            let [annoB, mesB, diaB] = a.fechaProgramada.split('-')
+            dateB = new Date(`${annoB}-${mesB}`) - 1
+            //if(dateB=='Invalid Date')  console.log('invalida :', `${annoB}-${mesB}`)
+        }
+
+        if((dateA-dateB)===0){
+            // stock ordenado de mayor a menor (B-A)
+            return b.stockTeorico - a.stockTeorico
+        }else{
+            // fecha ordenada de de menor a mayor (A-B)
+            return dateA - dateB
+        }
+    }
+    
+    ordenarLista(){
+        console.error('[programa mensual] ordenar lista no funcionando')
+        this.lista  = R.sort(this.orderByFechaProgramadaStock, this.lista)
+    }
+    
+    getListaFiltrada(){
+        this.actualizarFiltros()
+
+        // filtrar por clientes
+        // let clientesSeleccionados = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
+        // let listaFiltradaPorRegiones = R.filter(inventario=>{
+        //     return R.contains(inventario.local.direccion.comuna.provincia.region.numero, clientesSeleccionados)
+        // }, this.lista)
+
+        // Filtrar por Regiones
+        let regionesSeleccionadas = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
+        let listaFiltradaPorRegiones = R.filter(inventario=>{
+            return R.contains(inventario.local.direccion.comuna.provincia.region.numero, regionesSeleccionadas)
+        }, this.lista)
+
+        // Filtro por Local
+        let localesSeleccionados = this.filtroLocales.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
+        let listaFiltradaPorLocales = R.filter(inventario=>{
+            return R.contains(inventario.local.numero, localesSeleccionados)
+        }, listaFiltradaPorRegiones)
+
+        // ##### Ordenar por fecha y por stock
+        let listaOrdenadaYFiltrada = R.sort(this.orderByFechaProgramadaStock, listaFiltradaPorLocales)
+
+        return {
+            inventariosFiltrados: listaOrdenadaYFiltrada,
+            filtroClientes: this.filtroClientes,
+            filtroRegiones: this.filtroRegiones,
+            filtroLocales: this.filtroLocales
+        }
+    }
+    
     actualizarFiltros(){
         // Clientes
         // let clientes = this.lista.map(inventario=>inventario.local.cliente.nombre)
