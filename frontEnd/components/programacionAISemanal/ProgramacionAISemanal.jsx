@@ -29,13 +29,18 @@ class ProgramacionAISemanal extends React.Component {
         this.state = {
 //            meses,
 //            semanas: [],
-            auditoriasFiltradas: [],
             idCliente: 2,       // Seleccionar FCV por defecto
             numeroLocal: '',
 //            mesSeleccionado: '',
 //            semanaSeleccionada: '',
             fechaInicialSeleccionada: moment(),
-            fechaFinalSeleccionada: moment().add(1, 'month')
+            fechaFinalSeleccionada: moment().add(1, 'month'),
+            // Auditorias y Filtros
+            filtroLocales: [],
+            filtroRegiones: [],
+            filtroComunas: [],
+            filtroAuditores: [],
+            auditoriasFiltradas: []
         }
 
         // referencia a todos las entradas de fecha de los inventarios
@@ -149,8 +154,17 @@ class ProgramacionAISemanal extends React.Component {
     // }
 
     onBuscarPorNumeroLocal(evt){
-        let numero = evt.target.value
+        //let numero = evt.target.value
     }
+
+    // Filtros
+    actualizarFiltro(nombreFiltro, filtro){
+        this.blackboxSemanal.reemplazarFiltro(nombreFiltro, filtro)
+        // actualizar los filtros, y la lista ordenada de locales
+        this.setState(this.blackboxSemanal.getListaFiltrada())
+    }
+
+    // Llamadas al API
     // Todo: recibir el idCliente desde los metodos que lo llamen
     buscarAuditorias(){
         let idCliente = this.state.idCliente
@@ -275,11 +289,12 @@ class ProgramacionAISemanal extends React.Component {
                 </div>
 
                 <TablaAuditoriaSemanal
-                    //puedeModificar={this.props.puedeModificar}
-                    //auditores={this.props.auditores}
-                    //auditorias={this.state.auditoriasFiltradas}
-                    //guardarAuditoria={this.guardarAuditoria.bind(this)}
-                    ordenarAuditorias={this.ordenarAuditorias.bind(this)}>
+                    ordenarAuditorias={this.ordenarAuditorias.bind(this)}
+                    filtroLocales={this.state.filtroLocales}
+                    filtroRegiones={this.state.filtroRegiones}
+                    filtroComunas={this.state.filtroComunas}
+                    filtroAuditores={this.state.filtroAuditores}
+                    actualizarFiltro={this.actualizarFiltro.bind(this)}>
 
                     {this.state.auditoriasFiltradas.length===0
                         ? <tr><td colSpan="15" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>

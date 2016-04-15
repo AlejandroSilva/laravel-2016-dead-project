@@ -57,9 +57,9 @@ class RowAuditoriaSemanal extends React.Component{
             cambiosAuditoria.realizada = estadoSelectRealizada.seleccionUsuario
 
         // APROVADA ha cambiado?
-        let estadoSelectAprovada = this.selectAprovada.getEstado()
-        if(estadoSelectAprovada.dirty)
-            cambiosAuditoria.aprovada = estadoSelectAprovada.seleccionUsuario
+        let estadoSelectAprobada = this.selectAprobada.getEstado()
+        if(estadoSelectAprobada.dirty)
+            cambiosAuditoria.aprovada = estadoSelectAprobada.seleccionUsuario
 
         // la HORA DE LLEGADA DEL AUDITOR es valida y ha cambiado?
         // let estadoHoraAuditor = this.inputHoraAuditor.getEstado()
@@ -142,28 +142,28 @@ class RowAuditoriaSemanal extends React.Component{
                             puedeModificar={this.props.puedeModificar}/>
                 </td>
                 {/* Realizada */}
-                <td className={css.tdRealizadaAprovada}>
+                <td className={css.tdRealizadaAprobada}>
                     <Select
                         ref={ref=>this.selectRealizada=ref}
                         seleccionada={this.props.auditoria.realizada}
                         onSelect={this.guardarAuditoria.bind(this)}
                         opciones={[
-                            {valor: '0', texto: 'Pendiente de realizar'},
+                            {valor: '0', texto: 'Pendiente'},
                             {valor: '1', texto: 'Realizada'}
                         ]}
                         opcionNula={false}
                         opcionNulaSeleccionable={false}
                         puedeModificar={this.props.puedeModificar}/>
                 </td>
-                {/* Aprovada */}
-                <td className={css.tdRealizadaAprovada}>
+                {/* Aprobada */}
+                <td className={css.tdRealizadaAprobada}>
                     <Select
-                        ref={ref=>this.selectAprovada=ref}
+                        ref={ref=>this.selectAprobada=ref}
                         seleccionada={this.props.auditoria.aprovada}
                         onSelect={this.guardarAuditoria.bind(this)}
                         opciones={[
-                            {valor: '0', texto: 'Pendiente de aprovar'},
-                            {valor: '1', texto: 'Aprovada'}
+                            {valor: '0', texto: 'Pendiente'},
+                            {valor: '1', texto: 'Aprobada'}
                         ]}
                         opcionNula={false}
                         opcionNulaSeleccionable={false}

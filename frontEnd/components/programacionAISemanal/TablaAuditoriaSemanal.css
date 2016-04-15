@@ -57,11 +57,11 @@
 
 /* CECO */
 .thCeco{
-    width: 30px !important;
+    width: 45px !important;
     background: white;
 }
 .tdCeco{
-    width: 30px !important;
+    width: 45px !important;
     background: white;
     vertical-align: middle !important;
     font-size: 12px !important;
@@ -72,11 +72,11 @@
 
 /* REGIÓN */
 .thRegion{
-    width: 35px !important;
+    width: 45px !important;
     background: white;
 }
 .tdRegion{
-    width: 35px !important;
+    width: 45px !important;
     background: white;
     vertical-align: middle !important;
     font-size: 12px !important;
@@ -183,19 +183,19 @@
     line-height: 12px;
 }
 
-/* Estados: REALIZADA / APROVADA */
-.thRealizadaAprovada {
+/* Estados: REALIZADA / APROBADA */
+.thRealizadaAprobada {
     width: 80px !important;
     background: white;
 }
-.tdRealizadaAprovada {
+.tdRealizadaAprobada {
     width: 80px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.tdRealizadaAprovada > select {
+.tdRealizadaAprobada > select {
     width: 78px !important;
     height: 18px;               /* misma altura de un input */
     margin: 0 auto 1px auto;    /* mismos margenes de un input */

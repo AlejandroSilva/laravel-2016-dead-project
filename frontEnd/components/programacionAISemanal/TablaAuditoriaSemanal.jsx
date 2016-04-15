@@ -3,6 +3,7 @@ import React from 'react'
 // Componentes
 import Sticky from '../shared/react-sticky/sticky.js'
 import StickyContainer from '../shared/react-sticky/container.js'
+import HeaderConFiltro from '../shared/HeaderConFiltro.jsx'
 
 // Styles
 import * as css from './TablaAuditoriaSemanal.css'
@@ -21,8 +22,8 @@ class TablaAuditoriaSemanal extends React.Component{
                     <col className={css.thTienda}/>
                     <col className={css.thStock}/>
                     <col className={css.thAuditor}/>
-                    <col className={css.thRealizadaAprovada}/>
-                    <col className={css.thRealizadaAprovada}/>
+                    <col className={css.thRealizadaAprobada}/>
+                    <col className={css.thRealizadaAprobada}/>
                     <col className={css.thAperturaCierre}/>
                     <col className={css.thAperturaCierre}/>
                     <col className={css.thDireccion}/>
@@ -43,14 +44,39 @@ class TablaAuditoriaSemanal extends React.Component{
                             />
                         </th>
                         <th className={css.thCliente}>CL</th>
-                        <th className={css.thCeco}>CE</th>
-                        <th className={css.thRegion}>RG</th>
-                        <th className={css.thComuna}>Comuna</th>
+                        <th className={css.thCeco}>
+                            CE
+                            {/*<HeaderConFiltro
+                                nombre="CE"
+                                filtro={this.props.filtroLocales}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLocales')}
+                            />*/}
+                        </th>
+                        <th className={css.thRegion}>
+                            <HeaderConFiltro
+                                nombre="RG"
+                                filtro={this.props.filtroRegiones}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRegiones')}
+                            />
+                        </th>
+                        <th className={css.thComuna}>
+                            <HeaderConFiltro
+                                nombre="Comuna"
+                                filtro={this.props.filtroComunas}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroComunas')}
+                            />
+                        </th>
                         <th className={css.thTienda}>Tienda</th>
                         <th className={css.thStock}>Stock</th>
-                        <th className={css.thAuditor}>Auditor</th>
-                        <th className={css.thRealizadaAprovada}>Realizada</th>
-                        <th className={css.thRealizadaAprovada}>Aprovada</th>
+                        <th className={css.thAuditor}>
+                            <HeaderConFiltro
+                                nombre="Auditor"
+                                filtro={this.props.filtroAuditores}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroAuditores')}
+                            />
+                        </th>
+                        <th className={css.thRealizadaAprobada}>Realizada</th>
+                        <th className={css.thRealizadaAprobada}>Aprobada</th>
                         <th className={css.thAperturaCierre}>Hr.Apertura</th>
                         <th className={css.thAperturaCierre}>Hr.Cierre</th>
                         <th className={css.thDireccion}>Dirección</th>
@@ -65,6 +91,13 @@ class TablaAuditoriaSemanal extends React.Component{
     }
 }
 TablaAuditoriaSemanal.propTypes = {
-    ordenarAuditorias: React.PropTypes.func.isRequired
+    // Objetos
+    filtroLocales: React.PropTypes.array.isRequired,
+    filtroRegiones: React.PropTypes.array.isRequired,
+    filtroComunas: React.PropTypes.array.isRequired,
+    filtroAuditores: React.PropTypes.array.isRequired,
+    // Metodos
+    ordenarAuditorias: React.PropTypes.func.isRequired,
+    actualizarFiltro: React.PropTypes.func.isRequired
 }
 export default TablaAuditoriaSemanal
