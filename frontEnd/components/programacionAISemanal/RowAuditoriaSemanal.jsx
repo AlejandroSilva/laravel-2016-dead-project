@@ -6,30 +6,16 @@ moment.locale('es')
 // Componentes
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
-import InputFecha from './InputFecha.jsx'
+import InputFecha from '../shared/InputFecha.jsx'
 import Select from '../shared/Select.jsx'
 
 // Styles
 import * as css from './TablaAuditoriaSemanal.css'
 
 class RowAuditoriaSemanal extends React.Component{
-    constructor(props){
-        super(props)
-        this.state = {
-            inputDia: 0,
-            inputMes: 0,
-            inputAnno: 0,
-            inputDotacion: 0,
-            selectJornada: 4
-        }
-        // Refs disponibles: this.inputDia, this.inputDotacion
-    }
-
     focusElemento(elemento){
         if(elemento==='dia'){
             this.inputDia.focus()
-        }else if(elemento==='dotacion'){
-            this.inputDotacionTotal.focus()
         }else if(elemento==='stock'){
             this.inputStock.focus()
         }

@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import R from 'ramda'
 
 export default class BlackBoxSemanal{
     constructor(){
@@ -62,40 +61,48 @@ export default class BlackBoxSemanal{
     }
 
     actualizarFiltros(){
-        //***  Se asume que la lista esta ordenada
-
         // ##### Filtro Regiones (ordenado por codRegion)
-        let regiones = this.lista
-            .sort((aud1, aud2)=> aud1.local.direccion.comuna.provincia.region.cutRegion-aud2.local.direccion.comuna.provincia.region.cutRegion)
-            .map(auditoria=>auditoria.local.direccion.comuna.provincia.region.numero)
-        let regionesUnicasOrdenadas = R.uniq(regiones)
-        this.filtroRegiones = regionesUnicasOrdenadas.map(textoUnico=>{
-            // si no existe la opcion, se crea y se selecciona por defecto
-            return this.filtroRegiones.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
-        })
+        this.filtroRegiones = _.chain(this.lista)
+            .map(auditoria=>{
+                let valor = auditoria.local.direccion.comuna.provincia.region.cutRegion
+                let texto = auditoria.local.direccion.comuna.provincia.region.numero
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroRegiones, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('valor')    // ordenado por numero de region
+            .value()
+        console.log(this.filtroRegiones)
 
         // ##### Filtro Comunas (ordenado por codComuna)
-        let comunas = this.lista
-            //.sort((aud1, aud2)=> aud1.local.direccion.comuna.cutComuna-aud2.local.direccion.comuna.cutComuna)
-            .map(auditoria=>auditoria.local.direccion.comuna.nombre)
-        let comunasUnicasOrdenadas = R.uniq(comunas)
-        this.filtroComunas = comunasUnicasOrdenadas.map(textoUnico=>{
-            // si no existe la opcion, se crea y se selecciona por defecto
-            return this.filtroComunas.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
-        })
+        this.filtroComunas = _.chain(this.lista)
+            .map(auditoria=>{
+                let valor = auditoria.local.direccion.cutComuna
+                let texto = auditoria.local.direccion.comuna.nombre
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroComunas, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('texto')
+            .value()
 
         // ##### Filtro Auditores
-        let auditoresUnicos = _.chain(this.lista)
+        this.filtroAuditores = _.chain(this.lista)
             .map(auditoria=>{
-                let auditor = auditoria.auditor
-                return auditor? `${auditor.nombre1} ${auditor.apellidoPaterno}` : '-- NO FIJADO --'
-            })
-            .uniq().sortBy().value()
+                let valor = auditoria.idAuditor
+                let texto = auditoria.auditor? `${auditoria.auditor.nombre1} ${auditoria.auditor.apellidoPaterno}` : '-- NO FIJADO --'
 
-        this.filtroAuditores = auditoresUnicos.map(textoUnico=>{
-            // si no existe la opcion, se crea y se selecciona por defecto
-            return this.filtroAuditores.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
-        })
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroAuditores, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('texto')
+            .value()
     }
     reemplazarFiltro(nombreFiltro, filtroActualizado) {
         if(this[nombreFiltro]) {
@@ -108,29 +115,18 @@ export default class BlackBoxSemanal{
     getListaFiltrada(){
         this.actualizarFiltros()
 
-        // Filtrar por Regiones
-        let regionesSeleccionadas = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let filtradaPorRegiones = R.filter(inventario=>{
-            return R.contains(inventario.local.direccion.comuna.provincia.region.numero, regionesSeleccionadas)
-        }, this.lista)
-
-        // Filtrar por Comunas
-        let comunasSeleccionadas = this.filtroComunas.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let filtradaPorRegionesComunas = R.filter(inventario=>{
-            return R.contains(inventario.local.direccion.comuna.nombre, comunasSeleccionadas)
-        }, filtradaPorRegiones)
-
-        // Filtrar por Auditor
-        let auditoresSeleccionados = this.filtroAuditores.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltradaPorRegionesComunasAuditores = filtradaPorRegionesComunas.filter(auditoria=>{
-            let auditor = auditoria.auditor
-            let nombreAuditor = auditor? `${auditor.nombre1} ${auditor.apellidoPaterno}` : '-- NO FIJADO --'
-            return R.contains(nombreAuditor, auditoresSeleccionados)
-        })
-
         return {
-            //auditoriasFiltradas: this.lista,
-            auditoriasFiltradas: listaFiltradaPorRegionesComunasAuditores,
+            auditoriasFiltradas: _.chain(this.lista)
+                .filter(auditoria=>{
+                    return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+                })
+                .filter(auditoria=>{
+                    return _.find(this.filtroComunas, {'valor': auditoria.local.direccion.cutComuna, 'seleccionado': true})
+                })
+                .filter(auditoria=>{
+                    return _.find(this.filtroAuditores, {'valor': auditoria.idAuditor, 'seleccionado': true})
+                })
+                .value(),
             filtroRegiones: this.filtroRegiones,
             filtroComunas: this.filtroComunas,
             filtroAuditores: this.filtroAuditores

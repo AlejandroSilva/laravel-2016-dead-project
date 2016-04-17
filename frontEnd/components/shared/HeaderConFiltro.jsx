@@ -39,7 +39,10 @@ class HeaderConFiltro extends React.Component {
         let todosSeleccionados = this.revisarTodosSeleccionados()
         // si estan todos seleccionados, marcar ninguno
         // si falta uno por marcar, se marcan todos
-        let filtroActualizado = this.props.filtro.map(opcion=>({texto: opcion.texto, seleccionado: !todosSeleccionados}))
+        let filtroActualizado = this.props.filtro.map(opcion=>{
+            opcion.seleccionado = !todosSeleccionados
+            return opcion
+        })
 
         // informar la actualizacion al padre
         this.props.actualizarFiltro(filtroActualizado)
