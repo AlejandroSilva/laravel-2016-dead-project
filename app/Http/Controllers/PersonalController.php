@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
+// Modelos
+use App\User;
+// Permisos
+use Auth;
 
 class PersonalController extends Controller {
     // GET personal/lista
@@ -34,11 +36,6 @@ class PersonalController extends Controller {
             'apellidoPaterno' => 'required|min:3|max:20',
             'apellidoMaterno' => 'required|min:3|max:20',
             'fechaNacimiento' => 'required',
-//            'telefono1' => 'required',
-//            'telefono2' => 'required',
-//            'contratado' => 'required',
-//            'bloqueado' => 'required',
-//            'password' => 'required',
         ]);
 
         $usuario = User::create([
@@ -60,7 +57,12 @@ class PersonalController extends Controller {
         return view('operacional.personal.usuarios', ['mensaje'=>'Creado correctamente'] );
     }
 
-    function test(){
-        echo User::find(1)->roles;
+    public function api_getRolesUsuario($idUsuario){
+        $usuario = User::find($idUsuario);
+        if($usuario){
+            return response()->json($usuario->roles, 200);
+        }else{
+            return response()->json([], 404);
+        }
     }
 }

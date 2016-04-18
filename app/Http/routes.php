@@ -77,6 +77,7 @@ Route::group(['middleware' => ['web']], function (){
     Route::post('api/inventario/nuevo',                 'InventariosController@api_nuevo');
     Route::get('api/inventario/{annoMesDia}/cliente/{idCliente}',  'InventariosController@api_getPorMesYCliente');
     Route::get('api/inventario/{fecha1}/al/{fecha2}',   'InventariosController@api_getPorRango');
+    // No modificar esta ruta, Esteban la utiliza
     Route::get('api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}',   'InventariosController@api_getPorRangoYCliente');
     Route::get('api/inventario/{idInventario}',         'InventariosController@api_get');
     Route::put('api/inventario/{idInventario}',         'InventariosController@api_actualizar');
@@ -109,10 +110,11 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
     Route::group(['prefix' => 'personal', 'middleware' => ['auth']], function() {
-        Route::get('lista',       'PersonalController@show_listaPersonal')->name('personal.lista');
-        Route::get('nuevo',       'PersonalController@show_formulario')->name('personal.nuevo');
-        Route::post('nuevo',      'PersonalController@show_postFormulario');
-        Route::get('test',        'PersonalController@test');
+        // No modificar esta ruta, Esteban la utiliza
+        Route::get('{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
+        Route::get('lista',             'PersonalController@show_listaPersonal')->name('personal.lista');
+        Route::get('nuevo',             'PersonalController@show_formulario')->name('personal.nuevo');
+        Route::post('nuevo',            'PersonalController@show_postFormulario');
     });
     /*
     |--------------------------------------------------------------------------
