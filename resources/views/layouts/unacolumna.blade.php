@@ -23,59 +23,78 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="drop-operacional">
                                 {{-- PROGRAMACIÓN INVENTARIO GENERAL --}}
-                                <li class="{{ Request::is('programacionIG/mensual')? 'active': '' }}">
-                                    <a href="{{ url('programacionIG/mensual') }}">Programación mensual IG</a>
-                                </li>
-                                <li class="{{ Request::is('programacionIG/semanal')? 'active': '' }}">
-                                    <a href="{{ url('programacionIG/semanal') }}">Programación semanal IG</a>
-                                </li>
-                                <li role="separator" class="divider"></li>
+                                @if( Auth::user()->can('programaInventarios_ver') )
+                                    <li class="{{ Request::is('programacionIG/mensual')? 'active': '' }}">
+                                        <a href="{{ url('programacionIG/mensual') }}">Programación mensual IG</a>
+                                    </li>
+                                    <li class="{{ Request::is('programacionIG/semanal')? 'active': '' }}">
+                                        <a href="{{ url('programacionIG/semanal') }}">Programación semanal IG</a>
+                                    </li>
+                                @endif
 
                                 {{-- PROGRAMACIÓN AUDITORIA INVENTARIO   --}}
-                                <li class="{{ Request::is('programacionAI/mensual')? 'active': '' }}">
-                                    <a href="{{ url('programacionAI/mensual') }}">Programación mensual AI</a>
-                                </li>
-                                <li class="{{ Request::is('programacionAI/semanal')? 'active': '' }}">
-                                    <a href="{{ url('programacionAI/semanal') }}">Programación semanal AI</a>
-                                </li>
-                                <li role="separator" class="divider"></li>
-
+                                @if( Auth::user()->can('programaAuditorias_ver') )
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('programacionAI/mensual')? 'active': '' }}">
+                                        <a href="{{ url('programacionAI/mensual') }}">Programación mensual AI</a>
+                                    </li>
+                                    <li class="{{ Request::is('programacionAI/semanal')? 'active': '' }}">
+                                        <a href="{{ url('programacionAI/semanal') }}">Programación semanal AI</a>
+                                    </li>
+                                @endif
 
                                 {{-- INVENTARIO --}}
-                                <li class="{{ Request::is('inventario/lista')? 'active': '' }}">
-                                    <a href="{{ url('inventario/lista') }}">Lista de inventarios</a>
-                                </li>
-                                {{-- ya no se crean inventarios desde el menu, eliminar esto --}}
-                                {{--<li class="{{ Request::is('inventario/nuevo')? 'active': '' }}">--}}
-                                    {{--<a href="{{ url('inventario/nuevo') }}">Nuevo Inventario</a>--}}
-                                {{--</li>--}}
-                                <li role="separator" class="divider"></li>
+                                @if( Auth::user()->hasRole('Administrador') )
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('inventario/lista')? 'active': '' }}">
+                                        <a href="{{ url('inventario/lista') }}">Lista de inventarios</a>
+                                    </li>
+                                    {{-- ya no se crean inventarios desde el menu, eliminar esto --}}
+                                    {{--<li class="{{ Request::is('inventario/nuevo')? 'active': '' }}">--}}
+                                        {{--<a href="{{ url('inventario/nuevo') }}">Nuevo Inventario</a>--}}
+                                    {{--</li>--}}
+                                @endif
 
                                 {{-- Nominas --}}
-                                <li class="{{ Request::is('nominas')? 'active': '' }}">
-                                    <a href="{{ url('nominas') }}">Nominas</a>
-                                </li>
-                                <li class="{{ Request::is('nomFinales')? 'active': '' }}">
-                                    <a href="{{ url('nomFinales') }}">Nominas Finales</a>
-                                </li>
-                                <li role="separator" class="divider"></li>
+                                @if( Auth::user()->hasRole('Administrador') )
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('nominas')? 'active': '' }}">
+                                        <a href="{{ url('nominas') }}">Nominas</a>
+                                    </li>
+                                    <li class="{{ Request::is('nomFinales')? 'active': '' }}">
+                                        <a href="{{ url('nomFinales') }}">Nominas Finales</a>
+                                    </li>
+                                @endif
 
                                 {{-- Personal --}}
-                                <li class="{{ Request::is('personal/lista')? 'active': '' }}">
-                                    <a href="{{ url('personal/lista') }}">Lista de Personal</a>
-                                </li>
-                                <li class="{{ Request::is('personal/nuevo')? 'active': '' }}">
-                                    <a href="{{ route('personal.nuevo') }}">Nuevo Personal</a>
-                                </li>
+                                @if( Auth::user()->hasRole('Administrador') )
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('personal/lista')? 'active': '' }}">
+                                        <a href="{{ url('personal/lista') }}">Lista de Personal</a>
+                                    </li>
+                                    <li class="{{ Request::is('personal/nuevo')? 'active': '' }}">
+                                        <a href="{{ route('personal.nuevo') }}">Nuevo Personal</a>
+                                    </li>
+                                @endif
+
+                                {{-- Cliente / Locales --}}
+                                @if( Auth::user()->hasRole('Developer') )
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('admin/locales')? 'active': '' }}">
+                                        <a href="{{ route('admin.locales.lista') }}">Mantenedor de Locales</a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
 
-                        <li class="">
-                            <a href="#">Gestión Logistica</a>
-                        </li>
-                        <li class="#">
-                            <a href="#">Gestión Financiera</a>
-                        </li>
+                        @if( Auth::user()->hasRole('Administrador') )
+                            <li class="">
+                                <a href="#">Gestión Logistica</a>
+                            </li>
+                            <li class="#">
+                                <a href="#">Gestión Financiera</a>
+                            </li>
+                        @endif
                     @endif
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -97,11 +116,6 @@
 @section('hmtl-body')
     @yield('top')
     <div class='container-fluid'>
-        {{--<div class="col-sm-2">--}}
-            {{--@include('includes.main-sidebar')--}}
-        {{--</div>--}}
-        {{--<div class="col-sm-12">--}}
-            @yield('main-content')
-        {{--</div>--}}
+        @yield('main-content')
     </div>
 @stop
