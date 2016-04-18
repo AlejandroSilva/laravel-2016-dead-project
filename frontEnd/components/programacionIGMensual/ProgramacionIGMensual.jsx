@@ -148,7 +148,8 @@ class ProgramacionIGMensual extends React.Component{
     }
     
     // #### Filtros
-    ordenarInventarios(){
+    ordenarInventarios(evt){
+        evt.preventDefault()
         this.blackbox.ordenarLista()
         this.setState( this.blackbox.getListaFiltrada() )
     }

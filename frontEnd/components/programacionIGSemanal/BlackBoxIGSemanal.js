@@ -1,3 +1,4 @@
+import moment from 'moment'
 import _ from 'lodash'
 
 export default class BlackBoxIGSemanal{
@@ -9,6 +10,7 @@ export default class BlackBoxIGSemanal{
         this.filtroLideres = []
         this.filtroCaptadores = []
         this.filtroLocales = []
+        this.filtroFechas = []
     }
     reset() {
         this.lista = []
@@ -18,6 +20,7 @@ export default class BlackBoxIGSemanal{
         this.filtroLideres = []
         this.filtroCaptadores = []
         this.filtroLocales = []
+        this.filtroFechas = []
     }
     // Todo: Optimizar
     // Todo Modificar: el listado de clientes
@@ -37,7 +40,9 @@ export default class BlackBoxIGSemanal{
     }
 
     /*** ################### FILTROS ################### ***/
-    ordenarLista() {
+    ordenarLista(evt) {
+        evt.preventDefault()
+
         let porFechaProgramada = (inventario)=> {
             let dateA = new Date(inventario.fechaProgramada)
             if (dateA == 'Invalid Date') {
@@ -57,13 +62,20 @@ export default class BlackBoxIGSemanal{
     }
 
     actualizarFiltros(){
-        // Clientes
-        // let clientes = this.lista.map(inventario=>inventario.local.cliente.nombre)
-        // this.filtroClientes = R.uniq(clientes).map(textoUnico=>{
-        //     // si no existe la opcion, se crea y se selecciona por defecto
-        //     return this.filtroClientes.find(opc=>opc.texto===textoUnico)
-        //         || { texto: textoUnico, seleccionado: true}
-        // })
+        // ##### Filtro fechas
+        this.filtroFechas = _.chain(this.lista)
+            .map(inventario=>{
+                let momentFecha = moment(inventario.fechaProgramada)
+                let valor = inventario.fechaProgramada
+                let texto = momentFecha.isValid()? momentFecha.format('dddd DD MMMM') : `-- ${inventario.fechaProgramada} --`
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroFechas, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('valor')
+            .value()
 
         // ##### Filtro Regiones
         this.filtroRegiones = _.chain(this.lista)
@@ -226,14 +238,18 @@ export default class BlackBoxIGSemanal{
                             || _.find(this.filtroCaptadores, {'valor': inventario.nomina_noche.idCaptador1, 'seleccionado': true})
                     }
                 })
-
+                // Filtrar por Fecha (dejar de lo ultimo, ya que es la mas lenta -comparacion de strings-)
+                .filter(inventario=>{
+                    return _.find(this.filtroFechas, {'valor': inventario.fechaProgramada, 'seleccionado': true})
+                })
                 .value(),
             filtros: {
                 filtroRegiones: this.filtroRegiones,
                 filtroComunas: this.filtroComunas,
                 filtroLideres: this.filtroLideres,
                 filtroCaptadores: this.filtroCaptadores,
-                filtroLocales: this.filtroLocales
+                filtroLocales: this.filtroLocales,
+                filtroFechas: this.filtroFechas
             }
         }
     }

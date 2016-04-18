@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import moment from 'moment'
 
 export default class BlackBoxSemanal{
     constructor(){
@@ -8,6 +9,7 @@ export default class BlackBoxSemanal{
         this.filtroComunas = []
         this.filtroRealizadas = []
         this.filtroAprobadas = []
+        this.filtroFechas = []
         //this.filtroLocales = []
     }
     reset() {
@@ -17,6 +19,7 @@ export default class BlackBoxSemanal{
         this.filtroComunas = []
         this.filtroRealizadas = []
         this.filtroAprobadas = []
+        this.filtroFechas = []
         //this.filtroLocales = []
     }
     // Todo: Optimizar
@@ -65,6 +68,21 @@ export default class BlackBoxSemanal{
     }
 
     actualizarFiltros(){
+        // ##### Filtro fechas
+        this.filtroFechas = _.chain(this.lista)
+            .map(auditoria=>{
+                let momentFecha = moment(auditoria.fechaProgramada)
+                let valor = auditoria.fechaProgramada
+                let texto = momentFecha.isValid()? momentFecha.format('dddd DD MMMM') : `-- ${auditoria.fechaProgramada} --`
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroFechas, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('valor')
+            .value()
+
         // ##### Filtro Regiones (ordenado por codRegion)
         this.filtroRegiones = _.chain(this.lista)
             .map(auditoria=>{
@@ -164,8 +182,13 @@ export default class BlackBoxSemanal{
                 .filter(auditoria=>{
                     return _.find(this.filtroAprobadas, {'valor': auditoria.aprovada, 'seleccionado': true})
                 })
+                // Filtrar por Fecha (dejar de lo ultimo, ya que es la mas lenta -comparacion de strings-)
+                .filter(auditoria=>{
+                    return _.find(this.filtroFechas, {'valor': auditoria.fechaProgramada, 'seleccionado': true})
+                })
                 .value(),
             filtros: {
+                filtroFechas: this.filtroFechas,
                 filtroRegiones: this.filtroRegiones,
                 filtroComunas: this.filtroComunas,
                 filtroAuditores: this.filtroAuditores,

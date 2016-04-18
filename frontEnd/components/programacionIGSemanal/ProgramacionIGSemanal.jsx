@@ -87,7 +87,8 @@ class ProgramacionIGSemanal extends React.Component {
                 this.setState( this.blackbox.getListaFiltrada() )        // {inventariosFiltrados: ...}
             })
     }
-    ordenarInventarios(){
+    ordenarInventarios(evt){
+        evt.preventDefault()
         this.blackbox.ordenarLista()
         this.setState( this.blackbox.getListaFiltrada() )
     }

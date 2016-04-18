@@ -61,12 +61,22 @@ class HeaderConFiltro extends React.Component {
         return (
             <div className={css.container}
                  ref={ref=>this.node=ref}>
-                <div onClick={this.toggleMenu.bind(this)}>
+                <div className={css.divTitulo}
+                     onClick={this.toggleMenu.bind(this)}>
                     {this.props.nombre}
-                     <span className={'glyphicon pull-right '+
-                        (this.state.open? 'glyphicon-triangle-top ': 'glyphicon-triangle-bottom ')+
-                        (this.revisarTodosSeleccionados()? '': css.filtroColoreado)
-                    }></span>
+                </div>
+                <div className={'pull-right'}>
+                    {this.props.ordenarLista?
+                        <span className={'glyphicon glyphicon-sort-by-attributes '+css.spanOrdenar}
+                              onClick={this.props.ordenarLista}
+                        /> : null
+                    }
+                     <span className={
+                              (this.revisarTodosSeleccionados()? '': css.filtroColoreado)+
+                              (this.state.open? ' glyphicon glyphicon-triangle-top ': ' glyphicon glyphicon-triangle-bottom ')
+                            }
+                           onClick={this.toggleMenu.bind(this)}
+                     />
                 </div>
                 <div className={css.menu} style={{display: this.state.open? '': 'none'}}>
                     <div className={css.contenedorValores}>
@@ -100,9 +110,11 @@ HeaderConFiltro.propTypes = {
     nombre: PropTypes.string,
     filtro: PropTypes.arrayOf(PropTypes.object).isRequired,
     // Metodos
-    actualizarFiltro: PropTypes.func.isRequired
+    actualizarFiltro: PropTypes.func.isRequired,
+    ordenarLista: PropTypes.func
 }
 HeaderConFiltro.defaultProps = {
-    nombre: '[sin nombre]'
+    nombre: '[sin nombre]',
+    ordenarLista: null
 }
 export default HeaderConFiltro

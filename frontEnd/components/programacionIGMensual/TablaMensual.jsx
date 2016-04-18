@@ -33,9 +33,12 @@ class TablaMensual extends React.Component{
 
                         <th className={css.thCorrelativo}>#</th>
                         <th className={css.thFecha}>
-                            Fecha
-                            <span className={'glyphicon glyphicon-sort-by-attributes pull-right'}
-                                  onClick={ this.props.ordenarInventarios }/>
+                            <HeaderConFiltro
+                                nombre='Fecha'
+                                filtro={this.props.filtros.filtroFechas || []}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroFechas')}
+                                ordenarLista={this.props.ordenarInventarios}
+                            />
                         </th>
                         <th className={css.thCliente}>Cliente</th>
                         <th className={css.thCeco}>CE</th>

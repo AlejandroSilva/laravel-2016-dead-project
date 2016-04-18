@@ -1,4 +1,5 @@
-import R from 'ramda'
+import moment from 'moment'
+import _ from 'lodash'
 
 export default class BlackBox{
     constructor(clientes){
@@ -9,6 +10,7 @@ export default class BlackBox{
         this.filtroComunas = []
         this.filtroLocales = []
         this.filtroAuditores = []
+        this.filtroFechas = []
         this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idAuditoria no ha sido fijado
     }
     // Todo Modificar
@@ -19,6 +21,7 @@ export default class BlackBox{
         this.filtroComunas = []
         this.filtroLocales = []
         this.filtroAuditores = []
+        this.filtroFechas = []
         this.idDummy = 1
     }
     // Todo Modificar: el listado de clientes
@@ -206,6 +209,21 @@ export default class BlackBox{
     }
 
     actualizarFiltros(){
+        // ##### Filtro fechas
+        this.filtroFechas = _.chain(this.lista)
+            .map(auditoria=>{
+                let momentFecha = moment(auditoria.fechaProgramada)
+                let valor = auditoria.fechaProgramada
+                let texto = momentFecha.isValid()? momentFecha.format('dddd DD MMMM') : `-- ${auditoria.fechaProgramada} --`
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroFechas, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('valor')
+            .value()
+        
         // ##### Filtro Clientes (ordenado por codRegion)
         this.filtroClientes = _.chain(this.lista)
             .map(auditoria=>{
@@ -274,24 +292,33 @@ export default class BlackBox{
 
         return {
             auditoriasFiltradas: _.chain(this.lista)
+                // Filtrar por Cliente
                 .filter(auditoria=>{
                     return _.find(this.filtroClientes, {'valor': auditoria.local.idCliente, 'seleccionado': true})
                 })
+                // Filtrar por Region
                 .filter(auditoria=>{
                     return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
                 })
+                // Filtrar por Comuna
                 .filter(auditoria=>{
                     return _.find(this.filtroComunas, {'valor': auditoria.local.direccion.cutComuna, 'seleccionado': true})
                 })
+                // Filtrar por Auditor
                 .filter(auditoria=>{
                     return _.find(this.filtroAuditores, {'valor': auditoria.idAuditor, 'seleccionado': true})
+                })
+                // Filtrar por Fecha (dejar de lo ultimo, ya que es la mas lenta -comparacion de strings-)
+                .filter(auditoria=>{
+                    return _.find(this.filtroFechas, {'valor': auditoria.fechaProgramada, 'seleccionado': true})
                 })
                 .value(),
             filtros: {
                 filtroClientes: this.filtroClientes,
                 filtroRegiones: this.filtroRegiones,
                 filtroComunas: this.filtroComunas,
-                filtroAuditores: this.filtroAuditores
+                filtroAuditores: this.filtroAuditores,
+                filtroFechas: this.filtroFechas
             }
         }
     }

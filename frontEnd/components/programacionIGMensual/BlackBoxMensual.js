@@ -1,4 +1,5 @@
-import R from 'ramda'
+import moment from 'moment'
+import _ from 'lodash'
 
 export default class BlackBox{
     constructor(clientes){
@@ -8,6 +9,7 @@ export default class BlackBox{
         this.filtroRegiones = []
         this.filtroComunas = []
         this.filtroLocales = []
+        this.filtroFechas = []
         this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
     }
     // Todo Modificar
@@ -17,6 +19,7 @@ export default class BlackBox{
         this.filtroRegiones = []
         this.filtroComunas = []
         this.filtroLocales = []
+        this.filtroFechas = []
         this.idDummy = 1
     }
     // Todo Modificar: el listado de clientes
@@ -214,6 +217,21 @@ export default class BlackBox{
     }
 
     actualizarFiltros(){
+        // ##### Filtro fechas
+        this.filtroFechas = _.chain(this.lista)
+            .map(inventario=>{
+                let momentFecha = moment(inventario.fechaProgramada)
+                let valor = inventario.fechaProgramada
+                let texto = momentFecha.isValid()? momentFecha.format('dddd DD MMMM') : `-- ${inventario.fechaProgramada} --`
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroFechas, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('valor')
+            .value()
+
         // ##### Filtro Regiones (ordenado por codRegion)
         this.filtroRegiones = _.chain(this.lista)
             .map(auditoria=>{
@@ -266,14 +284,16 @@ export default class BlackBox{
                 .filter(inventario=>{
                     return _.find(this.filtroComunas, {'valor': inventario.local.direccion.cutComuna, 'seleccionado': true})
                 })
-                // .filter(auditoria=>{
-                //     return _.find(this.filtroAuditores, {'valor': auditoria.idAuditor, 'seleccionado': true})
-                // })
+                // Filtrar por Fecha (dejar de lo ultimo, ya que es la mas lenta -comparacion de strings-)
+                .filter(inventario=>{
+                    return _.find(this.filtroFechas, {'valor': inventario.fechaProgramada, 'seleccionado': true})
+                })
                 .value(),
             filtros: {
                 filtroClientes: this.filtroClientes,
                 filtroRegiones: this.filtroRegiones,
-                filtroComunas: this.filtroComunas
+                filtroComunas: this.filtroComunas,
+                filtroFechas: this.filtroFechas
             }
         }
     }

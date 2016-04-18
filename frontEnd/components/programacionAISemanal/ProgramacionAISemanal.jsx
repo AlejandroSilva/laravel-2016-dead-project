@@ -159,7 +159,8 @@ class ProgramacionAISemanal extends React.Component {
         // actualizar los filtros, y la lista ordenada de locales
         this.setState(this.blackbox.getListaFiltrada())
     }
-    ordenarAuditorias(){
+    ordenarAuditorias(evt){
+        evt.preventDefault()
         this.blackbox.ordenarLista()
         this.setState( this.blackbox.getListaFiltrada() )
     }
