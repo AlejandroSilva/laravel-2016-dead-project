@@ -252,7 +252,7 @@ class ProgramacionIGSemanal extends React.Component {
                     */}
 
                     {/* SELECTOR UN RANGO DE FECHAS */}
-                    <div className={'col-sm-4 form-group '}>
+                    <div className={'col-sm-3 form-group '}>
                         <label className="control-label" htmlFor="selectSemana">Rango de Fecha</label>
                         <SelectRange
                             startDateSelected = {this.state.fechaInicialSeleccionada}
