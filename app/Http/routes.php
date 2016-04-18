@@ -110,12 +110,12 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
     Route::group(['prefix' => 'personal', 'middleware' => ['auth']], function() {
-        // No modificar esta ruta, Esteban la utiliza
-        Route::get('{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
         Route::get('lista',             'PersonalController@show_listaPersonal')->name('personal.lista');
         Route::get('nuevo',             'PersonalController@show_formulario')->name('personal.nuevo');
         Route::post('nuevo',            'PersonalController@show_postFormulario');
     });
+    // No modificar esta ruta, Esteban la utiliza
+    Route::get('api/personal/{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
     /*
     |--------------------------------------------------------------------------
     | Otros
