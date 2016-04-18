@@ -86,7 +86,9 @@ class NominasController extends Controller {
                     'nominaDia',
                     'nominaNoche',
                     'nominaDia.lider',
-                        'nominaNoche.lider'
+                    'nominaNoche.lider',
+                    'nominaDia.captador',
+                    'nominaNoche.captador',
                 ])->find($inventarioPadre->idInventario),
                 200
             );

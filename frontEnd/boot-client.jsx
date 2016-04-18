@@ -51,6 +51,7 @@ if( programacionAIMensualDOM ){
             puedeModificar={ window.laravelPuedeModificarAuditorias }
             puedeAgregar={ window.laravelPuedeAgregarAuditorias }
             clientes={clienteFCV}
+            // clientes={window.laravelClientes}
             auditores={window.laravelAuditores}
         />, programacionAIMensualDOM)
 }

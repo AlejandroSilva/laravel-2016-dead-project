@@ -93,18 +93,18 @@
     vertical-align: middle !important;
 }
 /* Auditor */
-.thLider{
+.thAuditor{
     width: 110px !important;
     background: white;
 }
-.tdLider{
+.tdAuditor{
     width: 110px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.tdLider > select {
+.tdAuditor > select {
     width: 98px !important;
     height: 18px;               /* misma altura de un input */
     margin: 0 auto 1px auto;    /* mismos margenes de un input */
@@ -136,21 +136,6 @@
 }
 .tdDotacion > input{
     width: 100%;
-}
-
-/* Jornada */
-.thJornada {
-    width: 110px;
-    max-width: 110px;
-    background: white;
-}
-.tdJornada {
-    composes: thJornada;
-    vertical-align: middle !important;
-}
-.tdJornada > select{
-    display: block;
-    margin: 0 auto;
 }
 
 /* Estado */

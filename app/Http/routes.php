@@ -43,11 +43,12 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
     Route::group(['prefix' => 'programacionIG', 'middleware' => ['auth']], function(){
-        Route::get('/',                  'ProgramacionController@showIndex');
-        Route::get('/mensual',          'ProgramacionController@showMensual');
-        Route::get('/mensual/pdf/{mes}','ProgramacionController@descargarProgramaMensual');
-        Route::get('/semanal',          'ProgramacionController@showSemanal');
+        Route::get('/',                 'InventariosController@showProgramacionIndex');
+        Route::get('/mensual',          'InventariosController@showProgramacionMensual');
+        Route::get('/semanal',          'InventariosController@showProgramacionSemanal');
     });
+    Route::get('/pdf/inventarios/{mes}/cliente/{idCliente}',    'InventariosController@descargarPDF_porMes');
+    Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'InventariosController@descargarPDF_porRango');
 
     
     /*
@@ -56,11 +57,12 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
     Route::group(['prefix' => 'programacionAI', 'middleware' => ['auth']], function() {
-        Route::get('/',                 'ProgramacionAIController@showIndex');
-        Route::get('/mensual',          'ProgramacionAIController@showMensual');
-        Route::get('/mensual/pdf/{mes}', 'ProgramacionAIController@descargarProgramaMensual');
-        Route::get('/semanal',          'ProgramacionAIController@showSemanal');
+        Route::get('/',                 'AuditoriasController@showProgramacionIndex');
+        Route::get('/mensual',          'AuditoriasController@showMensual');
+        Route::get('/semanal',          'AuditoriasController@showSemanal');
     });
+    Route::get('/pdf/auditorias/{mes}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porMes');
+    Route::get('/pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porRango');
     
     /*
     |--------------------------------------------------------------------------
@@ -73,7 +75,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('/lista',            'InventariosController@showLista');
     });
     Route::post('api/inventario/nuevo',                 'InventariosController@api_nuevo');
-    Route::get('api/inventario/mes/{annoMesDia}',       'InventariosController@api_getPorMes');
+    Route::get('api/inventario/{annoMesDia}/cliente/{idCliente}',  'InventariosController@api_getPorMesYCliente');
     Route::get('api/inventario/{fecha1}/al/{fecha2}',   'InventariosController@api_getPorRango');
     Route::get('api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}',   'InventariosController@api_getPorRangoYCliente');
     Route::get('api/inventario/{idInventario}',         'InventariosController@api_get');
@@ -96,10 +98,10 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
     Route::post('api/auditoria/nuevo',                      'AuditoriasController@api_nuevo');
-    Route::get('api/auditoria/mes/{annoMesDia}',            'AuditoriasController@api_getPorMes');
     Route::put('api/auditoria/{idAuditoria}',               'AuditoriasController@api_actualizar');
     Route::delete('api/auditoria/{idAuditoria}',            'AuditoriasController@api_eliminar');
-    Route::get('api/auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}',   'AuditoriasController@api_getPorRangoYCliente');
+    Route::get('api/auditoria/mes/{annoMesDia}/cliente/{idCliente}',     'AuditoriasController@api_getPorMesYCliente');
+    Route::get('api/auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}', 'AuditoriasController@api_getPorRangoYCliente');
 
     /*
     |--------------------------------------------------------------------------

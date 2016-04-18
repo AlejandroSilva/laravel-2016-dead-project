@@ -33,11 +33,11 @@ export default {
         eliminar: (idInventario)=>{
             return axios.delete(`/api/inventario/${idInventario}`)
         },
-        getPorMes: (annoMesDia)=> {
-            return axios.get(`/api/inventario/mes/${annoMesDia}`)
-        },
         getPorRango: (fechaInicio, fechaFin)=>{
             return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}`)
+        },
+        getPorMesYCliente: (annoMesDia, idCliente)=> {
+            return axios.get(`/api/inventario/${annoMesDia}/cliente/${idCliente}`)
         },
         getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>{
             return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)
@@ -47,14 +47,14 @@ export default {
         nuevo: (datos)=>{
             return axios.post(`/api/auditoria/nuevo`, datos)
         },
-        getPorMes: (annoMesDia)=> {
-            return axios.get(`/api/auditoria/mes/${annoMesDia}`)
-        },
         actualizar: (idAuditoria, datos)=>{
             return axios.put(`/api/auditoria/${idAuditoria}`, datos)
         },
         eliminar: (idAuditoria)=>{
             return axios.delete(`/api/auditoria/${idAuditoria}`)
+        },
+        getPorMesYCliente: (annoMesDia, idCliente)=> {
+            return axios.get(`/api/auditoria/mes/${annoMesDia}/cliente/${idCliente}`)
         },
         getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>{
             return axios.get(`/api/auditoria/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)

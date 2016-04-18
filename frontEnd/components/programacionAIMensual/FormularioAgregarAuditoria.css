@@ -1,0 +1,7 @@
+.tableCell {
+    padding: 0 !important;
+    margin: 0;
+}
+.tableCell > p {
+    margin: 0;
+}

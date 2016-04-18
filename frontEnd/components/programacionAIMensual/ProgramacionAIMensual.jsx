@@ -8,12 +8,15 @@ import BlackBoxMensualAI from './BlackBoxMensualAI.js'
 // Component
 //import Multiselect from 'react-widgets/lib/Multiselect'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import { FormularioAgregarAuditoria } from './FormularioAgregarAuditoria.jsx'
+import RowAuditoriaMensual from './RowAuditoriaMensual.jsx'
 import TablaMensualAI from './TablaMensualAI.jsx'
-import AgregarAuditoria from './AgregarAuditoria.jsx'
 
-class ProgramacionMensualAI extends React.Component{
+class ProgramacionAIMensual extends React.Component{
     constructor(props) {
         super(props)
+        this.blackbox = new BlackBoxMensualAI(this.props.clientes)
+
         // mostrar en el selector, los proximos 12 meses
         let meses = []
         for (let desface = 0; desface < 12; desface++) {
@@ -24,39 +27,32 @@ class ProgramacionMensualAI extends React.Component{
             })
         }
         this.state = {
-            mesSeleccionado: '2016-01-00',
             auditoriasFiltradas: [],
-            filtroClientes: [],
-            filtroRegiones: [],
+            filtros: {},
             meses
         }
-        // MAGIA NEGRA!!
-        this.blackbox = new BlackBoxMensualAI(this.props.clientes)
+
+        // referencia a todos las entradas de fecha de los inventarios
+        this.rows = []
     }
 
-    onSeleccionarMes(annoMesDia){
-        console.log('mes seleccionado ', annoMesDia)
-        this.setState({
-            mesSeleccionado: annoMesDia
-        })
-        // obtener todos los inventarios realizados en el mes seleccionado
+    componentWillReceiveProps(nextProps){
+        // cuando se reciben nuevos elementos, se generand posiciones "vacias" en el arreglo de rows
+        this.rows = this.rows.filter(input=>input!==null)
+    }
 
-        api.auditoria.getPorMes(annoMesDia)
-            .then(auditorias=>{
-                this.blackbox.reset()
-                auditorias.forEach(auditoria=>{
-                    // crear un dummy
-                    let auditoriaDummy = this.blackbox.__crearDummy(annoMesDia, auditoria.idLocal )
-                    this.blackbox.addFinal(auditoriaDummy)
-
-                    // actualizar los datos del auditoria
-                    this.blackbox.actualizarDatosAuditoria(auditoriaDummy.idDummy, auditoria)
-                })
-                // actualizar los filtros, y la lista ordenada de locales
-                this.blackbox.ordenarLista()
-                this.setState(this.blackbox.getListaFiltrada())
-            })
-            //.catch(err=>console.error('error: ', err))
+    focusRow(index, nombreElemento){
+        let ultimoIndex = this.rows.length-1
+        if(index<0){
+            // al seleccionar "antes de la primera", se seleciona el ultimo
+            this.rows[ultimoIndex].focusElemento(nombreElemento)
+        }else if(index>ultimoIndex){
+            // al seleccionar "despues de la ultima", se selecciona el primero
+            this.rows[ index%this.rows.length ].focusElemento(nombreElemento)
+        }else{
+            // no es ni el ultimo, ni el primero
+            this.rows[index].focusElemento(nombreElemento)
+        }
     }
 
     crearGrupoInventarios(nuevasAuditorias){
@@ -66,7 +62,7 @@ class ProgramacionMensualAI extends React.Component{
             promesasFetch.push(
                 api.auditoria.nuevo({
                         idLocal: nuevaAuditoria.idLocal,
-                        fechaProgramada: this.state.mesSeleccionado
+                        fechaProgramada: this.refFormularioAgregar.getOpcionesSeleccionadas().mes
                     })
                     .then(auditoriaCreada=>{
                         this.blackbox.actualizarDatosAuditoria(nuevaAuditoria.idDummy, auditoriaCreada)
@@ -108,7 +104,7 @@ class ProgramacionMensualAI extends React.Component{
         // cuando se agregar un inventario, se crea automaticamente (junto a su nomina)
         api.auditoria.nuevo({
             idLocal: auditoriaDummy.local.idLocal,
-            fechaProgramada: this.state.mesSeleccionado
+            fechaProgramada: this.refFormularioAgregar.getOpcionesSeleccionadas().mes
         })
             .then(auditoriaCreada=>{
                 this.blackbox.actualizarDatosAuditoria(auditoriaDummy.idDummy, auditoriaCreada)
@@ -151,6 +147,26 @@ class ProgramacionMensualAI extends React.Component{
         }
     }
 
+    // Llamadas al API
+    buscarAuditorias(annoMesDia, idCliente){
+        // obtener todos los inventarios realizados en el mes seleccionado
+        api.auditoria.getPorMesYCliente(annoMesDia, idCliente)
+            .then(auditorias=>{
+                this.blackbox.reset()
+                auditorias.forEach(auditoria=>{
+                    // crear un dummy
+                    let auditoriaDummy = this.blackbox.__crearDummy(annoMesDia, auditoria.idLocal )
+                    this.blackbox.addFinal(auditoriaDummy)
+
+                    // actualizar los datos del auditoria
+                    this.blackbox.actualizarDatosAuditoria(auditoriaDummy.idDummy, auditoria)
+                })
+                // actualizar los filtros, y la lista ordenada de locales
+                this.blackbox.ordenarLista()
+                this.setState(this.blackbox.getListaFiltrada())
+            })
+        //.catch(err=>console.error('error: ', err))
+    }
     actualizarAuditoria(idAuditoria, formAuditoria, idDummy){
         // Actualizar los datos del inventario
         api.auditoria.actualizar(idAuditoria, formAuditoria)
@@ -162,7 +178,6 @@ class ProgramacionMensualAI extends React.Component{
                 this.setState(this.blackbox.getListaFiltrada())
             })
     }
-
     quitarAuditoria(idDummy){
         this.blackbox.remove(idDummy)
         // actualizar los filtros, y la lista ordenada de locales
@@ -179,71 +194,81 @@ class ProgramacionMensualAI extends React.Component{
             .catch(resp=>console.error)
     }
 
+    // Filtros
+    actualizarFiltro(nombreFiltro, filtro){
+        this.blackbox.reemplazarFiltro(nombreFiltro, filtro)
+        // actualizar los filtros, y la lista ordenada de locales
+        this.setState(this.blackbox.getListaFiltrada())
+    }
     ordenarAuditorias(){
         this.blackbox.ordenarLista()
         this.setState( this.blackbox.getListaFiltrada() )
     }
 
-    actualizarFiltro(nombreFiltro, filtro){
-        if(nombreFiltro==='cliente'){
-            this.blackbox.reemplazarFiltroClientes(filtro)
-
-            // actualizar los filtros, y la lista ordenada de locales
-            this.setState(this.blackbox.getListaFiltrada())
-        }
-        if(nombreFiltro==='region'){
-            this.blackbox.reemplazarFiltroRegiones(filtro)
-
-            // actualizar los filtros, y la lista ordenada de locales
-            this.setState(this.blackbox.getListaFiltrada())
-        }
-
-    }
-
     render(){
+        // refFormularioAgregar no esta definido antes del render
+        let opcionesSeleccionadas = this.refFormularioAgregar? this.refFormularioAgregar.getOpcionesSeleccionadas() : {}
         return (
             <div>
                 <h1>Programación mensual AI</h1>
 
-                <AgregarAuditoria
+                <FormularioAgregarAuditoria
+                    ref={ref=>this.refFormularioAgregar=ref}
                     clientes={this.props.clientes}
                     meses={this.state.meses}
                     agregarAuditoria={this.agregarAuditoria.bind(this)}
                     agregarGrupoInventarios={this.agregarGrupoInventarios.bind(this)}
-                    onSeleccionarMes={this.onSeleccionarMes.bind(this)}
+                    buscarAuditorias={this.buscarAuditorias.bind(this)}
                     puedeAgregar={this.props.puedeAgregar}
                 />
 
                 <div className="row">
-                    <h4 className="page-header" style={{marginTop: '1em'}}>
-                        {/*<a className="btn btn-success btn-xs pull-right"
-                            href={`/programacionAI/mensual/pdf/${this.state.mesSeleccionado}`}
-                        >Exportar</a>*/}
-                    </h4>
+                    <a className="btn btn-success btn-xs pull-right"
+                        href={`/pdf/auditorias/${opcionesSeleccionadas.mes}/cliente/${opcionesSeleccionadas.idCliente}`}
+                       disabled
+                    >Exportar a Excel</a>
                     <TablaMensualAI
-                        puedeModificar={this.props.puedeModificar}
-                        auditoriasFiltradas={this.state.auditoriasFiltradas}
-                        auditores={this.props.auditores}
-                        filtroClientes={this.state.filtroClientes}
-                        filtroRegiones={this.state.filtroRegiones}
+                        filtros={this.state.filtros}
                         actualizarFiltro={this.actualizarFiltro.bind(this)}
-                        actualizarAuditoria={this.actualizarAuditoria.bind(this)}
-                        quitarAuditoria={this.quitarAuditoria.bind(this)}
-                        eliminarAuditoria={this.eliminarAuditoria.bind(this)}
-                        ordenarAuditorias={this.ordenarAuditorias.bind(this)}
-                        //ref={ref=>this.TablaInventarios=ref}
-                    />
+                        ordenarAuditorias={this.ordenarAuditorias.bind(this)}>
+
+                        {this.state.auditoriasFiltradas.length===0
+                            ? <tr><td colSpan="13" style={{textAlign: 'center'}}><b>No hay auditorias para mostrar en este periodo.</b></td></tr>
+                            : this.state.auditoriasFiltradas.map((auditoria, index)=>{
+                                let mostrarSeparador = false
+                                let sgteAuditoria = this.state.auditoriasFiltradas[index+1]
+                                if(sgteAuditoria)
+                                    mostrarSeparador = auditoria.fechaProgramada!==sgteAuditoria.fechaProgramada
+                                return <RowAuditoriaMensual
+                                    // Propiedades
+                                    puedeModificar={this.props.puedeModificar}
+                                    key={index}
+                                    index={index}
+                                    ref={ref=>this.rows[index]=ref}
+                                    mostrarSeparador={mostrarSeparador}
+                                    auditoria={auditoria}
+                                    auditores={this.props.auditores}
+                                    // Metodos
+                                    actualizarAuditoria={this.actualizarAuditoria.bind(this)}
+                                    quitarAuditoria={this.quitarAuditoria.bind(this)}
+                                    eliminarAuditoria={this.eliminarAuditoria.bind(this)}
+                                    focusRow={this.focusRow.bind(this)}
+                                    //guardarOCrear={this.guardarOCrear.bind(this)}
+                                />
+                            })
+                        }
+                    </TablaMensualAI>
                 </div>
             </div>
         )
     }
 }
 
-ProgramacionMensualAI.propTypes = {
+ProgramacionAIMensual.propTypes = {
     puedeModificar: React.PropTypes.bool.isRequired,
     puedeAgregar: React.PropTypes.bool.isRequired,
     clientes: React.PropTypes.array.isRequired,
     auditores: React.PropTypes.array.isRequired
 }
 
-export default ProgramacionMensualAI
+export default ProgramacionAIMensual

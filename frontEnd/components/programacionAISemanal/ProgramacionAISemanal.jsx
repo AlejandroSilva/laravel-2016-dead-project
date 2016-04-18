@@ -14,7 +14,9 @@ const format = 'YYYY-MM-DD'
 class ProgramacionAISemanal extends React.Component {
     constructor(props) {
         super(props)
-        this.blackboxSemanal = new BlackBoxSemanal()
+        this.blackbox = new BlackBoxSemanal()
+
+        // IMPORTANTE: No eliminar el codigo para seleccionar mes ni semana, puede ser que vuelvan a pedir que se incluya
 
         // mostrar en el selector, los proximos 12 meses
         // let meses = []
@@ -36,10 +38,7 @@ class ProgramacionAISemanal extends React.Component {
             fechaInicialSeleccionada: moment(),
             fechaFinalSeleccionada: moment().add(1, 'month'),
             // Auditorias y Filtros
-            filtroLocales: [],
-            filtroRegiones: [],
-            filtroComunas: [],
-            filtroAuditores: [],
+            filtros: {},
             auditoriasFiltradas: []
         }
 
@@ -58,21 +57,18 @@ class ProgramacionAISemanal extends React.Component {
 
     focusRow(index, nombreElemento){
         let ultimoIndex = this.rows.length-1
-        // seleccionar "antes de la primera"
-        if(index<0)
-            index = ultimoIndex
-        if(index>ultimoIndex)
-            index = index%this.rows.length
-       
-        let nextRow = this.rows[index]
-        nextRow.focusElemento(nombreElemento)
+        if(index<0){
+            // al seleccionar "antes de la primera", se seleciona el ultimo
+            this.rows[ultimoIndex].focusElemento(nombreElemento)
+        }else if(index>ultimoIndex){
+            // al seleccionar "despues de la ultima", se selecciona el primero
+            this.rows[ index%this.rows.length ].focusElemento(nombreElemento)
+        }else{
+            // no es ni el ultimo, ni el primero
+            this.rows[index].focusElemento(nombreElemento)
+        }
     }
-
-    ordenarAuditorias(){
-        this.blackboxSemanal.ordenarLista()
-        this.setState( this.blackboxSemanal.getListaFiltrada() )
-    }
-
+    
     // Select de Cliente seleccionado
     onSelectClienteChanged(evt){
         this.setState({
@@ -159,9 +155,13 @@ class ProgramacionAISemanal extends React.Component {
 
     // Filtros
     actualizarFiltro(nombreFiltro, filtro){
-        this.blackboxSemanal.reemplazarFiltro(nombreFiltro, filtro)
+        this.blackbox.reemplazarFiltro(nombreFiltro, filtro)
         // actualizar los filtros, y la lista ordenada de locales
-        this.setState(this.blackboxSemanal.getListaFiltrada())
+        this.setState(this.blackbox.getListaFiltrada())
+    }
+    ordenarAuditorias(){
+        this.blackbox.ordenarLista()
+        this.setState( this.blackbox.getListaFiltrada() )
     }
 
     // Llamadas al API
@@ -174,11 +174,11 @@ class ProgramacionAISemanal extends React.Component {
         api.auditoria.getPorRangoYCliente(fechaInicio, fechaFin, idCliente)
             .then(auditorias=>{
                 console.log(`auditorias del rango ${fechaInicio} a ${fechaFin}, y cliente ${idCliente}`, auditorias)
-                this.blackboxSemanal.reset()
-                auditorias.forEach(auditoria=>this.blackboxSemanal.add(auditoria))
+                this.blackbox.reset()
+                auditorias.forEach(auditoria=>this.blackbox.add(auditoria))
 
-                this.blackboxSemanal.ordenarLista()
-                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {auditoriasFiltradas: ...}
+                this.blackbox.ordenarLista()
+                this.setState( this.blackbox.getListaFiltrada() )        // {auditoriasFiltradas: ...}
             })
     }
     guardarAuditoria(idAuditoria, formInventario){
@@ -189,9 +189,9 @@ class ProgramacionAISemanal extends React.Component {
             .then(auditoriaActualizada=>{
                 console.log('auditoria actualizada correctamente')
                 // actualizar los datos y el state de la app
-                this.blackboxSemanal.actualizarAuditoria(auditoriaActualizada)
+                this.blackbox.actualizarAuditoria(auditoriaActualizada)
                 // actualizar los filtros, y la lista ordenada de locales
-                this.setState( this.blackboxSemanal.getListaFiltrada() )        // {auditoriasFiltradas: ...}
+                this.setState( this.blackbox.getListaFiltrada() )        // {auditoriasFiltradas: ...}
             })
     }
     eliminarAuditoria(auditoria){
@@ -201,14 +201,16 @@ class ProgramacionAISemanal extends React.Component {
         console.log('eliminando ', auditoria)
         api.auditoria.eliminar(auditoria.idAuditoria)
             .then((resp)=>{
-                this.blackboxSemanal.remove(auditoria.idAuditoria)
+                this.blackbox.remove(auditoria.idAuditoria)
                 // actualizar los filtros, y la lista ordenada de locales
-                this.setState(this.blackboxSemanal.getListaFiltrada())
+                this.setState(this.blackbox.getListaFiltrada())
             })
             .catch(error=>console.error(error))
     }
 
     render(){
+        let fechaInicial = this.state.fechaInicialSeleccionada.format(format)
+        let fechaFinal = this.state.fechaFinalSeleccionada.format(format)
         return(
             <div>
                 <h1>Programación Semanal AI</h1>
@@ -271,29 +273,23 @@ class ProgramacionAISemanal extends React.Component {
                             onRangeSelected = {this.onSelectRangoChanged.bind(this)}
                         />
                     </div>
-                    {/* SELECTOR DE NUMERO DE LCOAL */}
+                    {/* SELECTOR DE NUMERO DE LOCAL */}
                     <div className={'col-sm-2 form-group '}>
                         <label className="control-label" htmlFor="selectSemana">Numero de Local</label>
                         <input type="number"className='form-control'
                                disabled
                         />
                     </div>
-                    {/* BOTON BUSCAR */}
-                    <div className={'col-sm-2 form-group '}>
-                        <label className="control-label">{'\u00A0'}</label>
-                        <button className='form-control btn btn-primary'
-                                onClick={this.onBuscarPorNumeroLocal.bind(this)}
-                                disabled
-                        >Buscar</button>
-                    </div>
                 </div>
+
+                <a className="btn btn-success btn-xs pull-right"
+                   href={`/pdf/auditorias/${fechaInicial}/al/${fechaFinal}/cliente/${this.state.idCliente}`}
+                   disabled
+                >Exportar a Excel</a>
 
                 <TablaAuditoriaSemanal
                     ordenarAuditorias={this.ordenarAuditorias.bind(this)}
-                    filtroLocales={this.state.filtroLocales}
-                    filtroRegiones={this.state.filtroRegiones}
-                    filtroComunas={this.state.filtroComunas}
-                    filtroAuditores={this.state.filtroAuditores}
+                    filtros={this.state.filtros}
                     actualizarFiltro={this.actualizarFiltro.bind(this)}>
 
                     {this.state.auditoriasFiltradas.length===0
@@ -309,11 +305,8 @@ class ProgramacionAISemanal extends React.Component {
                                 key={index}
                                 index={index}
                                 ref={ref=>this.rows[index]=ref}
-                                auditoria={auditoria}
-                                // lideres={this.props.lideres}
-                                // supervisores={this.props.supervisores}
-                                // captadores={this.props.captadores}
                                 mostrarSeparador={mostrarSeparador}
+                                auditoria={auditoria}
                                 auditores={this.props.auditores}
                                 // Metodos
                                 guardarAuditoria={this.guardarAuditoria.bind(this)}

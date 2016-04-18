@@ -48,21 +48,21 @@ class TablaAuditoriaSemanal extends React.Component{
                             CE
                             {/*<HeaderConFiltro
                                 nombre="CE"
-                                filtro={this.props.filtroLocales}
+                                filtro={this.props.filtros.filtroLocales || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLocales')}
                             />*/}
                         </th>
                         <th className={css.thRegion}>
                             <HeaderConFiltro
                                 nombre="RG"
-                                filtro={this.props.filtroRegiones}
+                                filtro={this.props.filtros.filtroRegiones || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRegiones')}
                             />
                         </th>
                         <th className={css.thComuna}>
                             <HeaderConFiltro
                                 nombre="Comuna"
-                                filtro={this.props.filtroComunas}
+                                filtro={this.props.filtros.filtroComunas || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroComunas')}
                             />
                         </th>
@@ -71,7 +71,7 @@ class TablaAuditoriaSemanal extends React.Component{
                         <th className={css.thAuditor}>
                             <HeaderConFiltro
                                 nombre="Auditor"
-                                filtro={this.props.filtroAuditores}
+                                filtro={this.props.filtros.filtroAuditores || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroAuditores')}
                             />
                         </th>
@@ -92,10 +92,7 @@ class TablaAuditoriaSemanal extends React.Component{
 }
 TablaAuditoriaSemanal.propTypes = {
     // Objetos
-    filtroLocales: React.PropTypes.array.isRequired,
-    filtroRegiones: React.PropTypes.array.isRequired,
-    filtroComunas: React.PropTypes.array.isRequired,
-    filtroAuditores: React.PropTypes.array.isRequired,
+    filtros: React.PropTypes.objectOf(React.PropTypes.array).isRequired,
     // Metodos
     ordenarAuditorias: React.PropTypes.func.isRequired,
     actualizarFiltro: React.PropTypes.func.isRequired

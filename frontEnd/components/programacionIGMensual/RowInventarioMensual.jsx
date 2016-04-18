@@ -6,163 +6,51 @@ moment.locale('es')
 // Componentes
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+import InputFecha from '../shared/InputFecha.jsx'
+import InputStock from '../shared/InputStock.jsx'
+import InputDotacionSimple from '../shared/InputDotacionSimple.jsx'
 
 // Styles
-import * as cssTabla from './TablaMensual.css'
-import * as cssInput from './Inputs.css'
+import * as css from './TablaMensual.css'
 
 class RowInventarioMensual extends React.Component{
-    constructor(props){
-        super(props)
-        this.state = {
-            inputDia: 0,
-            inputMes: 0,
-            inputAnno: 0,
-            inputDotacion: 0,
-            selectJornada: 4,
-            diaValido: this._diaValido(0),
-            mesValido: this._mesValido(0),
-            dotacionValida: this._dotacionValida(0)
-        }
-        // Refs disponibles: this.inputDia, this.inputDotacion
-    }
-
-    componentWillMount(){
-        // al montar el componente, fijas su state "inicial"
-        let [anno, mes, dia] = this.props.inventario.fechaProgramada.split('-')
-        let dotacionSugerida = this.props.inventario.local.dotacionSugerida
-        let dotacionAsignadaTotal = this.props.inventario.dotacionAsignadaTotal
-        let jornadaInventario = this.props.inventario.idJornada
-        let jornadaLocal = this.props.inventario.local.idJornadaSugerida
-        this.setState({
-            inputDia: dia,
-            inputMes: mes,
-            inputAnno: anno,
-            inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
-            selectJornada: jornadaInventario || jornadaLocal,
-            diaValido: this._diaValido(dia),
-            mesValido: this._mesValido(mes),
-            dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
-        })
-    }
-
-    componentWillReceiveProps(nextProps){
-      // Si el inventario cambio, se vuelven a poner los valores "por defecto"
-        let [anno, mes, dia] = nextProps.inventario.fechaProgramada.split('-')
-        let dotacionAsignadaTotal = nextProps.inventario.dotacionAsignadaTotal
-        let dotacionSugerida = nextProps.inventario.local.dotacionSugerida
-        let jornadaInventario = nextProps.inventario.idJornada
-        let jornadaLocal = nextProps.inventario.local.idJornadaSugerida
-        this.setState({
-            inputDia: dia,
-            inputMes: mes,
-            inputAnno: anno,
-            inputDotacion: dotacionAsignadaTotal || dotacionSugerida,
-            selectJornada: jornadaInventario || jornadaLocal,
-            diaValido: this._diaValido(dia),
-            mesValido: this._mesValido(mes),
-            dotacionValida: this._dotacionValida(dotacionAsignadaTotal || dotacionSugerida)
-        })
-    }
-
     focusElemento(elemento){
         if(elemento==='dia'){
-            this.inputDia.focus()
+            this.inputFecha.focus()
+        }else if(elemento==='stock'){
+            this.inputStock.focus()
         }else if(elemento==='dotacion'){
-            this.inputDotacion.focus()
+            this.inputDotacionTotal.focus()
         }
     }
-    inputOnKeyDown(elemento, evt){
-        if((evt.keyCode===9 && evt.shiftKey===false) || evt.keyCode===40 || evt.keyCode===13){
-            // 9 = tab, flechaAbajo = 40,  13 = enter
-            evt.preventDefault()
-            this.props.focusFilaSiguiente(this.props.index, elemento)
-
-        }else if((evt.keyCode===9 && evt.shiftKey===true) || evt.keyCode===38) {
-            // flechaArriba = 38, shift+tab
-            this.props.focusFilaAnterior(this.props.index, elemento)
-            evt.preventDefault()
-        }
-    }
-
-    onInputDiaChange(evt){
-        let dia = evt.target.value
-        this.setState({
-            inputDia: dia,
-            diaValido: this._diaValido(dia)
-        })
-    }
-    onInputMesChange(evt){
-        let mes = evt.target.value
-        this.setState({
-            inputMes: mes,
-            mesValido: this._mesValido(mes)
-        })
-    }
-    onInputDotacionChange(evt){
-        let dotacion = evt.target.value
-        this.setState({
-            inputDotacion: dotacion,
-            dotacionValida: this._dotacionValida(dotacion)
-        })
-    }
-    onSelectJornadaChange(evt){
-        let jornada = evt.target.value
-        this.setState({selectJornada: jornada}, ()=>{
-            this.guardarOCrear()
-        })
-    }
-
-    _diaValido(dia){
-        return dia>0 && dia<32
-    }
-    _mesValido(mes){
-        console.log(mes, mes>=1, mes<=12)
-        return mes>=1 && mes<=12
-    }
-    _dotacionValida(dotacion){
-        return dotacion>0
-    }
-    isDirty(){
-        let [anno, mes, dia] = this.props.inventario.fechaProgramada.split('-')
-        let isDirty = (
-            this.state.inputDia!=dia ||
-            this.state.inputMes!=mes ||
-            this.state.inputDotacion!=(this.props.inventario.dotacionAsignadaTotal || this.props.inventario.local.dotacionSugerida) ||
-            this.state.selectJornada!=(this.props.inventario.idJornada || this.props.inventario.local.idJornadaSugerida)
-        )
-        console.log("isDirty ", isDirty)
-        return isDirty
-    }
-    guardarOCrear(){
+    guardarInventario(){
         if(!this.props.puedeModificar)
             return alert("no tiene permitido modificar el inventario")
 
-        // si no es dirty (no hay cambios) no se hace nada
-        if(this.isDirty()===false)
-            return
+        let cambiosInventario = {}
 
-        let dotacion = this.state.inputDotacion
-        let jornada = this.state.selectJornada
-        let anno = this.state.inputAnno
-        let mes = this.state.inputMes
-        let dia = this.state.inputDia
+        // el DIA es valido, y ha cambiado?
+        let estadoInputFecha = this.inputFecha.getEstado()
+        if (estadoInputFecha.valid && estadoInputFecha.dirty) {
+            cambiosInventario.fechaProgramada = estadoInputFecha.fecha
+        } else if (estadoInputFecha.valid === false) {
+            return console.log(`fecha ${estadoInputFecha.fecha} invalida`)
+        }
 
-        if(this.state.diaValido && this.state.mesValido && this.state.dotacionValida){
-            let fecha = `${anno}-${mes}-${dia}`
+        // la DOTACION es valida y ha cambiado?
+        let estadoInputDotacionTotal = this.inputDotacionTotal.getEstado()
+        if (estadoInputDotacionTotal.valid && estadoInputDotacionTotal.dirty) {
+            cambiosInventario.dotacionAsignadaTotal = estadoInputDotacionTotal.valor
+        } else if (estadoInputDotacionTotal.valid === false) {
+            return console.log(`dotacion total: ${estadoInputDotacionTotal.valor} invalida`)
+        }
 
-            this.props.guardarOCrearInventario({
-                idInventario: this.props.inventario.idInventario,
-                idDummy: this.props.inventario.idDummy,
-                idLocal: this.props.inventario.local.idLocal,
-                idJornada: jornada,
-                fechaProgramada: fecha,
-                //horaLlegada: this.props.inventario.horaLlegada || this.props.inventario.local.horaLlegadaSugerida,
-                stockTeorico: this.props.inventario.local.stock,
-                dotacionAsignadaTotal: dotacion
-            })
+        // almenos uno de los ementos debe estar "dirty" para guardar los cambios
+        if(JSON.stringify(cambiosInventario)!=="{}"){
+            console.log('cambios en el inventario ',cambiosInventario)
+            this.props.actualizarInventario(this.props.inventario.idInventario, cambiosInventario, this.props.inventario.idDummy)
         }else{
-            console.log('datos invalidos')
+            console.log('inventario sin cambios, no se actualiza')
         }
     }
     quitarInventario(){
@@ -175,47 +63,29 @@ class RowInventarioMensual extends React.Component{
     }
 
     render(){
-        let nombreCliente = this.props.inventario.local.nombreCliente || this.props.inventario.local.cliente.nombreCorto
-        let nombreRegion = this.props.inventario.local.nombreRegion || this.props.inventario.local.direccion.comuna.provincia.region.numero
-        let nombreComuna = this.props.inventario.local.nombreComuna || this.props.inventario.local.direccion.comuna.nombre
-        let diaSemana = moment(this.props.inventario.fechaProgramada).format('dddd')
         return (
-            <tr className={this.props.mostrarSeparador? cssTabla.trSeparador: ''}>
+            <tr className={this.props.mostrarSeparador? css.trSeparador: ''}>
                 {/* Correlativo */}
-                <td className={cssTabla.tdCorrelativo}>
-                    {this.props.index}
+                <td className={css.tdCorrelativo}>
+                    {this.props.index+1}
                 </td>
                 {/* Fecha */}
-                <td className={cssTabla.tdFecha}>
-                    <div className='pull-right'>
-                        <p className={cssInput.diaSemana}>{diaSemana==='Invalid date'? '': diaSemana}</p>
-                        <input className={this.state.diaValido? cssInput.inputDia : cssInput.inputDiaInvalido}
-                               type="number" min={0} max={31}
-                               ref={ref=>this.inputDia=ref}
-                               value={this.state.inputDia}
-                               onChange={this.onInputDiaChange.bind(this)}
-                               onKeyDown={this.inputOnKeyDown.bind(this, 'dia')}
-                               onBlur={this.guardarOCrear.bind(this)}
-                               onFocus={()=>{this.inputDia.select()}}
-                               disabled={this.props.puedeModificar? '':'disabled'}
-                        />
-                        <input className={cssInput.inputMes} type="number"
-                               className={this.state.mesValido? cssInput.inputDia : cssInput.inputDiaInvalido}
-                               type="number" min={1} max={12}
-                               ref={ref=>this.inputMes=ref}
-                               value={this.state.inputMes}
-                               disabled/>
-                        <input className={cssInput.inputAnno} type="number"
-                               disabled
-                               value={this.state.inputAnno}/>
-                    </div>
+                <td className={css.tdFecha}>
+                    <InputFecha
+                        puedeModificar={this.props.puedeModificar}
+                        ref={ref=>this.inputFecha=ref}
+                        diaSemana={moment(this.props.inventario.fechaProgramada).format('dddd')}
+                        fecha={this.props.inventario.fechaProgramada}
+                        onGuardar={this.guardarInventario.bind(this)}
+                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}
+                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dia')}/>
                 </td>
                 {/* Cliente*/}
-                <td className={cssTabla.tdCliente}>
-                    <p><small>{ nombreCliente }</small></p>
+                <td className={css.tdCliente}>
+                    <p><small>{ this.props.inventario.local.cliente.nombreCorto }</small></p>
                 </td>
                 {/* CECO */}
-                <td className={cssTabla.tdCeco}>
+                <td className={css.tdCeco}>
                     <OverlayTrigger
                         placement="left"
                         delay={0}
@@ -224,61 +94,48 @@ class RowInventarioMensual extends React.Component{
                     </OverlayTrigger>
                 </td>
                 {/* Local */}
-                <td className={cssTabla.tdLocal}>
+                <td className={css.tdLocal}>
                     <p><small><b>{this.props.inventario.local.nombre}</b></small></p>
                 </td>
                 {/* Region*/}
-                <td className={cssTabla.tdRegion}>
-                    <p style={{margin:0}}><small>{ nombreRegion }</small></p>
+                <td className={css.tdRegion}>
+                    <p style={{margin:0}}><small>{ this.props.inventario.local.direccion.comuna.provincia.region.numero }</small></p>
                 </td>
                 {/* Comuna */}
-                <td className={cssTabla.tdComuna}>
+                <td className={css.tdComuna}>
                     <OverlayTrigger
                         placement="left"
                         delay={0}
                         overlay={<Tooltip id="yyy">{'Dirección: '+(this.props.inventario.local.direccion.direccion)}</Tooltip>}>
-                        <p style={{margin:0}}><b><small>{ nombreComuna }</small></b></p>
+                        <p style={{margin:0}}><b><small>{ this.props.inventario.local.direccion.comuna.nombre }</small></b></p>
                     </OverlayTrigger>
 
                 </td>
                 {/* Stock */}
-                <td className={cssTabla.tdStock}>
-                    <OverlayTrigger
-                        placement="left"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">{'Stock al '+(this.props.inventario.fechaStock)}</Tooltip>}>
-                        <p><small>{numeral(this.props.inventario.stockTeorico).format('0,0')}</small></p>
-                    </OverlayTrigger>
+                <td className={css.tdStock}>
+                    <InputStock
+                        ref={ref=>this.inputStock=ref}
+                        asignada={this.props.inventario.stockTeorico}
+                        tooltipText={'Stock al ' +(this.props.inventario.fechaStock)}
+                        onGuardar={this.guardarInventario.bind(this)}
+                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'stock')}
+                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'stock')}
+                        puedeModificar={false}
+                    />
                 </td>
-                {/* Dotación */}
-                <td className={cssTabla.tdDotacion}>
-                    <OverlayTrigger
-                        placement="right"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">{'Produción '+this.props.inventario.local.formato_local.produccionSugerida}</Tooltip>}>
-
-                        <input className={this.state.dotacionValida? cssInput.inputDotacion : cssInput.inputDotacionInvalida } type="number"
-                               value={this.state.inputDotacion}
-                               onChange={this.onInputDotacionChange.bind(this)}
-                               ref={ref=>this.inputDotacion=ref}
-                               onKeyDown={this.inputOnKeyDown.bind(this, 'dotacion')}
-                               onBlur={this.guardarOCrear.bind(this)}
-                               disabled={this.props.puedeModificar? '':'disabled'}/>
-                    </OverlayTrigger>
+                {/* Dotación Total */}
+                <td className={css.tdDotacion}>
+                    <InputDotacionSimple
+                        ref={ref=>this.inputDotacionTotal=ref}
+                        asignada={this.props.inventario.dotacionAsignadaTotal}
+                        onGuardar={this.guardarInventario.bind(this)}
+                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
+                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}
+                        puedeModificar={this.props.puedeModificar}
+                    />
                 </td>
-                {/* Jornada */}
-                {/*
-                <td className={cssTabla.tdJornada}>
-                    <select onChange={this.onSelectJornadaChange.bind(this)} value={this.state.selectJornada}>
-                        <option value="1">no definido</option>
-                        <option value="2">día</option>
-                        <option value="3">noche</option>
-                        <option value="4">día y noche</option>
-                    </select>
-                </td>
-                */}
                 {/* Opciones    */}
-                <td className={cssTabla.tdOpciones}>
+                <td className={css.tdOpciones}>
                     {
                         this.props.inventario.idInventario ? (
                             // si esta creado, puede eliminar el inventario
@@ -312,11 +169,10 @@ RowInventarioMensual.propTypes = {
     mostrarSeparador: React.PropTypes.bool.isRequired,
     puedeModificar: React.PropTypes.bool.isRequired,
     // Metodos
-    focusFilaSiguiente: React.PropTypes.func.isRequired,
-    focusFilaAnterior: React.PropTypes.func.isRequired,
-    guardarOCrearInventario: React.PropTypes.func.isRequired,
+    actualizarInventario: React.PropTypes.func.isRequired,
     quitarInventario: React.PropTypes.func.isRequired,
-    eliminarInventario: React.PropTypes.func.isRequired
+    eliminarInventario: React.PropTypes.func.isRequired,
+    focusRow: React.PropTypes.func.isRequired
 }
 RowInventarioMensual.defaultProps = {
     mostrarSeparador: false

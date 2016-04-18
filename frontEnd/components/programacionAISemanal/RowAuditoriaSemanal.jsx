@@ -15,21 +15,24 @@ import * as css from './TablaAuditoriaSemanal.css'
 class RowAuditoriaSemanal extends React.Component{
     focusElemento(elemento){
         if(elemento==='dia'){
-            this.inputDia.focus()
-        }else if(elemento==='stock'){
-            this.inputStock.focus()
+            this.inputFecha.focus()
+        }else{
+            console.error(`focusElemento(): Elemento "${elemento}" no encontrado`)
         }
     }
 
     guardarAuditoria() {
+        if(!this.props.puedeModificar)
+            return alert('no tiene permisos para realizar esta acción')
+
         let cambiosAuditoria = {}
 
-        // el DIA es valido, y ha cambiado?
-        let estadoInputDia = this.inputDia.getEstado()
-        if (estadoInputDia.valid && estadoInputDia.dirty) {
-            cambiosAuditoria.fechaProgramada = estadoInputDia.fecha
-        } else if (estadoInputDia.valid === false) {
-            return console.log(`fecha ${estadoInputDia.fecha} invalida`)
+        // la FECHA es valida, y ha cambiado?
+        let estadoInputFecha = this.inputFecha.getEstado()
+        if (estadoInputFecha.valid && estadoInputFecha.dirty) {
+            cambiosAuditoria.fechaProgramada = estadoInputFecha.fecha
+        } else if (estadoInputFecha.valid === false) {
+            return console.log(`fecha ${estadoInputFecha.fecha} invalida`)
         }
 
         // el AUDITOR ha cambiado?
@@ -63,6 +66,9 @@ class RowAuditoriaSemanal extends React.Component{
     }
 
     eliminarAuditoria(){
+        if(!this.props.puedeModificar)
+            return alert('no tiene permisos para realizar esta acción')
+
         this.props.eliminarAuditoria(this.props.auditoria)
     }
 
@@ -80,7 +86,7 @@ class RowAuditoriaSemanal extends React.Component{
                 <td className={css.tdFecha}>
                     <InputFecha
                         puedeModificar={this.props.puedeModificar}
-                        ref={ref=>this.inputDia=ref}
+                        ref={ref=>this.inputFecha=ref}
                         diaSemana={moment(this.props.auditoria.fechaProgramada).format('dddd')}
                         fecha={this.props.auditoria.fechaProgramada}
                         onGuardar={this.guardarAuditoria.bind(this)}
@@ -194,8 +200,6 @@ RowAuditoriaSemanal.propTypes = {
     index: React.PropTypes.number.isRequired,
     auditoria: React.PropTypes.object.isRequired,
     auditores: React.PropTypes.array.isRequired,
-    // lideres: React.PropTypes.array.isRequired,
-    // captadores: React.PropTypes.array.isRequired,
     mostrarSeparador: React.PropTypes.bool.isRequired,
     // Metodos
     guardarAuditoria: React.PropTypes.func.isRequired,

@@ -74,7 +74,6 @@ export default class BlackBoxSemanal{
             .uniqBy('valor')
             .sortBy('valor')    // ordenado por numero de region
             .value()
-        console.log(this.filtroRegiones)
 
         // ##### Filtro Comunas (ordenado por codComuna)
         this.filtroComunas = _.chain(this.lista)
@@ -94,7 +93,7 @@ export default class BlackBoxSemanal{
         this.filtroAuditores = _.chain(this.lista)
             .map(auditoria=>{
                 let valor = auditoria.idAuditor
-                let texto = auditoria.auditor? `${auditoria.auditor.nombre1} ${auditoria.auditor.apellidoPaterno}` : '-- NO FIJADO --'
+                let texto = auditoria.auditor? `${auditoria.auditor.nombre1} ${auditoria.auditor.apellidoPaterno}` : '-- NO ASIGNADO --'
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroAuditores, {'valor': valor})
@@ -127,10 +126,11 @@ export default class BlackBoxSemanal{
                     return _.find(this.filtroAuditores, {'valor': auditoria.idAuditor, 'seleccionado': true})
                 })
                 .value(),
-            filtroRegiones: this.filtroRegiones,
-            filtroComunas: this.filtroComunas,
-            filtroAuditores: this.filtroAuditores
+            filtros: {
+                filtroRegiones: this.filtroRegiones,
+                filtroComunas: this.filtroComunas,
+                filtroAuditores: this.filtroAuditores
+            }
         }
     }
-
 }

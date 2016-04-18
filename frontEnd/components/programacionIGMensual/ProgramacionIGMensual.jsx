@@ -9,11 +9,14 @@ import BlackBoxMensual from './BlackBoxMensual.js'
 //import Multiselect from 'react-widgets/lib/Multiselect'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import TablaMensual from './TablaMensual.jsx'
-import AgregarPrograma from './AgregarPrograma.jsx'
+import AgregarInventario from './AgregarInventario.jsx'
+import RowInventarioMensual from './RowInventarioMensual.jsx'
 
 class ProgramacionIGMensual extends React.Component{
     constructor(props) {
         super(props)
+        this.blackbox = new BlackBoxMensual(this.props.clientes)
+
         // mostrar en el selector, los proximos 12 meses
         let meses = []
         for (let desface = 0; desface < 12; desface++) {
@@ -24,55 +27,47 @@ class ProgramacionIGMensual extends React.Component{
             })
         }
         this.state = {
-            mesSeleccionado: '2016-01-00',
+            meses,
             inventariosFiltrados: [],
-            filtroClientes: [],
-            filtroRegiones: [],
-            filtroLocales: [],
-            meses
+            filtros: {}
         }
-        // MAGIA NEGRA!!
-        this.blackbox = new BlackBoxMensual(this.props.clientes)
+
+        // referencia a todos las entradas de fecha de los inventarios
+        this.rows = []
     }
 
-    onSeleccionarMes(annoMesDia){
-        console.log('mes seleccionado ', annoMesDia)
-        this.setState({
-            mesSeleccionado: annoMesDia
-        })
-        // obtener todos los inventarios realizados en el mes seleccionado
-
-        api.inventario.getPorMes(annoMesDia)
-            .then(inventarios=>{
-                this.blackbox.reset()
-                inventarios.forEach(inventario=>{
-                    // crear un dummy
-                    let nuevoInventario = this.blackbox.__crearDummy(annoMesDia, inventario.idLocal )
-                    this.blackbox.addFinal(nuevoInventario)
-
-                    // actualizar los datos del inventario
-                    this.blackbox.actualizarDatosInventario(nuevoInventario, inventario)
-                })
-                // actualizar los filtros, y la lista ordenada de locales
-                this.blackbox.ordenarLista()
-                this.setState(this.blackbox.getListaFiltrada())
-            })
-            //.catch(err=>console.error('error: ', err))
+    componentWillReceiveProps(){
+        // cuando se reciben nuevos elementos, se generand posiciones "vacias" en el arreglo de rows
+        this.rows = this.rows.filter(input=>input!==null)
     }
 
+    focusRow(index, nombreElemento){
+        let ultimoIndex = this.rows.length-1
+        if(index<0){
+            // al seleccionar "antes de la primera", se seleciona el ultimo
+            this.rows[ultimoIndex].focusElemento(nombreElemento)
+        }else if(index>ultimoIndex){
+            // al seleccionar "despues de la ultima", se selecciona el primero
+            this.rows[ index%this.rows.length ].focusElemento(nombreElemento)
+        }else{
+            // no es ni el ultimo, ni el primero
+            this.rows[index].focusElemento(nombreElemento)
+        }
+    }
+
+    // #### Agregar Inventarios 
     crearGrupoInventarios(nuevosInventarios){
         let promesasFetch = []
         nuevosInventarios.forEach(nuevoInventario=> {
             // crear todos los locales (y sus nominas)
+
             promesasFetch.push(
                 api.inventario.nuevo({
                         idLocal: nuevoInventario.idLocal,
-                        fechaProgramada: this.state.mesSeleccionado
+                        fechaProgramada: this.refFormularioAgregar.getOpcionesSeleccionadas().mes
                     })
                     .then(inventarioCreado=>{
-                        this.blackbox.actualizarDatosInventario({
-                            idDummy: nuevoInventario.idDummy
-                        }, inventarioCreado)
+                        this.blackbox.actualizarDatosInventario(nuevoInventario.idDummy, inventarioCreado)
                         // actualizar los datos y el state de la app
                         // actualizar los filtros, y la lista ordenada de locales
                         // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
@@ -95,7 +90,6 @@ class ProgramacionIGMensual extends React.Component{
                 this.setState(this.blackbox.getListaFiltrada())
             })
     }
-
     agregarInventario(idCliente, numeroLocal, annoMesDia){
         let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, numeroLocal, annoMesDia)
         if(errores)
@@ -111,12 +105,10 @@ class ProgramacionIGMensual extends React.Component{
         // cuando se agregar un inventario, se crea automaticamente (junto a su nomina)
         api.inventario.nuevo({
             idLocal: nuevoInventario.local.idLocal,
-            fechaProgramada: this.state.mesSeleccionado
+            fechaProgramada: this.refFormularioAgregar.getOpcionesSeleccionadas().mes
         })
             .then(inventarioCreado=>{
-                this.blackbox.actualizarDatosInventario({
-                    idDummy: nuevoInventario.idDummy
-                }, inventarioCreado)
+                this.blackbox.actualizarDatosInventario(nuevoInventario.idDummy, inventarioCreado)
                 // actualizar los datos y el state de la app
                 // actualizar los filtros, y la lista ordenada de locales
                 // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
@@ -124,7 +116,6 @@ class ProgramacionIGMensual extends React.Component{
             })
         return [null, {}]
     }
-
     // Lista de inventarios que son "pegados desde excel"
     agregarGrupoInventarios(idCliente, numerosLocales, annoMesDia){
         console.log(numerosLocales)
@@ -155,49 +146,53 @@ class ProgramacionIGMensual extends React.Component{
             conteoProblemas: pegadoConProblemas.length
         }
     }
-
-    guardarOCrearInventario(formInventario){
-        // Nota: agregarInventario() y fetchLocales() siempre crean el inventario y sus nominas, por lo que el metodo
-        // api.inventario.nuevo() de abajo nunca deberia ser llamado.
-
-        if(formInventario.idInventario){
-            // Actualizar los datos del inventario
-            api.inventario.actualizar(formInventario.idInventario, {
-                    idInventario: formInventario.idInventario,
-                    fechaProgramada: formInventario.fechaProgramada,
-                    dotacionAsignadaTotal: formInventario.dotacionAsignadaTotal,
-                    idJornada: formInventario.idJornada,
-                })
-                .then(inventarioActualizado=>{
-                    console.log('inventario actualizado correctamente')
-                    // actualizar los datos y el state de la app
-                    this.blackbox.actualizarDatosInventario(formInventario, inventarioActualizado)
-                    // actualizar los filtros, y la lista ordenada de locales
-                    this.setState(this.blackbox.getListaFiltrada())
-                })
-        }else{
-            // Crear los datos del inventario en el servidor (quitar todos los campos que no interesan)
-            api.inventario.nuevo({
-                idLocal: formInventario.idLocal,
-                //idJornada: formInventario.idJornada,      // deja que tome la jornada por defecto
-                fechaProgramada: formInventario.fechaProgramada
-            })
-                .then(inventarioCreado=>{
-                    this.blackbox.actualizarDatosInventario(formInventario, inventarioCreado)
-                    // actualizar los datos y el state de la app
-                    // actualizar los filtros, y la lista ordenada de locales
-                    // this.setState(this.blackbox.getListaFiltradaSinOrdenar())
-                    this.setState(this.blackbox.getListaFiltrada())
-                })
-        }
+    
+    // #### Filtros
+    ordenarInventarios(){
+        this.blackbox.ordenarLista()
+        this.setState( this.blackbox.getListaFiltrada() )
     }
+    actualizarFiltro(nombreFiltro, filtro){
+        this.blackbox.reemplazarFiltro(nombreFiltro, filtro)
+        // actualizar los filtros, y la lista ordenada de locales
+        this.setState(this.blackbox.getListaFiltrada())
+    }
+    
+    // #### Llamadas al API
+    buscarInventarios(annoMesDia, idCliente){
+        api.inventario.getPorMesYCliente(annoMesDia, idCliente)
+            .then(inventarios=>{
+                this.blackbox.reset()
+                inventarios.forEach(inventario=>{
+                    // crear un dummy
+                    let nuevoInventario = this.blackbox.__crearDummy(annoMesDia, inventario.idLocal )
+                    this.blackbox.addFinal(nuevoInventario)
 
+                    // actualizar los datos del inventario
+                    this.blackbox.actualizarDatosInventario(nuevoInventario.idDummy, inventario)
+                })
+                // actualizar los filtros, y la lista ordenada de locales
+                this.blackbox.ordenarLista()
+                this.setState(this.blackbox.getListaFiltrada())
+            })
+        //.catch(err=>console.error('error: ', err))
+    }
+    actualizarInventario(idInventario, formInventario, idDummy){
+        // Actualizar los datos del inventario
+        api.inventario.actualizar(idInventario, formInventario)
+            .then(inventarioActualizado=>{
+                console.log('inventario actualizado correctamente')
+                // actualizar los datos y el state de la app
+                this.blackbox.actualizarDatosInventario(idDummy, inventarioActualizado)
+                // actualizar los filtros, y la lista ordenada de locales
+                this.setState(this.blackbox.getListaFiltrada())
+            })
+    }
     quitarInventario(idDummy){
         this.blackbox.remove(idDummy)
         // actualizar los filtros, y la lista ordenada de locales
         this.setState(this.blackbox.getListaFiltrada())
     }
-
     eliminarInventario(inventario){
         api.inventario.eliminar(inventario.idInventario)
             .then(resp=>{
@@ -208,51 +203,58 @@ class ProgramacionIGMensual extends React.Component{
             .catch(resp=>console.error)
     }
 
-    ordenarInventarios(){
-        this.blackbox.ordenarLista()
-        this.setState( this.blackbox.getListaFiltrada() )
-    }
-    
-    actualizarFiltro(nombreFiltro, filtro){
-        this.blackbox.reemplazarFiltro(nombreFiltro, filtro)
-        // actualizar los filtros, y la lista ordenada de locales
-        this.setState(this.blackbox.getListaFiltrada())
-    }
-
     render(){
+        // refFormularioAgregar no esta definido antes del render
+        let opcionesSeleccionadas = this.refFormularioAgregar? this.refFormularioAgregar.getOpcionesSeleccionadas() : {}
+
         return (
             <div>
                 <h1>Programación mensual IG</h1>
 
-                <AgregarPrograma
+                <AgregarInventario
+                    ref={ref=>this.refFormularioAgregar=ref}
                     puedeAgregar={this.props.puedeAgregar}
                     clientes={this.props.clientes}
                     meses={this.state.meses}
                     agregarInventario={this.agregarInventario.bind(this)}
                     agregarGrupoInventarios={this.agregarGrupoInventarios.bind(this)}
-                    onSeleccionarMes={this.onSeleccionarMes.bind(this)}
+                    buscarAuditorias={this.buscarInventarios.bind(this)}
                 />
 
                 <div className="row">
-                    <h4 className="page-header" style={{marginTop: '1em'}}>
-                        Locales a programar:
-                        <a className="btn btn-success btn-xs pull-right"
-                            href={`/programacionIG/mensual/pdf/${this.state.mesSeleccionado}`}
-                        >Exportar</a>
-                    </h4>
+                    <a className="btn btn-success btn-xs pull-right"
+                       href={`/pdf/inventarios/${opcionesSeleccionadas.mes}/cliente/${opcionesSeleccionadas.idCliente}`}
+                    >Exportar</a>
+
                     <TablaMensual
-                        puedeModificar={this.props.puedeModificar}
-                        inventariosFiltrados={this.state.inventariosFiltrados}
-                        filtroClientes={this.state.filtroClientes}
-                        filtroRegiones={this.state.filtroRegiones}
-                        filtroLocales={this.state.filtroLocales}
+                        filtros={this.state.filtros}
                         actualizarFiltro={this.actualizarFiltro.bind(this)}
-                        guardarOCrearInventario={this.guardarOCrearInventario.bind(this)}
-                        quitarInventario={this.quitarInventario.bind(this)}
-                        eliminarInventario={this.eliminarInventario.bind(this)}
-                        ordenarInventarios={this.ordenarInventarios.bind(this)}
-                        //ref={ref=>this.TablaInventarios=ref}
-                    />
+                        ordenarInventarios={this.ordenarInventarios.bind(this)}>
+                        {this.state.inventariosFiltrados.length===0
+                            ? <tr><td colSpan="10" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                            : this.state.inventariosFiltrados.map((inventario, index)=>{
+                            let mostrarSeparador = false
+                            let sgteInventario = this.state.inventariosFiltrados[index+1]
+                            if(sgteInventario)
+                                mostrarSeparador = inventario.fechaProgramada!==sgteInventario.fechaProgramada
+                            return <RowInventarioMensual
+                                    // Propiedades
+                                    puedeModificar={this.props.puedeModificar}
+                                    key={index}
+                                    index={index}
+                                    ref={ref=>this.rows[index]=ref}
+                                    inventario={inventario}
+                                    mostrarSeparador={mostrarSeparador}
+                                    // Metodos
+                                    focusRow={this.focusRow.bind(this)}
+                                    actualizarInventario={this.actualizarInventario.bind(this)}
+                                    quitarInventario={this.quitarInventario.bind(this)}
+                                    eliminarInventario={this.eliminarInventario.bind(this)}
+                                    ref={ref=>this.rows[index]=ref}
+                                />
+                            })
+                        }
+                    </TablaMensual>
                 </div>
             </div>
         )

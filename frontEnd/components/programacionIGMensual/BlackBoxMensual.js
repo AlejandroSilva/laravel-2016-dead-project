@@ -6,6 +6,7 @@ export default class BlackBox{
         this.lista = []
         this.filtroClientes = []
         this.filtroRegiones = []
+        this.filtroComunas = []
         this.filtroLocales = []
         this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
     }
@@ -14,6 +15,7 @@ export default class BlackBox{
         this.lista = []
         this.filtroClientes = []
         this.filtroRegiones = []
+        this.filtroComunas = []
         this.filtroLocales = []
         this.idDummy = 1
     }
@@ -86,19 +88,16 @@ export default class BlackBox{
             idDummy: this.idDummy++,    // asignar e incrementar
             idInventario: null,
             idLocal: idLocal,
-            idJornada: null,
             fechaProgramada: annoMesDia,
             horaLlegada: null,
-            stockTeorico: 0,
-            dotacionAsignada: null,
+            stockTeorico: '0',
+            dotacionAsignadaTotal: '0',
             local: {
                 idLocal: idLocal,
-                idJornadaSugerida: 4, // no definida
                 nombre: '-',
                 numero: '-',
                 stock: 0,
                 fechaStock: 'YYYY-MM-DD',
-                nombreCliente: '-',
                 nombreComuna: '-',
                 nombreProvincia: '-',
                 nombreRegion: '-',
@@ -106,9 +105,13 @@ export default class BlackBox{
                 formato_local: {
                     produccionSugerida: 0
                 },
+                cliente:{
+                    nombreCliente: '-'
+                },
                 direccion: {
                     direccion: '-',
                     comuna: {
+                        nombre: '',
                         provincia:{
                             region:{
                                 numero: '-'
@@ -181,116 +184,97 @@ export default class BlackBox{
         this.actualizarFiltros()
     }
     // Todo modificar el listado de clientes
-    actualizarDatosInventario(formInventario, inventarioActualizado){
+    actualizarDatosInventario(idDummy, inventarioActualizado){
         this.lista = this.lista.map(inventario=> {
-            if (inventario.idDummy == formInventario.idDummy) {
+            if (inventario.idDummy == idDummy) {
                 inventario = Object.assign(inventario, inventarioActualizado)
             }
             return inventario
         })
     }
-    
-    // ORDENAR Y FILTRAR
-    orderByFechaProgramadaStock(a,b){
-        // si se parsea la fecha sin dia (EJ. 2016-01-00) resulta un 'Invalid Date'
 
-        let dateA = new Date(a.fechaProgramada)
-        if(dateA=='Invalid Date'){
-            let [annoA, mesA, diaA] = a.fechaProgramada.split('-')
-            // OJO: (new Date('2016-04')) - (new Date('2016-03-31')), resulta en 0, y los ordena mal, por eso se resta 1
-            dateA = new Date(`${annoA}-${mesA}`) - 1
-            //if(dateA=='Invalid Date')  console.log('invalida :', `${annoA}-${mesA}`)
-        }
-
-        let dateB = new Date(b.fechaProgramada)
-        if(dateB=='Invalid Date'){
-            let [annoB, mesB, diaB] = a.fechaProgramada.split('-')
-            dateB = new Date(`${annoB}-${mesB}`) - 1
-            //if(dateB=='Invalid Date')  console.log('invalida :', `${annoB}-${mesB}`)
-        }
-
-        if((dateA-dateB)===0){
-            // stock ordenado de mayor a menor (B-A)
-            return b.stockTeorico - a.stockTeorico
-        }else{
-            // fecha ordenada de de menor a mayor (A-B)
-            return dateA - dateB
-        }
-    }
-    
+    /*** ################### FILTROS ################### ***/
     ordenarLista(){
-        console.error('[programa mensual] ordenar lista no funcionando')
-        this.lista  = R.sort(this.orderByFechaProgramadaStock, this.lista)
-    }
-    
-    getListaFiltrada(){
-        this.actualizarFiltros()
-
-        // filtrar por clientes
-        // let clientesSeleccionados = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        // let listaFiltradaPorRegiones = R.filter(inventario=>{
-        //     return R.contains(inventario.local.direccion.comuna.provincia.region.numero, clientesSeleccionados)
-        // }, this.lista)
-
-        // Filtrar por Regiones
-        let regionesSeleccionadas = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltradaPorRegiones = R.filter(inventario=>{
-            return R.contains(inventario.local.direccion.comuna.provincia.region.numero, regionesSeleccionadas)
-        }, this.lista)
-
-        // Filtro por Local
-        let localesSeleccionados = this.filtroLocales.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltradaPorLocales = R.filter(inventario=>{
-            return R.contains(inventario.local.numero, localesSeleccionados)
-        }, listaFiltradaPorRegiones)
-
-        // ##### Ordenar por fecha y por stock
-        let listaOrdenadaYFiltrada = R.sort(this.orderByFechaProgramadaStock, listaFiltradaPorLocales)
-
-        return {
-            inventariosFiltrados: listaOrdenadaYFiltrada,
-            filtroClientes: this.filtroClientes,
-            filtroRegiones: this.filtroRegiones,
-            filtroLocales: this.filtroLocales
+        let porFechaProgramada = (inventario)=>{
+            let dateA = new Date(inventario.fechaProgramada)
+            if(dateA=='Invalid Date'){
+                let [annoA, mesA, diaA] = inventario.fechaProgramada.split('-')
+                // OJO: (new Date('2016-04')) - (new Date('2016-03-31')), resulta en 0, y los ordena mal, por eso se resta 1
+                return new Date(`${annoA}-${mesA}`) - 1
+            }else{
+                return dateA
+            }
         }
+        let porStockTeorico = (inventario)=>{
+            return inventario.stockTeorico*1
+        }
+
+        // ordenar por fechaprogramada, por stock teorico
+        this.lista = _.orderBy(this.lista, [porFechaProgramada, porStockTeorico], ['asc', 'desc'])
     }
-    
+
     actualizarFiltros(){
-        // Clientes
-        // let clientes = this.lista.map(inventario=>inventario.local.cliente.nombre)
-        // let clientes = this.lista.map(inventario=>inventario.local.XASDASDASDASDASDASDASDASD)
-        // let clientesUnicos = R.uniq(clientes)
-        // this.filtroClientes = clientesUnicos.map(textoUnico=>{
-        //     // si no existe la opcion, se crea y se selecciona por defecto
-        //     return this.filtroClientes.find(opc=>opc.texto===textoUnico)
-        //         || { texto: textoUnico, seleccionado: true}
-        // })
+        // ##### Filtro Regiones (ordenado por codRegion)
+        this.filtroRegiones = _.chain(this.lista)
+            .map(auditoria=>{
+                let valor = auditoria.local.direccion.comuna.provincia.region.cutRegion
+                let texto = auditoria.local.direccion.comuna.provincia.region.numero
 
-        // ##### Filtro Regiones
-        let regiones = this.lista
-            .sort((inv1, inv2)=> inv1.local.direccion.comuna.provincia.region.cutRegion-inv2.local.direccion.comuna.provincia.region.cutRegion)
-            .map(inventario=>inventario.local.direccion.comuna.provincia.region.numero)
-        let regionesUnicasOrdenadas = R.uniq(regiones)
-        this.filtroRegiones = regionesUnicasOrdenadas.map(textoUnico=>{
-            // si no existe la opcion, se crea y se selecciona por defecto
-            return this.filtroRegiones.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
-        })
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroRegiones, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('valor')    // ordenado por numero de region
+            .value()
 
-        // ##### Filtro Numero de Local
-        let locales = this.lista.map(inventario=>inventario.local.numero)
-        // convierte el texto a numero, y los ordena de menor a mayor
-        let localesOrdenados = R.uniq(locales).sort((a, b)=>{ return (isNaN(a*1) || isNaN(b*1))? (a>b) : (a*1-b*1) })
-/** */  console.log("inventario semanal: ", locales, localesOrdenados)
-        this.filtroLocales = localesOrdenados.map(textoUnico=>{
-            // si no existe la opcion, se crea y se selecciona por defecto
-            return this.filtroLocales.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
-        })
+        // ##### Filtro Comunas (ordenado por codComuna)
+        this.filtroComunas = _.chain(this.lista)
+            .map(auditoria=>{
+                let valor = auditoria.local.direccion.cutComuna
+                let texto = auditoria.local.direccion.comuna.nombre
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroComunas, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('texto')
+            .value()
     }
     reemplazarFiltro(nombreFiltro, filtroActualizado) {
         if(this[nombreFiltro]) {
             this[nombreFiltro] = filtroActualizado
         }else{
             console.error(`Filtro ${nombreFiltro} no existe.`)
+        }
+    }
+    getListaFiltrada(){
+        this.actualizarFiltros()
+        
+        return {
+            //inventariosFiltrados: this.lista,
+            inventariosFiltrados: _.chain(this.lista)
+                // .filter(auditoria=>{
+                //     return _.find(this.filtroClientes, {'valor': auditoria.local.idCliente, 'seleccionado': true})
+                // })
+                // Filtro por Region
+                .filter(inventario=>{
+                    return _.find(this.filtroRegiones, {'valor': inventario.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+                })
+                // Filtro por Comuna
+                .filter(inventario=>{
+                    return _.find(this.filtroComunas, {'valor': inventario.local.direccion.cutComuna, 'seleccionado': true})
+                })
+                // .filter(auditoria=>{
+                //     return _.find(this.filtroAuditores, {'valor': auditoria.idAuditor, 'seleccionado': true})
+                // })
+                .value(),
+            filtros: {
+                filtroClientes: this.filtroClientes,
+                filtroRegiones: this.filtroRegiones,
+                filtroComunas: this.filtroComunas
+            }
         }
     }
 }

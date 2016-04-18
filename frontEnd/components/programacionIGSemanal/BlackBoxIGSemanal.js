@@ -1,18 +1,22 @@
-import R from 'ramda'
+import _ from 'lodash'
 
 export default class BlackBoxIGSemanal{
     constructor(){
         this.lista = []
         // this.filtroClientes = []
         this.filtroRegiones = []
+        this.filtroComunas = []
         this.filtroLideres = []
+        this.filtroCaptadores = []
         this.filtroLocales = []
     }
     reset() {
         this.lista = []
         // this.filtroClientes = []
         this.filtroRegiones = []
+        this.filtroComunas = []
         this.filtroLideres = []
+        this.filtroCaptadores = []
         this.filtroLocales = []
     }
     // Todo: Optimizar
@@ -21,91 +25,6 @@ export default class BlackBoxIGSemanal{
         this.lista.push(inventario)
     }
 
-    orderByFechaProgramadaStock(a,b){
-        // si se parsea la fecha sin dia (EJ. 2016-01-00) resulta un 'Invalid Date'
-        let dateA = new Date(a.fechaProgramada)
-        if(dateA=='Invalid Date'){
-            let [annoA, mesA, diaA] = a.fechaProgramada.split('-')
-            // OJO: (new Date('2016-04')) - (new Date('2016-03-31')), resulta en 0, y los ordena mal, por eso se resta 1
-            dateA = new Date(`${annoA}-${mesA}`) - 1
-            //if(dateA=='Invalid Date')  console.log('invalida :', `${annoA}-${mesA}`)
-        }
-
-        let dateB = new Date(b.fechaProgramada)
-        if(dateB=='Invalid Date'){
-            let [annoB, mesB, diaB] = a.fechaProgramada.split('-')
-            dateB = new Date(`${annoB}-${mesB}`) - 1
-            //if(dateB=='Invalid Date')  console.log('invalida :', `${annoB}-${mesB}`)
-        }
-
-        if((dateA-dateB)===0){
-            // stock ordenado de mayor a menor (B-A)
-            return b.stockTeorico - a.stockTeorico
-        }else{
-            // fecha ordenada de de menor a mayor (A-B)
-            return dateA - dateB
-        }
-    }
-    ordenarLista(){
-        console.error('[programa semanal] ordenar lista no funcionando')
-        this.lista = R.sort(this.orderByFechaProgramadaStock, this.lista)
-    }
-    getListaFiltrada(){
-        this.actualizarFiltros()
-
-        // Todo: filtrar por clientes
-
-        // Filtrar por Regiones
-        let regionesSeleccionadas = this.filtroRegiones.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltradaPorRegiones = R.filter(inventario=>{
-            return R.contains(inventario.local.direccion.comuna.provincia.region.numero, regionesSeleccionadas)
-        }, this.lista)
-
-        // Filtrar por Lideres (hay lideres en dos nominas: nominaDia y nominaNoche
-        let lideresSeleccionados = this.filtroLideres.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltradaPorLideres = R.filter(inventario=>{
-            if(inventario.idJornada=='1'){
-                // la jornada no ha sido seleccionada, no hay ninguna nomina activa, entonces no hay lider seleccionado
-                //return R.contains('-- NO FIJADO --', lideresSeleccionados)
-                return true
-            }else if(inventario.idJornada=='2'){
-                // si la jornada es de dia, revisar si el lider esta en la nomina_dia
-                let liderDia = inventario.nomina_dia.lider
-                let nombreLiderDia = liderDia? `${liderDia.nombre1} ${liderDia.apellidoPaterno}` : '-- NO FIJADO --'
-                return R.contains(nombreLiderDia, lideresSeleccionados)
-            }else if(inventario.idJornada=='3'){
-                // si la jornada es 'noche', se debe buscar el lider en la nomina_noche
-                let liderNoche = inventario.nomina_noche.lider
-                let nombreLiderNoche = liderNoche? `${liderNoche.nombre1} ${liderNoche.apellidoPaterno}` : '-- NO FIJADO --'
-                return R.contains(nombreLiderNoche, lideresSeleccionados)
-            }else if(inventario.idJornada=='4'){
-                // si la jornada es 'dia y noche', se debe buscar el lider en la nomina_dia y nomina_noche
-                let liderDia = inventario.nomina_dia.lider
-                let liderNoche = inventario.nomina_noche.lider
-                let nombreLiderDia = liderDia? `${liderDia.nombre1} ${liderDia.apellidoPaterno}` : '-- NO FIJADO --'
-                let nombreLiderNoche = liderNoche? `${liderNoche.nombre1} ${liderNoche.apellidoPaterno}` : '-- NO FIJADO --'
-                return R.contains(nombreLiderNoche, lideresSeleccionados) || R.contains(nombreLiderDia, lideresSeleccionados)
-            }
-        }, listaFiltradaPorRegiones)
-
-        // Filtro por Local
-        let localesSeleccionados = this.filtroLocales.filter(opcion=>opcion.seleccionado).map(opcion=>opcion.texto)
-        let listaFiltradaPorLocales = R.filter(inventario=>{
-            return R.contains(inventario.local.numero, localesSeleccionados)
-        }, listaFiltradaPorLideres)
-
-        // ##### Ordenar por fecha y por stock
-        let listaOrdenadaYFiltrada = R.sort(this.orderByFechaProgramadaStock, listaFiltradaPorLocales)
-
-        return {
-            inventariosFiltrados: listaOrdenadaYFiltrada,
-            //filtroClientes: this.filtroClientes,
-            filtroRegiones: this.filtroRegiones,
-            filtroLideres: this.filtroLideres,
-            filtroLocales: this.filtroLocales
-        }
-    }
-    
     // Todo modificar el listado de clientes
     actualizarInventario(inventarioActualizado) {
         this.lista = this.lista.map(inventario=> {
@@ -117,7 +36,26 @@ export default class BlackBoxIGSemanal{
         this.actualizarFiltros()
     }
 
-    /** ###################### FILTROS ###################### **/
+    /*** ################### FILTROS ################### ***/
+    ordenarLista() {
+        let porFechaProgramada = (inventario)=> {
+            let dateA = new Date(inventario.fechaProgramada)
+            if (dateA == 'Invalid Date') {
+                let [annoA, mesA, diaA] = inventario.fechaProgramada.split('-')
+                // OJO: (new Date('2016-04')) - (new Date('2016-03-31')), resulta en 0, y los ordena mal, por eso se resta 1
+                return new Date(`${annoA}-${mesA}`) - 1
+            } else {
+                return dateA
+            }
+        }
+        let porStockTeorico = (inventario)=>{
+            return inventario.stockTeorico*1
+        }
+        
+        // ordenar por fechaprogramada, y por stock
+        this.lista = _.orderBy(this.lista, [porFechaProgramada, porStockTeorico], ['asc', 'desc'])
+    }
+
     actualizarFiltros(){
         // Clientes
         // let clientes = this.lista.map(inventario=>inventario.local.cliente.nombre)
@@ -128,54 +66,175 @@ export default class BlackBoxIGSemanal{
         // })
 
         // ##### Filtro Regiones
-        let regiones = this.lista
-            .sort((inv1, inv2)=> inv1.local.direccion.comuna.provincia.region.cutRegion-inv2.local.direccion.comuna.provincia.region.cutRegion)
-            .map(inventario=>inventario.local.direccion.comuna.provincia.region.numero)
-        let regionesUnicasOrdenadas = R.uniq(regiones)
-        this.filtroRegiones = regionesUnicasOrdenadas.map(textoUnico=>{
-            // si no existe la opcion, se crea y se selecciona por defecto
-            return this.filtroRegiones.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
-        })
+        this.filtroRegiones = _.chain(this.lista)
+            .map(inventario=>{
+                let valor = inventario.local.direccion.comuna.provincia.region.cutRegion
+                let texto = inventario.local.direccion.comuna.provincia.region.numero
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroRegiones, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('valor')    // ordenado por numero de region
+            .value()
+
+        // ##### Filtro Comunas (ordenado por codComuna)
+        this.filtroComunas = _.chain(this.lista)
+            .map(inventario=>{
+                let valor = inventario.local.direccion.cutComuna
+                let texto = inventario.local.direccion.comuna.nombre
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroComunas, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('texto')
+            .value()
 
         // ##### Filtro Lideres, considerar el lider solo si la jornada de la nomina se encuentra activa
-        let lideresDia = this.lista
+        let lideresDia = _.chain(this.lista)
             // considerar la nomina de dia solo cuando la jornada sea 'dia (2)' o 'dia y noche (4)'
             .filter( inventario=>(inventario.idJornada=='2' || inventario.idJornada=='4') )
-            // obtener el nombre+apellido como el texto de la opcion
             .map(inventario=>{
                 let lider = inventario.nomina_dia.lider
-                return lider? `${lider.nombre1} ${lider.apellidoPaterno}` : '-- NO FIJADO --'
+                let valor = inventario.nomina_dia.idLider
+                let texto = lider? `${lider.nombre1} ${lider.apellidoPaterno}` : '-- NO ASIGNADO --'
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroLideres, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
             })
-        let lideresNoche = this.lista
+            .value()
+        let lideresNoche = _.chain(this.lista)
             // considerar la nomina de noche solo cuando la jornada sea 'noche (3)' o 'dia y noche (4)'
             .filter( inventario=>(inventario.idJornada=='3' || inventario.idJornada=='4') )
-            // obtener el nombre+apellido como el texto de la opcion
             .map(inventario=>{
                 let lider = inventario.nomina_noche.lider
-                return lider? `${lider.nombre1} ${lider.apellidoPaterno}` : '-- NO FIJADO --'
+                let valor = inventario.nomina_noche.idLider
+                let texto = lider? `${lider.nombre1} ${lider.apellidoPaterno}` : '-- NO ASIGNADO --'
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroLideres, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
             })
-        // unir lideres de dia + lideres de noche, ordenarlos alfabeticamente
-        let lideresDiaNoche = ['-- NO FIJADO --'].concat(lideresDia, lideresNoche)
-        let lideresUnicos = R.uniq(lideresDiaNoche).sort((a,b)=>a>=b)
-        this.filtroLideres = lideresUnicos.map(textoUnico=>{
-            // si no existe la opcion, se crea y se selecciona por defecto
-            return this.filtroLideres.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
-        })
+            .value()
+        // unir ambos arreglos, sacar los repetidos, y ordenar por nombre
+        this.filtroLideres = _.chain(lideresDia)
+            .unionBy(lideresNoche, 'valor')
+            .uniqBy('valor')
+            .sortBy('texto')
+            .value()
+
+        // ##### Filtro Captador, considerar el lider solo si la jornada de la nomina se encuentra activa
+        let captadoresDia = _.chain(this.lista)
+            // considerar la nomina de dia solo cuando la jornada sea 'dia (2)' o 'dia y noche (4)'
+            .filter( inventario=>(inventario.idJornada=='2' || inventario.idJornada=='4') )
+            .map(inventario=>{
+                let captador = inventario.nomina_dia.captador
+                let valor = inventario.nomina_dia.idCaptador1
+
+                let texto = captador? `${captador.nombre1} ${captador.apellidoPaterno}` : '-- NO ASIGNADO --'
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroCaptadores, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .value()
+        let captadoresNoche = _.chain(this.lista)
+            // considerar la nomina de noche solo cuando la jornada sea 'noche (3)' o 'dia y noche (4)'
+            .filter( inventario=>(inventario.idJornada=='3' || inventario.idJornada=='4') )
+            .map(inventario=>{
+                let captador = inventario.nomina_noche.captador
+                let valor = inventario.nomina_noche.idCaptador1
+                let texto = captador? `${captador.nombre1} ${captador.apellidoPaterno}` : '-- NO ASIGNADO --'
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroCaptadores, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .value()
+        // unir ambos arreglos, sacar los repetidos, y ordenar por nombre
+        this.filtroCaptadores = _.chain(captadoresDia)
+            .unionBy(captadoresNoche, 'valor')
+            .uniqBy('valor')
+            .sortBy('texto')
+            .value()
 
         // ##### Filtro Numero de Local
-        let locales = this.lista.map(inventario=>inventario.local.numero)
-        // convierte el texto a numero, y los ordena de menor a mayor
-        let localesOrdenados = R.uniq(locales).sort((a, b)=>{ return (isNaN(a*1) || isNaN(b*1))? (a>b) : (a*1-b*1) })
-        this.filtroLocales = localesOrdenados.map(textoUnico=>{
-            // si no existe la opcion, se crea y se selecciona por defecto
-            return this.filtroLocales.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
-        })
+        // let locales = this.lista.map(inventario=>inventario.local.numero)
+        // // convierte el texto a numero, y los ordena de menor a mayor
+        // let localesOrdenados = R.uniq(locales).sort((a, b)=>{ return (isNaN(a*1) || isNaN(b*1))? (a>b) : (a*1-b*1) })
+        // this.filtroLocales = localesOrdenados.map(textoUnico=>{
+        //     // si no existe la opcion, se crea y se selecciona por defecto
+        //     return this.filtroLocales.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
+        // })
     }
     reemplazarFiltro(nombreFiltro, filtroActualizado) {
         if(this[nombreFiltro]) {
             this[nombreFiltro] = filtroActualizado
         }else{
             console.error(`Filtro ${nombreFiltro} no existe.`)
+        }
+    }
+
+    getListaFiltrada(){
+        this.actualizarFiltros()
+
+        return {
+            inventariosFiltrados: _.chain(this.lista)
+                // Filtrar por Regiones
+                .filter(inventario=>{
+                    return _.find(this.filtroRegiones, {'valor': inventario.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+                })
+                // Filtrar por Comunas
+                .filter(inventario=>{
+                    return _.find(this.filtroComunas, {'valor': inventario.local.direccion.cutComuna, 'seleccionado': true})
+                })
+                // Filtrar por Lideres
+                .filter(inventario=>{
+                    if(inventario.idJornada=='1'){
+                        // la jornada no ha sido seleccionada, no hay ninguna nomina activa, entonces no hay lider seleccionado
+                        return true
+                    }else if(inventario.idJornada=='2'){
+                        // si la jornada es de dia, revisar si el lider esta en la nomina_dia
+                        return _.find(this.filtroLideres, {'valor': inventario.nomina_dia.idLider, 'seleccionado': true})
+                    }else if(inventario.idJornada=='3'){
+                        // si la jornada es 'noche', se debe buscar el lider en la nomina_noche
+                        return _.find(this.filtroLideres, {'valor': inventario.nomina_noche.idLider, 'seleccionado': true})
+                    }else if(inventario.idJornada=='4'){
+                        // si la jornada es 'dia y noche', se debe buscar el lider en la nomina_dia y nomina_noche
+                        return _.find(this.filtroLideres, {'valor': inventario.nomina_dia.idLider, 'seleccionado': true})
+                        || _.find(this.filtroLideres, {'valor': inventario.nomina_noche.idLider, 'seleccionado': true})
+                    }
+                })
+                // Filtrar por Captadores
+                .filter(inventario=>{
+                    if(inventario.idJornada=='1'){
+                        // la jornada no ha sido seleccionada, no hay ninguna nomina activa, entonces no hay lider seleccionado
+                        return true
+                    }else if(inventario.idJornada=='2'){
+                        // si la jornada es de dia, revisar si el lider esta en la nomina_dia
+                        return _.find(this.filtroCaptadores, {'valor': inventario.nomina_dia.idCaptador1, 'seleccionado': true})
+                    }else if(inventario.idJornada=='3'){
+                        // si la jornada es 'noche', se debe buscar el lider en la nomina_noche
+                        return _.find(this.filtroCaptadores, {'valor': inventario.nomina_noche.idCaptador1, 'seleccionado': true})
+                    }else if(inventario.idJornada=='4'){
+                        // si la jornada es 'dia y noche', se debe buscar el lider en la nomina_dia y nomina_noche
+                        return _.find(this.filtroCaptadores, {'valor': inventario.nomina_dia.idCaptador1, 'seleccionado': true})
+                            || _.find(this.filtroCaptadores, {'valor': inventario.nomina_noche.idCaptador1, 'seleccionado': true})
+                    }
+                })
+
+                .value(),
+            filtros: {
+                filtroRegiones: this.filtroRegiones,
+                filtroComunas: this.filtroComunas,
+                filtroLideres: this.filtroLideres,
+                filtroCaptadores: this.filtroCaptadores,
+                filtroLocales: this.filtroLocales
+            }
         }
     }
 }
