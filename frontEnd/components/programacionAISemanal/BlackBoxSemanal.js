@@ -6,14 +6,18 @@ export default class BlackBoxSemanal{
         this.filtroAuditores = []
         this.filtroRegiones = []
         this.filtroComunas = []
-        this.filtroLocales = []
+        this.filtroRealizadas = []
+        this.filtroAprobadas = []
+        //this.filtroLocales = []
     }
     reset() {
         this.lista = []
         this.filtroAuditores = []
         this.filtroRegiones = []
         this.filtroComunas = []
-        this.filtroLocales = []
+        this.filtroRealizadas = []
+        this.filtroAprobadas = []
+        //this.filtroLocales = []
     }
     // Todo: Optimizar
     // Todo Modificar: el listado de clientes
@@ -102,6 +106,30 @@ export default class BlackBoxSemanal{
             .uniqBy('valor')
             .sortBy('texto')
             .value()
+
+        // ##### Filtro Realizadas
+        this.filtroRealizadas = _.chain([
+                {valor: '1', texto: 'Realizada'},
+                {valor: '0', texto: 'Pendiente'}
+        ])
+            .map(opcionRealizada=>{
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroRealizadas, {'valor': opcionRealizada.valor})
+                return opcion? opcion : {valor: opcionRealizada.valor, texto: opcionRealizada.texto, seleccionado: true}
+            })
+            .value()
+
+        // ##### Filtro Aprobadas
+        this.filtroAprobadas = _.chain([
+            {valor: '1', texto: 'Aprobada'},
+            {valor: '0', texto: 'Pendiente'}
+        ])
+            .map(opcionAprobada=>{
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroAprobadas, {'valor': opcionAprobada.valor})
+                return opcion? opcion : {valor: opcionAprobada.valor, texto: opcionAprobada.texto, seleccionado: true}
+            })
+            .value()
     }
     reemplazarFiltro(nombreFiltro, filtroActualizado) {
         if(this[nombreFiltro]) {
@@ -116,20 +144,33 @@ export default class BlackBoxSemanal{
 
         return {
             auditoriasFiltradas: _.chain(this.lista)
+                // Filtrar por Region
                 .filter(auditoria=>{
                     return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
                 })
+                // Filtrar por Comuna
                 .filter(auditoria=>{
                     return _.find(this.filtroComunas, {'valor': auditoria.local.direccion.cutComuna, 'seleccionado': true})
                 })
+                // Filtrar por Auditor
                 .filter(auditoria=>{
                     return _.find(this.filtroAuditores, {'valor': auditoria.idAuditor, 'seleccionado': true})
+                })
+                // Filtrar por Realizada
+                .filter(auditoria=>{
+                    return _.find(this.filtroRealizadas, {'valor': auditoria.realizada, 'seleccionado': true})
+                })
+                // Filtrar por Aprobada
+                .filter(auditoria=>{
+                    return _.find(this.filtroAprobadas, {'valor': auditoria.aprovada, 'seleccionado': true})
                 })
                 .value(),
             filtros: {
                 filtroRegiones: this.filtroRegiones,
                 filtroComunas: this.filtroComunas,
-                filtroAuditores: this.filtroAuditores
+                filtroAuditores: this.filtroAuditores,
+                filtroRealizadas: this.filtroRealizadas,
+                filtroAprobadas: this.filtroAprobadas
             }
         }
     }

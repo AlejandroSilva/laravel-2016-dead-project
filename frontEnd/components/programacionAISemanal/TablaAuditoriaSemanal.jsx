@@ -75,8 +75,20 @@ class TablaAuditoriaSemanal extends React.Component{
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroAuditores')}
                             />
                         </th>
-                        <th className={css.thRealizadaAprobada}>Realizada</th>
-                        <th className={css.thRealizadaAprobada}>Aprobada</th>
+                        <th className={css.thRealizadaAprobada}>
+                            <HeaderConFiltro
+                                nombre="Realizada"
+                                filtro={this.props.filtros.filtroRealizadas || []}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRealizadas')}
+                            />
+                        </th>
+                        <th className={css.thRealizadaAprobada}>
+                            <HeaderConFiltro
+                                nombre="Aprobada"
+                                filtro={this.props.filtros.filtroAprobadas || []}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroAprobadas')}
+                            />
+                        </th>
                         <th className={css.thAperturaCierre}>Hr.Apertura</th>
                         <th className={css.thAperturaCierre}>Hr.Cierre</th>
                         <th className={css.thDireccion}>Dirección</th>
