@@ -40,9 +40,7 @@ export default class BlackBoxIGSemanal{
     }
 
     /*** ################### FILTROS ################### ***/
-    ordenarLista(evt) {
-        evt.preventDefault()
-
+    ordenarLista(){
         let porFechaProgramada = (inventario)=> {
             let dateA = new Date(inventario.fechaProgramada)
             if (dateA == 'Invalid Date') {
