@@ -42,8 +42,8 @@
     @yield('hmtl-body')
 
     <script async src="/app/bundle.js"></script>
-    <script async src="/vendor/jquery/jquery-2.2.1.min.js"></script>
-    <script async src="/vendor/bootstrap/bootstrap.min.js"></script>
+    <script src="/vendor/jquery/jquery-2.2.1.min.js"></script>
+    <script src="/vendor/bootstrap/bootstrap.min.js"></script>
 </body>
 </html>
 {{-- Styles en esta seccion hacen que se haga render mas rapido en la pagina --}}
