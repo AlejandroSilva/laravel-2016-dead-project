@@ -75,7 +75,12 @@ class Locales extends Model{
         return round($stock/$producion);
     }
 
-    public function ultimoInventario(){
-        return Inventarios::where('idLocal', '=', $this->idLocal)->orderBy('idInventario', 'desc')->first();
+//    public function ultimoInventario(){
+    public function inventarioRealizadoEn($annoMesDia){
+        $fecha = explode('-', $annoMesDia);
+        return Inventarios::where('idLocal', '=', $this->idLocal)
+            ->whereRaw("extract(year from fechaProgramada) = ?", [$fecha[0]])
+            ->whereRaw("extract(month from fechaProgramada) = ?", [$fecha[1]])
+            ->first();
     }
 }

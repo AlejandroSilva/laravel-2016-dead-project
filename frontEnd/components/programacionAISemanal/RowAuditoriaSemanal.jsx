@@ -77,17 +77,24 @@ class RowAuditoriaSemanal extends React.Component{
             return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
         })
         // SOLUCION TEMPORAL....
-        let fechaUltimoInventarioLocal = ''
-        if(this.props.auditoria.ultimoInventario!==null){
-            let momentFecha = moment(this.props.auditoria.ultimoInventario.fechaProgramada)
-            if(momentFecha.isValid()){
-                fechaUltimoInventarioLocal = 'Ultimo Inventario: '+momentFecha.format('DD-MM-YYYY')
+        let tooltipCECO = ''
+        if(this.props.auditoria.inventarioEnELMismoMes!==null){
+            let momentInventario = moment(this.props.auditoria.inventarioEnELMismoMes.fechaProgramada)
+            let momentAuditoria = moment(this.props.auditoria.fechaProgramada)
+            if(momentInventario.isValid()){
+                if(momentAuditoria.isValid()){
+                    let diasDiferencia = momentInventario.diff(momentAuditoria, 'days');
+                    let textoDiferencia = diasDiferencia>0? `(${diasDiferencia} después)` : (diasDiferencia<0? `(${-diasDiferencia} antes)` : '')
+                    tooltipCECO = `Inventario programado para el: \n ${momentInventario.format('DD-MM-YYYY')} ${textoDiferencia}`
+                }else{
+                    tooltipCECO = `Inventario programado para el: \n ${momentInventario.format('DD-MM-YYYY')}`
+                }
             }else {
-                let [anno, mes, dia] = this.props.auditoria.ultimoInventario.fechaProgramada.split('-')
-                fechaUltimoInventarioLocal = `Ultimo Inventario: 00-${mes}-${anno}`
+                let [anno, mes, dia] = this.props.auditoria.inventarioEnELMismoMes.fechaProgramada.split('-')
+                tooltipCECO = `Inventario programado para el: 00-${mes}-${anno}`
             }
         }else{
-            fechaUltimoInventarioLocal = 'sin inventario asociado'
+            tooltipCECO = 'Sin inventario en el mismo mes'
         }
         return (
             <tr className={this.props.mostrarSeparador? css.trSeparador: ''}>
@@ -116,7 +123,7 @@ class RowAuditoriaSemanal extends React.Component{
                         placement="right"
                         delay={0}
                         overlay={<Tooltip id="yyy">
-                        {fechaUltimoInventarioLocal}</Tooltip>}>
+                        {tooltipCECO}</Tooltip>}>
                         <p>
                             <small><b>{this.props.auditoria.local.numero}</b></small>
                         </p>

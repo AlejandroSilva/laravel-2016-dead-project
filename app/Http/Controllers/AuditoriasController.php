@@ -161,7 +161,9 @@ class AuditoriasController extends Controller {
                     'local.direccion.comuna.provincia.region',
                     'auditor'
                 ])->find($auditoria->idAuditoria);
-                $auditoria['ultimoInventario'] = Locales::find($auditoria['idLocal'])->ultimoInventario();
+                // agregar si existe, un inventario que haya sido realizado en el mismo local, el mismo mes
+                $auditoria['inventarioEnELMismoMes'] = Locales::find($auditoria['idLocal'])
+                    ->inventarioRealizadoEn($auditoria['fechaProgramada']);
 
                 return response()->json($auditoria, 200);
             }else{
@@ -201,7 +203,9 @@ class AuditoriasController extends Controller {
 
         // agregra a la consulta, el ultimo inventario asociado al local de la auditoria
         $auditoriasConInventario = array_map(function ($auditoria) {
-            $auditoria['ultimoInventario'] = Locales::find($auditoria['idLocal'])->ultimoInventario();
+            // agregar si existe, un inventario que haya sido realizado en el mismo local, el mismo mes
+            $auditoria['inventarioEnELMismoMes'] = Locales::find($auditoria['idLocal'])
+                ->inventarioRealizadoEn($auditoria['fechaProgramada']);
             return $auditoria;
         }, $auditorias);
 
