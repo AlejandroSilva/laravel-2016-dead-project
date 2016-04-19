@@ -56,6 +56,11 @@ class PersonalController extends Controller {
         return response()->json($usuario, 200);
     }
 
+    // PUT api/usuario/{idUsuario}
+    public function api_actualizar($idUsuario){
+        return response()->json(['msg'=>'por implementar'], 501);
+    }
+
     public function api_getRolesUsuario($idUsuario){
         $usuario = User::find($idUsuario);
         if($usuario){

@@ -215,6 +215,35 @@ class AuditoriasController extends Controller {
         return response()->json($auditoriasConInventario, 200);
     }
 
+
+    /**
+     * ##########################################################
+     * API DE INTERACCION CON LA OTRA PLATAFORMA
+     * ##########################################################
+     */
+    // POST api/auditoria/cliente/{idCliente}/numeroLocal/{CECO}/fecha/{fecha}/informarRealizado
+    function api_informarRealizado($idCliente, $ceco, $fecha){
+        // Buscar el Local (por idCliente y CECO)
+        $local = Locales::where('idCliente', '=', $idCliente)
+            ->where('numero', '=', $ceco)
+            ->first();
+        if($local){
+            // Buscar la auditoria (por fecha)
+            $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)->first();
+            if($auditoria){
+                $auditoria->realizada = true;
+                $auditoria->save();
+                return response()->json(Auditorias::find($auditoria->idAuditoria), 200);
+            }else{
+                // auditoria con esa fecha no existe
+                return response()->json(['msg'=>'no existe una auditoria con esa fecha para este local'], 404);
+            }
+        }else{
+            // local de ese usuario, con ese ceco no existe
+            return response()->json(['msg'=>'no existe un local con este numero para este cliente'], 404);
+        }
+    }
+
     /**
      * ##########################################################
      * Descarga de documentos
