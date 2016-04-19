@@ -26,7 +26,7 @@ class Locales extends Model{
         //return $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\Direcciones', 'idLocal', 'idLocal');
     }
-
+    
     public function inventarios(){
         //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
         return $this->hasMany('App\Inventarios', 'idLocal', 'idLocal');
@@ -73,5 +73,14 @@ class Locales extends Model{
         $stock = $this->stock;
 
         return round($stock/$producion);
+    }
+
+//    public function ultimoInventario(){
+    public function inventarioRealizadoEn($annoMesDia){
+        $fecha = explode('-', $annoMesDia);
+        return Inventarios::where('idLocal', '=', $this->idLocal)
+            ->whereRaw("extract(year from fechaProgramada) = ?", [$fecha[0]])
+            ->whereRaw("extract(month from fechaProgramada) = ?", [$fecha[1]])
+            ->first();
     }
 }

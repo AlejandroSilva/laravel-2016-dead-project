@@ -273,9 +273,9 @@ class ProgramacionIGSemanal extends React.Component {
                 </div>
                 
                 <a className="btn btn-success btn-xs pull-right"
-                   href={`/pdf/inventarios/${fechaInicial}/al/${fechaFinal}/cliente/${this.state.idCliente}`}
-                   disabled
-                >Exportar a Excel</a>
+                   href={`/pdf/inventarios/${fechaInicial}/al/${fechaFinal}/cliente/${this.state.idCliente}`}>
+                    Exportar a Excel
+                </a>
                 
                 <TablaSemanal
                     ordenarInventarios={this.ordenarInventarios.bind(this)}
