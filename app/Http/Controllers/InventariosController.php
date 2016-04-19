@@ -450,15 +450,15 @@ class InventariosController extends Controller {
         $sheet->getColumnDimension('I')->setWidth(15);
         $sheet->getColumnDimension('J')->setWidth(40);
         $sheet->getColumnDimension('A')->setWidth(12.5);
-        $sheet->getColumnDimension('B')->setWidth(12);
+        $sheet->getColumnDimension('B')->setWidth(13);
         $sheet->getColumnDimension('D')->setWidth(17);
         $sheet->getColumnDimension('F')->setWidth(15);
         $sheet->getColumnDimension('G')->setWidth(12.5);
         $sheet->getColumnDimension('H')->setWidth(15);
 
         // agregar datos
-        $sheet->setCellValue('A2', 'Rango fecha');
-        $sheet->setCellValue('B2', $annoMesDia1);
+        $sheet->setCellValue('A2', 'Rango fecha:');
+        $sheet->setCellValue('B2', "$annoMesDia1 al ");
         $sheet->setCellValue('C2', $annoMesDia2);
         $sheet->setCellValue('F1', 'Generado el:');
         $sheet->setCellValue('G1', $hora);
