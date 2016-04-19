@@ -106,7 +106,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::delete('{idAuditoria}',  'AuditoriasController@api_eliminar');
         Route::get('mes/{annoMesDia}/cliente/{idCliente}',      'AuditoriasController@api_getPorMesYCliente');
         Route::get('{fecha1}/al/{fecha2}/cliente/{idCliente}',  'AuditoriasController@api_getPorRangoYCliente');
-        Route::get('/cliente/{idCliente}/numeroLocal/{CECO}/fecha/{fecha}/informarRealizado', 'AuditoriasController@api_informarRealizado');
+        Route::put('/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informarRealizado', 'AuditoriasController@api_informarRealizado');
     });
 
     /*
@@ -115,12 +115,17 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
     Route::group(['prefix' => 'personal', 'middleware' => ['auth']], function() {
-        Route::get('lista',             'PersonalController@show_listaPersonal')->name('personal.lista');
         Route::get('nuevo',             'PersonalController@show_formulario')->name('personal.nuevo');
-        Route::post('nuevo',            'PersonalController@show_postFormulario');
     });
-    // API PERSONAL
+    // API USUARIOS
+    Route::group(['prefix' => 'api/usuario'], function(){
+        Route::get('listado',           'PersonalController@api_getUsuarios')->name('per');
+        Route::post('nuevo',            'PersonalController@api_crear');
+        Route::put('{idUsuario}',       'PersonalController@api_actualizar');
+    });
+
     Route::group(['prefix' => 'api/personal'], function(){
+        // TODO: MOVER API/PERSONAL a API/USUARIO
         // RUTAS UTILIZADAS POR LA OTRA APLICACION
         Route::get('{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
     });
