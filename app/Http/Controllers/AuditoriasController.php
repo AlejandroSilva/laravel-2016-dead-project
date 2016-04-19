@@ -156,13 +156,14 @@ class AuditoriasController extends Controller {
 
             if($resultado) {
                 // mostrar el dato tal cual como esta en la BD
-                return response()->json(
-                    Auditorias::with([
-                        'local.cliente',
-                        'local.direccion.comuna.provincia.region',
-                        'auditor'
-                    ])->find($auditoria->idAuditoria),
-                    200);
+                $auditoria = Auditorias::with([
+                    'local.cliente',
+                    'local.direccion.comuna.provincia.region',
+                    'auditor'
+                ])->find($auditoria->idAuditoria);
+                $auditoria['ultimoInventario'] = Locales::find($auditoria['idLocal'])->ultimoInventario();
+
+                return response()->json($auditoria, 200);
             }else{
                 return response()->json([
                     'request'=>$request->all(),
@@ -285,7 +286,12 @@ class AuditoriasController extends Controller {
         $anno = $fecha[0];
         $mes = $fecha[1];
 
-        $query = Auditorias::with(['local.cliente', 'local.direccion.comuna.provincia.region', 'auditor'])->whereRaw("extract(year from fechaProgramada) = ?", [$anno])->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
+        $query = Auditorias::with([
+            'local.cliente',
+            'local.direccion.comuna.provincia.region',
+            'auditor'])
+            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
 
         if ($idCliente != 0) {
             // si el cliente no es "Todos" (0), hacer un filtro por cliente
