@@ -3,11 +3,8 @@
     <title>Oportunidad - @yield('title')</title>
     <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
-    {{-- Styles --}}
-    <link rel='stylesheet' href='/vendor/bootstrap/bootstrap.min.css'>
     {{--<link rel='stylesheet' href='/vendor/react-widgets/react-widgets.min.css'>--}}
     {{--<link rel='stylesheet' href='/css/styles.css'>--}}
-    <link rel='stylesheet' href='/css/frontEnd.css'>
     <style>
         body {
             padding-top: 70px;
@@ -49,3 +46,6 @@
     <script src="/vendor/bootstrap/bootstrap.min.js"></script>
 </body>
 </html>
+{{-- Styles en esta seccion hacen que se haga render mas rapido en la pagina --}}
+<link rel='stylesheet' href='/vendor/bootstrap/bootstrap.min.css'>
+<link rel='stylesheet' href='/css/frontEnd.css'>
