@@ -128,7 +128,7 @@ class InventariosController extends Controller {
 
             $inventario = new Inventarios();
             $inventario->idLocal = $request->idLocal;
-            // asignar la jornada entregada por parametros, o la que tenga por defecto el local 
+            // asignar la jornada entregada por parametros, o la que tenga por defecto el local
             if($request->idJornada) {
                 $inventario->idJornada = $request->idJornada;
             }else{
@@ -274,38 +274,14 @@ class InventariosController extends Controller {
 
     // GET api/inventario/mes/{annoMesDia}
     function api_getPorMesYCliente($annoMesDia, $idCliente){
-        $fecha = explode('-', $annoMesDia);
-        $anno = $fecha[0];
-        $mes  = $fecha[1];
+        $inventarios = $this->inventarioPorMesYCliente($annoMesDia, $idCliente);
+        return response()->json($inventarios, 200);
+    }
 
-        $query = Inventarios::with([
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region',
-            'nominaDia',
-            'nominaNoche',
-            'nominaDia.lider',
-            'nominaNoche.lider',
-            'nominaDia.captador',
-            'nominaNoche.captador',
-        ])
-            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
-
-        if($idCliente==0){
-            // No se realiza un filtro por clientes
-            $inventarios = $query->get();
-            return response()->json($inventarios->toArray(), 200);
-        }
-        else{
-            // Se filtran por cliente
-            $inventarios = $query
-                ->whereHas('local', function($query) use ($idCliente){
-                    $query->where('idCliente', '=', $idCliente);
-                })
-                ->get();
-            return json_encode($inventarios->toArray());
-        }
+    // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}
+    function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
+        $inventarios = $this->getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
+        return response()->json($inventarios, 200);
     }
 
     // GET api/inventario/{fecha1}/al/{fecha2}
@@ -339,8 +315,225 @@ class InventariosController extends Controller {
         return response()->json($inventariosMod, 200);
     }
 
-    // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}
-    function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
+    /**
+     * ##########################################################
+     * Descarga de documentos
+     * ##########################################################
+     */
+
+    // GET /pdf/inventarios/{mes}/cliente/{idCliente}
+    public function descargarPDF_porMes($annoMesDia, $idCliente){
+        //Se utiliza funcion privada que recorre inventarios por mes y dia
+        $inventarios = $this->inventarioPorMesYCliente($annoMesDia, $idCliente);
+        $cliente = Clientes::find($idCliente);
+
+        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha stock', 'Dotación Total', 'Dirección'];
+        $inventariosArray = array_map(function($inventario){
+            return [
+                $inventario['fechaProgramada'],
+                $inventario['local']['cliente']['nombreCorto'],
+                $inventario['local']['numero'],
+                $inventario['local']['nombre'],
+                $inventario['local']['direccion']['comuna']['provincia']['region']['numero'],
+                $inventario['local']['direccion']['comuna']['nombre'],
+                $inventario['local']['stock'],
+                $inventario['fechaStock'],
+                $inventario['dotacionAsignadaTotal'],
+                $inventario['local']['direccion']['direccion']
+            ];
+        }, $inventarios);
+
+        // Nuevo archivo
+        $workbook = new PHPExcel();  // workbook
+        $sheet = $workbook->getActiveSheet();
+        $styleArray = array(
+            'font'  => array(
+                'bold'  => true,
+                'color' => array('rgb' => '000000'),
+                'size'  => 12,
+                'name'  => 'Verdana'
+            )
+        );
+        $hora = date('d/m/Y h:i:s A',time()-10800);
+
+        $sheet->getStyle('A4:B4')->applyFromArray($styleArray);
+        $sheet->getStyle('C4:D4')->applyFromArray($styleArray);
+        $sheet->getStyle('E4:F4')->applyFromArray($styleArray);
+        $sheet->getStyle('G4:H4')->applyFromArray($styleArray);
+        $sheet->getStyle('I4:J4')->applyFromArray($styleArray);
+        $sheet->getColumnDimension('A')->setWidth(12.5);
+        $sheet->getColumnDimension('D')->setWidth(17);
+        $sheet->getColumnDimension('F')->setWidth(15);
+        $sheet->getColumnDimension('G')->setWidth(12.5);
+        $sheet->getColumnDimension('H')->setWidth(15);
+        $sheet->getColumnDimension('I')->setWidth(15);
+        $sheet->getColumnDimension('J')->setWidth(40);
+
+        // agregar datos
+        $sheet->setCellValue('A1', 'Programación mensual');
+        $sheet->setCellValue('A2', 'Mes:');
+        $sheet->setCellValue('B2', $annoMesDia);
+        $sheet->setCellValue('F1', 'Generado el:');
+        $sheet->setCellValue('G1', $hora);
+        $sheet->fromArray($inventariosHeader, NULL, 'A4');
+        $sheet->fromArray($inventariosArray,  NULL, 'A5');
+
+        if(!$cliente){
+            $sheet->setCellValue('A1', 'Cliente:');
+            $sheet->setCellValue('B1', 'Todos');
+
+            // guardar
+            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $excelWritter->save($randomFileName);
+
+            // entregar la descarga al usuario
+            return response()->download($randomFileName, "programacion $annoMesDia.xlsx");
+
+        }else{
+            $sheet->setCellValue('A1', 'Cliente:');
+            //obtener nombre cliente
+            $sheet->setCellValue('B1', $cliente->nombre);
+
+            // guardar
+            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $excelWritter->save($randomFileName);
+
+            // entregar la descarga al usuario
+            return response()->download($randomFileName, "programacion $cliente->nombre-$annoMesDia.xlsx");
+        }
+    }
+
+    // GET /pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}
+    public function descargarPDF_porRango($annoMesDia1, $annoMesDia2, $idCliente){
+        //Se utiliza funcion privada que recorre inventarios por fecha inicio-final y por idCliente
+        $inventarios = $this-> getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
+        $cliente = Clientes::find($idCliente);
+
+        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha Stock', 'Dotación Total', 'Dirección'];
+        $inventariosArray = array_map(function($inventario){
+            return [
+                $inventario['fechaProgramada'],
+                $inventario['local']['cliente']['nombreCorto'],
+                $inventario['local']['numero'],
+                $inventario['local']['nombre'],
+                $inventario['local']['direccion']['comuna']['provincia']['region']['numero'],
+                $inventario['local']['direccion']['comuna']['nombre'],
+                $inventario['local']['stock'],
+                $inventario['fechaStock'],
+                $inventario['dotacionAsignadaTotal'],
+                $inventario['local']['direccion']['direccion']
+
+            ];
+        }, $inventarios);
+
+        // Nuevo archivo
+        $workbook = new PHPExcel();  // workbook
+        $sheet = $workbook->getActiveSheet();
+        $styleArray = array(
+            'font'  => array(
+                'bold'  => true,
+                'color' => array('rgb' => '000000'),
+                'size'  => 12,
+                'name'  => 'Verdana'
+            )
+        );
+
+        $hora = date('d/m/Y h:i:s A',time()-10800);
+        //aplicando estilos
+        $sheet->getStyle('A4:B4')->applyFromArray($styleArray);
+        $sheet->getStyle('C4:D4')->applyFromArray($styleArray);
+        $sheet->getStyle('E4:F4')->applyFromArray($styleArray);
+        $sheet->getStyle('G4:H4')->applyFromArray($styleArray);
+        $sheet->getStyle('I4:J4')->applyFromArray($styleArray);
+        $sheet->getColumnDimension('I')->setWidth(15);
+        $sheet->getColumnDimension('J')->setWidth(40);
+        $sheet->getColumnDimension('A')->setWidth(12.5);
+        $sheet->getColumnDimension('B')->setWidth(12);
+        $sheet->getColumnDimension('D')->setWidth(17);
+        $sheet->getColumnDimension('F')->setWidth(15);
+        $sheet->getColumnDimension('G')->setWidth(12.5);
+        $sheet->getColumnDimension('H')->setWidth(15);
+
+        // agregar datos
+        $sheet->setCellValue('A2', 'Rango fecha');
+        $sheet->setCellValue('B2', $annoMesDia1);
+        $sheet->setCellValue('C2', $annoMesDia2);
+        $sheet->setCellValue('F1', 'Generado el:');
+        $sheet->setCellValue('G1', $hora);
+        $sheet->fromArray($inventariosHeader, NULL, 'A4');
+        $sheet->fromArray($inventariosArray,  NULL, 'A5');
+
+        if(!$cliente){
+            $sheet->setCellValue('A1', 'Cliente:');
+            $sheet->setCellValue('B1', 'Todos');
+
+            // guardar
+            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $excelWritter->save($randomFileName);
+
+            // entregar la descarga al usuario
+            return response()->download($randomFileName, "programacion $annoMesDia1.xlsx");
+
+        }else{
+            $sheet->setCellValue('A1', 'Cliente:');
+            //obtener nombre cliente
+            $sheet->setCellValue('B1', $cliente->nombre);
+
+            // guardar
+            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $excelWritter->save($randomFileName);
+
+            // entregar la descarga al usuario
+            return response()->download($randomFileName, "programacion $cliente->nombre-$annoMesDia1.xlsx");
+        }
+    }
+
+    /**
+     * ##########################################################
+     * funciones privadas
+     * ##########################################################
+     */
+
+    //función filtra por mes y cliente
+    private function inventarioPorMesYCliente($annoMesDia, $idCliente){
+        $fecha = explode('-', $annoMesDia);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+
+        $query = Inventarios::with([
+            'local.cliente',
+            'local.formatoLocal',
+            'local.direccion.comuna.provincia.region',
+            'nominaDia',
+            'nominaNoche',
+            'nominaDia.lider',
+            'nominaNoche.lider',
+            'nominaDia.captador',
+            'nominaNoche.captador'
+        ])
+            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+            ->orderBy('fechaProgramada', 'asc');
+
+        if($idCliente==0){
+            // No se realiza un filtro por clientes
+            return $query->get()->toArray();
+        }
+        else {
+            $query->whereHas('local', function($query) use ($idCliente){
+                $query->where('idCliente', '=', $idCliente);
+            });
+            return $query->get()->toArray();
+        }
+    }
+
+    //función filtra por rango de fecha y cliente
+    private function getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
+
         $query = Inventarios::with([
             'local.cliente',
             'local.formatoLocal',
@@ -359,80 +552,16 @@ class InventariosController extends Controller {
         if($idCliente==0){
             // No se realiza un filtro por clientes
             $inventarios = $query->get();
-            return response()->json($inventarios->toArray(), 200);
+            return $query->get()->toArray();
         }
         else{
             // Se filtran por cliente
-            $inventarios = $query
+            $query
                 ->whereHas('local', function($query) use ($idCliente){
                     $query->where('idCliente', '=', $idCliente);
                 })
                 ->get();
-            return json_encode($inventarios->toArray());
+            return $query->get()->toArray();
         }
-    }
-
-
-    /**
-     * ##########################################################
-     * Descarga de documentos
-     * ##########################################################
-     */
-    // GET /pdf/inventarios/{mes}/cliente/{idCliente}
-    public function descargarPDF_porMes($annoMesDia, $idCliente){
-        $fecha = explode('-', $annoMesDia);
-        $anno = $fecha[0];
-        $mes  = $fecha[1];
-
-        // inventarios que se desean mostrar
-        $inventarios = Inventarios::with([
-            //'local',
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region',
-            'nominaDia',
-            'nominaNoche'
-        ])
-            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
-            ->join('locales', 'locales.idLocal', '=', 'inventarios.idLocal')
-            ->orderBy('fechaProgramada', 'ASC')
-            ->orderBy('locales.stock', 'DESC')
-            ->get();
-
-        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Dotación Total'];
-        $inventariosArray = array_map(function($inventario){
-            return [
-                $inventario['fechaProgramada'],
-                $inventario['local']['cliente']['nombreCorto'],
-                $inventario['local']['numero'],
-                $inventario['local']['nombre'],
-                $inventario['local']['direccion']['comuna']['provincia']['region']['numero'],
-                $inventario['local']['direccion']['comuna']['nombre'],
-                $inventario['local']['stock'],
-                $inventario['dotacionAsignadaTotal'],
-            ];
-        }, $inventarios->toArray());
-
-        // Nuevo archivo
-        $workbook = new PHPExcel();  // workbook
-        $sheet = $workbook->getActiveSheet();
-        // agregar datos
-        $sheet->setCellValue('A1', 'Programación mensual');
-        $sheet->fromArray($inventariosHeader, NULL, 'A4');
-        $sheet->fromArray($inventariosArray,  NULL, 'A5');
-
-        // guardar
-        $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-        $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
-        $excelWritter->save($randomFileName);
-
-        // entregar la descarga al usuario
-        return response()->download($randomFileName, "programacion $annoMesDia.xlsx");
-    }
-
-    // GET /pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}
-    public function descargarPDF_porRango($fechaInicial, $fechaFinal, $idCliente){
-        return response()->json(['msg'=>'no implementado'], 501);
     }
 }
