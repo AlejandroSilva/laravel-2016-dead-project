@@ -11,13 +11,12 @@ use App\User;
 use Auth;
 
 class PersonalController extends Controller {
-    // GET personal/lista
-    function show_listaPersonal(){
+
+    // GET api/usuarios
+    function api_getUsuarios(){
         // todo buscar lista de personal
         $personal = User::all();
-        return view('operacional.personal.lista',[
-            'personal'=>$personal
-        ]);
+        return response()->json($personal, 200);
     }
 
     // GET personal/nuevo
@@ -54,7 +53,7 @@ class PersonalController extends Controller {
         ]);
         
         $usuario->attachRole(4);   // operador por defecto
-        return view('operacional.personal.usuarios', ['mensaje'=>'Creado correctamente'] );
+        return response()->json($usuario, 200);
     }
 
     public function api_getRolesUsuario($idUsuario){
