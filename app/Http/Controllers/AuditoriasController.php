@@ -140,9 +140,11 @@ class AuditoriasController extends Controller {
         $auditoria = Auditorias::find($idAuditoria);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
         if($auditoria){
-            if(isset($request->fechaProgramada))
-                $auditoria->fechaProgramada = $request->fechaProgramada;
-            
+            // actualizar fecha siempre y cuando sea valida dependiendo el mes
+            if(isset($request->fechaProgramada)) {
+                if ($this->fecha_valida($request->fechaProgramada)) 
+                    $auditoria->fechaProgramada = $request->fechaProgramada;
+            }
             // actualizar auditor
             if(isset($request->idAuditor))
                 $auditoria->idAuditor = $request->idAuditor==0? null: $request->idAuditor;
@@ -309,5 +311,15 @@ class AuditoriasController extends Controller {
     // GET /pdf/auditorias/{fechaInicial}/al{fechaFinal}/cliente/{idCliente}
     function descargarPDF_porRango($fechaInicial, $fechaFinal, $idCliente){
         return response()->json(['msg'=>'no implementado'], 501);
+    }
+    
+    // Function para validar que la fecha entregada sea valida
+    private function fecha_valida($fechaProgramada){
+        $fecha = explode('-', $fechaProgramada);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+        $dia = $fecha[2];
+
+        return checkdate($mes,$dia,$anno);
     }
 }

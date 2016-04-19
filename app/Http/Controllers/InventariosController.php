@@ -191,7 +191,8 @@ class InventariosController extends Controller {
     }
 
     // GET api/inventario/{idInventario}
-    function api_get($idInventario){
+    function api_get($idInventario)
+    {
         $inventario = Inventarios::with([
             'local.cliente',
             'local.formatoLocal',
@@ -203,9 +204,9 @@ class InventariosController extends Controller {
             'nominaDia.captador',
             'nominaNoche.captador',
         ])->find($idInventario);
-        if($inventario){
+        if ($inventario) {
             return response()->json($inventario, 200);
-        }else{
+        } else {
             return response()->json([], 404);
         }
     }
@@ -215,8 +216,11 @@ class InventariosController extends Controller {
         $inventario = Inventarios::find($idInventario);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
         if($inventario){
-            if(isset($request->fechaProgramada))
-                $inventario->fechaProgramada = $request->fechaProgramada;
+            // actualizar fecha siempre y cuando sea valida dependiendo el mes
+            if(isset($request->fechaProgramada)){
+                if($this->fecha_valida($request->fechaProgramada))
+                    $inventario->fechaProgramada = $request->fechaProgramada;
+            }
             if(isset($request->dotacionAsignadaTotal))
                 $inventario->dotacionAsignadaTotal = $request->dotacionAsignadaTotal;
             if(isset($request->idJornada))
@@ -563,5 +567,15 @@ class InventariosController extends Controller {
                 ->get();
             return $query->get()->toArray();
         }
+    }
+
+    //Function para validar que la fecha sea valida
+    private function fecha_valida($fechaProgramada){
+        $fecha = explode('-', $fechaProgramada);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+        $dia = $fecha[2];
+
+        return checkdate($mes,$dia,$anno);
     }
 }
