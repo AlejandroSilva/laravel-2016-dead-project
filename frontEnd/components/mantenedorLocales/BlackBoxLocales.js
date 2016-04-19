@@ -1,5 +1,3 @@
-//import R from 'ramda'
-
 export default class BlackBoxLocales{
     constructor(){
         this.lista = []
