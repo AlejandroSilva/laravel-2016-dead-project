@@ -7,7 +7,7 @@ module.exports = {
         './frontEnd/boot-client.jsx'
     ],
     output: {
-        path:     './public',
+        path:     './public/app',
         filename: 'bundle.js'
     },
     module: {
@@ -23,6 +23,6 @@ module.exports = {
     },
     plugins: [
         //new webpack.optimize.UglifyJsPlugin(),
-        new ExtractTextPlugin('css/frontEnd.css', { allChunks: true })
+        new ExtractTextPlugin('frontEnd.css', { allChunks: true })
     ]
 }
