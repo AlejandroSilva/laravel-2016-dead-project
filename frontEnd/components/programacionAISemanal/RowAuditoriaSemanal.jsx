@@ -76,6 +76,19 @@ class RowAuditoriaSemanal extends React.Component{
         const opcionesAuditores = this.props.auditores.map(usuario=>{
             return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
         })
+        // SOLUCION TEMPORAL....
+        let fechaUltimoInventarioLocal = ''
+        if(this.props.auditoria.ultimoInventario!==null){
+            let momentFecha = moment(this.props.auditoria.ultimoInventario.fechaProgramada)
+            if(momentFecha.isValid()){
+                fechaUltimoInventarioLocal = 'Ultimo Inventario: '+momentFecha.format('DD-MM-YYYY')
+            }else {
+                let [anno, mes, dia] = this.props.auditoria.ultimoInventario.fechaProgramada.split('-')
+                fechaUltimoInventarioLocal = `Ultimo Inventario: 00-${mes}-${anno}`
+            }
+        }else{
+            fechaUltimoInventarioLocal = 'sin inventario asociado'
+        }
         return (
             <tr className={this.props.mostrarSeparador? css.trSeparador: ''}>
                 {/* Correlativo */}
@@ -99,7 +112,15 @@ class RowAuditoriaSemanal extends React.Component{
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
-                    <p><small><b>{this.props.auditoria.local.numero}</b></small></p>
+                    <OverlayTrigger
+                        placement="right"
+                        delay={0}
+                        overlay={<Tooltip id="yyy">
+                        {fechaUltimoInventarioLocal}</Tooltip>}>
+                        <p>
+                            <small><b>{this.props.auditoria.local.numero}</b></small>
+                        </p>
+                    </OverlayTrigger>
                 </td>
                 {/* Region */}
                 <td className={css.tdRegion}>

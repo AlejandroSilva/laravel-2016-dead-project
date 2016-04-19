@@ -274,13 +274,13 @@ class InventariosController extends Controller {
 
     // GET api/inventario/mes/{annoMesDia}
     function api_getPorMesYCliente($annoMesDia, $idCliente){
-        $inventarios = $this->inventarioPorMesYCliente($annoMesDia, $idCliente);
+        $inventarios = $this->inventariosPorMesYCliente($annoMesDia, $idCliente);
         return response()->json($inventarios, 200);
     }
 
     // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}
     function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
-        $inventarios = $this->getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
+        $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
         return response()->json($inventarios, 200);
     }
 
@@ -324,7 +324,7 @@ class InventariosController extends Controller {
     // GET /pdf/inventarios/{mes}/cliente/{idCliente}
     public function descargarPDF_porMes($annoMesDia, $idCliente){
         //Se utiliza funcion privada que recorre inventarios por mes y dia
-        $inventarios = $this->inventarioPorMesYCliente($annoMesDia, $idCliente);
+        $inventarios = $this->inventariosPorMesYCliente($annoMesDia, $idCliente);
         $cliente = Clientes::find($idCliente);
 
         $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha stock', 'Dotación Total', 'Dirección'];
@@ -408,7 +408,7 @@ class InventariosController extends Controller {
     // GET /pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}
     public function descargarPDF_porRango($annoMesDia1, $annoMesDia2, $idCliente){
         //Se utiliza funcion privada que recorre inventarios por fecha inicio-final y por idCliente
-        $inventarios = $this-> getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
+        $inventarios = $this-> inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
         $cliente = Clientes::find($idCliente);
 
         $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha Stock', 'Dotación Total', 'Dirección'];
@@ -499,7 +499,7 @@ class InventariosController extends Controller {
      */
 
     //función filtra por mes y cliente
-    private function inventarioPorMesYCliente($annoMesDia, $idCliente){
+    private function inventariosPorMesYCliente($annoMesDia, $idCliente){
         $fecha = explode('-', $annoMesDia);
         $anno = $fecha[0];
         $mes  = $fecha[1];
@@ -519,21 +519,16 @@ class InventariosController extends Controller {
             ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
             ->orderBy('fechaProgramada', 'asc');
 
-        if($idCliente==0){
-            // No se realiza un filtro por clientes
-            return $query->get()->toArray();
-        }
-        else {
-            $query->whereHas('local', function($query) use ($idCliente){
-                $query->where('idCliente', '=', $idCliente);
+        if($idCliente!=0) {
+            $query->whereHas('local', function($q) use ($idCliente) {
+                $q->where('idCliente', '=', $idCliente);
             });
-            return $query->get()->toArray();
         }
+        return $query->get()->toArray();
     }
 
     //función filtra por rango de fecha y cliente
-    private function getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
-
+    private function inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
         $query = Inventarios::with([
             'local.cliente',
             'local.formatoLocal',
@@ -549,19 +544,12 @@ class InventariosController extends Controller {
             ->where('fechaProgramada', '<=', $annoMesDia2)
             ->orderBy('fechaProgramada', 'asc');
 
-        if($idCliente==0){
-            // No se realiza un filtro por clientes
-            $inventarios = $query->get();
-            return $query->get()->toArray();
-        }
-        else{
+        if($idCliente!=0) {
             // Se filtran por cliente
-            $query
-                ->whereHas('local', function($query) use ($idCliente){
-                    $query->where('idCliente', '=', $idCliente);
-                })
-                ->get();
-            return $query->get()->toArray();
+            $query->whereHas('local', function ($q) use ($idCliente) {
+                $q->where('idCliente', '=', $idCliente);
+            });
         }
+        return $query->get()->toArray();
     }
 }

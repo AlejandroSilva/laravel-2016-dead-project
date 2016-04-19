@@ -38,7 +38,6 @@ class AuditoriasController extends Controller {
         if(!$user || !$user->can('programaAuditorias_ver'))
             return view('errors.403');
 
-
         // Array de Clientes
         $clientesWithLocales = Clientes::allWithSimpleLocales();
         // Array Auditores
@@ -66,7 +65,7 @@ class AuditoriasController extends Controller {
         $minymax = $select[0];
 
         // Array de Clientes
-        $clientes  = Clientes::all();
+        $clientes = Clientes::all();
         // Array Auditores
         $rolAuditor = Role::where('name', 'Auditor')->first();
         $auditores = $rolAuditor!=null? $rolAuditor->users : '[]';
@@ -88,7 +87,7 @@ class AuditoriasController extends Controller {
      */
 
     // POST api/auditoria/nuevo
-    function api_nuevo(Request $request){
+    function api_nuevo(Request $request) {
         $validator = Validator::make($request->all(), [
             // FK
             'idLocal'=> 'required',
@@ -112,9 +111,8 @@ class AuditoriasController extends Controller {
             $auditoria->idLocal = $request->idLocal;
             $auditoria->fechaProgramada = $request->fechaProgramada;
             $auditoria->horaPresentacionAuditor = $local->llegadaSugeridaLiderDia();
-
-
-            $resultado =  $auditoria->save();
+            
+            $resultado = $auditoria->save();
 
             if($resultado){
                 return response()->json(
@@ -136,13 +134,13 @@ class AuditoriasController extends Controller {
     }
 
     // PUT api/auditorias/{idAuditoria}
-    function api_actualizar($idAuditoria, Request $request){
+    function api_actualizar($idAuditoria, Request $request) {
         $auditoria = Auditorias::find($idAuditoria);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
         if($auditoria){
             if(isset($request->fechaProgramada))
                 $auditoria->fechaProgramada = $request->fechaProgramada;
-            
+
             // actualizar auditor
             if(isset($request->idAuditor))
                 $auditoria->idAuditor = $request->idAuditor==0? null: $request->idAuditor;
@@ -153,8 +151,7 @@ class AuditoriasController extends Controller {
             // actualizar hora de presentacion de auditor
             if(isset($request->horaPresentacionAuditor))
                 $auditoria->horaPresentacionAuditor = $request->horaPresentacionAuditor==0? null: $request->horaPresentacionAuditor;
-
-
+            
             $resultado = $auditoria->save();
 
             if($resultado) {
@@ -173,7 +170,7 @@ class AuditoriasController extends Controller {
                     'auditoria'=>$auditoria
                 ], 400);
             }
-        }else{
+        } else {
             return response()->json([], 404);
         }
     }
@@ -192,56 +189,22 @@ class AuditoriasController extends Controller {
     }
 
     // GET api/auditoria/mes/{annoMesDia}/cliente/{idCliente}
-    function api_getPorMesYCliente($annoMesDia, $idCliente){
-        $fecha = explode('-', $annoMesDia);
-        $anno = $fecha[0];
-        $mes  = $fecha[1];
-
-        $query = Auditorias::with([
-            'local.cliente',
-            'local.direccion.comuna.provincia.region',
-            'auditor'
-        ])
-            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
-
-
-        if($idCliente==0){
-            // No se realiza un filtro por clientes
-            return response()->json($query->get()->toArray(), 200);
-        }else{
-            $query->whereHas('local', function($query) use ($idCliente){
-                $query->where('idCliente', '=', $idCliente);
-            });
-            return response()->json($query->get()->toArray(), 200);
-        }
+    function api_getPorMesYCliente($annoMesDia, $idCliente) {
+        $auditorias = $this->buscarPorMesYCliente($annoMesDia, $idCliente);
+        return response()->json($auditorias, 200);
     }
 
     // GET api/auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}
-    function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
-        $query = Auditorias::with([
-            'local.cliente',
-            'local.direccion.comuna.provincia.region',
-            'auditor'
-        ])
-            ->where('fechaProgramada', '>=', $annoMesDia1)
-            ->where('fechaProgramada', '<=', $annoMesDia2);
+    function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente) {
+        $auditorias = $this->buscarPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
 
-        if($idCliente==0){
-            // No se realiza un filtro por clientes
-            $auditorias = $query->get();
-            return response()->json($auditorias->toArray(), 200);
-        }
-        else{
-            // Se filtran por cliente
-            $auditorias = $query
-                ->whereHas('local', function($query) use ($idCliente){
-                    $query->where('idCliente', '=', $idCliente);
-                })
-                ->get();
+        // agregra a la consulta, el ultimo inventario asociado al local de la auditoria
+        $auditoriasConInventario = array_map(function ($auditoria) {
+            $auditoria['ultimoInventario'] = Locales::find($auditoria['idLocal'])->ultimoInventario();
+            return $auditoria;
+        }, $auditorias);
 
-            return json_encode($auditorias->toArray());
-        }
+        return response()->json($auditoriasConInventario, 200);
     }
 
     /**
@@ -309,5 +272,45 @@ class AuditoriasController extends Controller {
     // GET /pdf/auditorias/{fechaInicial}/al{fechaFinal}/cliente/{idCliente}
     function descargarPDF_porRango($fechaInicial, $fechaFinal, $idCliente){
         return response()->json(['msg'=>'no implementado'], 501);
+    }
+
+    /**
+     * ##########################################################
+     * funciones privadas
+     * ##########################################################
+     */
+
+    private function buscarPorMesYCliente($annoMesDia, $idCliente) {
+        $fecha = explode('-', $annoMesDia);
+        $anno = $fecha[0];
+        $mes = $fecha[1];
+
+        $query = Auditorias::with(['local.cliente', 'local.direccion.comuna.provincia.region', 'auditor'])->whereRaw("extract(year from fechaProgramada) = ?", [$anno])->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
+
+        if ($idCliente != 0) {
+            // si el cliente no es "Todos" (0), hacer un filtro por cliente
+            $query->whereHas('local', function ($query) use ($idCliente) {
+                $query->where('idCliente', '=', $idCliente);
+            });
+        }
+        return $query->get()->toArray();
+    }
+
+    private function buscarPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente) {
+        $query = Auditorias::with([
+            'local.cliente',
+            'local.direccion.comuna.provincia.region',
+            'auditor'
+        ])
+            ->where('fechaProgramada', '>=', $annoMesDia1)
+            ->where('fechaProgramada', '<=', $annoMesDia2);
+
+        if($idCliente!=0){
+            // Se filtran por cliente
+            $query->whereHas('local', function($query) use ($idCliente){
+                $query->where('idCliente', '=', $idCliente);
+            });
+        }
+        return $query->get()->toArray();
     }
 }
