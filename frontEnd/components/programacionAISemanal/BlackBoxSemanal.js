@@ -8,6 +8,7 @@ export default class BlackBoxSemanal{
         this.filtroRegiones = []
         this.filtroComunas = []
         this.filtroRealizadas = []
+        this.filtroRealizadasInformada = []
         this.filtroAprobadas = []
         this.filtroFechas = []
         //this.filtroLocales = []
@@ -18,6 +19,7 @@ export default class BlackBoxSemanal{
         this.filtroRegiones = []
         this.filtroComunas = []
         this.filtroRealizadas = []
+        this.filtroRealizadasInformada = []
         this.filtroAprobadas = []
         this.filtroFechas = []
         //this.filtroLocales = []
@@ -136,6 +138,17 @@ export default class BlackBoxSemanal{
                 return opcion? opcion : {valor: opcionRealizada.valor, texto: opcionRealizada.texto, seleccionado: true}
             })
             .value()
+        // ##### Filtro Realizadas INFORMADAS
+        this.filtroRealizadasInformada = _.chain([
+                {valor: '1', texto: 'Realizada'},
+                {valor: '0', texto: 'Pendiente'}
+            ])
+            .map(opcionRealizada=>{
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroRealizadasInformada, {'valor': opcionRealizada.valor})
+                return opcion? opcion : {valor: opcionRealizada.valor, texto: opcionRealizada.texto, seleccionado: true}
+            })
+            .value()
 
         // ##### Filtro Aprobadas
         this.filtroAprobadas = _.chain([
@@ -178,6 +191,10 @@ export default class BlackBoxSemanal{
                 .filter(auditoria=>{
                     return _.find(this.filtroRealizadas, {'valor': auditoria.realizada, 'seleccionado': true})
                 })
+                // Filtrar por Realizada
+                .filter(auditoria=>{
+                    return _.find(this.filtroRealizadasInformada, {'valor': auditoria.realizadaInformada, 'seleccionado': true})
+                })
                 // Filtrar por Aprobada
                 .filter(auditoria=>{
                     return _.find(this.filtroAprobadas, {'valor': auditoria.aprovada, 'seleccionado': true})
@@ -193,6 +210,7 @@ export default class BlackBoxSemanal{
                 filtroComunas: this.filtroComunas,
                 filtroAuditores: this.filtroAuditores,
                 filtroRealizadas: this.filtroRealizadas,
+                filtroRealizadasInformada: this.filtroRealizadasInformada,
                 filtroAprobadas: this.filtroAprobadas
             }
         }
