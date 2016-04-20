@@ -579,26 +579,28 @@ class InventariosController extends Controller {
         $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, 0);
 
         // quitar todos los inventarios en los que en usuario no es lider
-        return array_filter($inventarios, function($inventario) use ($idUsuario){
+        // TODO: IMPORANTE!! array_filter cambia la estructura de los objectos que recibe
+        $inventariosFiltrados = [];
+        foreach ($inventarios as $inventario) {
             $jornadaInventario = $inventario['idJornada'];
             $liderDia = $inventario['nomina_dia']['idLider'];
             $liderNoche = $inventario['nomina_noche']['idLider'];
 
             // 1="no definido", 2="dia", 3="noche", 4="dia y noche"
-            if($jornadaInventario==2){
+            if ($jornadaInventario == 2 && ($liderDia==$idUsuario)) {
                 // si es "dia", solo puede estar asignado a la nomina de dia
-                return $liderDia==$idUsuario;
-            }else if($jornadaInventario==3){
+                array_push($inventariosFiltrados, $inventario);
+            } else if ($jornadaInventario == 3 && ($liderNoche==$idUsuario)) {
                 // si es "noche", solo puede estar asignado a la nomina de noche
-                return $liderNoche==$idUsuario;
-            }else if($jornadaInventario==4){
+                array_push($inventariosFiltrados, $inventario);
+            } else if ($jornadaInventario == 4 && ( ($liderDia==$idUsuario) || ($liderNoche==$idUsuario) )) {
                 // si la jornada es "dia noche", puede ser lider de cualquiera de las dos nominas
-                return $liderDia==$idUsuario || $liderNoche==$idUsuario;
-            }else{
+                array_push($inventariosFiltrados, $inventario);
+            } else {
                 // si no tiene nominas asignadas, no es lider de ninguna
-                return false;
             }
-        });
+        }
+        return $inventariosFiltrados;
     }
 
     //Function para validar que la fecha sea valida
