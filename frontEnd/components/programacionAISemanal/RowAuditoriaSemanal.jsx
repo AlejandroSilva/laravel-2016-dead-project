@@ -189,6 +189,20 @@ class RowAuditoriaSemanal extends React.Component{
                         opcionNulaSeleccionable={false}
                         puedeModificar={this.props.puedeModificar && this.props.auditoria.realizada==="1"}/>
                 </td>
+                {/* Estado Informado */}
+                <td className={css.tdRealizadaAprobada}>
+                    <Select
+                        ref={ref=>this.selectRealizada=ref}
+                        seleccionada={this.props.auditoria.realizadaInformada}
+                        onSelect={this.guardarAuditoria.bind(this)}
+                        opciones={[
+                            {valor: '0', texto: 'Pendiente'},
+                            {valor: '1', texto: 'Realizada'}
+                        ]}
+                        opcionNula={false}
+                        opcionNulaSeleccionable={false}
+                        puedeModificar={false}/>
+                </td>
                 {/* Hora de Apertura del local */}
                 <td className={css.tdAperturaCierre}>
                     <input type="time"
