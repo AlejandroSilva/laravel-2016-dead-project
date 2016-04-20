@@ -15,6 +15,7 @@ use App\Clientes;
 use App\Inventarios;
 use App\Locales;
 use App\Nominas;
+use App\User;
 // Auth
 use App\Role;
 use Auth;
@@ -281,6 +282,12 @@ class InventariosController extends Controller {
         return response()->json($inventarios, 200);
     }
 
+    /**
+     * ##########################################################
+     * API DE INTERACCION CON LA OTRA PLATAFORMA
+     * ##########################################################
+     */
+    
     // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}
     function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
         $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
@@ -320,8 +327,13 @@ class InventariosController extends Controller {
     }
 
     // GET api/inventario/{fecha1}/al/{fecha2}/lider/{idCliente}
-    function api_getPorRangoYLider($fecha1, $fecha2, $idCliente){
-        return response()->json(['msg'=>'no implementado'], 501);
+    function api_getPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente){
+        if(User::find($idCliente)){
+            $auditorias = $this->buscarPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente);
+            return response()->json($auditorias, 200);
+        }else{
+            return response()->json(['msg'=>'el usuario indicado no existe'], 404);
+        }
     }
     /**
      * ##########################################################
@@ -559,6 +571,34 @@ class InventariosController extends Controller {
             });
         }
         return $query->get()->toArray();
+    }
+
+    //función filtra por rango de fecha y lider
+    private function buscarPorRangoYLider($annoMesDia1, $annoMesDia2, $idUsuario){
+        // obtener todos los inventarios en ese periodo de tiempo
+        $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, 0);
+
+        // quitar todos los inventarios en los que en usuario no es lider
+        return array_filter($inventarios, function($inventario) use ($idUsuario){
+            $jornadaInventario = $inventario['idJornada'];
+            $liderDia = $inventario['nomina_dia']['idLider'];
+            $liderNoche = $inventario['nomina_noche']['idLider'];
+
+            // 1="no definido", 2="dia", 3="noche", 4="dia y noche"
+            if($jornadaInventario==2){
+                // si es "dia", solo puede estar asignado a la nomina de dia
+                return $liderDia==$idUsuario;
+            }else if($jornadaInventario==3){
+                // si es "noche", solo puede estar asignado a la nomina de noche
+                return $liderNoche==$idUsuario;
+            }else if($jornadaInventario==4){
+                // si la jornada es "dia noche", puede ser lider de cualquiera de las dos nominas
+                return $liderDia==$idUsuario || $liderNoche==$idUsuario;
+            }else{
+                // si no tiene nominas asignadas, no es lider de ninguna
+                return false;
+            }
+        });
     }
 
     //Function para validar que la fecha sea valida
