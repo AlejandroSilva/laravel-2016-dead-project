@@ -35,6 +35,9 @@
                                 {{-- PROGRAMACIÓN AUDITORIA INVENTARIO   --}}
                                 @if( Auth::user()->can('programaAuditorias_ver') )
                                     <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('programacionAI')? 'active': '' }}">
+                                        <a href="{{ url('programacionAI') }}">Estado general Auditorias</a>
+                                    </li>
                                     <li class="{{ Request::is('programacionAI/mensual')? 'active': '' }}">
                                         <a href="{{ url('programacionAI/mensual') }}">Programación mensual AI</a>
                                     </li>
