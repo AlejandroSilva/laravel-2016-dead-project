@@ -66,17 +66,6 @@
                                     </li>
                                 @endif
 
-                                {{-- Personal --}}
-                                @if( Auth::user()->hasRole('Administrador') )
-                                    <li role="separator" class="divider"></li>
-                                    <li class="{{ Request::is('personal/lista')? 'active': '' }}">
-                                        <a href="{{ url('personal/lista') }}">Lista de Personal</a>
-                                    </li>
-                                    <li class="{{ Request::is('personal/nuevo')? 'active': '' }}">
-                                        <a href="{{ route('personal.nuevo') }}">Nuevo Personal</a>
-                                    </li>
-                                @endif
-
                                 {{-- Cliente / Locales --}}
                                 @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
