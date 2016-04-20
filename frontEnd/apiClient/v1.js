@@ -33,6 +33,7 @@ export default {
         eliminar: (idInventario)=>{
             return axios.delete(`/api/inventario/${idInventario}`)
         },
+        // ¿¿getPorRango ya no se utiliza??
         getPorRango: (fechaInicio, fechaFin)=>{
             return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}`)
         },

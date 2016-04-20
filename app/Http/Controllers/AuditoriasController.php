@@ -16,6 +16,7 @@ use App\Clientes;
 use App\Inventarios;
 use App\Locales;
 use App\Role;
+use App\User;
 // Permisos
 use Auth;
 
@@ -215,12 +216,22 @@ class AuditoriasController extends Controller {
         return response()->json($auditoriasConInventario, 200);
     }
 
-
     /**
      * ##########################################################
      * API DE INTERACCION CON LA OTRA PLATAFORMA
      * ##########################################################
      */
+
+    // GET api/auditoria/{fecha1}/al/{fecha2}/auditor/{idCliente}
+    function api_getPorRangoYAuditor($annoMesDia1, $annoMesDia2, $idAuditor){
+        if(User::find($idAuditor)){
+            $auditorias = $this->buscarPorRangoYAuditor($annoMesDia1, $annoMesDia2, $idAuditor);
+            return response()->json($auditorias, 200);
+        }else{
+            return response()->json(['msg'=>'el usuario indicado no existe'], 404);
+        }
+    }
+
     // POST api/auditoria/cliente/{idCliente}/numeroLocal/{CECO}/fecha/{fecha}/informarRealizado
     function api_informarRealizado($idCliente, $ceco, $fecha){
         // Buscar el Local (por idCliente y CECO)
@@ -353,6 +364,23 @@ class AuditoriasController extends Controller {
                 $query->where('idCliente', '=', $idCliente);
             });
         }
+        return $query->get()->toArray();
+    }
+
+    private function buscarPorRangoYAuditor($annoMesDia1, $annoMesDia2, $idAuditor){
+        $query = Auditorias::with([
+            'local.cliente',
+            'local.direccion.comuna.provincia.region',
+            'auditor'
+        ])
+            ->where('fechaProgramada', '>=', $annoMesDia1)
+            ->where('fechaProgramada', '<=', $annoMesDia2)
+            // Se filtran por auditor
+            ->whereHas('local', function($q) use ($idAuditor){
+                $q->where('idAuditor', '=', $idAuditor);
+            })
+            ->orderBy('fechaProgramada', 'ASC')
+            ->orderBy('idLocal');
         return $query->get()->toArray();
     }
 

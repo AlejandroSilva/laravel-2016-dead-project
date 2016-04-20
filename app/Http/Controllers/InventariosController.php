@@ -191,8 +191,7 @@ class InventariosController extends Controller {
     }
 
     // GET api/inventario/{idInventario}
-    function api_get($idInventario)
-    {
+    function api_get($idInventario) {
         $inventario = Inventarios::with([
             'local.cliente',
             'local.formatoLocal',
@@ -289,6 +288,7 @@ class InventariosController extends Controller {
     }
 
     // GET api/inventario/{fecha1}/al/{fecha2}
+    // TODO ¿¿getPorRango ya no se utiliza??
     function api_getPorRango($annoMesDia1, $annoMesDia2){
         $inventarios = Inventarios::with([
             'local.cliente',
@@ -319,6 +319,10 @@ class InventariosController extends Controller {
         return response()->json($inventariosMod, 200);
     }
 
+    // GET api/inventario/{fecha1}/al/{fecha2}/lider/{idCliente}
+    function api_getPorRangoYLider($fecha1, $fecha2, $idCliente){
+        return response()->json(['msg'=>'no implementado'], 501);
+    }
     /**
      * ##########################################################
      * Descarga de documentos

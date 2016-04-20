@@ -69,11 +69,10 @@ Route::group(['middleware' => ['web']], function (){
         Route::delete('{idInventario}',      'InventariosController@api_eliminar');
         // buscar inventarios
         Route::get('{annoMesDia}/cliente/{idCliente}',  'InventariosController@api_getPorMesYCliente');
-        Route::get('{fecha1}/al/{fecha2}',              'InventariosController@api_getPorRango');
+        Route::get('{fecha1}/al/{fecha2}',              'InventariosController@api_getPorRango');   // ¿¿getPorRango ya no se utiliza??
         // RUTAS UTILIZADAS POR LA OTRA APLICACION
         Route::get('{fecha1}/al/{fecha2}/cliente/{idCliente}',   'InventariosController@api_getPorRangoYCliente');
 //        Route::get('{fecha1}/al/{fecha2}/lider/{idCliente}',     'InventariosController@api_getPorRangoYLider');
-//        Route::get('{fecha1}/al/{fecha2}/auditor/{idCliente}',   'InventariosController@api_getPorRangoYAuditor');
     });
 
     // API NOMINAS
@@ -106,6 +105,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::delete('{idAuditoria}',  'AuditoriasController@api_eliminar');
         Route::get('mes/{annoMesDia}/cliente/{idCliente}',      'AuditoriasController@api_getPorMesYCliente');
         Route::get('{fecha1}/al/{fecha2}/cliente/{idCliente}',  'AuditoriasController@api_getPorRangoYCliente');
+        // RUTAS UTILIZADAS POR OTRA APLICACION
+        Route::get('{fecha1}/al/{fecha2}/auditor/{idCliente}',  'AuditoriasController@api_getPorRangoYAuditor');
         Route::put('/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informarRealizado', 'AuditoriasController@api_informarRealizado');
     });
 
@@ -122,10 +123,12 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('listado',           'PersonalController@api_getUsuarios')->name('per');
         Route::post('nuevo',            'PersonalController@api_crear');
         Route::put('{idUsuario}',       'PersonalController@api_actualizar');
+        // RUTAS UTILIZADAS POR LA OTRA APLICACION
+        Route::get('{idUsuario}/roles', 'PersonalController@api_getRolesUsuario'); // (DUPLICADA)
     });
 
     Route::group(['prefix' => 'api/personal'], function(){
-        // TODO: MOVER API/PERSONAL a API/USUARIO
+        // TODO: MOVER API/PERSONAL a API/USUARIO  // ELIMINAR RUTA LUEGO!!
         // RUTAS UTILIZADAS POR LA OTRA APLICACION
         Route::get('{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
     });
