@@ -504,7 +504,8 @@ class AuditoriasController extends Controller {
             return [
                 $auditoria['fechaProgramada'],
                 $auditoria['horaPresentacionAuditor'],
-                $auditoria['realizada']? 'Realizada' : 'Pendiente',
+                // en realizada, debe mostrar lo que informo el sistema de "inventario"
+                $auditoria['realizadaInformada']? 'Realizada' : 'Pendiente',
                 $auditoria['aprovada']? 'Aprobada': 'Pendiente',
                 $auditoria['local']['cliente']['nombreCorto'],
                 $auditoria['local']['numero'],
