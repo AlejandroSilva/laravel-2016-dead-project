@@ -579,7 +579,6 @@ class InventariosController extends Controller {
         $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, 0);
 
         // quitar todos los inventarios en los que en usuario no es lider
-        // TODO: IMPORANTE!! array_filter cambia la estructura de los objectos que recibe
         $inventariosFiltrados = [];
         foreach ($inventarios as $inventario) {
             $jornadaInventario = $inventario['idJornada'];
