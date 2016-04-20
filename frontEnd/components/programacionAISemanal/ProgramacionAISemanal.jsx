@@ -294,7 +294,7 @@ class ProgramacionAISemanal extends React.Component {
                     actualizarFiltro={this.actualizarFiltro.bind(this)}>
 
                     {this.state.auditoriasFiltradas.length===0
-                        ? <tr><td colSpan="15" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                        ? <tr><td colSpan="16" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.state.auditoriasFiltradas.map((auditoria, index)=>{
                             let mostrarSeparador = false
                             let sgteInventario = this.state.auditoriasFiltradas[index+1]
