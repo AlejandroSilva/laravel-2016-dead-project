@@ -511,7 +511,7 @@ class AuditoriasController extends Controller {
                 $auditoria['local']['nombre'],
                 $auditoria['local']['stock'],
                 $auditoria['local']['fechaStock'],
-                $auditoria['auditor']? ['auditor']:'--------------------------',
+                $auditoria['auditor']? $auditoria['auditor']['nombre1']." ".$auditoria['auditor']['apellidoPaterno'] : '-',
                 $auditoria['local']['direccion']['direccion'],
                 $auditoria['local']['direccion']['comuna']['provincia']['region']['nombreCorto'],
                 $auditoria['local']['direccion']['comuna']['provincia']['nombre'],
