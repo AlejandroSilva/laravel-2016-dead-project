@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +14,7 @@ use App\Auditorias;
 use App\Clientes;
 use App\Inventarios;
 use App\Locales;
+use App\Zonas;
 use App\Role;
 use App\User;
 // Permisos
@@ -232,22 +232,82 @@ class AuditoriasController extends Controller {
         }
     }
 
+    // GET api/auditoria/cliente/{idCliente}/mes/{annoMesDia}/estadoGeneral
+    function api_estadoGeneral($idCliente, $annoMesDia){
+        $fecha = explode('-', $annoMesDia);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+
+        $cliente = Clientes::find($idCliente);
+        if($cliente){
+            $reporte_general = array_map(function($zona) use($idCliente, $anno, $mes){
+                $auditorias = Auditorias::with([
+                    'local.direccion.comuna.provincia.region'
+                ])
+                // mismo mes
+                ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+                // mismo cliente
+                ->whereHas('local', function($q) use ($idCliente) {
+                    $q->where('idCliente', '=', $idCliente);
+                })
+                // misma zona
+                ->whereHas('local.direccion.comuna.provincia.region', function($q) use ($zona) {
+                    $q->where('idZona', '=', $zona['idZona']);
+                })
+                ->get();
+
+                // Filtrar las REALIZADAS, de las PENDIENTES
+                $realizadas = [];
+                $pendientes = [];
+                foreach ($auditorias as $auditoria){
+                    if($auditoria->realizada==0){
+                        array_push($realizadas, $auditoria);
+                    }else{
+                        array_push($pendientes, $auditoria);
+                    }
+                };
+
+                return [
+                    'zona'=>$zona,
+                    'total'=>count($auditorias),
+                    'realizadas'=>count($realizadas),
+                    'pendientes'=>count($pendientes),
+                    'perc_arealizados'=>round( count($realizadas)*100/count($auditorias) )
+                ];
+            }, Zonas::all()->toArray());
+
+            return response()->json($reporte_general, 200);
+        }else{
+            return response()->json(['msg'=>'cliente no encontrado'], 404);
+        }
+    }
+
     // POST api/auditoria/cliente/{idCliente}/numeroLocal/{CECO}/fecha/{fecha}/informarRealizado
-    function api_informarRealizado($idCliente, $ceco, $fecha){
+    function api_informarRealizado($idCliente, $ceco, $annoMesDia){
+        $fecha = explode('-', $annoMesDia);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+
         // Buscar el Local (por idCliente y CECO)
         $local = Locales::where('idCliente', '=', $idCliente)
             ->where('numero', '=', $ceco)
             ->first();
         if($local){
-            // Buscar la auditoria (por fecha)
-            $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)->first();
+            // Buscar una aditoria del LOCAL en el mismo MES
+            $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)
+                ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+                ->first();
+
             if($auditoria){
-                $auditoria->realizada = true;
+                $auditoria->realizadaInformada = true;
                 $auditoria->save();
+                // buscar la auditoria actualizada en la BD
                 return response()->json(Auditorias::find($auditoria->idAuditoria), 200);
             }else{
                 // auditoria con esa fecha no existe
-                return response()->json(['msg'=>'no existe una auditoria con esa fecha para este local'], 404);
+                return response()->json(['msg'=>'no existe una auditoria para ese local en el mes indicado'], 404);
             }
         }else{
             // local de ese usuario, con ese ceco no existe
