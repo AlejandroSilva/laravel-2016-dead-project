@@ -127,11 +127,11 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
     });
 
-//    Route::group(['prefix' => 'api/personal'], function(){
-//        // TODO: MOVER API/PERSONAL a API/USUARIO  // ELIMINAR RUTA LUEGO!!
-//        // RUTAS UTILIZADAS POR LA OTRA APLICACION
-//        Route::get('{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
-//    });
+    Route::group(['prefix' => 'api/personal'], function(){
+        // TODO: MOVER API/PERSONAL a API/USUARIO  // ELIMINAR RUTA LUEGO!!
+        // RUTAS UTILIZADAS POR LA OTRA APLICACION
+        Route::get('{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
+    });
 
     /*
     |--------------------------------------------------------------------------
