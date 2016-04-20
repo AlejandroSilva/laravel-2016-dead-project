@@ -258,22 +258,40 @@ class AuditoriasController extends Controller {
                 ->get();
 
                 // Filtrar las REALIZADAS, de las PENDIENTES
-                $realizadas = [];
-                $pendientes = [];
+                $realizadasManual = [];
+                $pendientesManual = [];
+                $realizadasInformado = [];
+                $pendientesInformado = [];
                 foreach ($auditorias as $auditoria){
+                    // separar por Realizado Manual
                     if($auditoria->realizada==0){
-                        array_push($realizadas, $auditoria);
+                        array_push($pendientesManual, $auditoria);
                     }else{
-                        array_push($pendientes, $auditoria);
+                        array_push($realizadasManual, $auditoria);
+                    }
+                    // separar por Realizado Informado
+                    if($auditoria->realizadaInformada==0){
+                        array_push($pendientesInformado, $auditoria);
+                    }else{
+                        array_push($realizadasInformado, $auditoria);
                     }
                 };
 
                 return [
                     'zona'=>$zona,
                     'total'=>count($auditorias),
-                    'realizadas'=>count($realizadas),
-                    'pendientes'=>count($pendientes),
-                    'perc_arealizados'=>round( count($realizadas)*100/count($auditorias) )
+                    // Estadisticas de los elementos "Realizados manualmente"
+                    'manual'=>[
+                        'realizadas'=>count($realizadasManual),
+                        'pendientes'=>count($pendientesManual),
+                        'perc_realizados'=>round( count($realizadasManual)*100/count($auditorias) ),
+                    ],
+                    // Estadisticas de los elementos "Realizados informados"
+                    'informado'=>[
+                        'realizadas'=>count($realizadasInformado),
+                        'pendientes'=>count($pendientesInformado),
+                        'perc_realizados'=>round( count($realizadasInformado)*100/count($auditorias) ),
+                    ]
                 ];
             }, Zonas::all()->toArray());
 
