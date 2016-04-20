@@ -323,63 +323,84 @@ class AuditoriasController extends Controller {
 
     // GET /pdf/auditorias/{mes}/cliente/{idCliente}
     function descargarPDF_porMes($annoMesDia, $idCliente){
-        return response()->json(['msg'=>'no implementado'], 501);
-    /*
-        $fecha = explode('-', $annoMesDia);
-        $anno = $fecha[0];
-        $mes  = $fecha[1];
+        $auditorias = $this->buscarPorMesYCliente($annoMesDia, $idCliente);
+        $cliente = Clientes::find($idCliente);
 
-        // inventarios que se desean mostrar
-        $inventarios = Inventarios::with([
-            //'local',
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region',
-            'nominaDia',
-            'nominaNoche'
-        ])
-            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
-            ->join('locales', 'locales.idLocal', '=', 'inventarios.idLocal')
-            ->orderBy('fechaProgramada', 'ASC')
-            ->orderBy('locales.stock', 'DESC')
-            ->get();
-
-        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Dotación Total'];
-        $inventariosArray = array_map(function($inventario){
-            return [
-                $inventario['fechaProgramada'],
-                $inventario['local']['cliente']['nombreCorto'],
-                $inventario['local']['numero'],
-                $inventario['local']['nombre'],
-                $inventario['local']['direccion']['comuna']['provincia']['region']['numero'],
-                $inventario['local']['direccion']['comuna']['nombre'],
-                $inventario['local']['stock'],
-                $inventario['dotacionAsignadaTotal'],
-            ];
-        }, $inventarios->toArray());
-
-        // Nuevo archivo
-        $workbook = new PHPExcel();  // workbook
+        $workbook = $this->generarWorkbook($auditorias);
         $sheet = $workbook->getActiveSheet();
-        // agregar datos
-        $sheet->setCellValue('A1', 'Programación mensual');
-        $sheet->fromArray($inventariosHeader, NULL, 'A4');
-        $sheet->fromArray($inventariosArray,  NULL, 'A5');
 
-        // guardar
-        $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-        $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
-        $excelWritter->save($randomFileName);
+        //evaluar si cliente viene con un valor
+        if(!$cliente){
+            $sheet->setCellValue('A2', 'Fecha:');
+            $sheet->setCellValue('B2', $annoMesDia);
+            $sheet->setCellValue('A1', 'Cliente:');
+            $sheet->setCellValue('B1', 'Todos');
 
-        // entregar la descarga al usuario
-        return response()->download($randomFileName, "programacion $annoMesDia.xlsx");
-    */
+            // guardar
+            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $excelWritter->save($randomFileName);
+
+            // entregar la descarga al usuario
+            return response()->download($randomFileName, "programacion $annoMesDia.xlsx");
+
+        }else {
+            $sheet->setCellValue('A2', 'Fecha:');
+            $sheet->setCellValue('B2', $annoMesDia);
+            $sheet->setCellValue('A1', 'Cliente:');
+            //obtener nombre cliente
+            $sheet->setCellValue('B1', $cliente->nombre);
+
+            // guardar
+            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+            $randomFileName = "pmensual_" . md5(uniqid(rand(), true)) . ".xlxs";
+            $excelWritter->save($randomFileName);
+
+            //return response()->json($auditorias, 200);
+            return response()->download($randomFileName, "programacion $cliente->nombre-$annoMesDia.xlsx");
+        }
     }
 
     // GET /pdf/auditorias/{fechaInicial}/al{fechaFinal}/cliente/{idCliente}
     function descargarPDF_porRango($fechaInicial, $fechaFinal, $idCliente){
-        return response()->json(['msg'=>'no implementado'], 501);
+        $auditorias = $this->buscarPorRangoYCliente($fechaInicial, $fechaFinal, $idCliente);
+        $cliente = Clientes::find($idCliente);
+
+        $workbook = $this->generarWorkbook($auditorias);
+        $sheet = $workbook->getActiveSheet();
+
+
+
+        //evaluar si cliente viene con un valor
+        if(!$cliente){
+            $sheet->setCellValue('A1', 'Cliente:');
+            $sheet->setCellValue('B1', 'Todos');
+
+            // guardar
+            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $excelWritter->save($randomFileName);
+
+            // entregar la descarga al usuario
+            return response()->download($randomFileName, "programacion $fechaInicial-al-$fechaFinal.xlsx");
+
+        }else{
+            $sheet->setCellValue('A1', 'Cliente:');
+            $sheet->setCellValue('A2', 'Desde:');
+            $sheet->setCellValue('A3', 'Hasta:');
+            //obtener nombre cliente
+            $sheet->setCellValue('B1', $cliente->nombre);
+            $sheet->setCellValue('B2', $fechaInicial);
+            $sheet->setCellValue('B3', $fechaFinal);
+
+            // guardar
+            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $excelWritter->save($randomFileName);
+
+            // entregar la descarga al usuario
+            return response()->download($randomFileName, "programacion$cliente->nombre-$fechaInicial-al-$fechaFinal.xlsx");
+        }
     }
 
     /**
@@ -398,7 +419,8 @@ class AuditoriasController extends Controller {
             'local.direccion.comuna.provincia.region',
             'auditor'])
             ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
+            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+            ->orderBy('fechaProgramada', 'asc');
 
         if ($idCliente != 0) {
             // si el cliente no es "Todos" (0), hacer un filtro por cliente
@@ -416,7 +438,8 @@ class AuditoriasController extends Controller {
             'auditor'
         ])
             ->where('fechaProgramada', '>=', $annoMesDia1)
-            ->where('fechaProgramada', '<=', $annoMesDia2);
+            ->where('fechaProgramada', '<=', $annoMesDia2)
+            ->orderBy('fechaProgramada', 'asc');
 
         if($idCliente!=0){
             // Se filtran por cliente
@@ -452,5 +475,86 @@ class AuditoriasController extends Controller {
         $dia = $fecha[2];
 
         return checkdate($mes, $dia, $anno);
+    }
+
+    // Funcion para general el excel
+    private function generarWorkbook($auditorias){
+        //$formatoLocal = FormatoLocales::find();
+        $auditoriasHeader = ['Fecha', 'Hora presentación', 'Realizada', 'Aprobada', 'Cliente', 'CECO', 'Local', 'Stock', 'Fecha stock', 'Auditor', 'Dirección', 'Región', 'Provincia', 'Comuna', 'Hora apertura', 'Hora cierre', 'Email', 'Telefono1', 'Telefono2'];
+
+        $auditoriasArray = array_map(function($auditoria){
+            return [
+                $auditoria['fechaProgramada'],
+                $auditoria['horaPresentacionAuditor'],
+                $auditoria['realizada']? 'Realizada' : 'Pendiente',
+                $auditoria['aprovada']? 'Aprobada': 'Pendiente',
+                $auditoria['local']['cliente']['nombreCorto'],
+                $auditoria['local']['numero'],
+                $auditoria['local']['nombre'],
+                $auditoria['local']['stock'],
+                $auditoria['local']['fechaStock'],
+                $auditoria['auditor']? ['auditor']:'--------------------------',
+                $auditoria['local']['direccion']['direccion'],
+                $auditoria['local']['direccion']['comuna']['provincia']['region']['nombreCorto'],
+                $auditoria['local']['direccion']['comuna']['provincia']['nombre'],
+                $auditoria['local']['direccion']['comuna']['nombre'],
+                $auditoria['local']['horaApertura'],
+                $auditoria['local']['horaCierre'],
+                $auditoria['local']['emailContacto'],
+                $auditoria['local']['telefono1'],
+                $auditoria['local']['telefono2']
+            ];
+        }, $auditorias);
+
+        // Nuevo archivo
+        $workbook = new PHPExcel();
+        $styleArray = array(
+            'font'  => array(
+                'bold'  => true,
+                'color' => array('rgb' => '000000'),
+                'size'  => 12,
+                'name'  => 'Verdana'
+            )
+        );
+
+        $sheet = $workbook->getActiveSheet();
+        $hora = date('d/m/Y h:i:s A',time()-10800);
+
+        //Agregando valores a celdas y ancho a columnas
+        $sheet->getStyle('A5:B5')->applyFromArray($styleArray);
+        $sheet->getStyle('C5:D5')->applyFromArray($styleArray);
+        $sheet->getStyle('E5:F5')->applyFromArray($styleArray);
+        $sheet->getStyle('G5:H5')->applyFromArray($styleArray);
+        $sheet->getStyle('I5:J5')->applyFromArray($styleArray);
+        $sheet->getStyle('K5:L5')->applyFromArray($styleArray);
+        $sheet->getStyle('M5:N5')->applyFromArray($styleArray);
+        $sheet->getStyle('O5:P5')->applyFromArray($styleArray);
+        $sheet->getStyle('Q5:R5')->applyFromArray($styleArray);
+        $sheet->getStyle('S5')->applyFromArray($styleArray);
+        $sheet->getColumnDimension('A')->setWidth(12.5);
+        $sheet->getColumnDimension('B')->setWidth(19);
+        $sheet->getColumnDimension('C')->setWidth(12);
+        $sheet->getColumnDimension('D')->setWidth(12);
+        $sheet->getColumnDimension('F')->setWidth(15);
+        $sheet->getColumnDimension('G')->setWidth(14.5);
+        $sheet->getColumnDimension('H')->setWidth(15);
+        $sheet->getColumnDimension('H')->setWidth(12);
+        $sheet->getColumnDimension('I')->setWidth(15);
+        $sheet->getColumnDimension('J')->setWidth(15);
+        $sheet->getColumnDimension('K')->setWidth(38);
+        $sheet->getColumnDimension('L')->setWidth(15);
+        $sheet->getColumnDimension('M')->setWidth(15);
+        $sheet->getColumnDimension('N')->setWidth(15);
+        $sheet->getColumnDimension('O')->setWidth(15);
+        $sheet->getColumnDimension('P')->setWidth(15);
+        $sheet->getColumnDimension('Q')->setWidth(28);
+        $sheet->getColumnDimension('R')->setWidth(13);
+        $sheet->getColumnDimension('S')->setWidth(13);
+        $sheet->setCellValue('F1', 'Generado el:');
+        $sheet->setCellValue('G1', $hora);
+        $sheet->fromArray($auditoriasHeader, NULL, 'A5');
+        $sheet->fromArray($auditoriasArray,  NULL, 'A6');
+
+        return $workbook;
     }
 }

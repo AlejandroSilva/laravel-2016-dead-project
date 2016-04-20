@@ -347,58 +347,12 @@ class InventariosController extends Controller {
         $inventarios = $this->inventariosPorMesYCliente($annoMesDia, $idCliente);
         $cliente = Clientes::find($idCliente);
 
-        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha stock', 'Dotación Total', 'Dirección'];
-        $inventariosArray = array_map(function($inventario){
-            return [
-                $inventario['fechaProgramada'],
-                $inventario['local']['cliente']['nombreCorto'],
-                $inventario['local']['numero'],
-                $inventario['local']['nombre'],
-                $inventario['local']['direccion']['comuna']['provincia']['region']['numero'],
-                $inventario['local']['direccion']['comuna']['nombre'],
-                $inventario['local']['stock'],
-                $inventario['fechaStock'],
-                $inventario['dotacionAsignadaTotal'],
-                $inventario['local']['direccion']['direccion']
-            ];
-        }, $inventarios);
-
-        // Nuevo archivo
-        $workbook = new PHPExcel();  // workbook
+        $workbook = $this->generarWorkbook($inventarios);
         $sheet = $workbook->getActiveSheet();
-        $styleArray = array(
-            'font'  => array(
-                'bold'  => true,
-                'color' => array('rgb' => '000000'),
-                'size'  => 12,
-                'name'  => 'Verdana'
-            )
-        );
-        $hora = date('d/m/Y h:i:s A',time()-10800);
-
-        $sheet->getStyle('A4:B4')->applyFromArray($styleArray);
-        $sheet->getStyle('C4:D4')->applyFromArray($styleArray);
-        $sheet->getStyle('E4:F4')->applyFromArray($styleArray);
-        $sheet->getStyle('G4:H4')->applyFromArray($styleArray);
-        $sheet->getStyle('I4:J4')->applyFromArray($styleArray);
-        $sheet->getColumnDimension('A')->setWidth(12.5);
-        $sheet->getColumnDimension('D')->setWidth(17);
-        $sheet->getColumnDimension('F')->setWidth(15);
-        $sheet->getColumnDimension('G')->setWidth(12.5);
-        $sheet->getColumnDimension('H')->setWidth(15);
-        $sheet->getColumnDimension('I')->setWidth(15);
-        $sheet->getColumnDimension('J')->setWidth(40);
-
-        // agregar datos
-        $sheet->setCellValue('A1', 'Programación mensual');
-        $sheet->setCellValue('A2', 'Mes:');
-        $sheet->setCellValue('B2', $annoMesDia);
-        $sheet->setCellValue('F1', 'Generado el:');
-        $sheet->setCellValue('G1', $hora);
-        $sheet->fromArray($inventariosHeader, NULL, 'A4');
-        $sheet->fromArray($inventariosArray,  NULL, 'A5');
 
         if(!$cliente){
+            $sheet->setCellValue('A2', 'Fecha:');
+            $sheet->setCellValue('B2', $annoMesDia);
             $sheet->setCellValue('A1', 'Cliente:');
             $sheet->setCellValue('B1', 'Todos');
 
@@ -431,61 +385,14 @@ class InventariosController extends Controller {
         $inventarios = $this-> inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
         $cliente = Clientes::find($idCliente);
 
-        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha Stock', 'Dotación Total', 'Dirección'];
-        $inventariosArray = array_map(function($inventario){
-            return [
-                $inventario['fechaProgramada'],
-                $inventario['local']['cliente']['nombreCorto'],
-                $inventario['local']['numero'],
-                $inventario['local']['nombre'],
-                $inventario['local']['direccion']['comuna']['provincia']['region']['numero'],
-                $inventario['local']['direccion']['comuna']['nombre'],
-                $inventario['local']['stock'],
-                $inventario['fechaStock'],
-                $inventario['dotacionAsignadaTotal'],
-                $inventario['local']['direccion']['direccion']
-
-            ];
-        }, $inventarios);
-
-        // Nuevo archivo
-        $workbook = new PHPExcel();  // workbook
+        $workbook = $this->generarWorkbook($inventarios);
         $sheet = $workbook->getActiveSheet();
-        $styleArray = array(
-            'font'  => array(
-                'bold'  => true,
-                'color' => array('rgb' => '000000'),
-                'size'  => 12,
-                'name'  => 'Verdana'
-            )
-        );
-
-        $hora = date('d/m/Y h:i:s A',time()-10800);
-        //aplicando estilos
-        $sheet->getStyle('A4:B4')->applyFromArray($styleArray);
-        $sheet->getStyle('C4:D4')->applyFromArray($styleArray);
-        $sheet->getStyle('E4:F4')->applyFromArray($styleArray);
-        $sheet->getStyle('G4:H4')->applyFromArray($styleArray);
-        $sheet->getStyle('I4:J4')->applyFromArray($styleArray);
-        $sheet->getColumnDimension('I')->setWidth(15);
-        $sheet->getColumnDimension('J')->setWidth(40);
-        $sheet->getColumnDimension('A')->setWidth(12.5);
-        $sheet->getColumnDimension('B')->setWidth(13);
-        $sheet->getColumnDimension('D')->setWidth(17);
-        $sheet->getColumnDimension('F')->setWidth(15);
-        $sheet->getColumnDimension('G')->setWidth(12.5);
-        $sheet->getColumnDimension('H')->setWidth(15);
-
-        // agregar datos
-        $sheet->setCellValue('A2', 'Rango fecha:');
-        $sheet->setCellValue('B2', "$annoMesDia1 al ");
-        $sheet->setCellValue('C2', $annoMesDia2);
-        $sheet->setCellValue('F1', 'Generado el:');
-        $sheet->setCellValue('G1', $hora);
-        $sheet->fromArray($inventariosHeader, NULL, 'A4');
-        $sheet->fromArray($inventariosArray,  NULL, 'A5');
 
         if(!$cliente){
+            $sheet->setCellValue('A2', 'Desde:');
+            $sheet->setCellValue('B2', $annoMesDia1);
+            $sheet->setCellValue('A3', 'Hasta:');
+            $sheet->setCellValue('B3', $annoMesDia2);
             $sheet->setCellValue('A1', 'Cliente:');
             $sheet->setCellValue('B1', 'Todos');
 
@@ -495,7 +402,7 @@ class InventariosController extends Controller {
             $excelWritter->save($randomFileName);
 
             // entregar la descarga al usuario
-            return response()->download($randomFileName, "programacion $annoMesDia1.xlsx");
+            return response()->download($randomFileName, "programacion $annoMesDia1-al-$annoMesDia2.xlsx");
 
         }else{
             $sheet->setCellValue('A1', 'Cliente:');
@@ -610,5 +517,57 @@ class InventariosController extends Controller {
         $dia = $fecha[2];
 
         return checkdate($mes,$dia,$anno);
+    }
+    
+    // Función generica para generar el archivo excel
+    private function generarWorkbook($inventarios){
+        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha stock', 'Dotación Total', 'Dirección'];
+
+        $inventariosArray = array_map(function($inventario){
+            return [
+                $inventario['fechaProgramada'],
+                $inventario['local']['cliente']['nombreCorto'],
+                $inventario['local']['numero'],
+                $inventario['local']['nombre'],
+                $inventario['local']['direccion']['comuna']['provincia']['region']['numero'],
+                $inventario['local']['direccion']['comuna']['nombre'],
+                $inventario['local']['stock'],
+                $inventario['fechaStock'],
+                $inventario['dotacionAsignadaTotal'],
+                $inventario['local']['direccion']['direccion']
+            ];
+        }, $inventarios);
+
+        // Nuevo archivo
+        $workbook = new PHPExcel();  // workbook
+        $sheet = $workbook->getActiveSheet();
+        $styleArray = array(
+            'font'  => array(
+                'bold'  => true,
+                'color' => array('rgb' => '000000'),
+                'size'  => 12,
+                'name'  => 'Verdana'
+            )
+        );
+        $hora = date('d/m/Y h:i:s A',time()-10800);
+
+        $sheet->getStyle('A5:B5')->applyFromArray($styleArray);
+        $sheet->getStyle('C5:D5')->applyFromArray($styleArray);
+        $sheet->getStyle('E5:F5')->applyFromArray($styleArray);
+        $sheet->getStyle('G5:H5')->applyFromArray($styleArray);
+        $sheet->getStyle('I5:J5')->applyFromArray($styleArray);
+        $sheet->getColumnDimension('A')->setWidth(12.5);
+        $sheet->getColumnDimension('D')->setWidth(17);
+        $sheet->getColumnDimension('F')->setWidth(15);
+        $sheet->getColumnDimension('G')->setWidth(12.5);
+        $sheet->getColumnDimension('H')->setWidth(15);
+        $sheet->getColumnDimension('I')->setWidth(15);
+        $sheet->getColumnDimension('J')->setWidth(40);
+        $sheet->setCellValue('F1', 'Generado el:');
+        $sheet->setCellValue('G1', $hora);
+        $sheet->fromArray($inventariosHeader, NULL, 'A5');
+        $sheet->fromArray($inventariosArray,  NULL, 'A6');
+
+        return $workbook;
     }
 }
