@@ -473,6 +473,8 @@ class InventariosController extends Controller {
 
         return checkdate($mes,$dia,$anno);
     }
+    
+    // Función generica para generar el archivo excel
     private function generarWorkbook($inventarios){
         $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha stock', 'Dotación Total', 'Dirección'];
 
