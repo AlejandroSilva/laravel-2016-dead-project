@@ -338,6 +338,7 @@ class AuditoriasController extends Controller {
 
             if($auditoria){
                 $auditoria->realizadaInformada = true;
+                $auditoria->fechaAuditoria = $annoMesDia;
                 $auditoria->save();
                 // buscar la auditoria actualizada en la BD
                 Log::info("[AUDITORIA:INFORMAR_REALIZADO:OK] idAuditoria '$auditoria->idAuditoria' informada correctamente. ceco '$ceco', idCliente '$idCliente', mes '$annoMesDia'.");
