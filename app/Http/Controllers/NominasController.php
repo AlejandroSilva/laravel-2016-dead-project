@@ -23,7 +23,6 @@ class NominasController extends Controller {
         return view('operacional.nominasFinales.nominasFinales-index');
     }
     
-    
     /**
      * ##########################################################
      * Rutas para consumo del API REST
@@ -96,5 +95,17 @@ class NominasController extends Controller {
         }else{
             return response()->json([], 404);
         }
+    }
+
+    /**
+     * ##########################################################
+     * API DE INTERACCION CON LA OTRA PLATAFORMA
+     * ##########################################################
+     */
+
+    // POST api/nomina/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informarDisponible
+    function api_informarDisponible($idCliente, $ceco, $annoMesDia){
+        // TODO: por implementar
+        return response()->json(['msg'=>'falta por implementar'], 404);
     }
 }

@@ -280,18 +280,19 @@ class AuditoriasController extends Controller {
 
                 return [
                     'zona'=>$zona,
-                    'total'=>count($auditorias),
                     // Estadisticas de los elementos "Realizados manualmente"
                     'manual'=>[
+                        'total'=>count($auditorias),
                         'realizadas'=>count($realizadasManual),
                         'pendientes'=>count($pendientesManual),
-                        'perc_realizados'=>round( count($realizadasManual)*100/count($auditorias) ),
+                        'porcentaje_realizados'=>round( count($realizadasManual)*100/count($auditorias) ),
                     ],
                     // Estadisticas de los elementos "Realizados informados"
                     'informado'=>[
+                        'total'=>count($auditorias),
                         'realizadas'=>count($realizadasInformado),
                         'pendientes'=>count($pendientesInformado),
-                        'perc_realizados'=>round( count($realizadasInformado)*100/count($auditorias) ),
+                        'porcentaje_realizados'=>round( count($realizadasInformado)*100/count($auditorias) ),
                     ]
                 ];
             }, Zonas::all()->toArray());

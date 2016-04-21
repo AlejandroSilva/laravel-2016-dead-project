@@ -79,6 +79,8 @@ Route::group(['middleware' => ['web']], function (){
     Route::group(['prefix' => 'api/nomina'], function(){
         Route::get('{idNomina}',                 'NominasController@api_get');
         Route::put('{idNomina}',                 'NominasController@api_actualizar');
+        // RUTAS UTILIZADAS POR LA OTRA APLICACION
+        Route::get('/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informarDisponible', 'NominasController@api_informarDisponible');
     });
 
     /*
@@ -106,7 +108,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('mes/{annoMesDia}/cliente/{idCliente}',      'AuditoriasController@api_getPorMesYCliente');
         Route::get('{fecha1}/al/{fecha2}/cliente/{idCliente}',  'AuditoriasController@api_getPorRangoYCliente');
         // RUTAS UTILIZADAS POR OTRA APLICACION
-        Route::get('/cliente/{idCliente}/mes/{annoMesDia}/estadoGeneral',   'AuditoriasController@api_estadoGeneral');
+        Route::get('/cliente/{idCliente}/mes/{annoMesDia}/estado-general',   'AuditoriasController@api_estadoGeneral');
         Route::get('{fecha1}/al/{fecha2}/auditor/{idCliente}',  'AuditoriasController@api_getPorRangoYAuditor');
         Route::get('/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informarRealizado', 'AuditoriasController@api_informarRealizado');
     });
