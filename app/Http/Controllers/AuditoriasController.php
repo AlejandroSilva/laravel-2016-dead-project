@@ -521,11 +521,14 @@ class AuditoriasController extends Controller {
     // Funcion para general el excel
     private function generarWorkbook($auditorias){
         //$formatoLocal = FormatoLocales::find();
-        $auditoriasHeader = ['Fecha', 'Hora presentación', 'Realizada', 'Aprobada', 'Cliente', 'CECO', 'Local', 'Stock', 'Fecha stock', 'Auditor', 'Dirección', 'Región', 'Provincia', 'Comuna', 'Hora apertura', 'Hora cierre', 'Email', 'Telefono1', 'Telefono2'];
+        $auditoriasHeader = ['Fecha Programada', 'Hora presentación', 'Realizada', 'Aprobada', 'Cliente', 'CECO', 'Local', 'Stock', 'Fecha stock', 'Auditor', 'Dirección', 'Región', 'Provincia', 'Comuna', 'Hora apertura', 'Hora cierre', 'Email', 'Telefono1', 'Telefono2'];
 
         $auditoriasArray = array_map(function($auditoria){
+            // la fecha programada debe estar estar en formato DD-MM-YYYY
+            $fecha = explode('-', $auditoria['fechaProgramada']);
+            
             return [
-                $auditoria['fechaProgramada'],
+                "$fecha[2]-$fecha[1]-$fecha[0]", // DD-MM-YYYY
                 $auditoria['horaPresentacionAuditor'],
                 // en realizada, debe mostrar lo que informo el sistema de "inventario"
                 $auditoria['realizadaInformada']? 'Realizada' : 'Pendiente',
