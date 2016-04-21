@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
+use Log;
 // PHP Excel
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -322,14 +323,19 @@ class AuditoriasController extends Controller {
                 $auditoria->realizadaInformada = true;
                 $auditoria->save();
                 // buscar la auditoria actualizada en la BD
+                Log::info("[AUDITORIA:INFORMAR_REALIZADO:OK] idAuditoria '$auditoria->idAuditoria' informada correctamente. ceco '$ceco', idCliente '$idCliente', mes '$annoMesDia'.");
                 return response()->json(Auditorias::find($auditoria->idAuditoria), 200);
             }else{
                 // auditoria con esa fecha no existe
-                return response()->json(['msg'=>'no existe una auditoria para ese local en el mes indicado'], 404);
+                $errorMsg = "no existe una auditoria para el idLocal '$local->idLocal' en el mes '$annoMesDia'";
+                Log::info("[AUDITORIA:INFORMAR_REALIZADO:ERROR] $errorMsg");
+                return response()->json(['msg'=>$errorMsg], 404);
             }
         }else{
             // local de ese usuario, con ese ceco no existe
-            return response()->json(['msg'=>'no existe un local con este numero para este cliente'], 404);
+            $errorMsg = "no existe el CECO '$ceco' del idCliente '$idCliente'";
+            Log::info("[AUDITORIA:INFORMAR_REALIZADO:ERROR] $errorMsg");
+            return response()->json(['msg'=>$errorMsg], 404);
         }
     }
 
