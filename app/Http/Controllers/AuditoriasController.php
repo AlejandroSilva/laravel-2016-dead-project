@@ -295,6 +295,7 @@ class AuditoriasController extends Controller {
 
                 return [
                     'zona'=>$zona,
+                    'regiones'=>Zonas::find($zona['idZona'])->regiones,
                     // Estadisticas de los elementos "Realizados manualmente"
                     'manual'=>[
                         'total'=>count($auditorias),
@@ -310,7 +311,7 @@ class AuditoriasController extends Controller {
                         'porcentaje_realizados'=>round( count($realizadasInformado)*100/count($auditorias) ),
                     ]
                 ];
-            }, Zonas::all()->toArray());
+            }, Zonas::orderBy('idZona')->get()->toArray());
 
             return response()->json($reporte_general, 200);
         }else{
