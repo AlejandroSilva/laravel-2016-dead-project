@@ -7,14 +7,14 @@ class AddDisponibleDesdeToNominaTable extends Migration {
     public function up() {
         Schema::table('nominas', function (Blueprint $table) {
             $table
-                ->timestamp('fechaArchivoDisponible')
+                ->timestamp('fechaSubidaNomina')
                 ->nullable()
                 ->default(null);
         });
     }
     public function down() {
         Schema::table('nominas', function (Blueprint $table) {
-            $table->dropColumn('fechaArchivoDisponible');
+            $table->dropColumn('fechaSubidaNomina');
         });
     }
 }
