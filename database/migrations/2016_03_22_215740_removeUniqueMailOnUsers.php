@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class RemoveUniqueMailOnUsers extends Migration {
     public function up() {
-
         Schema::table('users', function(Blueprint $table){
             $table->dropUnique('users_email_unique');
             $table->unique('RUN');
