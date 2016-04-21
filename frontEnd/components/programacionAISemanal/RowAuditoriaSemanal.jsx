@@ -45,7 +45,7 @@ class RowAuditoriaSemanal extends React.Component{
         if(estadoSelectRealizada.dirty)
             cambiosAuditoria.realizada = estadoSelectRealizada.seleccionUsuario
 
-        // APROVADA ha cambiado?
+        // APROBADA ha cambiado?
         let estadoSelectAprobada = this.selectAprobada.getEstado()
         if(estadoSelectAprobada.dirty)
             cambiosAuditoria.aprovada = estadoSelectAprobada.seleccionUsuario
@@ -192,9 +192,8 @@ class RowAuditoriaSemanal extends React.Component{
                 {/* Estado Informado */}
                 <td className={css.tdRealizadaAprobada}>
                     <Select
-                        ref={ref=>this.selectRealizada=ref}
                         seleccionada={this.props.auditoria.realizadaInformada}
-                        onSelect={this.guardarAuditoria.bind(this)}
+                        onSelect={()=>{}}
                         opciones={[
                             {valor: '0', texto: 'Pendiente'},
                             {valor: '1', texto: 'Realizada'}
