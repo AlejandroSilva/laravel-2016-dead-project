@@ -117,6 +117,7 @@ class AuditoriasController extends Controller {
             $resultado = $auditoria->save();
 
             if($resultado){
+                Log::info("[AUDITORIA:NUEVO] auditoria con idLocal '$auditoria->idLocal' programada para '$auditoria->fechaProgramada' creada.");
                 return response()->json(
                     $auditoria = Auditorias::with([
                         'local.cliente',
@@ -142,21 +143,33 @@ class AuditoriasController extends Controller {
         if($auditoria){
             // actualizar fecha siempre y cuando sea valida dependiendo el mes
             if(isset($request->fechaProgramada)) {
-                if ($this->fecha_valida($request->fechaProgramada)) 
+                if ($this->fecha_valida($request->fechaProgramada)) {
                     $auditoria->fechaProgramada = $request->fechaProgramada;
+                    Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. fechaProgramada '$request->fechaProgramada' actualizada.");
+                }
             }
 
             // actualizar auditor
-            if(isset($request->idAuditor))
-                $auditoria->idAuditor = $request->idAuditor==0? null: $request->idAuditor;
-            if(isset($request->realizada))
+            if(isset($request->idAuditor)){
+                $idAuditor = $request->idAuditor==0? null: $request->idAuditor;
+                $auditoria->idAuditor = $idAuditor;
+                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. idAuditor '$idAuditor' actualizado.");
+            }
+            if(isset($request->realizada)){
                 $auditoria->realizada = $request->realizada;
-            if(isset($request->aprovada))
+                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. realizada '$request->realizada' actualizado.");
+            }
+            if(isset($request->aprovada)){
                 $auditoria->aprovada = $request->aprovada;
+                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. aprovada '$request->aprovada' actualizado.");
+            }
             // actualizar hora de presentacion de auditor
-            if(isset($request->horaPresentacionAuditor))
-                $auditoria->horaPresentacionAuditor = $request->horaPresentacionAuditor==0? null: $request->horaPresentacionAuditor;
-            
+            if(isset($request->horaPresentacionAuditor)){
+                $horaPresentacion = $request->horaPresentacionAuditor==0? null: $request->horaPresentacionAuditor;
+                $auditoria->horaPresentacionAuditor = $horaPresentacion;
+                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. horaPresentacionAuditor '$horaPresentacion' actualizado.");
+            }
+
             $resultado = $auditoria->save();
 
             if($resultado) {
@@ -172,6 +185,7 @@ class AuditoriasController extends Controller {
 
                 return response()->json($auditoria, 200);
             }else{
+                Log::info("[AUDITORIA:ACTUALIZAR] actualizacion fallida");
                 return response()->json([
                     'request'=>$request->all(),
                     'resultado'=>$resultado,
@@ -187,6 +201,7 @@ class AuditoriasController extends Controller {
     function api_eliminar($idAuditoria) {
         $auditoria = Auditorias::find($idAuditoria);
         if ($auditoria) {
+            Log::info("[AUDITORIA:ELIMINAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal' programada para '$auditoria->fechaProgramada' eliminada.");
             DB::transaction(function () use ($auditoria) {
                 $auditoria->delete();
                 return response()->json([], 204);
