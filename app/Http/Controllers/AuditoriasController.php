@@ -526,12 +526,15 @@ class AuditoriasController extends Controller {
 
         $auditoriasArray = array_map(function($auditoria){
             // la fecha programada debe estar estar en formato DD-MM-YYYY
-            $fechaProgramada = explode('-', $auditoria['fechaProgramada']);
-            $fechaAuditoria  = explode('-', $auditoria['fechaAuditoria']);
-            
+            $_fprogramada = explode('-', $auditoria['fechaProgramada']);
+            $fechaProgramada = "$_fprogramada[2]-$_fprogramada[1]-$_fprogramada[0]";
+            // la fecha de auditoria se muestra solo si es distinta a '0000-00-00'
+            $_fauditoria  = explode('-', $auditoria['fechaAuditoria']);
+            $fechaAuditoria = $auditoria['fechaAuditoria']!='0000-00-00'? "$_fauditoria[2]-$_fauditoria[1]-$_fauditoria[0]" : '';
+
             return [
-                "$fechaProgramada[2]-$fechaProgramada[1]-$fechaProgramada[0]", // DD-MM-YYYY
-                "$fechaAuditoria[2]-$fechaAuditoria[1]-$fechaAuditoria[0]", // DD-MM-YYYY
+                $fechaProgramada,
+                $fechaAuditoria,
                 $auditoria['horaPresentacionAuditor'],
                 // en realizada, debe mostrar lo que informo el sistema de "inventario"
                 $auditoria['realizadaInformada']? 'Realizada' : 'Pendiente',
