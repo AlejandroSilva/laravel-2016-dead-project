@@ -13,6 +13,7 @@ use PHPExcel_IOFactory;
 // Modelos
 use App\Auditorias;
 use App\Clientes;
+use App\DiasHabiles;
 use App\Inventarios;
 use App\Locales;
 use App\Zonas;
@@ -250,13 +251,23 @@ class AuditoriasController extends Controller {
 
     // GET api/auditoria/cliente/{idCliente}/mes/{annoMesDia}/estadoGeneral
     function api_estadoGeneral($idCliente, $annoMesDia){
-        $fecha = explode('-', $annoMesDia);
-        $anno = $fecha[0];
-        $mes  = $fecha[1];
+        $dia = DiasHabiles::where('fecha', '=', $annoMesDia)->first();
 
+        if(!$dia){
+            return response()->json(['msg'=>'No se encuentra informacion de los dias habiles de esta fecha'], 400);
+        }
         $cliente = Clientes::find($idCliente);
         if($cliente){
-            $reporte_general = array_map(function($zona) use($idCliente, $anno, $mes){
+            $_fecha = explode('-', $annoMesDia);
+            $anno = $_fecha[0];
+            $mes  = $_fecha[1];
+            $diasHabilesMes = $dia->getDiasHabilesMes();
+            $diasHabilesTranscurridos = $dia->getDiasHabilesTranscurridosMes();
+            $diasHabilesRestantes = $dia->getDiasHabilesRestantesMes();
+            
+            $reporte_general = array_map(function($zona)
+            use($idCliente, $anno, $mes, $diasHabilesMes, $diasHabilesRestantes, $diasHabilesTranscurridos){
+
                 $auditorias = Auditorias::with([
                     'local.direccion.comuna.provincia.region'
                 ])
@@ -274,17 +285,10 @@ class AuditoriasController extends Controller {
                 ->get();
 
                 // Filtrar las REALIZADAS, de las PENDIENTES
-                $realizadasManual = [];
-                $pendientesManual = [];
                 $realizadasInformado = [];
                 $pendientesInformado = [];
                 foreach ($auditorias as $auditoria){
-                    // separar por Realizado Manual
-                    if($auditoria->realizada==0){
-                        array_push($pendientesManual, $auditoria);
-                    }else{
-                        array_push($realizadasManual, $auditoria);
-                    }
+                    // IMPORTANTE: separar por Realizado Manual -----  SE IGNORAN LOS MANUALES
                     // separar por Realizado Informado
                     if($auditoria->realizadaInformada==0){
                         array_push($pendientesInformado, $auditoria);
@@ -293,22 +297,38 @@ class AuditoriasController extends Controller {
                     }
                 };
 
+                // Realizar los calculos de zona
+                $total = count($auditorias);
+                $realizadas = count($realizadasInformado);
+                $pendientes = count($pendientesInformado);
+                // Estado de avance Esperado
+                $auditoriasPorDia_esperado = round($total/$diasHabilesMes, 1);
+                $realizadasALaFecha_esperado = round($diasHabilesTranscurridos*$auditoriasPorDia_esperado);
+                $porcentajeAvance_esperado = round(($realizadasALaFecha_esperado*100)/$total);
+                // Estado de avance Real
+                $auditoriasPorDia_real = round($realizadas/$diasHabilesTranscurridos, 1);
+                $porcentajeAvance_real = round(($realizadas*100)/$total);
+                
                 return [
                     'zona'=>$zona,
-                    'regiones'=>Zonas::find($zona['idZona'])->regiones,
-                    // Estadisticas de los elementos "Realizados manualmente"
-                    'manual'=>[
-                        'total'=>count($auditorias),
-                        'realizadas'=>count($realizadasManual),
-                        'pendientes'=>count($pendientesManual),
-                        'porcentaje_realizados'=>round( count($realizadasManual)*100/count($auditorias) ),
-                    ],
-                    // Estadisticas de los elementos "Realizados informados"
+                    #'regiones'=>Zonas::find($zona['idZona'])->regiones,
                     'informado'=>[
-                        'total'=>count($auditorias),
-                        'realizadas'=>count($realizadasInformado),
-                        'pendientes'=>count($pendientesInformado),
-                        'porcentaje_realizados'=>round( count($realizadasInformado)*100/count($auditorias) ),
+                        // conteo de auditorias
+                        'totalMes'=>$total,
+                        'realizadas'=>$realizadas,
+                        'pendientes'=>$pendientes,
+                        // dias habiles del mes
+                        'diasHabilesMes'=>$diasHabilesMes,
+                        'diasHabilesRestantes'=>$diasHabilesRestantes,
+                        'diasHabilesTranscurridos'=>$diasHabilesTranscurridos,
+                        // Estado de avance Esperado
+                        'auditoriasPorDia_esperado'=>$auditoriasPorDia_esperado,
+                        'realizadasALaFecha_esperado'=>$realizadasALaFecha_esperado,
+                        'porcentajeCumplimiento_esperado'=>$porcentajeAvance_esperado,
+                        // Estado de avance Real
+                        'auditoriasPorDia_real'=>$auditoriasPorDia_real,
+                        'realizadasALaFecha_real'=>$realizadas,
+                        'porcentajeCumplimiento_real'=>$porcentajeAvance_real
                     ]
                 ];
             }, Zonas::orderBy('idZona')->get()->toArray());
