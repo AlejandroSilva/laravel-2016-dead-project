@@ -522,14 +522,16 @@ class AuditoriasController extends Controller {
     // Funcion para general el excel
     private function generarWorkbook($auditorias){
         //$formatoLocal = FormatoLocales::find();
-        $auditoriasHeader = ['Fecha Programada', 'Hora presentación', 'Realizada', 'Aprobada', 'Cliente', 'CECO', 'Local', 'Stock', 'Fecha stock', 'Auditor', 'Dirección', 'Región', 'Provincia', 'Comuna', 'Hora apertura', 'Hora cierre', 'Email', 'Telefono1', 'Telefono2'];
+        $auditoriasHeader = ['Fecha Programada', 'Fecha Auditoría', 'Hora presentación', 'Realizada', 'Aprobada', 'Cliente', 'CECO', 'Local', 'Stock', 'Fecha stock', 'Auditor', 'Dirección', 'Región', 'Provincia', 'Comuna', 'Hora apertura', 'Hora cierre', 'Email', 'Teléfono 1', 'Teléfono 2'];
 
         $auditoriasArray = array_map(function($auditoria){
             // la fecha programada debe estar estar en formato DD-MM-YYYY
-            $fecha = explode('-', $auditoria['fechaProgramada']);
+            $fechaProgramada = explode('-', $auditoria['fechaProgramada']);
+            $fechaAuditoria  = explode('-', $auditoria['fechaAuditoria']);
             
             return [
-                "$fecha[2]-$fecha[1]-$fecha[0]", // DD-MM-YYYY
+                "$fechaProgramada[2]-$fechaProgramada[1]-$fechaProgramada[0]", // DD-MM-YYYY
+                "$fechaAuditoria[2]-$fechaAuditoria[1]-$fechaAuditoria[0]", // DD-MM-YYYY
                 $auditoria['horaPresentacionAuditor'],
                 // en realizada, debe mostrar lo que informo el sistema de "inventario"
                 $auditoria['realizadaInformada']? 'Realizada' : 'Pendiente',
@@ -558,7 +560,6 @@ class AuditoriasController extends Controller {
             'font'  => array(
                 'bold'  => true,
                 'color' => array('rgb' => '000000'),
-                'size'  => 12,
                 'name'  => 'Verdana'
             )
         );
@@ -567,37 +568,30 @@ class AuditoriasController extends Controller {
         $hora = date('d/m/Y h:i:s A',time()-10800);
 
         //Agregando valores a celdas y ancho a columnas
-        $sheet->getStyle('A5:B5')->applyFromArray($styleArray);
-        $sheet->getStyle('C5:D5')->applyFromArray($styleArray);
-        $sheet->getStyle('E5:F5')->applyFromArray($styleArray);
-        $sheet->getStyle('G5:H5')->applyFromArray($styleArray);
-        $sheet->getStyle('I5:J5')->applyFromArray($styleArray);
-        $sheet->getStyle('K5:L5')->applyFromArray($styleArray);
-        $sheet->getStyle('M5:N5')->applyFromArray($styleArray);
-        $sheet->getStyle('O5:P5')->applyFromArray($styleArray);
-        $sheet->getStyle('Q5:R5')->applyFromArray($styleArray);
-        $sheet->getStyle('S5')->applyFromArray($styleArray);
-        $sheet->getColumnDimension('A')->setWidth(12.5);
-        $sheet->getColumnDimension('B')->setWidth(19);
-        $sheet->getColumnDimension('C')->setWidth(12);
-        $sheet->getColumnDimension('D')->setWidth(12);
-        $sheet->getColumnDimension('F')->setWidth(15);
-        $sheet->getColumnDimension('G')->setWidth(14.5);
-        $sheet->getColumnDimension('H')->setWidth(15);
-        $sheet->getColumnDimension('H')->setWidth(12);
-        $sheet->getColumnDimension('I')->setWidth(15);
-        $sheet->getColumnDimension('J')->setWidth(15);
-        $sheet->getColumnDimension('K')->setWidth(38);
-        $sheet->getColumnDimension('L')->setWidth(15);
-        $sheet->getColumnDimension('M')->setWidth(15);
-        $sheet->getColumnDimension('N')->setWidth(15);
-        $sheet->getColumnDimension('O')->setWidth(15);
-        $sheet->getColumnDimension('P')->setWidth(15);
-        $sheet->getColumnDimension('Q')->setWidth(28);
-        $sheet->getColumnDimension('R')->setWidth(13);
-        $sheet->getColumnDimension('S')->setWidth(13);
-        $sheet->setCellValue('F1', 'Generado el:');
-        $sheet->setCellValue('G1', $hora);
+        $sheet->getStyle('A5:X5')->applyFromArray($styleArray);
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('E')->setAutoSize(true);
+        $sheet->getColumnDimension('F')->setAutoSize(true);
+        $sheet->getColumnDimension('G')->setAutoSize(true);
+        $sheet->getColumnDimension('H')->setAutoSize(true);
+        $sheet->getColumnDimension('I')->setAutoSize(true);
+        $sheet->getColumnDimension('J')->setAutoSize(true);
+        $sheet->getColumnDimension('K')->setAutoSize(true);
+        $sheet->getColumnDimension('L')->setAutoSize(true);
+        $sheet->getColumnDimension('M')->setAutoSize(true);
+        $sheet->getColumnDimension('N')->setAutoSize(true);
+        $sheet->getColumnDimension('O')->setAutoSize(true);
+        $sheet->getColumnDimension('P')->setAutoSize(true);
+        $sheet->getColumnDimension('Q')->setAutoSize(true);
+        $sheet->getColumnDimension('R')->setAutoSize(true);
+        $sheet->getColumnDimension('S')->setAutoSize(true);
+        $sheet->getColumnDimension('T')->setAutoSize(true);
+        $sheet->getColumnDimension('U')->setAutoSize(true);
+        $sheet->setCellValue('D1', 'Generado el:');
+        $sheet->setCellValue('E1', $hora);
         $sheet->fromArray($auditoriasHeader, NULL, 'A5');
         $sheet->fromArray($auditoriasArray,  NULL, 'A6');
 

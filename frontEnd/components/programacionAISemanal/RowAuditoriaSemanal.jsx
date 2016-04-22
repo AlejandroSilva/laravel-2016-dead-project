@@ -202,6 +202,10 @@ class RowAuditoriaSemanal extends React.Component{
                         opcionNulaSeleccionable={false}
                         puedeModificar={false}/>
                 </td>
+                {/* (informado) Fecha Auditoria */}
+                <td className={css.tdRealizadaAprobada}>
+                    {this.props.auditoria.fechaAuditoria!='0000-00-00'? this.props.auditoria.fechaAuditoria : ''}
+                </td>
                 {/* Hora de Apertura del local */}
                 <td className={css.tdAperturaCierre}>
                     <input type="time"

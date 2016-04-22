@@ -25,6 +25,7 @@ class TablaAuditoriaSemanal extends React.Component{
                     <col className={css.thRealizadaAprobada}/>
                     <col className={css.thRealizadaAprobada}/>
                     <col className={css.thRealizadaAprobada}/>
+                    <col className={css.thRealizadaAprobada}/>
                     <col className={css.thAperturaCierre}/>
                     <col className={css.thAperturaCierre}/>
                     <col className={css.thDireccion}/>
@@ -99,6 +100,7 @@ class TablaAuditoriaSemanal extends React.Component{
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRealizadasInformada')}
                             />
                         </th>
+                        <th className={css.thAperturaCierre}>(informado) Fecha </th>
                         <th className={css.thAperturaCierre}>Hr.Apertura</th>
                         <th className={css.thAperturaCierre}>Hr.Cierre</th>
                         <th className={css.thDireccion}>Dirección</th>

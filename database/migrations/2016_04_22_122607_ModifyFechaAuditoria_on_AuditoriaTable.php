@@ -10,7 +10,6 @@ class ModifyFechaAuditoriaOnAuditoriaTable extends Migration {
                 ->date('fechaAuditoria')
                 ->nullable(false)
                 ->change();
-                //->default('0000-00-00');
         });
     }
     public function down() {
