@@ -357,6 +357,40 @@ class AuditoriasController extends Controller {
         }
     }
 
+    // TEMPORAL; ELIMINAR ASAP
+    function api_informarFecha($idCliente, $ceco, $annoMesDia){
+        $fecha = explode('-', $annoMesDia);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+
+        // Buscar el Local (por idCliente y CECO)
+        $local = Locales::where('idCliente', '=', $idCliente)
+            ->where('numero', '=', $ceco)
+            ->first();
+        if($local){
+            // Buscar una aditoria del LOCAL en el mismo MES
+            $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)
+                ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+                ->first();
+
+            if($auditoria){
+                $auditoria->fechaAuditoria = $annoMesDia;
+                $auditoria->save();
+                // buscar la auditoria actualizada en la BD
+                return response()->json(Auditorias::find($auditoria->idAuditoria), 200);
+            }else{
+                // auditoria con esa fecha no existe
+                $errorMsg = "no existe una auditoria para el idLocal '$local->idLocal' en el mes '$annoMesDia'";
+                return response()->json(['msg'=>$errorMsg], 404);
+            }
+        }else{
+            // local de ese usuario, con ese ceco no existe
+            $errorMsg = "no existe el CECO '$ceco' del idCliente '$idCliente'";
+            return response()->json(['msg'=>$errorMsg], 404);
+        }
+    }
+
     /**
      * ##########################################################
      * Descarga de documentos
