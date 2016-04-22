@@ -108,7 +108,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('mes/{annoMesDia}/cliente/{idCliente}',      'AuditoriasController@api_getPorMesYCliente');
         Route::get('{fecha1}/al/{fecha2}/cliente/{idCliente}',  'AuditoriasController@api_getPorRangoYCliente');
         // RUTAS UTILIZADAS POR OTRA APLICACION
-        Route::get('/cliente/{idCliente}/mes/{annoMesDia}/estado-general',   'AuditoriasController@api_estadoGeneral');
+        Route::get('/cliente/{idCliente}/dia/{annoMesDia}/estado-general',   'AuditoriasController@api_estadoGeneral');
         Route::get('{fecha1}/al/{fecha2}/auditor/{idCliente}',  'AuditoriasController@api_getPorRangoYAuditor');
         Route::post('/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado', 'AuditoriasController@api_informarRealizado');
         Route::post('/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-fecha', 'AuditoriasController@api_informarFecha');
