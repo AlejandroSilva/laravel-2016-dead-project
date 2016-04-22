@@ -35,8 +35,8 @@ class ProgramacionAISemanal extends React.Component {
             numeroLocal: '',
 //            mesSeleccionado: '',
 //            semanaSeleccionada: '',
-            fechaInicialSeleccionada: moment(),
-            fechaFinalSeleccionada: moment().add(1, 'month'),
+            fechaInicialSeleccionada: moment( moment().format('YYYY-MM-01') ),
+            fechaFinalSeleccionada: moment().endOf('month'),
             // Auditorias y Filtros
             filtros: {},
             auditoriasFiltradas: []
