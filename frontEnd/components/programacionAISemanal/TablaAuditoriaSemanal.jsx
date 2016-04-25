@@ -24,8 +24,6 @@ class TablaAuditoriaSemanal extends React.Component{
                     <col className={css.thAuditor}/>
                     <col className={css.thRealizadaAprobada}/>
                     <col className={css.thRealizadaAprobada}/>
-                    <col className={css.thRealizadaAprobada}/>
-                    <col className={css.thRealizadaAprobada}/>
                     <col className={css.thAperturaCierre}/>
                     <col className={css.thAperturaCierre}/>
                     <col className={css.thDireccion}/>
@@ -79,28 +77,20 @@ class TablaAuditoriaSemanal extends React.Component{
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroAuditores')}
                             />
                         </th>
-                        <th className={css.thRealizadaAprobada}>
+                        <th className={css.thAperturaCierre}>
                             <HeaderConFiltro
-                                nombre="Realizada"
-                                filtro={this.props.filtros.filtroRealizadas || []}
-                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRealizadas')}
+                                nombre="(informado) Fecha"
+                                filtro={this.props.filtros.filtroFechaAuditoria || []}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroFechaAuditoria')}
                             />
                         </th>
                         <th className={css.thRealizadaAprobada}>
                             <HeaderConFiltro
-                                nombre="Aprobada"
+                                nombre="Revisada"
                                 filtro={this.props.filtros.filtroAprobadas || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroAprobadas')}
                             />
                         </th>
-                        <th className={css.thRealizadaAprobada}>
-                            <HeaderConFiltro
-                                nombre="(informado) Realizada"
-                                filtro={this.props.filtros.filtroRealizadasInformada || []}
-                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRealizadasInformada')}
-                            />
-                        </th>
-                        <th className={css.thAperturaCierre}>(informado) Fecha </th>
                         <th className={css.thAperturaCierre}>Hr.Apertura</th>
                         <th className={css.thAperturaCierre}>Hr.Cierre</th>
                         <th className={css.thDireccion}>Dirección</th>

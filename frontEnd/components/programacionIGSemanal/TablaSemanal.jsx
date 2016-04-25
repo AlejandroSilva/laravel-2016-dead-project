@@ -86,7 +86,13 @@ class TablaInventarios extends React.Component{
                         <th className={css.thHora}>Hr.Lider</th>
                         <th className={css.thHora}>Hr.Equipo</th>
                         <th className={css.thDireccion}>Dirección</th>
-                        <th className={css.thNomina}>Nómina</th>
+                        <th className={css.thNomina}>
+                            <HeaderConFiltro
+                                nombre='Nómina'
+                                filtro={this.props.filtros.filtroFechaSubidaNomina || []}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroFechaSubidaNomina')}
+                            />
+                            </th>
                     </Sticky>
                 </thead>
                 <tbody>

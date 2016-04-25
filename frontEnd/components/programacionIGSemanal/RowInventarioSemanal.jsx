@@ -189,7 +189,7 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Tienda */}
                 <td className={css.tdTienda}>
-                    <p><small>{this.props.inventario.local.nombre}</small></p>
+                    <p>{this.props.inventario.local.nombre}</p>
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
@@ -335,7 +335,7 @@ class RowInventario extends React.Component{
                 <td className={css.tdNomina}>
                     {this.props.inventario.nomina_dia.fechaSubidaNomina==='0000-00-00'?
                         <span className="label label-default">Pendiente</span> :
-                        <span className="label label-primary">Subida el {this.props.inventario.nomina_dia.fechaSubidaNomina}</span>
+                        <span className="label label-primary">{this.props.inventario.nomina_dia.fechaSubidaNomina}</span>
                     }
                 </td>
             </tr>

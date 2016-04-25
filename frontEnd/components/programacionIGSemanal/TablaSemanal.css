@@ -42,14 +42,14 @@
 
 /* CLIENTE */
 .thCliente{
-    width: 45px !important;
+    width: 35px !important;
     background: white;
 }
 .tdCliente{
-    width: 45px !important;
+    width: 35px !important;
     background: white;
     vertical-align: middle !important;
-    font-size: 12px !important;
+    font-size: 10px !important;
 }
 .tdCliente p{
     text-align: center;
@@ -57,14 +57,14 @@
 
 /* CECO */
 .thCeco{
-    width: 45px !important;
+    width: 35px !important;
     background: white;
 }
 .tdCeco{
-    width: 45px !important;
+    width: 35px !important;
     background: white;
     vertical-align: middle !important;
-    font-size: 12px !important;
+    font-size: 10px !important;
 }
 .tdCeco p{
     text-align: center;
@@ -87,23 +87,23 @@
 
 /* COMUNA */
 .thComuna{
-    width: 95px !important;
+    width: 80px !important;
     background: white;
 }
 .tdComuna{
-    width: 95px !important;
+    width: 80px !important;
     background: white;
     vertical-align: middle !important;
-    font-size: 12px !important;
+    font-size: 10px !important;
 }
 
 /* TURNO */
 .thTurno{
-    width: 95px !important;
+    width: 80px !important;
     background: white;
 }
 .tdTurno{
-    width: 95px !important;
+    width: 80px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
@@ -111,7 +111,7 @@
     font-size: 14px !important;
 }
 .tdTurno > select {
-    width: 94px !important;
+    width: 79px !important;
     display: block;
     margin: 0 auto 1px auto;
     height:18px;
@@ -121,13 +121,14 @@
 
 /* TIENDA */
 .thTienda{
-    width: 110px !important;
+    width: 100px !important;
     background: white;
 }
 .tdTienda{
-    width: 110px !important;
+    width: 100px !important;
     background: white;
     vertical-align: middle !important;
+    font-size: 10px;
 }
 
 /* STOCK */

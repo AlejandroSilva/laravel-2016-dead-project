@@ -142,33 +142,30 @@ class AuditoriasController extends Controller {
         $auditoria = Auditorias::find($idAuditoria);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
         if($auditoria){
+            $mensajeActualizar = "[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'; ";
+
             // actualizar fecha siempre y cuando sea valida dependiendo el mes
             if(isset($request->fechaProgramada)) {
                 if ($this->fecha_valida($request->fechaProgramada)) {
+                    Log::info( $mensajeActualizar."fechaProgramada '$auditoria->fechaProgramada' > '$request->fechaProgramada'." );
                     $auditoria->fechaProgramada = $request->fechaProgramada;
-                    Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. fechaProgramada '$request->fechaProgramada' actualizada.");
                 }
             }
-
             // actualizar auditor
             if(isset($request->idAuditor)){
                 $idAuditor = $request->idAuditor==0? null: $request->idAuditor;
+                Log::info( $mensajeActualizar."idAuditor '$auditoria->idAuditor' > '$idAuditor'." );
                 $auditoria->idAuditor = $idAuditor;
-                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. idAuditor '$idAuditor' actualizado.");
-            }
-            if(isset($request->realizada)){
-                $auditoria->realizada = $request->realizada;
-                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. realizada '$request->realizada' actualizado.");
             }
             if(isset($request->aprovada)){
+                Log::info( $mensajeActualizar."aprovada '$auditoria->aprovada' > '$request->aprovada'." );
                 $auditoria->aprovada = $request->aprovada;
-                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. aprovada '$request->aprovada' actualizado.");
             }
             // actualizar hora de presentacion de auditor
             if(isset($request->horaPresentacionAuditor)){
                 $horaPresentacion = $request->horaPresentacionAuditor==0? null: $request->horaPresentacionAuditor;
                 $auditoria->horaPresentacionAuditor = $horaPresentacion;
-                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. horaPresentacionAuditor '$horaPresentacion' actualizado.");
+                Log::info( $mensajeActualizar."horaPresentacionAuditor '$auditoria->horaPresentacionAuditor' > '$horaPresentacion'." );
             }
 
             $resultado = $auditoria->save();

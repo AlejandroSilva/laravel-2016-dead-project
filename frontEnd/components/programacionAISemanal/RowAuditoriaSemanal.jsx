@@ -40,11 +40,6 @@ class RowAuditoriaSemanal extends React.Component{
         if(estadoSelectAuditor.dirty)
             cambiosAuditoria.idAuditor = estadoSelectAuditor.seleccionUsuario
 
-        // REALIZADA ha cambiado?
-        let estadoSelectRealizada = this.selectRealizada.getEstado()
-        if(estadoSelectRealizada.dirty)
-            cambiosAuditoria.realizada = estadoSelectRealizada.seleccionUsuario
-
         // APROBADA ha cambiado?
         let estadoSelectAprobada = this.selectAprobada.getEstado()
         if(estadoSelectAprobada.dirty)
@@ -161,21 +156,14 @@ class RowAuditoriaSemanal extends React.Component{
                             opcionNulaSeleccionable={true}
                             puedeModificar={this.props.puedeModificar}/>
                 </td>
-                {/* Realizada */}
+                {/* (informado) Fecha Auditoria */}
                 <td className={css.tdRealizadaAprobada}>
-                    <Select
-                        ref={ref=>this.selectRealizada=ref}
-                        seleccionada={this.props.auditoria.realizada}
-                        onSelect={this.guardarAuditoria.bind(this)}
-                        opciones={[
-                            {valor: '0', texto: 'Pendiente'},
-                            {valor: '1', texto: 'Realizada'}
-                        ]}
-                        opcionNula={false}
-                        opcionNulaSeleccionable={false}
-                        puedeModificar={this.props.puedeModificar}/>
+                    {this.props.auditoria.fechaAuditoria==='0000-00-00'?
+                        <span className="label label-default">Pendiente</span> :
+                        <span className="label label-primary">{this.props.auditoria.fechaAuditoria}</span>
+                    }
                 </td>
-                {/* Aprobada */}
+                {/* Revisado (antes llamado "Aprobada" */}
                 <td className={css.tdRealizadaAprobada}>
                     <Select
                         ref={ref=>this.selectAprobada=ref}
@@ -183,28 +171,11 @@ class RowAuditoriaSemanal extends React.Component{
                         onSelect={this.guardarAuditoria.bind(this)}
                         opciones={[
                             {valor: '0', texto: 'Pendiente'},
-                            {valor: '1', texto: 'Aprobada'}
+                            {valor: '1', texto: 'Revisada'}
                         ]}
                         opcionNula={false}
                         opcionNulaSeleccionable={false}
-                        puedeModificar={this.props.puedeModificar && this.props.auditoria.realizada==="1"}/>
-                </td>
-                {/* Estado Informado */}
-                <td className={css.tdRealizadaAprobada}>
-                    <Select
-                        seleccionada={this.props.auditoria.realizadaInformada}
-                        onSelect={()=>{}}
-                        opciones={[
-                            {valor: '0', texto: 'Pendiente'},
-                            {valor: '1', texto: 'Realizada'}
-                        ]}
-                        opcionNula={false}
-                        opcionNulaSeleccionable={false}
-                        puedeModificar={false}/>
-                </td>
-                {/* (informado) Fecha Auditoria */}
-                <td className={css.tdRealizadaAprobada}>
-                    {this.props.auditoria.fechaAuditoria!='0000-00-00'? this.props.auditoria.fechaAuditoria : ''}
+                        puedeModificar={this.props.puedeModificar}/>
                 </td>
                 {/* Hora de Apertura del local */}
                 <td className={css.tdAperturaCierre}>
