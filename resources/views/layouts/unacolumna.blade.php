@@ -2,7 +2,7 @@
 @extends('layouts.root')
 
 @section('top')
-    <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -47,7 +47,7 @@
                                 @endif
 
                                 {{-- INVENTARIO --}}
-                                @if( Auth::user()->hasRole('Administrador') )
+                                @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('inventario/lista')? 'active': '' }}">
                                         <a href="{{ url('inventario/lista') }}">Lista de inventarios</a>
@@ -59,7 +59,7 @@
                                 @endif
 
                                 {{-- Nominas --}}
-                                @if( Auth::user()->hasRole('Administrador') )
+                                @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('nominas')? 'active': '' }}">
                                         <a href="{{ url('nominas') }}">Nominas</a>
