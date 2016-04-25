@@ -371,7 +371,7 @@ class InventariosController extends Controller {
 
             // guardar
             $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $randomFileName = "archivos_temporales/pInventarioMes_".md5(uniqid(rand(), true)).".xlxs";
             $excelWritter->save($randomFileName);
 
             // entregar la descarga al usuario
@@ -398,7 +398,7 @@ class InventariosController extends Controller {
 
             // guardar
             $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $randomFileName = "archivos_temporales/pInventarioSemanal_".md5(uniqid(rand(), true)).".xlxs";
             $excelWritter->save($randomFileName);
 
             // entregar la descarga al usuario

@@ -425,21 +425,15 @@ class AuditoriasController extends Controller {
         $workbook = $this->generarWorkbook($auditorias);
         $sheet = $workbook->getActiveSheet();
 
-        //evaluar si cliente viene con un valor
+
+        $archivoDescarga = "programacion.xlsx";
         if(!$cliente){
             $sheet->setCellValue('A2', 'Fecha:');
             $sheet->setCellValue('B2', $annoMesDia);
             $sheet->setCellValue('A1', 'Cliente:');
             $sheet->setCellValue('B1', 'Todos');
 
-            // guardar
-            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
-            $excelWritter->save($randomFileName);
-
-            // entregar la descarga al usuario
-            return response()->download($randomFileName, "programacion $annoMesDia.xlsx");
-
+            $archivoDescarga = "programacion $annoMesDia.xlsx";
         }else {
             $sheet->setCellValue('A2', 'Fecha:');
             $sheet->setCellValue('B2', $annoMesDia);
@@ -447,14 +441,15 @@ class AuditoriasController extends Controller {
             //obtener nombre cliente
             $sheet->setCellValue('B1', $cliente->nombre);
 
-            // guardar
-            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_" . md5(uniqid(rand(), true)) . ".xlxs";
-            $excelWritter->save($randomFileName);
-
-            //return response()->json($auditorias, 200);
-            return response()->download($randomFileName, "programacion $cliente->nombre-$annoMesDia.xlsx");
+            $archivoDescarga = "programacion $cliente->nombre-$annoMesDia.xlsx";
         }
+        // crear archivo
+        $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+        $randomFileName = "archivos_temporales/pAuditoriaMensual_".md5(uniqid(rand(), true)).".xlxs";
+        $excelWritter->save($randomFileName);
+
+        // entregar al usuario
+        return response()->download($randomFileName, $archivoDescarga);
     }
 
     // GET /pdf/auditorias/{fechaInicial}/al{fechaFinal}/cliente/{idCliente}
@@ -474,7 +469,7 @@ class AuditoriasController extends Controller {
 
             // guardar
             $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $randomFileName = "archivos_temporales/pAuditoriaSemanal_".md5(uniqid(rand(), true)).".xlxs";
             $excelWritter->save($randomFileName);
 
             // entregar la descarga al usuario
@@ -491,7 +486,7 @@ class AuditoriasController extends Controller {
 
             // guardar
             $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $randomFileName = "archivos_temporales/pAuditoriaSemanal_".md5(uniqid(rand(), true)).".xlxs";
             $excelWritter->save($randomFileName);
 
             // entregar la descarga al usuario
