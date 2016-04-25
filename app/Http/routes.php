@@ -80,7 +80,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('{idNomina}',                 'NominasController@api_get');
         Route::put('{idNomina}',                 'NominasController@api_actualizar');
         // RUTAS UTILIZADAS POR LA OTRA APLICACION
-        Route::get('/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informarDisponible', 'NominasController@api_informarDisponible');
+        Route::post('/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-disponible', 'NominasController@api_informarDisponible');
     });
 
     /*
