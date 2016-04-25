@@ -285,7 +285,6 @@ class ProgramacionAISemanal extends React.Component {
 
                 <a className="btn btn-success btn-xs pull-right"
                    href={`/pdf/auditorias/${fechaInicial}/al/${fechaFinal}/cliente/${this.state.idCliente}`}
-                   disabled
                 >Exportar a Excel</a>
 
                 <TablaAuditoriaSemanal

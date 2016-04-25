@@ -333,7 +333,10 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Nómina*/}
                 <td className={css.tdNomina}>
-                    <button className="btn btn-xs btn-primary btn-block" tabIndex="-1" disabled>Ver</button>
+                    {this.props.inventario.nomina_dia.fechaSubidaNomina==='0000-00-00'?
+                        <span className="label label-default">Pendiente</span> :
+                        <span className="label label-primary">Subida el {this.props.inventario.nomina_dia.fechaSubidaNomina}</span>
+                    }
                 </td>
             </tr>
         )

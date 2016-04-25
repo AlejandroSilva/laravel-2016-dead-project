@@ -226,7 +226,6 @@ class ProgramacionAIMensual extends React.Component{
                 <div className="row">
                     <a className="btn btn-success btn-xs pull-right"
                         href={`/pdf/auditorias/${opcionesSeleccionadas.mes}/cliente/${opcionesSeleccionadas.idCliente}`}
-                       disabled
                     >Exportar a Excel</a>
                     <TablaMensualAI
                         filtros={this.state.filtros}
