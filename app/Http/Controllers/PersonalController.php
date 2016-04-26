@@ -65,7 +65,7 @@ class PersonalController extends Controller {
             return response()->json($validator->messages(), 400);
         }else{
             $usuario = User::create( Input::all() );
-            return response()->json($usuario, 200);
+            return response()->json(User::find($usuario->id), 200);
         }
     }
 
