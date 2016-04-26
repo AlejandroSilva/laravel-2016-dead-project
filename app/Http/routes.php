@@ -127,8 +127,8 @@ Route::group(['middleware' => ['web']], function (){
     });
     // API USUARIOS
     Route::group(['prefix' => 'api/usuario'], function(){
-        Route::get('listado',           'PersonalController@api_getUsuarios')->name('per');
-        Route::post('nuevo',            'PersonalController@api_crear');
+        Route::get('buscar',            'PersonalController@api_buscar');
+        Route::post('nuevo',            'PersonalController@api_nuevo');
         Route::put('{idUsuario}',       'PersonalController@api_actualizar');
         // RUTAS UTILIZADAS POR LA OTRA APLICACION
         Route::get('{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
