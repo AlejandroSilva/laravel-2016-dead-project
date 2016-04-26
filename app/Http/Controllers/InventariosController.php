@@ -477,9 +477,8 @@ class InventariosController extends Controller {
         return $inventariosFiltrados;
     }
 
-    
-    
     function api_buscar(Request $request){
+        // agrega cabeceras para las peticiones con CORS
         header('Access-Control-Allow-Origin: *');
 
         $fechaInicio = $request->query('fechaInicio');
