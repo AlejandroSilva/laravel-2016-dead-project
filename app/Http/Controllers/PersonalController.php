@@ -51,6 +51,9 @@ class PersonalController extends Controller {
      */
     // GET api/usuario/buscar
     function api_buscar(){
+        // agrega cabeceras para las peticiones con CORS
+        header('Access-Control-Allow-Origin: *');
+        
         $personal = User::all()->sortBy('id');
         return response()->json($personal, 200);
     }
