@@ -299,12 +299,12 @@ class AuditoriasController extends Controller {
                 $realizadas = count($realizadasInformado);
                 $pendientes = count($pendientesInformado);
                 // Estado de avance Esperado
-                $auditoriasPorDia_esperado = round($total/$diasHabilesMes, 1);
+                $auditoriasPorDia_esperado = $diasHabilesMes==0? 0 : round($total/$diasHabilesMes, 1);          // division por cero
                 $realizadasALaFecha_esperado = round($diasHabilesTranscurridos*$auditoriasPorDia_esperado);
-                $porcentajeAvance_esperado = round(($realizadasALaFecha_esperado*100)/$total);
+                $porcentajeAvance_esperado = $total==0? 0 : round(($realizadasALaFecha_esperado*100)/$total);   // division por cero
                 // Estado de avance Real
-                $auditoriasPorDia_real = round($realizadas/$diasHabilesTranscurridos, 1);
-                $porcentajeAvance_real = round(($realizadas*100)/$total);
+                $auditoriasPorDia_real = $diasHabilesTranscurridos==0? 0 : round($realizadas/$diasHabilesTranscurridos, 1); // division por cero
+                $porcentajeAvance_real = $total==0? 0 : round(($realizadas*100)/$total);                        // division por cero
                 
                 return [
                     'zona'=>$zona,
