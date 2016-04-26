@@ -276,7 +276,7 @@ class InventariosController extends Controller {
         }
     }
 
-    // GET api/inventario/mes/{annoMesDia}
+    // GET api/inventario/mes/{annoMesDia}                              // ELIMINAR
     function api_getPorMesYCliente($annoMesDia, $idCliente){
         $inventarios = $this->inventariosPorMesYCliente($annoMesDia, $idCliente);
         return response()->json($inventarios, 200);
@@ -288,13 +288,13 @@ class InventariosController extends Controller {
      * ##########################################################
      */
     
-    // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}
+    // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}      // ELIMINAR
     function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
         $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
         return response()->json($inventarios, 200);
     }
 
-    // GET api/inventario/{fecha1}/al/{fecha2}/lider/{idCliente}
+    // GET api/inventario/{fecha1}/al/{fecha2}/lider/{idCliente}        // ELIMINAR
     function api_getPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente){
         if(User::find($idCliente)){
             $auditorias = $this->buscarPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente);
@@ -480,6 +480,8 @@ class InventariosController extends Controller {
     
     
     function api_buscar(Request $request){
+        header('Access-Control-Allow-Origin: *');
+
         $fechaInicio = $request->query('fechaInicio');
         $fechaFin = $request->query('fechaFin');
         $mes = $request->query('mes');
