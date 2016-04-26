@@ -63,15 +63,17 @@ Route::group(['middleware' => ['web']], function (){
 
     // API INVENTARIOS
     Route::group(['prefix' => 'api/inventario'], function(){
+        Route::get('buscar',     'InventariosController@api_buscar');
+        
         Route::post('nuevo',                 'InventariosController@api_nuevo');
         Route::get('{idInventario}',         'InventariosController@api_get');
         Route::put('{idInventario}',         'InventariosController@api_actualizar');
         Route::delete('{idInventario}',      'InventariosController@api_eliminar');
         // buscar inventarios
-        Route::get('{annoMesDia}/cliente/{idCliente}',  'InventariosController@api_getPorMesYCliente');
-        Route::get('{fecha1}/al/{fecha2}',              'InventariosController@api_getPorRango');   // ¿¿getPorRango ya no se utiliza??
+        //Route::get('{annoMesDia}/cliente/{idCliente}',  'InventariosController@api_getPorMesYCliente');     // **YA NO SE USA EN EL SIG
+
         // RUTAS UTILIZADAS POR LA OTRA APLICACION
-        Route::get('{fecha1}/al/{fecha2}/cliente/{idCliente}',   'InventariosController@api_getPorRangoYCliente');
+        Route::get('{fecha1}/al/{fecha2}/cliente/{idCliente}',   'InventariosController@api_getPorRangoYCliente'); // **YA NO SE USA EN EL SIG
         Route::get('{fecha1}/al/{fecha2}/lider/{idCliente}',     'InventariosController@api_getPorRangoYLider');
     });
 

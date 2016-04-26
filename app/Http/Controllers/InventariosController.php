@@ -294,38 +294,6 @@ class InventariosController extends Controller {
         return response()->json($inventarios, 200);
     }
 
-    // GET api/inventario/{fecha1}/al/{fecha2}
-    // TODO ¿¿getPorRango ya no se utiliza??
-    function api_getPorRango($annoMesDia1, $annoMesDia2){
-        $inventarios = Inventarios::with([
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region',
-            'nominaDia',
-            'nominaNoche',
-            'nominaDia.lider',
-            'nominaNoche.lider',
-            'nominaDia.captador',
-            'nominaNoche.captador',
-        ])
-            ->where('fechaProgramada', '>=', $annoMesDia1)
-            ->where('fechaProgramada', '<=', $annoMesDia2)
-            ->get();
-
-        // se modifican algunos campos para ser tratados mejor en el frontend
-        $inventariosMod = array_map(function($inventario){
-            $local = $inventario['local'];
-            $local['nombreCliente'] = $local['cliente']['nombreCorto'];
-            $local['nombreComuna'] = $local['direccion']['comuna']['nombre'];
-            $local['nombreProvincia'] = $local['direccion']['comuna']['provincia']['nombre'];
-            $local['nombreRegion'] = $local['direccion']['comuna']['provincia']['region']['numero'];
-            $inventario['local'] = $local;
-            return $inventario;
-        }, $inventarios->toArray());
-
-        return response()->json($inventariosMod, 200);
-    }
-
     // GET api/inventario/{fecha1}/al/{fecha2}/lider/{idCliente}
     function api_getPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente){
         if(User::find($idCliente)){
@@ -507,6 +475,86 @@ class InventariosController extends Controller {
             }
         }
         return $inventariosFiltrados;
+    }
+
+    
+    
+    function api_buscar(Request $request){
+        $fechaInicio = $request->query('fechaInicio');
+        $fechaFin = $request->query('fechaFin');
+        $mes = $request->query('mes');
+        $idCliente = $request->query('idCliente');
+        $idLider = $request->query('idLider');
+
+        $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider);
+        return response()->json($inventarios, 200);
+    }
+    private function buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider){
+        $query = Inventarios::with([
+            'local.cliente',
+            'local.formatoLocal',
+            'local.direccion.comuna.provincia.region',
+            'nominaDia',
+            'nominaNoche',
+            'nominaDia.lider',
+            'nominaNoche.lider',
+            'nominaDia.captador',
+            'nominaNoche.captador',
+        ]);
+        
+        // Filtrar por rango de fecha si corresponde
+        if(isset($fechaInicio) && isset($fechaFin)){
+            $query
+                ->where('fechaProgramada', '>=', $fechaInicio)
+                ->where('fechaProgramada', '<=', $fechaFin)
+                ->orderBy('fechaProgramada', 'asc');    
+        }
+        
+        // Filtrar por mes si corresponde
+        if(isset($mes)){
+            $fecha = explode('-', $mes);
+            $anno = $fecha[0];
+            $mes  = $fecha[1];
+            $query->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+                ->orderBy('fechaProgramada', 'asc');
+        }
+        
+        // Se filtran por cliente, solo si este es distinto a cero
+        if( isset($idCliente) && $idCliente!=0) {
+            $query->whereHas('local', function ($q) use ($idCliente) {
+                $q->where('idCliente', '=', $idCliente);
+            });
+        }
+        
+        $inventarios = $query->get()->toArray();
+
+        // Filtrar por Lideres si corresponde
+        if(isset($idLider) && $idLider!=0){
+            $inventariosFiltrados = [];
+            foreach ($inventarios as $inventario) {
+                $jornadaInventario = $inventario['idJornada'];
+                $liderDia = $inventario['nomina_dia']['idLider'];
+                $liderNoche = $inventario['nomina_noche']['idLider'];
+
+                // 1="no definido", 2="dia", 3="noche", 4="dia y noche"
+                if ($jornadaInventario == 2 && ($liderDia==$idLider)) {
+                    // si es "dia", solo puede estar asignado a la nomina de dia
+                    array_push($inventariosFiltrados, $inventario);
+                } else if ($jornadaInventario == 3 && ($liderNoche==$idLider)) {
+                    // si es "noche", solo puede estar asignado a la nomina de noche
+                    array_push($inventariosFiltrados, $inventario);
+                } else if ($jornadaInventario == 4 && ( ($liderDia==$idLider) || ($liderNoche==$idLider) )) {
+                    // si la jornada es "dia noche", puede ser lider de cualquiera de las dos nominas
+                    array_push($inventariosFiltrados, $inventario);
+                } else {
+                    // si no tiene nominas asignadas, no es lider de ninguna
+                }
+            }
+            return $inventariosFiltrados;
+        }else{
+            return $inventarios;
+        }
     }
 
     //Function para validar que la fecha sea valida

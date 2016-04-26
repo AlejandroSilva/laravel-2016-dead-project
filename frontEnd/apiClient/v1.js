@@ -33,15 +33,13 @@ export default {
         eliminar: (idInventario)=>{
             return axios.delete(`/api/inventario/${idInventario}`)
         },
-        // ¿¿getPorRango ya no se utiliza??
-        getPorRango: (fechaInicio, fechaFin)=>{
-            return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}`)
-        },
         getPorMesYCliente: (annoMesDia, idCliente)=> {
-            return axios.get(`/api/inventario/${annoMesDia}/cliente/${idCliente}`)
+            // ELIMINAR RUTA return axios.get(`/api/inventario/${annoMesDia}/cliente/${idCliente}`)
+            return axios.get(`/api/inventario/buscar?mes=${annoMesDia}&idCliente=${idCliente}`)
         },
         getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>{
-            return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)
+            // ELIMINAR RUTA return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)
+            return axios.get(`/api/inventario/buscar?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
         }
     },
     auditoria: {
