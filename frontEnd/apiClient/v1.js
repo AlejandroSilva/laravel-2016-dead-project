@@ -59,7 +59,7 @@ export default {
             return axios.get(`/api/auditoria/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)
         },
         estadoGeneral: (idCliente, dia)=>{
-            return axios.get(`http://localhost/api/auditoria/cliente/${idCliente}/dia/${dia}/estado-general`);
+            return axios.get(`/api/auditoria/cliente/${idCliente}/dia/${dia}/estado-general`);
         }
     },
     nomina: {
