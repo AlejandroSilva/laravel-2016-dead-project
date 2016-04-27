@@ -54,8 +54,14 @@ class PersonalController extends Controller {
         // agrega cabeceras para las peticiones con CORS
         header('Access-Control-Allow-Origin: *');
         
-        $personal = User::all()->sortBy('id');
-        return response()->json($personal, 200);
+        $arrayUsuarios = User::with(['comuna.provincia.region', 'roles'])
+            ->get()
+            ->sortBy('id')
+            ->toArray();
+
+        // se parsean los usuarios con el formato "estandar"
+        $arrayUsuarios_formato = array_map( [$this, 'darFormatoUsuario'], $arrayUsuarios );
+        return response()->json($arrayUsuarios_formato, 200);
     }
 
     // POST api/usuario/nuevo
@@ -68,7 +74,10 @@ class PersonalController extends Controller {
             return response()->json($validator->messages(), 400);
         }else{
             $usuario = User::create( Input::all() );
-            return response()->json(User::find($usuario->id), 200);
+            // se parsea el usuario con el formato "estandar"
+            $usuario_db = User::with(['comuna.provincia.region', 'roles'])->find($usuario->id);
+            $usuario_formato = $this->darFormatoUsuario( $usuario_db );
+            return response()->json($usuario_formato, 200);
         }
     }
 
@@ -90,5 +99,48 @@ class PersonalController extends Controller {
         }else{
             return response()->json([], 404);
         }
+    }
+
+    /**
+     * ##########################################################
+     * funciones privadas
+     * ##########################################################
+     */
+
+    private function darFormatoUsuario($user){
+        return [
+            // datos personales
+            'id' => $user['id'],
+            'nombre1' => $user['nombre1'],
+            'nombre2' => $user['nombre2'],
+            'apellidoPaterno' => $user['apellidoPaterno'],
+            'apellidoMaterno' => $user['apellidoMaterno'],
+            'telefono' => $user['telefono'],
+            'telefonoEmergencia' => $user['telefonoEmergencia'],
+            'usuarioRUN' => $user['usuarioRUN'],
+            'usuarioDV' => $user['usuarioDV'],
+            'email' => $user['email'],
+            'emailPersonal' => $user['emailPersonal'],
+            // Contrato
+            'tipoContrato' => $user['tipoContrato'],
+            'fechaInicioContrato' => $user['fechaInicioContrato'],
+            'fechaCertificadoAntecedentes' => $user['fechaCertificadoAntecedentes'],
+            // Datos bancarios
+            'banco' => $user['banco'],
+            'tipoCuenta' => $user['tipoCuenta'],
+            'numeroCuenta' => $user['numeroCuenta'],
+            // Direccion
+            'direccion' => $user['direccion'],
+            'comuna' => $user['comuna']['nombre'],
+            'provincia' => $user['comuna']['provincia']['nombre'],
+            'region' => $user['comuna']['provincia']['region']['nombre'],
+            // si "roles" es un arreglo vacio, array_map lanza un error
+            'roles' => sizeof($user['roles'])>0?
+                array_map(function($role){
+                    return $role['name'];
+                }, $user['roles'])
+                :
+                []
+        ];
     }
 }

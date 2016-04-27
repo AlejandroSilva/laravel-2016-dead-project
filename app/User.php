@@ -35,4 +35,9 @@ class User extends Authenticatable {
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function comuna(){
+        // belongsTo(modelo, this.fogeignKey, parent.otherKey)
+        return $this->belongsTo('App\Comunas', 'cutComuna', 'cutComuna');
+    }
 }
