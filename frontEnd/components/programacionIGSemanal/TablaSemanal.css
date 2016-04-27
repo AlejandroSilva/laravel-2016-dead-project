@@ -202,33 +202,36 @@
 
 /* HORA LLEGADA LIDER / HORA LLEGADA EQUIPO */
 .thHora{
-    width: 94px !important;
+    width: 62px !important;
     background: white;
 }
 .tdHora{
-    width: 94px !important;
+    width: 62px !important;
     background: white;
     vertical-align: middle !important;
-    padding-left: 2px !important;
-    padding-right: 2px !important;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
 }
 .tdHora > input {
-    width: 90px !important;
+    width: 60px !important;
     height: 18px !important;    /* misma altura que los select */
+    margin-left: 0;
+    margin-right: 0;
 }
 
 /* DIRECCION */
 .thDireccion{
-    width: 220px !important;
+    width: 110px !important;
     background: white;
 }
 .tdDireccion{
-    width: 220px !important;
+    width: 110px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 2px !important;
     padding-right: 2px !important;
-    font-size: 10px;
+    font-size: 8px;
+    line-height: 1 !important;
 }
 
 /* NOMINA */

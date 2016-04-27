@@ -49,7 +49,7 @@
     width: 45px !important;
     background: white;
     vertical-align: middle !important;
-    font-size: 12px !important;
+    font-size: 10px !important;
 }
 .tdCliente p{
     text-align: center;
@@ -64,7 +64,7 @@
     width: 45px !important;
     background: white;
     vertical-align: middle !important;
-    font-size: 12px !important;
+    font-size: 10px !important;
 }
 .tdCeco p{
     text-align: center;
@@ -79,7 +79,7 @@
     width: 45px !important;
     background: white;
     vertical-align: middle !important;
-    font-size: 12px !important;
+    font-size: 10px !important;
 }
 .tdRegion p{
     text-align: center;
@@ -87,14 +87,14 @@
 
 /* COMUNA */
 .thComuna{
-    width: 95px !important;
+    width: 80px !important;
     background: white;
 }
 .tdComuna{
-    width: 95px !important;
+    width: 80px !important;
     background: white;
     vertical-align: middle !important;
-    font-size: 12px !important;
+    font-size: 10px !important;
 }
 
 /* TURNO */
@@ -183,19 +183,32 @@
     line-height: 12px;
 }
 
-/* Estados: REALIZADA / APROBADA */
-.thRealizadaAprobada {
+/* Fecha informada de realización de auditoria*/
+.thFechaInformada {
+    width: 70px !important;
+    background: white;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.tdFechaInformada {
+    width: 70px !important;
+    background: white;
+    vertical-align: middle !important;
+}
+
+/* Estados: REVISADA (ex-APROBADA) */
+.thRevisada {
     width: 80px !important;
     background: white;
 }
-.tdRealizadaAprobada {
+.tdRevisada {
     width: 80px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.tdRealizadaAprobada > select {
+.tdRevisada > select {
     width: 78px !important;
     height: 18px;               /* misma altura de un input */
     margin: 0 auto 1px auto;    /* mismos margenes de un input */
@@ -242,19 +255,17 @@
 
 /* DIRECCION */
 .thDireccion{
-    width: 220px !important;
+    width: 110px !important;
     background: white;
 }
 .tdDireccion{
-    width: 220px !important;
+    width: 110px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 2px !important;
     padding-right: 2px !important;
-    font-size: 10px;
-}
-.tdDireccion > p {
-    font-size: 10px !important;
+    font-size: 8px;
+    line-height: 1 !important;
 }
 
 /* Opciones */

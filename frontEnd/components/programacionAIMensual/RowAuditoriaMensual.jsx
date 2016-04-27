@@ -94,7 +94,7 @@ class RowAuditoriaMensual extends React.Component{
                 </td>
                 {/* Comuna */}
                 <td className={css.tdComuna}>
-                    <p style={{margin:0}}><b><small>{ this.props.auditoria.local.direccion.comuna.nombre }</small></b></p>
+                    { this.props.auditoria.local.direccion.comuna.nombre }
                 </td>
                 {/* Local */}
                 <td className={css.tdLocal}>
@@ -137,8 +137,8 @@ class RowAuditoriaMensual extends React.Component{
                 </td>
 
                 {/* Direccion */}
-                <td className={css.direccion}>
-                    <p>{this.props.auditoria.local.direccion.direccion}</p>
+                <td className={css.tdDireccion}>
+                    {this.props.auditoria.local.direccion.direccion}
                 </td>
                 {/* Opciones    */}
                 <td className={css.tdOpciones}>

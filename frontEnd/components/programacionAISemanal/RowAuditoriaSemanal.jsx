@@ -157,14 +157,14 @@ class RowAuditoriaSemanal extends React.Component{
                             puedeModificar={this.props.puedeModificar}/>
                 </td>
                 {/* (informado) Fecha Auditoria */}
-                <td className={css.tdRealizadaAprobada}>
+                <td className={css.tdFechaInformada}>
                     {this.props.auditoria.fechaAuditoria==='0000-00-00'?
                         <span className="label label-default">Pendiente</span> :
                         <span className="label label-primary">{this.props.auditoria.fechaAuditoria}</span>
                     }
                 </td>
                 {/* Revisado (antes llamado "Aprobada" */}
-                <td className={css.tdRealizadaAprobada}>
+                <td className={css.tdRevisada}>
                     <Select
                         ref={ref=>this.selectAprobada=ref}
                         seleccionada={this.props.auditoria.aprovada}
@@ -191,7 +191,7 @@ class RowAuditoriaSemanal extends React.Component{
                 </td>
                 {/* Dirección */}
                 <td className={css.tdDireccion}>
-                    <p>{this.props.auditoria.local.direccion.direccion}</p>
+                    {this.props.auditoria.local.direccion.direccion}
                 </td>
                 {/* Opciones */}
                 <td className={css.tdOpciones}>

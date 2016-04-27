@@ -329,7 +329,7 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Dirección */}
                 <td className={css.tdDireccion}>
-                    <p>{this.props.inventario.local.direccion.direccion}</p>
+                    {this.props.inventario.local.direccion.direccion}
                 </td>
                 {/* Nómina*/}
                 <td className={css.tdNomina}>

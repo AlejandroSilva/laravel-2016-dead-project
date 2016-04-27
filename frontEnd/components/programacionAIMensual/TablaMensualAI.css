@@ -40,7 +40,7 @@
 
 /* Cliente */
 .thCliente {
-    width: 75px;
+    width: 65px;
     background: white;
 }
 .tdCliente {
@@ -49,7 +49,7 @@
 }
 /* CECO */
 .thCeco {
-    width: 45px;
+    width: 40px;
     background: white;
 }
 .tdCeco {
@@ -76,7 +76,7 @@
 }
 /* Region */
 .thRegion {
-    width: 80px;
+    width: 70px;
     background: white;
 }
 .tdRegion {
@@ -85,12 +85,13 @@
 }
 /* Comuna */
 .thComuna {
-    width: 140px;
+    width: 80px;
     background: white;
 }
 .tdComuna {
     composes: thComuna;
     vertical-align: middle !important;
+    font-size: 10px;
 }
 /* Auditor */
 .thAuditor{
@@ -114,7 +115,7 @@
 
 /* Stock */
 .thStock {
-    width: 60px;
+    width: 45px;
     background: white;
 }
 .tdStock {
@@ -167,19 +168,17 @@
 }
 
 .thDireccion{
-    width: 220px !important;
+    width: 110px !important;
     background: white;
 }
 .tdDireccion{
-    width: 220px !important;
+    width: 110px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 2px !important;
     padding-right: 2px !important;
-    font-size: 10px;
-}
-.tdDireccion > p {
-    font-size: 10px !important;
+    font-size: 8px;
+    line-height: 1 !important;
 }
 
 /* Opciones */
