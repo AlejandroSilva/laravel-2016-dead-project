@@ -301,10 +301,13 @@ class AuditoriasController extends Controller {
                 // Estado de avance Esperado
                 $auditoriasPorDia_esperado = $diasHabilesMes==0? 0 : round($total/$diasHabilesMes, 1);          // division por cero
                 $realizadasALaFecha_esperado = round($diasHabilesTranscurridos*$auditoriasPorDia_esperado);
+                $pendientesALaFecha_esperado = $total - $realizadasALaFecha_esperado;
                 $porcentajeAvance_esperado = $total==0? 0 : round(($realizadasALaFecha_esperado*100)/$total);   // division por cero
+                $diasParaTerminar_esperado = $auditoriasPorDia_esperado==0? 0 : round($pendientesALaFecha_esperado/$auditoriasPorDia_esperado, 1);
                 // Estado de avance Real
                 $auditoriasPorDia_real = $diasHabilesTranscurridos==0? 0 : round($realizadas/$diasHabilesTranscurridos, 1); // division por cero
                 $porcentajeAvance_real = $total==0? 0 : round(($realizadas*100)/$total);                        // division por cero
+                $diasParaTerminar_real = $auditoriasPorDia_real==0? 0 : round($pendientes/$auditoriasPorDia_real, 1);
                 
                 return [
                     'zona'=>$zona,
@@ -321,11 +324,14 @@ class AuditoriasController extends Controller {
                         // Estado de avance Esperado
                         'auditoriasPorDia_esperado'=>$auditoriasPorDia_esperado,
                         'realizadasALaFecha_esperado'=>$realizadasALaFecha_esperado,
+                        'pendientesALaFecha_esperado'=>$pendientesALaFecha_esperado,
                         'porcentajeCumplimiento_esperado'=>$porcentajeAvance_esperado,
+                        'diasParaTerminar_esperado'=>$diasParaTerminar_esperado,
                         // Estado de avance Real
                         'auditoriasPorDia_real'=>$auditoriasPorDia_real,
                         'realizadasALaFecha_real'=>$realizadas,
-                        'porcentajeCumplimiento_real'=>$porcentajeAvance_real
+                        'porcentajeCumplimiento_real'=>$porcentajeAvance_real,
+                        'diasParaTerminar_real'=>$diasParaTerminar_real,
                     ]
                 ];
             }, Zonas::orderBy('idZona')->get()->toArray());
