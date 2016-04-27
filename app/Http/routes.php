@@ -26,8 +26,12 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
     Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function(){
-        Route::get('clientes', 'ClientesController@show_Lista')->name('admin.clientes.lista');
+        Route::get('/clientes',                                  'ClientesController@show_Lista');
+        Route::post('/clientes',                                    'ClientesController@postFormulario');
+        Route::get('/cliente/{idCliente}/editar',                'ClientesController@api_get');
+        Route::put('/cliente/{idCliente}/editar',                'ClientesController@api_actualizar');
         Route::get('locales',  'LocalesController@show_mantenedor')->name('admin.locales.lista');
+        
     });
 
     // API CLIENTES Y LOCALES
