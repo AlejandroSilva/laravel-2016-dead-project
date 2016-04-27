@@ -117,6 +117,7 @@ class PersonalController extends Controller {
             'apellidoMaterno' => $user['apellidoMaterno'],
             'telefono' => $user['telefono'],
             'telefonoEmergencia' => $user['telefonoEmergencia'],
+            'fechaNacimiento' => $user['fechaNacimiento'],
             'usuarioRUN' => $user['usuarioRUN'],
             'usuarioDV' => $user['usuarioDV'],
             'email' => $user['email'],
