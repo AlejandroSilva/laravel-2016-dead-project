@@ -30,7 +30,7 @@
                            required
                     >
                 </td>
-                <td><input type="submit" class="btn btn-block btn-primary" value="Agregar"></td>
+                <td><input type="submit" class="btn btn-block btn-primary" value="Modificar"></td>
             </tr>
             </tbody>
 

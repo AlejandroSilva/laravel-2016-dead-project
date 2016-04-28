@@ -1,10 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\FormatoLocales;
-use App\Jornadas;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Auth;
 use App\Locales;
 use App\Clientes;
+use App\FormatoLocales;
+use App\Jornadas;
 
 class LocalesController extends Controller {
     /**
@@ -89,5 +90,69 @@ class LocalesController extends Controller {
         // Calcular la dotacion sugerida
         $localAsArray['dotacionSugerida'] = $local->dotacionSugerida();
         return response()->json($localAsArray);
+    }
+
+    public function api_getFormatos(){
+        $formatos = FormatoLocales::all();
+        return view('operacional.locales.formatos', [
+            'formatos' => $formatos
+        ]);
+    }
+    
+    public function postFormulario(Request $request){
+        $this->validate($request,
+            [   //unique:formato_locales-----> el nombre formato_locales debe ser igual a la tabla de la base de datos
+                'nombre'=> 'required|min:2|max:40|unique:formato_locales',
+                'siglas'=> 'required|min:2|max:10|unique:formato_locales',
+                'produccionSugerida'=> 'required',
+                'descripcion',
+            ]);
+
+        $formato = new FormatoLocales();
+        $formato->nombre = $request->nombre;
+        $formato->siglas = $request->siglas;
+        $formato->produccionSugerida = $request->produccionSugerida;
+        $formato->descripcion = $request->descripcion;
+
+        $formato->save();
+        
+        $formato = FormatoLocales::all();
+        return view('operacional.locales.formatos', [
+            'formatos' => $formato
+        ]);
+    }
+
+    public function api_get($idFormato){
+        $formato = FormatoLocales::find($idFormato);
+        if($formato){
+            return view('operacional.locales.formato', [
+                'formato'=>$formato
+            ]);
+
+        }else{
+            return response()->json([], 404);
+        }
+    }
+
+    public function api_actualizar($idFormato, Request $request){
+        $formato = FormatoLocales::find($idFormato);
+        if($formato) {
+            if (isset($request->nombre)) {
+                $formato->nombre = $request->nombre;
+            }
+            if (isset($request->siglas)) {
+                $formato->siglas = $request->siglas;
+            }
+            if (isset($request->produccionSugerida)) {
+                $formato->produccionSugerida = $request->produccionSugerida;
+            }
+            $formato->descripcion = $request->descripcion;
+
+            $formato->save();
+            return Redirect::to("formatoLocales");
+
+        }else{
+            return response()->json([], 404);
+        }
     }
 }
