@@ -79,14 +79,14 @@ class TablaAuditoriaSemanal extends React.Component{
                         </th>
                         <th className={css.thFechaInformada}>
                             <HeaderConFiltro
-                                nombre="(informado) Fecha"
+                                nombre="Estado Realización"
                                 filtro={this.props.filtros.filtroFechaAuditoria || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroFechaAuditoria')}
                             />
                         </th>
                         <th className={css.thRevisada}>
                             <HeaderConFiltro
-                                nombre="Revisada"
+                                nombre="Estado Análisis"
                                 filtro={this.props.filtros.filtroAprobadas || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroAprobadas')}
                             />

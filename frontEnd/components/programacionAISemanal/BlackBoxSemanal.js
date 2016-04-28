@@ -139,16 +139,16 @@ export default class BlackBoxSemanal{
             .value()
 
         // ##### Filtro Revisada (antes "Aprobadas")
-        this.filtroAprobadas = _.chain([
-                {valor: '1', texto: 'Revisada'},
-                {valor: '0', texto: 'Pendiente'}
-            ])
-            .map(opcionAprobada=>{
-                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
-                let opcion = _.find(this.filtroAprobadas, {'valor': opcionAprobada.valor})
-                return opcion? opcion : {valor: opcionAprobada.valor, texto: opcionAprobada.texto, seleccionado: true}
-            })
-            .value()
+        // this.filtroAprobadas = _.chain([
+        //         {valor: '1', texto: 'Revisada'},
+        //         {valor: '0', texto: 'Pendiente'}
+        //     ])
+        //     .map(opcionAprobada=>{
+        //         // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+        //         let opcion = _.find(this.filtroAprobadas, {'valor': opcionAprobada.valor})
+        //         return opcion? opcion : {valor: opcionAprobada.valor, texto: opcionAprobada.texto, seleccionado: true}
+        //     })
+        //     .value()
     }
     reemplazarFiltro(nombreFiltro, filtroActualizado) {
         if(this[nombreFiltro]) {
@@ -180,9 +180,9 @@ export default class BlackBoxSemanal{
                     return _.find(this.filtroFechas, {'valor': auditoria.fechaProgramada, 'seleccionado': true})
                 })
                 // Filtrar por Aprobada
-                .filter(auditoria=>{
-                    return _.find(this.filtroAprobadas, {'valor': auditoria.aprovada, 'seleccionado': true})
-                })
+                // .filter(auditoria=>{
+                //     return _.find(this.filtroAprobadas, {'valor': auditoria.aprovada, 'seleccionado': true})
+                // })
                 // Filtrar por Fecha de Subida de Nomina
                 .filter(auditoria=>{
                     return _.find(this.filtroFechaAuditoria, {'valor': auditoria.fechaAuditoria, 'seleccionado': true})

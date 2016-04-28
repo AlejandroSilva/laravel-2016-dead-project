@@ -40,11 +40,6 @@ class RowAuditoriaSemanal extends React.Component{
         if(estadoSelectAuditor.dirty)
             cambiosAuditoria.idAuditor = estadoSelectAuditor.seleccionUsuario
 
-        // APROBADA ha cambiado?
-        let estadoSelectAprobada = this.selectAprobada.getEstado()
-        if(estadoSelectAprobada.dirty)
-            cambiosAuditoria.aprovada = estadoSelectAprobada.seleccionUsuario
-
         // la HORA DE LLEGADA DEL AUDITOR es valida y ha cambiado?
         // let estadoHoraAuditor = this.inputHoraAuditor.getEstado()
         // console.log('hora auditor ', estadoHoraAuditor)
@@ -156,15 +151,17 @@ class RowAuditoriaSemanal extends React.Component{
                             opcionNulaSeleccionable={true}
                             puedeModificar={this.props.puedeModificar}/>
                 </td>
-                {/* (informado) Fecha Auditoria */}
+                {/* Estado Realizacion (Fecha Auditoria) */}
                 <td className={css.tdFechaInformada}>
                     {this.props.auditoria.fechaAuditoria==='0000-00-00'?
                         <span className="label label-default">Pendiente</span> :
                         <span className="label label-primary">{this.props.auditoria.fechaAuditoria}</span>
                     }
                 </td>
-                {/* Revisado (antes llamado "Aprobada" */}
+                {/* Estado Analisis (antes llamado "Aprobada" */}
                 <td className={css.tdRevisada}>
+                    {this.props.auditoria.estadoAnalisis}
+                    {/*
                     <Select
                         ref={ref=>this.selectAprobada=ref}
                         seleccionada={this.props.auditoria.aprovada}
@@ -176,6 +173,7 @@ class RowAuditoriaSemanal extends React.Component{
                         opcionNula={false}
                         opcionNulaSeleccionable={false}
                         puedeModificar={this.props.puedeModificar}/>
+                     */}
                 </td>
                 {/* Hora de Apertura del local */}
                 <td className={css.tdAperturaCierre}>

@@ -157,10 +157,6 @@ class AuditoriasController extends Controller {
                 Log::info( $mensajeActualizar."idAuditor '$auditoria->idAuditor' > '$idAuditor'." );
                 $auditoria->idAuditor = $idAuditor;
             }
-            if(isset($request->aprovada)){
-                Log::info( $mensajeActualizar."aprovada '$auditoria->aprovada' > '$request->aprovada'." );
-                $auditoria->aprovada = $request->aprovada;
-            }
             // actualizar hora de presentacion de auditor
             if(isset($request->horaPresentacionAuditor)){
                 $horaPresentacion = $request->horaPresentacionAuditor==0? null: $request->horaPresentacionAuditor;
@@ -287,7 +283,7 @@ class AuditoriasController extends Controller {
                 foreach ($auditorias as $auditoria){
                     // IMPORTANTE: separar por Realizado Manual -----  SE IGNORAN LOS MANUALES
                     // separar por Realizado Informado
-                    if($auditoria->realizadaInformada==0){
+                    if($auditoria->fechaAuditoria=='0000-00-00'){
                         array_push($pendientesInformado, $auditoria);
                     }else{
                         array_push($realizadasInformado, $auditoria);
@@ -360,7 +356,6 @@ class AuditoriasController extends Controller {
                 ->first();
 
             if($auditoria){
-                $auditoria->realizadaInformada = true;
                 $auditoria->fechaAuditoria = $annoMesDia;
                 $auditoria->save();
                 // buscar la auditoria actualizada en la BD
@@ -594,8 +589,7 @@ class AuditoriasController extends Controller {
                 $fechaAuditoria,
                 $auditoria['horaPresentacionAuditor'],
                 // en realizada, debe mostrar lo que informo el sistema de "inventario"
-                $auditoria['realizadaInformada']? 'Realizada' : 'Pendiente',
-                $auditoria['aprovada']? 'Aprobada': 'Pendiente',
+                '--------------------', // esta realizada??
                 $auditoria['local']['cliente']['nombreCorto'],
                 $auditoria['local']['numero'],
                 $auditoria['local']['nombre'],
