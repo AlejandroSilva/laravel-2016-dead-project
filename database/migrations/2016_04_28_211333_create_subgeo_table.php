@@ -21,6 +21,9 @@ class CreateSubgeoTable extends Migration {
             $table->string('nombre', 40)->unique();
             $table->integer('min');
             $table->integer('max');
+            
+            
+            WIP!!!!
         });
     }
 
