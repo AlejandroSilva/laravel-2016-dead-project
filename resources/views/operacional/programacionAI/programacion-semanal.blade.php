@@ -14,6 +14,7 @@
 
     <script>
         window.laravelPuedeModificarAuditorias = {!! $puedeModificarAuditorias !!};
+        window.laravelPuedeRevisarAuditorias = {!! $puedeRevisarAuditorias !!};
         window.laravelClientes = {!! $clientes !!};
         window.laravelAuditores = {!! $auditores !!};
     </script>

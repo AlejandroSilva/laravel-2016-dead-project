@@ -70,6 +70,7 @@ if( programacionAISemanalDOM ){
     ReactDOM.render(
         <ProgramacionAISemanal
             puedeModificar={ window.laravelPuedeModificarAuditorias }
+            puedeRevisar={laravelPuedeRevisarAuditorias}
             clientes={clienteFCV}
             auditores={window.laravelAuditores}
         />, programacionAISemanalDOM)

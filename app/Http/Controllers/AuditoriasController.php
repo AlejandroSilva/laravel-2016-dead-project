@@ -76,6 +76,7 @@ class AuditoriasController extends Controller {
         // buscar la mayor fechaProgramada en los iventarios
         return view('operacional.programacionAI.programacion-semanal', [
             'puedeModificarAuditorias' => $user->can('programaAuditorias_modificar')? "true":"false",
+            'puedeRevisarAuditorias' => $user->can('programaAuditorias_revisar')? "true":"false",
             'clientes' => $clientes,
             'primerInventario'=> $minymax->primerInventario,
             'ultimoInventario'=> $minymax->ultimoInventario,
