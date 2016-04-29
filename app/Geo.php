@@ -8,9 +8,6 @@ class Geo extends Model {
     // llave primaria
     public $primaryKey = 'idGeo';
 
-    // este modelo no tiene timestamps
-    public $timestamps = false;
-
     // #### Relaciones
     public function zona(){
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)

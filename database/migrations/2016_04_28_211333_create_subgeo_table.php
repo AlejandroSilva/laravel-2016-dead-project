@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+// Modelos
+use App\Subgeo;
 
 class CreateSubgeoTable extends Migration {
     public function up() {
@@ -21,10 +23,14 @@ class CreateSubgeoTable extends Migration {
             $table->string('nombre', 40)->unique();
             $table->integer('min');
             $table->integer('max');
-            
-            
-            WIP!!!!
+            $table->timestamps();
         });
+
+        // Agregar UN SUB-GEO por defecto
+        $subgeo = new Subgeo();
+        $subgeo->nombre = "-SIN GEO-";
+        $subgeo->idGeo = 1;
+        $subgeo->save();
     }
 
     public function down() {
