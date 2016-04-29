@@ -47,6 +47,16 @@ Route::group(['middleware' => ['web']], function (){
 
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | Administracion de regiones
+    |--------------------------------------------------------------------------
+    |*/
+    Route::group(['prefix' => 'regiones', 'middleware' => ['auth']], function(){
+        Route::get('/',                              'RegionesController@showMantenedorRegiones');
+        Route::put('/{cutRegion}/editar',           'RegionesController@api_actualizar');
+    });
+
     // API CLIENTES Y LOCALES
     Route::get('api/clientes',                      'ClientesController@api_getClientes');
     Route::get('api/cliente/{idCliente}/locales',   'ClientesController@api_getLocales');
