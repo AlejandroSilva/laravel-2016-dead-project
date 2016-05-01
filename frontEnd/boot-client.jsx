@@ -10,6 +10,7 @@ import ProgramacionAIMensual from './components/programacionAIMensual/Programaci
 import ProgramacionAISemanal from './components/programacionAISemanal/ProgramacionAISemanal.jsx'
 import { ProgramacionAIPendientes } from './components/programacionAIPendientes/ProgramacionAIPendientes.jsx'
 import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.jsx'
+import { GeoGestor } from './components/Geo/GeoGestor.jsx'
 
 /** FORMULARIO PARA LA CREACIÓN DE UN NUEVO FORMULARIO */
 let nuevoInventarioDOM = document.getElementById('nuevo-inventario')
@@ -85,6 +86,16 @@ if( mantenedorLocalesDOM ){
             formatoLocales={window.laravelFormatoLocales}
         />, mantenedorLocalesDOM)
 }
+
+/** GEO **/
+let geoGestorDOM = document.getElementById('react-geo-gestor')
+if( geoGestorDOM ){
+    ReactDOM.render(
+        <GeoGestor
+            // props
+        />, geoGestorDOM)
+}
+
 
 // http://jamesknelson.com/push-state-vs-hash-based-routing-with-react-js/
 //class App extends React.Component{

@@ -49,8 +49,20 @@
                                 {{-- INVENTARIO --}}
                                 @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('geo/')? 'active': '' }}">
+                                        <a href="{{ url('geo/') }}">(D) GEO gestor</a>
+                                    </li>
+                                    {{-- ya no se crean inventarios desde el menu, eliminar esto --}}
+                                    {{--<li class="{{ Request::is('inventario/nuevo')? 'active': '' }}">--}}
+                                    {{--<a href="{{ url('inventario/nuevo') }}">Nuevo Inventario</a>--}}
+                                    {{--</li>--}}
+                                @endif
+
+                                {{-- INVENTARIO --}}
+                                @if( Auth::user()->hasRole('Developer') )
+                                    <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('inventario/lista')? 'active': '' }}">
-                                        <a href="{{ url('inventario/lista') }}">Lista de inventarios</a>
+                                        <a href="{{ url('inventario/lista') }}">(D) Lista de inventarios</a>
                                     </li>
                                     {{-- ya no se crean inventarios desde el menu, eliminar esto --}}
                                     {{--<li class="{{ Request::is('inventario/nuevo')? 'active': '' }}">--}}
@@ -62,10 +74,10 @@
                                 @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('nominas')? 'active': '' }}">
-                                        <a href="{{ url('nominas') }}">Nominas</a>
+                                        <a href="{{ url('nominas') }}">(D) Nominas</a>
                                     </li>
                                     <li class="{{ Request::is('nomFinales')? 'active': '' }}">
-                                        <a href="{{ url('nomFinales') }}">Nominas Finales</a>
+                                        <a href="{{ url('nomFinales') }}">(D) Nominas Finales</a>
                                     </li>
                                 @endif
 
@@ -73,7 +85,7 @@
                                 @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('admin/locales')? 'active': '' }}">
-                                        <a href="{{ route('admin.locales.lista') }}">Mantenedor de Locales</a>
+                                        <a href="{{ route('admin.locales.lista') }}">(D) Mantenedor de Locales</a>
                                     </li>
                                 @endif
                             </ul>

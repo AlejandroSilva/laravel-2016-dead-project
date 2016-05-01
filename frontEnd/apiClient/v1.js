@@ -11,60 +11,49 @@ axios.interceptors.response.use((response)=>{
 
 export default {
     cliente: {
-        getLocales: (idCliente)=>{
-            return axios.get(`/api/cliente/${idCliente}/locales`)
-        }
+        getLocales: (idCliente)=>
+            axios.get(`/api/cliente/${idCliente}/locales`)
     },
     locales: {
-        get: (idLocal)=>{
-            return axios.get(`/api/locales/${idLocal}`)
-        },
-        getVerbose: (idLocal)=>{
-            return axios.get(`/api/locales/${idLocal}/verbose`)
-        }
+        get: (idLocal)=>
+            axios.get(`/api/locales/${idLocal}`),
+        getVerbose: (idLocal)=>
+            axios.get(`/api/locales/${idLocal}/verbose`)
     },
     inventario: {
-        nuevo: (datos)=>{
-            return axios.post(`/api/inventario/nuevo`, datos)
-        },
-        actualizar: (idInventario, datos)=>{
-            return axios.put(`/api/inventario/${idInventario}`, datos)
-        },
-        eliminar: (idInventario)=>{
-            return axios.delete(`/api/inventario/${idInventario}`)
-        },
-        getPorMesYCliente: (annoMesDia, idCliente)=> {
+        nuevo: (datos)=>
+            axios.post(`/api/inventario/nuevo`, datos),
+        actualizar: (idInventario, datos)=>
+            axios.put(`/api/inventario/${idInventario}`, datos),
+        eliminar: (idInventario)=>
+            axios.delete(`/api/inventario/${idInventario}`),
+        getPorMesYCliente: (annoMesDia, idCliente)=>
             // ELIMINAR RUTA return axios.get(`/api/inventario/${annoMesDia}/cliente/${idCliente}`)
-            return axios.get(`/api/inventario/buscar?mes=${annoMesDia}&idCliente=${idCliente}`)
-        },
-        getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>{
+            axios.get(`/api/inventario/buscar?mes=${annoMesDia}&idCliente=${idCliente}`),
+        getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>
             // ELIMINAR RUTA return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)
-            return axios.get(`/api/inventario/buscar?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
-        }
+            axios.get(`/api/inventario/buscar?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
     },
     auditoria: {
-        nuevo: (datos)=>{
-            return axios.post(`/api/auditoria/nuevo`, datos)
-        },
-        actualizar: (idAuditoria, datos)=>{
-            return axios.put(`/api/auditoria/${idAuditoria}`, datos)
-        },
-        eliminar: (idAuditoria)=>{
-            return axios.delete(`/api/auditoria/${idAuditoria}`)
-        },
-        getPorMesYCliente: (annoMesDia, idCliente)=> {
-            return axios.get(`/api/auditoria/mes/${annoMesDia}/cliente/${idCliente}`)
-        },
-        getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>{
-            return axios.get(`/api/auditoria/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)
-        },
-        estadoGeneral: (idCliente, dia)=>{
-            return axios.get(`/api/auditoria/cliente/${idCliente}/dia/${dia}/estado-general`);
-        }
+        nuevo: (datos)=>
+            axios.post(`/api/auditoria/nuevo`, datos),
+        actualizar: (idAuditoria, datos)=>
+            axios.put(`/api/auditoria/${idAuditoria}`, datos),
+        eliminar: (idAuditoria)=>
+            axios.delete(`/api/auditoria/${idAuditoria}`),
+        getPorMesYCliente: (annoMesDia, idCliente)=>
+            axios.get(`/api/auditoria/mes/${annoMesDia}/cliente/${idCliente}`),
+        getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>
+            axios.get(`/api/auditoria/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`),
+        estadoGeneral: (idCliente, dia)=>
+            axios.get(`/api/auditoria/cliente/${idCliente}/dia/${dia}/estado-general`)
     },
     nomina: {
-        actualizar: (idNomina, datos)=>{
-            return axios.put(`/api/nomina/${idNomina}`, datos)
-        }
+        actualizar: (idNomina, datos)=>
+            axios.put(`/api/nomina/${idNomina}`, datos)
+    },
+    geo: {
+       comunas: ()=>
+            axios.get(`/api/geo/comunas`)
     }
 }

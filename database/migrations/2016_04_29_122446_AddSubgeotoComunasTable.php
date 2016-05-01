@@ -10,24 +10,25 @@ class AddSubgeotoComunasTable extends Migration {
     public function up() {
         // Agregar el campo idSubgeo
         Schema::table('comunas', function(Blueprint $table){
-            $table->integer('idSubgeo')->unsigned();
-        });
-        
-        // Asignar un Subgeo por defecto
-        Schema::table('comunas', function(Blueprint $table){
-            foreach(Comunas::all() as $comuna) {
-                // Luego de agregar el campo idSubgeo, asignar un subegeo por defecto
-                // y hacer la referencia a la Tabla Subgeos
-                $comuna->idSubgeo = 1;  // '-SIN GEO-'
-                $comuna->save();
-            }
-            $table->foreign('idSubgeo')->references('idSubgeo')->on('subgeos');
+            $table->integer('idSubgeo1')->unsigned()->nullable();
+            $table->integer('idSubgeo2')->unsigned()->nullable();
+            $table->integer('idSubgeo3')->unsigned()->nullable();
+
+            $table->foreign('idSubgeo1')->references('idSubgeo')->on('subgeos');
+            $table->foreign('idSubgeo2')->references('idSubgeo')->on('subgeos');
+            $table->foreign('idSubgeo3')->references('idSubgeo')->on('subgeos');
         });
     }
     
     public function down() {
         Schema::table('comunas', function(Blueprint $table) {
-            $table->dropColumn('idSubgeo');
+            $table->dropForeign('comunas_idsubgeo1_foreign');
+            $table->dropForeign('comunas_idsubgeo2_foreign');
+            $table->dropForeign('comunas_idsubgeo3_foreign');
+
+            $table->dropColumn('idSubgeo1');
+            $table->dropColumn('idSubgeo2');
+            $table->dropColumn('idSubgeo3');
         });
     }
 }

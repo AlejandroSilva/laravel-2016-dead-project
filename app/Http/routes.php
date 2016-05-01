@@ -133,7 +133,19 @@ Route::group(['middleware' => ['web']], function (){
         // RUTAS UTILIZADAS POR LA OTRA APLICACION
         Route::get('{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
     });
-
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Gestor de Geo-Zonas
+    |--------------------------------------------------------------------------
+    |*/
+    Route::group(['prefix' => 'geo', 'middleware' => ['auth']], function() {
+        Route::get('/',             'GeoController@show_index');//->name('geo.index');
+    });
+    Route::group(['prefix' => 'api/geo'], function() {
+        Route::get('/comunas',      'GeoController@api_getComunas');
+    });
+    
     /*
     |--------------------------------------------------------------------------
     | Otros
