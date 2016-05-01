@@ -76,6 +76,7 @@ class AuditoriasController extends Controller {
         // buscar la mayor fechaProgramada en los iventarios
         return view('operacional.programacionAI.programacion-semanal', [
             'puedeModificarAuditorias' => $user->can('programaAuditorias_modificar')? "true":"false",
+            'puedeRevisarAuditorias' => $user->can('programaAuditorias_revisar')? "true":"false",
             'clientes' => $clientes,
             'primerInventario'=> $minymax->primerInventario,
             'ultimoInventario'=> $minymax->ultimoInventario,
@@ -212,7 +213,17 @@ class AuditoriasController extends Controller {
     // GET api/auditoria/mes/{annoMesDia}/cliente/{idCliente}
     function api_getPorMesYCliente($annoMesDia, $idCliente) {
         $auditorias = $this->buscarPorMesYCliente($annoMesDia, $idCliente);
-        return response()->json($auditorias, 200);
+
+        // agregra a la consulta, el ultimo inventario asociado al local de la auditoria
+        $auditoriasConInventario = array_map(function ($auditoria) {
+            // agregar si existe, un inventario que haya sido realizado en el mismo local, el mismo mes
+            $auditoria['inventarioEnELMismoMes'] = Locales::find($auditoria['idLocal'])
+                ->inventarioRealizadoEn($auditoria['fechaProgramada']);
+            return $auditoria;
+        }, $auditorias);
+
+
+        return response()->json($auditoriasConInventario, 200);
     }
 
     // GET api/auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}

@@ -302,6 +302,7 @@ class ProgramacionAISemanal extends React.Component {
                             return <RowAuditoriaSemanal
                                 // Propiedades
                                 puedeModificar={this.props.puedeModificar}
+                                puedeRevisar={this.props.puedeRevisar}
                                 key={index}
                                 index={index}
                                 ref={ref=>this.rows[index]=ref}
@@ -323,6 +324,7 @@ class ProgramacionAISemanal extends React.Component {
 
 ProgramacionAISemanal.propTypes = {
     puedeModificar: React.PropTypes.bool.isRequired,
+    puedeRevisar: React.PropTypes.bool.isRequired,
     clientes: React.PropTypes.array.isRequired,
     auditores: React.PropTypes.array.isRequired
 }

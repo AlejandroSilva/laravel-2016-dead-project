@@ -175,7 +175,7 @@ class RowAuditoriaSemanal extends React.Component{
                         ]}
                         opcionNula={false}
                         opcionNulaSeleccionable={false}
-                        puedeModificar={this.props.puedeModificar}/>
+                        puedeModificar={this.props.puedeRevisar}/>
                 </td>
                 {/* Hora de Apertura del local */}
                 <td className={css.tdAperturaCierre}>
@@ -213,6 +213,7 @@ class RowAuditoriaSemanal extends React.Component{
 RowAuditoriaSemanal.propTypes = {
     // Objetos
     puedeModificar: React.PropTypes.bool.isRequired,
+    puedeRevisar: React.PropTypes.bool.isRequired,
     index: React.PropTypes.number.isRequired,
     auditoria: React.PropTypes.object.isRequired,
     auditores: React.PropTypes.array.isRequired,
