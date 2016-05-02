@@ -70,20 +70,51 @@
         <tbody>
         @if(isset($formatos))
             @foreach($formatos as $formatos)
-                <tr>
-                    <td>{{ $formatos->idFormatoLocal}}</td>
-                    <td>{{ $formatos->nombre}}</td>
-                    <td>{{ $formatos->siglas}}</td>
-                    <td>{{ $formatos->produccionSugerida}}</td>
-                    <td>{{ $formatos->descripcion }}</td>
-                    <td>
-                        <a href="/formatoLocales/formato/{{$formatos->idFormatoLocal }}/editar" class="btn btn-primary btn-xs btn-block">
-                            Editar
-                        </a>
-                    </td>
-                </tr>
+                <form class="form-horizontal" method="POST" action="/formatoLocales/formato/{{$formatos->idFormatoLocal}}/editar">
+                    <input name="_method" type="hidden" value="PUT">
+                    <input name="_token" type="hidden" value="{{csrf_token()}}">
+                    <tr>
+                        <td>{{ $formatos->idFormatoLocal}}</td>
+                        <td>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" value="{{ $formatos->nombre}}" name="nombre">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-xs-6">
+                                <input type="text" class="form-control" value="{{ $formatos->siglas}}" name="siglas">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-xs-6">
+                                <input type="number" class="form-control" value="{{ $formatos->produccionSugerida}}" name="produccionSugerida">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-xs-13">
+                                <input type="text" class="form-control" value="{{ $formatos->descripcion }}" name="descripcion">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="submit" class="btn btn-primary btn-xs btn-block" value="Modificar">
+                        </td>
+                    </tr>
+                </form>
             @endforeach
         @endif
         </tbody>
     </table>
-@stop
+    @if (count($errors) > 0)
+            <!-- Form Error List -->
+    <div class="alert alert-danger">
+        <strong>Whoops! Something went wrong!</strong>
+
+        <br><br>
+
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif

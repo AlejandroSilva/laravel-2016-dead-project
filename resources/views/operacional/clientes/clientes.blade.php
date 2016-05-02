@@ -5,7 +5,7 @@
 
     <h1 class="page-header">Listado de clientes</h1>
 
-    <form class="form-horizontal" method="POST" action="/admin/clientes">
+    <form class="form-horizontal" method="POST" action="/clientes">
         <input name="_token" type="hidden" value="{{csrf_token()}}">
         <table>
             <thead>
@@ -62,18 +62,44 @@
         <tbody>
         @if(isset($clientes))
             @foreach($clientes as $cliente)
-                <tr>
-                    <td>{{ $cliente->idCliente}}</td>
-                    <td>{{ $cliente->nombre}}</td>
-                    <td>{{ $cliente->nombreCorto}}</td>
-                    <td>
-                        <a href="/admin/cliente/{{ $cliente->idCliente }}/editar" class="btn btn-primary btn-xs btn-block">
-                            Editar
-                        </a>
-                    </td>
-                </tr>
+                <form class="form-horizontal" method="POST" action="clientes/cliente/{{$cliente->idCliente}}/editar">
+                    <input name="_method" type="hidden" value="PUT">
+                    <input name="_token" type="hidden" value="{{csrf_token()}}">
+                        <tr>
+                            <td>{{ $cliente->idCliente}}</td>
+                            <td>
+                                <div class="col-xs-5">
+                                    <input type="text" class="form-control" value="{{ $cliente->nombre}}" name="nombre">
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="col-xs-3">
+                                    <input type="text" class="form-control" value="{{ $cliente->nombreCorto}}" name="nombreCorto">
+                                </div>
+
+
+                            </td>
+                            <td>
+                                <input type="submit" class="btn btn-primary btn-xs btn-block" value="Modificar">
+                            </td>
+                        </tr>
+                </form>
             @endforeach
         @endif
         </tbody>
     </table>
-@stop
+    @if (count($errors) > 0)
+            <!-- Form Error List -->
+    <div class="alert alert-danger">
+        <strong>Whoops! Something went wrong!</strong>
+
+        <br><br>
+
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif

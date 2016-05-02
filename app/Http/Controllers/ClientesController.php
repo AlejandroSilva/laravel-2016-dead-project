@@ -50,7 +50,7 @@ class ClientesController extends Controller {
                 $cliente->nombreCorto = $request->nombreCorto;
             }
             $cliente->save();
-            return Redirect::to("admin/clientes");
+            return Redirect::to("clientes");
 
         }else{
             return response()->json([], 404);

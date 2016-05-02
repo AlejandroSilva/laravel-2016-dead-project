@@ -25,11 +25,11 @@ Route::group(['middleware' => ['web']], function (){
     | Administracion de Clientes y sus locales
     |--------------------------------------------------------------------------
     |*/
-    Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function(){
-        Route::get('/clientes',                                  'ClientesController@show_Lista');
-        Route::post('/clientes',                                    'ClientesController@postFormulario');
-        Route::get('/cliente/{idCliente}/editar',                'ClientesController@api_get');
-        Route::put('/cliente/{idCliente}/editar',                'ClientesController@api_actualizar');
+    Route::group(['prefix' => 'clientes', 'middleware' => ['auth']], function(){
+        Route::get('/',                                   'ClientesController@show_Lista');
+        Route::post('/',                                  'ClientesController@postFormulario');
+        //Route::get('/cliente/{idCliente}/editar',                'ClientesController@api_get');
+        Route::put('cliente/{idCliente}/editar',                 'ClientesController@api_actualizar');
         Route::get('locales',  'LocalesController@show_mantenedor')->name('admin.locales.lista');
         
     });
@@ -42,7 +42,6 @@ Route::group(['middleware' => ['web']], function (){
     Route::group(['prefix' => 'formatoLocales', 'middleware' => ['auth']], function(){
         Route::get('/',                              'LocalesController@api_getFormatos');
         Route::post('/',                                    'LocalesController@postFormulario');
-        Route::get('/formato/{idFormato}/editar',                'LocalesController@api_get');
         Route::put('/formato/{idFormato}/editar',                'LocalesController@api_actualizar');
 
     });
