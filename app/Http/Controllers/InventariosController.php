@@ -341,6 +341,7 @@ class InventariosController extends Controller {
         // Actualizar los datos
         $inventario->unidadesReal = $unidadesReal;
         $inventario->unidadesTeorico = $unidadesTeorico;
+        $inventario->fechaToma = $fechaProgramada;  // Siempre la fecha de programada es la misma que la fecha de toma?
         $inventario->save();
 
         Log::info("[INVENTARIO:INFORMAR_FINAL:OK] $stringPeticion");
