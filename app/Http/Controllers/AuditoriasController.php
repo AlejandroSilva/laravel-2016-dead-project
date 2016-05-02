@@ -590,7 +590,7 @@ class AuditoriasController extends Controller {
     // Funcion para general el excel
     private function generarWorkbook($auditorias){
         //$formatoLocal = FormatoLocales::find();
-        $auditoriasHeader = ['Fecha Programada', 'Fecha Auditoría', 'Hora presentación', 'Realizada', 'Aprobada', 'Cliente', 'CECO', 'Local', 'Stock', 'Fecha stock', 'Auditor', 'Dirección', 'Región', 'Provincia', 'Comuna', 'Hora apertura', 'Hora cierre', 'Email', 'Teléfono 1', 'Teléfono 2'];
+        $auditoriasHeader = ['Fecha Programada', 'Fecha Auditoría', 'Hora presentación', 'Realizada', 'Aprobada', 'Cliente', 'CECO', 'Local', 'Stock', 'Fecha stock', 'Auditor', 'Dirección', 'Región', 'Nombre región', 'Provincia', 'Comuna', 'Hora apertura', 'Hora cierre', 'Email', 'Teléfono 1', 'Teléfono 2'];
 
         $auditoriasArray = array_map(function($auditoria){
             // la fecha programada debe estar estar en formato DD-MM-YYYY
@@ -614,6 +614,7 @@ class AuditoriasController extends Controller {
                 $auditoria['local']['fechaStock'],
                 $auditoria['auditor']? $auditoria['auditor']['nombre1']." ".$auditoria['auditor']['apellidoPaterno'] : '-',
                 $auditoria['local']['direccion']['direccion'],
+                $auditoria['local']['direccion']['comuna']['provincia']['region']['numero'],
                 $auditoria['local']['direccion']['comuna']['provincia']['region']['nombreCorto'],
                 $auditoria['local']['direccion']['comuna']['provincia']['nombre'],
                 $auditoria['local']['direccion']['comuna']['nombre'],
