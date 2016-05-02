@@ -338,6 +338,13 @@ class RowInventario extends React.Component{
                         <span className="label label-primary">{this.props.inventario.nomina_dia.fechaSubidaNomina}</span>
                     }
                 </td>
+                {/* Unidades */}
+                <td className={css.tdUnidadesReales}>
+                    {this.props.inventario.unidadesReal}
+                </td>
+                <td className={css.tdUnidadesTeoricas}>
+                    {this.props.inventario.unidadesTeorico}
+                </td>
             </tr>
         )
     }
@@ -361,3 +368,7 @@ RowInventario.defaultProps = {
 }
 
 export default RowInventario
+
+
+// falta: en la tabla agregar campo: fecha + unidades teoricas + unidades reaales
+// falta: crear la api de esteban

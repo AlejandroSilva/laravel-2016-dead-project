@@ -203,7 +203,7 @@ class ProgramacionIGSemanal extends React.Component {
         return(
             <div>
                 <h1>Programación semanal IG</h1>
-                <div className="row">
+                <div>
                     {/* SELECTOR DE CLIENTE */}
                     <div className={'col-sm-2 form-group '}>
                         <label className="control-label" htmlFor="selectCliente">Cliente</label>
@@ -284,7 +284,7 @@ class ProgramacionIGSemanal extends React.Component {
                     actualizarFiltro={this.actualizarFiltro.bind(this)}
                 >
                     {this.state.inventariosFiltrados.length===0
-                        ? <tr><td colSpan="16" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                        ? <tr><td colSpan="18" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.state.inventariosFiltrados.map((inventario, index)=>{
                         let mostrarSeparador = false
                         let sgteInventario = this.state.inventariosFiltrados[index+1]

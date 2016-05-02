@@ -31,6 +31,8 @@ class TablaInventarios extends React.Component{
                     <col className={css.thHora}/>
                     <col className={css.thDireccion}/>
                     <col className={css.thNomina}/>
+                    <col className={css.thUnidadesReales}/>
+                    <col className={css.thUnidadesTeoricas}/>
                 </colgroup>
                 <thead>
                     {/* TR que se pega al top de la pagina, es una TR, con instancia de 'Sticky' */}
@@ -92,7 +94,9 @@ class TablaInventarios extends React.Component{
                                 filtro={this.props.filtros.filtroFechaSubidaNomina || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroFechaSubidaNomina')}
                             />
-                            </th>
+                        </th>
+                        <th className={css.thUnidadesReales}>U.Cont</th>
+                        <th className={css.thUnidadesTeoricas}>U.Teo</th>
                     </Sticky>
                 </thead>
                 <tbody>

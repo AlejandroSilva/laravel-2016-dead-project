@@ -164,11 +164,11 @@
 
 /* LIDER / SUPERVISOR / CAPTADOR1 / CAPTADOR2 */
 .thLider{
-    width: 110px !important;
+    width: 100px !important;
     background: white;
 }
 .tdLider{
-    width: 110px !important;
+    width: 100px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
@@ -221,28 +221,28 @@
 
 /* DIRECCION */
 .thDireccion{
-    width: 110px !important;
+    width: 160px !important;
     background: white;
 }
 .tdDireccion{
-    width: 110px !important;
+    width: 160px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 2px !important;
     padding-right: 2px !important;
-    font-size: 8px;
+    font-size: 10px;
     line-height: 1 !important;
 }
 
 /* NOMINA */
 .thNomina{
-    width: auto !important;
-    min-width: 100px;
     background: white;
+    width: 65px;
+    padding-left: 0 !important;
 }
 .tdNomina{
-    width: auto !important;
     background: white;
+    width: auto !important;
     vertical-align: middle !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -252,4 +252,27 @@
     font-size: 12px !important;
     line-height: 12px !important;
     height: 18px !important;
+}
+
+/* UNIDADES */
+.thUnidadesReales {
+    background: white;
+    width: 45px;
+    padding-left: 0 !important;;
+}
+.tdUnidadesReales {
+    background: white;
+    width: 45px;
+    vertical-align: middle !important;
+}
+
+.thUnidadesTeoricas {
+    background: white;
+    width: auto !important;
+    padding-left: 0 !important;
+}
+.tdUnidadesTeoricas {
+    background: white;
+    width: auto !important;
+    vertical-align: middle !important;
 }

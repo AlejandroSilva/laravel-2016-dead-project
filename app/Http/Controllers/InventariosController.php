@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use Redirect;
+use Log;
 // PHP Excel
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -287,7 +288,66 @@ class InventariosController extends Controller {
      * API DE INTERACCION CON LA OTRA PLATAFORMA
      * ##########################################################
      */
-    
+
+    // api/inventario/informar-archivo-final
+    function api_informarArchivoFinal(Request $request){
+        // agrega cabeceras para las peticiones con CORS
+        header('Access-Control-Allow-Origin: *');
+
+        $idCliente= $request->idCliente;
+        $ceco = $request->ceco;
+        $fechaProgramada = $request->fechaProgramada;
+        $unidadesReal = $request->unidadesReal;
+        $unidadesTeorico = $request->unidadesTeorico;
+        $stringPeticion = "CECO:'$ceco' idCliente:'$idCliente' fechaProgamada:$fechaProgramada Unidades:$unidadesReal U.Teorico:$unidadesTeorico";
+
+        // Validar los campos
+        $validator = Validator::make([
+                'idCliente' => $idCliente,
+                'ceco' => $ceco,
+                'fechaProgramada' => $fechaProgramada,
+                'unidadesReal' => $unidadesReal,
+                'unidadesTeorico' => $unidadesTeorico
+            ],
+            [
+                'idCliente' => 'required|numeric',
+                'ceco' => 'required|numeric',
+                'fechaProgramada' => 'required|date',
+                'unidadesReal' => 'required|numeric',
+                'unidadesTeorico' => 'required|numeric'
+            ]
+        );
+        if($validator->fails()){
+            $error = $validator->messages();
+            Log::info("[INVENTARIO:INFORMAR_FINAL:ERROR] $stringPeticion. Validador: $error");
+            return response()->json($error, 400);
+        }
+
+        // Buscar el inventario
+        $inventario = Inventarios::with(['local'])
+            ->whereHas('local', function($q) use ($ceco, $idCliente) {
+                $q  ->where('numero', $ceco)
+                    ->where('idCliente', $idCliente);
+            })
+            ->where('fechaProgramada', $fechaProgramada)
+            ->first();
+
+        if(!$inventario){
+            $msg = "[INVENTARIO:INFORMAR_FINAL:ERROR] $stringPeticion. Inventario no encontrado ";
+            Log::info($msg);
+            return response()->json('inventario no encontrado', 400);
+        }
+
+        // Actualizar los datos
+        $inventario->unidadesReal = $unidadesReal;
+        $inventario->unidadesTeorico = $unidadesTeorico;
+        $inventario->save();
+
+        Log::info("[INVENTARIO:INFORMAR_FINAL:OK] $stringPeticion");
+        return response()->json(Inventarios::find($inventario->idInventario), 200);
+    }
+
+
     // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}      // ELIMINAR
 //    function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
 //        $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);

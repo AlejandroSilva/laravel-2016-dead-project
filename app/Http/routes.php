@@ -73,6 +73,7 @@ Route::group(['middleware' => ['web']], function (){
         //Route::get('{annoMesDia}/cliente/{idCliente}',  'InventariosController@api_getPorMesYCliente');     // **YA NO SE USA EN EL SIG
 
         // RUTAS UTILIZADAS POR LA OTRA APLICACION
+        Route::post('/informar-archivo-final',  'InventariosController@api_informarArchivoFinal');
         //Route::get('{fecha1}/al/{fecha2}/cliente/{idCliente}',   'InventariosController@api_getPorRangoYCliente'); // **YA NO SE USA EN EL SIG
         //Route::get('{fecha1}/al/{fecha2}/lider/{idCliente}',     'InventariosController@api_getPorRangoYLider');    // ** YA NO SE USA EN LA PLATAFORMA INVENTARIO
     });
