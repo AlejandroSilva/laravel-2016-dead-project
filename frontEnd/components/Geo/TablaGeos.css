@@ -6,7 +6,7 @@
 
 .colNumeral{
     background: white;
-    width: 15px;
+    width: 20px;
 }
 
 /* Zona */
@@ -42,15 +42,15 @@
 }
 .colGeoNombre{
     background: white;
-    width: 80px;
+    width: 70px;
 }
 .colGeoMin{
     background: white;
-    width: 30px;
+    width: 35px;
 }
 .colGeoMax{
     background: white;
-    width: 30px;
+    width: 35px;
 }
 
 /* Subgeo */
@@ -65,10 +65,23 @@
 }
 .colSubgeoMin{
     background: white;
-    width: 30px;
+    width: 35px;
 }
 .colSubgeoMax{
-    background: white;
-    width: 30px;
-    /*width: auto !important;*/
+    background: orange;
+    /*width: 35px;*/
+    width: auto !important;
+}
+
+.colUNO{
+    background: grey;
+    width: 20%;
+}
+.colDOS{
+    background: grey;
+    width: 40%;
+}
+.colTRES{
+    background: grey;
+    width: 40%;
 }

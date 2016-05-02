@@ -27,82 +27,65 @@ export class TablaGeos extends React.Component{
                     <col className={css.colSubgeoMax}/>
                 </colgroup>
                 <thead>
-                {/*
-                    <Sticky
-                        topOffset={-50}
-                        type={React.DOM.tr}
-                        stickyStyle={{top: '50px'}}>
-                            <th colSpan="1" className={css.colNumeral}></th>
-                            <th colSpan="1" className={css.colZona}>Zona</th>
-                            <th colSpan="1" className={css.colRegion}>Región</th>
-                            <th colSpan="2" className={css.colComuna}>Comuna</th>
-                            <th colSpan="3" className={css.colGeo}>Geo</th>
-                            <th colSpan="3" className={css.colSubgeo}>Sub-geo</th>
-                    </Sticky>
-                 */}
+
+                     <Sticky
+                         topOffset={-50}
+                         type={React.DOM.tr}
+                         stickyStyle={{top: '50px'}}>
+                             <th colSpan="1" className={css.colNumeral}></th>
+                             <th colSpan="1" className={css.colZona}>Zona</th>
+                             <th colSpan="1" className={css.colRegion}>Región</th>
+                             <th colSpan="2" className={css.colComuna}>Comuna</th>
+                             <th colSpan="3" className={css.colGeo}>Geo</th>
+                             <th colSpan="3" className={css.colSubgeo}>Sub-geo</th>
+                     </Sticky>
                     <Sticky
                         topOffset={-79}
                         type={React.DOM.tr}
                         stickyStyle={{top: '79px'}}>
                             <th className={css.colNumeral}>#</th>
-                            {/* ZONA */}
                             <th className={css.colZona}>Nombre</th>
-                            {/* REGION */}
                             <th className={css.colRegion}>Nombre</th>
-                            {/* COMUNA */}
                             <th className={css.colComunaNombre}>Nombre</th>
                             <th className={css.colComunaLocales}># Locales</th>
-                            {/* GEO */}
                             <th className={css.colGeoNombre}>Nombre</th>
                             <th className={css.colGeoMin}>Min</th>
                             <th className={css.colGeoMax}>Max</th>
-                            {/* SUB GEO*/}
                             <th className={css.colSubgeoNombre}>Nombre</th>
                             <th className={css.colSubgeoMin}>Min</th>
                             <th className={css.colSubgeoMax}>Max</th>
                     </Sticky>
+
+                     {/*
+                     <Sticky
+                         topOffset={-107}
+                         type={React.DOM.tr}
+                         stickyStyle={{top: '107px'}}>
+                             <th colSpan="5" className={css.colUNO}>UNO</th>
+                             <th colSpan="3" className={css.colDOS}>DOS</th>
+                             <th colSpan="3" className={css.colTRES}>TRES</th>
+                     </Sticky>
+                     */}
                 </thead>
                 <tbody>
                     {this.props.comunas.map((comuna, index)=>{
                         return <tr key={index}>
-                            <td className={css.colNumeral}>
-                                {index+1}
-                            </td>
+                            <td>{index+1}</td>
                             {/* ZONA */}
-                            <td className={css.colZona}>
-                                {comuna.zona}
-                            </td>
+                            <td>{comuna.zona}</td>
                             {/* REGION */}
-                            <td className={css.colRegion}>
-                                {comuna.region}
-                            </td>
+                            <td>{comuna.region}</td>
                             {/* COMUNA */}
-                            <td className={css.colComunaNombre}>
-                                {comuna.comuna}
-                            </td>
-                            <td className={css.colComunaLocales}>
-                                {comuna.totalLocales}
-                            </td>
+                            <td>{comuna.comuna}</td>
+                            <td>{comuna.totalLocales}</td>
                             {/* GEO */}
-                            <td className={css.colGeoNombre}>
-                                {comuna.geo}
-                            </td>
-                            <td className={css.colGeoMin}>
-                                Min
-                            </td>
-                            <td className={css.colGeoMax}>
-                                Max
-                            </td>
+                            <td>{comuna.geo}</td>
+                            <td>Min</td>
+                            <td>Max</td>
                             {/* SUB GEO*/}
-                            <td className={css.colSubgeoNombre}>
-                                {comuna.geo}
-                            </td>
-                            <td className={css.colSubgeoMin}>
-                                Min
-                            </td>
-                            <td className={css.colSubgeoMax}>
-                                Max
-                            </td>
+                            <td>{comuna.geo}</td>
+                            <td>Min</td>
+                            <td>Max</td>
                         </tr>
                     })}
                 </tbody>

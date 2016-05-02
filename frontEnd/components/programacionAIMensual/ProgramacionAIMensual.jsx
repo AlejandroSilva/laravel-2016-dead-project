@@ -6,8 +6,6 @@ import api from '../../apiClient/v1'
 import BlackBoxMensualAI from './BlackBoxMensualAI.js'
 
 // Component
-//import Multiselect from 'react-widgets/lib/Multiselect'
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import { FormularioAgregarAuditoria } from './FormularioAgregarAuditoria.jsx'
 import RowAuditoriaMensual from './RowAuditoriaMensual.jsx'
 import TablaMensualAI from './TablaMensualAI.jsx'
