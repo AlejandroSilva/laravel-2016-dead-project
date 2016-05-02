@@ -93,6 +93,10 @@ export default class BlackBoxIGSemanal{
 
         // ##### Filtro Comunas (ordenado por codComuna)
         this.filtroComunas = _.chain(this.lista)
+            // solo dejar las comunas en las que su respectiva region este seleccionada
+            .filter(inventario=>{
+                return _.find(this.filtroRegiones, {'valor': inventario.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+            })
             .map(inventario=>{
                 let valor = inventario.local.direccion.cutComuna
                 let texto = inventario.local.direccion.comuna.nombre
