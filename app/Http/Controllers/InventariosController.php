@@ -277,10 +277,10 @@ class InventariosController extends Controller {
     }
 
     // GET api/inventario/mes/{annoMesDia}                              // ELIMINAR
-    function api_getPorMesYCliente($annoMesDia, $idCliente){
-        $inventarios = $this->inventariosPorMesYCliente($annoMesDia, $idCliente);
-        return response()->json($inventarios, 200);
-    }
+//    function api_getPorMesYCliente($annoMesDia, $idCliente){
+//        $inventarios = $this->inventariosPorMesYCliente($annoMesDia, $idCliente);
+//        return response()->json($inventarios, 200);
+//    }
 
     /**
      * ##########################################################
@@ -289,20 +289,20 @@ class InventariosController extends Controller {
      */
     
     // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}      // ELIMINAR
-    function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
-        $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
-        return response()->json($inventarios, 200);
-    }
+//    function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
+//        $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
+//        return response()->json($inventarios, 200);
+//    }
 
     // GET api/inventario/{fecha1}/al/{fecha2}/lider/{idCliente}        // ELIMINAR
-    function api_getPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente){
-        if(User::find($idCliente)){
-            $auditorias = $this->buscarPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente);
-            return response()->json($auditorias, 200);
-        }else{
-            return response()->json(['msg'=>'el usuario indicado no existe'], 404);
-        }
-    }
+//    function api_getPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente){
+//        if(User::find($idCliente)){
+//            $auditorias = $this->buscarPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente);
+//            return response()->json($auditorias, 200);
+//        }else{
+//            return response()->json(['msg'=>'el usuario indicado no existe'], 404);
+//        }
+//    }
     /**
      * ##########################################################
      * Descarga de documentos
@@ -312,79 +312,51 @@ class InventariosController extends Controller {
     // GET /pdf/inventarios/{mes}/cliente/{idCliente}
     public function descargarPDF_porMes($annoMesDia, $idCliente){
         //Se utiliza funcion privada que recorre inventarios por mes y dia
-        $inventarios = $this->inventariosPorMesYCliente($annoMesDia, $idCliente);
-        $cliente = Clientes::find($idCliente);
+        $inventarios = $this->buscarInventarios(null, null, $annoMesDia, $idCliente, null);
 
+        // nombre del cliente (si existe)
+        $cliente = Clientes::find($idCliente);
+        $nombreCliente = $cliente? $cliente->nombre : 'Todos';
+
+        // generar el archivo
         $workbook = $this->generarWorkbook($inventarios);
         $sheet = $workbook->getActiveSheet();
+        $sheet->setCellValue('A1', 'Cliente:');
+        $sheet->setCellValue('B1', $nombreCliente);
+        $sheet->setCellValue('A2', 'Fecha:');
+        $sheet->setCellValue('B2', $annoMesDia);
 
-        if(!$cliente){
-            $sheet->setCellValue('A2', 'Fecha:');
-            $sheet->setCellValue('B2', $annoMesDia);
-            $sheet->setCellValue('A1', 'Cliente:');
-            $sheet->setCellValue('B1', 'Todos');
-
-            // guardar
-            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
-            $excelWritter->save($randomFileName);
-
-            // entregar la descarga al usuario
-            return response()->download($randomFileName, "programacion $annoMesDia.xlsx");
-
-        }else{
-            $sheet->setCellValue('A1', 'Cliente:');
-            //obtener nombre cliente
-            $sheet->setCellValue('B1', $cliente->nombre);
-
-            // guardar
-            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
-            $excelWritter->save($randomFileName);
-
-            // entregar la descarga al usuario
-            return response()->download($randomFileName, "programacion $cliente->nombre-$annoMesDia.xlsx");
-        }
+        // guardar el archivo a disco y descargarlo
+        $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+        $randomFileName = "archivos_temporales/progIGmes_".md5(uniqid(rand(), true)).".xlxs";
+        $excelWritter->save($randomFileName);
+        return response()->download($randomFileName, "programacion IG $nombreCliente ($annoMesDia).xlsx");
     }
 
     // GET /pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}
-    public function descargarPDF_porRango($annoMesDia1, $annoMesDia2, $idCliente){
+    public function descargarPDF_porRango($fechaInicio, $fechaFin, $idCliente){
         //Se utiliza funcion privada que recorre inventarios por fecha inicio-final y por idCliente
-        $inventarios = $this-> inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
-        $cliente = Clientes::find($idCliente);
+        $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, null, $idCliente, null);
 
+        // nombre del cliente (si existe)
+        $cliente = Clientes::find($idCliente);
+        $nombreCliente = $cliente? $cliente->nombre : 'Todos';
+
+        // generar el archivo
         $workbook = $this->generarWorkbook($inventarios);
         $sheet = $workbook->getActiveSheet();
+        $sheet->setCellValue('A1', 'Cliente:');
+        $sheet->setCellValue('B1', $nombreCliente);
+        $sheet->setCellValue('A2', 'Desde:');
+        $sheet->setCellValue('B2', $fechaInicio);
+        $sheet->setCellValue('A3', 'Hasta:');
+        $sheet->setCellValue('B3', $fechaFin);
 
-        if(!$cliente){
-            $sheet->setCellValue('A2', 'Desde:');
-            $sheet->setCellValue('B2', $annoMesDia1);
-            $sheet->setCellValue('A3', 'Hasta:');
-            $sheet->setCellValue('B3', $annoMesDia2);
-            $sheet->setCellValue('A1', 'Cliente:');
-            $sheet->setCellValue('B1', 'Todos');
-
-            // guardar
-            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
-            $excelWritter->save($randomFileName);
-
-            // entregar la descarga al usuario
-            return response()->download($randomFileName, "programacion $annoMesDia1-al-$annoMesDia2.xlsx");
-
-        }else{
-            $sheet->setCellValue('A1', 'Cliente:');
-            //obtener nombre cliente
-            $sheet->setCellValue('B1', $cliente->nombre);
-
-            // guardar
-            $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
-            $excelWritter->save($randomFileName);
-
-            // entregar la descarga al usuario
-            return response()->download($randomFileName, "programacion $cliente->nombre-$annoMesDia1.xlsx");
-        }
+        // guardar el archivo a disco y descargarlo
+        $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+        $randomFileName = "archivos_temporales/progIGrango".md5(uniqid(rand(), true)).".xlxs";
+        $excelWritter->save($randomFileName);
+        return response()->download($randomFileName, "programacion IG $nombreCliente ($fechaInicio al $fechaFin).xlsx");
     }
 
     /**
@@ -394,88 +366,88 @@ class InventariosController extends Controller {
      */
 
     //función filtra por mes y cliente
-    private function inventariosPorMesYCliente($annoMesDia, $idCliente){
-        $fecha = explode('-', $annoMesDia);
-        $anno = $fecha[0];
-        $mes  = $fecha[1];
-
-        $query = Inventarios::with([
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region',
-            'nominaDia',
-            'nominaNoche',
-            'nominaDia.lider',
-            'nominaNoche.lider',
-            'nominaDia.captador',
-            'nominaNoche.captador'
-        ])
-            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
-            ->orderBy('fechaProgramada', 'asc');
-
-        if($idCliente!=0) {
-            $query->whereHas('local', function($q) use ($idCliente) {
-                $q->where('idCliente', '=', $idCliente);
-            });
-        }
-        return $query->get()->toArray();
-    }
+//    private function inventariosPorMesYCliente($annoMesDia, $idCliente){
+//        $fecha = explode('-', $annoMesDia);
+//        $anno = $fecha[0];
+//        $mes  = $fecha[1];
+//
+//        $query = Inventarios::with([
+//            'local.cliente',
+//            'local.formatoLocal',
+//            'local.direccion.comuna.provincia.region',
+//            'nominaDia',
+//            'nominaNoche',
+//            'nominaDia.lider',
+//            'nominaNoche.lider',
+//            'nominaDia.captador',
+//            'nominaNoche.captador'
+//        ])
+//            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+//            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+//            ->orderBy('fechaProgramada', 'asc');
+//
+//        if($idCliente!=0) {
+//            $query->whereHas('local', function($q) use ($idCliente) {
+//                $q->where('idCliente', '=', $idCliente);
+//            });
+//        }
+//        return $query->get()->toArray();
+//    }
 
     //función filtra por rango de fecha y cliente
-    private function inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
-        $query = Inventarios::with([
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region',
-            'nominaDia',
-            'nominaNoche',
-            'nominaDia.lider',
-            'nominaNoche.lider',
-            'nominaDia.captador',
-            'nominaNoche.captador',
-        ])
-            ->where('fechaProgramada', '>=', $annoMesDia1)
-            ->where('fechaProgramada', '<=', $annoMesDia2)
-            ->orderBy('fechaProgramada', 'asc');
-
-        if($idCliente!=0) {
-            // Se filtran por cliente
-            $query->whereHas('local', function ($q) use ($idCliente) {
-                $q->where('idCliente', '=', $idCliente);
-            });
-        }
-        return $query->get()->toArray();
-    }
+//    private function inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
+//        $query = Inventarios::with([
+//            'local.cliente',
+//            'local.formatoLocal',
+//            'local.direccion.comuna.provincia.region',
+//            'nominaDia',
+//            'nominaNoche',
+//            'nominaDia.lider',
+//            'nominaNoche.lider',
+//            'nominaDia.captador',
+//            'nominaNoche.captador',
+//        ])
+//            ->where('fechaProgramada', '>=', $annoMesDia1)
+//            ->where('fechaProgramada', '<=', $annoMesDia2)
+//            ->orderBy('fechaProgramada', 'asc');
+//
+//        if($idCliente!=0) {
+//            // Se filtran por cliente
+//            $query->whereHas('local', function ($q) use ($idCliente) {
+//                $q->where('idCliente', '=', $idCliente);
+//            });
+//        }
+//        return $query->get()->toArray();
+//    }
 
     //función filtra por rango de fecha y lider
-    private function buscarPorRangoYLider($annoMesDia1, $annoMesDia2, $idUsuario){
-        // obtener todos los inventarios en ese periodo de tiempo
-        $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, 0);
-
-        // quitar todos los inventarios en los que en usuario no es lider
-        $inventariosFiltrados = [];
-        foreach ($inventarios as $inventario) {
-            $jornadaInventario = $inventario['idJornada'];
-            $liderDia = $inventario['nomina_dia']['idLider'];
-            $liderNoche = $inventario['nomina_noche']['idLider'];
-
-            // 1="no definido", 2="dia", 3="noche", 4="dia y noche"
-            if ($jornadaInventario == 2 && ($liderDia==$idUsuario)) {
-                // si es "dia", solo puede estar asignado a la nomina de dia
-                array_push($inventariosFiltrados, $inventario);
-            } else if ($jornadaInventario == 3 && ($liderNoche==$idUsuario)) {
-                // si es "noche", solo puede estar asignado a la nomina de noche
-                array_push($inventariosFiltrados, $inventario);
-            } else if ($jornadaInventario == 4 && ( ($liderDia==$idUsuario) || ($liderNoche==$idUsuario) )) {
-                // si la jornada es "dia noche", puede ser lider de cualquiera de las dos nominas
-                array_push($inventariosFiltrados, $inventario);
-            } else {
-                // si no tiene nominas asignadas, no es lider de ninguna
-            }
-        }
-        return $inventariosFiltrados;
-    }
+//    private function buscarPorRangoYLider($annoMesDia1, $annoMesDia2, $idUsuario){
+//        // obtener todos los inventarios en ese periodo de tiempo
+//        $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, 0);
+//
+//        // quitar todos los inventarios en los que en usuario no es lider
+//        $inventariosFiltrados = [];
+//        foreach ($inventarios as $inventario) {
+//            $jornadaInventario = $inventario['idJornada'];
+//            $liderDia = $inventario['nomina_dia']['idLider'];
+//            $liderNoche = $inventario['nomina_noche']['idLider'];
+//
+//            // 1="no definido", 2="dia", 3="noche", 4="dia y noche"
+//            if ($jornadaInventario == 2 && ($liderDia==$idUsuario)) {
+//                // si es "dia", solo puede estar asignado a la nomina de dia
+//                array_push($inventariosFiltrados, $inventario);
+//            } else if ($jornadaInventario == 3 && ($liderNoche==$idUsuario)) {
+//                // si es "noche", solo puede estar asignado a la nomina de noche
+//                array_push($inventariosFiltrados, $inventario);
+//            } else if ($jornadaInventario == 4 && ( ($liderDia==$idUsuario) || ($liderNoche==$idUsuario) )) {
+//                // si la jornada es "dia noche", puede ser lider de cualquiera de las dos nominas
+//                array_push($inventariosFiltrados, $inventario);
+//            } else {
+//                // si no tiene nominas asignadas, no es lider de ninguna
+//            }
+//        }
+//        return $inventariosFiltrados;
+//    }
 
     function api_buscar(Request $request){
         // agrega cabeceras para las peticiones con CORS
@@ -490,6 +462,7 @@ class InventariosController extends Controller {
         $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider);
         return response()->json($inventarios, 200);
     }
+
     private function buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider){
         $query = Inventarios::with([
             'local.cliente',
@@ -565,7 +538,12 @@ class InventariosController extends Controller {
         $mes  = $fecha[1];
         $dia = $fecha[2];
 
-        return checkdate($mes,$dia,$anno);
+        // cuando se pone una fecha del tipo '2016-04-', checkdate lanza una excepcion
+        if( !isset($anno) || !isset($mes) || !isset($dia)) {
+            return false;
+        }else{
+            return checkdate($mes,$dia,$anno);
+        }
     }
     
     // Función generica para generar el archivo excel
