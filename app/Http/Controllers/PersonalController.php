@@ -15,7 +15,7 @@ class PersonalController extends Controller {
     private $userRules = [
         'usuarioRUN' => 'required|unique:users|max:15',
         'usuarioDV' => 'required|max:1',
-        'emailSEI' => 'max:60',
+        'email' => 'max:60',
         'emailPersonal' => 'max:60',
         'nombre1' => 'required|min:3|max:20',
         'nombre2' => 'required|min:3|max:20',
