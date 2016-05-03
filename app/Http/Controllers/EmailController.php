@@ -21,8 +21,10 @@ class EmailController extends Controller {
                 ->cc('asilva@seiconsultores.cl', 'Alejandro Silva')
 
                 ->subject("prueba adjuntos 9")
-                ->attach('/home/asilva/Steve.jpg')
-                ->attach(public_path().'/css/styles.css');
+//                ->attach('/home/asilva/Steve.jpg')
+                ->attach(public_path().'/css/styles.css')
+                ->attach(public_path().'/robots.txt')
+                ->attach(public_path().'/seedFiles/localesFCV.csv');
         });
 
         return response()->json(['message' => 'Request completed']);
