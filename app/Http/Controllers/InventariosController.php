@@ -282,7 +282,7 @@ class InventariosController extends Controller {
      * ##########################################################
      */
 
-    // api/inventario/informar-archivo-final
+    // POST api/inventario/informar-archivo-final
     function api_informarArchivoFinal(Request $request){
         // agrega cabeceras para las peticiones con CORS
         header('Access-Control-Allow-Origin: *');
