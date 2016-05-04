@@ -363,32 +363,38 @@ class AuditoriasController extends Controller {
         $local = Locales::where('idCliente', '=', $idCliente)
             ->where('numero', '=', $ceco)
             ->first();
-        if($local){
-            // Buscar una aditoria del LOCAL en el mismo MES
-            $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)
-                ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
-                ->first();
-
-            if($auditoria){
-                $auditoria->realizadaInformada = true;
-                $auditoria->fechaAuditoria = $annoMesDia;
-                $auditoria->save();
-                // buscar la auditoria actualizada en la BD
-                Log::info("[AUDITORIA:INFORMAR_REALIZADO:OK] idAuditoria '$auditoria->idAuditoria' informada correctamente. ceco '$ceco', idCliente '$idCliente', mes '$annoMesDia'.");
-                return response()->json(Auditorias::find($auditoria->idAuditoria), 200);
-            }else{
-                // auditoria con esa fecha no existe
-                $errorMsg = "no existe una auditoria para el idLocal '$local->idLocal' en el mes '$annoMesDia'";
-                Log::info("[AUDITORIA:INFORMAR_REALIZADO:ERROR] $errorMsg");
-                return response()->json(['msg'=>$errorMsg], 404);
-            }
-        }else{
+        if(!$local) {
             // local de ese usuario, con ese ceco no existe
-            $errorMsg = "no existe el CECO '$ceco' del idCliente '$idCliente'";
+            $errorMsg = "CECO:'$ceco' idCliente:'$idCliente' fecha:'$annoMesDia'. No existe el Local.";
+            Log::info("[AUDITORIA:INFORMAR_REALIZADO:ERROR] $errorMsg");
+            return response()->json(['msg' => $errorMsg], 404);
+        }
+        
+        // Buscar una aditoria del LOCAL en el mismo MES
+        $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)
+            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+            ->first();
+        if(!$auditoria) {
+            // auditoria con esa fecha no existe
+            $errorMsg = "CECO:'$ceco' idCliente:'$idCliente' fecha:'$annoMesDia'. No existe auditoria para el mes indicado.";
             Log::info("[AUDITORIA:INFORMAR_REALIZADO:ERROR] $errorMsg");
             return response()->json(['msg'=>$errorMsg], 404);
         }
+        
+        // Verificar que no haya sido informada anteriormente
+        if($auditoria->fechaAuditoria!='0000-00-00'){
+            $errorMsg = "CECO:'$ceco' idCliente:'$idCliente' fecha:'$annoMesDia'. Auditoria ya informada previamente.";
+            Log::info("[AUDITORIA:INFORMAR_REALIZADO:ERROR] $errorMsg");
+            return response()->json(['msg'=>$errorMsg], 400);
+        }
+        
+        $auditoria->realizadaInformada = true;      // Eliminar
+        $auditoria->fechaAuditoria = $annoMesDia;
+        $auditoria->save();
+        // buscar la auditoria actualizada en la BD
+        Log::info("[AUDITORIA:INFORMAR_REALIZADO:OK] CECO:'$ceco' idCliente:'$idCliente' fecha:'$annoMesDia'. idAuditoria:'$auditoria->idAuditoria' informada correctamente.");
+        return response()->json(Auditorias::find($auditoria->idAuditoria), 200);         
     }
 
     // TEMPORAL; ELIMINAR ASAP
