@@ -32,9 +32,8 @@ class ProgramacionIGSemanal extends React.Component {
             idCliente: 0,
             // mesSeleccionado: '',
             // semanaSeleccionada: '',
-            fechaInicialSeleccionada: moment(),
-            // fechaFinalSeleccionada: moment().add(7, 'days'),
-            fechaFinalSeleccionada: moment().add(1, 'month'),
+            fechaInicialSeleccionada: moment( moment().format('YYYY-MM-01') ),
+            fechaFinalSeleccionada: moment().endOf('month'),
             // Inventarios y Filtros
             filtros: {},
             inventariosFiltrados: []
