@@ -21,7 +21,6 @@ use App\User;
 use App\Role;
 use Auth;
 
-
 class InventariosController extends Controller {
     /**
      * ##########################################################
@@ -277,12 +276,6 @@ class InventariosController extends Controller {
         }
     }
 
-    // GET api/inventario/mes/{annoMesDia}                              // ELIMINAR
-//    function api_getPorMesYCliente($annoMesDia, $idCliente){
-//        $inventarios = $this->inventariosPorMesYCliente($annoMesDia, $idCliente);
-//        return response()->json($inventarios, 200);
-//    }
-
     /**
      * ##########################################################
      * API DE INTERACCION CON LA OTRA PLATAFORMA
@@ -299,7 +292,7 @@ class InventariosController extends Controller {
         $fechaProgramada = $request->fechaProgramada;
         $unidadesReal = $request->unidadesReal;
         $unidadesTeorico = $request->unidadesTeorico;
-        $stringPeticion = "CECO:'$ceco' idCliente:'$idCliente' fechaProgamada:$fechaProgramada Unidades:$unidadesReal U.Teorico:$unidadesTeorico";
+        $stringPeticion = "CECO:'$ceco' idCliente:'$idCliente' fechaProgamada:'$fechaProgramada' Unidades:'$unidadesReal'' U.Teorico:'$unidadesTeorico'";
 
         // Validar los campos
         $validator = Validator::make([
@@ -331,7 +324,6 @@ class InventariosController extends Controller {
             })
             ->where('fechaProgramada', $fechaProgramada)
             ->first();
-
         if(!$inventario){
             $msg = "[INVENTARIO:INFORMAR_FINAL:ERROR] $stringPeticion. Inventario no encontrado ";
             Log::info($msg);
@@ -348,22 +340,6 @@ class InventariosController extends Controller {
         return response()->json(Inventarios::find($inventario->idInventario), 200);
     }
 
-
-    // GET api/inventario/{fecha1}/al/{fecha2}/cliente/{idCliente}      // ELIMINAR
-//    function api_getPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
-//        $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente);
-//        return response()->json($inventarios, 200);
-//    }
-
-    // GET api/inventario/{fecha1}/al/{fecha2}/lider/{idCliente}        // ELIMINAR
-//    function api_getPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente){
-//        if(User::find($idCliente)){
-//            $auditorias = $this->buscarPorRangoYLider($annoMesDia1, $annoMesDia2, $idCliente);
-//            return response()->json($auditorias, 200);
-//        }else{
-//            return response()->json(['msg'=>'el usuario indicado no existe'], 404);
-//        }
-//    }
     /**
      * ##########################################################
      * Descarga de documentos
@@ -373,7 +349,7 @@ class InventariosController extends Controller {
     // GET /pdf/inventarios/{mes}/cliente/{idCliente}
     public function descargarPDF_porMes($annoMesDia, $idCliente){
         //Se utiliza funcion privada que recorre inventarios por mes y dia
-        $inventarios = $this->buscarInventarios(null, null, $annoMesDia, $idCliente, null);
+        $inventarios = $this->buscarInventarios(null, null, $annoMesDia, $idCliente, null, null, null);
 
         // nombre del cliente (si existe)
         $cliente = Clientes::find($idCliente);
@@ -397,7 +373,7 @@ class InventariosController extends Controller {
     // GET /pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}
     public function descargarPDF_porRango($fechaInicio, $fechaFin, $idCliente){
         //Se utiliza funcion privada que recorre inventarios por fecha inicio-final y por idCliente
-        $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, null, $idCliente, null);
+        $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, null, $idCliente, null, null);
 
         // nombre del cliente (si existe)
         $cliente = Clientes::find($idCliente);
@@ -425,91 +401,7 @@ class InventariosController extends Controller {
      * funciones privadas
      * ##########################################################
      */
-
-    //función filtra por mes y cliente
-//    private function inventariosPorMesYCliente($annoMesDia, $idCliente){
-//        $fecha = explode('-', $annoMesDia);
-//        $anno = $fecha[0];
-//        $mes  = $fecha[1];
-//
-//        $query = Inventarios::with([
-//            'local.cliente',
-//            'local.formatoLocal',
-//            'local.direccion.comuna.provincia.region',
-//            'nominaDia',
-//            'nominaNoche',
-//            'nominaDia.lider',
-//            'nominaNoche.lider',
-//            'nominaDia.captador',
-//            'nominaNoche.captador'
-//        ])
-//            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-//            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
-//            ->orderBy('fechaProgramada', 'asc');
-//
-//        if($idCliente!=0) {
-//            $query->whereHas('local', function($q) use ($idCliente) {
-//                $q->where('idCliente', '=', $idCliente);
-//            });
-//        }
-//        return $query->get()->toArray();
-//    }
-
-    //función filtra por rango de fecha y cliente
-//    private function inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, $idCliente){
-//        $query = Inventarios::with([
-//            'local.cliente',
-//            'local.formatoLocal',
-//            'local.direccion.comuna.provincia.region',
-//            'nominaDia',
-//            'nominaNoche',
-//            'nominaDia.lider',
-//            'nominaNoche.lider',
-//            'nominaDia.captador',
-//            'nominaNoche.captador',
-//        ])
-//            ->where('fechaProgramada', '>=', $annoMesDia1)
-//            ->where('fechaProgramada', '<=', $annoMesDia2)
-//            ->orderBy('fechaProgramada', 'asc');
-//
-//        if($idCliente!=0) {
-//            // Se filtran por cliente
-//            $query->whereHas('local', function ($q) use ($idCliente) {
-//                $q->where('idCliente', '=', $idCliente);
-//            });
-//        }
-//        return $query->get()->toArray();
-//    }
-
-    //función filtra por rango de fecha y lider
-//    private function buscarPorRangoYLider($annoMesDia1, $annoMesDia2, $idUsuario){
-//        // obtener todos los inventarios en ese periodo de tiempo
-//        $inventarios = $this->inventariosPorRangoYCliente($annoMesDia1, $annoMesDia2, 0);
-//
-//        // quitar todos los inventarios en los que en usuario no es lider
-//        $inventariosFiltrados = [];
-//        foreach ($inventarios as $inventario) {
-//            $jornadaInventario = $inventario['idJornada'];
-//            $liderDia = $inventario['nomina_dia']['idLider'];
-//            $liderNoche = $inventario['nomina_noche']['idLider'];
-//
-//            // 1="no definido", 2="dia", 3="noche", 4="dia y noche"
-//            if ($jornadaInventario == 2 && ($liderDia==$idUsuario)) {
-//                // si es "dia", solo puede estar asignado a la nomina de dia
-//                array_push($inventariosFiltrados, $inventario);
-//            } else if ($jornadaInventario == 3 && ($liderNoche==$idUsuario)) {
-//                // si es "noche", solo puede estar asignado a la nomina de noche
-//                array_push($inventariosFiltrados, $inventario);
-//            } else if ($jornadaInventario == 4 && ( ($liderDia==$idUsuario) || ($liderNoche==$idUsuario) )) {
-//                // si la jornada es "dia noche", puede ser lider de cualquiera de las dos nominas
-//                array_push($inventariosFiltrados, $inventario);
-//            } else {
-//                // si no tiene nominas asignadas, no es lider de ninguna
-//            }
-//        }
-//        return $inventariosFiltrados;
-//    }
-
+    
     function api_buscar(Request $request){
         // agrega cabeceras para las peticiones con CORS
         header('Access-Control-Allow-Origin: *');
@@ -520,11 +412,17 @@ class InventariosController extends Controller {
         $idCliente = $request->query('idCliente');
         $idLider = $request->query('idLider');
 
-        $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider);
+        $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, null);
         return response()->json($inventarios, 200);
     }
 
-    private function buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider){
+    public function buscarInventarios_conFormato($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina){
+        $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina);
+        // se parsean los usuarios con el formato "estandar"
+        return $inventarios_formato = array_map( [$this, 'darFormatoInventario'], $inventarios );
+    }
+
+    public function buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina){
         $query = Inventarios::with([
             'local.cliente',
             'local.formatoLocal',
@@ -566,8 +464,7 @@ class InventariosController extends Controller {
 
         // Filtrar por Lideres si corresponde
         if(isset($idLider) && $idLider!=0){
-            $inventariosFiltrados = [];
-            foreach ($inventarios as $inventario) {
+            $inventarios = collect($inventarios)->filter(function($inventario) use ($idLider){
                 $jornadaInventario = $inventario['idJornada'];
                 $liderDia = $inventario['nomina_dia']['idLider'];
                 $liderNoche = $inventario['nomina_noche']['idLider'];
@@ -575,21 +472,32 @@ class InventariosController extends Controller {
                 // 1="no definido", 2="dia", 3="noche", 4="dia y noche"
                 if ($jornadaInventario == 2 && ($liderDia==$idLider)) {
                     // si es "dia", solo puede estar asignado a la nomina de dia
-                    array_push($inventariosFiltrados, $inventario);
+                    return true;
                 } else if ($jornadaInventario == 3 && ($liderNoche==$idLider)) {
                     // si es "noche", solo puede estar asignado a la nomina de noche
-                    array_push($inventariosFiltrados, $inventario);
+                    return true;
                 } else if ($jornadaInventario == 4 && ( ($liderDia==$idLider) || ($liderNoche==$idLider) )) {
                     // si la jornada es "dia noche", puede ser lider de cualquiera de las dos nominas
-                    array_push($inventariosFiltrados, $inventario);
+                    return true;
                 } else {
                     // si no tiene nominas asignadas, no es lider de ninguna
+                    return false;
                 }
-            }
-            return $inventariosFiltrados;
-        }else{
-            return $inventarios;
+            })->toArray();
         }
+
+        // Filtrar por fechaSubidaNomina
+        if(isset($fechaSubidaNomina)){
+            $inventarios = collect($inventarios)->filter(function($inventario) use ($fechaSubidaNomina){
+                $fechaSubidaDia = $inventario['nomina_dia']['fechaSubidaNomina'];
+                $fechaSubidaNoche = $inventario['nomina_noche']['fechaSubidaNomina'];
+
+                // la fecha buscada debe ser igual a fecha de subida de la nomina de dia O la fecha de subida de la nomina de noche
+                return $fechaSubidaDia==$fechaSubidaNomina || $fechaSubidaNoche==$fechaSubidaNomina;
+            })->toArray();
+        }
+
+        return $inventarios;
     }
 
     //Function para validar que la fecha sea valida
@@ -657,5 +565,64 @@ class InventariosController extends Controller {
         $sheet->fromArray($inventariosArray,  NULL, 'A6');
 
         return $workbook;
+    }
+
+    private function darFormatoInventario($inventario){
+        return [
+            // Informacion del inventario
+            'idInventario' => $inventario['idInventario'],
+            'idJornada' => $inventario['idJornada'],
+            'inventario_fechaProgramada' => $inventario['fechaProgramada'],
+            'inventario_stockTeorico' => $inventario['stockTeorico'],
+            'inventario_fechaStock' => $inventario['fechaStock'],
+            'inventario_dotacionAsignadaTotal' => $inventario['dotacionAsignadaTotal'],
+            // Local
+            'idLocal' => $inventario['idLocal'],
+            'local_numero' => $inventario['local']['numero'],
+            'local_nombre' => $inventario['local']['nombre'],
+
+            // Cliente
+            'idCliente' => $inventario['local']['idCliente'],
+            'cliente_nombreCorto' => $inventario['local']['cliente']['nombreCorto'],
+
+            // Formato Local
+            'idFormatoLocal' => $inventario['local']['idFormatoLocal'],
+            'formatoLocal_nombre' => $inventario['local']['formato_local']['nombre'],
+            'formatoLocal_produccionSugerida' => $inventario['local']['formato_local']['produccionSugerida'],
+
+            'direccion' => $inventario['local']['direccion']['direccion'],
+            // Comuna
+            'cutComuna' => $inventario['local']['direccion']['cutComuna'],
+            'comuna_nombre' => $inventario['local']['direccion']['comuna']['nombre'],
+            // Region
+            'cutRegion' => $inventario['local']['direccion']['comuna']['provincia']['cutRegion'],
+            'region_numero' => $inventario['local']['direccion']['comuna']['provincia']['region']['numero'],
+
+            // nomina Dia
+            'idNominaDia' => $inventario['idNominaDia'],
+            'nominaDia_horaPresentacionLider' => $inventario['nomina_dia']['horaPresentacionLider'],
+            'nominaDia_horaPresentacionEquipo' => $inventario['nomina_dia']['horaPresentacionEquipo'],
+            'nominaDia_dotacionAsignada' => $inventario['nomina_dia']['dotacionAsignada'],
+            'nominaDia_fechaSubidaNomina' => $inventario['nomina_dia']['fechaSubidaNomina'],
+            // Lider Dia
+            'nominaDia_idLider' => $inventario['nomina_dia']['idLider'],
+            'nominaDia_lider_nombre' => trim($inventario['nomina_dia']['lider']['nombre1']." ".$inventario['nomina_dia']['lider']['apellidoPaterno']),
+            // Captador Dia
+            'nominaDia_idCaptador' => $inventario['nomina_dia']['idCaptador1'],
+            'nominaDia_captador_nombre' => trim($inventario['nomina_dia']['captador']['nombre1']." ".$inventario['nomina_dia']['captador']['apellidoPaterno']),
+
+            // nomina Noche
+            'idNominaNoche' => $inventario['idNominaNoche'],
+            'nominaNoche_horaPresentacionLider' => $inventario['nomina_noche']['horaPresentacionLider'],
+            'nominaNoche_horaPresentacionEquipo' => $inventario['nomina_noche']['horaPresentacionEquipo'],
+            'nominaNoche_dotacionAsignada' => $inventario['nomina_noche']['dotacionAsignada'],
+            'nominaNoche_fechaSubidaNomina' => $inventario['nomina_noche']['fechaSubidaNomina'],
+            // Lider Noche
+            'nominaNoche_idLider' => $inventario['nomina_noche']['idLider'],
+            'nominaNoche_lider_nombre' => trim($inventario['nomina_noche']['lider']['nombre1']." ".$inventario['nomina_noche']['lider']['apellidoPaterno']),
+            // Captador Dia
+            'nominaNoche_idCaptador' => $inventario['nomina_noche']['idCaptador1'],
+            'nominaNoche_captador_nombre' => trim($inventario['nomina_noche']['captador']['nombre1']." ".$inventario['nomina_noche']['captador']['apellidoPaterno']),
+        ];
     }
 }
