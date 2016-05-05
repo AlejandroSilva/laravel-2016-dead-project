@@ -17,7 +17,7 @@ use App\FormatoLocales;
 use App\Jornadas;
 use App\Comunas;
 use App\Direcciones;
-
+use App\User;
 
 class LocalesController extends Controller {
 
@@ -181,6 +181,10 @@ class LocalesController extends Controller {
     }
 
     public function showClientes(){
+        $user = Auth::user();
+        if(!$user || !$user->can('programaLocales_ver'))
+            return view('errors.403');
+        
         $clientes = Clientes::all();
         
         return view('operacional.locales.mantenedorLocales', [
@@ -189,6 +193,10 @@ class LocalesController extends Controller {
     }
 
     public function api_getLocales($idCliente){
+        $user = Auth::user();
+        if(!$user || !$user->can('programaLocales_ver'))
+            return view('errors.403');
+        
         $formatoLocales = FormatoLocales::all()->sortBy('idFormatoLocal');
         $jornadas = Jornadas::all();
         $clientes = Clientes::all();
@@ -203,7 +211,8 @@ class LocalesController extends Controller {
                 'formatoLocales' => $formatoLocales,
                 'jornadas' => $jornadas,
                 'clientes' => $clientes,
-                'comunas' => $comunas
+                'comunas' => $comunas,
+                'user' => $user
             ]);
         }else{
             return response()->json([], 404);
@@ -211,6 +220,10 @@ class LocalesController extends Controller {
     }
     
     public function api_actualizarLocal($idLocal, Request $request){
+        $user = Auth::user();
+        if(!$user || !$user->can('programaLocales_modificar'))
+            return view('errors.403');
+
         $local = Locales::find($idLocal);
         $direccion = $local->direccion;
 
@@ -260,6 +273,10 @@ class LocalesController extends Controller {
     }
     
     public function post_formulario(Request $request){
+        $user = Auth::user();
+        if(!$user || !$user->can('programaLocales_agregar'))
+            return view('errors.403');
+
         $validator= Validator::make(Input::all(), $this->localesRules);
         if($validator->fails()){
             return response()->json($validator->messages(), 400);

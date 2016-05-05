@@ -291,7 +291,7 @@
                             <tr>
                                 <td class="tdIdLocal">{{ $local->idLocal}}</td>
                                 <td class="tdIdCliente">
-                                    <select name="idCliente" required>
+                                    <select name="idCliente" required {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                         @foreach( $clientes as $cliente)
                                             <option value="{{ $cliente->idCliente }}"    {{ $local->idCliente==$cliente->idCliente? 'selected' :''  }}>
                                                 {{ $cliente->nombre}}
@@ -301,7 +301,7 @@
 
                                 </td>
                                 <td class="tdFormato">
-                                    <select name="idFormatoLocal" required>
+                                    <select name="idFormatoLocal" required {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                         @foreach( $formatoLocales as $formatoLocal)
                                             <option value="{{ $formatoLocal->idFormatoLocal }}"    {{ $local->idFormatoLocal==$formatoLocal->idFormatoLocal? 'selected' :''  }}>
                                                 {{ $formatoLocal->nombre}}
@@ -310,7 +310,7 @@
                                     </select>
                                 </td>
                                 <td class="tdJornada" >
-                                    <select name="idJornadaSugerida">
+                                    <select name="idJornadaSugerida" {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                         @foreach( $jornadas as $jornada)
                                             <option value="{{ $jornada->idJornada }}"    {{ $local->idJornadaSugerida==$jornada->idJornada? 'selected' :''  }}>
                                                 {{ $jornada->nombre}}
@@ -319,40 +319,51 @@
                                     </select>
                                 </td>
                                 <td class="tdNumero">
-                                    <input type="text" value="{{ $local->numero}}" name="numero" required >
+                                    <input type="text" value="{{ $local->numero}}" name="numero" required
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdNombre">
-                                    <input type="text" value="{{ $local->nombre}}" name="nombre" required maxlength="35">
+                                    <input type="text" value="{{ $local->nombre}}" name="nombre" required maxlength="35"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdHoraApertura">
-                                    <input type="text" value="{{ $local->horaApertura}}" name="horaApertura">
+                                    <input type="text" value="{{ $local->horaApertura}}" name="horaApertura"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdHoraCierre">
-                                    <input type="text" value="{{ $local->horaCierre}}" name="horaCierre">
+                                    <input type="text" value="{{ $local->horaCierre}}" name="horaCierre"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdEmail">
-                                    <input type="text" value="{{ $local->emailContacto}}" name="emailContacto" required maxlength="50">
+                                    <input type="text" value="{{ $local->emailContacto}}" name="emailContacto" required maxlength="50"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdCodArea1">
-                                    <input type="text" value="{{ $local->codArea1}}" name="codArea1">
+                                    <input type="text" value="{{ $local->codArea1}}" name="codArea1"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdTelefono1">
-                                    <input type="text" value="{{ $local->telefono1}}" name="telefono1">
+                                    <input type="text" value="{{ $local->telefono1}}" name="telefono1"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdCodArea2">
-                                    <input type="text" value="{{ $local->codArea2}}" name="codArea2">
+                                    <input type="text" value="{{ $local->codArea2}}" name="codArea2"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdTelefono2">
-                                    <input type="text" value="{{ $local->telefono2}}" name="telefono2">
+                                    <input type="text" value="{{ $local->telefono2}}" name="telefono2"
+                                           {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdStock">
-                                    <input type="text" value="{{ $local->stock}}" name="stock" required >
+                                    <input type="text" value="{{ $local->stock}}" name="stock" required
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdFechaStock">
-                                    <input type="text" value="{{ $local->fechaStock}}" name="fechaStock">
+                                    <input type="text" value="{{ $local->fechaStock}}" name="fechaStock"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdComuna">
-                                    <select name="cutComuna" required>
+                                    <select name="cutComuna" required {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                         @foreach( $comunas as $comuna)
                                             <option value="{{ $comuna->cutComuna }}"    {{ $local->direccion->cutComuna == $comuna->cutComuna? 'selected' :''  }}>
                                                 {{ $comuna->nombre}}
@@ -361,10 +372,12 @@
                                     </select>
                                 </td>
                                 <td class="tdDireccion">
-                                    <input type="text" value="{{ $local->direccion->direccion }}" name="direccion" class="input" required maxlength="150">
+                                    <input type="text" value="{{ $local->direccion->direccion }}" name="direccion" class="input" required maxlength="150"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdOpcion">
-                                    <input type="submit" class="btn btn-primary btn-xs btn-block" value="Modificar">
+                                    <input type="submit" class="btn btn-primary btn-xs btn-block" value="Modificar"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
 
                             </tr>
@@ -421,7 +434,7 @@
                             <input name="_token" type="hidden" value="{{csrf_token()}}">
                             <tr>
                                 <td class="tdIdCliente">
-                                    <select name="idCliente" required>
+                                    <select name="idCliente" required {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                         @foreach( $clientes as $cliente)
                                             <option value="{{ $cliente->idCliente }}" >
                                                 {{ $cliente->nombre}}
@@ -430,7 +443,7 @@
                                     </select>
                                 </td>
                                 <td class="tdFormato">
-                                    <select name="idFormatoLocal" required>
+                                    <select name="idFormatoLocal" required {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                         @foreach( $formatoLocales as $formatoLocal)
                                             <option value="{{ $formatoLocal->idFormatoLocal }}"    >
                                                 {{ $formatoLocal->nombre}}
@@ -439,7 +452,7 @@
                                     </select>
                                 </td>
                                 <td class="tdJornada" >
-                                    <select name="idJornadaSugerida" required>
+                                    <select name="idJornadaSugerida" required {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                         @foreach( $jornadas as $jornada)
                                             <option value="{{ $jornada->idJornada }}"    >
                                                 {{ $jornada->nombre}}
@@ -448,40 +461,51 @@
                                     </select>
                                 </td>
                                 <td class="tdNumero">
-                                    <input type="text" name="numero" required>
+                                    <input type="text" name="numero" required
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdNombre">
-                                    <input type="text" name="nombre" required maxlength="35">
+                                    <input type="text" name="nombre" required maxlength="35"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdHoraApertura">
-                                    <input type="text" name="horaApertura">
+                                    <input type="text" name="horaApertura"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdHoraCierre">
-                                    <input type="text" name="horaCierre">
+                                    <input type="text" name="horaCierre"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdEmail">
-                                    <input type="text" name="emailContacto" required maxlength="50">
+                                    <input type="text" name="emailContacto" required maxlength="50"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdCodArea1">
-                                    <input type="text" name="codArea1">
+                                    <input type="text" name="codArea1"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdTelefono1">
-                                    <input type="text" name="telefono1">
+                                    <input type="text" name="telefono1"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdCodArea2">
-                                    <input type="text" name="codArea2">
+                                    <input type="text" name="codArea2"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdTelefono2">
-                                    <input type="text" name="telefono2">
+                                    <input type="text" name="telefono2"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdStock">
-                                    <input type="text" name="stock" required>
+                                    <input type="text" name="stock" required
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdFechaStock">
-                                    <input type="text" name="fechaStock">
+                                    <input type="text" name="fechaStock"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdComuna">
-                                    <select name="cutComuna" required>
+                                    <select name="cutComuna" required {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                         @foreach( $comunas as $comuna)
                                             <option value="{{ $comuna->cutComuna }}"   >
                                                 {{ $comuna->nombre}}
@@ -490,10 +514,12 @@
                                     </select>
                                 </td>
                                 <td class="tdDireccion2">
-                                    <input type="text" name="direccion" class="input" required maxlength="150">
+                                    <input type="text" name="direccion" class="input" required maxlength="150"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdOpcion">
-                                    <input type="submit" class="btn btn-primary btn-xs btn-block" value="Agregar">
+                                    <input type="submit" class="btn btn-primary btn-xs btn-block" value="Agregar"
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
 
                             </tr>
