@@ -63,19 +63,15 @@ Route::group(['middleware' => ['web']], function (){
 
     // API INVENTARIOS
     Route::group(['prefix' => 'api/inventario'], function(){
-        Route::get('buscar',     'InventariosController@api_buscar');
-        
+        Route::get('buscar',                 'InventariosController@api_buscar');
+
         Route::post('nuevo',                 'InventariosController@api_nuevo');
         Route::get('{idInventario}',         'InventariosController@api_get');
         Route::put('{idInventario}',         'InventariosController@api_actualizar');
         Route::delete('{idInventario}',      'InventariosController@api_eliminar');
-        // buscar inventarios
-        //Route::get('{annoMesDia}/cliente/{idCliente}',  'InventariosController@api_getPorMesYCliente');     // **YA NO SE USA EN EL SIG
 
         // RUTAS UTILIZADAS POR LA OTRA APLICACION
         Route::post('/informar-archivo-final',  'InventariosController@api_informarArchivoFinal');
-        //Route::get('{fecha1}/al/{fecha2}/cliente/{idCliente}',   'InventariosController@api_getPorRangoYCliente'); // **YA NO SE USA EN EL SIG
-        //Route::get('{fecha1}/al/{fecha2}/lider/{idCliente}',     'InventariosController@api_getPorRangoYLider');    // ** YA NO SE USA EN LA PLATAFORMA INVENTARIO
     });
 
     // API NOMINAS
@@ -153,12 +149,6 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
 
-    //    Route::group(['prefix' => 'nominas', 'middleware' => ['auth']], function() {
-    //        Route::get('/',               'NominasController@showNominas');
-    //    });
-    //    Route::group(['prefix' => 'nomFinales', 'middleware' => ['auth']], function() {
-    //        Route::get('/',            'NominasController@showNominasFinales');
-    //    });
 
     //Route::get('/map', function(){return view('maptest');});
     /*

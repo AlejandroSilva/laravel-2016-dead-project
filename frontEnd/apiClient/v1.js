@@ -28,10 +28,8 @@ export default {
         eliminar: (idInventario)=>
             axios.delete(`/api/inventario/${idInventario}`),
         getPorMesYCliente: (annoMesDia, idCliente)=>
-            // ELIMINAR RUTA return axios.get(`/api/inventario/${annoMesDia}/cliente/${idCliente}`)
             axios.get(`/api/inventario/buscar?mes=${annoMesDia}&idCliente=${idCliente}`),
         getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>
-            // ELIMINAR RUTA return axios.get(`/api/inventario/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`)
             axios.get(`/api/inventario/buscar?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
     },
     auditoria: {
