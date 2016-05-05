@@ -22,28 +22,29 @@ class RowAuditoriaSemanal extends React.Component{
     }
 
     guardarAuditoria() {
-        if(!this.props.puedeModificar)
-            return alert('no tiene permisos para realizar esta acción')
-
         let cambiosAuditoria = {}
 
-        // la FECHA es valida, y ha cambiado?
-        let estadoInputFecha = this.inputFecha.getEstado()
-        if (estadoInputFecha.valid && estadoInputFecha.dirty) {
-            cambiosAuditoria.fechaProgramada = estadoInputFecha.fecha
-        } else if (estadoInputFecha.valid === false) {
-            return console.log(`fecha ${estadoInputFecha.fecha} invalida`)
+        if(this.props.puedeModificar){
+            // la FECHA es valida, y ha cambiado?
+            let estadoInputFecha = this.inputFecha.getEstado()
+            if (estadoInputFecha.valid && estadoInputFecha.dirty) {
+                cambiosAuditoria.fechaProgramada = estadoInputFecha.fecha
+            } else if (estadoInputFecha.valid === false) {
+                return console.log(`fecha ${estadoInputFecha.fecha} invalida`)
+            }
+    
+            // el AUDITOR ha cambiado?
+            let estadoSelectAuditor = this.selectAuditor.getEstado()
+            if(estadoSelectAuditor.dirty)
+                cambiosAuditoria.idAuditor = estadoSelectAuditor.seleccionUsuario
         }
 
-        // el AUDITOR ha cambiado?
-        let estadoSelectAuditor = this.selectAuditor.getEstado()
-        if(estadoSelectAuditor.dirty)
-            cambiosAuditoria.idAuditor = estadoSelectAuditor.seleccionUsuario
-
-        // APROBADA ha cambiado?
-        let estadoSelectAprobada = this.selectAprobada.getEstado()
-        if(estadoSelectAprobada.dirty)
-            cambiosAuditoria.aprovada = estadoSelectAprobada.seleccionUsuario
+        if(this.props.puedeModificar || this.props.puedeRevisar){
+            // APROBADA ha cambiado?
+            let estadoSelectAprobada = this.selectAprobada.getEstado()
+            if(estadoSelectAprobada.dirty)
+                cambiosAuditoria.aprovada = estadoSelectAprobada.seleccionUsuario
+        }
 
         // la HORA DE LLEGADA DEL AUDITOR es valida y ha cambiado?
         // let estadoHoraAuditor = this.inputHoraAuditor.getEstado()

@@ -183,9 +183,6 @@ class ProgramacionAISemanal extends React.Component {
             })
     }
     guardarAuditoria(idAuditoria, formInventario){
-        if(this.props.puedeModificar!==true)
-            return alert("No tiene los permisos para modificar la Auditoria")
-
         api.auditoria.actualizar(idAuditoria, formInventario)
             .then(auditoriaActualizada=>{
                 console.log('auditoria actualizada correctamente')
