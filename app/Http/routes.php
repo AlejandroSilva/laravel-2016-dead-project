@@ -153,8 +153,6 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
 
-
-    Route::get('/send-mail', 'EmailController@send');
     //    Route::group(['prefix' => 'nominas', 'middleware' => ['auth']], function() {
     //        Route::get('/',               'NominasController@showNominas');
     //    });
