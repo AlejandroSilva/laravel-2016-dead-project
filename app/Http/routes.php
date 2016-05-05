@@ -10,7 +10,7 @@
 |
 */
 
-Route::group(['middleware' => ['web']], function (){
+    Route::group(['middleware' => ['web']], function (){
     Route::get('/',             'HomeController@index');
 
     /*
@@ -69,8 +69,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('/',                           'LocalesController@showClientes');
         Route::get('cliente/{idCliente}/',        'LocalesController@api_getLocales');
         Route::put('{idLocal}/editar',            'LocalesController@api_actualizarLocal');
-        
-
     });
 
     // API CLIENTES Y LOCALES
@@ -79,9 +77,7 @@ Route::group(['middleware' => ['web']], function (){
     Route::get('api/clientes/locales',              'ClientesController@api_getClientesWithLocales');
     Route::get('api/locales/{idLocal}',             'LocalesController@api_getLocal');
     Route::get('api/locales/{idLocal}/verbose',     'LocalesController@api_getLocalVerbose');
-
-
-
+        
     /*
     |--------------------------------------------------------------------------
     | Programación de Inventarios Generales

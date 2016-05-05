@@ -11,6 +11,7 @@ class Locales extends Model{
     // este modelo tiene timestamps
     public $timestamps = true;
 
+    //Fillable para reconocer que datos vienen desde el controller en caso de venir otros no definidos aqui los ignora
     protected $fillable = ['idCliente','idFormatoLocal','idJornadaSugerida','numero','nombre','horaApertura','horaCierre','emailContacto','codArea1','telefono1',
                             'codArea2','telefono2','stock','fechaStock'];
     // #### Relaciones

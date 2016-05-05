@@ -20,6 +20,7 @@ use App\Direcciones;
 
 
 class LocalesController extends Controller {
+
     private $localesRules = [
         'idCliente' => 'required|max:10',
         'idFormatoLocal' => 'required|max:10',
@@ -42,6 +43,7 @@ class LocalesController extends Controller {
      * Rutas que generan vistas
      * ##########################################################
      */
+
     // GET admin/locales
     function show_mantenedor(){
         // validar de que el usuario tenga los permisos
@@ -177,6 +179,7 @@ class LocalesController extends Controller {
             return response()->json([], 404);
         }
     }
+
     public function showClientes(){
         $clientes = Clientes::all();
         

@@ -11,11 +11,11 @@
                 <h1 class="page-header">CLientes</h1>
                 <table class="table table-condensed table-bordered table-hover">
                     <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Opción</th>
-                    </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Opción</th>
+                        </tr>
                     </thead>
                     <tbody>
                         @foreach( $clientes as $cliente)

@@ -257,124 +257,124 @@
 
     <div class="container-fluid">
         <div class="row">
-                <h1 class="page-header">Locales</h1>
+            <h1 class="page-header">Locales</h1>
 
-                <table class="table table-condensed table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th class="thIdLocal">ID</th>
-                            <th class="thIdCliente">Cliente</th>
-                            <th class="thFormato">Formato</th>
-                            <th class="thJornada">Jornada</th>
-                            <th class="thNumero">CE</th>
-                            <th class="thNombre">Nombre</th>
-                            <th class="thHoraApertura">Hora apertura</th>
-                            <th class="thHoraCierre">Hora cierre</th>
-                            <th class="thEmail">Email</th>
-                            <th class="thCodArea1">Cod Area1</th>
-                            <th class="thTelefono1">Telefono1</th>
-                            <th class="thCodArea2">Cod Area2</th>
-                            <th class="thTelefono2">Telefono2</th>
-                            <th class="thStock">Stock</th>
-                            <th class="thFechaStock">Fecha Stock</th>
-                            <th class="thComuna">Comuna</th>
-                            <th class="thDireccion">Direccion</th>
-                            <th class="thOpcion">Opción</th>
-                        </tr>
-                        </thead>
-                    <tbody>
-                    @if(isset($locales))
-                        @foreach($locales as $local)
-                            <form method="POST" action="/locales/{{$local->idLocal}}/editar">
-                                <input name="_method" type="hidden" value="PUT">
-                                <input name="_token" type="hidden" value="{{csrf_token()}}">
-                                <tr>
-                                    <td class="tdIdLocal">{{ $local->idLocal}}</td>
-                                    <td class="tdIdCliente">
-                                        <select name="idCliente" required>
-                                            @foreach( $clientes as $cliente)
-                                                <option value="{{ $cliente->idCliente }}"    {{ $local->idCliente==$cliente->idCliente? 'selected' :''  }}>
-                                                    {{ $cliente->nombre}}
-                                                </option>
-                                            @endforeach
-                                        </select>
+            <table class="table table-condensed table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th class="thIdLocal">ID</th>
+                    <th class="thIdCliente">Cliente</th>
+                    <th class="thFormato">Formato</th>
+                    <th class="thJornada">Jornada</th>
+                    <th class="thNumero">CE</th>
+                    <th class="thNombre">Nombre</th>
+                    <th class="thHoraApertura">Hora apertura</th>
+                    <th class="thHoraCierre">Hora cierre</th>
+                    <th class="thEmail">Email</th>
+                    <th class="thCodArea1">Cod Area1</th>
+                    <th class="thTelefono1">Telefono1</th>
+                    <th class="thCodArea2">Cod Area2</th>
+                    <th class="thTelefono2">Telefono2</th>
+                    <th class="thStock">Stock</th>
+                    <th class="thFechaStock">Fecha Stock</th>
+                    <th class="thComuna">Comuna</th>
+                    <th class="thDireccion">Direccion</th>
+                    <th class="thOpcion">Opción</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if(isset($locales))
+                    @foreach($locales as $local)
+                        <form method="POST" action="/locales/{{$local->idLocal}}/editar">
+                            <input name="_method" type="hidden" value="PUT">
+                            <input name="_token" type="hidden" value="{{csrf_token()}}">
+                            <tr>
+                                <td class="tdIdLocal">{{ $local->idLocal}}</td>
+                                <td class="tdIdCliente">
+                                    <select name="idCliente" required>
+                                        @foreach( $clientes as $cliente)
+                                            <option value="{{ $cliente->idCliente }}"    {{ $local->idCliente==$cliente->idCliente? 'selected' :''  }}>
+                                                {{ $cliente->nombre}}
+                                            </option>
+                                        @endforeach
+                                    </select>
 
-                                    </td>
-                                    <td class="tdFormato">
-                                        <select name="idFormatoLocal" required>
-                                            @foreach( $formatoLocales as $formatoLocal)
-                                                <option value="{{ $formatoLocal->idFormatoLocal }}"    {{ $local->idFormatoLocal==$formatoLocal->idFormatoLocal? 'selected' :''  }}>
-                                                    {{ $formatoLocal->nombre}}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td class="tdJornada" >
-                                        <select name="idJornadaSugerida">
-                                            @foreach( $jornadas as $jornada)
-                                                <option value="{{ $jornada->idJornada }}"    {{ $local->idJornadaSugerida==$jornada->idJornada? 'selected' :''  }}>
-                                                    {{ $jornada->nombre}}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td class="tdNumero">
-                                        <input type="text" value="{{ $local->numero}}" name="numero" required >
-                                    </td>
-                                    <td class="tdNombre">
-                                        <input type="text" value="{{ $local->nombre}}" name="nombre" required maxlength="35">
-                                    </td>
-                                    <td class="tdHoraApertura">
-                                        <input type="text" value="{{ $local->horaApertura}}" name="horaApertura">
-                                    </td>
-                                    <td class="tdHoraCierre">
-                                        <input type="text" value="{{ $local->horaCierre}}" name="horaCierre">
-                                    </td>
-                                    <td class="tdEmail">
-                                        <input type="text" value="{{ $local->emailContacto}}" name="emailContacto" required maxlength="50">
-                                    </td>
-                                    <td class="tdCodArea1">
-                                        <input type="text" value="{{ $local->codArea1}}" name="codArea1">
-                                    </td>
-                                    <td class="tdTelefono1">
-                                        <input type="text" value="{{ $local->telefono1}}" name="telefono1">
-                                    </td>
-                                    <td class="tdCodArea2">
-                                        <input type="text" value="{{ $local->codArea2}}" name="codArea2">
-                                    </td>
-                                    <td class="tdTelefono2">
-                                        <input type="text" value="{{ $local->telefono2}}" name="telefono2">
-                                    </td>
-                                    <td class="tdStock">
-                                        <input type="text" value="{{ $local->stock}}" name="stock" required >
-                                    </td>
-                                    <td class="tdFechaStock">
-                                        <input type="text" value="{{ $local->fechaStock}}" name="fechaStock">
-                                    </td>
-                                    <td class="tdComuna">
-                                        <select name="cutComuna" required>
-                                            @foreach( $comunas as $comuna)
-                                                <option value="{{ $comuna->cutComuna }}"    {{ $local->direccion->cutComuna == $comuna->cutComuna? 'selected' :''  }}>
-                                                    {{ $comuna->nombre}}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td class="tdDireccion">
-                                        <input type="text" value="{{ $local->direccion->direccion }}" name="direccion" class="input" required maxlength="150">
-                                    </td>
-                                    <td class="tdOpcion">
-                                        <input type="submit" class="btn btn-primary btn-xs btn-block" value="Modificar">
-                                    </td>
+                                </td>
+                                <td class="tdFormato">
+                                    <select name="idFormatoLocal" required>
+                                        @foreach( $formatoLocales as $formatoLocal)
+                                            <option value="{{ $formatoLocal->idFormatoLocal }}"    {{ $local->idFormatoLocal==$formatoLocal->idFormatoLocal? 'selected' :''  }}>
+                                                {{ $formatoLocal->nombre}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="tdJornada" >
+                                    <select name="idJornadaSugerida">
+                                        @foreach( $jornadas as $jornada)
+                                            <option value="{{ $jornada->idJornada }}"    {{ $local->idJornadaSugerida==$jornada->idJornada? 'selected' :''  }}>
+                                                {{ $jornada->nombre}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="tdNumero">
+                                    <input type="text" value="{{ $local->numero}}" name="numero" required >
+                                </td>
+                                <td class="tdNombre">
+                                    <input type="text" value="{{ $local->nombre}}" name="nombre" required maxlength="35">
+                                </td>
+                                <td class="tdHoraApertura">
+                                    <input type="text" value="{{ $local->horaApertura}}" name="horaApertura">
+                                </td>
+                                <td class="tdHoraCierre">
+                                    <input type="text" value="{{ $local->horaCierre}}" name="horaCierre">
+                                </td>
+                                <td class="tdEmail">
+                                    <input type="text" value="{{ $local->emailContacto}}" name="emailContacto" required maxlength="50">
+                                </td>
+                                <td class="tdCodArea1">
+                                    <input type="text" value="{{ $local->codArea1}}" name="codArea1">
+                                </td>
+                                <td class="tdTelefono1">
+                                    <input type="text" value="{{ $local->telefono1}}" name="telefono1">
+                                </td>
+                                <td class="tdCodArea2">
+                                    <input type="text" value="{{ $local->codArea2}}" name="codArea2">
+                                </td>
+                                <td class="tdTelefono2">
+                                    <input type="text" value="{{ $local->telefono2}}" name="telefono2">
+                                </td>
+                                <td class="tdStock">
+                                    <input type="text" value="{{ $local->stock}}" name="stock" required >
+                                </td>
+                                <td class="tdFechaStock">
+                                    <input type="text" value="{{ $local->fechaStock}}" name="fechaStock">
+                                </td>
+                                <td class="tdComuna">
+                                    <select name="cutComuna" required>
+                                        @foreach( $comunas as $comuna)
+                                            <option value="{{ $comuna->cutComuna }}"    {{ $local->direccion->cutComuna == $comuna->cutComuna? 'selected' :''  }}>
+                                                {{ $comuna->nombre}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="tdDireccion">
+                                    <input type="text" value="{{ $local->direccion->direccion }}" name="direccion" class="input" required maxlength="150">
+                                </td>
+                                <td class="tdOpcion">
+                                    <input type="submit" class="btn btn-primary btn-xs btn-block" value="Modificar">
+                                </td>
 
-                                </tr>
-                            </form>
-                        @endforeach
-                    @endif
-                    </tbody>
-                </table>
+                            </tr>
+                        </form>
+                    @endforeach
+                @endif
+                </tbody>
+            </table>
 
-                @if (count($errors) > 0)
+            @if (count($errors) > 0)
                         <!-- Form Error List -->
                 <div class="alert alert-danger">
                     <strong>Whoops! Something went wrong!</strong>
@@ -389,132 +389,130 @@
                 </div>
                 @endif
         </div>
+
         <div class="row">
 
-                <h1>Agregar</h1>
-                    <table class="table table-condensed table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th class="thIdCliente">Cliente</th>
-                            <th class="thFormato">Formato</th>
-                            <th class="thJornada">Jornada</th>
-                            <th class="thNumero">CE</th>
-                            <th class="thNombre">Nombre</th>
-                            <th class="thHoraApertura">Hora apertura</th>
-                            <th class="thHoraCierre">Hora cierre</th>
-                            <th class="thEmail">Email</th>
-                            <th class="thCodArea1">Cod Area1</th>
-                            <th class="thTelefono1">Telefono1</th>
-                            <th class="thCodArea2">Cod Area2</th>
-                            <th class="thTelefono2">Telefono2</th>
-                            <th class="thStock">Stock</th>
-                            <th class="thFechaStock">Fecha Stock</th>
-                            <th class="thComuna">Comuna</th>
-                            <th class="thDireccion">Direccion</th>
-                            <th class="thOpcion">Opción</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+            <h1>Agregar</h1>
+                <table class="table table-condensed table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="thIdCliente">Cliente</th>
+                        <th class="thFormato">Formato</th>
+                        <th class="thJornada">Jornada</th>
+                        <th class="thNumero">CE</th>
+                        <th class="thNombre">Nombre</th>
+                        <th class="thHoraApertura">Hora apertura</th>
+                        <th class="thHoraCierre">Hora cierre</th>
+                        <th class="thEmail">Email</th>
+                        <th class="thCodArea1">Cod Area1</th>
+                        <th class="thTelefono1">Telefono1</th>
+                        <th class="thCodArea2">Cod Area2</th>
+                        <th class="thTelefono2">Telefono2</th>
+                        <th class="thStock">Stock</th>
+                        <th class="thFechaStock">Fecha Stock</th>
+                        <th class="thComuna">Comuna</th>
+                        <th class="thDireccion">Direccion</th>
+                        <th class="thOpcion">Opción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                                <form method="POST" action="/locales">
-                                    <input name="_token" type="hidden" value="{{csrf_token()}}">
-                                    <tr>
-                                        <td class="tdIdCliente">
-                                            <select name="idCliente" required>
-                                                @foreach( $clientes as $cliente)
-                                                    <option value="{{ $cliente->idCliente }}" >
-                                                        {{ $cliente->nombre}}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td class="tdFormato">
-                                            <select name="idFormatoLocal" required>
-                                                @foreach( $formatoLocales as $formatoLocal)
-                                                    <option value="{{ $formatoLocal->idFormatoLocal }}"    >
-                                                        {{ $formatoLocal->nombre}}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td class="tdJornada" >
-                                            <select name="idJornadaSugerida" required>
-                                                @foreach( $jornadas as $jornada)
-                                                    <option value="{{ $jornada->idJornada }}"    >
-                                                        {{ $jornada->nombre}}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td class="tdNumero">
-                                            <input type="text" name="numero" required>
-                                        </td>
-                                        <td class="tdNombre">
-                                            <input type="text" name="nombre" required maxlength="35">
-                                        </td>
-                                        <td class="tdHoraApertura">
-                                            <input type="text" name="horaApertura">
-                                        </td>
-                                        <td class="tdHoraCierre">
-                                            <input type="text" name="horaCierre">
-                                        </td>
-                                        <td class="tdEmail">
-                                            <input type="text" name="emailContacto" required maxlength="50">
-                                        </td>
-                                        <td class="tdCodArea1">
-                                            <input type="text" name="codArea1">
-                                        </td>
-                                        <td class="tdTelefono1">
-                                            <input type="text" name="telefono1">
-                                        </td>
-                                        <td class="tdCodArea2">
-                                            <input type="text" name="codArea2">
-                                        </td>
-                                        <td class="tdTelefono2">
-                                            <input type="text" name="telefono2">
-                                        </td>
-                                        <td class="tdStock">
-                                            <input type="text" name="stock" required>
-                                        </td>
-                                        <td class="tdFechaStock">
-                                            <input type="text" name="fechaStock">
-                                        </td>
-                                        <td class="tdComuna">
-                                            <select name="cutComuna" required>
-                                                @foreach( $comunas as $comuna)
-                                                    <option value="{{ $comuna->cutComuna }}"   >
-                                                        {{ $comuna->nombre}}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td class="tdDireccion2">
-                                            <input type="text" name="direccion" class="input" required maxlength="150">
-                                        </td>
-                                        <td class="tdOpcion">
-                                            <input type="submit" class="btn btn-primary btn-xs btn-block" value="Agregar">
-                                        </td>
-
-                                    </tr>
-                                </form>
-                                @if (count($errors) > 0)
-                                        <!-- Form Error List -->
-                                <div class="alert alert-danger">
-                                    <strong>Whoops! Something went wrong!</strong>
-
-                                    <br><br>
-
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
+                        <form method="POST" action="/locales">
+                            <input name="_token" type="hidden" value="{{csrf_token()}}">
+                            <tr>
+                                <td class="tdIdCliente">
+                                    <select name="idCliente" required>
+                                        @foreach( $clientes as $cliente)
+                                            <option value="{{ $cliente->idCliente }}" >
+                                                {{ $cliente->nombre}}
+                                            </option>
                                         @endforeach
-                                    </ul>
-                                </div>
-                                @endif
+                                    </select>
+                                </td>
+                                <td class="tdFormato">
+                                    <select name="idFormatoLocal" required>
+                                        @foreach( $formatoLocales as $formatoLocal)
+                                            <option value="{{ $formatoLocal->idFormatoLocal }}"    >
+                                                {{ $formatoLocal->nombre}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="tdJornada" >
+                                    <select name="idJornadaSugerida" required>
+                                        @foreach( $jornadas as $jornada)
+                                            <option value="{{ $jornada->idJornada }}"    >
+                                                {{ $jornada->nombre}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="tdNumero">
+                                    <input type="text" name="numero" required>
+                                </td>
+                                <td class="tdNombre">
+                                    <input type="text" name="nombre" required maxlength="35">
+                                </td>
+                                <td class="tdHoraApertura">
+                                    <input type="text" name="horaApertura">
+                                </td>
+                                <td class="tdHoraCierre">
+                                    <input type="text" name="horaCierre">
+                                </td>
+                                <td class="tdEmail">
+                                    <input type="text" name="emailContacto" required maxlength="50">
+                                </td>
+                                <td class="tdCodArea1">
+                                    <input type="text" name="codArea1">
+                                </td>
+                                <td class="tdTelefono1">
+                                    <input type="text" name="telefono1">
+                                </td>
+                                <td class="tdCodArea2">
+                                    <input type="text" name="codArea2">
+                                </td>
+                                <td class="tdTelefono2">
+                                    <input type="text" name="telefono2">
+                                </td>
+                                <td class="tdStock">
+                                    <input type="text" name="stock" required>
+                                </td>
+                                <td class="tdFechaStock">
+                                    <input type="text" name="fechaStock">
+                                </td>
+                                <td class="tdComuna">
+                                    <select name="cutComuna" required>
+                                        @foreach( $comunas as $comuna)
+                                            <option value="{{ $comuna->cutComuna }}"   >
+                                                {{ $comuna->nombre}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="tdDireccion2">
+                                    <input type="text" name="direccion" class="input" required maxlength="150">
+                                </td>
+                                <td class="tdOpcion">
+                                    <input type="submit" class="btn btn-primary btn-xs btn-block" value="Agregar">
+                                </td>
 
-                        </tbody>
-                    </table>
+                            </tr>
+                        </form>
+                    </tbody>
+                    @if (count($errors) > 0)
+                                <!-- Form Error List -->
+                        <div class="alert alert-danger">
+                            <strong>Whoops! Something went wrong!</strong>
 
-                </form>
+                            <br><br>
+
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </table>
         </div>
     </div>
