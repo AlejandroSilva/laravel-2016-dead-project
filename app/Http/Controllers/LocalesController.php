@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
 use Symfony\Component\HttpFoundation\Response;
 // Modelos
 use Auth;
@@ -13,8 +15,28 @@ use App\Locales;
 use App\Clientes;
 use App\FormatoLocales;
 use App\Jornadas;
+use App\Comunas;
+use App\Direcciones;
+
 
 class LocalesController extends Controller {
+    private $localesRules = [
+        'idCliente' => 'required|max:10',
+        'idFormatoLocal' => 'required|max:10',
+        'idJornadaSugerida' => 'required|max:10',
+        'numero' => 'required|unique:locales|max:11',
+        'nombre' => 'required|max:35',
+        'horaApertura',
+        'horaCierre',
+        'emailContacto' => 'required|max:50',
+        'codArea1' => 'required|max:10',
+        'telefono1' => 'max:20',
+        'codArea2' => 'max:10',
+        'telefono2' => 'max:20',
+        'stock' => 'required|max:11',
+        'fechaStock'
+    ];
+
     /**
      * ##########################################################
      * Rutas que generan vistas
@@ -154,5 +176,105 @@ class LocalesController extends Controller {
         }else{
             return response()->json([], 404);
         }
+    }
+    public function showClientes(){
+        $clientes = Clientes::all();
+        
+        return view('operacional.locales.mantenedorLocales', [
+            'clientes' => $clientes
+        ]);
+    }
+
+    public function api_getLocales($idCliente){
+        $formatoLocales = FormatoLocales::all()->sortBy('idFormatoLocal');
+        $jornadas = Jornadas::all();
+        $clientes = Clientes::all();
+        $comunas = Comunas::all();
+        $cliente = Clientes::find($idCliente);
+        if($cliente){
+            $locales = Locales::with(['direccion'])
+                ->where('idCliente', '=', $idCliente)
+                ->get();
+            return view('operacional.locales.locales', [
+                'locales' => $locales,
+                'formatoLocales' => $formatoLocales,
+                'jornadas' => $jornadas,
+                'clientes' => $clientes,
+                'comunas' => $comunas
+            ]);
+        }else{
+            return response()->json([], 404);
+        }
+    }
+    
+    public function api_actualizarLocal($idLocal, Request $request){
+        $local = Locales::find($idLocal);
+        $direccion = $local->direccion;
+
+        if($local){
+            if (isset($request->idCliente))
+                $local->idCliente = $request->idCliente;
+            if (isset($request->idFormatoLocal))
+                $local->idFormatoLocal = $request->idFormatoLocal;
+            if (isset($request->idJornadaSugerida))
+                $local->idJornadaSugerida = $request->idJornadaSugerida;
+            if (isset($request->numero))
+                $local->numero = $request->numero;
+            if (isset($request->nombre))
+                $local->nombre = $request->nombre;
+            if (isset($request->horaApertura))
+                $local->horaApertura = $request->horaApertura;
+            if (isset($request->horaCierre))
+                $local->horaCierre = $request->horaCierre;
+            if (isset($request->emailContacto))
+                $local->emailContacto = $request->emailContacto;
+            if (isset($request->codArea1))
+                $local->codArea1 = $request->codArea1;
+            if (isset($request->codArea2))
+                $local->codArea2 = $request->codArea2;
+            if (isset($request->telefono1))
+                $local->telefono1 = $request->telefono1;
+            if (isset($request->telefono2))
+                $local->telefono2 = $request->telefono2;
+            if (isset($request->stock))
+                $local->stock = $request->stock;
+            if (isset($request->fechaStock))
+                $local->fechaStock = $request->fechaStock;
+            if (isset($request->cutComuna)){
+                $direccion->cutComuna = $request->cutComuna;
+            }
+            if (isset($request->direccion)){
+                $direccion->direccion = $request->direccion;
+            }
+            $direccion->save();
+
+            $local->save();
+
+            return Redirect::to("locales/cliente/$local->idCliente");
+            }else{
+            return response()->json([], 404);
+        }
+    }
+    
+    public function post_formulario(Request $request){
+        $validator= Validator::make(Input::all(), $this->localesRules);
+        if($validator->fails()){
+            return response()->json($validator->messages(), 400);
+        }else{
+            $local = Locales::create( Input::all() );
+            $idLocal = $local->idLocal;
+
+        }
+        $this->validate($request,
+            [
+                'cutComuna'=> 'required|min:3|max:10|',
+                'direccion'=> 'max:150|'
+            ]);
+        $direccion = new Direcciones();
+        $direccion->idLocal = $idLocal;
+        $direccion->cutComuna = $request->cutComuna;
+        $direccion->direccion = $request->direccion;
+        $direccion->save();
+        return Redirect::to("locales/cliente/$local->idCliente");
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Direcciones extends Model {
     // llave primaria
-    public $primaryKey = 'idDireccion';
+    public $primaryKey = 'idLocal';
 
     // este modelo tiene timestamps
     public $timestamps = true;

@@ -48,12 +48,29 @@ Route::group(['middleware' => ['web']], function (){
 
     /*
     |--------------------------------------------------------------------------
-    | Administracion de regiones
+    | Administracion de regiones y zonas
     |--------------------------------------------------------------------------
     |*/
     Route::group(['prefix' => 'regiones', 'middleware' => ['auth']], function(){
         Route::get('/',                              'RegionesController@showMantenedorRegiones');
-        Route::put('/{cutRegion}/editar',           'RegionesController@api_actualizar');
+        Route::put('/{cutRegion}/editar',            'RegionesController@api_actualizar');
+        Route::post('/zona',                         'RegionesController@postFormularioZona');
+        Route::put('/zona/{idZona}/editar',          'RegionesController@api_actualizarZona');
+        
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Administracion de locales
+    |--------------------------------------------------------------------------
+    |*/
+    Route::group(['prefix' => 'locales', 'middleware' => ['auth']], function(){
+        Route::post('/',                          'LocalesController@post_formulario');  
+        Route::get('/',                           'LocalesController@showClientes');
+        Route::get('cliente/{idCliente}/',        'LocalesController@api_getLocales');
+        Route::put('{idLocal}/editar',            'LocalesController@api_actualizarLocal');
+        
+
     });
 
     // API CLIENTES Y LOCALES
