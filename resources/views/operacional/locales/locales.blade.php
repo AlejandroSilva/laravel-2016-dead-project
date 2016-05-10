@@ -1,7 +1,13 @@
+<?php use Illuminate\Support\Facades\Input; ?>
 @extends('operacional.layoutOperacional')
 @section('title', 'Formato')
 @section('content')
     <style>
+        /* estilo para errores */
+        .input-error{
+            border-color: orangered;
+            color: orangered;
+        }
         /* Columna con el idCliente */
         .thIdLocal {
             font-size: 11px;
@@ -258,7 +264,6 @@
     <div class="container-fluid">
         <div class="row">
             <h1 class="page-header">Locales</h1>
-
             <table class="table table-condensed table-bordered table-hover">
                 <thead>
                 <tr>
@@ -271,14 +276,14 @@
                     <th class="thHoraApertura">Hora apertura</th>
                     <th class="thHoraCierre">Hora cierre</th>
                     <th class="thEmail">Email</th>
-                    <th class="thCodArea1">Cod Area1</th>
-                    <th class="thTelefono1">Telefono1</th>
-                    <th class="thCodArea2">Cod Area2</th>
-                    <th class="thTelefono2">Telefono2</th>
+                    <th class="thCodArea1">Cód área1</th>
+                    <th class="thTelefono1">Teléfono1</th>
+                    <th class="thCodArea2">Cód área2</th>
+                    <th class="thTelefono2">Teléfono2</th>
                     <th class="thStock">Stock</th>
                     <th class="thFechaStock">Fecha Stock</th>
                     <th class="thComuna">Comuna</th>
-                    <th class="thDireccion">Direccion</th>
+                    <th class="thDireccion">Dirección</th>
                     <th class="thOpcion">Opción</th>
                 </tr>
                 </thead>
@@ -290,6 +295,7 @@
                             <input name="_token" type="hidden" value="{{csrf_token()}}">
                             <tr>
                                 <td class="tdIdLocal">{{ $local->idLocal}}</td>
+                                <input type="hidden" value="{{ $local->idLocal}}" name="idLocal">
                                 <td class="tdIdCliente">
                                     <select name="idCliente" required {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                         @foreach( $clientes as $cliente)
@@ -320,11 +326,15 @@
                                 </td>
                                 <td class="tdNumero">
                                     <input type="text" value="{{ $local->numero}}" name="numero" required
-                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}
+                                            class="{{ $local->idLocal == Input::old('idLocal') && $errors->error->has('numero')? 'input-error' : '' }}"
+                                    >
                                 </td>
                                 <td class="tdNombre">
-                                    <input type="text" value="{{ $local->nombre}}" name="nombre" required maxlength="35"
-                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
+                                    <input type="text" value="{{ $local->nombre }}" name="nombre" required maxlength="35"
+                                            {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}
+                                            class="{{ $local->idLocal == Input::old('idLocal') && $errors->error->has('nombre')? 'input-error' : '' }}"
+                                    >
                                 </td>
                                 <td class="tdHoraApertura">
                                     <input type="text" value="{{ $local->horaApertura}}" name="horaApertura"
@@ -335,7 +345,7 @@
                                             {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdEmail">
-                                    <input type="text" value="{{ $local->emailContacto}}" name="emailContacto" required maxlength="50"
+                                    <input type="text" value="{{ $local->emailContacto}}" name="emailContacto" maxlength="50"
                                             {{ $user->can('programaLocales_modificar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdCodArea1">
@@ -387,20 +397,19 @@
                 </tbody>
             </table>
 
-            @if (count($errors) > 0)
-                        <!-- Form Error List -->
+            @if (count($errors->error) > 0)
                 <div class="alert alert-danger">
-                    <strong>Whoops! Something went wrong!</strong>
-
+                    <strong>Ha ocurrido un problema</strong>
                     <br><br>
-
                     <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                        @if(isset($errors))
+                            @foreach ($errors->error->all() as $error)
+                                <li>{{ $error}}</li>
+                            @endforeach
+                        @endif
                     </ul>
                 </div>
-                @endif
+            @endif
         </div>
 
         <div class="row">
@@ -417,20 +426,19 @@
                         <th class="thHoraApertura">Hora apertura</th>
                         <th class="thHoraCierre">Hora cierre</th>
                         <th class="thEmail">Email</th>
-                        <th class="thCodArea1">Cod Area1</th>
-                        <th class="thTelefono1">Telefono1</th>
-                        <th class="thCodArea2">Cod Area2</th>
-                        <th class="thTelefono2">Telefono2</th>
+                        <th class="thCodArea1">Cód Area1</th>
+                        <th class="thTelefono1">Teléfono1</th>
+                        <th class="thCodArea2">Cód Area2</th>
+                        <th class="thTelefono2">Teléfono2</th>
                         <th class="thStock">Stock</th>
                         <th class="thFechaStock">Fecha Stock</th>
                         <th class="thComuna">Comuna</th>
-                        <th class="thDireccion">Direccion</th>
+                        <th class="thDireccion">Dirección</th>
                         <th class="thOpcion">Opción</th>
                     </tr>
                     </thead>
                     <tbody>
-
-                        <form method="POST" action="/locales">
+                        <form method="POST" action="/locales/post">
                             <input name="_token" type="hidden" value="{{csrf_token()}}">
                             <tr>
                                 <td class="tdIdCliente">
@@ -462,12 +470,20 @@
                                 </td>
                                 <td class="tdNumero">
                                     <input type="text" name="numero" required
-                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}
+                                            class="{{ (isset($errors) && $errors->has('numero'))? 'input-error' : '' }}"
+                                    >
                                 </td>
                                 <td class="tdNombre">
                                     <input type="text" name="nombre" required maxlength="35"
-                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
+                                            {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}
+                                            class="{{ (isset($errors) && $errors->has('nombre'))? 'input-error' : '' }}"
+
+                                    >
                                 </td>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
                                 <td class="tdHoraApertura">
                                     <input type="text" name="horaApertura"
                                             {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
@@ -477,7 +493,7 @@
                                             {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdEmail">
-                                    <input type="text" name="emailContacto" required maxlength="50"
+                                    <input type="text" name="emailContacto" maxlength="50"
                                             {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
                                 </td>
                                 <td class="tdCodArea1">
@@ -525,20 +541,23 @@
                             </tr>
                         </form>
                     </tbody>
-                    @if (count($errors) > 0)
-                                <!-- Form Error List -->
-                        <div class="alert alert-danger">
-                            <strong>Whoops! Something went wrong!</strong>
-
-                            <br><br>
-
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
                 </table>
+            @if (count($errors) > 0)
+                    <!-- Form Error List -->
+            <div class="alert alert-danger">
+                <strong>Ha ocurrido un problema</strong>
+
+                <br><br>
+
+                <ul>
+                    @if(isset($errors))
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    @endif
+
+                </ul>
+            </div>
+            @endif
         </div>
     </div>

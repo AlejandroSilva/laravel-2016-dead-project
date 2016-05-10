@@ -25,17 +25,17 @@ class LocalesController extends Controller {
         'idCliente' => 'required|max:10',
         'idFormatoLocal' => 'required|max:10',
         'idJornadaSugerida' => 'required|max:10',
-        'numero' => 'required|unique:locales|max:11',
-        'nombre' => 'required|max:35',
-        'horaApertura',
-        'horaCierre',
-        'emailContacto' => 'required|max:50',
-        'codArea1' => 'required|max:10',
+        'numero' => 'required|unique:locales',
+        'nombre' => 'required|unique:locales',
+        'horaApertura' => 'required',
+        'horaCierre' => 'required',
+        'emailContacto' => 'max:50',
+        'codArea1' => 'max:10',
         'telefono1' => 'max:20',
         'codArea2' => 'max:10',
         'telefono2' => 'max:20',
         'stock' => 'required|max:11',
-        'fechaStock'
+        'fechaStock' => 'date'
     ];
 
     /**
@@ -225,50 +225,76 @@ class LocalesController extends Controller {
             return view('errors.403');
 
         $local = Locales::find($idLocal);
-        $direccion = $local->direccion;
+        // tomar las reglas originales, y agregar la excepcion
+        $localesRules = $this->localesRules;
+        $localesRules["numero"] = "required|unique:locales,numero,$local->idLocal,idLocal";
+        $localesRules["nombre"] = "required|unique:locales,nombre,$local->nombre,nombre";
 
-        if($local){
-            if (isset($request->idCliente))
-                $local->idCliente = $request->idCliente;
-            if (isset($request->idFormatoLocal))
-                $local->idFormatoLocal = $request->idFormatoLocal;
-            if (isset($request->idJornadaSugerida))
-                $local->idJornadaSugerida = $request->idJornadaSugerida;
-            if (isset($request->numero))
-                $local->numero = $request->numero;
-            if (isset($request->nombre))
-                $local->nombre = $request->nombre;
-            if (isset($request->horaApertura))
-                $local->horaApertura = $request->horaApertura;
-            if (isset($request->horaCierre))
-                $local->horaCierre = $request->horaCierre;
-            if (isset($request->emailContacto))
-                $local->emailContacto = $request->emailContacto;
-            if (isset($request->codArea1))
-                $local->codArea1 = $request->codArea1;
-            if (isset($request->codArea2))
-                $local->codArea2 = $request->codArea2;
-            if (isset($request->telefono1))
-                $local->telefono1 = $request->telefono1;
-            if (isset($request->telefono2))
-                $local->telefono2 = $request->telefono2;
-            if (isset($request->stock))
-                $local->stock = $request->stock;
-            if (isset($request->fechaStock))
-                $local->fechaStock = $request->fechaStock;
-            if (isset($request->cutComuna)){
-                $direccion->cutComuna = $request->cutComuna;
-            }
-            if (isset($request->direccion)){
-                $direccion->direccion = $request->direccion;
-            }
-            $direccion->save();
+        $validator= Validator::make(Input::all(), $localesRules);
+        if($validator->fails()) {
+            return Redirect::to("locales/cliente/$local->idCliente")->withErrors($validator,'error')->withInput();
+            
+        }else{
+            $direccion = $local->direccion;
+            
+            if($local){
 
-            $local->save();
+                if (isset($request->idCliente))
+                    $local->idCliente = $request->idCliente;
 
-            return Redirect::to("locales/cliente/$local->idCliente");
+                if (isset($request->idFormatoLocal))
+                    $local->idFormatoLocal = $request->idFormatoLocal;
+
+                if (isset($request->idJornadaSugerida))
+                    $local->idJornadaSugerida = $request->idJornadaSugerida;
+
+                if (isset($request->numero))
+                    $local->numero = $request->numero;
+
+                if (isset($request->nombre))
+                    $local->nombre = $request->nombre;
+
+                if (isset($request->horaApertura))
+                    $local->horaApertura = $request->horaApertura;
+
+                if (isset($request->horaCierre))
+                    $local->horaCierre = $request->horaCierre;
+
+                if (isset($request->emailContacto))
+                    $local->emailContacto = $request->emailContacto;
+
+                if (isset($request->codArea1))
+                    $local->codArea1 = $request->codArea1;
+
+                if (isset($request->codArea2))
+                    $local->codArea2 = $request->codArea2;
+
+                if (isset($request->telefono1))
+                    $local->telefono1 = $request->telefono1;
+
+                if (isset($request->telefono2))
+                    $local->telefono2 = $request->telefono2;
+
+                if (isset($request->stock))
+                    $local->stock = $request->stock;
+
+                if (isset($request->fechaStock))
+                    $local->fechaStock = $request->fechaStock;
+
+                if (isset($request->cutComuna))
+                    $direccion->cutComuna = $request->cutComuna;
+
+                if (isset($request->direccion))
+                    $direccion->direccion = $request->direccion;
+
+                $direccion->save();
+
+                $local->save();
+
+                return Redirect::to("locales/cliente/$local->idCliente");
             }else{
-            return response()->json([], 404);
+                return response()->json([], 404);
+            }
         }
     }
     
@@ -279,11 +305,11 @@ class LocalesController extends Controller {
 
         $validator= Validator::make(Input::all(), $this->localesRules);
         if($validator->fails()){
-            return response()->json($validator->messages(), 400);
+            $idCliente = $request->idCliente;
+            return Redirect::to("locales/cliente/$idCliente")->withErrors($validator);
         }else{
             $local = Locales::create( Input::all() );
             $idLocal = $local->idLocal;
-
         }
         $this->validate($request,
             [

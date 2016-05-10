@@ -65,7 +65,7 @@
     |--------------------------------------------------------------------------
     |*/
     Route::group(['prefix' => 'locales', 'middleware' => ['auth']], function(){
-        Route::post('/',                          'LocalesController@post_formulario');  
+        Route::post('/post',                          'LocalesController@post_formulario');
         Route::get('/',                           'LocalesController@showClientes');
         Route::get('cliente/{idCliente}/',        'LocalesController@api_getLocales');
         Route::put('{idLocal}/editar',            'LocalesController@api_actualizarLocal');
