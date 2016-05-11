@@ -27,14 +27,14 @@ class LocalesController extends Controller {
         'idJornadaSugerida' => 'required|max:10',
         'numero' => 'required|unique:locales',
         'nombre' => 'required|unique:locales',
-        'horaApertura' => 'required',
-        'horaCierre' => 'required',
+        'horaApertura' => 'required|date_format:H:i:s',
+        'horaCierre' => 'required|date_format:H:i:s',
         'emailContacto' => 'max:50',
         'codArea1' => 'max:10',
         'telefono1' => 'max:20',
         'codArea2' => 'max:10',
         'telefono2' => 'max:20',
-        'stock' => 'required|max:11',
+        'stock' => 'required|numeric|digits_between:1,11',
         'fechaStock' => 'date'
     ];
 
@@ -227,7 +227,7 @@ class LocalesController extends Controller {
         $local = Locales::find($idLocal);
         // tomar las reglas originales, y agregar la excepcion
         $localesRules = $this->localesRules;
-        $localesRules["numero"] = "required|unique:locales,numero,$local->idLocal,idLocal";
+        $localesRules["numero"] = "required|unique:locales,numero,$local->numero,numero";
         $localesRules["nombre"] = "required|unique:locales,nombre,$local->nombre,nombre";
 
         $validator= Validator::make(Input::all(), $localesRules);

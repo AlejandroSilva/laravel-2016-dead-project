@@ -4,32 +4,39 @@
 @section('title', 'Listado de Clientes')
 
 @section('content')
+    <script>
+        function ShowSelected()
+        {
+            /* Para obtener el valor */
+            var cod = document.getElementById("id").value;
 
-    <div class="container">
+            console.log(cod);
+            window.location.href = '/locales/cliente/'+cod;
+        }
+    </script>
+
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-6">
-                <h1 class="page-header">CLientes</h1>
-                <table class="table table-condensed table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Opción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <div>
+                <h1>Mantenedor de locales</h1>
+                <h4 class="page-header">Buscar locales según cliente</h4>
+            </div>
+            <div class="col-md-2">
+                <label className="control-label">Cliente</label>
+
+                <tbody>
+                <td>
+                    <select name="idCliente" id="id" onchange="ShowSelected(this);" class="form-control">
+                        <option value="">Elija uno</option>
                         @foreach( $clientes as $cliente)
-                            <tr>
-                                <td>{{ $cliente->idCliente}}</td>
-                                <td>{{ $cliente->nombre}}</td>
-                                <td><a href="locales/cliente/{{$cliente->idCliente}}" class="btn btn-primary btn-xs btn-block">
-                                        Seleccionar
-                                    </a>
-                                </td>
-                            </tr>
+
+                            <option value="{{ $cliente->idCliente }}">
+                                {{ $cliente->nombreCorto}}{{"-"}}{{$cliente->nombre}}
+                            </option>
                         @endforeach
-                    </tbody>
-                  </table>
-             </div>
+                    </select>
+                </td>
+                </tbody>
+            </div>
         </div>
     </div>

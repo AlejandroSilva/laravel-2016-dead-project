@@ -5,7 +5,7 @@
 
     <div class="container">
         <div class="row">
-            <div>
+            <div class="cold-md-12">
                 <h1 class="page-header">Regiones</h1>
                 <table class="table table-condensed table-bordered table-hover">
                     <thead>
@@ -50,6 +50,8 @@
                 </table>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
                 <h1>Zonas</h1>
                 <table class="table table-condensed table-bordered table-hover">
                     <thead>
@@ -66,44 +68,45 @@
                                 <input name="_method" type="hidden" value="PUT">
                                 <input name="_token" type="hidden" value="{{csrf_token()}}">
                                 <tr>
-                                <td>{{ $zona->idZona}}</td>
-                                <td>
-                                    <div class="col-xs-12">
-                                        <input type="text" class="form-control" value="{{ $zona->nombre}}" name="nombre">
-                                    </div>
-                                </td>
-                                <td>
-                                    <input type="submit" class="btn btn-primary btn-xs btn-block" value="Modificar">
-                                </td>
+                                    <td>{{ $zona->idZona}}</td>
+                                    <td>
+
+                                            <input type="text" class="form-control" value="{{ $zona->nombre}}" name="nombre">
+
+                                    </td>
+                                    <td>
+                                        <input type="submit" class="btn btn-primary btn-xs btn-block" value="Modificar">
+                                    </td>
                                 </tr>
                             </form>
                         @endforeach
                     @endif
                     </tbody>
                 </table>
-
+            </div>
+            <div class="col-md-4">
                 <h1>Agregar</h1>
                 <form class="form-horizontal" method="POST" action="/regiones/zona">
                     <input name="_token" type="hidden" value="{{csrf_token()}}">
                     <table>
                         <tbody>
-                            <tr>
-                                <th>Nombre:</th>
-                                <td>
-                                    <div class="col-xs-14">
-                                        <input type="text" class="form-control" name="nombre" placeholder="Ejemplo: Norte Grande"
-                                               minlength="2"
-                                               maxlength="50"
-                                               required
-                                        >
-                                    </div>
-                                </td>
-                                <td><input type="submit" class="btn btn-block btn-primary" value="Agregar"></td>
-                            </tr>
+                        <tr>
+                            <th>Nombre:</th>
+                            <td>
+                                <div class="col-xs-14">
+                                    <input type="text" class="form-control" name="nombre" placeholder="Ejemplo: Norte Grande"
+                                           minlength="2"
+                                           maxlength="50"
+                                           required
+                                    >
+                                </div>
+                            </td>
+                            <td><input type="submit" class="btn btn-block btn-primary" value="Agregar"></td>
+                        </tr>
                         </tbody>
                     </table>
                 </form>
-
+            </div>
         </div>
 
     </div>  {{-- container --}}
