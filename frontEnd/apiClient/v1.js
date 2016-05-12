@@ -28,9 +28,9 @@ export default {
         eliminar: (idInventario)=>
             axios.delete(`/api/inventario/${idInventario}`),
         getPorMesYCliente: (annoMesDia, idCliente)=>
-            axios.get(`/api/inventario/buscar?mes=${annoMesDia}&idCliente=${idCliente}`),
+            axios.get(`/api/inventarios/buscar?mes=${annoMesDia}&idCliente=${idCliente}`),
         getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>
-            axios.get(`/api/inventario/buscar?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
+            axios.get(`/api/inventarios/buscar?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
     },
     auditoria: {
         nuevo: (datos)=>
