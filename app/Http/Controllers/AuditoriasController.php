@@ -120,13 +120,15 @@ class AuditoriasController extends Controller {
 
             if($resultado){
                 Log::info("[AUDITORIA:NUEVO] auditoria con idLocal '$auditoria->idLocal' programada para '$auditoria->fechaProgramada' creada.");
-                return response()->json(
-                    $auditoria = Auditorias::with([
-                        'local.cliente',
-                        'local.direccion.comuna.provincia.region',
-                        'auditor'
-                    ])->find($auditoria->idAuditoria)
-                    , 201);
+                $auditoriaDB = Auditorias::with([
+                    'local.cliente',
+                    'local.direccion.comuna.provincia.region',
+                    'auditor'
+                ])->find($auditoria->idAuditoria);
+                // Temporal, remover de alguna forma (con un scope)?
+                $auditoriaDB['inventarioEnELMismoMes'] = Locales::find($auditoria->idLocal)
+                    ->inventarioRealizadoEn($auditoria->fechaProgramada);
+                return response()->json($auditoriaDB, 201);
             }else{
                 return response()->json([
                     'request'=> $request->all(),

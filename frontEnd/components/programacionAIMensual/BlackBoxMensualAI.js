@@ -93,6 +93,7 @@ export default class BlackBox{
             idAuditoria: null,
             idLocal: idLocal,
             fechaProgramada: annoMesDia,
+            inventarioEnELMismoMes: null,
             local: {
                 idLocal: idLocal,
                 idJornadaSugerida: 4, // no definida
