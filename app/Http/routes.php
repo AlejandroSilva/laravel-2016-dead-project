@@ -96,8 +96,8 @@ Route::group(['middleware' => ['web']], function (){
     |*/
     Route::group(['prefix'=>'api'], function(){
         // API INVENTARIOS
-        Route::get('inventario/buscar',                 'InventariosController@api_buscar');
-        Route::post('inventario/informar-archivo-final',  'InventariosController@api_informarArchivoFinal');
+        Route::get('inventarios/buscar',                 'InventariosController@api_buscar');
+        Route::post('inventarios/informar-archivo-final',  'InventariosController@api_informarArchivoFinal');
         // API DE NOMINAS
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-disponible', 'NominasController@api_informarDisponible');
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-manual/{fecha2}', 'NominasController@api_informarDisponible2');
