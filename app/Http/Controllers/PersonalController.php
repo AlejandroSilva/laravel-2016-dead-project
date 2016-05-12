@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Log;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 // Modelos
 use App\User;
+use App\Role;
 // Permisos
 use Auth;
 
@@ -18,9 +20,9 @@ class PersonalController extends Controller {
         'email' => 'max:60',
         'emailPersonal' => 'max:60',
         'nombre1' => 'required|min:3|max:20',
-        'nombre2' => 'required|min:3|max:20',
+        'nombre2' => 'max:20',
         'apellidoPaterno' => 'required|min:3|max:20',
-        'apellidoMaterno' => 'required|min:3|max:20',
+        'apellidoMaterno' => 'max:20',
         'fechaNacimiento' => 'required',
         'telefono' => 'max:20',
         'telefonoEmergencia' => 'max:20',
@@ -39,23 +41,28 @@ class PersonalController extends Controller {
      * Rutas que generan vistas
      * ##########################################################
      */
-    // GET personal/nuevo
-    function show_formulario(){
-        return view('operacional.personal.usuarios');
-    }
+    // GET personal/nuevo (SIN USO
+//    function show_formulario(){
+//        return view('operacional.personal.usuarios');
+//    }
+
 
     /**
      * ##########################################################
-     * Rutas para consumo del API REST
+     * Rutas para consumo del API REST (CON autentificacion)
      * ##########################################################
      */
     // GET api/usuario/buscar
-    function api_buscar(){
-        // agrega cabeceras para las peticiones con CORS
-        header('Access-Control-Allow-Origin: *');
+    function api_buscar(Request $request){
+        $query = User::withRegionRoles();
+
+        // buscar por RUN?
+        $run = $request->query('run');
+        if(isset($run)){
+            $query->where('usuarioRUN', $run);
+        }
         
-        $arrayUsuarios = User::with(['comuna.provincia.region', 'roles'])
-            ->get()
+        $arrayUsuarios = $query->get()
             ->sortBy('id')
             ->toArray();
 
@@ -64,19 +71,27 @@ class PersonalController extends Controller {
         return response()->json($arrayUsuarios_formato, 200);
     }
 
-    // POST api/usuario/nuevo
-    function api_nuevo(){
-        // agrega cabeceras para las peticiones con CORS
-        header('Access-Control-Allow-Origin: *');
+    // POST api/usuario/nuevo-operador
+    function api_nuevoOperador(){
+        // Todo: solo algunos usuarios pueden agregar operadores (crear un permiso?)
+        $usuarioAuth = Auth::user();
 
         $validator = Validator::make(Input::all(), $this->userRules);
         if($validator->fails()){
-            return response()->json($validator->messages(), 400);
+            $error = $validator->messages();
+            Log::info("[USUARIO:NUEVO_OPERADOR:ERROR] Usuario:'$usuarioAuth->nombre1 $usuarioAuth->apellidoPaterno'($usuarioAuth->id)'. Validador: $error");
+
+            return response()->json($error, 400);
         }else{
             $usuario = User::create( Input::all() );
+            $rolOperador = Role::where('name', 'Operador')->first();
+            $usuario->attachRole($rolOperador);     // attach llama a save (?)
+
+            Log::info("[USUARIO:NUEVO_OPERADOR:OK] Usuario:'$usuarioAuth->nombre1 $usuarioAuth->apellidoPaterno'($usuarioAuth->id)' ha creado:'$usuario->nombre1 $usuario->apellidoPaterno'($usuario->id)'");
+
             // se parsea el usuario con el formato "estandar"
-            $usuario_db = User::with(['comuna.provincia.region', 'roles'])->find($usuario->id);
-            $usuario_formato = $this->darFormatoUsuario( $usuario_db );
+            $usuario_db = User::withRegionRoles()->find($usuario->id);
+            $usuario_formato = $this->darFormatoUsuario( $usuario_db->toArray() );
             return response()->json($usuario_formato, 200);
         }
     }
@@ -88,7 +103,7 @@ class PersonalController extends Controller {
 
     /**
      * ##########################################################
-     * API DE INTERACCION CON LA OTRA PLATAFORMA
+     * API DE INTERACCION CON LA OTRA PLATAFORMA (publicas: SIN autentificacion)
      * ##########################################################
      */
     // GET /api/usuario/{idUsuario}/roles
@@ -136,12 +151,21 @@ class PersonalController extends Controller {
             'provincia' => $user['comuna']['provincia']['nombre'],
             'region' => $user['comuna']['provincia']['region']['nombre'],
             // si "roles" es un arreglo vacio, array_map lanza un error
-            'roles' => sizeof($user['roles'])>0?
-                array_map(function($role){
-                    return $role['name'];
-                }, $user['roles'])
-                :
-                []
+//            'roles' => sizeof($user['roles'])>0?
+//                array_map(function($role){
+//                    return $role['name'];
+//                }, $user['roles'])
+//                :
+//                []
+            'roles' => array_map( [$this, 'darFormatoRole'], $user['roles'] )
+        ];
+    }
+
+    private function darFormatoRole($role){
+        return [
+            'id' => $role['id'],
+            'name' => $role['name'],
+            'description' => $role['description'],
         ];
     }
 }

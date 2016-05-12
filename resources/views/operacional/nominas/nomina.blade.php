@@ -1,15 +1,15 @@
 @extends('operacional.layoutOperacional')
-
-@section('title', 'Nominas')
+@section('title', 'Programa')
 
 @section('content')
-    <h1 class="page-header">Nominas</h1>
+    {{-- aca se montara el component 'TablaAuditoriasPendientes' de React --}}
+    <div id="react-nominaIG-nominaIG">
+        <p>Cargando, espere unos segundos</p>
+    </div>
 
-    <ul>
-        <li>ver historico de nominas</li>
-        <li>editar datos de nomina</li>
-        <li>editar personal (lideres, supervisores y operadores)</li>
-        <li>cambiar hora llegada</li>
-        <li>publicar nomina (cerrar)</li>
-    </ul>
+    <script>
+        window.laravelInventario = {!! json_encode($inventario) !!};
+        window.laravelNomina = {!! json_encode($nomina) !!};
+        window.laravelComunas = {!! json_encode($comunas) !!};
+    </script>
 @stop

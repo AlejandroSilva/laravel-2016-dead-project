@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 use Log;
 use App\Http\Requests;
 // Modelos
-use App\Nominas;
+use App\Comunas;
 use App\Inventarios;
 use App\Locales;
+use App\Nominas;
 
 class NominasController extends Controller {
 
@@ -19,13 +20,34 @@ class NominasController extends Controller {
      * ##########################################################
      */
     
-    function showNominas(){
-        return view('operacional.nominas.nominas-index');
+    function show_nomina($idNomina){
+        // Todo: agregar seguriddad, solo para usuarios con permisos
+//        $user = Auth::user();
+//        if(!$user || !$user->can('programaAuditorias_ver'))
+//            return view('errors.403');
+
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina){
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Nomina no encontrada',
+                'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
+            ]);
+        }
+
+        // Buscar el inventario al que pertenece (junto con el cliente, el formato de local y la direccion
+        $_inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
+        $inventario = Inventarios::withTodo()->find($_inventario->idInventario);
+        $inventario_formateado = app('App\Http\Controllers\InventariosController')->darFormatoInventario($inventario);
+
+        $comunas = Comunas::all();
+
+        return view('operacional.nominas.nomina', [
+            'nomina' => $nomina,
+            'inventario' => $inventario_formateado,
+            'comunas' => $comunas
+        ]);
     }
     
-    function showNominasFinales(){
-        return view('operacional.nominasFinales.nominasFinales-index');
-    }
     
     /**
      * ##########################################################
@@ -36,6 +58,9 @@ class NominasController extends Controller {
     // PUT api/nomina/{idNomina}
     function api_get($idNomina){
         $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json([], 404);
+        
         $inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
         return response()->json(
             $inventario

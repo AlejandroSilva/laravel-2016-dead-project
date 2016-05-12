@@ -66,9 +66,10 @@ class NominasPendientes extends Command {
                 'inventarios_nominasPendientes' => $inventarios_nominasPendientes
             ], function ($message) use($hoy){
                 $message
-                    ->from('no-responder@sig.seiconsultores.cl', 'SEI Consultores')
-                    ->to('mgamboa@seiconsultores.cl', 'Marco Gamboa')
-                    ->cc('asilva@seiconsultores.cl', 'Alejandro Silva')
+                    ->from('no-responder@plataforma.seiconsultores.cl', 'SEI Consultores')
+                    ->to('asilva@seiconsultores.cl', 'Alejandro Silva')
+//                    ->to('mgamboa@seiconsultores.cl', 'Marco Gamboa')
+//                    ->cc('asilva@seiconsultores.cl', 'Alejandro Silva')
 //                    ->cc('pm5k.sk@gmail.com', 'Alejandro Silva')
                     ->subject("Nominas pendientes ".$hoy->toDateString());
             });
@@ -77,7 +78,7 @@ class NominasPendientes extends Command {
     }
 
     private function log($msg){
-        Log::info($msg);
+        //Log::info($msg);
         $this->info($msg);
     }
 }

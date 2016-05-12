@@ -11,6 +11,7 @@ import ProgramacionAISemanal from './components/programacionAISemanal/Programaci
 import { ProgramacionAIPendientes } from './components/programacionAIPendientes/ProgramacionAIPendientes.jsx'
 import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.jsx'
 import { GeoGestor } from './components/Geo/GeoGestor.jsx'
+import { NominaIG } from './components/nominaIG/nominaIG.jsx'
 
 /** FORMULARIO PARA LA CREACIÓN DE UN NUEVO FORMULARIO */
 let nuevoInventarioDOM = document.getElementById('nuevo-inventario')
@@ -95,6 +96,18 @@ if( geoGestorDOM ){
         <GeoGestor
             // props
         />, geoGestorDOM)
+}
+
+/** MANTENEDOR DE NOMINAS **/
+let mantenedorNominaIGDOM = document.getElementById('react-nominaIG-nominaIG')
+if( mantenedorNominaIGDOM ){
+    ReactDOM.render(
+        <NominaIG
+            usuario={undefined}
+            inventario={window.laravelInventario}
+            nomina={window.laravelNomina}
+            comunas={window.laravelComunas}
+        />, mantenedorNominaIGDOM)
 }
 
 

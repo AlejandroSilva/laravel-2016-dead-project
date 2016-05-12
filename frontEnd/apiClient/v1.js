@@ -53,5 +53,11 @@ export default {
     geo: {
        comunas: ()=>
             axios.get(`/api/geo/comunas`)
+    },
+    usuario: {
+        buscarRUN: (run)=>
+            axios.get(`/api/usuario/buscar?run=${run}`),
+        nuevoOperador: (datos)=>
+            axios.post(`/api/usuario/nuevo-operador`, datos)
     }
 }

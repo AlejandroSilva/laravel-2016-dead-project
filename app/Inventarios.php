@@ -30,4 +30,19 @@ class Inventarios extends Model {
 //        return $this->hasOne('App\Nominas', 'idNomina', 'idNominaNoche');
         return $this->belongsTo('App\Nominas', 'idNominaNoche', 'idNomina');
     }
+
+    // #### With scopes
+    public function scopeWithTodo($query){
+        $query->with([
+            'local.cliente',
+            'local.formatoLocal',
+            'local.direccion.comuna.provincia.region',
+            'nominaDia',
+            'nominaNoche',
+            'nominaDia.lider',
+            'nominaNoche.lider',
+            'nominaDia.captador',
+            'nominaNoche.captador',
+        ]);
+    }
 }

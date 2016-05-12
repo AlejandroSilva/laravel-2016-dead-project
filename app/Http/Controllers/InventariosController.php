@@ -347,6 +347,7 @@ class InventariosController extends Controller {
      */
 
     // GET /pdf/inventarios/{mes}/cliente/{idCliente}
+
     public function descargarPDF_porMes($annoMesDia, $idCliente){
         //Se utiliza funcion privada que recorre inventarios por mes y dia
         $inventarios = $this->buscarInventarios(null, null, $annoMesDia, $idCliente, null, null, null);
@@ -419,21 +420,11 @@ class InventariosController extends Controller {
     public function buscarInventarios_conFormato($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina){
         $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina);
         // se parsean los usuarios con el formato "estandar"
-        return $inventarios_formato = array_map( [$this, 'darFormatoInventario'], $inventarios );
+        return $inventarios_formato = $inventarios->map([$this, 'darFormatoInventario']);
     }
 
     public function buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina){
-        $query = Inventarios::with([
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region',
-            'nominaDia',
-            'nominaNoche',
-            'nominaDia.lider',
-            'nominaNoche.lider',
-            'nominaDia.captador',
-            'nominaNoche.captador',
-        ]);
+        $query = Inventarios::withTodo();
         
         // Filtrar por rango de fecha si corresponde
         if(isset($fechaInicio) && isset($fechaFin)){
@@ -497,7 +488,8 @@ class InventariosController extends Controller {
             })->toArray();
         }
 
-        return $inventarios;
+        // retornar una collection, igual que el query original
+        return collect($inventarios);
     }
 
     //Function para validar que la fecha sea valida
@@ -517,6 +509,7 @@ class InventariosController extends Controller {
     
     // Función generica para generar el archivo excel
     private function generarWorkbook($inventarios){
+        $inventarios = $inventarios->toArray();
         $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha stock', 'Dotación Total', 'Dirección'];
 
         $inventariosArray = array_map(function($inventario){
@@ -567,7 +560,7 @@ class InventariosController extends Controller {
         return $workbook;
     }
 
-    private function darFormatoInventario($inventario){
+    public function darFormatoInventario($inventario){
         return [
             // Informacion del inventario
             'idInventario' => $inventario['idInventario'],

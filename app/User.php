@@ -10,9 +10,9 @@ class User extends Authenticatable {
     // can($permission), and ability($roles, $permissions, $options) within your User model.
     use EntrustUserTrait;
     
-//    protected $table = 'users';          // table name
+//    protected $table = 'users';     // table name
 //    public $primaryKey = 'id';      // llave primaria
-//    public $timestamps = true;              // este modelo tiene timestamps
+//    public $timestamps = true;      // este modelo tiene timestamps
     
     
     /**
@@ -39,5 +39,10 @@ class User extends Authenticatable {
     public function comuna(){
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Comunas', 'cutComuna', 'cutComuna');
+    }
+
+    // ## Scopes
+    public function scopeWithRegionRoles($query){
+        $query->with(['comuna.provincia.region', 'roles']);
     }
 }

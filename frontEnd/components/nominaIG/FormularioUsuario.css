@@ -1,0 +1,16 @@
+.footer-formulario{
+    text-align: right;
+    padding-top: 1em;
+    border-top: 1px solid #e5e5e5;
+}
+
+.validation-error-no-margin {
+    display: block;
+    color: #a94442;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+.validation-error {
+    display: block;
+    color: #a94442;
+}
