@@ -68,7 +68,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('locales/{idLocal}',             'LocalesController@api_getLocal');
         Route::get('locales/{idLocal}/verbose',     'LocalesController@api_getLocalVerbose');
         // API INVENTARIOS
-        Route::get('inventario/buscar',                 'InventariosController@api_buscar');
         Route::post('inventario/nuevo',                 'InventariosController@api_nuevo');
         Route::get('inventario/{idInventario}',         'InventariosController@api_get');
         Route::put('inventario/{idInventario}',         'InventariosController@api_actualizar');
@@ -97,6 +96,7 @@ Route::group(['middleware' => ['web']], function (){
     |*/
     Route::group(['prefix'=>'api'], function(){
         // API INVENTARIOS
+        Route::get('inventario/buscar',                 'InventariosController@api_buscar');
         Route::post('inventario/informar-archivo-final',  'InventariosController@api_informarArchivoFinal');
         // API DE NOMINAS
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-disponible', 'NominasController@api_informarDisponible');
