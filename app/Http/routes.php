@@ -79,8 +79,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('auditoria/nuevo', 'AuditoriasController@api_nuevo');
         Route::put('auditoria/{idAuditoria}', 'AuditoriasController@api_actualizar');
         Route::delete('auditoria/{idAuditoria}', 'AuditoriasController@api_eliminar');
-        Route::get('auditoria/mes/{annoMesDia}/cliente/{idCliente}', 'AuditoriasController@api_getPorMesYCliente');
-        Route::get('auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}', 'AuditoriasController@api_getPorRangoYCliente');
         // API USUARIOS
         Route::get('usuario/buscar',            'PersonalController@api_buscar');
         Route::post('usuario/nuevo-operador',   'PersonalController@api_nuevoOperador');
@@ -102,8 +100,10 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-disponible', 'NominasController@api_informarDisponible');
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-manual/{fecha2}', 'NominasController@api_informarDisponible2');
         // API AUDITORIAS
-        Route::get('auditoria/cliente/{idCliente}/dia/{annoMesDia}/estado-general',   'AuditoriasController@api_estadoGeneral');
+        Route::get('auditoria/mes/{annoMesDia}/cliente/{idCliente}',        'AuditoriasController@api_getPorMesYCliente');
+        Route::get('auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}',    'AuditoriasController@api_getPorRangoYCliente');
         Route::get('auditoria/{fecha1}/al/{fecha2}/auditor/{idCliente}',  'AuditoriasController@api_getPorRangoYAuditor');
+        Route::get('auditoria/cliente/{idCliente}/dia/{annoMesDia}/estado-general',   'AuditoriasController@api_estadoGeneral');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado', 'AuditoriasController@api_informarRealizado');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-fecha', 'AuditoriasController@api_informarFecha');
         // API USUARIOS - RUTAS PUBLICAS UTILIZADAS POR LA OTRA APLICACION
