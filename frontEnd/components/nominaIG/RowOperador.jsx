@@ -30,7 +30,7 @@ export class RowOperador extends React.Component {
                     Cargo
                 </th>
                 <th>
-                    <button className="btn btn-sm btn-warning"
+                    <button className="btn btn-xs btn-warning"
                             onClick={()=>{ this.props.quitarUsuario(this.props.operador.usuarioRUN) }}
                     >Quitar</button>
                 </th>

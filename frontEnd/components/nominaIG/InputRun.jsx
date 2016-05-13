@@ -23,8 +23,8 @@ export class InputRun extends React.Component {
                 this.props.onRUNChange('', '')
             })
         }
-        // es valido si tiene de 1 a 12 digitos
-        if(/^[0-9]{1,12}$/.test(RUN)){
+        // es valido si tiene de 1 a 8 digitos
+        if(/^[0-9]{1,8}$/.test(RUN)){
             let DV = obtenerVerificador(RUN)
             this.setState({RUN, DV}, ()=>{
                 this.props.onRUNChange(RUN, DV)

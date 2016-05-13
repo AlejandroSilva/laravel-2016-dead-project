@@ -35,15 +35,16 @@ export class FormularioUsuario extends React.Component {
     usuarioSchema  = yup.object({
     usuarioRUN: yup.string().default(this.props.RUNbuscado)
         .min(1, 'El RUN debe tener un minimo de 1 caracteres')
-        .max(12, 'El RUN debe tener un máximo de 12 caracteres'),
+        .max(8, 'El RUN debe tener un máximo de 8 caracteres'),
     usuarioDV: yup.string()
-        .default(obtenerVerificador(this.props.RUNbuscado))
+//        .default(obtenerVerificador(this.props.RUNbuscado))
+       .default('')
         .required('Ingrese el digito verificador del RUN')
-        // .test('verificarUsuarioDV', 'El digito verificador es incorrecto', function(value){
-        //     // Hack sucio... cuando se hace una validacion con delay, se sacan los valores de options, si no, de parent
-        //     let valores = this.options.value? this.options.value : this.parent
-        //     return validarRUN(valores.usuarioRUN, value)
-        // })
+        .test('verificarUsuarioDV', 'El digito verificador es incorrecto', function(value){
+            // Hack sucio... cuando se hace una validacion con delay, se sacan los valores de options, si no, de parent
+            let valores = this.options.value? this.options.value : this.parent
+            return validarRUN(valores.usuarioRUN, value)
+        })
         .max(1, 'El máximo es 1 digito'),
     email: yup.string().default('')
         .max(60, 'El máximo es 60 caracteres')   // no obligatorio
@@ -121,6 +122,11 @@ export class FormularioUsuario extends React.Component {
         }
     }
 
+    componentDidMount(){
+        console.log("mouint")
+        ReactDOM.findDOMNode(this['refUsuarioDV'].refs.input).select()
+    }
+
     render(){
         return(
             <div>
@@ -143,19 +149,19 @@ export class FormularioUsuario extends React.Component {
                                     <Form.Field className="form-control" //placeholder='RUN'
                                                 name='usuarioRUN'
 //                                                disabled={true}
-                                                mapValue={{
-                                                    usuarioRUN: usuarioRUN=>usuarioRUN,
-                                                    usuarioDV: usuarioRUN=>obtenerVerificador(usuarioRUN)
-                                                }}
-                                                // onKeyPress={this.siguienteComponente.bind(this, 'refNombre1')}
+//                                                 mapValue={{
+//                                                     usuarioRUN: usuarioRUN=>usuarioRUN,
+//                                                     usuarioDV: usuarioRUN=>obtenerVerificador(usuarioRUN)
+//                                                 }}
+                                                onKeyPress={this.siguienteComponente.bind(this, 'refUsuarioDV')}
                                     />
                                 </div>
                                 <div className="col-sm-2">
                                     <Form.Field className="form-control"
                                                 name='usuarioDV'
-                                                disabled={true}
-                                                //ref={ref=>this.refUsuarioDV=ref}
-                                                //onKeyPress={this.siguienteComponente.bind(this, 'refNombre1')}
+                                                //disabled={true}
+                                                ref={ref=>this.refUsuarioDV=ref}
+                                                onKeyPress={this.siguienteComponente.bind(this, 'refNombre1')}
                                     />
                                 </div>
                                 <Form.Message for={['usuarioRUN', 'usuarioDV']} errorClass={cx('validation-error-no-margin')}/>

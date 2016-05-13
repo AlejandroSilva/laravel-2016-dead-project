@@ -23,7 +23,6 @@ export class NominaIG extends React.Component {
     }
 
     agregarUsuario(run){
-        //this.refs.notificator.success("Title.", "Msg - body.", 40*1000);
         if(run===''){
             return console.log('RUN vacio, no se hace nada');
         }
@@ -40,18 +39,20 @@ export class NominaIG extends React.Component {
                         RUNbuscado: run
                     })
                 } else if(statusCode==200){
-                    console.log('operador ya existe, dotacion sin cambios', dotacion)
+                    this.refs.notificator.error("Nómina", "El usuario ya existe en la nómina", 4*1000);
+                    //console.log('operador ya existe, dotacion sin cambios', dotacion)
                     this.setState({dotacion})
 
                 } else if(statusCode==201){
                     // se agrego el usuario a la dotacion, retornan la dotacion actualizada
-                    console.log('usuario agregado, dotacion actualizada', dotacion)
+                    this.refs.notificator.success("Nómina", "Usuario agregado correctamente", 4*1000);
+                    //console.log('usuario agregado, dotacion actualizada', dotacion)
                     this.setState({dotacion})
                 }
             })
             .catch(err=>{
                 console.log('ha ocurrido un error al intentar obtener los datos del usuario. ', err)
-                alert('ha ocurrido un error al intentar obtener los datos del usuario. ', err)
+                this.refs.notificator.error("Nómina", "Error al intentar agregar el usuario", 4*1000);
             })
     }
     quitarUsuario(run){
@@ -112,10 +113,10 @@ export class NominaIG extends React.Component {
                     Nomina para <b>{this.props.inventario.local.nombre}</b> de <b>{this.props.inventario.local.cliente.nombreCorto}</b>
                 </h1>
                 <div className="row">
-                    <div className="col-sm-6">
+                    <div className="col-sm-4">
                         {/* Datos generales del inventario */}
-                        <h3>Inventario</h3>
-                        <table className={'table '+css.tablaDatosInventario}>
+                        <h4>Inventario</h4>
+                        <table className={'table table-compact '+css.tablaDatosInventario}>
                             <tbody>
                                 <tr>
                                     <td>Cliente</td><td>{this.props.inventario.local.cliente.nombreCorto}</td>
@@ -138,11 +139,12 @@ export class NominaIG extends React.Component {
                             </tbody>
                         </table>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-8">
                         {/* Datos generales del local*/}
-                        <h3>Local</h3>
+                        <h4>Local</h4>
                         <div className="row">
-                            <table className={'table '+css.tablaDatosLocal}>
+                            <div className="col-sm-6">
+                                <table className={'table table-compact '+css.tablaDatosLocal}>
                                 <tbody>
                                     <tr>
                                         <td>Dirección</td><td>{this.props.inventario.local.direccion}</td>
@@ -156,30 +158,37 @@ export class NominaIG extends React.Component {
                                     <tr>
                                         <td>Formato Local</td><td>{this.props.inventario.local.formatoLocal_nombre}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Hr.Apertura</td><td>{this.props.inventario.local.horaApertura}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Hr.Cierre</td><td>{this.props.inventario.local.horaCierre}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Telefono 1</td><td>{this.props.inventario.local.telefono1}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Telefono 2</td><td>{this.props.inventario.local.telefono2}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Correo</td><td>{this.props.inventario.local.emailContacto}</td>
-                                    </tr>
                                 </tbody>
                             </table>
+                            </div>
+                            <div className="col-sm-6">
+                                <table className={'table table-compact '+css.tablaDatosLocal}>
+                                    <tbody>
+                                        <tr>
+                                            <td>Hr.Apertura</td><td>{this.props.inventario.local.horaApertura}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Hr.Cierre</td><td>{this.props.inventario.local.horaCierre}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Telefono 1</td><td>{this.props.inventario.local.telefono1}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Telefono 2</td><td>{this.props.inventario.local.telefono2}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Correo</td><td>{this.props.inventario.local.emailContacto}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="row">
                     {/* Dotacion Titular */}
-                    <table className="table table-striped table-bordered table-hover table-condensed">
+                    <table className={'table table-striped table-bordered table-hover table-condensed '+css.tablaDotacion}>
                         <thead>
                             <tr>
                                 <th colSpan="6">Titular</th>
@@ -219,7 +228,7 @@ export class NominaIG extends React.Component {
 
                 <div className="row">
                     {/* Dotacion Reemplazo */}
-                    <table className="table table-striped table-bordered table-hover table-condensed">
+                    <table className={'table table-striped table-bordered table-hover table-condensed '+css.tablaDotacion}>
                         <thead>
                         <tr>
                             <th>#</th>

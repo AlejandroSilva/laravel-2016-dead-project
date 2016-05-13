@@ -1,12 +1,25 @@
 .tablaDatosInventario {
     font-size: 12px;
 }
+.tablaDatosInventario td {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+}
 
 .tablaDatosLocal {
     font-size: 12px;
+}
+.tablaDatosLocal td {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
 }
 
 .modalAmplio {
     width: 90%;
     max-width: 1100px;
+}
+
+
+.tablaDotacion {
+    font-size: 12px;
 }
