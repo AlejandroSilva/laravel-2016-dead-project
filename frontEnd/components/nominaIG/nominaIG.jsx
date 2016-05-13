@@ -25,7 +25,7 @@ export class NominaIG extends React.Component {
     agregarUsuario(run){
         //this.refs.notificator.success("Title.", "Msg - body.", 40*1000);
         if(run===''){
-            console.log('RUN vacio, no se hace nada');
+            return console.log('RUN vacio, no se hace nada');
         }
         api.nomina.agregarOperador(this.props.nomina.idNomina, run)
             .then(response=>{
