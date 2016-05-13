@@ -34,8 +34,8 @@ const listaTipoCuentas = ['Cuenta Corriente', 'Cuenta Vista', 'Cuenta Ahorro', '
 export class FormularioUsuario extends React.Component {
     usuarioSchema  = yup.object({
     usuarioRUN: yup.string().default(this.props.RUNbuscado)
-        .min(3, 'El RUN debe tener un minimo de 3 caracteres')
-        .max(15, 'El RUN debe tener un máximo de 15 caracteres'),
+        .min(1, 'El RUN debe tener un minimo de 1 caracteres')
+        .max(12, 'El RUN debe tener un máximo de 12 caracteres'),
     usuarioDV: yup.string()
         .default(obtenerVerificador(this.props.RUNbuscado))
         .required('Ingrese el digito verificador del RUN')
@@ -79,8 +79,7 @@ export class FormularioUsuario extends React.Component {
         //.max(new Date('03-23-2020')),
         .required('Ingrese la fecha de nacimiento'),
     direccion: yup.string().default('')
-        .required('Ingrese la direccion')
-        .min(5, 'El minimo es de 5 caracteres'),
+        .max(150, 'El máximoes de 5 caracteres'),
     // cutRegion: yup.number()
     //     .required('Seleccione una Región'),
     cutComuna: yup.string()

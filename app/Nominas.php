@@ -30,4 +30,38 @@ class Nominas extends Model {
         //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\User', 'id', 'idCaptador1');
     }
+
+    public function dotacion(){
+        return $this->belongsToMany('App\User', 'nominas_user', 'idNomina', 'idUser');
+    }
+    
+    // #### Scopes
+//    public function scopeWithLiderCaptadorDotacion($query){
+//        return $query->with([
+//            'lider',
+//            'captador',
+//            'dotacion.roles'
+//        ]);
+//    }
+    
+    // #### Formatear
+    static function formatearSimple($nomina){
+        return [
+            "idNomina" => $nomina->idNomina,
+            "idLider" => $nomina->idLider,
+            "idCaptador1" => $nomina->idCaptador1,
+            "horaPresentacionLider" => $nomina->horaPresentacionLider,
+            "horaPresentacionEquipo" => $nomina->horaPresentacionEquipo,
+            "dotacionAsignada" => $nomina->dotacionAsignada,
+            "dotacionCaptador1" => $nomina->dotacionCaptador1,
+            "fechaSubidaNomina" => $nomina->fechaSubidaNomina
+        ];
+    }
+    static function formatearConLiderCaptadorDotacion($nomina){
+        $nominaArray = Nominas::formatearSimple($nomina);
+        $nominaArray['lider'] =  User::formatearSimple($nomina->lider);
+        $nominaArray['captador']  =  User::formatearSimple($nomina->captador1);
+        $nominaArray['dotacion']  =  $nomina->dotacion->map('\App\User::formatearSimple');
+        return $nominaArray;
+    }
 }

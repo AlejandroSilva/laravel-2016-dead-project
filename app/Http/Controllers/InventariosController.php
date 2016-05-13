@@ -561,6 +561,7 @@ class InventariosController extends Controller {
     }
 
     public function darFormatoInventario($inventario){
+        // eliminar esto, y utilizarr el fomrato creado en "inventarios"
         return [
             // Informacion del inventario
             'idInventario' => $inventario['idInventario'],

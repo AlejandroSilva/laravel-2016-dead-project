@@ -39,7 +39,7 @@ module.exports = {
             {test: /\.jsx?$/, exclude: [/node_modules/, /public/], loader: 'babel' }
         ]
     },
-    //devtool: 'source-map',
+    devtool: 'eval',
     plugins: [
         //new webpack.optimize.UglifyJsPlugin(),
         new ExtractTextPlugin('frontEnd.css', { allChunks: true })

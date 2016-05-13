@@ -52,7 +52,7 @@ class PersonalController extends Controller {
      * Rutas para consumo del API REST (CON autentificacion)
      * ##########################################################
      */
-    // GET api/usuario/buscar
+    // GET api/usuarios/buscar
     function api_buscar(Request $request){
         $query = User::withRegionRoles();
 
@@ -71,7 +71,7 @@ class PersonalController extends Controller {
         return response()->json($arrayUsuarios_formato, 200);
     }
 
-    // POST api/usuario/nuevo-operador
+    // POST api/usuarios/nuevo-operador
     function api_nuevoOperador(){
         // Todo: solo algunos usuarios pueden agregar operadores (crear un permiso?)
         $usuarioAuth = Auth::user();

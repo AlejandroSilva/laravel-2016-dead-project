@@ -1,6 +1,7 @@
 import React from 'react'
 let PropTypes = React.PropTypes
-
+// Validador Rut
+import { obtenerVerificador } from '../shared/ValidadorRUN'
 // Componentes
 //import * as css from './nominaIG.css'
 
@@ -8,38 +9,46 @@ export class InputRun extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            RUN: ''
+            RUN: '',
+            RV: ''
         }
     }
 
     onInputChange(evt){
-        let input = evt.target.value
-        if(input=='')
-            return
-        this.setState({
-            RUN: parseInt(input)
-        })
+        let RUN = evt.target.value
+
+        // si los campos de textos no son validos, entonces no deja que los campos se modifiquen
+        if(RUN===''){
+            this.setState({RUN: '', DV: ''}, ()=>{
+                this.props.onRUNChange('', '')
+            })
+        }
+        // es valido si tiene de 1 a 12 digitos
+        if(/^[0-9]{1,12}$/.test(RUN)){
+            let DV = obtenerVerificador(RUN)
+            this.setState({RUN, DV}, ()=>{
+                this.props.onRUNChange(RUN, DV)
+            })
+        }
     }
     inputOnKeyDown(evt){
         if((evt.keyCode===9 && evt.shiftKey===false) || evt.keyCode===40 || evt.keyCode===13) {
             // 9 = tab, flechaAbajo = 40,  13 = enter
-            if(this.state.RUN!==''){
-                this.props.buscarUsuario(''+this.state.RUN)
-                evt.preventDefault()
-            }
+            this.props.onPressEnter(this.state.RUN)
+            this.setState({RUN:'', DV:''})
+            evt.preventDefault()
         }else if((evt.keyCode===9 && evt.shiftKey===true) || evt.keyCode===38) {
             // flechaArriba = 38, shift+tab
-            if(this.state.RUN!==''){
-                this.props.buscarUsuario(''+this.state.RUN)
-                evt.preventDefault()
-            }
+            this.props.onPressEnter(this.state.RUN)
+            this.setState({RUN:'', DV:''})
+            evt.preventDefault()
         }
     }
 
     render(){
         return (
             <input type="text"
-                value={this.state.RUN}
+                   value={this.state.RUN}
                    onChange={this.onInputChange.bind(this)}
                    onKeyDown={this.inputOnKeyDown.bind(this)}
             />
@@ -48,7 +57,8 @@ export class InputRun extends React.Component {
 }
 
 InputRun.propTypes = {
-    buscarUsuario: PropTypes.func.isRequired
+    onPressEnter: PropTypes.func.isRequired,
+    onRUNChange: PropTypes.func.isRequired
     // nomina: PropTypes.object.isRequired,
 }
 InputRun.defaultProps = {

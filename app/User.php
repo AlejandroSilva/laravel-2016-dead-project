@@ -41,8 +41,29 @@ class User extends Authenticatable {
         return $this->belongsTo('App\Comunas', 'cutComuna', 'cutComuna');
     }
 
+    public function nomasEnLasQueHaParticipado(){
+        return $this->belongsToMany('App\Nominas', 'nominas_user', 'idUser', 'idNomina');
+    }
+
     // ## Scopes
     public function scopeWithRegionRoles($query){
         $query->with(['comuna.provincia.region', 'roles']);
+    }
+
+    // #### Formatear
+    static function formatearSimple($user){
+        if(!$user)
+            return null;
+        return [
+            'id' => $user->id,
+            'usuarioRUN' => $user->usuarioRUN,
+            'usuarioDV' => $user->usuarioDV,
+            'nombre' => "$user->nombre1 $user->apellidoPaterno",
+            'nombre1' => $user->nombre1,
+            'nombre2' => $user->nombre2,
+            'apellidoPaterno' => $user->apellidoPaterno,
+            'apellidoMaterno' => $user->apellidoMaterno,
+            'roles' => ['pendiente.....'],
+        ];
     }
 }

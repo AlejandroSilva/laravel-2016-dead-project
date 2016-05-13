@@ -11,6 +11,7 @@ use App\Comunas;
 use App\Inventarios;
 use App\Locales;
 use App\Nominas;
+use App\User;
 
 class NominasController extends Controller {
 
@@ -36,36 +37,21 @@ class NominasController extends Controller {
 
         // Buscar el inventario al que pertenece (junto con el cliente, el formato de local y la direccion
         $_inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
-        $inventario = Inventarios::withTodo()->find($_inventario->idInventario);
-        $inventario_formateado = app('App\Http\Controllers\InventariosController')->darFormatoInventario($inventario);
-
-        $comunas = Comunas::all();
+        $inventario = Inventarios::find($_inventario->idInventario);
 
         return view('operacional.nominas.nomina', [
-            'nomina' => $nomina,
-            'inventario' => $inventario_formateado,
-            'comunas' => $comunas
+            'nomina' => Nominas::formatearConLiderCaptadorDotacion($nomina),
+            'inventario' => Inventarios::formatoClienteFormatoRegion($inventario),
+            'comunas' => Comunas::all(),
+            'dotacion' => []
         ]);
     }
-    
-    
+
     /**
      * ##########################################################
      * Rutas para consumo del API REST
      * ##########################################################
      */
-
-    // PUT api/nomina/{idNomina}
-    function api_get($idNomina){
-        $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json([], 404);
-        
-        $inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
-        return response()->json(
-            $inventario
-        );
-    }
 
     // PUT api/nomina/{idNomina}
     function api_actualizar($idNomina, Request $request){
@@ -126,6 +112,65 @@ class NominasController extends Controller {
         }
     }
 
+    // GET api/nomina/{idNomina}/dotacion
+    function api_get($idNomina){
+        $nomina = Nominas::find($idNomina);
+
+        return $nomina?
+            response()->json(Nominas::formatearConLiderCaptadorDotacion($nomina))
+            :
+            response()->json([], 404);
+    }
+
+    // POST api/nomina/{idNomina}/operador/{operadorRUN}
+    function api_agregarOperador($idNomina, $operadorRUN){
+        // Todo: El usuario tiene los permisos para agregar un usuario a una nomina?
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json('Nomina no encontrada', 404);
+
+        // el operador existe?
+        $operador = User::where('usuarioRUN', $operadorRUN)->first();
+        if(!$operador)
+            return response()->json('', 204);
+
+        // Si el operador ya esta en la nomina, no hacer nada y devolver la lista como esta
+        $operadorExiste = $nomina->dotacion()->find($operador->id);
+        if($operadorExiste)
+            return response()->json($nomina->dotacion->map('\App\User::formatearSimple'), 200);
+
+        // Si la dotacion esta completa, no hacer nada y retornar el error
+        if(sizeof($nomina->dotacion) >= $nomina->dotacionAsignada)
+            return response()->json('Ha alcanzado el maximo de dotacion', 400);
+
+        // No hay problemas en este punto, agregar usuario y retornar la dotacion
+        $nomina->dotacion()->save($operador, ['correlativo'=>123]);
+        // se debe actualizar la dotacion
+        return response()->json(
+            Nominas::find($nomina->idNomina)->dotacion->map('\App\User::formatearSimple'),
+            201);
+    }
+
+    // DELETE api/nomina/{idNomina}/operador/{operadorRUN}
+    function api_quitarOperador($idNomina, $operadorRUN){
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json('Nomina no encontrada', 404);
+
+        // el operador existe?
+        $operador = User::where('usuarioRUN', $operadorRUN)->first();
+        if(!$operador)
+            return response()->json('Operador no encontrado', 404);
+
+        $nomina->dotacion()->detach($operador);
+
+        return response()->json($nomina->dotacion->map('\App\User::formatearSimple'), 200);
+    }
+    
+    
     /**
      * ##########################################################
      * API DE INTERACCION CON LA OTRA PLATAFORMA
@@ -232,4 +277,5 @@ class NominasController extends Controller {
 
         return response()->json(['msg'=>'falta por implementar'], 404);
     }
+
 }

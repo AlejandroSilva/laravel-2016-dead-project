@@ -1,4 +1,6 @@
-import axios from 'axios'
+import Axios from 'axios'
+let axios = Axios.create()
+let axiosRaw = Axios.create()
 
 axios.interceptors.response.use((response)=>{
     // Si existe un problema de red, terminar la promesa
@@ -6,6 +8,14 @@ axios.interceptors.response.use((response)=>{
         return Promise.reject(response.message)
     }else{
         return Promise.resolve(response.data)
+    }
+})
+axiosRaw.interceptors.response.use((response)=>{
+    // Si existe un problema de red, terminar la promesa
+    if( response instanceof Error ){
+        return Promise.reject(response)
+    }else{
+        return Promise.resolve(response)
     }
 })
 
@@ -47,8 +57,13 @@ export default {
             axios.get(`/api/auditoria/cliente/${idCliente}/dia/${dia}/estado-general`)
     },
     nomina: {
+        // utilizada por programacion IG para actualizar lider
         actualizar: (idNomina, datos)=>
-            axios.put(`/api/nomina/${idNomina}`, datos)
+            axios.put(`/api/nomina/${idNomina}`, datos),
+        agregarOperador: (idNomina, usuarioRUN)=>
+            axiosRaw.post(`/api/nomina/${idNomina}/operador/${usuarioRUN}`),
+        quitarOperador: (idNomina, usuarioRUN)=>
+            axios.delete(`/api/nomina/${idNomina}/operador/${usuarioRUN}`)
     },
     geo: {
        comunas: ()=>
@@ -56,8 +71,8 @@ export default {
     },
     usuario: {
         buscarRUN: (run)=>
-            axios.get(`/api/usuario/buscar?run=${run}`),
+            axios.get(`/api/usuarios/buscar?run=${run}`),
         nuevoOperador: (datos)=>
-            axios.post(`/api/usuario/nuevo-operador`, datos)
+            axios.post(`/api/usuarios/nuevo-operador`, datos)
     }
 }

@@ -73,16 +73,19 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('inventario/{idInventario}',         'InventariosController@api_actualizar');
         Route::delete('inventario/{idInventario}',      'InventariosController@api_eliminar');
         // API DE NOMINAS
-        Route::get('nomina/{idNomina}',                 'NominasController@api_get');
         Route::put('nomina/{idNomina}',                 'NominasController@api_actualizar');
+        Route::get('nomina/{idNomina}/dotacion',        'NominasController@api_get');
+        Route::post('nomina/{idNomina}/operador/{operadorRUN}',     'NominasController@api_agregarOperador');
+        Route::delete('nomina/{idNomina}/operador/{operadorRUN}',   'NominasController@api_quitarOperador');
+        
         // API AUDITORIAS
         Route::post('auditoria/nuevo', 'AuditoriasController@api_nuevo');
         Route::put('auditoria/{idAuditoria}', 'AuditoriasController@api_actualizar');
         Route::delete('auditoria/{idAuditoria}', 'AuditoriasController@api_eliminar');
         // API USUARIOS
-        Route::get('usuario/buscar',            'PersonalController@api_buscar');
-        Route::post('usuario/nuevo-operador',   'PersonalController@api_nuevoOperador');
-        Route::put('usuario/{idUsuario}',       'PersonalController@api_actualizar');
+        Route::put('usuario/{idUsuario}',           'PersonalController@api_actualizar');
+        Route::get('usuarios/buscar',               'PersonalController@api_buscar');
+        Route::post('usuarios/nuevo-operador',      'PersonalController@api_nuevoOperador');
         // API GEO (DESARROLLO DETENIDO)
 //        Route::get('geo/comunas',      'GeoController@api_getComunas');
     });

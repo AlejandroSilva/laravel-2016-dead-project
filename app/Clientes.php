@@ -36,4 +36,9 @@ class Clientes extends Model {
             return $clienteArray;
         });
     }
+
+    // #### Formatear
+    static function formatearSimple($cliente){
+        return $cliente;
+    }
 }
