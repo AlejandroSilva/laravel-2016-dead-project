@@ -143,10 +143,10 @@ export class FormularioUsuario extends React.Component {
                                     <Form.Field className="form-control" //placeholder='RUN'
                                                 name='usuarioRUN'
 //                                                disabled={true}
-                                                // mapValue={{
-                                                //     usuarioRUN: usuarioRUN=>usuarioRUN,
-                                                //     usuarioDV: usuarioRUN=>obtenerVerificador(usuarioRUN)
-                                                // }}
+                                                mapValue={{
+                                                    usuarioRUN: usuarioRUN=>usuarioRUN,
+                                                    usuarioDV: usuarioRUN=>obtenerVerificador(usuarioRUN)
+                                                }}
                                                 // onKeyPress={this.siguienteComponente.bind(this, 'refNombre1')}
                                     />
                                 </div>

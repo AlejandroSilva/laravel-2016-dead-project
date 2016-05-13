@@ -182,8 +182,7 @@ export class NominaIG extends React.Component {
                     <table className="table table-striped table-bordered table-hover table-condensed">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th colSpan="5">Titular</th>
+                                <th colSpan="6">Titular</th>
                             </tr>
                             <tr>
                                 <th>#</th>
@@ -206,6 +205,15 @@ export class NominaIG extends React.Component {
                                 />
                             })}
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colSpan="5"></th>
+                                <th>
+                                    <button className="btn btn-block btn-sm btn-primary" disabled>Enviar nomina</button>
+                                    <button className="btn btn-block btn-sm btn-success" disabled>Aprobar nomina</button>
+                                </th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
 
@@ -228,11 +236,10 @@ export class NominaIG extends React.Component {
                         </thead>
                         <tbody>
                         {_.range(0, this.props.nomina.dotacionAsignada).map(index=>{
-                            let operador = {} //this.props.nomina.dotacion[index]
                             return <RowOperador
                                 key={index}
                                 correlativo={index+1}
-                                operador={ {} }
+                                operador={ null }
                                 agregarUsuario={this.agregarUsuario.bind(this)}
                                 quitarUsuario={this.quitarUsuario.bind(this)}
                             />
