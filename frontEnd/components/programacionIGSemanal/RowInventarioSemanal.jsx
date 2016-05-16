@@ -335,10 +335,12 @@ class RowInventario extends React.Component{
                 <td className={css.tdNomina}>
                     {this.props.inventario.nomina_dia.fechaSubidaNomina==='0000-00-00'?
                         <a href={`nomina/${this.props.inventario.nomina_dia.idNomina}`}
+                           target="_blank"
                            className="label label-default">
                             Pendiente
                         </a> :
                         <a href={`nomina/${this.props.inventario.nomina_dia.idNomina}`}
+                           target="_blank"
                            className="label label-primary">
                             {this.props.inventario.nomina_dia.fechaSubidaNomina}
                         </a>

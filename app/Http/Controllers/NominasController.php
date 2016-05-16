@@ -20,7 +20,8 @@ class NominasController extends Controller {
      * Rutas que generan vistas
      * ##########################################################
      */
-    
+
+    // GET programacionIG/nomina/{idNomina}
     function show_nomina($idNomina){
         // Todo: agregar seguriddad, solo para usuarios con permisos
 //        $user = Auth::user();
@@ -42,8 +43,7 @@ class NominasController extends Controller {
         return view('operacional.nominas.nomina', [
             'nomina' => Nominas::formatearConLiderCaptadorDotacion($nomina),
             'inventario' => Inventarios::formatoClienteFormatoRegion($inventario),
-            'comunas' => Comunas::all(),
-            'dotacion' => []
+            'comunas' => Comunas::all()
         ]);
     }
 
@@ -123,7 +123,7 @@ class NominasController extends Controller {
     }
 
     // POST api/nomina/{idNomina}/operador/{operadorRUN}
-    function api_agregarOperador($idNomina, $operadorRUN){
+    function api_agregarOperador($idNomina, $operadorRUN, Request $request){
         // Todo: El usuario tiene los permisos para agregar un usuario a una nomina?
 
         // la nomina existe?
@@ -131,26 +131,31 @@ class NominasController extends Controller {
         if(!$nomina)
             return response()->json('Nomina no encontrada', 404);
 
-        // el operador existe?
+        // el operador existe? se entrega un 204 y en el frontend se muestra un formulario
         $operador = User::where('usuarioRUN', $operadorRUN)->first();
         if(!$operador)
             return response()->json('', 204);
 
         // Si el operador ya esta en la nomina, no hacer nada y devolver la lista como esta
-        $operadorExiste = $nomina->dotacion()->find($operador->id);
+        $operadorExiste = $nomina->usuarioEnDotacion($operador);
         if($operadorExiste)
-            return response()->json($nomina->dotacion->map('\App\User::formatearSimple'), 200);
+            return response()->json(Nominas::formatearDotacion($nomina), 200);
 
+        // Todo: trabajar este dato
         // Si la dotacion esta completa, no hacer nada y retornar el error
         if(sizeof($nomina->dotacion) >= $nomina->dotacionAsignada)
             return response()->json('Ha alcanzado el maximo de dotacion', 400);
+        if($request->esTitular==true){
+            // No hay problemas en este punto, agregar usuario y retornar la dotacion
+            $nomina->dotacion()->save($operador, ['titular'=>true]);
+        }else{
+            // No hay problemas en este punto, agregar usuario y retornar la dotacion
+            $nomina->dotacion()->save($operador, ['titular'=>false]);
+        }
 
-        // No hay problemas en este punto, agregar usuario y retornar la dotacion
-        $nomina->dotacion()->save($operador, ['correlativo'=>123]);
         // se debe actualizar la dotacion
-        return response()->json(
-            Nominas::find($nomina->idNomina)->dotacion->map('\App\User::formatearSimple'),
-            201);
+        $nominaActualizada = Nominas::find($nomina->idNomina);
+        return response()->json(Nominas::formatearDotacion($nominaActualizada), 201);
     }
 
     // DELETE api/nomina/{idNomina}/operador/{operadorRUN}
@@ -167,7 +172,7 @@ class NominasController extends Controller {
 
         $nomina->dotacion()->detach($operador);
 
-        return response()->json($nomina->dotacion->map('\App\User::formatearSimple'), 200);
+        return response()->json(Nominas::formatearDotacion($nomina), 200);
     }
     
     

@@ -32,9 +32,26 @@ class Nominas extends Model {
     }
 
     public function dotacion(){
-        return $this->belongsToMany('App\User', 'nominas_user', 'idNomina', 'idUser');
+        return $this->belongsToMany('App\User', 'nominas_user', 'idNomina', 'idUser')->withTimestamps();
     }
-    
+    public function dotacionTitular() {
+        // operadores ordenados por la fecha de asignacion a la nomina
+        return $this->dotacion()
+            ->where('titular', true)
+            ->orderBy('nominas_user.created_at', 'asc');
+    }
+    public function dotacionReemplazo() {
+        // operadores ordenados por la fecha de asignacion a la nomina
+        return $this->dotacion()
+            ->where('titular', false)
+            ->orderBy('nominas_user.created_at', 'asc');
+    }
+
+    // #### Consultas
+    public function usuarioEnDotacion($operador){
+        return $this->dotacion()->find($operador->id);
+    }
+
     // #### Scopes
 //    public function scopeWithLiderCaptadorDotacion($query){
 //        return $query->with([
@@ -61,7 +78,14 @@ class Nominas extends Model {
         $nominaArray = Nominas::formatearSimple($nomina);
         $nominaArray['lider'] =  User::formatearSimple($nomina->lider);
         $nominaArray['captador']  =  User::formatearSimple($nomina->captador1);
-        $nominaArray['dotacion']  =  $nomina->dotacion->map('\App\User::formatearSimple');
+        $nominaArray['dotacionTitular']  =  $nomina->dotacionTitular->map('\App\User::formatearSimple');
+        $nominaArray['dotacionReemplazo']  =  $nomina->dotacionReemplazo->map('\App\User::formatearSimple');
         return $nominaArray;
+    }
+    static function formatearDotacion($nomina){
+        return [
+            'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatearSimple'),
+            'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatearSimple')
+        ];
     }
 }

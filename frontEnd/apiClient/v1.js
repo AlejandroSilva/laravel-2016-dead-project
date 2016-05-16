@@ -60,8 +60,8 @@ export default {
         // utilizada por programacion IG para actualizar lider
         actualizar: (idNomina, datos)=>
             axios.put(`/api/nomina/${idNomina}`, datos),
-        agregarOperador: (idNomina, usuarioRUN)=>
-            axiosRaw.post(`/api/nomina/${idNomina}/operador/${usuarioRUN}`),
+        agregarOperador: (idNomina, usuarioRUN, esTitular)=>
+            axiosRaw.post(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, {esTitular}),
         quitarOperador: (idNomina, usuarioRUN)=>
             axios.delete(`/api/nomina/${idNomina}/operador/${usuarioRUN}`)
     },

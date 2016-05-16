@@ -42,7 +42,9 @@ class User extends Authenticatable {
     }
 
     public function nomasEnLasQueHaParticipado(){
-        return $this->belongsToMany('App\Nominas', 'nominas_user', 'idUser', 'idNomina');
+        return $this
+            ->belongsToMany('App\Nominas', 'nominas_user', 'idUser', 'idNomina')
+            ->withTimestamps();
     }
 
     // ## Scopes

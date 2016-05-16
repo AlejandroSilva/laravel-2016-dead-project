@@ -18,15 +18,17 @@ export class NominaIG extends React.Component {
         this.state = {
             showModal: false,
             RUNbuscado: '',
-            dotacion: this.props.nomina.dotacion
+            esTitular: true,
+            dotacionTitular: this.props.nomina.dotacionTitular,
+            dotacionReemplazo: this.props.nomina.dotacionReemplazo
         }
     }
 
-    agregarUsuario(run){
+    agregarUsuario(esTitular, run){
         if(run===''){
             return console.log('RUN vacio, no se hace nada');
         }
-        api.nomina.agregarOperador(this.props.nomina.idNomina, run)
+        api.nomina.agregarOperador(this.props.nomina.idNomina, run, esTitular)
             .then(response=>{
                 let dotacion = response.data
                 let statusCode = response.status
@@ -36,18 +38,25 @@ export class NominaIG extends React.Component {
                     console.log("RUN no existe, mostrando formulario")
                     this.setState({
                         showModal: true,
-                        RUNbuscado: run
+                        RUNbuscado: run,
+                        esTitular
                     })
                 } else if(statusCode==200){
                     this.refs.notificator.error("Nómina", "El usuario ya existe en la nómina", 4*1000);
                     //console.log('operador ya existe, dotacion sin cambios', dotacion)
-                    this.setState({dotacion})
+                    this.setState({
+                        dotacionTitular: dotacion.dotacionTitular,
+                        dotacionReemplazo: dotacion.dotacionReemplazo
+                    })
 
                 } else if(statusCode==201){
                     // se agrego el usuario a la dotacion, retornan la dotacion actualizada
                     this.refs.notificator.success("Nómina", "Usuario agregado correctamente", 4*1000);
                     //console.log('usuario agregado, dotacion actualizada', dotacion)
-                    this.setState({dotacion})
+                    this.setState({
+                        dotacionTitular: dotacion.dotacionTitular,
+                        dotacionReemplazo: dotacion.dotacionReemplazo
+                    })
                 }
             })
             .catch(err=>{
@@ -60,7 +69,10 @@ export class NominaIG extends React.Component {
         api.nomina.quitarOperador(this.props.nomina.idNomina, run)
             .then(dotacion=>{
                 console.log('dotacion actualizada')
-                this.setState({dotacion})
+                this.setState({
+                    dotacionTitular: dotacion.dotacionTitular,
+                    dotacionReemplazo: dotacion.dotacionReemplazo
+                })
             })
             .catch(err=>{
                 console.log('ha ocurrido un error al quitar el operador ', err)
@@ -74,8 +86,8 @@ export class NominaIG extends React.Component {
         api.usuario.nuevoOperador(datos)
             .then(usuario=>{
                 console.log('nuevo usuario creado', usuario)
+                this.agregarUsuario(this.state.esTitular, usuario.usuarioRUN)
                 this.setState({showModal: false})
-                this.agregarUsuario(usuario.usuarioRUN)
             })
             .catch(err=>{
                 alert('ha ocurrido un erro al crear un usuario ', err)
@@ -128,10 +140,10 @@ export class NominaIG extends React.Component {
                                     <td>Fecha programada</td><td>{this.props.inventario.inventario_fechaProgramada}</td>
                                 </tr>
                                 <tr>
-                                    <td>Hr. llegada lider</td><td>HH:MM</td>
+                                    <td>Hr. llegada lider</td><td>{this.props.nomina.horaPresentacionLider}</td>
                                 </tr>
                                 <tr>
-                                    <td>Hr. llegada equipo</td><td>HH:MM</td>
+                                    <td>Hr. llegada equipo</td><td>{this.props.nomina.horaPresentacionEquipo}</td>
                                 </tr>
                                 <tr>
                                     <td>Dotación asignada</td><td>{this.props.nomina.dotacionAsignada}</td>
@@ -204,12 +216,12 @@ export class NominaIG extends React.Component {
                         </thead>
                         <tbody>
                             {_.range(0, this.props.nomina.dotacionAsignada).map(index=>{
-                                let operador = this.state.dotacion[index]
+                                let operador = this.state.dotacionTitular[index]
                                 return <RowOperador
                                     key={index}
                                     correlativo={index+1}
                                     operador={operador}
-                                    agregarUsuario={this.agregarUsuario.bind(this)}
+                                    agregarUsuario={this.agregarUsuario.bind(this, true)}
                                     quitarUsuario={this.quitarUsuario.bind(this)}
                                 />
                             })}
@@ -245,11 +257,12 @@ export class NominaIG extends React.Component {
                         </thead>
                         <tbody>
                         {_.range(0, this.props.nomina.dotacionAsignada).map(index=>{
+                            let operador = this.state.dotacionReemplazo[index]
                             return <RowOperador
                                 key={index}
                                 correlativo={index+1}
-                                operador={ null }
-                                agregarUsuario={this.agregarUsuario.bind(this)}
+                                operador={ operador }
+                                agregarUsuario={this.agregarUsuario.bind(this, false)}
                                 quitarUsuario={this.quitarUsuario.bind(this)}
                             />
                         })}
