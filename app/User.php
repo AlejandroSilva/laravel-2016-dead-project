@@ -47,10 +47,6 @@ class User extends Authenticatable {
             ->withTimestamps();
     }
 
-    // ## Scopes
-    public function scopeWithRegionRoles($query){
-        $query->with(['comuna.provincia.region', 'roles']);
-    }
 
     // #### Formatear
     static function formatearSimple($user){
@@ -65,7 +61,37 @@ class User extends Authenticatable {
             'nombre2' => $user->nombre2,
             'apellidoPaterno' => $user->apellidoPaterno,
             'apellidoMaterno' => $user->apellidoMaterno,
-            'roles' => ['pendiente.....'],
+            // si "roles" es un arreglo vacio, array_map lanza un error
+            //            'roles' => sizeof($user['roles'])>0?
+            //                array_map(function($role){
+            //                    return $role['name'];
+            //                }, $user['roles'])
+            //                :
+            //                []
+            'roles' => $user->roles->map(['\App\Role', 'darFormatoSimple'])
         ];
+    }
+
+    static function formatoCompleto($user){
+        $userArray = User::formatearSimple($user);
+        $userArray['telefono'] = $user->telefono;
+        $userArray['telefonoEmergencia'] = $user->telefonoEmergencia;
+        $userArray['fechaNacimiento'] = $user->fechaNacimiento;
+        $userArray['email'] = $user->email;
+        $userArray['emailPersonal'] = $user->emailPersonal;
+        // Contrato
+        $userArray['tipoContrato'] = $user->tipoContrato;
+        $userArray['fechaInicioContrato'] = $user->fechaInicioContrato;
+        $userArray['fechaCertificadoAntecedentes'] = $user->fechaCertificadoAntecedentes;
+        // Datos bancarios
+        $userArray['banco'] = $user->banco;
+        $userArray['tipoCuenta'] = $user->tipoCuenta;
+        $userArray['numeroCuenta'] = $user->numeroCuenta;
+        // Direccion
+        $userArray['direccion'] = $user->direccion;
+        $userArray['comuna'] = $user->comuna->nombre;
+        $userArray['provincia'] = $user->comuna->provincia->nombre;
+        $userArray['region'] = $user->comuna->provincia->region->nombre;
+        return $userArray;
     }
 }

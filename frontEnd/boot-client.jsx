@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 // Componentes
-import InventarioForm from './components/inventario/InventarioForm.jsx'
+//import InventarioForm from './components/inventario/InventarioForm.jsx'
 import ProgramacionIGMensual from './components/programacionIGMensual/ProgramacionIGMensual.jsx'
 import ProgramacionIGSemanal from './components/programacionIGSemanal/ProgramacionIGSemanal.jsx'
 import ProgramacionAIMensual from './components/programacionAIMensual/ProgramacionAIMensual.jsx'
@@ -13,14 +13,15 @@ import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.
 import { GeoGestor } from './components/Geo/GeoGestor.jsx'
 import { NominaIG } from './components/nominaIG/nominaIG.jsx'
 
-/** FORMULARIO PARA LA CREACIÓN DE UN NUEVO FORMULARIO */
-let nuevoInventarioDOM = document.getElementById('nuevo-inventario')
-if (nuevoInventarioDOM){
-    ReactDOM.render(
-        <InventarioForm
-            clientes={window.laravelClientes}
-        />, nuevoInventarioDOM)
-}
+/** FORMULARIO PARA LA CREACIÓN DE UN NUEVO Inventario */
+// GET inventario/nuevo, NO SE OCUPA
+// let nuevoInventarioDOM = document.getElementById('nuevo-inventario')
+// if (nuevoInventarioDOM){
+//     ReactDOM.render(
+//         <InventarioForm
+//             clientes={window.laravelClientes}
+//         />, nuevoInventarioDOM)
+// }
 
 /** PROGRAMACIÓN INVENTARIO GENERAL */
 let programacionIGMensualDOM = document.getElementById('react-programacionIG-mensual')

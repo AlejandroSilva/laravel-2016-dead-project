@@ -24,12 +24,12 @@ export default {
         getLocales: (idCliente)=>
             axios.get(`/api/cliente/${idCliente}/locales`)
     },
-    locales: {
-        get: (idLocal)=>
-            axios.get(`/api/locales/${idLocal}`),
-        getVerbose: (idLocal)=>
-            axios.get(`/api/locales/${idLocal}/verbose`)
-    },
+    // locales: {
+        // get: (idLocal)=>
+        //     axios.get(`/api/locales/${idLocal}`),
+        // getVerbose: (idLocal)=>
+        //     axios.get(`/api/locales/${idLocal}/verbose`)
+    // },
     inventario: {
         nuevo: (datos)=>
             axios.post(`/api/inventario/nuevo`, datos),
