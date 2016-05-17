@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Permission;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Log;
@@ -122,7 +123,7 @@ class PersonalController extends Controller {
      * ##########################################################
      */
 
-    private function darFormatoUsuario($user){
+    public function darFormatoUsuario($user){
         return [
             // datos personales
             'id' => $user['id'],
@@ -167,5 +168,71 @@ class PersonalController extends Controller {
             'name' => $role['name'],
             'description' => $role['description'],
         ];
+    }
+
+    /**
+     * ##########################################################
+     * Funciones para mantenedor de usuarios roles y permisos
+     * ##########################################################
+     */
+
+    public function showUsuariosRoles(){
+        $users = User::get();
+        $roles = Role::get();
+        
+        return view('operacional.usuarios.usuarios', [
+            'users' => $users,
+            'roles' => $roles
+        ]);
+    }
+    
+    public function api_nuevo_rol($idUsuario, $idRole){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->can('programaPersonal_modificar'))
+            redirect('errors.403');
+
+        $user = User::find($idUsuario);
+        $user->roles()->attach($idRole);
+
+    }
+    
+    public function api_delete_rol($idUsuario, $idRole){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->can('programaPersonal_modificar'))
+            return view('errors.403');
+
+        $user = User::find($idUsuario);
+        $user->detachRole($idRole);
+    }
+
+    public function showPermissionsRoles(){
+        $roles = Role::get();
+        $permissions = Permission::get();
+        
+        return view('operacional.usuarios.permissions', [
+            'permissions' => $permissions,
+            'roles' => $roles
+        ]);
+    }
+    public function api_nuevo_permiso($idPermission, $idRole){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->can('programaPersonal_modificar'))
+            redirect('errors.403');
+        
+        $rol = Role::find($idRole);
+        $rol->perms()->attach($idPermission);
+    }
+
+    public function api_delete_permiso($idPermission, $idRole){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->can('programaPersonal_modificar'))
+            return view('errors.403');
+        
+        $rol = Role::find($idRole);
+        $rol->perms()->detach($idPermission);
     }
 }

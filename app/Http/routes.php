@@ -53,6 +53,11 @@ Route::group(['middleware' => ['web']], function (){
 //        Route::get('personal/nuevo',             'PersonalController@show_formulario')->name('personal.nuevo');
         // GEO - MANTENEDOR (DESARROLLO DETENIDO)
 //        Route::get('geo',             'GeoController@show_index');//->name('geo.index');
+        // USUARIOS -MANTENEDOR USUARIOS-ROLES
+        Route::get('admin/usuarios-roles',                          'PersonalController@showUsuariosRoles');
+        // PERMISSIONS- MANTENEDOR PERMISSIONS-ROLES
+        Route::get('admin/permissions-roles',                       'PersonalController@showPermissionsRoles');
+
     });
 
     /*
@@ -83,6 +88,13 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('usuario/buscar',            'PersonalController@api_buscar');
         Route::post('usuario/nuevo-operador',   'PersonalController@api_nuevoOperador');
         Route::put('usuario/{idUsuario}',       'PersonalController@api_actualizar');
+        // API USUARIOS-ROLES
+        Route::post('usuario/{idUsuario}/role/{idRole}',            'PersonalController@api_nuevo_rol');
+        Route::delete('usuario/{idUsuario}/role/{idRole}',          'PersonalController@api_delete_rol');
+        // API ROLES-PERMISOS
+        Route::post('permission/{idPermission}/role/{idRole}',      'PersonalController@api_nuevo_permiso');
+        Route::delete('permission/{idPermission}/roles/{idRole}',   'PersonalController@api_delete_permiso');
+
         // API GEO (DESARROLLO DETENIDO)
 //        Route::get('geo/comunas',      'GeoController@api_getComunas');
     });
