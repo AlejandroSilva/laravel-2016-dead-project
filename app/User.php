@@ -42,11 +42,12 @@ class User extends Authenticatable {
     }
 
     public function nomasEnLasQueHaParticipado(){
-        return $this
-            ->belongsToMany('App\Nominas', 'nominas_user', 'idUser', 'idNomina')
-            ->withTimestamps();
+        // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
+        return $this->belongsToMany('App\Nominas', 'nominas_user', 'idUser', 'idNomina')
+            ->withTimestamps()
+            ->withPivot('titular', 'idRoleAsignado');
+//            ->with('role')
     }
-
 
     // #### Formatear
     static function formatearSimple($user){
@@ -70,6 +71,15 @@ class User extends Authenticatable {
             //                []
             'roles' => $user->roles->map(['\App\Role', 'darFormatoSimple'])
         ];
+    }
+    
+    static function formatearSimplePivotDotacion($user){
+        $userArray = User::formatearSimple($user);
+        // informacion del pivot generado al unir un usuario con una dotacion
+        $userArray['idRoleAsignado'] = $user->pivot->idRoleAsignado;
+        //          WIP, ESTO NO FUNCIONABA
+        //        $userArray['roleAsignado'] = $user->pivot;
+        return $userArray;
     }
 
     static function formatoCompleto($user){

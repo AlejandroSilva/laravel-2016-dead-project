@@ -62,6 +62,8 @@ export default {
             axios.put(`/api/nomina/${idNomina}`, datos),
         agregarOperador: (idNomina, usuarioRUN, esTitular)=>
             axiosRaw.post(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, {esTitular}),
+        modificarOperador: (idNomina, usuarioRUN, datos)=>
+            axios.put(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, datos),
         quitarOperador: (idNomina, usuarioRUN)=>
             axios.delete(`/api/nomina/${idNomina}/operador/${usuarioRUN}`)
     },

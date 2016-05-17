@@ -64,6 +64,19 @@ export class NominaIG extends React.Component {
                 this.refs.notificator.error("Nómina", "Error al intentar agregar el usuario", 4*1000);
             })
     }
+
+    // modificarUsuario(run, datos) {
+    //     datos.idRoleAsignado = 6;
+    //     api.nomina.modificarOperador(this.props.nomina.idNomina, run, datos)
+    //         .then(resp=>{
+    //             console.log(resp)
+    //         })
+    //         .catch(err=>{
+    //             alert('error al modificar ', err)
+    //             console.log(err)
+    //         })
+    // }
+
     quitarUsuario(run){
         console.log('quitar usuario', run)
         api.nomina.quitarOperador(this.props.nomina.idNomina, run)

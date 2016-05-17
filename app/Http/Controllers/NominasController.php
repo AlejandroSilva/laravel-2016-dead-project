@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Role;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Log;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
 // Modelos
 use App\Comunas;
@@ -173,6 +176,41 @@ class NominasController extends Controller {
         $nomina->dotacion()->detach($operador);
 
         return response()->json(Nominas::formatearDotacion($nomina), 200);
+    }
+
+    // PUT api/nomina/{idNomina}/operador/{operadorRUN}
+    function api_modificarOperador($idNomina, $operadorRUN, Request $request){
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina' => ['Nomina no encontrada']], 404);
+
+        // el operador existe?
+        $operador = User::where('usuarioRUN', $operadorRUN)->first();
+        if(!$operador)
+            return response()->json(['operadorRUN' => ['Operador no encontrado']], 404);
+
+        $relacion = $nomina->dotacion()->find($operador->id);
+
+        // el operador ha sido asignado a la dotacion?
+        if(!$relacion)
+            return response()->json(['operadorRUN' => ['El operador no esta asignado a la dotacion']], 400);
+
+
+        // cambiar Rol
+        if(isset($request->idRoleAsignado)){
+            // existe el rol?
+            if(!Role::find($request->idRoleAsignado))
+                return response()->json(['idRoleAsignado' => ['Rol no existe']], 400);
+
+            $relacion->pivot->idRoleAsignado = $request->idRoleAsignado;
+            $relacion->pivot->save();
+        }
+
+        // TODO: falta agregar el rol que tiene actualmente asignado
+        return response()->json(
+            Nominas::formatearDotacion(Nominas::find($nomina->idNomina))
+        , 200);
     }
     
     

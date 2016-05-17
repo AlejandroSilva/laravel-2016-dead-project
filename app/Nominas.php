@@ -32,7 +32,12 @@ class Nominas extends Model {
     }
 
     public function dotacion(){
-        return $this->belongsToMany('App\User', 'nominas_user', 'idNomina', 'idUser')->withTimestamps();
+        // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
+        return $this->belongsToMany('App\User', 'nominas_user', 'idNomina', 'idUser')
+            ->withTimestamps()
+            ->withPivot('titular', 'idRoleAsignado');
+//            ->join('roles', 'idRoleAsignado', '=', 'roles.id');
+//            ->select('drink_id', 'customer_id', 'pivot_customer_got_drink', 'chair.name AS pivot_chair_name');
     }
     public function dotacionTitular() {
         // operadores ordenados por la fecha de asignacion a la nomina
@@ -78,14 +83,14 @@ class Nominas extends Model {
         $nominaArray = Nominas::formatearSimple($nomina);
         $nominaArray['lider'] =  User::formatearSimple($nomina->lider);
         $nominaArray['captador']  =  User::formatearSimple($nomina->captador1);
-        $nominaArray['dotacionTitular']  =  $nomina->dotacionTitular->map('\App\User::formatearSimple');
-        $nominaArray['dotacionReemplazo']  =  $nomina->dotacionReemplazo->map('\App\User::formatearSimple');
+        $nominaArray['dotacionTitular']  =  $nomina->dotacionTitular->map('\App\User::formatearSimplePivotDotacion');
+        $nominaArray['dotacionReemplazo']  =  $nomina->dotacionReemplazo->map('\App\User::formatearSimplePivotDotacion');
         return $nominaArray;
     }
     static function formatearDotacion($nomina){
         return [
-            'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatearSimple'),
-            'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatearSimple')
+            'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatearSimplePivotDotacion'),
+            'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatearSimplePivotDotacion')
         ];
     }
 }

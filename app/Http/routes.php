@@ -76,6 +76,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('nomina/{idNomina}',                 'NominasController@api_actualizar');
         Route::get('nomina/{idNomina}/dotacion',        'NominasController@api_get');
         Route::post('nomina/{idNomina}/operador/{operadorRUN}',     'NominasController@api_agregarOperador');
+        Route::put('nomina/{idNomina}/operador/{operadorRUN}',      'NominasController@api_modificarOperador');
         Route::delete('nomina/{idNomina}/operador/{operadorRUN}',   'NominasController@api_quitarOperador');
         
         // API AUDITORIAS
