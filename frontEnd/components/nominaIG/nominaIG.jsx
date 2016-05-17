@@ -231,7 +231,7 @@ export class NominaIG extends React.Component {
                                     />
                                     {/* Supervisor */}
                                     <RowOperador
-                                        correlativo={0}
+                                        correlativo={1}
                                         operador={ this.props.nomina.lider }
                                         agregarUsuario={this.agregarUsuario.bind(this, false)}
                                         quitarUsuario={this.quitarUsuario.bind(this)}
@@ -241,7 +241,7 @@ export class NominaIG extends React.Component {
                                         let operador = this.state.dotacionTitular[index]
                                         return <RowOperador
                                             key={index}
-                                            correlativo={index+1}
+                                            correlativo={index+2}
                                             operador={operador}
                                             agregarUsuario={this.agregarUsuario.bind(this, true)}
                                             quitarUsuario={this.quitarUsuario.bind(this)}

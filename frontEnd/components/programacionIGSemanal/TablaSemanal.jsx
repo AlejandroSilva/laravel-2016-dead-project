@@ -25,8 +25,9 @@ class TablaInventarios extends React.Component{
                     <col className={css.thTienda}/>
                     <col className={css.thStock}/>
                     <col className={css.thDotacionTotal}/>
-                    <col className={css.thLider}/>
-                    <col className={css.thLider}/>
+                    <col className={css.thUsuario}/>
+                    <col className={css.thUsuario}/>
+                    <col className={css.thUsuario}/>
                     <col className={css.thHora}/>
                     <col className={css.thHora}/>
                     <col className={css.thDireccion}/>
@@ -70,15 +71,15 @@ class TablaInventarios extends React.Component{
                         <th className={css.thTienda}>Tienda</th>
                         <th className={css.thStock}>Stock</th>
                         <th className={css.thDotacionTotal}>Dot.Total</th>
-                        <th className={css.thLider}>
+                        <th className={css.thUsuario}>
                             <HeaderConFiltro
                                 nombre='Lider'
                                 filtro={this.props.filtros.filtroLideres || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLideres')}
                             />
                         </th>
-                        {/* <th className={css.thLider}>Supervisor</th> */}
-                        <th className={css.thLider}>
+                        <th className={css.thUsuario}>Supervisor</th>
+                        <th className={css.thUsuario}>
                             <HeaderConFiltro
                                 nombre='Captador'
                                 filtro={this.props.filtros.filtroCaptadores || []}

@@ -163,18 +163,18 @@
 }
 
 /* LIDER / SUPERVISOR / CAPTADOR1 / CAPTADOR2 */
-.thLider{
+.thUsuario{
     width: 100px !important;
     background: white;
 }
-.tdLider{
+.tdUsuario{
     width: 100px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.tdLider > select {
+.tdUsuario > select {
     width: 98px !important;
     height: 18px;               /* misma altura de un input */
     margin: 0 auto 1px auto;    /* mismos margenes de un input */

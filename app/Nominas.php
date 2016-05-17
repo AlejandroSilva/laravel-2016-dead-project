@@ -26,6 +26,11 @@ class Nominas extends Model {
         return $this->hasOne('App\User', 'id', 'idLider');
     }
 
+    public function supervisor(){
+        //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
+        return $this->hasOne('App\User', 'id', 'idSupervisor');
+    }
+
     public function captador(){
         //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\User', 'id', 'idCaptador1');
@@ -71,6 +76,7 @@ class Nominas extends Model {
         return [
             "idNomina" => $nomina->idNomina,
             "idLider" => $nomina->idLider,
+            "idSupervisor" => $nomina->idSupervisor,
             "idCaptador1" => $nomina->idCaptador1,
             "horaPresentacionLider" => $nomina->horaPresentacionLider,
             "horaPresentacionEquipo" => $nomina->horaPresentacionEquipo,
@@ -82,6 +88,7 @@ class Nominas extends Model {
     static function formatearConLiderCaptadorDotacion($nomina){
         $nominaArray = Nominas::formatearSimple($nomina);
         $nominaArray['lider'] =  User::formatearSimple($nomina->lider);
+        $nominaArray['supervisor'] =  User::formatearSimple($nomina->supervisor);
         $nominaArray['captador']  =  User::formatearSimple($nomina->captador1);
         $nominaArray['dotacionTitular']  =  $nomina->dotacionTitular->map('\App\User::formatearSimplePivotDotacion');
         $nominaArray['dotacionReemplazo']  =  $nomina->dotacionReemplazo->map('\App\User::formatearSimplePivotDotacion');
