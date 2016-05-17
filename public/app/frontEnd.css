@@ -1280,30 +1280,69 @@
 .TablaGeos__colTRES___1_vRt{
     background: grey;
     width: 40%;
-}.nominaIG__tablaDatosInventario___28wQc {
-    font-size: 12px;
-}
-.nominaIG__tablaDatosInventario___28wQc td {
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
+}/* ######## Paneles de Informacion ########*/
+.nominaIG__panelDatos_heading___1L6Ri{
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
 }
 
-.nominaIG__tablaDatosLocal___28SFJ {
+.nominaIG__tablaDatos___139OL {
     font-size: 12px;
 }
-.nominaIG__tablaDatosLocal___28SFJ td {
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
+.nominaIG__tablaDatos___139OL td {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
 }
 
+/* ######## Modal que muestra el formulario ########*/
 .nominaIG__modalAmplio___1otkB {
     width: 90%;
     max-width: 1100px;
 }
 
-
+/* ############# Dotación Seleccionada #############*/
 .nominaIG__tablaDotacion___3hM1A {
+    table-layout: fixed;
     font-size: 12px;
+}
+
+
+/* Correlativo */
+.nominaIG__colCorrelativo___SNZqu{
+    width: 18px;
+}
+
+/* Usuario RUN */
+.nominaIG__colUsuarioRUN___1791Y {
+    width: 100px;;
+}
+.nominaIG__tdUsuarioRUN___2fFmf > input {
+    width: 100%;
+}
+
+/* Usuario DV*/
+.nominaIG__colUsuarioDV___1QSds {
+    width: 30px;
+}
+.nominaIG__tdUsuarioDV___-4A-n > input {
+    width: 100%;
+    text-align: center;
+}
+
+/* Nombre */
+.nominaIG__colNombre___3cpOd {
+    width: 150px;
+}
+.nominaIG__tdNombre___2DHSH > input {
+    width: 100%;
+}
+
+/* Cargo */
+.nominaIG__colCargo___1e7JD {
+    width: 80px;
+}
+.nominaIG__colOpciones___3Kqsh {
+    width: auto;
 }.notify-container {
     display: flex;
     flex-direction: column;

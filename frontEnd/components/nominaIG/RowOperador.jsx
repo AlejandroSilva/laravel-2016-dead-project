@@ -2,6 +2,7 @@
 import React from 'react'
 let PropTypes = React.PropTypes
 // Componentes
+import * as css from './nominaIG.css'
 import { InputRun } from './InputRun.jsx'
 // Validador Rut
 
@@ -15,49 +16,51 @@ export class RowOperador extends React.Component {
 
         if(operador){
             // si el operador esta definido, mostrar sus datos
-            return <tr key={1}>
-                <th>{this.props.correlativo}</th>
-                <th>
-                    <input type="text" value={operador.usuarioRUN} disabled/>
-                </th>
-                <th>
-                    <input type="text" value={operador.usuarioDV} disabled/>
-                </th>
-                <th>
-                    <input type="text" value={operador.nombre} disabled/>
-                </th>
-                <th>
-                    Cargo
-                </th>
-                <th>
-                    <button className="btn btn-xs btn-warning"
-                            onClick={()=>{ this.props.quitarUsuario(this.props.operador.usuarioRUN) }}
-                    >Quitar</button>
-                </th>
-            </tr>
+            return (
+                <tr key={1}>
+                    <td>{this.props.correlativo}</td>
+                    <td className={css.tdUsuarioRUN}>
+                        <input type="text" value={operador.usuarioRUN} disabled/>
+                    </td>
+                    <td className={css.tdUsuarioDV}>
+                        <input type="text" value={operador.usuarioDV} disabled/>
+                    </td>
+                    <td className={css.tdNombre}>
+                        <input type="text" value={operador.nombre} disabled/>
+                    </td>
+                    <td>
+                        Cargo
+                    </td>
+                    <td>
+                        <button className="btn btn-xs btn-warning"
+                                onClick={()=>{ this.props.quitarUsuario(this.props.operador.usuarioRUN) }}
+                        >Quitar</button>
+                    </td>
+                </tr>
+            )
         }else{
             // si no esta definido, mostrar el formulario para agregarlo
             return (
                 <tr key={2}>
-                    <th>{this.props.correlativo}</th>
-                    <th>
+                    <td>{this.props.correlativo}</td>
+                    <td className={css.tdUsuarioRUN}>
                         <InputRun
                             onPressEnter={this.props.agregarUsuario}
                             onRUNChange={this.onRUNChange.bind(this)}
                         />
-                    </th>
-                    <th>
+                    </td>
+                    <td className={css.tdUsuarioDV}>
                         <input type="text" value={''} disabled ref={ref=>this.ref_usuarioDV=ref}/>
-                    </th>
-                    <th>
+                    </td>
+                    <td className={css.tdNombre}>
                         <input type="text" value={''} disabled/>
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         Cargo
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         {/*<a href="#" className="btn btn-small">Quitar</a>*/}
-                    </th>
+                    </td>
                 </tr>
             )
         }
