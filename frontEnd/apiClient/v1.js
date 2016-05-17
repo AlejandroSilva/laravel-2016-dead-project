@@ -60,12 +60,20 @@ export default {
         // utilizada por programacion IG para actualizar lider
         actualizar: (idNomina, datos)=>
             axios.put(`/api/nomina/${idNomina}`, datos),
+        agregarLider: (idNomina, usuarioRUN)=>
+            axios.post(`/api/nomina/${idNomina}/lider/${usuarioRUN}`),
+        quitarLider: (idNomina, usuarioRUN)=>
+            axios.delete(`/api/nomina/${idNomina}/lider`),
+        agregarSupervisor: (idNomina, usuarioRUN)=>
+            axios.post(`/api/nomina/${idNomina}/supervisor/${usuarioRUN}`),
+        quitarSupervisor: (idNomina, usuarioRUN)=>
+            axios.delete(`/api/nomina/${idNomina}/supervisor`),
         agregarOperador: (idNomina, usuarioRUN, esTitular)=>
             axiosRaw.post(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, {esTitular}),
-        modificarOperador: (idNomina, usuarioRUN, datos)=>
-            axios.put(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, datos),
         quitarOperador: (idNomina, usuarioRUN)=>
             axios.delete(`/api/nomina/${idNomina}/operador/${usuarioRUN}`)
+        // modificarOperador: (idNomina, usuarioRUN, datos)=>
+        //     axios.put(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, datos),
     },
     geo: {
        comunas: ()=>

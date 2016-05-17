@@ -85,7 +85,7 @@ class Nominas extends Model {
             "fechaSubidaNomina" => $nomina->fechaSubidaNomina
         ];
     }
-    static function formatearConLiderCaptadorDotacion($nomina){
+    static function formatearConLiderSupervisorCaptadorDotacion($nomina){
         $nominaArray = Nominas::formatearSimple($nomina);
         $nominaArray['lider'] =  User::formatearSimple($nomina->lider);
         $nominaArray['supervisor'] =  User::formatearSimple($nomina->supervisor);

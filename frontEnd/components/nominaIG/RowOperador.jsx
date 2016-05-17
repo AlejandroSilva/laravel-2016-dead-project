@@ -29,7 +29,7 @@ export class RowOperador extends React.Component {
                         <input type="text" value={operador.nombre} disabled/>
                     </td>
                     <td>
-                        Cargo
+                        {this.props.cargo}
                     </td>
                     <td>
                         <button className="btn btn-xs btn-warning"
@@ -56,7 +56,7 @@ export class RowOperador extends React.Component {
                         <input type="text" value={''} disabled/>
                     </td>
                     <td>
-                        Cargo
+                        {this.props.cargo}
                     </td>
                     <td>
                         {/*<a href="#" className="btn btn-small">Quitar</a>*/}
@@ -70,6 +70,7 @@ export class RowOperador extends React.Component {
 RowOperador.propTypes = {
     correlativo: PropTypes.number.isRequired,
     operador: PropTypes.object,
+    cargo: PropTypes.string,
     agregarUsuario: PropTypes.func.isRequired,
     quitarUsuario: PropTypes.func.isRequired
     // comunas: PropTypes.arrayOf(PropTypes.object).isRequired

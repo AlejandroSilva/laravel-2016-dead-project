@@ -44,7 +44,7 @@ class NominasController extends Controller {
         $inventario = Inventarios::find($_inventario->idInventario);
 
         return view('operacional.nominas.nomina', [
-            'nomina' => Nominas::formatearConLiderCaptadorDotacion($nomina),
+            'nomina' => Nominas::formatearConLiderSupervisorCaptadorDotacion($nomina),
             'inventario' => Inventarios::formatoClienteFormatoRegion($inventario),
             'comunas' => Comunas::all()
         ]);
@@ -56,7 +56,7 @@ class NominasController extends Controller {
      * ##########################################################
      */
 
-    // PUT api/nomina/{idNomina}
+    // PUT api/nomina/{idNomina}  // Modificar antuguo, no entrega un formato compacto, se debe reescribir
     function api_actualizar($idNomina, Request $request){
         // identificar la nomina indicada
         $nomina = Nominas::find($idNomina);
@@ -120,13 +120,101 @@ class NominasController extends Controller {
         $nomina = Nominas::find($idNomina);
 
         return $nomina?
-            response()->json(Nominas::formatearConLiderCaptadorDotacion($nomina))
+            response()->json(Nominas::formatearConLiderSupervisorCaptadorDotacion($nomina))
             :
             response()->json([], 404);
     }
 
-    // POST api/nomina/{idNomina}/operador/{operadorRUN}
-    function api_agregarOperador($idNomina, $operadorRUN, Request $request){
+    // POST api/nomina/{idNomina}/lider/{usuarioRUN}
+    function api_agregarLider($idNomina, $usuarioRUN){
+        // Todo: El usuario tiene los permisos para agregar un lider a una nomina?
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // el usuario existe? es un lider?
+        $usuario = User::where('usuarioRUN', $usuarioRUN)->first();
+        if(!$usuario)
+            return response()->json(['usuarioRUN'=>'Usuario no encontrado'], 404);
+        if(!$usuario->hasRole('Lider'))
+            return response()->json(['usuarioRUN'=>'El usuario no es un Lider'], 400);
+
+        // se agrega el lider y se actualiza la dotacion
+        $nomina->idLider = $usuario->idUsuario;
+        $nomina->save();
+
+        // entregar nomina actualizada
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
+        );
+    }
+    // DELETE api/nomina/{idNomina}/lider
+    function api_quitarLider($idNomina){
+        // ToDo: revisar los permisos, y ver que no haya sido enviado
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // quitar el lider
+        $nomina->idLider = null;
+        $nomina->save();
+
+        // entregar nomina actualizada
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
+        );
+    }
+
+    // POST api/nomina/{idNomina}/supervisor/{usuarioRUN}
+    function api_agregarSupervisor($idNomina, $usuarioRUN){
+        // Todo: El usuario tiene los permisos para agregar un supervisor a una nomina?
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // el usuario existe? es un lider?
+        $usuario = User::where('usuarioRUN', $usuarioRUN)->first();
+        if(!$usuario)
+            return response()->json(['usuarioRUN'=>'Usuario no encontrado'], 404);
+        if(!$usuario->hasRole('Supervisor'))
+            return response()->json(['usuarioRUN'=>'El usuario no es un Supervisor'], 400);
+        
+        // se agrega el lider y se actualiza la dotacion
+        $nomina->idSupervisor = $usuario->idUsuario;
+        $nomina->save();
+
+        // entregar nomina actualizada
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
+        );
+    }
+    // DELETE api/nomina/{idNomina}/supervisor
+    function api_quitarSupervisor($idNomina){
+        // ToDo: revisar los permisos, y ver que no haya sido enviado
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // quitar el lider
+        $nomina->idSupervisor = null;
+        $nomina->save();
+
+        // entregar nomina actualizada
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+        );
+    }
+    
+    // POST api/nomina/{idNomina}/operador/{usuarioRUN}
+    function api_agregarOperador($idNomina, $usuarioRUN, Request $request){
         // Todo: El usuario tiene los permisos para agregar un usuario a una nomina?
 
         // la nomina existe?
@@ -135,7 +223,7 @@ class NominasController extends Controller {
             return response()->json('Nomina no encontrada', 404);
 
         // el operador existe? se entrega un 204 y en el frontend se muestra un formulario
-        $operador = User::where('usuarioRUN', $operadorRUN)->first();
+        $operador = User::where('usuarioRUN', $usuarioRUN)->first();
         if(!$operador)
             return response()->json('', 204);
 
@@ -157,62 +245,63 @@ class NominasController extends Controller {
         }
 
         // se debe actualizar la dotacion
-        $nominaActualizada = Nominas::find($nomina->idNomina);
-        return response()->json(Nominas::formatearDotacion($nominaActualizada), 201);
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
+        );
     }
-
-    // DELETE api/nomina/{idNomina}/operador/{operadorRUN}
-    function api_quitarOperador($idNomina, $operadorRUN){
+    // DELETE api/nomina/{idNomina}/operador/{usuarioRUN}
+    function api_quitarOperador($idNomina, $usuarioRUN){
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
             return response()->json('Nomina no encontrada', 404);
 
         // el operador existe?
-        $operador = User::where('usuarioRUN', $operadorRUN)->first();
-        if(!$operador)
+        $usuario = User::where('usuarioRUN', $usuarioRUN)->first();
+        if(!$usuario)
             return response()->json('Operador no encontrado', 404);
 
-        $nomina->dotacion()->detach($operador);
+        $nomina->dotacion()->detach($usuario);
 
-        return response()->json(Nominas::formatearDotacion($nomina), 200);
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
+        );
     }
 
     // PUT api/nomina/{idNomina}/operador/{operadorRUN}
-    function api_modificarOperador($idNomina, $operadorRUN, Request $request){
-        // la nomina existe?
-        $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json(['idNomina' => ['Nomina no encontrada']], 404);
-
-        // el operador existe?
-        $operador = User::where('usuarioRUN', $operadorRUN)->first();
-        if(!$operador)
-            return response()->json(['operadorRUN' => ['Operador no encontrado']], 404);
-
-        $relacion = $nomina->dotacion()->find($operador->id);
-
-        // el operador ha sido asignado a la dotacion?
-        if(!$relacion)
-            return response()->json(['operadorRUN' => ['El operador no esta asignado a la dotacion']], 400);
-
-
-        // cambiar Rol
-        if(isset($request->idRoleAsignado)){
-            // existe el rol?
-            if(!Role::find($request->idRoleAsignado))
-                return response()->json(['idRoleAsignado' => ['Rol no existe']], 400);
-
-            $relacion->pivot->idRoleAsignado = $request->idRoleAsignado;
-            $relacion->pivot->save();
-        }
-
-        // TODO: falta agregar el rol que tiene actualmente asignado
-        return response()->json(
-            Nominas::formatearDotacion(Nominas::find($nomina->idNomina))
-        , 200);
-    }
-    
+//    function api_modificarOperador($idNomina, $operadorRUN, Request $request){
+//        // la nomina existe?
+//        $nomina = Nominas::find($idNomina);
+//        if(!$nomina)
+//            return response()->json(['idNomina' => ['Nomina no encontrada']], 404);
+//
+//        // el operador existe?
+//        $operador = User::where('usuarioRUN', $operadorRUN)->first();
+//        if(!$operador)
+//            return response()->json(['operadorRUN' => ['Operador no encontrado']], 404);
+//
+//        $relacion = $nomina->dotacion()->find($operador->id);
+//
+//        // el operador ha sido asignado a la dotacion?
+//        if(!$relacion)
+//            return response()->json(['operadorRUN' => ['El operador no esta asignado a la dotacion']], 400);
+//
+//
+//        // cambiar Rol
+//        if(isset($request->idRoleAsignado)){
+//            // existe el rol?
+//            if(!Role::find($request->idRoleAsignado))
+//                return response()->json(['idRoleAsignado' => ['Rol no existe']], 400);
+//
+//            $relacion->pivot->idRoleAsignado = $request->idRoleAsignado;
+//            $relacion->pivot->save();
+//        }
+//
+//        // TODO: falta agregar el rol que tiene actualmente asignado
+//        return response()->json(
+//            Nominas::formatearDotacion(Nominas::find($nomina->idNomina))
+//        , 200);
+//    }
     
     /**
      * ##########################################################
@@ -246,56 +335,6 @@ class NominasController extends Controller {
                 if($nominaDia->fechaSubidaNomina=='0000-00-00'){
                     $nominaDia->fechaSubidaNomina = Carbon::now();
                     $nominaNoche->fechaSubidaNomina = Carbon::now();
-                    $nominaDia->save();
-                    $nominaNoche->save();
-                    Log::info("[NOMINA:INFORMAR_REALIZADO:OK] CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia' (idInventario '$inventario->idInventario') informado correctamente.");
-                }else{
-                    Log::info("[NOMINA:INFORMAR_REALIZADO:ERROR] CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia' (idInventario '$inventario->idInventario') ya habia sido informado.");
-                }
-
-                return response()->json(Inventarios::with(['nominaDia', 'nominaNoche'])->find($inventario->idInventario), 200);
-            }else {
-                // inventario con esa fecha no existe
-                $errorMsg = "CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia'; no existe un inventario programado para el idLocal '$local->idLocal' en esa fecha.";
-                Log::info("[NOMINA:INFORMAR_REALIZADO:ERROR] $errorMsg");
-                return response()->json(['msg' => $errorMsg], 404);
-            }
-
-        } else{
-            // local de ese usuario, con ese ceco no existe
-            $errorMsg = "no existe el CECO '$ceco' del idCliente '$idCliente'";
-            Log::info("[NOMINA:INFORMAR_DISPONIBLE:ERROR] $errorMsg");
-            return response()->json(['msg'=>$errorMsg], 404);
-        }
-
-        return response()->json(['msg'=>'falta por implementar'], 404);
-    }
-
-    function api_informarDisponible2($idCliente, $ceco, $annoMesDia, $annoMesDia2){
-        //        $fecha = explode('-', $annoMesDia);
-        //        $anno = $fecha[0];
-        //        $mes  = $fecha[1];
-
-        // Buscar el Local (por idCliente y CECO)
-        $local = Locales::where('idCliente', '=', $idCliente)
-            ->where('numero', '=', $ceco)
-            ->first();
-        if($local) {
-            // Buscar inventario
-            $inventario = Inventarios::where('idLocal', '=', $local->idLocal)
-                ->where('fechaProgramada', $annoMesDia)
-                //->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-                //->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
-                ->first();
-            if($inventario) {
-                // fijar la 'fechaSubidaNomina'
-                $nominaDia = $inventario->nominaDia;
-                $nominaNoche = $inventario->nominaNoche;
-                // Si la fecha de subida ya habia sido fijada, no cambiar esa fecha
-                // esto puede suceder cuando re-suben la nomina para corregir algun error
-                if($nominaDia->fechaSubidaNomina=='0000-00-00'){
-                    $nominaDia->fechaSubidaNomina = $annoMesDia2;
-                    $nominaNoche->fechaSubidaNomina = $annoMesDia2;
                     $nominaDia->save();
                     $nominaNoche->save();
                     Log::info("[NOMINA:INFORMAR_REALIZADO:OK] CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia' (idInventario '$inventario->idInventario') informado correctamente.");

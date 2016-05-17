@@ -75,10 +75,14 @@ Route::group(['middleware' => ['web']], function (){
         // API DE NOMINAS
         Route::put('nomina/{idNomina}',                 'NominasController@api_actualizar');
         Route::get('nomina/{idNomina}/dotacion',        'NominasController@api_get');
-        Route::post('nomina/{idNomina}/operador/{operadorRUN}',     'NominasController@api_agregarOperador');
-        Route::put('nomina/{idNomina}/operador/{operadorRUN}',      'NominasController@api_modificarOperador');
-        Route::delete('nomina/{idNomina}/operador/{operadorRUN}',   'NominasController@api_quitarOperador');
-        
+        Route::post('nomina/{idNomina}/lider/{usuarioRUN}',         'NominasController@api_agregarLider');
+        Route::delete('nomina/{idNomina}/lider',                    'NominasController@api_quitarLider');
+        Route::post('nomina/{idNomina}/supervisor/{usuarioRUN}',    'NominasController@api_agregarSupervisor');
+        Route::delete('nomina/{idNomina}/supervisor',               'NominasController@api_quitarSupervisor');
+        Route::post('nomina/{idNomina}/operador/{usuarioRUN}',      'NominasController@api_agregarOperador');
+        Route::delete('nomina/{idNomina}/operador/{usuarioRUN}',    'NominasController@api_quitarOperador');
+//        Route::put('nomina/{idNomina}/operador/{operadorRUN}',      'NominasController@api_modificarOperador');
+
         // API AUDITORIAS
         Route::post('auditoria/nuevo', 'AuditoriasController@api_nuevo');
         Route::put('auditoria/{idAuditoria}', 'AuditoriasController@api_actualizar');
@@ -102,7 +106,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('inventarios/informar-archivo-final',  'InventariosController@api_informarArchivoFinal');
         // API DE NOMINAS
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-disponible', 'NominasController@api_informarDisponible');
-        Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-manual/{fecha2}', 'NominasController@api_informarDisponible2');
+
         // API AUDITORIAS
         Route::get('auditoria/mes/{annoMesDia}/cliente/{idCliente}',        'AuditoriasController@api_getPorMesYCliente');
         Route::get('auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}',    'AuditoriasController@api_getPorRangoYCliente');

@@ -19,18 +19,94 @@ export class NominaIG extends React.Component {
             showModal: false,
             RUNbuscado: '',
             esTitular: true,
+            lider: this.props.nomina.lider,
+            supervisor: this.props.nomina.supervisor,
             dotacionTitular: this.props.nomina.dotacionTitular,
             dotacionReemplazo: this.props.nomina.dotacionReemplazo
         }
     }
 
-    agregarUsuario(esTitular, run){
+    agregarLider(run) {
+        if (run === '') {
+            return console.log('RUN vacio, no se hace nada');
+        }
+        api.nomina.agregarLider(this.props.nomina.idNomina, run)
+            .then(nominaActualizada=> {
+                this.refs.notificator.success("Nómina", "Lider agregado", 4*1000);
+                this.setState({
+                    lider: nominaActualizada.lider,
+                    supervisor: nominaActualizada.supervisor,
+                    dotacionTitular: nominaActualizada.dotacionTitular,
+                    dotacionReemplazo: nominaActualizada.dotacionReemplazo
+                })
+            })
+            .catch(err=>{
+                let msgs = _.values(err.data).join('. ')
+                console.log('ha ocurrido un error al asignar el lider', err)
+                this.refs.notificator.error("Error al asignar el Lider", msgs, 4*1000);
+            })
+    }
+    quitarLider(){
+        api.nomina.quitarLider(this.props.nomina.idNomina)
+            .then(nominaActualizada=>{
+                console.log('dotacion actualizada')
+                this.setState({
+                    lider: nominaActualizada.lider,
+                    supervisor: nominaActualizada.supervisor,
+                    dotacionTitular: nominaActualizada.dotacionTitular,
+                    dotacionReemplazo: nominaActualizada.dotacionReemplazo
+                })
+            })
+            .catch(err=>{
+                console.log('ha ocurrido un error al quitar el lider', err)
+                alert('ha ocurrido un error al quitar el lider', err)
+            })
+    }
+
+    agregarSupervisor(run) {
+        if (run === '') {
+            return console.log('RUN vacio, no se hace nada');
+        }
+        api.nomina.agregarSupervisor(this.props.nomina.idNomina, run)
+            .then(nominaActualizada=> {
+                this.refs.notificator.success("Nómina", "Supervisor agregado", 4*1000);
+                this.setState({
+                    lider: nominaActualizada.lider,
+                    supervisor: nominaActualizada.supervisor,
+                    dotacionTitular: nominaActualizada.dotacionTitular,
+                    dotacionReemplazo: nominaActualizada.dotacionReemplazo
+                })
+            })
+            .catch(err=>{
+                let msgs = _.values(err.data).join('. ')
+                console.log('ha ocurrido un error al asignar el Supervisor', err)
+                this.refs.notificator.error("Error al asignar el Supervisor", msgs, 4*1000);
+            })
+    }
+    quitarSupervisor(){
+        api.nomina.quitarSupervisor(this.props.nomina.idNomina)
+            .then(nominaActualizada=>{
+                console.log('dotacion actualizada')
+                this.setState({
+                    lider: nominaActualizada.lider,
+                    supervisor: nominaActualizada.supervisor,
+                    dotacionTitular: nominaActualizada.dotacionTitular,
+                    dotacionReemplazo: nominaActualizada.dotacionReemplazo
+                })
+            })
+            .catch(err=>{
+                console.log('ha ocurrido un error al quitar el Supervisor', err)
+                alert('ha ocurrido un error al quitar el Supervisor', err)
+            })
+    }
+    
+    agregarOperador(esTitular, run){
         if(run===''){
             return console.log('RUN vacio, no se hace nada');
         }
         api.nomina.agregarOperador(this.props.nomina.idNomina, run, esTitular)
             .then(response=>{
-                let dotacion = response.data
+                let nominaActualizada = response.data
                 let statusCode = response.status
 
                 // si no se encuentra el usuario, se debe mostrar el formulario para crear uno
@@ -45,8 +121,10 @@ export class NominaIG extends React.Component {
                     this.refs.notificator.error("Nómina", "El usuario ya existe en la nómina", 4*1000);
                     //console.log('operador ya existe, dotacion sin cambios', dotacion)
                     this.setState({
-                        dotacionTitular: dotacion.dotacionTitular,
-                        dotacionReemplazo: dotacion.dotacionReemplazo
+                        lider: nominaActualizada.lider,
+                        supervisor: nominaActualizada.supervisor,
+                        dotacionTitular: nominaActualizada.dotacionTitular,
+                        dotacionReemplazo: nominaActualizada.dotacionReemplazo
                     })
 
                 } else if(statusCode==201){
@@ -54,18 +132,37 @@ export class NominaIG extends React.Component {
                     this.refs.notificator.success("Nómina", "Usuario agregado correctamente", 4*1000);
                     //console.log('usuario agregado, dotacion actualizada', dotacion)
                     this.setState({
-                        dotacionTitular: dotacion.dotacionTitular,
-                        dotacionReemplazo: dotacion.dotacionReemplazo
+                        lider: nominaActualizada.lider,
+                        supervisor: nominaActualizada.supervisor,
+                        dotacionTitular: nominaActualizada.dotacionTitular,
+                        dotacionReemplazo: nominaActualizada.dotacionReemplazo
                     })
                 }
             })
             .catch(err=>{
+                let msgs = _.values(err.data).join('. ')
                 console.log('ha ocurrido un error al intentar obtener los datos del usuario. ', err)
-                this.refs.notificator.error("Nómina", "Error al intentar agregar el usuario", 4*1000);
+                this.refs.notificator.error("Error", msgs, 4*1000);
             })
     }
-
-    // modificarUsuario(run, datos) {
+    quitarOperador(run){
+        console.log('quitar usuario', run)
+        api.nomina.quitarOperador(this.props.nomina.idNomina, run)
+            .then(nominaActualizada=>{
+                console.log('dotacion actualizada')
+                this.setState({
+                    lider: nominaActualizada.lider,
+                    supervisor: nominaActualizada.supervisor,
+                    dotacionTitular: nominaActualizada.dotacionTitular,
+                    dotacionReemplazo: nominaActualizada.dotacionReemplazo
+                })
+            })
+            .catch(err=>{
+                console.log('ha ocurrido un error al quitar el operador ', err)
+                alert('ha ocurrido un error al quitar el operador ', err)
+            })
+    }
+    // modificarOperador(run, datos) {
     //     datos.idRoleAsignado = 6;
     //     api.nomina.modificarOperador(this.props.nomina.idNomina, run, datos)
     //         .then(resp=>{
@@ -77,29 +174,13 @@ export class NominaIG extends React.Component {
     //         })
     // }
 
-    quitarUsuario(run){
-        console.log('quitar usuario', run)
-        api.nomina.quitarOperador(this.props.nomina.idNomina, run)
-            .then(dotacion=>{
-                console.log('dotacion actualizada')
-                this.setState({
-                    dotacionTitular: dotacion.dotacionTitular,
-                    dotacionReemplazo: dotacion.dotacionReemplazo
-                })
-            })
-            .catch(err=>{
-                console.log('ha ocurrido un error al quitar el operador ', err)
-                alert('ha ocurrido un error al quitar el operador ', err)
-            })
-    }
-
     onNuevoUsuario(datos){
         console.log('enviando', datos)
 
         api.usuario.nuevoOperador(datos)
             .then(usuario=>{
                 console.log('nuevo usuario creado', usuario)
-                this.agregarUsuario(this.state.esTitular, usuario.usuarioRUN)
+                this.agregarOperador(this.state.esTitular, usuario.usuarioRUN)
                 this.setState({showModal: false})
             })
             .catch(err=>{
@@ -121,7 +202,7 @@ export class NominaIG extends React.Component {
                     dialogClassName={css.modalAmplio}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>Nuevo Usuario</Modal.Title>
+                        <Modal.Title>Nuevo Operador</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         {/* Formulario para agregar usuarios */}
@@ -224,27 +305,30 @@ export class NominaIG extends React.Component {
                                 <tbody>
                                     {/* Lider */}
                                     <RowOperador
-                                        correlativo={0}
-                                        operador={ this.props.nomina.lider }
-                                        agregarUsuario={this.agregarUsuario.bind(this, false)}
-                                        quitarUsuario={this.quitarUsuario.bind(this)}
+                                        correlativo={1}
+                                        operador={ this.state.lider }
+                                        cargo="Lider"
+                                        agregarUsuario={this.agregarLider.bind(this)}
+                                        quitarUsuario={this.quitarLider.bind(this)}
                                     />
                                     {/* Supervisor */}
                                     <RowOperador
-                                        correlativo={1}
-                                        operador={ this.props.nomina.supervisor }
-                                        agregarUsuario={this.agregarUsuario.bind(this, false)}
-                                        quitarUsuario={this.quitarUsuario.bind(this)}
+                                        correlativo={2}
+                                        operador={ this.state.supervisor }
+                                        cargo="Supervisor"
+                                        agregarUsuario={this.agregarSupervisor.bind(this)}
+                                        quitarUsuario={this.quitarSupervisor.bind(this)}
                                     />
                                     {/* Dotación */}
-                                    {_.range(0, this.props.nomina.dotacionAsignada).map(index=>{
+                                    {_.range(1, this.props.nomina.dotacionAsignada).map(index=>{
                                         let operador = this.state.dotacionTitular[index]
                                         return <RowOperador
                                             key={index}
                                             correlativo={index+2}
                                             operador={operador}
-                                            agregarUsuario={this.agregarUsuario.bind(this, true)}
-                                            quitarUsuario={this.quitarUsuario.bind(this)}
+                                            cargo="Operador"
+                                            agregarUsuario={this.agregarOperador.bind(this, true)}
+                                            quitarUsuario={this.quitarOperador.bind(this)}
                                         />
                                     })}
                                 </tbody>
@@ -283,8 +367,9 @@ export class NominaIG extends React.Component {
                                             key={index}
                                             correlativo={index+1}
                                             operador={ operador }
-                                            agregarUsuario={this.agregarUsuario.bind(this, false)}
-                                            quitarUsuario={this.quitarUsuario.bind(this)}
+                                            cargo="Operador"
+                                            agregarUsuario={this.agregarOperador.bind(this, false)}
+                                            quitarUsuario={this.quitarOperador.bind(this)}
                                         />
                                     })}
                                 </tbody>
