@@ -13,6 +13,8 @@ import Select from '../shared/Select.jsx'
 
 // Styles
 import * as css from './TablaSemanal.css'
+import classNames from 'classnames/bind'
+let cx = classNames.bind(css)
 
 class RowInventario extends React.Component{
     focusElemento(elemento){
@@ -355,18 +357,32 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Nómina*/}
                 <td className={css.tdNomina}>
-                    {this.props.inventario.nomina_dia.fechaSubidaNomina==='0000-00-00'?
-                        <a href={`nomina/${this.props.inventario.nomina_dia.idNomina}`}
-                           target="_blank"
-                           className="label label-default">
-                            Pendiente
-                        </a> :
-                        <a href={`nomina/${this.props.inventario.nomina_dia.idNomina}`}
-                           target="_blank"
-                           className="label label-primary">
-                            {this.props.inventario.nomina_dia.fechaSubidaNomina}
-                        </a>
-                    }
+                    {/* Nomina de Día */}
+                    <a href={`nomina/${this.props.inventario.nomina_dia.idNomina}`}
+                       className={cx(
+                            'label',
+                            // color depende del valor de la fechaSubida
+                            this.props.inventario.nomina_dia.fechaSubidaNomina==='0000-00-00'? 'label-default' : 'label-primary',
+                            inventarioDia? 'center-block' : 'hide'
+                        )}
+                       target="_blank">
+                        {this.props.inventario.nomina_dia.fechaSubidaNomina==='0000-00-00'?
+                            'Pendiente' : this.props.inventario.nomina_dia.fechaSubidaNomina
+                        }
+                    </a>
+                    {/* Nomina de Noche */}
+                    <a href={`nomina/${this.props.inventario.nomina_noche.idNomina}`}
+                       className={cx(
+                            'label',
+                            // color depende del valor de la fechaSubida
+                            this.props.inventario.nomina_noche.fechaSubidaNomina==='0000-00-00'? 'label-default' : 'label-primary',
+                            inventarioNoche? 'center-block' : 'hide'
+                        )}
+                       target="_blank">
+                        {this.props.inventario.nomina_noche.fechaSubidaNomina==='0000-00-00'?
+                            'Pendiente' : this.props.inventario.nomina_noche.fechaSubidaNomina
+                        }
+                    </a>
                 </td>
                 {/* Unidades */}
                 <td className={css.tdUnidadesReales}>

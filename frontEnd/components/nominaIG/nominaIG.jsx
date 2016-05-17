@@ -232,7 +232,7 @@ export class NominaIG extends React.Component {
                                     {/* Supervisor */}
                                     <RowOperador
                                         correlativo={1}
-                                        operador={ this.props.nomina.lider }
+                                        operador={ this.props.nomina.supervisor }
                                         agregarUsuario={this.agregarUsuario.bind(this, false)}
                                         quitarUsuario={this.quitarUsuario.bind(this)}
                                     />
