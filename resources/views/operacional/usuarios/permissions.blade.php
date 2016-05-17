@@ -3,6 +3,43 @@
 @section('title', 'Permissions')
 
 @section('content')
+    <style>
+        /* estilos para checkbox */
+        .thEncabezado{
+
+        }
+        .thEncabezado > input{
+            text-align: center;
+            border: 0;
+            font-size: 15px;
+            width: 100px;
+        }
+        .tdPermisos{
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+
+        }
+        .tdPermisos > input{
+            border: 0;
+            font-size: 13px;
+            text-align: center;
+            width: 190px;
+        }
+        .tdInput{
+
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-bottom: 0 !important;
+            padding-top: 0 !important;
+        }
+        .tdInput > input{
+            width: 100px;
+            height: 20px;
+
+
+        }
+
+    </style>
     <script type="text/javascript">
         function changeUserRole(event) {
 
@@ -12,6 +49,7 @@
             var idRole = target.dataset.role
             var permisoFijado = target.dataset.permisoasignado
             var pet = new XMLHttpRequest();
+            console.log(event);
 
             if(permisoFijado=="true"){
                 console.log("eliminando permisos");
@@ -65,10 +103,10 @@
 
                     <tr>
                         @if(isset($permissions))
-                            <th>Permisos-Roles</th>
+                            <th class="thEncabezado">Permisos-Roles</th>
                             @foreach($roles as $rol)
 
-                                <th>{{$rol->name}}</th>
+                                <th class="thEncabezado"><input type="text" value="{{$rol->name}}" title="{{$rol->description}}" readonly></th>
 
                             @endforeach
                         @endif
@@ -78,16 +116,19 @@
                         @if(isset($permissions))
                             @foreach($permissions as $permission)
                                 <tr>
-                                    <td>{{$permission->name}}</td>
+                                    <td class="tdPermisos"><input type="text" value="{{$permission->name}}" title="{{$permission->description}}" readonly></td>
                                         @foreach($roles as $rol)
-                                            <td><input type="checkbox"
-                                                    {{$rol->perms()->whereId($permission->id)->first() ? 'checked' : ''}}
-                                                    data-role="{{$rol->id}}"
-                                                    data-permission="{{$permission->id}}"
-                                                    data-permisoasignado="{{$rol->perms()->whereId($permission->id)->first()?"true":"false"}}"
-                                                    onclick="changeUserRole(event);"
-                                            ></td>
+                                            <td class="tdInput">
+                                                <input type="checkbox"
+                                                   {{$rol->perms()->whereId($permission->id)->first() ? 'checked' : ''}}
+                                                   data-role="{{$rol->id}}"
+                                                   data-permission="{{$permission->id}}"
+                                                   data-permisoasignado="{{$rol->perms()->whereId($permission->id)->first()?"true":"false"}}"
+                                                   onclick="changeUserRole(event);"
+                                                >
+                                            </td>
                                         @endforeach
+
                                 </tr>
                             @endforeach
                         @endif
