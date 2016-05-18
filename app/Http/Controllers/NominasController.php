@@ -230,7 +230,8 @@ class NominasController extends Controller {
         // Si el operador ya esta en la nomina, no hacer nada y devolver la lista como esta
         $operadorExiste = $nomina->usuarioEnDotacion($operador);
         if($operadorExiste)
-            return response()->json(Nominas::formatearDotacion($nomina), 200);
+            return response()->json(
+                Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200);
 
         // Todo: trabajar este dato
         // Si la dotacion esta completa, no hacer nada y retornar el error

@@ -320,11 +320,11 @@ export class NominaIG extends React.Component {
                                         quitarUsuario={this.quitarSupervisor.bind(this)}
                                     />
                                     {/* Dotación */}
-                                    {_.range(1, this.props.nomina.dotacionAsignada).map(index=>{
+                                    {_.range(0, this.props.nomina.dotacionAsignada).map(index=>{
                                         let operador = this.state.dotacionTitular[index]
                                         return <RowOperador
                                             key={index}
-                                            correlativo={index+2}
+                                            correlativo={index+3}
                                             operador={operador}
                                             cargo="Operador"
                                             agregarUsuario={this.agregarOperador.bind(this, true)}
