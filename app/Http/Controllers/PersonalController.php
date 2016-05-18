@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Permission;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Redirect;
 use Log;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -35,6 +36,14 @@ class PersonalController extends Controller {
         'banco' => 'max:30',
         'tipoCuenta' => 'max:30',
         'numeroCuenta' => 'max:20',
+    ];
+    private $permissionRules = [
+        'name' => 'required|unique:permissions',
+        'description' => 'max:50'
+    ];
+    private $roleRules = [
+        'name' => 'required|unique:roles',
+        'description' => 'max:50'
     ];
 
     /**
@@ -234,5 +243,112 @@ class PersonalController extends Controller {
         
         $rol = Role::find($idRole);
         $rol->perms()->detach($idPermission);
+    }
+
+    public function showPermissions(){
+        $permissions = Permission::get();
+
+        return view('operacional.usuarios.mantPermissions',[
+            'permissions' => $permissions
+        ]);
+    }
+
+    public function api_actualizarPermission($idPermission, Request $request){
+        $permission = Permission::find($idPermission);
+        $permissionRules = $this->permissionRules;
+        $permissionRules["name"] = "required|unique:permissions,name,$permission->name,name";
+        
+        $validator = Validator::make(Input::all(), $permissionRules);
+        
+        if($validator->fails()){
+            return Redirect::to("admin/permissions")->withErrors($validator, 'error')->withInput();
+        }else{
+            if($permission){
+                if(isset($request->name))
+                    $permission->name = $request->name;
+                if(isset($request->description))
+                    $permission->description = $request->description;
+
+                $permission->save();
+                return Redirect::to("admin/permissions");
+            }else{
+                return response()->json([],404);
+            }
+        }
+    }
+    
+    public function api_nuevoPermission(Request $request){
+
+        $validator = Validator::make(Input::all(), $this->permissionRules);
+
+        if($validator->fails()){
+            return Redirect::to("admin/permissions")->withErrors($validator);
+        }else{
+            //$permission = Permission::create(Input::all());
+            $permission = new Permission();
+            $permission->name = $request->name;
+            $permission->description = $request->description;
+            //dd($permission);
+            $result = $permission->save();
+            if($result){
+                return Redirect::to("admin/permissions");
+            }
+            else{
+                return response()->json([],400);
+            }
+        }
+    }
+    
+    public function showRoles(){
+        $roles = Role::get();
+
+        return view('operacional.usuarios.mantRoles',[
+            'roles' => $roles
+        ]);
+    }
+
+    public function api_actualizarRole($idRole, Request $request){
+
+        $role = Role::find($idRole);
+        $roleRules = $this->roleRules;
+        $roleRules["name"] = "required|unique:roles,name,$role->name,name";
+        
+        $validator = Validator::make(Input::all(), $roleRules);
+        
+        if($validator->fails()){
+            return Redirect::to("admin/roles")->withErrors($validator, 'error')->withInput();
+        }else{
+            if($role){
+                if(isset($request->name))
+                    $role->name = $request->name;
+                if(isset($request->description))
+                    $role->description = $request->description;
+
+                $role->save();
+                return Redirect::to("admin/roles");
+            }else{
+                return response()->json([],404);
+            }
+        }
+
+    }
+    
+    public function api_nuevoRole(Request $request){
+        $validator = Validator::make(Input::all(), $this->roleRules);
+
+        if($validator->fails()){
+            return Redirect::to("admin/roles")->withErrors($validator);
+        }else{
+            $role = new Role();
+            $role->name = $request->name;
+            $role->description = $request->description;
+            $result = $role->save();
+            if($result){
+                return Redirect::to("admin/roles");
+            }
+            else{
+                return response()->json([],400);
+            }
+        }
     }
 }
