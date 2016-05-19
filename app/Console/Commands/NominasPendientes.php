@@ -78,7 +78,7 @@ class NominasPendientes extends Command {
     }
 
     private function log($msg){
-        //Log::info($msg);
+        Log::info($msg);
         $this->info($msg);
     }
 }

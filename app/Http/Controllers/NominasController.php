@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\InformarNominaACliente;
 use App\Role;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -135,7 +136,7 @@ class NominasController extends Controller {
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
         // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=1)
+        if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'Para asignar el Lider, la nómina debe estar Pendiente'], 400);
 
         // el usuario existe? es un lider?
@@ -164,7 +165,7 @@ class NominasController extends Controller {
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
         // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=1)
+        if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'Para quitar el Lider, la nómina debe estar Pendiente'], 400);
 
         // quitar el lider
@@ -187,7 +188,7 @@ class NominasController extends Controller {
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
         // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=1)
+        if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'Para quitar el supervisor, la nómina debe estar Pendiente'], 400);
 
         // el usuario existe? es un lider?
@@ -216,7 +217,7 @@ class NominasController extends Controller {
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
         // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=1)
+        if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'Para quitar el supervisor, la nómina debe estar Pendiente'], 400);
 
         // quitar el lider
@@ -239,7 +240,7 @@ class NominasController extends Controller {
             return response()->json('Nomina no encontrada', 404);
 
         // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=1)
+        if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'Para agregar el usuario, la nómina debe estar Pendiente'], 400);
 
         // el operador existe? se entrega un 204 y en el frontend se muestra un formulario
@@ -278,7 +279,7 @@ class NominasController extends Controller {
             return response()->json('Nomina no encontrada', 404);
 
         // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=1)
+        if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'Para quitar el usuario, la nómina debe estar Pendiente'], 400);
 
         // el operador existe?
@@ -403,6 +404,7 @@ class NominasController extends Controller {
         $nomina->save();
 
         // ToDo: enviar los correos
+        dispatch(new InformarNominaACliente($nomina));
 
         return response()->json(
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
