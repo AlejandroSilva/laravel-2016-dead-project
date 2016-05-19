@@ -185,7 +185,6 @@
                     <!-- Form Error List -->
             <div class="alert alert-danger">
                 <strong>Ha ocurrido un problema</strong>
-
                 <br><br>
                 <ul>
                     @if(isset($errors))

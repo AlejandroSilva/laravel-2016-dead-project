@@ -308,13 +308,7 @@ class PersonalController extends Controller {
             return Redirect::to("admin/permissions");
         }
         else{
-            //return Redirect::to("admin/permissions")->with('flash-message',"No se ha podido eliminar el permiso '$permission->name' porque esta asignado a uno o mas roles");
-            /*return Redirect::to("admin/permissions")->withErrors([
-                'error'=>[
-                    'eliminar'=> "no se puede eliminar"
-                ]
-            ], 'error')->withInput();*/
-            return Redirect::to("admin/permissions")->withErrors($permission->id, 'errorEliminar')->withInput()->with('flash-message',"No se ha podido eliminar el permiso '$permission->name' porque esta asignado a uno o mas roles");
+            return Redirect::to("admin/permissions")->withErrors($permission->id, 'errorEliminar')->withInput();
         }
     }
     
@@ -373,12 +367,13 @@ class PersonalController extends Controller {
 
     public function api_eliminarRole($idRole){
         $role = Role::findOrFail($idRole);
+        
         if(count($role->users->all())==0){
             $role->delete();
             return Redirect::to("admin/roles");
         }
         else{
-            return Redirect::to("admin/roles")->with('flash-message',"No se ha podido eliminar el rol '$role->name' porque pertenece a uno o más usuario");
+            return Redirect::to("admin/roles")->withErrors($role->id, 'errorEliminar')->withInput();
         }
     }
 }

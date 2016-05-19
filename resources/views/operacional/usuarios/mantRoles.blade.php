@@ -10,11 +10,6 @@
             border-color: orangered;
             color: orangered;
         }
-        .input-errorDelete{
-            color: orangered;
-            border: 0;
-            width: 600px;
-        }
 
         /* Columna con el idPermiso */
         .thIdLocal {
@@ -42,6 +37,20 @@
             text-align: center;
 
         }
+        .tdErrorEliminar {
+            border-top-style: hidden !important;
+            border-right-style: hidden !important;
+            border-bottom-style: hidden !important;
+            width: 300px !important;
+
+        }
+
+        .tdErrorEliminar > input{
+            text-align: left;
+            color: orangered;
+            border: 0;
+            width: 600px;
+        }
 
         /* Columna con la Descripcion */
         .thDescripcion {
@@ -52,11 +61,11 @@
             font-size: 15px;
             padding-left: 0 !important;
             padding-right: 0 !important;
-            width: 340px;
+            width: 300px;
             text-align: center;
         }
         .tdDescripcion > input{
-            width: 100%;
+            width: 300px;
             text-align: center;
         }
 
@@ -83,7 +92,7 @@
     <div class="row">
         <div class="col-md-6">
             <h1 class="page-header">Mantenedor de Roles</h1>
-            <table class="table table-condensed table-bordered table-hover">
+            <table class="table table-condensed table-bordered">
                 <thead>
                     <tr>
                         <th class="thIdLocal">ID</th>
@@ -117,11 +126,13 @@
                                 <input name="_method" type="hidden" value="DELETE">
                                 <td class="tdOpcion">
                                     <input type="submit" class="btn btn-primary btn-xs btn-block" value="Eliminar" name="eliminar"
-                                           {{ $errors->error->has('eliminar')? 'disabled' : '' }}
                                     >
                                 </td>
+                                <td class="tdErrorEliminar">
+                                    <input type="text" value="{{$errors->errorEliminar->first()==$role->id?'El rol no puede ser eliminado, se encuentra asignado a uno o mas usuarios':''}}"
+                                           readonly>
+                                </td>
                             </form>
-
                         </tr>
                     @endforeach
                 @endif
