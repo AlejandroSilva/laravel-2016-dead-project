@@ -336,11 +336,11 @@ class NominasController extends Controller {
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
         // la nomina esta pendiente?
-        if($nomina->idEstadoNomina!=1)
+        if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'La nomina debe estar en estado Pendiente'], 400);
 
-        // pasar al estado "recibida"
-        $nomina->idEstadoNomina = 2;
+        // pasar al estado "Recibida"
+        $nomina->idEstadoNomina = 3;
         $nomina->save();
 
         return response()->json(
@@ -355,12 +355,12 @@ class NominasController extends Controller {
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
-        // la nomina esta pendiente?
-        if($nomina->idEstadoNomina!=2)
+        // la nomina esta Recibida?
+        if($nomina->idEstadoNomina!=3)
             return response()->json(['idNomina'=>'La nomina debe estar en estado Recibida'], 400);
 
-        // pasasr al estado "pendiente"
-        $nomina->idEstadoNomina = 3;
+        // pasasr al estado "Aprobada"
+        $nomina->idEstadoNomina = 4;
         $nomina->save();
 
         return response()->json(
@@ -374,12 +374,12 @@ class NominasController extends Controller {
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
-        // la nomina esta pendiente?
-        if($nomina->idEstadoNomina!=2)
+        // la nomina esta Recibida?
+        if($nomina->idEstadoNomina!=3)
             return response()->json(['idNomina'=>'La nomina debe estar en estado Recibida'], 400);
 
-        // volver al estado "pendiente"
-        $nomina->idEstadoNomina = 1;
+        // volver al estado "Pendiente"
+        $nomina->idEstadoNomina = 2;
         $nomina->save();
 
         return response()->json(
@@ -394,12 +394,12 @@ class NominasController extends Controller {
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
-        // la nomina esta aprobada?
-        if($nomina->idEstadoNomina!=3)
+        // la nomina esta Aprobada?
+        if($nomina->idEstadoNomina!=4)
             return response()->json(['idNomina'=>'La nomina debe estar en estado Aprobada'], 400);
 
         // pasasr al estado "informada"
-        $nomina->idEstadoNomina = 4;
+        $nomina->idEstadoNomina = 5;
         $nomina->save();
 
         // ToDo: enviar los correos
@@ -416,12 +416,12 @@ class NominasController extends Controller {
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
-        // la nomina esta aprobada?
-        if($nomina->idEstadoNomina!=4)
+        // la nomina esta Informada?
+        if($nomina->idEstadoNomina!=5)
             return response()->json(['idNomina'=>'La nomina debe estar en estado Informada'], 400);
 
-        // al rectificar, se pasa al estado "pendiente"
-        $nomina->idEstadoNomina = 1;
+        // al rectificar, se pasa al estado Pendiente
+        $nomina->idEstadoNomina = 2;
         $nomina->save();
 
         // ToDo: enviar los correos
