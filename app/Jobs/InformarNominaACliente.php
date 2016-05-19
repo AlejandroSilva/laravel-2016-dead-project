@@ -66,8 +66,8 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ], function ($message) use($local){
             $message
                 ->from('no-responder@plataforma.seiconsultores.cl', 'SEI Consultores')
-                ->to('pm5k.sk@gmail.com', 'Alejandro Silva')
-//                ->cc('asilva@seiconsultores.cl', 'Alejandro Silva')
+                ->to('asilva@seiconsultores.cl', 'Alejandro Silva')
+                ->to('mgamboa@seiconsultores.cl', 'Marco Gamboa')
                 ->subject("Nomina Cruz Verde Local Nº $local->numero");
         });
     }
@@ -86,8 +86,8 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ], function ($message) use($local, $clienteNombre){
             $message
                 ->from('no-responder@plataforma.seiconsultores.cl', 'SEI Consultores')
-                ->to('pm5k.sk@gmail.com', 'Alejandro Silva')
-                //                ->cc('asilva@seiconsultores.cl', 'Alejandro Silva')
+                ->to('asilva@seiconsultores.cl', 'Alejandro Silva')
+                ->to('mgamboa@seiconsultores.cl', 'Marco Gamboa')
                 ->subject("Nomina $clienteNombre Local Nº $local->numero");
         });
     }
