@@ -71,9 +71,19 @@ export default {
         agregarOperador: (idNomina, usuarioRUN, esTitular)=>
             axiosRaw.post(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, {esTitular}),
         quitarOperador: (idNomina, usuarioRUN)=>
-            axios.delete(`/api/nomina/${idNomina}/operador/${usuarioRUN}`)
+            axios.delete(`/api/nomina/${idNomina}/operador/${usuarioRUN}`),
         // modificarOperador: (idNomina, usuarioRUN, datos)=>
         //     axios.put(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, datos),
+        enviar: (idNomina)=>
+            axios.post(`/api/nomina/${idNomina}/estado-enviar`),
+        aprobar: (idNomina)=>
+            axios.post(`/api/nomina/${idNomina}/estado-aprobar`),
+        rechazar: (idNomina)=>
+            axios.post(`/api/nomina/${idNomina}/estado-rechazar`),
+        informar: (idNomina)=>
+            axios.post(`/api/nomina/${idNomina}/estado-informar`),
+        rectificar: (idNomina)=>
+            axios.post(`/api/nomina/${idNomina}/estado-rectificar`)
     },
     geo: {
        comunas: ()=>

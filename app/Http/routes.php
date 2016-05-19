@@ -73,8 +73,9 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('inventario/{idInventario}',         'InventariosController@api_actualizar');
         Route::delete('inventario/{idInventario}',      'InventariosController@api_eliminar');
         // API DE NOMINAS
-        Route::put('nomina/{idNomina}',                 'NominasController@api_actualizar');
-        Route::get('nomina/{idNomina}/dotacion',        'NominasController@api_get');
+        Route::put('nomina/{idNomina}',                             'NominasController@api_actualizar');
+        // -- cambios en la dotacion de las nominas
+        Route::get('nomina/{idNomina}/dotacion',                    'NominasController@api_get');
         Route::post('nomina/{idNomina}/lider/{usuarioRUN}',         'NominasController@api_agregarLider');
         Route::delete('nomina/{idNomina}/lider',                    'NominasController@api_quitarLider');
         Route::post('nomina/{idNomina}/supervisor/{usuarioRUN}',    'NominasController@api_agregarSupervisor');
@@ -82,6 +83,12 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('nomina/{idNomina}/operador/{usuarioRUN}',      'NominasController@api_agregarOperador');
         Route::delete('nomina/{idNomina}/operador/{usuarioRUN}',    'NominasController@api_quitarOperador');
 //        Route::put('nomina/{idNomina}/operador/{operadorRUN}',      'NominasController@api_modificarOperador');
+        // -- cambio en los estados de las nominas
+        Route::post('nomina/{idNomina}/estado-enviar',              'NominasController@api_enviarNomina');
+        Route::post('nomina/{idNomina}/estado-aprobar',             'NominasController@api_aprobarNomina');
+        Route::post('nomina/{idNomina}/estado-rechazar',            'NominasController@api_rechazarNomina');
+        Route::post('nomina/{idNomina}/estado-informar',            'NominasController@api_informarNomina');
+        Route::post('nomina/{idNomina}/estado-rectificar',          'NominasController@api_rectificarNomina');
 
         // API AUDITORIAS
         Route::post('auditoria/nuevo', 'AuditoriasController@api_nuevo');

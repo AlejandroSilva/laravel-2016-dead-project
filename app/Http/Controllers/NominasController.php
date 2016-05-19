@@ -134,6 +134,10 @@ class NominasController extends Controller {
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
+        // la nomina se encuentra pendiente?
+        if($nomina->idEstadoNomina!=1)
+            return response()->json(['idNomina'=>'Para asignar el Lider, la nómina debe estar Pendiente'], 400);
+
         // el usuario existe? es un lider?
         $usuario = User::where('usuarioRUN', $usuarioRUN)->first();
         if(!$usuario)
@@ -142,7 +146,7 @@ class NominasController extends Controller {
             return response()->json(['usuarioRUN'=>'El usuario no es un Lider'], 400);
 
         // se agrega el lider y se actualiza la dotacion
-        $nomina->idLider = $usuario->idUsuario;
+        $nomina->idLider = $usuario->id;
         $nomina->save();
 
         // entregar nomina actualizada
@@ -158,6 +162,10 @@ class NominasController extends Controller {
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // la nomina se encuentra pendiente?
+        if($nomina->idEstadoNomina!=1)
+            return response()->json(['idNomina'=>'Para quitar el Lider, la nómina debe estar Pendiente'], 400);
 
         // quitar el lider
         $nomina->idLider = null;
@@ -178,6 +186,10 @@ class NominasController extends Controller {
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
 
+        // la nomina se encuentra pendiente?
+        if($nomina->idEstadoNomina!=1)
+            return response()->json(['idNomina'=>'Para quitar el supervisor, la nómina debe estar Pendiente'], 400);
+
         // el usuario existe? es un lider?
         $usuario = User::where('usuarioRUN', $usuarioRUN)->first();
         if(!$usuario)
@@ -186,7 +198,7 @@ class NominasController extends Controller {
             return response()->json(['usuarioRUN'=>'El usuario no es un Supervisor'], 400);
         
         // se agrega el lider y se actualiza la dotacion
-        $nomina->idSupervisor = $usuario->idUsuario;
+        $nomina->idSupervisor = $usuario->id;
         $nomina->save();
 
         // entregar nomina actualizada
@@ -202,6 +214,10 @@ class NominasController extends Controller {
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // la nomina se encuentra pendiente?
+        if($nomina->idEstadoNomina!=1)
+            return response()->json(['idNomina'=>'Para quitar el supervisor, la nómina debe estar Pendiente'], 400);
 
         // quitar el lider
         $nomina->idSupervisor = null;
@@ -221,6 +237,10 @@ class NominasController extends Controller {
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
             return response()->json('Nomina no encontrada', 404);
+
+        // la nomina se encuentra pendiente?
+        if($nomina->idEstadoNomina!=1)
+            return response()->json(['idNomina'=>'Para agregar el usuario, la nómina debe estar Pendiente'], 400);
 
         // el operador existe? se entrega un 204 y en el frontend se muestra un formulario
         $operador = User::where('usuarioRUN', $usuarioRUN)->first();
@@ -256,6 +276,10 @@ class NominasController extends Controller {
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
             return response()->json('Nomina no encontrada', 404);
+
+        // la nomina se encuentra pendiente?
+        if($nomina->idEstadoNomina!=1)
+            return response()->json(['idNomina'=>'Para quitar el usuario, la nómina debe estar Pendiente'], 400);
 
         // el operador existe?
         $usuario = User::where('usuarioRUN', $usuarioRUN)->first();
@@ -303,7 +327,111 @@ class NominasController extends Controller {
 //            Nominas::formatearDotacion(Nominas::find($nomina->idNomina))
 //        , 200);
 //    }
-    
+
+    function api_enviarNomina($idNomina){
+        // Todo: revisar si tiene los permisos
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // la nomina esta pendiente?
+        if($nomina->idEstadoNomina!=1)
+            return response()->json(['idNomina'=>'La nomina debe estar en estado Pendiente'], 400);
+
+        // pasar al estado "recibida"
+        $nomina->idEstadoNomina = 2;
+        $nomina->save();
+
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+        );
+    }
+    function api_aprobarNomina($idNomina){
+        // Todo: revisar si tiene los permisos
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // la nomina esta pendiente?
+        if($nomina->idEstadoNomina!=2)
+            return response()->json(['idNomina'=>'La nomina debe estar en estado Recibida'], 400);
+
+        // pasasr al estado "pendiente"
+        $nomina->idEstadoNomina = 3;
+        $nomina->save();
+
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+        );
+    }
+    function api_rechazarNomina($idNomina){
+        // Todo: revisar si tiene los permisos
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // la nomina esta pendiente?
+        if($nomina->idEstadoNomina!=2)
+            return response()->json(['idNomina'=>'La nomina debe estar en estado Recibida'], 400);
+
+        // volver al estado "pendiente"
+        $nomina->idEstadoNomina = 1;
+        $nomina->save();
+
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+        );
+    }
+    function api_informarNomina($idNomina){
+        // Todo: revisar si tiene los permisos
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // la nomina esta aprobada?
+        if($nomina->idEstadoNomina!=3)
+            return response()->json(['idNomina'=>'La nomina debe estar en estado Aprobada'], 400);
+
+        // pasasr al estado "informada"
+        $nomina->idEstadoNomina = 4;
+        $nomina->save();
+
+        // ToDo: enviar los correos
+
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+        );
+    }
+    function api_rectificarNomina($idNomina){
+        // Todo: revisar si tiene los permisos
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // la nomina esta aprobada?
+        if($nomina->idEstadoNomina!=4)
+            return response()->json(['idNomina'=>'La nomina debe estar en estado Informada'], 400);
+
+        // al rectificar, se pasa al estado "pendiente"
+        $nomina->idEstadoNomina = 1;
+        $nomina->save();
+
+        // ToDo: enviar los correos
+
+        return response()->json(
+            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+        );
+    }
+
+
     /**
      * ##########################################################
      * API DE INTERACCION CON LA OTRA PLATAFORMA

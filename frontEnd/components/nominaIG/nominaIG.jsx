@@ -6,11 +6,11 @@ import api from '../../apiClient/v1'
 import * as css from './nominaIG.css'
 import ReactNotify from 'react-notify'
 import * as ReactNotifyCSS from '../shared/ReactNotify.css'
-
-//import { ModalNuevoUsuario } from './ModalNuevoUsuario.jsx'
 import Modal from 'react-bootstrap/lib/Modal.js'
 import { FormularioUsuario } from './FormularioUsuario.jsx'
-import { RowOperador } from './RowOperador.jsx'
+import { PanelDatos } from './PanelDatos.jsx'
+import { PanelDotaciones } from './PanelDotaciones.jsx'
+import { PanelEstados } from './PanelEstados.jsx'
 
 export class NominaIG extends React.Component {
     constructor(props) {
@@ -19,6 +19,8 @@ export class NominaIG extends React.Component {
             showModal: false,
             RUNbuscado: '',
             esTitular: true,
+            // --------
+            idEstadoNomina: this.props.nomina.estado.idEstadoNomina,
             lider: this.props.nomina.lider,
             supervisor: this.props.nomina.supervisor,
             dotacionTitular: this.props.nomina.dotacionTitular,
@@ -26,6 +28,7 @@ export class NominaIG extends React.Component {
         }
     }
 
+    // ######### Metodos para cambiar la dotacion de la nomina #########
     agregarLider(run) {
         if (run === '') {
             return console.log('RUN vacio, no se hace nada');
@@ -42,7 +45,7 @@ export class NominaIG extends React.Component {
             })
             .catch(err=>{
                 let msgs = _.values(err.data).join('. ')
-                console.log('ha ocurrido un error al asignar el lider', err)
+                console.log('ha ocurrido un error al asignar el lider', err.data)
                 this.refs.notificator.error("Error al asignar el Lider", msgs, 4*1000);
             })
     }
@@ -58,8 +61,9 @@ export class NominaIG extends React.Component {
                 })
             })
             .catch(err=>{
-                console.log('ha ocurrido un error al quitar el lider', err)
-                alert('ha ocurrido un error al quitar el lider', err)
+                let msgs = _.values(err.data).join('. ')
+                console.log('ha ocurrido un error al quitar el Lider', err.data)
+                this.refs.notificator.error("Error al quitar el Lider", msgs, 4*1000);
             })
     }
 
@@ -79,7 +83,7 @@ export class NominaIG extends React.Component {
             })
             .catch(err=>{
                 let msgs = _.values(err.data).join('. ')
-                console.log('ha ocurrido un error al asignar el Supervisor', err)
+                console.log('ha ocurrido un error al asignar el Supervisor', err.data)
                 this.refs.notificator.error("Error al asignar el Supervisor", msgs, 4*1000);
             })
     }
@@ -95,8 +99,9 @@ export class NominaIG extends React.Component {
                 })
             })
             .catch(err=>{
-                console.log('ha ocurrido un error al quitar el Supervisor', err)
-                alert('ha ocurrido un error al quitar el Supervisor', err)
+                let msgs = _.values(err.data).join('. ')
+                console.log('ha ocurrido un error al quitar el Supervisor', err.data)
+                this.refs.notificator.error("Error", msgs, 4*1000);
             })
     }
     
@@ -141,7 +146,7 @@ export class NominaIG extends React.Component {
             })
             .catch(err=>{
                 let msgs = _.values(err.data).join('. ')
-                console.log('ha ocurrido un error al intentar obtener los datos del usuario. ', err)
+                console.log('ha ocurrido un error al agregar un operador', err.data)
                 this.refs.notificator.error("Error", msgs, 4*1000);
             })
     }
@@ -158,8 +163,9 @@ export class NominaIG extends React.Component {
                 })
             })
             .catch(err=>{
-                console.log('ha ocurrido un error al quitar el operador ', err)
-                alert('ha ocurrido un error al quitar el operador ', err)
+                let msgs = _.values(err.data).join('. ')
+                console.log('error al quitar el operador', err.data)
+                this.refs.notificator.error("Error", msgs, 4*1000);
             })
     }
     // modificarOperador(run, datos) {
@@ -192,6 +198,68 @@ export class NominaIG extends React.Component {
         console.log('formulario cancelado')
     }
 
+    // ######### Metodos para cambiar el estado de la nomina #########
+    enviarNomina(){
+        // al enviar una nomina, esta pasa al estado "enviada"
+        api.nomina.enviar(this.props.nomina.idNomina)
+            .then(nomina=>{
+                this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
+            })
+            .catch(err=>{
+                let msgs = _.values(err.data).join('. ')
+                console.log('error al enviar nomina', err.data)
+                this.refs.notificator.error("Error", msgs, 4*1000);
+            })
+    }
+    aprobarNomina(){
+        // al aprobar una nomina, esta pasa al estado "aprobada"
+        api.nomina.aprobar(this.props.nomina.idNomina)
+            .then(nomina=>{
+                this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
+            })
+            .catch(err=> {
+                let msgs = _.values(err.data).join('. ')
+                console.log('error al aprobar nomina', err.data)
+                this.refs.notificator.error("Error", msgs, 4 * 1000);
+            })
+    }
+    rechazarNomina(){
+        // al rechazar una nomina, esta vuelve a quedar en estado pendiente
+        api.nomina.rechazar(this.props.nomina.idNomina)
+            .then(nomina=>{
+                this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
+            })
+            .catch(err=> {
+                let msgs = _.values(err.data).join('. ')
+                console.log('error al rechazar nomina', err.data)
+                this.refs.notificator.error("Error", msgs, 4 * 1000);
+            })
+    }
+    informarNomina(){
+        // al aprobar una nomina, esta pasa al estado "aprobada"
+        api.nomina.informar(this.props.nomina.idNomina)
+            .then(nomina=>{
+                this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
+            })
+            .catch(err=> {
+                let msgs = _.values(err.data).join('. ')
+                console.log('Error al aprobar nomina', err.data)
+                this.refs.notificator.error("Error", msgs, 4 * 1000);
+            })
+    }
+    rectificarNomina(){
+        // al aprobar una nomina, esta pasa al estado "aprobada"
+        api.nomina.rectificar(this.props.nomina.idNomina)
+            .then(nomina=>{
+                this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
+            })
+            .catch(err=> {
+                let msgs = _.values(err.data).join('. ')
+                console.log('Error al rectificar nomina', err.data)
+                this.refs.notificator.error("Error", msgs, 4 * 1000);
+            })
+    }
+
     render(){
         return (
             <div className="container">
@@ -215,175 +283,38 @@ export class NominaIG extends React.Component {
                     </Modal.Body>
                 </Modal>
 
-                <div className="row">
-                    <div className="col-sm-6">
-                        {/* Datos generales del inventario */}
-                        <div className="panel panel-default">
-                            <div className={'panel-heading '+css.panelDatos_heading}>Inventario</div>
-                                <table className={'table table-compact table-striped '+css.tablaDatos}>
-                                    <tbody>
-                                        <tr>
-                                            <td>Cliente</td><td>{this.props.inventario.local.cliente.nombreCorto}</td>
-                                            <td>Dotación asignada</td><td>{this.props.nomina.dotacionAsignada}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Local</td><td>({this.props.inventario.local.numero}) {this.props.inventario.local.nombre}</td>
-                                            <td></td><td></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fecha programada</td><td>{this.props.inventario.inventario_fechaProgramada}</td>
-                                            <td></td><td></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Hr. llegada lider</td><td>{this.props.nomina.horaPresentacionLider}</td>
-                                            <td></td><td></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Hr. llegada equipo</td><td>{this.props.nomina.horaPresentacionEquipo}</td>
-                                            <td></td><td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                        </div>
-                    </div>
-                    <div className="col-sm-6">
-                        {/* Datos generales del local*/}
-                        <div className="panel panel-default">
-                            <div className={'panel-heading '+css.panelDatos_heading}>Local</div>
-                            <table className={'table table-compact '+css.tablaDatos}>
-                                <tbody>
-                                    <tr>
-                                        <td>Dirección</td><td>{this.props.inventario.local.direccion}</td>
-                                        <td>Hr.Apertura</td><td>{this.props.inventario.local.horaApertura}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Comuna</td><td>{this.props.inventario.local.comuna_nombre}</td>
-                                        <td>Hr.Cierre</td><td>{this.props.inventario.local.horaCierre}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Región</td><td>{this.props.inventario.local.region_numero}</td>
-                                        <td>Teléfono 1</td><td>{this.props.inventario.local.telefono1}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Formato Local</td><td>{this.props.inventario.local.formatoLocal_nombre}</td>
-                                        <td>Teléfono 2</td><td>{this.props.inventario.local.telefono2}</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td><td></td>
-                                        <td>Correo</td><td>{this.props.inventario.local.emailContacto}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row">
-                    {/* Dotacion Titular */}
-                    <section className="col-sm-6">
-                        <div className="panel panel-primary">
-                            <div className={'panel-heading '+css.panelDatos_heading}>Personal Asignado</div>
-                            <table className={'table table-striped table-bordered table-hover table-condensed '+css.tablaDotacion}>
-                                <colgroup>
-                                    <col className={css.colCorrelativo}/>
-                                    <col className={css.colUsuarioRUN}/>
-                                    <col className={css.colUsuarioDV}/>
-                                    <col className={css.colNombre}/>
-                                    <col className={css.colCargo}/>
-                                    <col className={css.colOpciones}/>
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>RUN</th>
-                                        <th>DV</th>
-                                        <th>Nombre</th>
-                                        <th>Cargo</th>
-                                        <th>Opciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {/* Lider */}
-                                    <RowOperador
-                                        correlativo={1}
-                                        operador={ this.state.lider }
-                                        cargo="Lider"
-                                        agregarUsuario={this.agregarLider.bind(this)}
-                                        quitarUsuario={this.quitarLider.bind(this)}
-                                    />
-                                    {/* Supervisor */}
-                                    <RowOperador
-                                        correlativo={2}
-                                        operador={ this.state.supervisor }
-                                        cargo="Supervisor"
-                                        agregarUsuario={this.agregarSupervisor.bind(this)}
-                                        quitarUsuario={this.quitarSupervisor.bind(this)}
-                                    />
-                                    {/* Dotación */}
-                                    {_.range(0, this.props.nomina.dotacionAsignada).map(index=>{
-                                        let operador = this.state.dotacionTitular[index]
-                                        return <RowOperador
-                                            key={index}
-                                            correlativo={index+3}
-                                            operador={operador}
-                                            cargo="Operador"
-                                            agregarUsuario={this.agregarOperador.bind(this, true)}
-                                            quitarUsuario={this.quitarOperador.bind(this)}
-                                        />
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    {/* Dotacion Reemplazo */}
-                    <section className="col-sm-6">
-                        <div className="panel panel-primary">
-                            <div className={'panel-heading '+css.panelDatos_heading}>Personal Reemplazo</div>
-                            <table className={'table table-striped table-bordered table-hover table-condensed '+css.tablaDotacion}>
-                                <colgroup>
-                                    <col className={css.colCorrelativo}/>
-                                    <col className={css.colUsuarioRUN}/>
-                                    <col className={css.colUsuarioDV}/>
-                                    <col className={css.colNombre}/>
-                                    <col className={css.colCargo}/>
-                                    <col className={css.colOpciones}/>
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>RUN</th>
-                                        <th>DV</th>
-                                        <th>Nombre</th>
-                                        <th>Cargo</th>
-                                        <th>Opciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {/* Dotación Reserva */}
-                                    {_.range(0, this.props.nomina.dotacionAsignada).map(index=>{
-                                        let operador = this.state.dotacionReemplazo[index]
-                                        return <RowOperador
-                                            key={index}
-                                            correlativo={index+1}
-                                            operador={ operador }
-                                            cargo="Operador"
-                                            agregarUsuario={this.agregarOperador.bind(this, false)}
-                                            quitarUsuario={this.quitarOperador.bind(this)}
-                                        />
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-                </div>
-
-                <div className="row">
-                    <div className="col-md-4 col-md-offset-4">
-                        <button className="btn btn-block btn-sm btn-primary" disabled>Enviar nómina</button>
-                        <button className="btn btn-block btn-sm btn-success" disabled>Aprobar nómina</button>
-                    </div>
-                </div>
+                <PanelDatos
+                    inventario={this.props.inventario}
+                    nomina={this.props.nomina}
+                />
+                
+                <PanelDotaciones
+                    // general
+                    dotacionAsignada={this.props.nomina.dotacionAsignada}
+                    dotacionEditable={this.state.idEstadoNomina==1} // considerar: estado, permisos, y otras variables
+                    // dotacion 
+                    lider={this.state.lider}
+                    supervisor={this.state.supervisor}
+                    dotacionTitular={this.state.dotacionTitular}
+                    dotacionReemplazo={this.state.dotacionReemplazo}
+                    // metodos
+                    agregarOperadorTitular={this.agregarOperador.bind(this, true)}
+                    agregarOperadorReemplazo={this.agregarOperador.bind(this, false)}
+                    quitarOperador={this.quitarOperador.bind(this)}
+                    agregarLider={this.agregarLider.bind(this)}
+                    quitarLider={this.quitarLider.bind(this)}
+                    agregarSupervisor={this.agregarSupervisor.bind(this)}
+                    quitarSupervisor={this.quitarSupervisor.bind(this)}
+                />
+                
+                <PanelEstados
+                    idEstado={this.state.idEstadoNomina}
+                    enviarNomina={this.enviarNomina.bind(this)}
+                    aprobarNomina={this.aprobarNomina.bind(this)}
+                    rechazarNomina={this.rechazarNomina.bind(this)}
+                    informarNomina={this.informarNomina.bind(this)}
+                    rectificarNomina={this.rectificarNomina.bind(this)}
+                />
             </div>
         )
     }

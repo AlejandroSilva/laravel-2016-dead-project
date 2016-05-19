@@ -2,7 +2,7 @@
 import React from 'react'
 let PropTypes = React.PropTypes
 // Componentes
-import * as css from './nominaIG.css'
+import * as css from './PanelDotaciones.css'
 import { InputRun } from './InputRun.jsx'
 // Validador Rut
 
@@ -32,9 +32,13 @@ export class RowOperador extends React.Component {
                         {this.props.cargo}
                     </td>
                     <td>
-                        <button className="btn btn-xs btn-warning"
-                                onClick={()=>{ this.props.quitarUsuario(this.props.operador.usuarioRUN) }}
-                        >Quitar</button>
+                        {this.props.editable ?
+                            <button className="btn btn-xs btn-warning"
+                                    onClick={()=>{ this.props.quitarUsuario(this.props.operador.usuarioRUN) }}
+                            >Quitar</button>
+                            :
+                            null
+                        }
                     </td>
                 </tr>
             )
@@ -44,10 +48,14 @@ export class RowOperador extends React.Component {
                 <tr key={2}>
                     <td>{this.props.correlativo}</td>
                     <td className={css.tdUsuarioRUN}>
-                        <InputRun
-                            onPressEnter={this.props.agregarUsuario}
-                            onRUNChange={this.onRUNChange.bind(this)}
-                        />
+                        {this.props.editable ?
+                            <InputRun key={1}
+                                onPressEnter={this.props.agregarUsuario}
+                                onRUNChange={this.onRUNChange.bind(this)}
+                            />
+                            :
+                            <input type="text" key={2} disabled/>
+                        }
                     </td>
                     <td className={css.tdUsuarioDV}>
                         <input type="text" value={''} disabled ref={ref=>this.ref_usuarioDV=ref}/>
@@ -68,6 +76,7 @@ export class RowOperador extends React.Component {
 }
 
 RowOperador.propTypes = {
+    editable: PropTypes.bool.isRequired,
     correlativo: PropTypes.number.isRequired,
     operador: PropTypes.object,
     cargo: PropTypes.string,

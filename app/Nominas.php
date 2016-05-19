@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\EstadoNominas;
 
 class Nominas extends Model {
     // llave primaria
@@ -57,6 +58,11 @@ class Nominas extends Model {
             ->orderBy('nominas_user.created_at', 'asc');
     }
 
+    public function estado(){
+        //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
+        return $this->hasOne('App\EstadoNominas', 'idEstadoNomina', 'idEstadoNomina');
+    }
+    
     // #### Consultas
     public function usuarioEnDotacion($operador){
         return $this->dotacion()->find($operador->id);
@@ -82,7 +88,8 @@ class Nominas extends Model {
             "horaPresentacionEquipo" => $nomina->horaPresentacionEquipo,
             "dotacionAsignada" => $nomina->dotacionAsignada,
             "dotacionCaptador1" => $nomina->dotacionCaptador1,
-            "fechaSubidaNomina" => $nomina->fechaSubidaNomina
+            "fechaSubidaNomina" => $nomina->fechaSubidaNomina,
+            "estado" => EstadoNominas::formatearSimple($nomina->estado)
         ];
     }
     static function formatearConLiderSupervisorCaptadorDotacion($nomina){
@@ -94,10 +101,10 @@ class Nominas extends Model {
         $nominaArray['dotacionReemplazo']  =  $nomina->dotacionReemplazo->map('\App\User::formatearSimplePivotDotacion');
         return $nominaArray;
     }
-    static function formatearDotacion($nomina){
-        return [
-            'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatearSimplePivotDotacion'),
-            'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatearSimplePivotDotacion')
-        ];
-    }
+//    static function formatearDotacion($nomina){
+//        return [
+//            'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatearSimplePivotDotacion'),
+//            'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatearSimplePivotDotacion')
+//        ];
+//    }
 }
