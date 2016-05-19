@@ -6,6 +6,7 @@ use App\Permission;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Log;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -298,6 +299,24 @@ class PersonalController extends Controller {
             }
         }
     }
+
+    public function api_eliminarPermission($idPermission){
+        $permission = Permission::findOrFail($idPermission);
+
+        if(count($permission->roles->all())==0){
+            $permission->delete();
+            return Redirect::to("admin/permissions");
+        }
+        else{
+            //return Redirect::to("admin/permissions")->with('flash-message',"No se ha podido eliminar el permiso '$permission->name' porque esta asignado a uno o mas roles");
+            /*return Redirect::to("admin/permissions")->withErrors([
+                'error'=>[
+                    'eliminar'=> "no se puede eliminar"
+                ]
+            ], 'error')->withInput();*/
+            return Redirect::to("admin/permissions")->withErrors($permission->id, 'errorEliminar')->withInput()->with('flash-message',"No se ha podido eliminar el permiso '$permission->name' porque esta asignado a uno o mas roles");
+        }
+    }
     
     public function showRoles(){
         $roles = Role::get();
@@ -349,6 +368,17 @@ class PersonalController extends Controller {
             else{
                 return response()->json([],400);
             }
+        }
+    }
+
+    public function api_eliminarRole($idRole){
+        $role = Role::findOrFail($idRole);
+        if(count($role->users->all())==0){
+            $role->delete();
+            return Redirect::to("admin/roles");
+        }
+        else{
+            return Redirect::to("admin/roles")->with('flash-message',"No se ha podido eliminar el rol '$role->name' porque pertenece a uno o más usuario");
         }
     }
 }

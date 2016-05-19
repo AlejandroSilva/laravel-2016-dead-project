@@ -10,6 +10,11 @@
             border-color: orangered;
             color: orangered;
         }
+        .input-errorDelete{
+            color: orangered;
+            border: 0;
+            width: 600px;
+        }
 
         /* Columna con el idPermiso */
         .thIdLocal {
@@ -44,15 +49,14 @@
             text-align: center;
         }
         .tdDescripcion {
-            font-size: 11px;
+            font-size: 15px;
             padding-left: 0 !important;
             padding-right: 0 !important;
-            padding-top: 8px !important;
-            width: 300px;
+            width: 340px;
             text-align: center;
         }
         .tdDescripcion > input{
-            width: 300px;
+            width: 100%;
             text-align: center;
         }
 
@@ -66,6 +70,13 @@
             padding-left: 0 !important;
             padding-right: 0 !important;
         }
+        .tdEliminar {
+            font-size: 10px;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        .tdEliminar >
+
     </style>
 
 <div class="container-fluid">
@@ -78,17 +89,18 @@
                         <th class="thIdLocal">ID</th>
                         <th class="thNombre">Nombre</th>
                         <th class="thDescripcion">Descripción</th>
-                        <th class="thOpcion">Opción</th>
+                        <th class="thOpcion">Opcion</th>
+                        <th class="thOpcion">Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
                 @if(isset($roles))
                     @foreach($roles as $role)
-                        <form method="POST" action="/api/role/{{$role->id}}/editar">
-                            <input name="_method" type="hidden" value="PUT">
-                            <tr>
+                        <tr>
+                            <form method="POST" action="/api/role/{{$role->id}}">
+                                <input name="_method" type="hidden" value="PUT">
                                 <td class="tdIdLocal">{{$role->id}}</td>
-                                <input type="hidden" value="{{ $role->id}}" name="id">
+                                    <input type="hidden" value="{{ $role->id}}" name="id">
                                 <td class="tdNombre">
                                     <input type="text" value="{{$role->name}}" name="name"
                                            class="{{ $role->id == Input::old('id') && $errors->error->has('name')? 'input-error' : '' }}"
@@ -100,10 +112,20 @@
                                 <td class="tdOpcion">
                                     <input type="submit" class="btn btn-primary btn-xs btn-block" value="Modificar">
                                 </td>
-                            </tr>
-                        </form>
+                            </form>
+                            <form method="POST" action="/api/role/{{$role->id}}">
+                                <input name="_method" type="hidden" value="DELETE">
+                                <td class="tdOpcion">
+                                    <input type="submit" class="btn btn-primary btn-xs btn-block" value="Eliminar" name="eliminar"
+                                           {{ $errors->error->has('eliminar')? 'disabled' : '' }}
+                                    >
+                                </td>
+                            </form>
+
+                        </tr>
                     @endforeach
                 @endif
+
                 </tbody>
             </table>
             @if (count($errors->error) > 0)
@@ -134,7 +156,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <form method="POST" action="/api/role/nuevo">
+                    <form method="POST" action="/api/roles">
                         <tr>
                             <td class="tdNombre">
                                 <input type="text" name="name" placeholder="inserte texto" required

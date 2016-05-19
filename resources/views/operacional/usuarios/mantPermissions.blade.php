@@ -10,6 +10,11 @@
             border-color: orangered;
             color: orangered;
         }
+        .input-errorDelete{
+            color: orangered;
+            border: 0;
+            width: 800px;
+        }
 
         /* Columna con el idPermiso */
         .thIdLocal {
@@ -43,15 +48,13 @@
             text-align: center;
         }
         .tdDescripcion {
-            font-size: 11px;
+            font-size: 15px;
             padding-left: 0 !important;
             padding-right: 0 !important;
-            padding-top: 8px !important;
-            width: 300px;
             text-align: center;
         }
         .tdDescripcion > input{
-            width: 300px;
+            width: 400px;
             text-align: center;
         }
 
@@ -78,14 +81,15 @@
                         <th class="thNombre">Nombre</th>
                         <th class="thDescripcion">Descripción</th>
                         <th class="thOpcion">Opción</th>
+                        <th class="thOpcion">Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
                 @if(isset($permissions))
                     @foreach($permissions as $permission)
-                        <form method="POST" action="/api/permission/{{$permission->id}}/editar">
-                            <input name="_method" type="hidden" value="PUT">
-                            <tr>
+                        <tr>
+                            <form method="POST" action="/api/permission/{{$permission->id}}/editar">
+                                <input name="_method" type="hidden" value="PUT">
                                 <td class="tdIdLocal">
                                     {{$permission->id}}
                                     <input type="hidden" value="{{ $permission->id}}" name="id">
@@ -101,12 +105,29 @@
                                 <td class="tdOpcion">
                                     <input type="submit" class="btn btn-primary btn-xs btn-block" value="Modificar">
                                 </td>
-                            </tr>
-                        </form>
+                            </form>
+                            <form method="POST" action="/api/permission/{{$permission->id}}">
+                                <input name="_method" type="hidden" value="DELETE">
+                                <td class="tdOpcion">
+                                    <input type="submit" class="btn btn-primary btn-xs btn-block" value="Eliminar" name="eliminar"
+                                            {{--{{ $errors->error->has('eliminar')? 'disabled' : '' }}--}}
+                                            {{--{{ $errors->error->all()==$permission->name? 'disabled' : '' }}--}}
+                                            {{--{{$errors->error}}--}}
+                                            {{--{{$errors->error==$permission->name? 'disabled' : ''}}--}}
+                                            @foreach ($errors->errorEliminar->all() as $error)
+                                                    {{ $error == $permission->id ?'disabled' : ''}}
+                                            @endforeach
+                                    >
+                                </td>
+
+                            </form>
+
+                        </tr>
                     @endforeach
                 @endif
                 </tbody>
             </table>
+            <div><input type="text" value="{{Session::get('flash-message')}}" class="input-errorDelete" readonly></div>
             @if (count($errors->error) > 0)
                 <div class="alert alert-danger">
                     <strong>Ha ocurrido un problema</strong>
