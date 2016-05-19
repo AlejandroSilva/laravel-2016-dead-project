@@ -10,11 +10,6 @@
             border-color: orangered;
             color: orangered;
         }
-        .input-errorDelete{
-            color: orangered;
-            border: 0;
-            width: 800px;
-        }
 
         /* Columna con el idPermiso */
         .thIdLocal {
@@ -40,6 +35,19 @@
         .tdNombre > input{
             width: 220px;
             text-align: center;
+        }
+        .tdErrorEliminar {
+            border-top-style: hidden !important;
+            border-right-style: hidden !important;
+            border-bottom-style: hidden !important;
+            width: 300px !important;
+
+        }
+        .tdErrorEliminar > input{
+            text-align: left;
+            color: orangered;
+            border: 0;
+            width: 600px;
         }
 
         /* Columna con la Descripcion */
@@ -74,7 +82,7 @@
     <div class="row">
         <div class="col-md-6">
             <h1 class="page-header">Mantenedor de Permisos</h1>
-            <table class="table table-condensed table-bordered table-hover">
+            <table class="table table-condensed table-bordered">
                 <thead>
                     <tr>
                         <th class="thIdLocal">ID</th>
@@ -110,15 +118,15 @@
                                 <input name="_method" type="hidden" value="DELETE">
                                 <td class="tdOpcion">
                                     <input type="submit" class="btn btn-primary btn-xs btn-block" value="Eliminar" name="eliminar"
-                                            {{--{{ $errors->error->has('eliminar')? 'disabled' : '' }}--}}
-                                            {{--{{ $errors->error->all()==$permission->name? 'disabled' : '' }}--}}
-                                            {{--{{$errors->error}}--}}
-                                            {{--{{$errors->error==$permission->name? 'disabled' : ''}}--}}
-                                            @foreach ($errors->errorEliminar->all() as $error)
-                                                    {{ $error == $permission->id ?'disabled' : ''}}
-                                            @endforeach
                                     >
                                 </td>
+                                <td class="tdErrorEliminar">
+                                    <input type="text" value="{{$errors->errorEliminar->first()==$permission->id?'El permiso no puede ser eliminado, se encuentra asignado a uno o mas roles':''}}"
+                                    readonly>
+
+                                </td>
+
+
 
                             </form>
 
@@ -127,7 +135,7 @@
                 @endif
                 </tbody>
             </table>
-            <div><input type="text" value="{{Session::get('flash-message')}}" class="input-errorDelete" readonly></div>
+
             @if (count($errors->error) > 0)
                 <div class="alert alert-danger">
                     <strong>Ha ocurrido un problema</strong>
