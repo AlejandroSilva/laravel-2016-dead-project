@@ -16,7 +16,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
 
     protected $nomina;
     protected $SEI_DESARROLLO = [
-        ['pm5k.sk@gmail.com', 'ALESILVA DESARROLLO']
+        ['pm5k.sk@gmail.com', 'ASILVA DESARROLLO']
     ];
     protected $SEI_nomina_bcc = [
         ['asilva@seiconsultores.cl', 'Alejandro Silva'],
