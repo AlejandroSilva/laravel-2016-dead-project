@@ -111,23 +111,36 @@
                             <ul class="dropdown-menu" aria-labelledby="drop-operacional">
                                 {{-- Mantenedores de roles y permisos --}}
                                 @if( Auth::user()->hasRole('Administrador') )
-                                    <li class="{{ Request::is('programacionIG/mensual')? 'active': '' }}">
+                                    <li class="{{ Request::is('admin/permissions')? 'active': '' }}">
                                         <a href="{{ url('admin/permissions') }}">Lista permisos</a>
                                     </li>
-                                    <li class="{{ Request::is('programacionIG/semanal')? 'active': '' }}">
+                                    <li class="{{ Request::is('admin/permissions-roles')? 'active': '' }}">
                                         <a href="{{ url('admin/permissions-roles') }}">Lista permisos roles</a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li class="{{ Request::is('programacionAI')? 'active': '' }}">
+                                    <li class="{{ Request::is('admin/roles')? 'active': '' }}">
                                         <a href="{{ url('admin/roles') }}">Lista roles</a>
                                     </li>
-                                    <li class="{{ Request::is('programacionAI')? 'active': '' }}">
+                                    <li class="{{ Request::is('admin/usuarios-roles')? 'active': '' }}">
                                         <a href="{{ url('admin/usuarios-roles') }}">Lista usuarios roles</a>
                                     </li>
                                 @endif
                             </ul>
                         </li>
-                        <li><a href="#">Bienvenido {{ Auth::user()->nombre1 }}</a></li>
+                        <li>
+                            <a id="drop-user" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Bienvenido {{ Auth::user()->nombre1 }} <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="drop-operacional">
+                                {{-- Menu usuario --}}
+                                @if( Auth::user() )
+                                    <li class="{{ Request::is('user/changePassword')? 'active': '' }}">
+                                        <a href="{{ url('user/changePassword') }}">Cambiar contraseña</a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+
                         {{--<li><a href="#">Configuración</a></li>--}}
                         <li><a href="/logout">Cerrar Sesión</a></li>
                     @else
