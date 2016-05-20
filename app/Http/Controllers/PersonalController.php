@@ -40,11 +40,11 @@ class PersonalController extends Controller {
     ];
     private $permissionRules = [
         'name' => 'required|unique:permissions',
-        'description' => 'max:50'
+        'description' => 'max:80'
     ];
     private $roleRules = [
         'name' => 'required|unique:roles',
-        'description' => 'max:50'
+        'description' => 'max:80'
     ];
 
     /**
@@ -187,6 +187,11 @@ class PersonalController extends Controller {
      */
 
     public function showUsuariosRoles(){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
+
         $users = User::get();
         $roles = Role::get();
         
@@ -199,8 +204,8 @@ class PersonalController extends Controller {
     public function api_nuevo_rol($idUsuario, $idRole){
         $usuario = Auth::user();
 
-        if(!$usuario || !$usuario->can('programaPersonal_modificar'))
-            redirect('errors.403');
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
 
         $user = User::find($idUsuario);
         $user->roles()->attach($idRole);
@@ -210,7 +215,7 @@ class PersonalController extends Controller {
     public function api_delete_rol($idUsuario, $idRole){
         $usuario = Auth::user();
 
-        if(!$usuario || !$usuario->can('programaPersonal_modificar'))
+        if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
 
         $user = User::find($idUsuario);
@@ -218,6 +223,11 @@ class PersonalController extends Controller {
     }
 
     public function showPermissionsRoles(){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
+
         $roles = Role::get();
         $permissions = Permission::get();
         
@@ -229,8 +239,8 @@ class PersonalController extends Controller {
     public function api_nuevo_permiso($idPermission, $idRole){
         $usuario = Auth::user();
 
-        if(!$usuario || !$usuario->can('programaPersonal_modificar'))
-            redirect('errors.403');
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
         
         $rol = Role::find($idRole);
         $rol->perms()->attach($idPermission);
@@ -239,7 +249,7 @@ class PersonalController extends Controller {
     public function api_delete_permiso($idPermission, $idRole){
         $usuario = Auth::user();
 
-        if(!$usuario || !$usuario->can('programaPersonal_modificar'))
+        if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
         
         $rol = Role::find($idRole);
@@ -247,6 +257,10 @@ class PersonalController extends Controller {
     }
 
     public function showPermissions(){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
         $permissions = Permission::get();
 
         return view('operacional.usuarios.mantPermissions',[
@@ -255,6 +269,11 @@ class PersonalController extends Controller {
     }
 
     public function api_actualizarPermission($idPermission, Request $request){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
+
         $permission = Permission::find($idPermission);
         $permissionRules = $this->permissionRules;
         $permissionRules["name"] = "required|unique:permissions,name,$permission->name,name";
@@ -279,17 +298,20 @@ class PersonalController extends Controller {
     }
     
     public function api_nuevoPermission(Request $request){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
 
         $validator = Validator::make(Input::all(), $this->permissionRules);
 
         if($validator->fails()){
             return Redirect::to("admin/permissions")->withErrors($validator);
         }else{
-            //$permission = Permission::create(Input::all());
             $permission = new Permission();
             $permission->name = $request->name;
             $permission->description = $request->description;
-            //dd($permission);
+
             $result = $permission->save();
             if($result){
                 return Redirect::to("admin/permissions");
@@ -301,6 +323,11 @@ class PersonalController extends Controller {
     }
 
     public function api_eliminarPermission($idPermission){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
+
         $permission = Permission::findOrFail($idPermission);
 
         if(count($permission->roles->all())==0){
@@ -313,6 +340,10 @@ class PersonalController extends Controller {
     }
     
     public function showRoles(){
+        $usuario = Auth::user();
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
+
         $roles = Role::get();
 
         return view('operacional.usuarios.mantRoles',[
@@ -321,6 +352,9 @@ class PersonalController extends Controller {
     }
 
     public function api_actualizarRole($idRole, Request $request){
+        $usuario = Auth::user();
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
 
         $role = Role::find($idRole);
         $roleRules = $this->roleRules;
@@ -347,6 +381,11 @@ class PersonalController extends Controller {
     }
     
     public function api_nuevoRole(Request $request){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
+
         $validator = Validator::make(Input::all(), $this->roleRules);
 
         if($validator->fails()){
@@ -366,6 +405,11 @@ class PersonalController extends Controller {
     }
 
     public function api_eliminarRole($idRole){
+        $usuario = Auth::user();
+
+        if(!$usuario || !$usuario->hasRole('Administrador'))
+            return view('errors.403');
+
         $role = Role::findOrFail($idRole);
         
         if(count($role->users->all())==0){

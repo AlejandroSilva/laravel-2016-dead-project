@@ -103,6 +103,30 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if( Auth::check() )
+                        <li class="{{ "dropdown " + (Request::is('admin*') ? 'active' : '')}}">
+                            {{-- MENU PRINCIPAL: GESTION PRIVILEGIOS --}}
+                            <a id="drop-operacional" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Gestión Privilegios <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="drop-operacional">
+                                {{-- Mantenedores de roles y permisos --}}
+                                @if( Auth::user()->hasRole('Administrador') )
+                                    <li class="{{ Request::is('programacionIG/mensual')? 'active': '' }}">
+                                        <a href="{{ url('admin/permissions') }}">Lista permisos</a>
+                                    </li>
+                                    <li class="{{ Request::is('programacionIG/semanal')? 'active': '' }}">
+                                        <a href="{{ url('admin/permissions-roles') }}">Lista permisos roles</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('programacionAI')? 'active': '' }}">
+                                        <a href="{{ url('admin/roles') }}">Lista roles</a>
+                                    </li>
+                                    <li class="{{ Request::is('programacionAI')? 'active': '' }}">
+                                        <a href="{{ url('admin/usuarios-roles') }}">Lista usuarios roles</a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
                         <li><a href="#">Bienvenido {{ Auth::user()->nombre1 }}</a></li>
                         {{--<li><a href="#">Configuración</a></li>--}}
                         <li><a href="/logout">Cerrar Sesión</a></li>
