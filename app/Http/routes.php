@@ -59,9 +59,13 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('admin/permissions-roles',                       'PersonalController@showPermissionsRoles');
         // MANTENEDOR PERMISSIONS
         Route::get('admin/permissions',                              'PersonalController@showPermissions');
-
         // MANTENEDOR ROLES
         Route::get('admin/roles',                                    'PersonalController@showRoles');
+        // CAMBIO DE CONTRASEÑA
+        Route::get('user/changePassword',                            'PersonalController@showChangePassword');
+        Route::post('user/changePassword',                           'PersonalController@postChangePassword');
+
+
     });
 
     /*

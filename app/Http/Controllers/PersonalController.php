@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Log;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+use Hash;
 // Modelos
 use App\User;
 use App\Role;
@@ -179,6 +180,57 @@ class PersonalController extends Controller {
             'description' => $role['description'],
         ];
     }
+
+    /**
+     * Funciones para cambio de contraseña
+     */
+    public function showChangePassword(){
+        return view('auth.changePassword');
+    }
+    public function postChangePassword(){
+
+        $rules = array(
+            'password' => 'required',
+            'newpassword' => 'required|min:5',
+            'repassword' => 'required|same:newpassword'
+        );
+
+        $messages = array(
+            'required' => 'El campo :attribute es obligatorio.',
+            'min' => 'El campo :attribute no puede tener menos de :min carácteres.'
+        );
+
+        $validation = Validator::make(Input::all(), $rules, $messages);
+        if ($validation->fails())
+        {
+            return Redirect::to('/user/changePassword')->withErrors($validation)->withInput();
+        }
+        else{
+            if (Hash::check(Input::get('password'), Auth::user()->password)){
+
+                //$cliente = new cliente();
+                $cliente = Auth::user();
+                $cliente->password = Hash::make(Input::get('newpassword'));
+                $cliente->save();
+
+
+                if($cliente->save()){
+                    return Redirect::to('/user/changePassword')->with('flash-message',"La contraseña se ha guardado correctamente");
+                }
+                else
+                {
+                    return Redirect::to('/user/changePassword')->with('flash_message', "No se ha podido guardar la nueva contaseña");
+                }
+            }
+            else
+            {
+
+                return Redirect::to('/user/changePassword')->with('flash-message',"La contraseña actual no es correcta");
+            }
+
+        }
+    }
+
 
     /**
      * ##########################################################
