@@ -8,7 +8,10 @@
     table-layout: fixed;
     font-size: 12px;
 }
-
+.tablaDotacion td {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
 /* Correlativo */
 .colCorrelativo{
     width: 18px;

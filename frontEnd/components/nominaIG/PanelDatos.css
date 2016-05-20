@@ -8,6 +8,6 @@
     font-size: 12px;
 }
 .tablaDatos td {
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
