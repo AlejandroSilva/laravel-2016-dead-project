@@ -137,16 +137,16 @@ export class FormularioUsuario extends React.Component {
                     //delay={1000}
                     //noValidate={true}
                     onSubmit={this.enviarFormulario.bind(this)}
-                    onInvalidSubmit={this.enviarFormularioInvalido.bind(this)}
-                >
+                    onInvalidSubmit={this.enviarFormularioInvalido.bind(this)}>
+
                     <div className="row">
                         <div className="col-md-7">
                             <h4>Datos Personales</h4>
                             {/* RUN */}
-                            <div className="form-group">
-                                <label className="col-sm-2 control-label">RUN</label>
+                            <div className={cx("form-group", 'form__control-label')}>
+                                <label className="col-sm-2 control-label">RUN (*)</label>
                                 <div className="col-sm-3">
-                                    <Form.Field className="form-control" //placeholder='RUN'
+                                    <Form.Field className="form-control" errorClass={cx('form__field--error')}
                                                 name='usuarioRUN'
 //                                                disabled={true}
 //                                                 mapValue={{
@@ -157,25 +157,27 @@ export class FormularioUsuario extends React.Component {
                                     />
                                 </div>
                                 <div className="col-sm-2">
-                                    <Form.Field className="form-control"
+                                    <Form.Field className="form-control" errorClass={cx('form__field--error')}
                                                 name='usuarioDV'
                                                 //disabled={true}
                                                 ref={ref=>this.refUsuarioDV=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refNombre1')}
                                     />
                                 </div>
-                                <Form.Message for={['usuarioRUN', 'usuarioDV']} errorClass={cx('validation-error-no-margin')}/>
+                                <div className="col-sm-5">
+                                    <Form.Message for={['usuarioRUN', 'usuarioDV']} errorClass={cx('form__message-error')}/>
+                                </div>
                             </div>
                             {/* Nombres */}
-                            <div className="form-group">
-                                <label className="col-sm-2 control-label">Nombres</label>
+                            <div className={cx("form-group", 'form__control-label')}>
+                                <label className="col-sm-2 control-label">Nombres (*)</label>
                                 <div className="col-sm-5">
-                                    <Form.Field className="form-control" placeholder='Primer Nombre'
+                                    <Form.Field className="form-control" errorClass={cx('form__field--error')} placeholder='Primer Nombre'
                                                 name='nombre1'
                                                 ref={ref=>this.refNombre1=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refNombre2')}
                                     />
-                                    <Form.Message for={'nombre1'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'nombre1'} errorClass={cx('form__message-error')}/>
                                 </div>
                                 <div className="col-sm-5">
                                     <Form.Field className="form-control" placeholder='Segundo Nombre'
@@ -183,19 +185,19 @@ export class FormularioUsuario extends React.Component {
                                                 ref={ref=>this.refNombre2=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refApellidoPaterno')}
                                     />
-                                    <Form.Message for={'nombre2'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'nombre2'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
                             {/* Apellidos */}
-                            <div className="form-group">
-                                <label className="col-sm-2 control-label">Apellidos</label>
+                            <div className={cx("form-group", 'form__control-label')}>
+                                <label className="col-sm-2 control-label">Apellidos (*)</label>
                                 <div className="col-sm-5">
-                                    <Form.Field className="form-control" placeholder='Apellido Paterno'
+                                    <Form.Field className="form-control" errorClass={cx('form__field--error')} placeholder='Apellido Paterno'
                                                 name='apellidoPaterno'
                                                 ref={ref=>this.refApellidoPaterno=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refApellidoMaterno')}
                                     />
-                                    <Form.Message for={'apellidoPaterno'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'apellidoPaterno'} errorClass={cx('form__message-error')}/>
                                 </div>
                                 <div className="col-sm-5">
                                     <Form.Field className="form-control" placeholder='Apellido Materno'
@@ -203,29 +205,29 @@ export class FormularioUsuario extends React.Component {
                                                 ref={ref=>this.refApellidoMaterno=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refFechaNacimiento')}
                                     />
-                                    <Form.Message for={'apellidoMaterno'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'apellidoMaterno'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
 
                             {/* Fecha Nacimiento */}
-                            <div className="form-group">
-                                <label className="col-sm-2 control-label">Fecha Nacimiento</label>
+                            <div className={cx("form-group", 'form__control-label')}>
+                                <label className="col-sm-2 control-label">Fecha Nacimiento (*)</label>
                                 <div className="col-sm-5">
                                     {/*<input type="date"/>*/}
-                                    <Form.Field placeholder='Ej. 31-07-2016' type='date2' time={false}
+                                    <Form.Field type='date2' time={false} errorClass={cx('form__field--error')} placeholder='Ej. 31-07-2016'
                                                 name='fechaNacimiento'
                                                 format='D-M-YYYY'
                                                 editFormat='D-M-YYYY'
                                                 ref={ref=>this.refFechaNacimiento=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refTelefono')}
                                     />
-                                    <Form.Message for={'fechaNacimiento'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'fechaNacimiento'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
 
                             <h4>Contacto</h4>
                             {/* Telefono */}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 <label className="col-sm-2 control-label">Telefono</label>
                                 <div className="col-sm-5">
                                     <Form.Field className="form-control" placeholder='Telefono'
@@ -233,7 +235,7 @@ export class FormularioUsuario extends React.Component {
                                                 ref={ref=>this.refTelefono=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refTelefonoEmergencia')}
                                     />
-                                    <Form.Message for={'telefono'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'telefono'} errorClass={cx('form__message-error')}/>
                                 </div>
                                 <div className="col-sm-5">
                                     <Form.Field className="form-control" placeholder='Telefono de Emergencia'
@@ -241,11 +243,11 @@ export class FormularioUsuario extends React.Component {
                                                 ref={ref=>this.refTelefonoEmergencia=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refEmail')}
                                     />
-                                    <Form.Message for={'telefonoEmergencia'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'telefonoEmergencia'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
                             {/* Email */}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 <label className="col-sm-2 control-label">Email</label>
                                 <div className="col-sm-5">
                                     <Form.Field className="form-control" placeholder='Email SEI'
@@ -253,7 +255,7 @@ export class FormularioUsuario extends React.Component {
                                                 ref={ref=>this.refEmail=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refEmailPersonal')}
                                     />
-                                    <Form.Message for={'email'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'email'} errorClass={cx('form__message-error')}/>
                                 </div>
                                 <div className="col-sm-5">
                                     <Form.Field className="form-control" placeholder='Email personal'
@@ -261,11 +263,11 @@ export class FormularioUsuario extends React.Component {
                                                 ref={ref=>this.refEmailPersonal=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refComuna')}
                                     />
-                                    <Form.Message for={'emailPersonal'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'emailPersonal'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
                             {/* Comuna */}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 {/*
                                 <label className="col-sm-2 control-label">Región</label>
                                 <div className="col-sm-4">
@@ -276,13 +278,13 @@ export class FormularioUsuario extends React.Component {
                                         <option value={2}>Blue</option>
                                         <option value={3}>other</option>
                                     </Form.Field>
-                                    <Form.Message for={'cutRegion'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'cutRegion'} errorClass={cx('form__message-error')}/>
                                 </div>
                                 */}
 
-                                <label className="col-sm-2 control-label">Comuna</label>
+                                <label className="col-sm-2 control-label">Comuna (*)</label>
                                 <div className="col-sm-5">
-                                    <Form.Field type='dropdownlist'
+                                    <Form.Field type='dropdownlist' errorClass={cx('form__field--error')}
                                                 name='cutComuna'
                                                 data={this.props.comunas}
                                                 valueField='cutComuna'
@@ -294,11 +296,11 @@ export class FormularioUsuario extends React.Component {
                                                 ref={ref=>this.refComuna=ref}
                                                 onKeyPress={this.siguienteComponente.bind(this, 'refDireccion')}
                                     />
-                                    <Form.Message for={'cutComuna'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'cutComuna'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
                             {/* Direccion */}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 <label className="col-sm-2 control-label">Dirección</label>
                                 <div className="col-sm-10">
                                     <Form.Field className="form-control" placeholder='Dirección'
@@ -306,25 +308,25 @@ export class FormularioUsuario extends React.Component {
                                                 ref={ref=>this.refDireccion=ref}
                                                 //onKeyPress={this.siguienteComponente.bind(this, 'refDireccion')}
                                     />
-                                    <Form.Message for={'direccion'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'direccion'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
                         </div>
                         <div className="col-md-5">
                             <h4>Datos Laborales</h4>
                             {/* Tipo Contrato */}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 <label className="col-sm-4 control-label">Tipo contrato</label>
                                 <div className="col-sm-8">
                                     <Form.Field name='tipoContrato' type='combobox'
                                                 data={['Plazo', 'Honorario']}
                                                 duration={0}
                                     />
-                                    <Form.Message for={'tipoContrato'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'tipoContrato'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
                             {/* Fecha inicio contrato */}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 <label className="col-sm-4 control-label">Fecha inicio contrato</label>
                                 <div className="col-sm-8">
 
@@ -333,46 +335,46 @@ export class FormularioUsuario extends React.Component {
 
                             <h4>Pagos</h4>
                             {/* Banco */}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 <label className="col-sm-4 control-label">Banco</label>
                                 <div className="col-sm-8">
                                     <Form.Field name='banco' type='combobox'
                                                 data={listaBancos}
                                                 duration={0}
                                     />
-                                    <Form.Message for={'banco'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'banco'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
                             {/* Tipo Cuenta */}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 <label className="col-sm-4 control-label">Tipo Cuenta</label>
                                 <div className="col-sm-8">
                                     <Form.Field name='tipoCuenta' type='combobox'
                                                 data={listaTipoCuentas}
                                                 duration={0}
                                     />
-                                    <Form.Message for={'tipoCuenta'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'tipoCuenta'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
                             {/* numero Cuenta*/}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 <label className="col-sm-4 control-label">Numero Cuenta</label>
                                 <div className="col-sm-8">
                                     <Form.Field className="form-control" name='numeroCuenta' placeholder='Ej. 123-456-789-9'/>
-                                    <Form.Message for={'numeroCuenta'} errorClass={cx('validation-error')}/>
+                                    <Form.Message for={'numeroCuenta'} errorClass={cx('form__message-error')}/>
                                 </div>
                             </div>
 
                             <h4>Otros</h4>
                             {/* Certificado Antecedentes */}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 <label className="col-sm-4 control-label">Certificado Antecedentes</label>
                                 <div className="col-sm-8">
                                     <input id="input-1" type="file" className="file" disabled/>
                                 </div>
                             </div>
                             {/* Fotografia personal */}
-                            <div className="form-group">
+                            <div className={cx("form-group", 'form__control-label')}>
                                 <label className="col-sm-4 control-label">Fotografia</label>
                                 <div className="col-sm-8">
                                     <input id="input-1" type="file" className="file" disabled/>
@@ -382,7 +384,7 @@ export class FormularioUsuario extends React.Component {
                         </div>
                     </div>
                     <div className="row">
-                        <div className={cx('col-sm-12', 'footer-formulario')}>
+                        <div className={cx("col-sm-12", 'form__footer')}>
                             <a className="btn btn-default" onClick={this.props.cancelarFormulario}>Close</a>
                             <Form.Button type='submit' className="btn btn-primary">Agregar</Form.Button>
                         </div>
