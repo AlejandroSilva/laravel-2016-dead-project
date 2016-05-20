@@ -7,10 +7,9 @@
     </style>
 </head>
 <body {{-- style="background: black; color: white"--}}>
-
-    <p>SEI Consultores, informa que se encuentra disponible la nomina de personal para el local <b>{{ $local->nombre }}</b>,
-    ubicado en {{$local->direccion->direccion}}.</p>
-    <p>La fecha programada para la toma del inventario es el día <b>{{$fechaProgramada}}</b>. y la hora de presentación del Líder en el local es a las {{ $horaPresentacionLider }} horas.</p>
+    <p>SEI Consultores, informa nomina de personal para inventario general <b>{{ $local->nombre }}</b>, con horario de
+        presentación Líder: <b>{{ $horaPresentacionLider }} hrs</b>, y equipo <b>{{ $horaPresentacionLider }} hrs</b>, en
+        el local ubicado en <b>{{$local->direccion->direccion}}</b>.</p>
 
     <table>
         <thead>
@@ -61,6 +60,10 @@
             @endforeach
         </tbody>
     </table>
+
+    <p>Ante cualquier duda, enviar un correo electrónico a <a href="mailto:logistica@seiconsultores.cl">logistica@seiconsultores.cl</a>, o
+        llamar al <a href="tel:(75 2) 747203">(75 2) 747203.</a>
+    </p>
 
     <img src="http://sig.seiconsultores.cl/logo-sei-mail.png">
 </body>
