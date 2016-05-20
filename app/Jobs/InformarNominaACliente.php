@@ -15,7 +15,47 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     use InteractsWithQueue, SerializesModels;
 
     protected $nomina;
+    protected $SEI_DESARROLLO = [
+        ['pm5k.sk@gmail.com', 'ALESILVA DESARROLLO']
+    ];
+    protected $SEI_nomina_bcc = [
+        ['asilva@seiconsultores.cl', 'Alejandro Silva'],
+        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
+        ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
+        ['clopez@seiconsultores.cl', 'Carlos Lopez'],
+        ['gbriones@seiconsultores.cl', 'Gabriela Briones'],
+        ['fpizarro@seiconsultores.cl', 'Francisca Pizarro'],
+        ['psobarzo@seiconsultores.cl', 'Paula Sobarzo'],
+        ['logistica@seiconsultores.cl', 'SEI']
+    ];
+    // Cliente 1: PUC
+    protected $PUC_nomina_to = [
+        ['amundaca@sb.cl', 'Alvaro Mundaca']
+    ];
+    // Cliente 2: FCV
+    protected $FCV_nomina_to = [
+        ['gabriel.vera@cruzverde.cl', 'Gabriel Vera'],
+        ['pajorquera@cruzverde.cl', 'Pamela Jorquera'],
+        ['jorge.alcaya@cruzverde.cl', 'Jorge Alcaya'],
+        ['mauricio.ojeda@cruzverde.cl', 'Mauricio Ojeda']
+    ];
+    // Cliente 3: CKY
+    protected $CKY_nomina_to = [
+        ['XXXX', 'Jose Perez']
+        // TODO: falta correo
+    ];
+    // Cliente 5: SB
+    protected $SB_nomina_to = [
+        ['amundaca@sb.cl', 'Alvaro Mundaca']
+        //TODO: otro mas
+    ];
+    // Cliente 7: CMT
+    protected $CMT_nomina_to = [
+        // sin nomina, no va gente
+        // TODO: evelin, cerna, cesar
+    ];
     
+
     /**
      * Create a new job instance.
      *
@@ -44,6 +84,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         // --
         $_hlider = $this->nomina->horaPresentacionLider;
         $_hequipo = $this->nomina->horaPresentacionEquipo;
+
         $datosVista = [
             // datos generales
             'local' => $local,
@@ -57,48 +98,62 @@ class InformarNominaACliente extends Job implements ShouldQueue {
             'dotacionReemplazo' => $this->nomina->dotacionReemplazo,
         ];
 
-        // La nomina a notificar es de FCV
-        if($cliente->idCliente==2){
-            $this->enviarFCV($local, $datosVista);
+        if($cliente->idCliente==1){                         // 1: PREUNIC
+            $this->enviarGENERICA([
+                'subject' => "Nomina PREUNIC Local Nº$local->numero",
+                'to' => $this->PUC_nomina_to,
+                'bcc' => $this->SEI_nomina_bcc
+            ], $datosVista);
+        }else if($cliente->idCliente==2){                   // 2: FCV
+            $this->enviarGENERICA([
+                'subject' => "Nomina Cruz Verde Local Nº$local->numero",
+                'to' => $this->FCV_nomina_to,
+                'bcc' => $this->SEI_nomina_bcc
+            ], $datosVista);
+        }else if($cliente->idCliente==3){                   // 3: CKY
+            $this->enviarGENERICA([
+                'subject' => "Nomina CKY Local Nº$local->numero",
+                'to' => $this->CKY_nomina_to,
+                'bcc' => $this->SEI_nomina_bcc
+            ], $datosVista);
+        }else if($cliente->idCliente==5){                   // 5: SALCOBRAND
+            $this->enviarGENERICA([
+                'subject' => "Nomina SB Local Nº$local->numero",
+                'to' => $this->SB_nomina_to,
+                'bcc' => $this->SEI_nomina_bcc
+            ], $datosVista);
+        }else if($cliente->idCliente==7){                   // 7: CMT
+            $this->enviarGENERICA([
+                'subject' => "Nomina CMT Local Nº$local->numero",
+                'to' => $this->CMT_nomina_to,
+                'bcc' => $this->SEI_nomina_bcc
+            ], $datosVista);
         }else{
-            $this->enviarGENERICA($local, $datosVista, $cliente->nombreCorto);
+            $this->enviarGENERICA([                         // Otros clientes
+                'subject' => "Nomina $cliente->nombreCorto Local Nº $local->numero (GENERICA)",
+                'to' => $this->SEI_nomina_bcc,
+                'bcc' => $this->SEI_nomina_bcc
+            ], $datosVista);
         }
         Log::info('#### JOB:InformarNominaACliente (fin) ####');
     }
 
-    private function enviarFCV($local, $datosVista){
-        Mail::send('emails.informarNomina.FCV', $datosVista,
-            function ($message) use($local){
-                $message
-                    ->from('no-responder@plataforma.seiconsultores.cl', 'SEI Consultores')
-                    ->subject("Nomina Cruz Verde Local Nº $local->numero");
-                if(App::environment('production')){
-                    $message
-                        ->to('asilva@seiconsultores.cl', 'Alejandro Silva')
-                        ->to('mgamboa@seiconsultores.cl', 'Marco Gamboa');
-                }else{
-                    $message
-                        ->to('pm5k.sk@gmail.com', 'Alejandro Silva DEV');
-                }
-            }
-        );
-    }
-
-    private function enviarGENERICA($local, $datosVista, $clienteNombre){
+    private function enviarGENERICA($datosCorreo, $datosVista){
         Mail::send('emails.informarNomina.GENERICA', $datosVista,
-            function ($message) use($local, $clienteNombre){
+            function ($message) use($datosCorreo){
                 $message
                     ->from('no-responder@plataforma.seiconsultores.cl', 'SEI Consultores')
-                    ->subject("Nomina $clienteNombre Local Nº $local->numero");
-
-                // diferencias las listas de correo dependiendo del environment de ejecucion
+                    ->subject($datosCorreo['subject']);
                 if(App::environment('production')){
-                    $message
-                        ->to('asilva@seiconsultores.cl', 'Alejandro Silva')
-                        ->to('mgamboa@seiconsultores.cl', 'Marco Gamboa');
+                    // enviar a los destinatarios
+                    foreach($datosCorreo['to'] as $destinatario)
+                        $message->to($destinatario[0], $destinatario[1]);
+                    // enviar las copias ocultas
+                    foreach($datosCorreo['bcc'] as $destinatario)
+                        $message->bcc($destinatario[0], $destinatario[1]);
                 }else{
-                    $message
-                        ->to('pm5k.sk@gmail.com', 'Alejandro Silva DEV');
+                    foreach($this->SEI_DESARROLLO as $destinatario)
+                        $message->to($destinatario[0], $destinatario[1]);
                 }
             }
         );

@@ -9,7 +9,7 @@
 <body {{-- style="background: black; color: white"--}}>
     <p>SEI Consultores, informa nomina de personal para inventario general <b>{{ $local->nombre }}</b>, con horario de
         presentación Líder: <b>{{ $horaPresentacionLider }} hrs</b>, y equipo <b>{{ $horaPresentacionLider }} hrs</b>, en
-        el local ubicado en <b>{{$local->direccion->direccion}}</b>.</p>
+        el local ubicado en <b>{{$local->direccion->direccion}}</b> es la siguiente:</p>
 
     <table>
         <thead>
@@ -21,6 +21,7 @@
             </tr>
         </thead>
         <tbody>
+            {{-- truco para asignar una variable "local" en blade --}}
             @for ($conteo=1; false; $conteo)
             @endfor
 
