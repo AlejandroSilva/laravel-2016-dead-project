@@ -41,7 +41,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     ];
     // Cliente 3: CKY
     protected $CKY_nomina_to = [
-        ['XXXX', 'Jose Perez']
+        ['bgamboa@seiconsultores.cl', 'Bernardita Gamboa']
         // TODO: falta correo
     ];
     // Cliente 5: SB
@@ -51,7 +51,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     ];
     // Cliente 7: CMT
     protected $CMT_nomina_to = [
-        // sin nomina, no va gente
+        ['bgamboa@seiconsultores.cl', 'Bernardita Gamboa']
         // TODO: evelin, cerna, cesar
     ];
     
