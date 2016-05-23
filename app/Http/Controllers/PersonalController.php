@@ -208,14 +208,13 @@ class PersonalController extends Controller {
         else{
             if (Hash::check(Input::get('password'), Auth::user()->password)){
 
-                //$cliente = new cliente();
                 $cliente = Auth::user();
                 $cliente->password = Hash::make(Input::get('newpassword'));
                 $cliente->save();
 
 
                 if($cliente->save()){
-                    return Redirect::to('/user/changePassword')->with('flash-message',"La contraseña se ha guardado correctamente");
+                    return Redirect::to('/');
                 }
                 else
                 {
@@ -243,7 +242,7 @@ class PersonalController extends Controller {
 
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
+        
         $users = User::get();
         $roles = Role::get();
         
