@@ -292,7 +292,7 @@ class ProgramacionIGSemanal extends React.Component {
                     actualizarFiltro={this.actualizarFiltro.bind(this)}
                 >
                     {this.state.inventariosFiltrados.length===0
-                        ? <tr><td colSpan="18" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                        ? <tr><td colSpan="19" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.state.inventariosFiltrados.map((inventario, index)=>{
                         let mostrarSeparador = false
                         let sgteInventario = this.state.inventariosFiltrados[index+1]

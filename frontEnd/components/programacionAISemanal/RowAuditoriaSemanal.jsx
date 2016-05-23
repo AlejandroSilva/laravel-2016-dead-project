@@ -103,7 +103,7 @@ class RowAuditoriaSemanal extends React.Component{
                     <InputFecha
                         puedeModificar={this.props.puedeModificar}
                         ref={ref=>this.inputFecha=ref}
-                        diaSemana={moment(this.props.auditoria.fechaProgramada).format('dddd')}
+                        diaSemana={moment(this.props.auditoria.fechaProgramada).format('dd')}
                         fecha={this.props.auditoria.fechaProgramada}
                         onGuardar={this.guardarAuditoria.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}

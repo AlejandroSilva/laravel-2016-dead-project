@@ -147,7 +147,7 @@ class RowInventario extends React.Component{
                 <td className={css.tdFecha}>
                     <InputFecha
                         ref={ref=>this.inputDia=ref}
-                        diaSemana={moment(this.props.inventario.fechaProgramada).format('dddd')}
+                        diaSemana={moment(this.props.inventario.fechaProgramada).format('dd')}
                         fecha={this.props.inventario.fechaProgramada}
                         onGuardar={this.guardarInventario.bind(this)}
                         puedeModificar={this.props.puedeModificar}
