@@ -17,6 +17,8 @@ use App\Locales;
 use App\Nominas;
 use App\User;
 
+use Knp\Snappy\Pdf;
+
 class NominasController extends Controller {
 
     /**
@@ -491,4 +493,8 @@ class NominasController extends Controller {
         return response()->json(['msg'=>'falta por implementar'], 404);
     }
 
+
+    function pdf(){
+        return \PDF::loadFile('http://www.github.com')->stream('github.pdf');
+    }
 }

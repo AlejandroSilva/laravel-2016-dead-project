@@ -42,6 +42,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'InventariosController@descargarPDF_porRango');
         // INVENTARIO - MANTENEDOR DE NOMINAS
         Route::get('programacionIG/nomina/{idNomina}',        'NominasController@show_nomina');
+        Route::get('programacionIG/nomina/{idNomina}/pdf',    'NominasController@pdf');
         // AUDITORIAS - PROGRAMACION AI
         Route::get('programacionAI',                 'AuditoriasController@showProgramacionIndex');
         Route::get('programacionAI/mensual',          'AuditoriasController@showMensual');
