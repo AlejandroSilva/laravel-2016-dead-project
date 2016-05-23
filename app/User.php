@@ -62,6 +62,7 @@ class User extends Authenticatable {
             'nombre2' => $user->nombre2,
             'apellidoPaterno' => $user->apellidoPaterno,
             'apellidoMaterno' => $user->apellidoMaterno,
+            'imagenPerfil' => $user->imagenPerfil,
             // si "roles" es un arreglo vacio, array_map lanza un error
             //            'roles' => sizeof($user['roles'])>0?
             //                array_map(function($role){

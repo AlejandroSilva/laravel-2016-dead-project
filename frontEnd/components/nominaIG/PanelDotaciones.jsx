@@ -10,7 +10,7 @@ export class PanelDotaciones extends React.Component {
     render() {
         return <div className="row">
             {/* Dotacion Titular */}
-            <section className="col-sm-6">
+            <section className="col-sm-5">
                 <div className="panel panel-primary">
                     <div className={'panel-heading '+css.panelHeading_compacto}>Personal Asignado</div>
                     <table className={'table table-striped table-bordered table-hover table-condensed '+css.tablaDotacion}>
@@ -70,7 +70,7 @@ export class PanelDotaciones extends React.Component {
             </section>
 
             {/* Dotacion Reemplazo */}
-            <section className="col-sm-6">
+            <section className="col-sm-5">
                 <div className="panel panel-primary">
                     <div className={'panel-heading '+css.panelHeading_compacto}>Personal Reemplazo</div>
                     <table className={'table table-striped table-bordered table-hover table-condensed '+css.tablaDotacion}>
@@ -108,6 +108,19 @@ export class PanelDotaciones extends React.Component {
                         })}
                         </tbody>
                     </table>
+                </div>
+            </section>
+
+            {/* Imagen Lider */}
+            <section className="col-sm-2">
+                <div className="panel panel-primary">
+                    <div className={'panel-heading '+css.panelHeading_compacto}>Lider</div>
+                    {this.props.lider && this.props.lider.imagenPerfil?
+                        <img className="img-responsive"
+                             src={`/imagenPerfil/${this.props.lider.imagenPerfil}`} alt=""/>
+                        :
+                        <p>Sin imagen</p>
+                    }
                 </div>
             </section>
         </div>
