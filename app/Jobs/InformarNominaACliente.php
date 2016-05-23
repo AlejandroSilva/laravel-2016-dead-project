@@ -94,7 +94,6 @@ class InformarNominaACliente extends Job implements ShouldQueue {
             'horaPresentacionEquipo' => (new \DateTime($_hequipo))->format('H:i'),
             // personal
             'lider' => $lider,
-            'lider_imagenPerfil_path' => ($lider && $lider->imagenPerfil)? public_path().'/imagenPerfil/'.$lider->imagenPerfil : '',
             'supervisor' => $this->nomina->supervisor,
             'dotacionTitular' => $this->nomina->dotacionTitular,
             'dotacionReemplazo' => $this->nomina->dotacionReemplazo,

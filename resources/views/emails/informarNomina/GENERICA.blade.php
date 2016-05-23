@@ -64,9 +64,9 @@
         <div style="max-width: 180px; display: inline-block; vertical-align: top;">
             {{-- Imagen del Lider --}}
             @if( isset($lider))
-                @if($lider_imagenPerfil_path != '')
-                    <img style="width: 100%; margin: 0; padding: 5px;
-                         "src="<?php echo $message->embed($lider_imagenPerfil_path); ?>"/>
+                @if($lider->imagenPerfil != '')
+                    <img style="width: 100%; margin: 0; padding: 5px;"
+                         src="<?php echo $message->embed(public_path().'/imagenPerfil/'.$lider->imagenPerfil); ?>"/>
                 @endif
             @endif
         </div>
@@ -76,6 +76,6 @@
         llamar al <a href="tel:(75 2) 747203">(75 2) 747203</a>.
     </p>
 
-    <img src="http://sig.seiconsultores.cl/logo-sei-mail.png">
+    <img src="<?php echo $message->embed(public_path()."/logo-sei-mail.png"); ?>"/>
 </body>
 </html>
