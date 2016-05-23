@@ -36,7 +36,7 @@ export class PanelDotaciones extends React.Component {
                         {/* Lider */}
                         <RowOperador
                             editable={this.props.dotacionEditable}
-                            correlativo={1}
+                            correlativo={"L"}
                             operador={ this.props.lider }
                             cargo="Lider"
                             agregarUsuario={this.props.agregarLider}
@@ -45,7 +45,7 @@ export class PanelDotaciones extends React.Component {
                         {/* Supervisor */}
                         <RowOperador
                             editable={this.props.dotacionEditable}
-                            correlativo={2}
+                            correlativo={"S"}
                             operador={ this.props.supervisor }
                             cargo="Supervisor"
                             agregarUsuario={this.props.agregarSupervisor}
@@ -57,7 +57,7 @@ export class PanelDotaciones extends React.Component {
                             return <RowOperador
                                 editable={this.props.dotacionEditable}
                                 key={index}
-                                correlativo={index+3}
+                                correlativo={index+1}
                                 operador={operador}
                                 cargo="Operador"
                                 agregarUsuario={this.props.agregarOperadorTitular}

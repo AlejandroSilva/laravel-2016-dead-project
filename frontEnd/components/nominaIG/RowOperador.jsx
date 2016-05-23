@@ -77,7 +77,7 @@ export class RowOperador extends React.Component {
 
 RowOperador.propTypes = {
     editable: PropTypes.bool.isRequired,
-    correlativo: PropTypes.number.isRequired,
+    correlativo: PropTypes.string.isRequired,
     operador: PropTypes.object,
     cargo: PropTypes.string,
     agregarUsuario: PropTypes.func.isRequired,
