@@ -42,7 +42,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'InventariosController@descargarPDF_porRango');
         // INVENTARIO - MANTENEDOR DE NOMINAS
         Route::get('programacionIG/nomina/{idNomina}',        'NominasController@show_nomina');
-        Route::get('programacionIG/nomina/{idNomina}/pdf',    'NominasController@pdf');
         // AUDITORIAS - PROGRAMACION AI
         Route::get('programacionAI',                 'AuditoriasController@showProgramacionIndex');
         Route::get('programacionAI/mensual',          'AuditoriasController@showMensual');
@@ -55,7 +54,16 @@ Route::group(['middleware' => ['web']], function (){
         // GEO - MANTENEDOR (DESARROLLO DETENIDO)
 //        Route::get('geo',             'GeoController@show_index');//->name('geo.index');
     });
-
+    /*
+    |--------------------------------------------------------------------------
+    | VISTAS PUBLICAS
+    |--------------------------------------------------------------------------
+    |*/
+    Route::group([], function(){
+        Route::get('programacionIG/nomina/{idNomina}/pdf',          'NominasController@show_nomina_pdfDownload');
+        Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
+    });
+    
     /*
     |--------------------------------------------------------------------------
     | API's PROTEGIDAS SOLO A USUARIOS

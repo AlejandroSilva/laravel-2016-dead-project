@@ -53,6 +53,37 @@ class NominasController extends Controller {
         ]);
     }
 
+    // GET programacionIG/nomina/{idNomina}/pdf-preview
+    function show_nomina_pdfPreview($idNomina){
+        // Todo validar permisos, token, etc...
+
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina){
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Nomina no encontrada',
+                'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
+            ]);
+        }
+
+        // Buscar el inventario al que pertenece (junto con el cliente, el formato de local y la direccion
+        $_inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
+        $inventario = Inventarios::find($_inventario->idInventario);
+
+        return view('pdfs.nominaIG', [
+            'nomina' => $nomina,
+            'inventario' => $inventario,
+            'lider' => $nomina->lider,
+            'supervisor' => $nomina->supervisor,
+            'dotacionTitular' => $nomina->dotacionTitular, 
+            'dotacionReemplazo' => $nomina->dotacionReemplazo, 
+        ]);
+    }
+
+    // GET programacionIG/nomina/{idNomina}/pdf
+    function show_nomina_pdfDownload($idNomina){
+        return \PDF::loadFile("localhost/programacionIG/nomina/$idNomina/pdf-preview")->stream('nomina.pdf');
+    }
+
     /**
      * ##########################################################
      * Rutas para consumo del API REST
@@ -491,10 +522,5 @@ class NominasController extends Controller {
         }
 
         return response()->json(['msg'=>'falta por implementar'], 404);
-    }
-
-
-    function pdf(){
-        return \PDF::loadFile('http://www.github.com')->stream('github.pdf');
     }
 }

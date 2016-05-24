@@ -65,7 +65,7 @@
             {{-- Imagen del Lider --}}
             @if( isset($lider))
                 @if($lider->imagenPerfil != '')
-                    <img style="width: 100%; margin: 0; padding: 5px;"
+                    <img style="width: 100%; margin: 0 auto; padding: 5px;"
                          src="<?php echo $message->embed(public_path().'/imagenPerfil/'.$lider->imagenPerfil); ?>"/>
                 @endif
             @endif

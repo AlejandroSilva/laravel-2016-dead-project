@@ -99,7 +99,7 @@ class Locales extends Model{
             'horaApertura' => $local->horaApertura,
             'horaCierre' => $local->horaCierre,
             // contacto
-            'emailContacto' => $local->idContacto,
+            'emailContacto' => $local->emailContacto,
             'telefono1' => "$local->codArea1 $local->telefono1",
             'telefono2' => "$local->codArea2 $local->telefono2",
         ];
