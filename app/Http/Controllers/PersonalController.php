@@ -63,6 +63,7 @@ class PersonalController extends Controller {
     // GET api/usuarios/buscar
     function api_buscar(Request $request){
         $usuarios = [];
+
         // buscar por RUN?
         $run = $request->query('run');
         if(isset($run)){
@@ -70,8 +71,10 @@ class PersonalController extends Controller {
         }else{
             $usuarios = User::all();
         }
+
         return response()->json($usuarios->sortBy('id')->map(['\App\User', 'formatoCompleto'] ), 200);
     }
+
     // POST api/usuarios/nuevo-operador
     function api_nuevoOperador(){
         // Todo: solo algunos usuarios pueden agregar operadores (crear un permiso?)
@@ -158,6 +161,7 @@ class PersonalController extends Controller {
         $usuario = Auth::user();
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
+
 
         $users = User::get();
         $roles = Role::get();
@@ -350,3 +354,6 @@ class PersonalController extends Controller {
         }
     }
 }
+
+
+

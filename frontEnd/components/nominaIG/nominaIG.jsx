@@ -104,7 +104,7 @@ export class NominaIG extends React.Component {
                 this.refs.notificator.error("Error", msgs, 4*1000);
             })
     }
-    
+
     agregarOperador(esTitular, run){
         if(run===''){
             return console.log('RUN vacio, no se hace nada');
@@ -283,11 +283,12 @@ export class NominaIG extends React.Component {
                     </Modal.Body>
                 </Modal>
 
+                {/*<a href={`/programacionIG/nomina/${this.props.nomina.publicIdNomina}/pdf`} className="btn btn-xs pull-right">Descargar</a>*/}
                 <PanelDatos
                     inventario={this.props.inventario}
                     nomina={this.props.nomina}
                 />
-                
+
                 <PanelDotaciones
                     // general
                     dotacionAsignada={this.props.nomina.dotacionAsignada}
@@ -306,7 +307,7 @@ export class NominaIG extends React.Component {
                     agregarSupervisor={this.agregarSupervisor.bind(this)}
                     quitarSupervisor={this.quitarSupervisor.bind(this)}
                 />
-                
+
                 <PanelEstados
                     idEstado={this.state.idEstadoNomina}
                     enviarNomina={this.enviarNomina.bind(this)}

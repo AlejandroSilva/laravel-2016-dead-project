@@ -72,6 +72,10 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
     });
 
+        Route::get('programacionIG/nomina/{publicIdNomina}/pdf',    'NominasController@show_nomina_pdfDownload');
+        Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
+    });
+    
     /*
     |--------------------------------------------------------------------------
     | API's PROTEGIDAS SOLO A USUARIOS
@@ -106,6 +110,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('nomina/{idNomina}/estado-rechazar',            'NominasController@api_rechazarNomina');
         Route::post('nomina/{idNomina}/estado-informar',            'NominasController@api_informarNomina');
         Route::post('nomina/{idNomina}/estado-rectificar',          'NominasController@api_rectificarNomina');
+
         // API AUDITORIAS
         Route::post('auditoria/nuevo', 'AuditoriasController@api_nuevo');
         Route::put('auditoria/{idAuditoria}', 'AuditoriasController@api_actualizar');
@@ -114,6 +119,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('usuario/{idUsuario}',           'PersonalController@api_actualizar');
         Route::get('usuarios/buscar',               'PersonalController@api_buscar');
         Route::post('usuarios/nuevo-operador',      'PersonalController@api_nuevoOperador');
+
         // API USUARIOS-ROLES
         Route::post('usuario/{idUsuario}/role/{idRole}',            'PersonalController@api_nuevo_rol');
         Route::delete('usuario/{idUsuario}/role/{idRole}',          'PersonalController@api_delete_rol');
@@ -128,6 +134,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('roles',                        'PersonalController@api_nuevoRole');
         Route::put('role/{idRole}',                 'PersonalController@api_actualizarRole');
         Route::delete('role/{idRole}',              'PersonalController@api_eliminarRole');
+
         // API GEO (DESARROLLO DETENIDO)
 //        Route::get('geo/comunas',      'GeoController@api_getComunas');
     });
@@ -152,4 +159,3 @@ Route::group(['middleware' => ['web']], function (){
         // API USUARIOS - RUTAS PUBLICAS UTILIZADAS POR LA OTRA APLICACION
         Route::get('usuario/{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
     });
-});
