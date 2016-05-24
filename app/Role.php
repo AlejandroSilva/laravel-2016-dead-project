@@ -15,4 +15,12 @@ class Role extends EntrustRole {
     //For example: "User Administrator", "Project Owner", "Widget Co. Employee".
 
     //description — A more detailed explanation of what the Role does. Also optional.
+
+    static function darFormatoSimple($role){
+        return [
+            'id' => $role->id,
+            'name' => $role->name,
+            'description' => $role->description,
+        ];
+    }
 }

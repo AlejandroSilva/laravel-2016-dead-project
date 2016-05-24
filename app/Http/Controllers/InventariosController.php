@@ -76,23 +76,23 @@ class InventariosController extends Controller {
         ]);
     }
 
-    // GET inventario
-    function showIndex(){
-        return view('operacional.inventario.inventario-index');
-    }
+    // GET inventario  // NO SE OCUPA
+//    function showIndex(){
+//        return view('operacional.inventario.inventario-index');
+//    }
 
     // GET inventario/lista
-    function showLista(){
-        return view('operacional.inventario.inventario-lista');
-    }
+//    function showLista(){
+//        return view('operacional.inventario.inventario-lista');
+//    }
 
-    // GET inventario/nuevo
-    function showNuevo(){
-        $clientesWithLocales = Clientes::allWithSimpleLocales();
-        return view('operacional.inventario.inventario-nuevo', [
-            'clientes' => $clientesWithLocales
-        ]);
-    }
+    // GET inventario/nuevo // NO SE OCUPA
+//    function showNuevo(){
+//        $clientesWithLocales = Clientes::allWithSimpleLocales();
+//        return view('operacional.inventario.inventario-nuevo', [
+//            'clientes' => $clientesWithLocales
+//        ]);
+//    }
 
     /**
      * ##########################################################
@@ -561,6 +561,7 @@ class InventariosController extends Controller {
     }
 
     public function darFormatoInventario($inventario){
+        // eliminar esto, y utilizarr el fomrato creado en "inventarios"
         return [
             // Informacion del inventario
             'idInventario' => $inventario['idInventario'],

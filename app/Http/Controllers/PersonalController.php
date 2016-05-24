@@ -1,22 +1,19 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Permission;
-use Illuminate\Http\Request;
-use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Hash;
+use Illuminate\Http\Request;
+use App\Http\Requests;
 use Log;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
-use Hash;
 // Modelos
 use App\User;
 use App\Role;
 // Permisos
 use Auth;
-
 class PersonalController extends Controller {
     private $userRules = [
         'usuarioRUN' => 'required|unique:users|max:15',
@@ -42,12 +39,13 @@ class PersonalController extends Controller {
     private $permissionRules = [
         'name' => 'required|unique:permissions',
         'description' => 'max:80'
+
     ];
     private $roleRules = [
         'name' => 'required|unique:roles',
         'description' => 'max:80'
-    ];
 
+    ];
     /**
      * ##########################################################
      * Rutas que generan vistas
@@ -57,62 +55,46 @@ class PersonalController extends Controller {
 //    function show_formulario(){
 //        return view('operacional.personal.usuarios');
 //    }
-
-
     /**
      * ##########################################################
      * Rutas para consumo del API REST (CON autentificacion)
      * ##########################################################
      */
-    // GET api/usuario/buscar
+    // GET api/usuarios/buscar
     function api_buscar(Request $request){
-        $query = User::withRegionRoles();
-
+        $usuarios = [];
         // buscar por RUN?
         $run = $request->query('run');
         if(isset($run)){
-            $query->where('usuarioRUN', $run);
+            $usuarios = User::where('usuarioRUN', $run)->get();
+        }else{
+            $usuarios = User::all();
         }
-        
-        $arrayUsuarios = $query->get()
-            ->sortBy('id')
-            ->toArray();
-
-        // se parsean los usuarios con el formato "estandar"
-        $arrayUsuarios_formato = array_map( [$this, 'darFormatoUsuario'], $arrayUsuarios );
-        return response()->json($arrayUsuarios_formato, 200);
+        return response()->json($usuarios->sortBy('id')->map(['\App\User', 'formatoCompleto'] ), 200);
     }
-
-    // POST api/usuario/nuevo-operador
+    // POST api/usuarios/nuevo-operador
     function api_nuevoOperador(){
         // Todo: solo algunos usuarios pueden agregar operadores (crear un permiso?)
         $usuarioAuth = Auth::user();
-
         $validator = Validator::make(Input::all(), $this->userRules);
         if($validator->fails()){
             $error = $validator->messages();
             Log::info("[USUARIO:NUEVO_OPERADOR:ERROR] Usuario:'$usuarioAuth->nombre1 $usuarioAuth->apellidoPaterno'($usuarioAuth->id)'. Validador: $error");
-
             return response()->json($error, 400);
         }else{
             $usuario = User::create( Input::all() );
             $rolOperador = Role::where('name', 'Operador')->first();
             $usuario->attachRole($rolOperador);     // attach llama a save (?)
-
             Log::info("[USUARIO:NUEVO_OPERADOR:OK] Usuario:'$usuarioAuth->nombre1 $usuarioAuth->apellidoPaterno'($usuarioAuth->id)' ha creado:'$usuario->nombre1 $usuario->apellidoPaterno'($usuario->id)'");
-
             // se parsea el usuario con el formato "estandar"
-            $usuario_db = User::withRegionRoles()->find($usuario->id);
-            $usuario_formato = $this->darFormatoUsuario( $usuario_db->toArray() );
-            return response()->json($usuario_formato, 200);
+            $usuarioActualizado = User::find($usuario->id);
+            return response()->json( User::formatoCompleto($usuarioActualizado), 200);
         }
     }
-
     // PUT api/usuario/{idUsuario}
     public function api_actualizar($idUsuario){
         return response()->json(['msg'=>'por implementar'], 501);
     }
-
     /**
      * ##########################################################
      * API DE INTERACCION CON LA OTRA PLATAFORMA (publicas: SIN autentificacion)
@@ -127,60 +109,6 @@ class PersonalController extends Controller {
             return response()->json([], 404);
         }
     }
-
-    /**
-     * ##########################################################
-     * funciones privadas
-     * ##########################################################
-     */
-
-    public function darFormatoUsuario($user){
-        return [
-            // datos personales
-            'id' => $user['id'],
-            'nombre1' => $user['nombre1'],
-            'nombre2' => $user['nombre2'],
-            'apellidoPaterno' => $user['apellidoPaterno'],
-            'apellidoMaterno' => $user['apellidoMaterno'],
-            'telefono' => $user['telefono'],
-            'telefonoEmergencia' => $user['telefonoEmergencia'],
-            'fechaNacimiento' => $user['fechaNacimiento'],
-            'usuarioRUN' => $user['usuarioRUN'],
-            'usuarioDV' => $user['usuarioDV'],
-            'email' => $user['email'],
-            'emailPersonal' => $user['emailPersonal'],
-            // Contrato
-            'tipoContrato' => $user['tipoContrato'],
-            'fechaInicioContrato' => $user['fechaInicioContrato'],
-            'fechaCertificadoAntecedentes' => $user['fechaCertificadoAntecedentes'],
-            // Datos bancarios
-            'banco' => $user['banco'],
-            'tipoCuenta' => $user['tipoCuenta'],
-            'numeroCuenta' => $user['numeroCuenta'],
-            // Direccion
-            'direccion' => $user['direccion'],
-            'comuna' => $user['comuna']['nombre'],
-            'provincia' => $user['comuna']['provincia']['nombre'],
-            'region' => $user['comuna']['provincia']['region']['nombre'],
-            // si "roles" es un arreglo vacio, array_map lanza un error
-//            'roles' => sizeof($user['roles'])>0?
-//                array_map(function($role){
-//                    return $role['name'];
-//                }, $user['roles'])
-//                :
-//                []
-            'roles' => array_map( [$this, 'darFormatoRole'], $user['roles'] )
-        ];
-    }
-
-    private function darFormatoRole($role){
-        return [
-            'id' => $role['id'],
-            'name' => $role['name'],
-            'description' => $role['description'],
-        ];
-    }
-
     /**
      * Funciones para cambio de contraseña
      */
@@ -188,18 +116,15 @@ class PersonalController extends Controller {
         return view('auth.changePassword');
     }
     public function postChangePassword(){
-
         $rules = array(
             'password' => 'required',
             'newpassword' => 'required|min:5',
             'repassword' => 'required|same:newpassword'
         );
-
         $messages = array(
             'required' => 'El campo :attribute es obligatorio.',
             'min' => 'El campo :attribute no puede tener menos de :min carácteres.'
         );
-
         $validation = Validator::make(Input::all(), $rules, $messages);
         if ($validation->fails())
         {
@@ -207,12 +132,9 @@ class PersonalController extends Controller {
         }
         else{
             if (Hash::check(Input::get('password'), Auth::user()->password)){
-
                 $cliente = Auth::user();
                 $cliente->password = Hash::make(Input::get('newpassword'));
                 $cliente->save();
-
-
                 if($cliente->save()){
                     return Redirect::to('/');
                 }
@@ -223,65 +145,51 @@ class PersonalController extends Controller {
             }
             else
             {
-
                 return Redirect::to('/user/changePassword')->with('flash-message',"La contraseña actual no es correcta");
             }
-
         }
     }
-
-
     /**
      * ##########################################################
      * Funciones para mantenedor de usuarios roles y permisos
      * ##########################################################
      */
-
     public function showUsuariosRoles(){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-        
+
         $users = User::get();
         $roles = Role::get();
-        
+
         return view('operacional.usuarios.usuarios', [
             'users' => $users,
             'roles' => $roles
         ]);
     }
-    
+
     public function api_nuevo_rol($idUsuario, $idRole){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
         $user = User::find($idUsuario);
         $user->roles()->attach($idRole);
-
     }
-    
+
     public function api_delete_rol($idUsuario, $idRole){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
         $user = User::find($idUsuario);
         $user->detachRole($idRole);
     }
-
     public function showPermissionsRoles(){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
         $roles = Role::get();
         $permissions = Permission::get();
-        
+
         return view('operacional.usuarios.permissions', [
             'permissions' => $permissions,
             'roles' => $roles
@@ -289,48 +197,39 @@ class PersonalController extends Controller {
     }
     public function api_nuevo_permiso($idPermission, $idRole){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-        
+
         $rol = Role::find($idRole);
         $rol->perms()->attach($idPermission);
     }
-
     public function api_delete_permiso($idPermission, $idRole){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-        
+
         $rol = Role::find($idRole);
         $rol->perms()->detach($idPermission);
     }
-
     public function showPermissions(){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
         $permissions = Permission::get();
-
         return view('operacional.usuarios.mantPermissions',[
             'permissions' => $permissions
         ]);
     }
-
     public function api_actualizarPermission($idPermission, Request $request){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
         $permission = Permission::find($idPermission);
         $permissionRules = $this->permissionRules;
         $permissionRules["name"] = "required|unique:permissions,name,$permission->name,name";
-        
+
         $validator = Validator::make(Input::all(), $permissionRules);
-        
+
         if($validator->fails()){
             return Redirect::to("admin/permissions")->withErrors($validator, 'error')->withInput();
         }else{
@@ -339,7 +238,6 @@ class PersonalController extends Controller {
                     $permission->name = $request->name;
                 if(isset($request->description))
                     $permission->description = $request->description;
-
                 $permission->save();
                 return Redirect::to("admin/permissions");
             }else{
@@ -347,22 +245,18 @@ class PersonalController extends Controller {
             }
         }
     }
-    
+
     public function api_nuevoPermission(Request $request){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
         $validator = Validator::make(Input::all(), $this->permissionRules);
-
         if($validator->fails()){
             return Redirect::to("admin/permissions")->withErrors($validator);
         }else{
             $permission = new Permission();
             $permission->name = $request->name;
             $permission->description = $request->description;
-
             $result = $permission->save();
             if($result){
                 return Redirect::to("admin/permissions");
@@ -372,15 +266,11 @@ class PersonalController extends Controller {
             }
         }
     }
-
     public function api_eliminarPermission($idPermission){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
         $permission = Permission::findOrFail($idPermission);
-
         if(count($permission->roles->all())==0){
             $permission->delete();
             return Redirect::to("admin/permissions");
@@ -389,30 +279,26 @@ class PersonalController extends Controller {
             return Redirect::to("admin/permissions")->withErrors($permission->id, 'errorEliminar')->withInput();
         }
     }
-    
+
     public function showRoles(){
         $usuario = Auth::user();
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
         $roles = Role::get();
-
         return view('operacional.usuarios.mantRoles',[
             'roles' => $roles
         ]);
     }
-
     public function api_actualizarRole($idRole, Request $request){
         $usuario = Auth::user();
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
         $role = Role::find($idRole);
         $roleRules = $this->roleRules;
         $roleRules["name"] = "required|unique:roles,name,$role->name,name";
-        
+
         $validator = Validator::make(Input::all(), $roleRules);
-        
+
         if($validator->fails()){
             return Redirect::to("admin/roles")->withErrors($validator, 'error')->withInput();
         }else{
@@ -421,24 +307,19 @@ class PersonalController extends Controller {
                     $role->name = $request->name;
                 if(isset($request->description))
                     $role->description = $request->description;
-
                 $role->save();
                 return Redirect::to("admin/roles");
             }else{
                 return response()->json([],404);
             }
         }
-
     }
-    
+
     public function api_nuevoRole(Request $request){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
         $validator = Validator::make(Input::all(), $this->roleRules);
-
         if($validator->fails()){
             return Redirect::to("admin/roles")->withErrors($validator);
         }else{
@@ -454,15 +335,12 @@ class PersonalController extends Controller {
             }
         }
     }
-
     public function api_eliminarRole($idRole){
         $usuario = Auth::user();
-
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
-
         $role = Role::findOrFail($idRole);
-        
+
         if(count($role->users->all())==0){
             $role->delete();
             return Redirect::to("admin/roles");

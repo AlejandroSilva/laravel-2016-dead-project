@@ -1,0 +1,51 @@
+.panelHeading_compacto {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+
+/* ############# Dotación Seleccionada #############*/
+.tablaDotacion {
+    table-layout: fixed;
+    font-size: 12px;
+}
+.tablaDotacion td {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+/* Correlativo */
+.colCorrelativo{
+    width: 18px;
+}
+
+/* Usuario RUN */
+.colUsuarioRUN {
+    width: 100px;;
+}
+.tdUsuarioRUN > input {
+    width: 100%;
+}
+
+/* Usuario DV*/
+.colUsuarioDV {
+    width: 35px;
+}
+.tdUsuarioDV > input {
+    width: 100%;
+    text-align: center;
+}
+
+/* Nombre */
+.colNombre {
+    width: 150px;
+}
+.tdNombre > input {
+    width: 100%;
+}
+
+/* Cargo */
+.colCargo {
+    width: 80px;
+}
+.colOpciones {
+    width: auto;
+}

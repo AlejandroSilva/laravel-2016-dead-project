@@ -36,7 +36,16 @@ class ProgramacionIGSemanal extends React.Component {
             fechaFinalSeleccionada: moment().endOf('month'),
             // Inventarios y Filtros
             filtros: {},
-            inventariosFiltrados: []
+            inventariosFiltrados: [],
+            opcionesLideres: props.lideres.map(usuario=>{
+                return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
+            }),
+            opcionesSupervisores: props.supervisores.map(usuario=>{
+                 return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
+            }),
+            opcionesCaptadores: props.captadores.map(usuario=>{
+                return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
+            })
         }
 
         // referencia a todos las entradas de fecha de los inventarios
@@ -283,7 +292,7 @@ class ProgramacionIGSemanal extends React.Component {
                     actualizarFiltro={this.actualizarFiltro.bind(this)}
                 >
                     {this.state.inventariosFiltrados.length===0
-                        ? <tr><td colSpan="18" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                        ? <tr><td colSpan="19" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.state.inventariosFiltrados.map((inventario, index)=>{
                         let mostrarSeparador = false
                         let sgteInventario = this.state.inventariosFiltrados[index+1]
@@ -296,8 +305,9 @@ class ProgramacionIGSemanal extends React.Component {
                             index={index}
                             ref={ref=>this.rows[index]=ref}
                             inventario={inventario}
-                            lideres={this.props.lideres}
-                            captadores={this.props.captadores}
+                            opcionesLideres={this.state.opcionesLideres}
+                            opcionesSupervisores={this.state.opcionesSupervisores}
+                            opcionesCaptadores={this.state.opcionesCaptadores}
                             mostrarSeparador={mostrarSeparador}
                             // Metodos
                             guardarInventario={this.guardarInventario.bind(this)}
@@ -315,7 +325,7 @@ ProgramacionIGSemanal.propTypes = {
     puedeModificar: React.PropTypes.bool.isRequired,
     clientes: React.PropTypes.array.isRequired,
     captadores: React.PropTypes.array.isRequired,
-    //supervisores: React.PropTypes.array.isRequired, // se recibe pero se ignoran por ahora
+    supervisores: React.PropTypes.array.isRequired, // se recibe pero se ignoran por ahora
     lideres: React.PropTypes.array.isRequired
 }
 ProgramacionIGSemanal.defaultProps = {

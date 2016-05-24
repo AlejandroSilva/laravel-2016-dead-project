@@ -83,4 +83,45 @@ class Locales extends Model{
             ->whereRaw("extract(month from fechaProgramada) = ?", [$fecha[1]])
             ->first();
     }
+
+    // #### Formatear
+
+    static function formatearSimple($local){
+        return [
+            'idLocal' => $local->idLocal,
+            'nombre' => $local->nombre,
+            'numero' => $local->numero,
+            'idLocal' => $local->idLocal,
+            // stock
+            'stock' => $local->stock,
+            'fechaStock' => $local->fechaStock,
+            // apertura
+            'horaApertura' => $local->horaApertura,
+            'horaCierre' => $local->horaCierre,
+            // contacto
+            'emailContacto' => $local->emailContacto,
+            'telefono1' => "$local->codArea1 $local->telefono1",
+            'telefono2' => "$local->codArea2 $local->telefono2",
+        ];
+    }
+
+    static function formatearConClienteFormatoDireccionRegion($local){
+        $localArray = Locales::formatearSimple($local);
+        $localArray['cliente'] = Clientes::formatearSimple($local->cliente);
+        // Formato de local
+        $localArray['idFormatoLocal'] = $local->idFormatoLocal;
+        $localArray['formatoLocal_nombre'] = $local->formatoLocal->nombre;
+        $localArray['formatoLocal_produccionSugerida'] = $local->formatoLocal->produccionSugerida;
+
+        // direcion comuna provincia region
+        $localArray['direccion'] = $local->direccion->direccion;
+        // Comuna
+        $localArray['cutComuna'] = $local->direccion->comuna->cutComuna;
+        $localArray['comuna_nombre'] = $local->direccion->comuna->nombre;
+        // Region
+        $localArray['cutRegion'] = $local->direccion->comuna->provincia->region->cutRegion;
+        $localArray['region_numero'] = $local->direccion->comuna->provincia->region->numero;
+
+        return $localArray;
+    }
 }

@@ -57,7 +57,7 @@ class NominasPendientes extends Command {
         $this->log(count($inventarios_nominasUrgentes)." 'urgentes', sin nomina en los proximos 2 dias.");
         $this->log(count($inventarios_nominasPendientes)." 'pendientes' sin nomina en los proximos 7 dias.");
         
-        if(count($inventarios_nominasUrgentes)>0 || count($inventarios_nominasPendientes)>0){
+//        if(count($inventarios_nominasUrgentes)>0 || count($inventarios_nominasPendientes)>0){
             Mail::queue('emails.nominasPendientes', [
                 'hoy' => $hoy->formatLocalized('%A %d %B'),
                 'hoy_mas_2dias' => $hoy_mas_2dias->formatLocalized('%A %d %B'),
@@ -67,18 +67,18 @@ class NominasPendientes extends Command {
             ], function ($message) use($hoy){
                 $message
                     ->from('no-responder@plataforma.seiconsultores.cl', 'SEI Consultores')
-                    ->to('asilva@seiconsultores.cl', 'Alejandro Silva')
+                    ->to('pm5k.sk@gmail.com', 'Alejandro Silva')
 //                    ->to('mgamboa@seiconsultores.cl', 'Marco Gamboa')
 //                    ->cc('asilva@seiconsultores.cl', 'Alejandro Silva')
 //                    ->cc('pm5k.sk@gmail.com', 'Alejandro Silva')
                     ->subject("Nominas pendientes ".$hoy->toDateString());
             });
-        }
+//        }
         $this->log('#### CRON NOMINAS:PENDIENTES (fin) ####');
     }
 
     private function log($msg){
-        //Log::info($msg);
+        Log::info($msg);
         $this->info($msg);
     }
 }

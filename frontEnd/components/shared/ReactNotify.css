@@ -1,0 +1,46 @@
+:global .notify-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: flex-start;
+    align-content: flex-start;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    z-index: 1000;
+}
+
+:global .notify-item {
+    width: 250px;
+    margin: 5px 10px;
+    color: #FFF;
+    border-radius: 5px;
+}
+
+:global .notify-item:hover {
+    opacity: 0.8;
+    box-shadow: 0 0 10px 0 rgb(15, 15, 15);
+}
+
+:global .notify-item > p {
+    font-family: 'Lora', serif;
+    margin: 10px;
+    opacity: .8;
+}
+
+:global .notify-item.success {
+    background-color: rgba(81, 163, 81, 1.0);
+}
+
+:global .notify-item.error {
+    background-color: rgba(203, 100, 94, 1.0);
+}
+
+:global .notify-item.info {
+    background-color: rgba(33, 150, 243, 1.0);
+}
+
+:global .notify-title {
+    font-weight: 700;
+}
