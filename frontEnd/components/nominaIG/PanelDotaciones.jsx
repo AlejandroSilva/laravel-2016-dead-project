@@ -57,7 +57,7 @@ export class PanelDotaciones extends React.Component {
                             return <RowOperador
                                 editable={this.props.dotacionEditable}
                                 key={index}
-                                correlativo={index+1}
+                                correlativo={""+index+1}
                                 operador={operador}
                                 cargo="Operador"
                                 agregarUsuario={this.props.agregarOperadorTitular}
@@ -99,7 +99,7 @@ export class PanelDotaciones extends React.Component {
                             return <RowOperador
                                 editable={this.props.dotacionEditable}
                                 key={index}
-                                correlativo={index+1}
+                                correlativo={""+index+1}
                                 operador={ operador }
                                 cargo="Operador"
                                 agregarUsuario={this.props.agregarOperadorReemplazo}

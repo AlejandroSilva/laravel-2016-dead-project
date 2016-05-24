@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use App\EstadoNominas;
 
@@ -92,8 +93,14 @@ class Nominas extends Model {
             "estado" => EstadoNominas::formatearSimple($nomina->estado)
         ];
     }
-    static function formatearConLiderSupervisorCaptadorDotacion($nomina){
+    static function formatearSimpleConPublicId($nomina){
+        // no en todas las ocaciones se necesita el publicIdNomina, es de 128 bits y puede resultar costoso de descargar
         $nominaArray = Nominas::formatearSimple($nomina);
+        $nominaArray['publicIdNomina'] = Crypt::encrypt($nomina->idNomina);
+        return $nominaArray;
+    }
+    static function formatearConLiderSupervisorCaptadorDotacion($nomina){
+        $nominaArray = Nominas::formatearSimpleConPublicId($nomina);
         $nominaArray['lider'] =  User::formatearSimple($nomina->lider);
         $nominaArray['supervisor'] =  User::formatearSimple($nomina->supervisor);
         $nominaArray['captador']  =  User::formatearSimple($nomina->captador1);

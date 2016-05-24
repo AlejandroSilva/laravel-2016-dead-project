@@ -3,22 +3,24 @@
 namespace App\Http\Controllers;
 
 use App;
+use Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 use App\Jobs\InformarNominaACliente;
-use App\Role;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Log;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
+use Knp\Snappy\Pdf;
 // Modelos
 use App\Comunas;
 use App\Inventarios;
 use App\Locales;
 use App\Nominas;
+use App\Role;
 use App\User;
 
-use Knp\Snappy\Pdf;
 
 class NominasController extends Controller {
 
@@ -80,8 +82,17 @@ class NominasController extends Controller {
         ]);
     }
 
-    // GET programacionIG/nomina/{idNomina}/pdf
-    function show_nomina_pdfDownload($idNomina){
+    // GET programacionIG/nomina/{publicIdNomina}/pdf           RUTA PUBLICA
+    function show_nomina_pdfDownload($publicIdNomina){
+        // intentar de des-encriptar el id de usuario
+        try {
+            $idNomina = Crypt::decrypt($publicIdNomina);
+        } catch (DecryptException $e) {
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Link de descarga invalido',
+                'descripcion' => 'El link de descarga que ha ocupado es invalido, actualice la página desde donde lo obtuvo, o contacte al departamento de informática de SEI.'
+            ]);
+        }
         $nomina = Nominas::find($idNomina);
         if($nomina){
             $_inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
