@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Jobs\InformarNominaACliente;
 use App\Role;
 use Carbon\Carbon;
