@@ -22,7 +22,8 @@ let estadoNominas = [
     'Pendiente',        // 2 - Pendiente
     'Recibida',         // 3 - Recibida
     'Aprobada',         // 4 - Aprobada
-    'Informada'         // 5 - Informada
+    'Informada',        // 5 - Informada
+    'Inform. Excel'   // 6 - Informada con Excel (plataforma antigua)
 ]
 let labelNominas = [
     'label-default',    // 0 - nunca ocurre
@@ -30,7 +31,8 @@ let labelNominas = [
     'label-default',    // 2 - Pendiente
     'label-success',    // 3 - Recibida (verde)
     'label-info',       // 4 - Aprobada (celeste)
-    'label-primary'     // 5 - Informada (azul)
+    'label-primary',    // 5 - Informada (azul)
+    'label-primary'     // 6 - Informada con Excel (plataforma antigua)
 ]
 
 class RowInventario extends React.Component{
