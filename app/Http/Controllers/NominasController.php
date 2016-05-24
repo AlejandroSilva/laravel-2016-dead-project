@@ -81,7 +81,11 @@ class NominasController extends Controller {
 
     // GET programacionIG/nomina/{idNomina}/pdf
     function show_nomina_pdfDownload($idNomina){
-        return \PDF::loadFile("localhost/programacionIG/nomina/$idNomina/pdf-preview")->stream('nomina.pdf');
+        if(App::environment('production')) {
+            return \PDF::loadFile("http://sig.seiconsultores.cl/programacionIG/nomina/$idNomina/pdf-preview")->stream('nomina.pdf');
+        }else{
+            return \PDF::loadFile("http://localhost/programacionIG/nomina/$idNomina/pdf-preview")->stream('nomina.pdf');
+        }
     }
 
     /**
