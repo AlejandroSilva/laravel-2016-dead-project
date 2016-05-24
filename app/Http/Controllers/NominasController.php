@@ -92,11 +92,12 @@ class NominasController extends Controller {
             $fechaProgramada = $inventario->fechaProgramada;
             $fileName = "nomina $cliente $ceco $fechaProgramada.pdf";
             if(App::environment('production')) {
-                return \PDF::loadFile("http://sig.seiconsultores.cl/programacionIG/nomina/$idNomina/pdf-preview")->stream('nomina.pdf');
+                return \PDF::loadFile("http://sig.seiconsultores.cl/programacionIG/nomina/$idNomina/pdf-preview")
+                    ->download($fileName);
             }else{
                 // stream, download
                 return \PDF::loadFile("http://localhost/programacionIG/nomina/$idNomina/pdf-preview")
-                    ->download($fileName);
+                    ->download($fileName);  //->stream('nomina.pdf');
             }
         }else{
             return view('errors.errorConMensaje', [
