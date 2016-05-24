@@ -16,6 +16,23 @@ import * as css from './TablaSemanal.css'
 import classNames from 'classnames/bind'
 let cx = classNames.bind(css)
 
+let estadoNominas = [
+    '-',                // 0 - nunca ocurre
+    'Deshabilitada',    // 1 - Deshabilitada
+    'Pendiente',        // 2 - Pendiente
+    'Recibida',         // 3 - Recibida
+    'Aprobada',         // 4 - Aprobada
+    'Informada'         // 5 - Informada
+]
+let labelNominas = [
+    'label-default',    // 0 - nunca ocurre
+    'label-default',    // 1 - Deshabilitada
+    'label-default',    // 2 - Pendiente
+    'label-success',    // 3 - Recibida (verde)
+    'label-info',       // 4 - Aprobada (celeste)
+    'label-primary'     // 5 - Informada (azul)
+]
+
 class RowInventario extends React.Component{
     focusElemento(elemento){
         if(elemento==='dia'){
@@ -362,26 +379,22 @@ class RowInventario extends React.Component{
                        className={cx(
                             'label',
                             // color depende del valor de la fechaSubida
-                            this.props.inventario.nomina_dia.fechaSubidaNomina==='0000-00-00'? 'label-default' : 'label-primary',
+                            labelNominas[this.props.inventario.nomina_noche.idEstadoNomina],
                             inventarioDia? 'center-block' : 'hide'
                         )}
                        target="_blank">
-                        {this.props.inventario.nomina_dia.fechaSubidaNomina==='0000-00-00'?
-                            'Pendiente' : this.props.inventario.nomina_dia.fechaSubidaNomina
-                        }
+                        {estadoNominas[this.props.inventario.nomina_noche.idEstadoNomina]}
                     </a>
                     {/* Nomina de Noche */}
                     <a href={`nomina/${this.props.inventario.nomina_noche.idNomina}`}
                        className={cx(
                             'label',
                             // color depende del valor de la fechaSubida
-                            this.props.inventario.nomina_noche.fechaSubidaNomina==='0000-00-00'? 'label-default' : 'label-primary',
+                            labelNominas[this.props.inventario.nomina_noche.idEstadoNomina],
                             inventarioNoche? 'center-block' : 'hide'
                         )}
                        target="_blank">
-                        {this.props.inventario.nomina_noche.fechaSubidaNomina==='0000-00-00'?
-                            'Pendiente' : this.props.inventario.nomina_noche.fechaSubidaNomina
-                        }
+                        {estadoNominas[this.props.inventario.nomina_noche.idEstadoNomina]}
                     </a>
                 </td>
                 {/* Unidades */}
