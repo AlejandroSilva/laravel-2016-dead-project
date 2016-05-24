@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use Redirect;
 use Log;
+// Crypt
+use Crypt;
 // PHP Excel
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -75,24 +77,6 @@ class InventariosController extends Controller {
             'lideres'=> $lideres
         ]);
     }
-
-    // GET inventario  // NO SE OCUPA
-//    function showIndex(){
-//        return view('operacional.inventario.inventario-index');
-//    }
-
-    // GET inventario/lista
-//    function showLista(){
-//        return view('operacional.inventario.inventario-lista');
-//    }
-
-    // GET inventario/nuevo // NO SE OCUPA
-//    function showNuevo(){
-//        $clientesWithLocales = Clientes::allWithSimpleLocales();
-//        return view('operacional.inventario.inventario-nuevo', [
-//            'clientes' => $clientesWithLocales
-//        ]);
-//    }
 
     /**
      * ##########################################################
@@ -347,7 +331,6 @@ class InventariosController extends Controller {
      */
 
     // GET /pdf/inventarios/{mes}/cliente/{idCliente}
-
     public function descargarPDF_porMes($annoMesDia, $idCliente){
         //Se utiliza funcion privada que recorre inventarios por mes y dia
         $inventarios = $this->buscarInventarios(null, null, $annoMesDia, $idCliente, null, null, null);
@@ -402,7 +385,8 @@ class InventariosController extends Controller {
      * funciones privadas
      * ##########################################################
      */
-    
+
+    // GET inventarios/buscar
     function api_buscar(Request $request){
         // agrega cabeceras para las peticiones con CORS
         header('Access-Control-Allow-Origin: *');
@@ -416,13 +400,6 @@ class InventariosController extends Controller {
         $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, null);
         return response()->json($inventarios, 200);
     }
-
-    public function buscarInventarios_conFormato($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina){
-        $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina);
-        // se parsean los usuarios con el formato "estandar"
-        return $inventarios_formato = $inventarios->map([$this, 'darFormatoInventario']);
-    }
-
     public function buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina){
         $query = Inventarios::withTodo();
         
@@ -488,8 +465,21 @@ class InventariosController extends Controller {
             })->toArray();
         }
 
+        // "Temporal": agregar a la nomina el campo publicIdNomina
+        $inventarios = collect($inventarios)->map(function($inventario) use ($idLider){
+            $inventario['nomina_dia']['publicIdNomina']   = Crypt::encrypt($inventario['nomina_dia']['idNomina']);
+            $inventario['nomina_noche']['publicIdNomina'] = Crypt::encrypt($inventario['nomina_noche']['idNomina']);
+            return $inventario;
+        })->toArray();
+
         // retornar una collection, igual que el query original
         return collect($inventarios);
+    }
+
+    // GET inventarios/buscar2
+    function api_buscar2(Request $request){
+        // Todo : pendiente
+        return response()->json(['error'=>'no implementado'], 503);
     }
 
     //Function para validar que la fecha sea valida
@@ -560,6 +550,12 @@ class InventariosController extends Controller {
         return $workbook;
     }
 
+    // utilizadas por el CRON para mostrar las NominasPendientes (dejar de ocupa esto, eliminar...)
+    public function buscarInventarios_conFormato($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina){
+        $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina);
+        // se parsean los usuarios con el formato "estandar"
+        return $inventarios_formato = $inventarios->map([$this, 'darFormatoInventario']);
+    }
     public function darFormatoInventario($inventario){
         // eliminar esto, y utilizarr el fomrato creado en "inventarios"
         return [
