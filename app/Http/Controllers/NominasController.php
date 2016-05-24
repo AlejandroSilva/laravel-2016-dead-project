@@ -45,13 +45,9 @@ class NominasController extends Controller {
             ]);
         }
 
-        // Buscar el inventario al que pertenece (junto con el cliente, el formato de local y la direccion
-        $_inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
-        $inventario = Inventarios::find($_inventario->idInventario);
-
         return view('operacional.nominas.nomina', [
             'nomina' => Nominas::formatearConLiderSupervisorCaptadorDotacion($nomina),
-            'inventario' => Inventarios::formatoClienteFormatoRegion($inventario),
+            'inventario' => Inventarios::formatoClienteFormatoRegion($nomina->inventario),
             'comunas' => Comunas::all()
         ]);
     }
@@ -68,13 +64,9 @@ class NominasController extends Controller {
             ]);
         }
 
-        // Buscar el inventario al que pertenece (junto con el cliente, el formato de local y la direccion
-        $_inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
-        $inventario = Inventarios::find($_inventario->idInventario);
-
         return view('pdfs.nominaIG', [
             'nomina' => $nomina,
-            'inventario' => $inventario,
+            'inventario' => $nomina->inventario,
             'lider' => $nomina->lider,
             'supervisor' => $nomina->supervisor,
             'dotacionTitular' => $nomina->dotacionTitular, 
@@ -95,9 +87,8 @@ class NominasController extends Controller {
         }
         $nomina = Nominas::find($idNomina);
         if($nomina){
-            $_inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
-            $inventario = Inventarios::find($_inventario->idInventario);
             // nombre del archivo
+            $inventario = $nomina->inventario;
             $cliente = $inventario->local->cliente->nombreCorto;
             $ceco = $inventario->local->numero;
             $fechaProgramada = $inventario->fechaProgramada;

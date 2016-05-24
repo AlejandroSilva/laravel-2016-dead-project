@@ -22,6 +22,10 @@ class Nominas extends Model {
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->hasOne('App\Inventarios', 'idNominaNoche', 'idNomina');
     }
+    public function inventario(){
+        // devolver el inventario padre
+        return $this->inventario1? $this->inventario1() : $this->inventario2();
+    }
 
     public function lider(){
         //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
