@@ -139,10 +139,10 @@
                             @endif
                             @if(isset($supervisor))
                                 <tr>
-                                    <td>L</td>
+                                    <td>S</td>
                                     <td>{{ $supervisor->usuarioRUN."-".$supervisor->usuarioDV }}</td>
                                     <td>{{ $supervisor->nombre1." ".$supervisor->apellidoPaterno }}</td>
-                                    <td>Lider</td>
+                                    <td>Supervisor</td>
                                 </tr>
                             @endif
                             @for($i=0; $i<sizeof($dotacionTitular); $i++)
