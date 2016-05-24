@@ -82,10 +82,27 @@ class NominasController extends Controller {
 
     // GET programacionIG/nomina/{idNomina}/pdf
     function show_nomina_pdfDownload($idNomina){
-        if(App::environment('production')) {
-            return \PDF::loadFile("http://sig.seiconsultores.cl/programacionIG/nomina/$idNomina/pdf-preview")->stream('nomina.pdf');
+        $nomina = Nominas::find($idNomina);
+        if($nomina){
+            $_inventario = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
+            $inventario = Inventarios::find($_inventario->idInventario);
+            // nombre del archivo
+            $cliente = $inventario->local->cliente->nombreCorto;
+            $ceco = $inventario->local->numero;
+            $fechaProgramada = $inventario->fechaProgramada;
+            $fileName = "nomina $cliente $ceco $fechaProgramada.pdf";
+            if(App::environment('production')) {
+                return \PDF::loadFile("http://sig.seiconsultores.cl/programacionIG/nomina/$idNomina/pdf-preview")->stream('nomina.pdf');
+            }else{
+                // stream, download
+                return \PDF::loadFile("http://localhost/programacionIG/nomina/$idNomina/pdf-preview")
+                    ->download($fileName);
+            }
         }else{
-            return \PDF::loadFile("http://localhost/programacionIG/nomina/$idNomina/pdf-preview")->stream('nomina.pdf');
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Nomina no encontrada',
+                'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
+            ]);
         }
     }
 
