@@ -146,10 +146,8 @@
         </tbody>
     </table>
 
-    <p>Ante cualquier duda, enviar un correo electrónico a <a href="mailto:logistica@seiconsultores.cl">logistica@seiconsultores.cl</a>, o
+    <p>Ante cualquier duda, enviar un correo electrónico a <a href="mailto:clopez@seiconsultores.cl">clopez@seiconsultores.cl</a>, o
         llamar al <a href="tel:(75 2) 747203">(75 2) 747203</a>.
     </p>
-
-    <img src="<?php echo $message->embed(public_path()."/logo-sei-mail.png"); ?>"/>
 </body>
 </html>
