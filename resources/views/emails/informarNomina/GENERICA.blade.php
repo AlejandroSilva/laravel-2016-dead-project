@@ -4,7 +4,7 @@
     <p>SEI Consultores, informa nomina de personal para IG <b>{{ $local->nombre }}</b> se encuentra disponible.</p>
 
     {{-- Datos Inventario --}}
-    <table style="margin-top: 16px; margin-bottom: 16px; width: 100%;">
+    <table style="margin-top: 16px; margin-bottom: 16px; width: 600px;">
         <tbody>
         <tr>
             <td style="border: 1px solid #ddd;">Cliente</td>
@@ -40,7 +40,7 @@
     </table>
 
     {{-- Datos Local --}}
-    <table style="width: 100%;">
+    <table style="width: 600px">
         <tbody>
             <tr>
                 <td style="border: 1px solid #ddd;">Dirección</td>
