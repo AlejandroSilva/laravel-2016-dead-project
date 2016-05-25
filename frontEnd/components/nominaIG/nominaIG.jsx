@@ -283,7 +283,6 @@ export class NominaIG extends React.Component {
                     </Modal.Body>
                 </Modal>
 
-                {/*<a href={`/programacionIG/nomina/${this.props.nomina.publicIdNomina}/pdf`} className="btn btn-xs pull-right">Descargar</a>*/}
                 <PanelDatos
                     inventario={this.props.inventario}
                     nomina={this.props.nomina}
@@ -316,6 +315,8 @@ export class NominaIG extends React.Component {
                     informarNomina={this.informarNomina.bind(this)}
                     rectificarNomina={this.rectificarNomina.bind(this)}
                 />
+
+                <a href={`/programacionIG/nomina/${this.props.nomina.publicIdNomina}/pdf`} className="btn btn-xs pull-right">Descargar</a>
             </div>
         )
     }

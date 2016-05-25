@@ -8,19 +8,23 @@ class Nominas extends Model {
     public $primaryKey = 'idNomina';
     // este modelo tiene timestamps
     public $timestamps = false;
+    
     // #### Relaciones
     public function inventario1() {
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->hasOne('App\Inventarios', 'idNominaDia', 'idNomina');
     }
+    
     public function inventario2(){
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->hasOne('App\Inventarios', 'idNominaNoche', 'idNomina');
     }
+    
     public function inventario(){
         // devolver el inventario padre
         return $this->inventario1? $this->inventario1() : $this->inventario2();
     }
+    
     public function lider(){
         //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\User', 'id', 'idLider');
@@ -29,10 +33,12 @@ class Nominas extends Model {
         //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\User', 'id', 'idSupervisor');
     }
+    
     public function captador(){
         //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\User', 'id', 'idCaptador1');
     }
+    
     public function dotacion(){
         // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
         return $this->belongsToMany('App\User', 'nominas_user', 'idNomina', 'idUser')
@@ -41,18 +47,21 @@ class Nominas extends Model {
 //            ->join('roles', 'idRoleAsignado', '=', 'roles.id');
 //            ->select('drink_id', 'customer_id', 'pivot_customer_got_drink', 'chair.name AS pivot_chair_name');
     }
+    
     public function dotacionTitular() {
         // operadores ordenados por la fecha de asignacion a la nomina
         return $this->dotacion()
             ->where('titular', true)
             ->orderBy('nominas_user.created_at', 'asc');
     }
+    
     public function dotacionReemplazo() {
         // operadores ordenados por la fecha de asignacion a la nomina
         return $this->dotacion()
             ->where('titular', false)
             ->orderBy('nominas_user.created_at', 'asc');
     }
+    
     public function estado(){
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->hasOne('App\EstadoNominas', 'idEstadoNomina', 'idEstadoNomina');
