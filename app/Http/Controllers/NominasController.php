@@ -397,8 +397,10 @@ class NominasController extends Controller {
         // pasasr al estado "informada"
         $nomina->idEstadoNomina = 5;
         $nomina->save();
+
         // ToDo: enviar los correos
         dispatch(new InformarNominaACliente($nomina));
+
         return response()->json(
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
         );

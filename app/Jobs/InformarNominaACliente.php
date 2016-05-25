@@ -20,38 +20,43 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     ];
     protected $SEI_nomina_bcc = [
         ['asilva@seiconsultores.cl', 'Alejandro Silva'],
-        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
-        ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
-        ['clopez@seiconsultores.cl', 'Carlos Lopez'],
-        ['gbriones@seiconsultores.cl', 'Gabriela Briones'],
-        ['fpizarro@seiconsultores.cl', 'Francisca Pizarro'],
-        ['psobarzo@seiconsultores.cl', 'Paula Sobarzo'],
-        ['logistica@seiconsultores.cl', 'SEI']
+//        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
+//        ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
+//        ['clopez@seiconsultores.cl', 'Carlos Lopez'],
+//        ['gbriones@seiconsultores.cl', 'Gabriela Briones'],
+//        ['fpizarro@seiconsultores.cl', 'Francisca Pizarro'],
+//        ['psobarzo@seiconsultores.cl', 'Paula Sobarzo'],
+//        ['logistica@seiconsultores.cl', 'SEI']
     ];
     // Cliente 1: PUC
     protected $PUC_nomina_to = [
-        ['amundaca@sb.cl', 'Alvaro Mundaca']
+        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
+//        ['amundaca@sb.cl', 'Alvaro Mundaca']
     ];
     // Cliente 2: FCV
     protected $FCV_nomina_to = [
-        ['gabriel.vera@cruzverde.cl', 'Gabriel Vera'],
-        ['pajorquera@cruzverde.cl', 'Pamela Jorquera'],
-        ['jorge.alcaya@cruzverde.cl', 'Jorge Alcaya'],
-        ['mauricio.ojeda@cruzverde.cl', 'Mauricio Ojeda']
+        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
+//        ['gabriel.vera@cruzverde.cl', 'Gabriel Vera'],
+//        ['pajorquera@cruzverde.cl', 'Pamela Jorquera'],
+//        ['jorge.alcaya@cruzverde.cl', 'Jorge Alcaya'],
+//        ['mauricio.ojeda@cruzverde.cl', 'Mauricio Ojeda']
     ];
     // Cliente 3: CKY
     protected $CKY_nomina_to = [
-        ['bgamboa@seiconsultores.cl', 'Bernardita Gamboa']
+        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
+//        ['bgamboa@seiconsultores.cl', 'Bernardita Gamboa']
         // TODO: falta correo
     ];
     // Cliente 5: SB
     protected $SB_nomina_to = [
-        ['amundaca@sb.cl', 'Alvaro Mundaca']
+        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
+//        ['amundaca@sb.cl', 'Alvaro Mundaca']
         //TODO: otro mas
     ];
     // Cliente 7: CMT
     protected $CMT_nomina_to = [
-        ['bgamboa@seiconsultores.cl', 'Bernardita Gamboa']
+        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
+//        ['bgamboa@seiconsultores.cl', 'Bernardita Gamboa']
         // TODO: evelin, cerna, cesar
     ];
     

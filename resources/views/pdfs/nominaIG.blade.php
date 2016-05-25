@@ -30,7 +30,7 @@
         }
         /* Correlativo */
         .colCorrelativo{
-            width: 18px;
+            width: 25px;
         }
         /* Usuario RUN */
         .colUsuarioRUN {
@@ -41,7 +41,8 @@
             width: 150px;
         }
         .colCargo {
-            width: 80px;
+            /*width: 80px;*/
+            width: auto;
         }
     </style>
     <div class='container'>
@@ -61,15 +62,15 @@
                             <td></td><td></td>
                         </tr>
                         <tr>
-                            <td>Fecha programada</td><td><b>{{$inventario->fechaProgramada}}</b></td>
+                            <td>Fecha programada</td><td><b>{{$inventario->fechaProgramadaF()}}</b></td>
                             <td></td><td></td>
                         </tr>
                         <tr>
-                            <td>Hr. llegada lider</td><td>{{$nomina->horaPresentacionLider}}</td>
+                            <td>Hr. llegada lider</td><td>{{$nomina->horaPresentacionLiderF()}}</td>
                             <td></td><td></td>
                         </tr>
                         <tr>
-                            <td>Hr. llegada equipo</td><td>{{$nomina->horaPresentacionEquipo}}</td>
+                            <td>Hr. llegada equipo</td><td>{{$nomina->horaPresentacionEquipoF()}}</td>
                             <td></td><td></td>
                         </tr>
                         </tbody>
@@ -84,10 +85,10 @@
                         <tbody>
                         <tr>
                             <td>Dirección</td><td>{{ $inventario->local->direccion->direccion }}</td>
-                            <td>Hr.Apertura</td><td>{{ $inventario->local->horaApertura }}</td></tr>
+                            <td>Hr.Apertura</td><td>{{ $inventario->local->horaAperturaF() }}</td></tr>
                         <tr>
                             <td>Comuna</td><td>{{ $inventario->local->direccion->comuna->nombre }}</td>
-                            <td>Hr.Cierre</td><td>{{ $inventario->local->horaCierre }}</td></tr>
+                            <td>Hr.Cierre</td><td>{{ $inventario->local->horaCierreF() }}</td></tr>
                         <tr>
                             <td>Región</td><td>{{ $inventario->local->direccion->comuna->provincia->region->numero }}</td>
                             <td>Teléfono 1</td><td>{{ $inventario->local->codArea1." ".$inventario->local->telefono1 }}</td>
@@ -122,7 +123,7 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th>#</th><th>RUN</th><th>Nombre</th><th>Cargo</th>
+                            <th>N°</th><th>RUN</th><th>Nombre</th><th>Cargo</th>
                         </tr>
                         </thead>
                         <tbody>

@@ -1,8 +1,11 @@
 <?php
 namespace App;
 use Crypt;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+// Modelos
 use App\EstadoNominas;
+
 class Nominas extends Model {
     // llave primaria
     public $primaryKey = 'idNomina';
@@ -71,6 +74,19 @@ class Nominas extends Model {
     public function usuarioEnDotacion($operador){
         return $this->dotacion()->find($operador->id);
     }
+    public function horaPresentacionLiderF(){
+        // Ejemplo: convertir "21:30:00" -> "21:30 hrs."
+        $carbon = Carbon::parse($this->horaPresentacionLider);
+        $minutes = $carbon->minute < 10? "0$carbon->minute" : $carbon->minute;
+        return "$carbon->hour:$minutes hrs.";
+    }
+    public function horaPresentacionEquipoF(){
+        // Ejemplo: convertir "21:30:00" -> "21:30 hrs."
+        $carbon = Carbon::parse($this->horaPresentacionEquipo);
+        $minutes = $carbon->minute < 10? "0$carbon->minute" : $carbon->minute;
+        return "$carbon->hour:$minutes hrs.";
+    }
+
     // #### Scopes
 //    public function scopeWithLiderCaptadorDotacion($query){
 //        return $query->with([
@@ -88,7 +104,9 @@ class Nominas extends Model {
             "idSupervisor" => $nomina->idSupervisor,
             "idCaptador1" => $nomina->idCaptador1,
             "horaPresentacionLider" => $nomina->horaPresentacionLider,
+            "horaPresentacionLiderF" => $nomina->horaPresentacionLiderF(),
             "horaPresentacionEquipo" => $nomina->horaPresentacionEquipo,
+            "horaPresentacionEquipoF" => $nomina->horaPresentacionEquipoF(),
             "dotacionAsignada" => $nomina->dotacionAsignada,
             "dotacionCaptador1" => $nomina->dotacionCaptador1,
             "fechaSubidaNomina" => $nomina->fechaSubidaNomina,

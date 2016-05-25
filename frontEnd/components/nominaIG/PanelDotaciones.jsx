@@ -24,7 +24,7 @@ export class PanelDotaciones extends React.Component {
                         </colgroup>
                         <thead>
                         <tr>
-                            <th>#</th>
+                            <th>N°</th>
                             <th>RUN</th>
                             <th>DV</th>
                             <th>Nombre</th>
@@ -84,7 +84,7 @@ export class PanelDotaciones extends React.Component {
                         </colgroup>
                         <thead>
                         <tr>
-                            <th>#</th>
+                            <th>N°</th>
                             <th>RUN</th>
                             <th>DV</th>
                             <th>Nombre</th>
@@ -93,13 +93,13 @@ export class PanelDotaciones extends React.Component {
                         </tr>
                         </thead>
                         <tbody>
-                        {/* Dotación Reserva */}
-                        {_.range(0, this.props.dotacionAsignada).map(index=>{
+                        {/* Dotación Reserva, por defecto dejar siempre 3 operadores de reserva */}
+                        {_.range(1, 4).map(index=>{
                             let operador = this.props.dotacionReemplazo[index]
                             return <RowOperador
                                 editable={this.props.dotacionEditable}
                                 key={index}
-                                correlativo={""+(index+1)}
+                                correlativo={""+index}
                                 operador={ operador }
                                 cargo="Operador"
                                 agregarUsuario={this.props.agregarOperadorReemplazo}

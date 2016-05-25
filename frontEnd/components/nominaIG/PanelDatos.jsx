@@ -23,15 +23,15 @@ export class PanelDatos extends React.Component {
                             <td></td><td></td>
                         </tr>
                         <tr>
-                            <td>Fecha programada</td><td>{this.props.inventario.inventario_fechaProgramada}</td>
+                            <td>Fecha programada</td><td>{this.props.inventario.inventario_fechaProgramadaF}</td>
                             <td></td><td></td>
                         </tr>
                         <tr>
-                            <td>Hr. llegada lider</td><td>{this.props.nomina.horaPresentacionLider}</td>
+                            <td>Hr. llegada lider</td><td>{this.props.nomina.horaPresentacionLiderF}</td>
                             <td></td><td></td>
                         </tr>
                         <tr>
-                            <td>Hr. llegada equipo</td><td>{this.props.nomina.horaPresentacionEquipo}</td>
+                            <td>Hr. llegada equipo</td><td>{this.props.nomina.horaPresentacionEquipoF}</td>
                             <td></td><td></td>
                         </tr>
                         </tbody>
@@ -46,11 +46,11 @@ export class PanelDatos extends React.Component {
                         <tbody>
                         <tr>
                             <td>Dirección</td><td>{this.props.inventario.local.direccion}</td>
-                            <td>Hr.Apertura</td><td>{this.props.inventario.local.horaApertura}</td>
+                            <td>Hr.Apertura</td><td>{this.props.inventario.local.horaAperturaF}</td>
                         </tr>
                         <tr>
                             <td>Comuna</td><td>{this.props.inventario.local.comuna_nombre}</td>
-                            <td>Hr.Cierre</td><td>{this.props.inventario.local.horaCierre}</td>
+                            <td>Hr.Cierre</td><td>{this.props.inventario.local.horaCierreF}</td>
                         </tr>
                         <tr>
                             <td>Región</td><td>{this.props.inventario.local.region_numero}</td>

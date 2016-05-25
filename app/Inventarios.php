@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 // Modelos
 use App\Locales;
 
@@ -33,6 +34,13 @@ class Inventarios extends Model {
         return $this->belongsTo('App\Nominas', 'idNominaNoche', 'idNomina');
     }
 
+    // Consultas
+    public function fechaProgramadaF(){
+        setlocale(LC_TIME, 'es_CL.utf-8');
+        // fecha con formato: ejemplo: "2016-05-30" -> "lunes 30 de mayo, 2016"
+        return Carbon::parse($this->fechaProgramada)->formatLocalized('%A %e de %B, %Y');
+    }
+
     // #### With scopes
     public function scopeWithTodo($query){
         $query->with([
@@ -61,6 +69,7 @@ class Inventarios extends Model {
             'idInventario' => $inventario->idInventario,
             'idJornada' => $inventario->idJornada,
             'inventario_fechaProgramada' => $inventario->fechaProgramada,
+            'inventario_fechaProgramadaF' => $inventario->fechaProgramadaF(),
             'inventario_stockTeorico' => $inventario->stockTeorico,
             'inventario_fechaStock' => $inventario->fechaStock,
             'inventario_dotacionAsignadaTotal' => $inventario->dotacionAsignadaTotal,

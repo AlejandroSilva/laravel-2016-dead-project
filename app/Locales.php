@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Locales extends Model{
@@ -84,8 +84,22 @@ class Locales extends Model{
             ->first();
     }
 
-    // #### Formatear
+    // #### Consultas
+    public function horaAperturaF(){
+        // Ejemplo: convertir "21:30:00" -> "21:30 hrs."
+        $carbon = Carbon::parse($this->horaApertura);
+        $minutes = $carbon->minute < 10? "0$carbon->minute" : $carbon->minute;
+        return "$carbon->hour:$minutes hrs.";
+    }
+    public function horaCierreF(){
+        // Ejemplo: convertir "21:30:00" -> "21:30 hrs."
+        $carbon = Carbon::parse($this->horaCierre);
+        $minutes = $carbon->minute < 10? "0$carbon->minute" : $carbon->minute;
+        return "$carbon->hour:$minutes hrs.";
+    }
 
+
+    // #### Formatear
     static function formatearSimple($local){
         return [
             'idLocal' => $local->idLocal,
@@ -97,7 +111,9 @@ class Locales extends Model{
             'fechaStock' => $local->fechaStock,
             // apertura
             'horaApertura' => $local->horaApertura,
+            'horaAperturaF' => $local->horaAperturaF(),
             'horaCierre' => $local->horaCierre,
+            'horaCierreF' => $local->horaCierreF(),
             // contacto
             'emailContacto' => $local->emailContacto,
             'telefono1' => "$local->codArea1 $local->telefono1",
