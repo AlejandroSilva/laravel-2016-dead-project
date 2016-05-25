@@ -68,10 +68,6 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
     Route::group([], function(){
-        Route::get('programacionIG/nomina/{idNomina}/pdf',          'NominasController@show_nomina_pdfDownload');
-        Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
-    });
-
         Route::get('programacionIG/nomina/{publicIdNomina}/pdf',    'NominasController@show_nomina_pdfDownload');
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
     });
@@ -160,3 +156,4 @@ Route::group(['middleware' => ['web']], function (){
         // API USUARIOS - RUTAS PUBLICAS UTILIZADAS POR LA OTRA APLICACION
         Route::get('usuario/{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
     });
+});
