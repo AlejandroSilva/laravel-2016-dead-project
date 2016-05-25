@@ -16,17 +16,18 @@ class InformarNominaACliente extends Job implements ShouldQueue {
 
     protected $nomina;
     protected $SEI_DESARROLLO = [
-        ['pm5k.sk@gmail.com', 'ASILVA DESARROLLO']
+        ['pm5k.sk@gmail.com', 'ASILVA DESARROLLO'],
+//        ['logistica@seiconsultores.cl', 'SEI']
     ];
     protected $SEI_nomina_bcc = [
         ['asilva@seiconsultores.cl', 'Alejandro Silva'],
-//        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
+        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
 //        ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
-//        ['clopez@seiconsultores.cl', 'Carlos Lopez'],
-//        ['gbriones@seiconsultores.cl', 'Gabriela Briones'],
-//        ['fpizarro@seiconsultores.cl', 'Francisca Pizarro'],
-//        ['psobarzo@seiconsultores.cl', 'Paula Sobarzo'],
-//        ['logistica@seiconsultores.cl', 'SEI']
+        ['clopez@seiconsultores.cl', 'Carlos Lopez'],
+        ['gbriones@seiconsultores.cl', 'Gabriela Briones'],
+        ['fpizarro@seiconsultores.cl', 'Francisca Pizarro'],
+        ['psobarzo@seiconsultores.cl', 'Paula Sobarzo'],
+        ['logistica@seiconsultores.cl', 'SEI']
     ];
     // Cliente 1: PUC
     protected $PUC_nomina_to = [
@@ -88,15 +89,17 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         $cliente = $local->cliente;
         $lider = $this->nomina->lider;
         // --
-        $_hlider = $this->nomina->horaPresentacionLider;
-        $_hequipo = $this->nomina->horaPresentacionEquipo;
 
         $datosVista = [
             // datos generales
             'local' => $local,
-            'fechaProgramada' => Carbon::parse($inventario->fechaProgramada)->formatLocalized('%A %d %B'),
-            'horaPresentacionLider' => (new \DateTime($_hlider))->format('H:i'),
-            'horaPresentacionEquipo' => (new \DateTime($_hequipo))->format('H:i'),
+            'inventario' => $inventario,
+            'nomina' => $this->nomina,
+//            'fechaProgramada' => Carbon::parse($inventario->fechaProgramada)->formatLocalized('%A %d %B'),
+//            'horaPresentacionLider' => (new \DateTime($_hlider))->format('H:i'),
+//            'horaPresentacionEquipo' => (new \DateTime($_hequipo))->format('H:i'),
+//            'horaPresentacionLider' => $this->nomina->horaPresentacionLiderF(),
+//            'horaPresentacionEquipo' => $this->nomina->horaPresentacionEquipoF(),
             // personal
             'lider' => $lider,
             'supervisor' => $this->nomina->supervisor,

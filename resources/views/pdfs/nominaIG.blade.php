@@ -44,6 +44,11 @@
             /*width: 80px;*/
             width: auto;
         }
+        .imgLider{
+            margin: 0 auto;
+            padding: 2px;
+            max-width: 120px !important;
+        }
     </style>
     <div class='container'>
         <div class="row">
@@ -192,8 +197,7 @@
                     <div class="col-xs-4">
                         <div class="panel panel-primary">
                             <div class="panel-heading panelHeading_compacto">Lider</div>
-                            <img class="img-responsive"
-                                 style="margin: 0 auto; padding: 2px;"
+                            <img class="img-responsive imgLider"
                                  src="/imagenPerfil/{{ $lider->imagenPerfil }}" alt="">
                         </div>
                     </div>
