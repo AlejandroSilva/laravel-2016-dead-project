@@ -1,0 +1,13 @@
+/* ######## Paneles de Informacion ########*/
+.panelDatos_heading{
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+
+.tablaDatos {
+    font-size: 12px;
+}
+.tablaDatos td {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}

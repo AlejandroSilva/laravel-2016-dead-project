@@ -93,6 +93,7 @@ export default class BlackBox{
             idAuditoria: null,
             idLocal: idLocal,
             fechaProgramada: annoMesDia,
+            inventarioEnELMismoMes: null,
             local: {
                 idLocal: idLocal,
                 idJornadaSugerida: 4, // no definida
@@ -254,6 +255,10 @@ export default class BlackBox{
 
         // ##### Filtro Comunas (ordenado por codComuna)
         this.filtroComunas = _.chain(this.lista)
+            // solo dejar las comunas en las que su respectiva region este seleccionada
+            .filter(auditoria=>{
+                return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+            })
             .map(auditoria=>{
                 let valor = auditoria.local.direccion.cutComuna
                 let texto = auditoria.local.direccion.comuna.nombre

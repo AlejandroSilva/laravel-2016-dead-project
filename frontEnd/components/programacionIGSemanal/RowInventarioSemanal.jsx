@@ -13,6 +13,27 @@ import Select from '../shared/Select.jsx'
 
 // Styles
 import * as css from './TablaSemanal.css'
+import classNames from 'classnames/bind'
+let cx = classNames.bind(css)
+
+let estadoNominas = [
+    '-',                // 0 - nunca ocurre
+    'Deshabilitada',    // 1 - Deshabilitada
+    'Pendiente',        // 2 - Pendiente
+    'Recibida',         // 3 - Recibida
+    'Aprobada',         // 4 - Aprobada
+    'Informada',        // 5 - Informada
+    'Inform. Excel'   // 6 - Informada con Excel (plataforma antigua)
+]
+let labelNominas = [
+    'label-default',    // 0 - nunca ocurre
+    'label-default',    // 1 - Deshabilitada
+    'label-default',    // 2 - Pendiente
+    'label-success',    // 3 - Recibida (verde)
+    'label-info',       // 4 - Aprobada (celeste)
+    'label-primary',    // 5 - Informada (azul)
+    'label-primary'     // 6 - Informada con Excel (plataforma antigua)
+]
 
 class RowInventario extends React.Component{
     focusElemento(elemento){
@@ -70,6 +91,7 @@ class RowInventario extends React.Component{
         this._guardarNomina(this.props.inventario.nomina_dia.idNomina, {
             inputDotacion: this.inputDotacionDia.getEstado(),
             selectLider: this.selectLiderDia.getEstado(),
+            selectSupervisor: this.selectSupervisorDia.getEstado(),
             selectCaptador1: this.selectCaptador1Dia.getEstado(),
             inputHoraPresentacionLider: this.inputHoraPresentacionLiderDia.getEstado(),
             inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoDia.getEstado()
@@ -79,6 +101,7 @@ class RowInventario extends React.Component{
         this._guardarNomina(this.props.inventario.nomina_noche.idNomina, {
             inputDotacion: this.inputDotacionNoche.getEstado(),
             selectLider: this.selectLiderNoche.getEstado(),
+            selectSupervisor: this.selectSupervisorNoche.getEstado(),
             selectCaptador1: this.selectCaptador1Noche.getEstado(),
             inputHoraPresentacionLider: this.inputHoraPresentacionLiderNoche.getEstado(),
             inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoNoche.getEstado()
@@ -99,6 +122,10 @@ class RowInventario extends React.Component{
         // el LIDER es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
         if (estados.selectLider.dirty)
             cambiosNomina.idLider = estados.selectLider.seleccionUsuario
+
+        // el SUPERVISOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
+        if (estados.selectSupervisor.dirty)
+            cambiosNomina.idSupervisor = estados.selectSupervisor.seleccionUsuario
 
         // el CAPTADOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
         if (estados.selectCaptador1.dirty)
@@ -124,12 +151,7 @@ class RowInventario extends React.Component{
         const idJornada = this.props.inventario.idJornada
         const inventarioDia = idJornada==2 || idJornada==4
         const inventarioNoche = idJornada==3 || idJornada==4
-        const opcionesLideres = this.props.lideres.map(usuario=>{
-            return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
-        })
-        const opcionesCaptadores = this.props.captadores.map(usuario=>{
-            return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
-        })
+
         let _hrApertura = this.props.inventario.local.horaApertura.split(':')
         let txtHrApertura = `Apertura a las ${_hrApertura[0]}:${_hrApertura[1]}hrs`
         let _hrCierre = this.props.inventario.local.horaCierre.split(':')
@@ -144,7 +166,7 @@ class RowInventario extends React.Component{
                 <td className={css.tdFecha}>
                     <InputFecha
                         ref={ref=>this.inputDia=ref}
-                        diaSemana={moment(this.props.inventario.fechaProgramada).format('dddd')}
+                        diaSemana={moment(this.props.inventario.fechaProgramada).format('dd')}
                         fecha={this.props.inventario.fechaProgramada}
                         onGuardar={this.guardarInventario.bind(this)}
                         puedeModificar={this.props.puedeModificar}
@@ -189,7 +211,7 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Tienda */}
                 <td className={css.tdTienda}>
-                    <p><small>{this.props.inventario.local.nombre}</small></p>
+                    <p>{this.props.inventario.local.nombre}</p>
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
@@ -235,12 +257,12 @@ class RowInventario extends React.Component{
                         puedeModificar={this.props.puedeModificar}/>
                 </td>
                 {/* Lider */}
-                <td className={css.tdLider}>
+                <td className={css.tdUsuario}>
                     <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectLiderDia=ref}
                             seleccionada={ this.props.inventario.nomina_dia.idLider || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
-                            opciones={opcionesLideres}
+                            opciones={this.props.opcionesLideres}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
                             puedeModificar={this.props.puedeModificar}
@@ -249,19 +271,40 @@ class RowInventario extends React.Component{
                             ref={ref=>this.selectLiderNoche=ref}
                             seleccionada={ this.props.inventario.nomina_noche.idLider || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
-                            opciones={opcionesLideres}
+                            opciones={this.props.opcionesLideres}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
+                            puedeModificar={this.props.puedeModificar}
+                    />
+                </td>
+                {/* Supervisor */}
+                <td className={css.tdUsuario}>
+                    <Select style={{display: inventarioDia? 'block' : 'none'}}
+                            ref={ref=>this.selectSupervisorDia=ref}
+                            seleccionada={ this.props.inventario.nomina_dia.idSupervisor || ''}
+                            onSelect={this.guardarNominaDia.bind(this)}
+                            opciones={this.props.opcionesSupervisores}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
+                            puedeModificar={this.props.puedeModificar}
+                    />
+                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
+                            ref={ref=>this.selectSupervisorNoche=ref}
+                            seleccionada={ this.props.inventario.nomina_noche.idSupervisor || ''}
+                            onSelect={this.guardarNominaNoche.bind(this)}
+                            opciones={this.props.opcionesSupervisores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
                             puedeModificar={this.props.puedeModificar}
                     />
                 </td>
                 {/* Captador 1 */}
-                <td className={css.tdLider}>
+                <td className={css.tdUsuario}>
                     <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador1Dia=ref}
                             seleccionada={this.props.inventario.nomina_dia.idCaptador1 || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
-                            opciones={opcionesCaptadores}
+                            opciones={this.props.opcionesCaptadores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
                             puedeModificar={this.props.puedeModificar}
@@ -270,7 +313,7 @@ class RowInventario extends React.Component{
                             ref={ref=>this.selectCaptador1Noche=ref}
                             seleccionada={this.props.inventario.nomina_noche.idCaptador1 || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
-                            opciones={opcionesCaptadores}
+                            opciones={this.props.opcionesCaptadores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
                             puedeModificar={this.props.puedeModificar}
@@ -329,14 +372,39 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Dirección */}
                 <td className={css.tdDireccion}>
-                    <p>{this.props.inventario.local.direccion.direccion}</p>
+                    {this.props.inventario.local.direccion.direccion}
                 </td>
                 {/* Nómina*/}
                 <td className={css.tdNomina}>
-                    {this.props.inventario.nomina_dia.fechaSubidaNomina==='0000-00-00'?
-                        <span className="label label-default">Pendiente</span> :
-                        <span className="label label-primary">Subida el {this.props.inventario.nomina_dia.fechaSubidaNomina}</span>
-                    }
+                    {/* Nomina de Día */}
+                    <a href={`nomina/${this.props.inventario.nomina_dia.idNomina}`}
+                       className={cx(
+                            'label',
+                            // color depende del valor de la fechaSubida
+                            labelNominas[this.props.inventario.nomina_noche.idEstadoNomina],
+                            inventarioDia? 'center-block' : 'hide'
+                        )}
+                       target="_blank">
+                        {estadoNominas[this.props.inventario.nomina_noche.idEstadoNomina]}
+                    </a>
+                    {/* Nomina de Noche */}
+                    <a href={`nomina/${this.props.inventario.nomina_noche.idNomina}`}
+                       className={cx(
+                            'label',
+                            // color depende del valor de la fechaSubida
+                            labelNominas[this.props.inventario.nomina_noche.idEstadoNomina],
+                            inventarioNoche? 'center-block' : 'hide'
+                        )}
+                       target="_blank">
+                        {estadoNominas[this.props.inventario.nomina_noche.idEstadoNomina]}
+                    </a>
+                </td>
+                {/* Unidades */}
+                <td className={css.tdUnidadesReales}>
+                    {this.props.inventario.unidadesReal}
+                </td>
+                <td className={css.tdUnidadesTeoricas}>
+                    {this.props.inventario.unidadesTeorico}
                 </td>
             </tr>
         )
@@ -348,8 +416,9 @@ RowInventario.propTypes = {
     puedeModificar: React.PropTypes.bool.isRequired,
     index: React.PropTypes.number.isRequired,
     inventario: React.PropTypes.object.isRequired,
-    lideres: React.PropTypes.array.isRequired,
-    captadores: React.PropTypes.array.isRequired,
+    opcionesLideres: React.PropTypes.array.isRequired,
+    opcionesSupervisores: React.PropTypes.array.isRequired,
+    opcionesCaptadores: React.PropTypes.array.isRequired,
     mostrarSeparador: React.PropTypes.bool.isRequired,
     // Metodos
     guardarInventario: React.PropTypes.func.isRequired,
@@ -361,3 +430,7 @@ RowInventario.defaultProps = {
 }
 
 export default RowInventario
+
+
+// falta: en la tabla agregar campo: fecha + unidades teoricas + unidades reaales
+// falta: crear la api de esteban

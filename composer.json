@@ -9,7 +9,12 @@
         "phpoffice/phpexcel": "1.8.1",
         "laravel/framework": "5.2.*",
         "zizaco/entrust": "dev-laravel-5",
-        "doctrine/dbal": "v2.5.4"
+        "doctrine/dbal": "v2.5.4",
+        "guzzlehttp/guzzle": "~5.3|~6.0",
+        "knplabs/knp-snappy": "^0.4.3",
+        "h4cc/wkhtmltopdf-amd64": "0.12.x",
+        "h4cc/wkhtmltoimage-amd64": "0.12.x",
+        "barryvdh/laravel-snappy": "^0.3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

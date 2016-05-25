@@ -2,7 +2,7 @@
 @extends('layouts.root')
 
 @section('top')
-    <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -47,10 +47,22 @@
                                 @endif
 
                                 {{-- INVENTARIO --}}
-                                @if( Auth::user()->hasRole('Administrador') )
+                                @if( Auth::user()->hasRole('Developer') )
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('geo/')? 'active': '' }}">
+                                        <a href="{{ url('geo/') }}">(D) GEO gestor</a>
+                                    </li>
+                                    {{-- ya no se crean inventarios desde el menu, eliminar esto --}}
+                                    {{--<li class="{{ Request::is('inventario/nuevo')? 'active': '' }}">--}}
+                                    {{--<a href="{{ url('inventario/nuevo') }}">Nuevo Inventario</a>--}}
+                                    {{--</li>--}}
+                                @endif
+
+                                {{-- INVENTARIO --}}
+                                @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('inventario/lista')? 'active': '' }}">
-                                        <a href="{{ url('inventario/lista') }}">Lista de inventarios</a>
+                                        <a href="{{ url('inventario/lista') }}">(D) Lista de inventarios</a>
                                     </li>
                                     {{-- ya no se crean inventarios desde el menu, eliminar esto --}}
                                     {{--<li class="{{ Request::is('inventario/nuevo')? 'active': '' }}">--}}
@@ -59,13 +71,13 @@
                                 @endif
 
                                 {{-- Nominas --}}
-                                @if( Auth::user()->hasRole('Administrador') )
+                                @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('nominas')? 'active': '' }}">
-                                        <a href="{{ url('nominas') }}">Nominas</a>
+                                        <a href="{{ url('nominas') }}">(D) Nominas</a>
                                     </li>
                                     <li class="{{ Request::is('nomFinales')? 'active': '' }}">
-                                        <a href="{{ url('nomFinales') }}">Nominas Finales</a>
+                                        <a href="{{ url('nomFinales') }}">(D) Nominas Finales</a>
                                     </li>
                                 @endif
 
@@ -73,7 +85,7 @@
                                 @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('admin/locales')? 'active': '' }}">
-                                        <a href="{{ route('admin.locales.lista') }}">Mantenedor de Locales</a>
+                                        <a href="{{ route('admin.locales.lista') }}">(D) Mantenedor de Locales</a>
                                     </li>
                                 @endif
                             </ul>
@@ -91,7 +103,44 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if( Auth::check() )
-                        <li><a href="#">Bienvenido {{ Auth::user()->nombre1 }}</a></li>
+                        <li class="{{ "dropdown " + (Request::is('admin*') ? 'active' : '')}}">
+                            {{-- MENU PRINCIPAL: GESTION PRIVILEGIOS --}}
+                            <a id="drop-operacional" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Gestión Privilegios <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="drop-operacional">
+                                {{-- Mantenedores de roles y permisos --}}
+                                @if( Auth::user()->hasRole('Administrador') )
+                                    <li class="{{ Request::is('admin/permissions')? 'active': '' }}">
+                                        <a href="{{ url('admin/permissions') }}">Lista permisos</a>
+                                    </li>
+                                    <li class="{{ Request::is('admin/permissions-roles')? 'active': '' }}">
+                                        <a href="{{ url('admin/permissions-roles') }}">Lista permisos roles</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('admin/roles')? 'active': '' }}">
+                                        <a href="{{ url('admin/roles') }}">Lista roles</a>
+                                    </li>
+                                    <li class="{{ Request::is('admin/usuarios-roles')? 'active': '' }}">
+                                        <a href="{{ url('admin/usuarios-roles') }}">Lista usuarios roles</a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+                        <li>
+                            <a id="drop-user" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Bienvenido {{ Auth::user()->nombre1 }} <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="drop-operacional">
+                                {{-- Menu usuario --}}
+                                @if( Auth::user() )
+                                    <li class="{{ Request::is('user/changePassword')? 'active': '' }}">
+                                        <a href="{{ url('user/changePassword') }}">Cambiar contraseña</a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+
                         {{--<li><a href="#">Configuración</a></li>--}}
                         <li><a href="/logout">Cerrar Sesión</a></li>
                     @else

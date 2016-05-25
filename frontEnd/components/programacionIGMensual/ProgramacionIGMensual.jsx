@@ -6,8 +6,6 @@ import api from '../../apiClient/v1'
 import BlackBoxMensual from './BlackBoxMensual.js'
 
 // Component
-//import Multiselect from 'react-widgets/lib/Multiselect'
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import TablaMensual from './TablaMensual.jsx'
 import AgregarInventario from './AgregarInventario.jsx'
 import RowInventarioMensual from './RowInventarioMensual.jsx'

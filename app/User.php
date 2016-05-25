@@ -10,9 +10,9 @@ class User extends Authenticatable {
     // can($permission), and ability($roles, $permissions, $options) within your User model.
     use EntrustUserTrait;
     
-//    protected $table = 'users';          // table name
+//    protected $table = 'users';     // table name
 //    public $primaryKey = 'id';      // llave primaria
-//    public $timestamps = true;              // este modelo tiene timestamps
+//    public $timestamps = true;      // este modelo tiene timestamps
     
     
     /**
@@ -21,8 +21,10 @@ class User extends Authenticatable {
      * @var array
      */
     protected $fillable = [
-        'email', 'nombre1', 'nombre2', 'apellidoPaterno', 'apellidoMaterno', 'fechaNacimiento',
-        'telefono1', 'telefono2', 'RUN', 'contratado', 'bloqueado', 'password'
+        'usuarioRUN', 'usuarioDV', 'email', 'emailPersonal',
+        'nombre1', 'nombre2', 'apellidoPaterno', 'apellidoMaterno',
+        'fechaNacimiento', 'telefono', 'telefonoEmergencia', 'direccion', 'cutComuna',
+        'tipoContrato', 'fechaInicioContrato', 'fechaCertificadoAntecedentes', 'banco', 'tipoCuenta', 'numeroCuenta'
     ];
 
     /**
@@ -33,4 +35,74 @@ class User extends Authenticatable {
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function comuna(){
+        // belongsTo(modelo, this.fogeignKey, parent.otherKey)
+        return $this->belongsTo('App\Comunas', 'cutComuna', 'cutComuna');
+    }
+
+    public function nomasEnLasQueHaParticipado(){
+        // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
+        return $this->belongsToMany('App\Nominas', 'nominas_user', 'idUser', 'idNomina')
+            ->withTimestamps()
+            ->withPivot('titular', 'idRoleAsignado');
+//            ->with('role')
+    }
+
+    // #### Formatear
+    static function formatearSimple($user){
+        if(!$user)
+            return null;
+        return [
+            'id' => $user->id,
+            'usuarioRUN' => $user->usuarioRUN,
+            'usuarioDV' => $user->usuarioDV,
+            'nombre' => "$user->nombre1 $user->apellidoPaterno",
+            'nombre1' => $user->nombre1,
+            'nombre2' => $user->nombre2,
+            'apellidoPaterno' => $user->apellidoPaterno,
+            'apellidoMaterno' => $user->apellidoMaterno,
+            'imagenPerfil' => $user->imagenPerfil,
+            // si "roles" es un arreglo vacio, array_map lanza un error
+            //            'roles' => sizeof($user['roles'])>0?
+            //                array_map(function($role){
+            //                    return $role['name'];
+            //                }, $user['roles'])
+            //                :
+            //                []
+            'roles' => $user->roles->map(['\App\Role', 'darFormatoSimple'])
+        ];
+    }
+    
+    static function formatearSimplePivotDotacion($user){
+        $userArray = User::formatearSimple($user);
+        // informacion del pivot generado al unir un usuario con una dotacion
+        $userArray['idRoleAsignado'] = $user->pivot->idRoleAsignado;
+        //          WIP, ESTO NO FUNCIONABA
+        //        $userArray['roleAsignado'] = $user->pivot;
+        return $userArray;
+    }
+
+    static function formatoCompleto($user){
+        $userArray = User::formatearSimple($user);
+        $userArray['telefono'] = $user->telefono;
+        $userArray['telefonoEmergencia'] = $user->telefonoEmergencia;
+        $userArray['fechaNacimiento'] = $user->fechaNacimiento;
+        $userArray['email'] = $user->email;
+        $userArray['emailPersonal'] = $user->emailPersonal;
+        // Contrato
+        $userArray['tipoContrato'] = $user->tipoContrato;
+        $userArray['fechaInicioContrato'] = $user->fechaInicioContrato;
+        $userArray['fechaCertificadoAntecedentes'] = $user->fechaCertificadoAntecedentes;
+        // Datos bancarios
+        $userArray['banco'] = $user->banco;
+        $userArray['tipoCuenta'] = $user->tipoCuenta;
+        $userArray['numeroCuenta'] = $user->numeroCuenta;
+        // Direccion
+        $userArray['direccion'] = $user->direccion;
+        $userArray['comuna'] = $user->comuna->nombre;
+        $userArray['provincia'] = $user->comuna->provincia->nombre;
+        $userArray['region'] = $user->comuna->provincia->region->nombre;
+        return $userArray;
+    }
 }

@@ -25,12 +25,15 @@ class TablaInventarios extends React.Component{
                     <col className={css.thTienda}/>
                     <col className={css.thStock}/>
                     <col className={css.thDotacionTotal}/>
-                    <col className={css.thLider}/>
-                    <col className={css.thLider}/>
+                    <col className={css.thUsuario}/>
+                    <col className={css.thUsuario}/>
+                    <col className={css.thUsuario}/>
                     <col className={css.thHora}/>
                     <col className={css.thHora}/>
                     <col className={css.thDireccion}/>
                     <col className={css.thNomina}/>
+                    <col className={css.thUnidadesReales}/>
+                    <col className={css.thUnidadesTeoricas}/>
                 </colgroup>
                 <thead>
                     {/* TR que se pega al top de la pagina, es una TR, con instancia de 'Sticky' */}
@@ -68,15 +71,15 @@ class TablaInventarios extends React.Component{
                         <th className={css.thTienda}>Tienda</th>
                         <th className={css.thStock}>Stock</th>
                         <th className={css.thDotacionTotal}>Dot.Total</th>
-                        <th className={css.thLider}>
+                        <th className={css.thUsuario}>
                             <HeaderConFiltro
                                 nombre='Lider'
                                 filtro={this.props.filtros.filtroLideres || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLideres')}
                             />
                         </th>
-                        {/* <th className={css.thLider}>Supervisor</th> */}
-                        <th className={css.thLider}>
+                        <th className={css.thUsuario}>Supervisor</th>
+                        <th className={css.thUsuario}>
                             <HeaderConFiltro
                                 nombre='Captador'
                                 filtro={this.props.filtros.filtroCaptadores || []}
@@ -86,7 +89,15 @@ class TablaInventarios extends React.Component{
                         <th className={css.thHora}>Hr.Lider</th>
                         <th className={css.thHora}>Hr.Equipo</th>
                         <th className={css.thDireccion}>Dirección</th>
-                        <th className={css.thNomina}>Nómina</th>
+                        <th className={css.thNomina}>
+                            <HeaderConFiltro
+                                nombre='Nómina'
+                                filtro={this.props.filtros.filtroFechaSubidaNomina || []}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroFechaSubidaNomina')}
+                            />
+                        </th>
+                        <th className={css.thUnidadesReales}>U.Cont</th>
+                        <th className={css.thUnidadesTeoricas}>U.Teo</th>
                     </Sticky>
                 </thead>
                 <tbody>

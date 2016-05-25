@@ -183,9 +183,6 @@ class ProgramacionAISemanal extends React.Component {
             })
     }
     guardarAuditoria(idAuditoria, formInventario){
-        if(this.props.puedeModificar!==true)
-            return alert("No tiene los permisos para modificar la Auditoria")
-
         api.auditoria.actualizar(idAuditoria, formInventario)
             .then(auditoriaActualizada=>{
                 console.log('auditoria actualizada correctamente')
@@ -215,7 +212,7 @@ class ProgramacionAISemanal extends React.Component {
         return(
             <div>
                 <h1>Programación Semanal AI</h1>
-                <div className="row">
+                <div>
                     {/* SELECTOR DE CLIENTE */}
                     <div className={'col-sm-2 form-group '}>
                         <label className="control-label" htmlFor="selectCliente">Cliente</label>
@@ -293,7 +290,7 @@ class ProgramacionAISemanal extends React.Component {
                     actualizarFiltro={this.actualizarFiltro.bind(this)}>
 
                     {this.state.auditoriasFiltradas.length===0
-                        ? <tr><td colSpan="16" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
+                        ? <tr><td colSpan="15" style={{textAlign: 'center'}}><b>No hay auditorias para mostrar en este periodo.</b></td></tr>
                         : this.state.auditoriasFiltradas.map((auditoria, index)=>{
                             let mostrarSeparador = false
                             let sgteInventario = this.state.auditoriasFiltradas[index+1]
@@ -302,6 +299,7 @@ class ProgramacionAISemanal extends React.Component {
                             return <RowAuditoriaSemanal
                                 // Propiedades
                                 puedeModificar={this.props.puedeModificar}
+                                puedeRevisar={this.props.puedeRevisar}
                                 key={index}
                                 index={index}
                                 ref={ref=>this.rows[index]=ref}
@@ -323,6 +321,7 @@ class ProgramacionAISemanal extends React.Component {
 
 ProgramacionAISemanal.propTypes = {
     puedeModificar: React.PropTypes.bool.isRequired,
+    puedeRevisar: React.PropTypes.bool.isRequired,
     clientes: React.PropTypes.array.isRequired,
     auditores: React.PropTypes.array.isRequired
 }

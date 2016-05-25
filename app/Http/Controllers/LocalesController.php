@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Input;
 use Symfony\Component\HttpFoundation\Response;
 // Modelos
 use Auth;
-use App\Locales;
+//use App\Locales;
 use App\Clientes;
 use App\FormatoLocales;
 use App\Jornadas;
@@ -69,17 +69,18 @@ class LocalesController extends Controller {
 
     // GET api/locales/{idLocal}
     // Entrega la informacion de un local, sin sus relaciones
-    public function api_getLocal($idLocal){
-        $local = Locales::find($idLocal);
-        // si no existe retorna un objeto vacio con statusCode 404 (not found)
-        if(!$local)
-            return response()->json([], 404);
-        return response()->json($local);
-    }
+//    public function api_getLocal($idLocal){
+//        $local = Locales::find($idLocal);
+//        // si no existe retorna un objeto vacio con statusCode 404 (not found)
+//        if(!$local)
+//            return response()->json([], 404);
+//        return response()->json($local);
+//    }
 
     // GET api/locales/{idLocal}/verbose
     // Entrega la ifnormacion de un local, junto con sus relaciones
-    public function api_getLocalVerbose($idLocal){
+
+    /*public function api_getLocalVerbose($idLocal){
         $local = Locales::find($idLocal);
 
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
@@ -114,7 +115,7 @@ class LocalesController extends Controller {
         // Calcular la dotacion sugerida
         $localAsArray['dotacionSugerida'] = $local->dotacionSugerida();
         return response()->json($localAsArray);
-    }
+    }*/
 
     public function api_getFormatos(){
         $formatos = FormatoLocales::all();

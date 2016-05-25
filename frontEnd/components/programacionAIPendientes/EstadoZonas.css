@@ -1,0 +1,16 @@
+.tablaEstadoZonas{
+    font-size: 12px;
+}
+
+.celdaExcelente {
+    background: green;
+}
+.celdaBien {
+    background: palegreen;
+}
+.celdaMal {
+    background: orange;
+}
+.celdaCritico {
+    background: indianred;
+}

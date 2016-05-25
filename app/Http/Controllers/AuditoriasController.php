@@ -76,6 +76,7 @@ class AuditoriasController extends Controller {
         // buscar la mayor fechaProgramada en los iventarios
         return view('operacional.programacionAI.programacion-semanal', [
             'puedeModificarAuditorias' => $user->can('programaAuditorias_modificar')? "true":"false",
+            'puedeRevisarAuditorias' => $user->can('programaAuditorias_revisar')? "true":"false",
             'clientes' => $clientes,
             'primerInventario'=> $minymax->primerInventario,
             'ultimoInventario'=> $minymax->ultimoInventario,
@@ -119,13 +120,15 @@ class AuditoriasController extends Controller {
 
             if($resultado){
                 Log::info("[AUDITORIA:NUEVO] auditoria con idLocal '$auditoria->idLocal' programada para '$auditoria->fechaProgramada' creada.");
-                return response()->json(
-                    $auditoria = Auditorias::with([
-                        'local.cliente',
-                        'local.direccion.comuna.provincia.region',
-                        'auditor'
-                    ])->find($auditoria->idAuditoria)
-                    , 201);
+                $auditoriaDB = Auditorias::with([
+                    'local.cliente',
+                    'local.direccion.comuna.provincia.region',
+                    'auditor'
+                ])->find($auditoria->idAuditoria);
+                // Temporal, remover de alguna forma (con un scope)?
+                $auditoriaDB['inventarioEnELMismoMes'] = Locales::find($auditoria->idLocal)
+                    ->inventarioRealizadoEn($auditoria->fechaProgramada);
+                return response()->json($auditoriaDB, 201);
             }else{
                 return response()->json([
                     'request'=> $request->all(),
@@ -142,33 +145,30 @@ class AuditoriasController extends Controller {
         $auditoria = Auditorias::find($idAuditoria);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
         if($auditoria){
+            $mensajeActualizar = "[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'; ";
+
             // actualizar fecha siempre y cuando sea valida dependiendo el mes
             if(isset($request->fechaProgramada)) {
                 if ($this->fecha_valida($request->fechaProgramada)) {
+                    Log::info( $mensajeActualizar."fechaProgramada '$auditoria->fechaProgramada' > '$request->fechaProgramada'." );
                     $auditoria->fechaProgramada = $request->fechaProgramada;
-                    Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. fechaProgramada '$request->fechaProgramada' actualizada.");
                 }
             }
-
             // actualizar auditor
             if(isset($request->idAuditor)){
                 $idAuditor = $request->idAuditor==0? null: $request->idAuditor;
+                Log::info( $mensajeActualizar."idAuditor '$auditoria->idAuditor' > '$idAuditor'." );
                 $auditoria->idAuditor = $idAuditor;
-                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. idAuditor '$idAuditor' actualizado.");
-            }
-            if(isset($request->realizada)){
-                $auditoria->realizada = $request->realizada;
-                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. realizada '$request->realizada' actualizado.");
             }
             if(isset($request->aprovada)){
+                Log::info( $mensajeActualizar."aprovada '$auditoria->aprovada' > '$request->aprovada'." );
                 $auditoria->aprovada = $request->aprovada;
-                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. aprovada '$request->aprovada' actualizado.");
             }
             // actualizar hora de presentacion de auditor
             if(isset($request->horaPresentacionAuditor)){
                 $horaPresentacion = $request->horaPresentacionAuditor==0? null: $request->horaPresentacionAuditor;
                 $auditoria->horaPresentacionAuditor = $horaPresentacion;
-                Log::info("[AUDITORIA:ACTUALIZAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal'. horaPresentacionAuditor '$horaPresentacion' actualizado.");
+                Log::info( $mensajeActualizar."horaPresentacionAuditor '$auditoria->horaPresentacionAuditor' > '$horaPresentacion'." );
             }
 
             $resultado = $auditoria->save();
@@ -215,7 +215,17 @@ class AuditoriasController extends Controller {
     // GET api/auditoria/mes/{annoMesDia}/cliente/{idCliente}
     function api_getPorMesYCliente($annoMesDia, $idCliente) {
         $auditorias = $this->buscarPorMesYCliente($annoMesDia, $idCliente);
-        return response()->json($auditorias, 200);
+
+        // agregra a la consulta, el ultimo inventario asociado al local de la auditoria
+        $auditoriasConInventario = array_map(function ($auditoria) {
+            // agregar si existe, un inventario que haya sido realizado en el mismo local, el mismo mes
+            $auditoria['inventarioEnELMismoMes'] = Locales::find($auditoria['idLocal'])
+                ->inventarioRealizadoEn($auditoria['fechaProgramada']);
+            return $auditoria;
+        }, $auditorias);
+
+
+        return response()->json($auditoriasConInventario, 200);
     }
 
     // GET api/auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}
@@ -302,12 +312,15 @@ class AuditoriasController extends Controller {
                 $realizadas = count($realizadasInformado);
                 $pendientes = count($pendientesInformado);
                 // Estado de avance Esperado
-                $auditoriasPorDia_esperado = round($total/$diasHabilesMes, 1);
+                $auditoriasPorDia_esperado = $diasHabilesMes==0? 0 : round($total/$diasHabilesMes, 1);          // division por cero
                 $realizadasALaFecha_esperado = round($diasHabilesTranscurridos*$auditoriasPorDia_esperado);
-                $porcentajeAvance_esperado = round(($realizadasALaFecha_esperado*100)/$total);
+                $pendientesALaFecha_esperado = $total - $realizadasALaFecha_esperado;
+                $porcentajeAvance_esperado = $total==0? 0 : round(($realizadasALaFecha_esperado*100)/$total);   // division por cero
+                $diasParaTerminar_esperado = $auditoriasPorDia_esperado==0? 0 : round($pendientesALaFecha_esperado/$auditoriasPorDia_esperado, 1);
                 // Estado de avance Real
-                $auditoriasPorDia_real = round($realizadas/$diasHabilesTranscurridos, 1);
-                $porcentajeAvance_real = round(($realizadas*100)/$total);
+                $auditoriasPorDia_real = $diasHabilesTranscurridos==0? 0 : round($realizadas/$diasHabilesTranscurridos, 1); // division por cero
+                $porcentajeAvance_real = $total==0? 0 : round(($realizadas*100)/$total);                        // division por cero
+                $diasParaTerminar_real = $auditoriasPorDia_real==0? 0 : round($pendientes/$auditoriasPorDia_real, 1);
                 
                 return [
                     'zona'=>$zona,
@@ -324,11 +337,14 @@ class AuditoriasController extends Controller {
                         // Estado de avance Esperado
                         'auditoriasPorDia_esperado'=>$auditoriasPorDia_esperado,
                         'realizadasALaFecha_esperado'=>$realizadasALaFecha_esperado,
+                        'pendientesALaFecha_esperado'=>$pendientesALaFecha_esperado,
                         'porcentajeCumplimiento_esperado'=>$porcentajeAvance_esperado,
+                        'diasParaTerminar_esperado'=>$diasParaTerminar_esperado,
                         // Estado de avance Real
                         'auditoriasPorDia_real'=>$auditoriasPorDia_real,
                         'realizadasALaFecha_real'=>$realizadas,
-                        'porcentajeCumplimiento_real'=>$porcentajeAvance_real
+                        'porcentajeCumplimiento_real'=>$porcentajeAvance_real,
+                        'diasParaTerminar_real'=>$diasParaTerminar_real,
                     ]
                 ];
             }, Zonas::orderBy('idZona')->get()->toArray());
@@ -339,7 +355,7 @@ class AuditoriasController extends Controller {
         }
     }
 
-    // POST api/auditoria/cliente/{idCliente}/numeroLocal/{CECO}/fecha/{fecha}/informarRealizado
+    // POST api/auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado
     function api_informarRealizado($idCliente, $ceco, $annoMesDia){
         $fecha = explode('-', $annoMesDia);
         $anno = $fecha[0];
@@ -349,32 +365,38 @@ class AuditoriasController extends Controller {
         $local = Locales::where('idCliente', '=', $idCliente)
             ->where('numero', '=', $ceco)
             ->first();
-        if($local){
-            // Buscar una aditoria del LOCAL en el mismo MES
-            $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)
-                ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
-                ->first();
-
-            if($auditoria){
-                $auditoria->realizadaInformada = true;
-                $auditoria->fechaAuditoria = $annoMesDia;
-                $auditoria->save();
-                // buscar la auditoria actualizada en la BD
-                Log::info("[AUDITORIA:INFORMAR_REALIZADO:OK] idAuditoria '$auditoria->idAuditoria' informada correctamente. ceco '$ceco', idCliente '$idCliente', mes '$annoMesDia'.");
-                return response()->json(Auditorias::find($auditoria->idAuditoria), 200);
-            }else{
-                // auditoria con esa fecha no existe
-                $errorMsg = "no existe una auditoria para el idLocal '$local->idLocal' en el mes '$annoMesDia'";
-                Log::info("[AUDITORIA:INFORMAR_REALIZADO:ERROR] $errorMsg");
-                return response()->json(['msg'=>$errorMsg], 404);
-            }
-        }else{
+        if(!$local) {
             // local de ese usuario, con ese ceco no existe
-            $errorMsg = "no existe el CECO '$ceco' del idCliente '$idCliente'";
+            $errorMsg = "CECO:'$ceco' idCliente:'$idCliente' fecha:'$annoMesDia'. No existe el Local.";
+            Log::info("[AUDITORIA:INFORMAR_REALIZADO:ERROR] $errorMsg");
+            return response()->json(['msg' => $errorMsg], 404);
+        }
+        
+        // Buscar una aditoria del LOCAL en el mismo MES
+        $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)
+            ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+            ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+            ->first();
+        if(!$auditoria) {
+            // auditoria con esa fecha no existe
+            $errorMsg = "CECO:'$ceco' idCliente:'$idCliente' fecha:'$annoMesDia'. No existe auditoria para el mes indicado.";
             Log::info("[AUDITORIA:INFORMAR_REALIZADO:ERROR] $errorMsg");
             return response()->json(['msg'=>$errorMsg], 404);
         }
+        
+        // Verificar que no haya sido informada anteriormente
+        if($auditoria->fechaAuditoria!='0000-00-00'){
+            $errorMsg = "CECO:'$ceco' idCliente:'$idCliente' fecha:'$annoMesDia'. Auditoria ya informada previamente.";
+            Log::info("[AUDITORIA:INFORMAR_REALIZADO:ERROR] $errorMsg");
+            return response()->json(['msg'=>$errorMsg], 400);
+        }
+        
+        $auditoria->realizadaInformada = true;      // Eliminar
+        $auditoria->fechaAuditoria = $annoMesDia;
+        $auditoria->save();
+        // buscar la auditoria actualizada en la BD
+        Log::info("[AUDITORIA:INFORMAR_REALIZADO:OK] CECO:'$ceco' idCliente:'$idCliente' fecha:'$annoMesDia'. idAuditoria:'$auditoria->idAuditoria' informada correctamente.");
+        return response()->json(Auditorias::find($auditoria->idAuditoria), 200);         
     }
 
     // TEMPORAL; ELIMINAR ASAP
@@ -576,7 +598,7 @@ class AuditoriasController extends Controller {
     // Funcion para general el excel
     private function generarWorkbook($auditorias){
         //$formatoLocal = FormatoLocales::find();
-        $auditoriasHeader = ['Fecha Programada', 'Fecha Auditoría', 'Hora presentación', 'Realizada', 'Aprobada', 'Cliente', 'CECO', 'Local', 'Stock', 'Fecha stock', 'Auditor', 'Dirección', 'Región', 'Provincia', 'Comuna', 'Hora apertura', 'Hora cierre', 'Email', 'Teléfono 1', 'Teléfono 2'];
+        $auditoriasHeader = ['Fecha Programada', 'Fecha Auditoría', 'Hora presentación', 'Realizada', 'Aprobada', 'Cliente', 'CECO', 'Local', 'Stock', 'Fecha stock', 'Auditor', 'Dirección', 'Región', 'Nombre región', 'Provincia', 'Comuna', 'Hora apertura', 'Hora cierre', 'Email', 'Teléfono 1', 'Teléfono 2'];
 
         $auditoriasArray = array_map(function($auditoria){
             // la fecha programada debe estar estar en formato DD-MM-YYYY
@@ -600,6 +622,7 @@ class AuditoriasController extends Controller {
                 $auditoria['local']['fechaStock'],
                 $auditoria['auditor']? $auditoria['auditor']['nombre1']." ".$auditoria['auditor']['apellidoPaterno'] : '-',
                 $auditoria['local']['direccion']['direccion'],
+                $auditoria['local']['direccion']['comuna']['provincia']['region']['numero'],
                 $auditoria['local']['direccion']['comuna']['provincia']['region']['nombreCorto'],
                 $auditoria['local']['direccion']['comuna']['provincia']['nombre'],
                 $auditoria['local']['direccion']['comuna']['nombre'],

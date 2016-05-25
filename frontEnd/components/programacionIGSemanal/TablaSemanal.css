@@ -30,11 +30,11 @@
 
 /* FECHA */
 .thFecha{
-    width: 170px !important;
+    width: 135px !important;
     background: white;
 }
 .tdFecha{
-    width: 170px !important;
+    width: 135px !important;
     background: white;
     vertical-align: middle !important;
     padding: 0px !important;
@@ -42,14 +42,14 @@
 
 /* CLIENTE */
 .thCliente{
-    width: 45px !important;
+    width: 35px !important;
     background: white;
 }
 .tdCliente{
-    width: 45px !important;
+    width: 35px !important;
     background: white;
     vertical-align: middle !important;
-    font-size: 12px !important;
+    font-size: 10px !important;
 }
 .tdCliente p{
     text-align: center;
@@ -57,14 +57,14 @@
 
 /* CECO */
 .thCeco{
-    width: 45px !important;
+    width: 35px !important;
     background: white;
 }
 .tdCeco{
-    width: 45px !important;
+    width: 35px !important;
     background: white;
     vertical-align: middle !important;
-    font-size: 12px !important;
+    font-size: 10px !important;
 }
 .tdCeco p{
     text-align: center;
@@ -87,23 +87,23 @@
 
 /* COMUNA */
 .thComuna{
-    width: 95px !important;
+    width: 80px !important;
     background: white;
 }
 .tdComuna{
-    width: 95px !important;
+    width: 80px !important;
     background: white;
     vertical-align: middle !important;
-    font-size: 12px !important;
+    font-size: 10px !important;
 }
 
 /* TURNO */
 .thTurno{
-    width: 95px !important;
+    width: 80px !important;
     background: white;
 }
 .tdTurno{
-    width: 95px !important;
+    width: 80px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
@@ -111,7 +111,7 @@
     font-size: 14px !important;
 }
 .tdTurno > select {
-    width: 94px !important;
+    width: 79px !important;
     display: block;
     margin: 0 auto 1px auto;
     height:18px;
@@ -121,13 +121,14 @@
 
 /* TIENDA */
 .thTienda{
-    width: 110px !important;
+    width: 100px !important;
     background: white;
 }
 .tdTienda{
-    width: 110px !important;
+    width: 100px !important;
     background: white;
     vertical-align: middle !important;
+    font-size: 10px;
 }
 
 /* STOCK */
@@ -162,18 +163,18 @@
 }
 
 /* LIDER / SUPERVISOR / CAPTADOR1 / CAPTADOR2 */
-.thLider{
-    width: 110px !important;
+.thUsuario{
+    width: 100px !important;
     background: white;
 }
-.tdLider{
-    width: 110px !important;
+.tdUsuario{
+    width: 100px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.tdLider > select {
+.tdUsuario > select {
     width: 98px !important;
     height: 18px;               /* misma altura de un input */
     margin: 0 auto 1px auto;    /* mismos margenes de un input */
@@ -201,44 +202,47 @@
 
 /* HORA LLEGADA LIDER / HORA LLEGADA EQUIPO */
 .thHora{
-    width: 94px !important;
+    width: 62px !important;
     background: white;
 }
 .tdHora{
-    width: 94px !important;
+    width: 62px !important;
     background: white;
     vertical-align: middle !important;
-    padding-left: 2px !important;
-    padding-right: 2px !important;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
 }
 .tdHora > input {
-    width: 90px !important;
+    width: 60px !important;
     height: 18px !important;    /* misma altura que los select */
+    margin-left: 0;
+    margin-right: 0;
 }
 
 /* DIRECCION */
 .thDireccion{
-    width: 220px !important;
+    width: 160px !important;
     background: white;
 }
 .tdDireccion{
-    width: 220px !important;
+    width: 160px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 2px !important;
     padding-right: 2px !important;
     font-size: 10px;
+    line-height: 1 !important;
 }
 
 /* NOMINA */
 .thNomina{
-    width: auto !important;
-    min-width: 100px;
     background: white;
+    width: 65px;
+    padding-left: 0 !important;
 }
 .tdNomina{
-    width: auto !important;
     background: white;
+    width: auto !important;
     vertical-align: middle !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -248,4 +252,27 @@
     font-size: 12px !important;
     line-height: 12px !important;
     height: 18px !important;
+}
+
+/* UNIDADES */
+.thUnidadesReales {
+    background: white;
+    width: 45px;
+    padding-left: 0 !important;;
+}
+.tdUnidadesReales {
+    background: white;
+    width: 45px;
+    vertical-align: middle !important;
+}
+
+.thUnidadesTeoricas {
+    background: white;
+    width: auto !important;
+    padding-left: 0 !important;
+}
+.tdUnidadesTeoricas {
+    background: white;
+    width: auto !important;
+    vertical-align: middle !important;
 }

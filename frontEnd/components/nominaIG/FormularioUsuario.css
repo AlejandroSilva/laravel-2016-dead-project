@@ -1,0 +1,29 @@
+.form__control-label{
+    font-size: 12px;
+}
+
+.form__footer{
+    text-align: right;
+    padding-top: 1em;
+    border-top: 1px solid #e5e5e5;
+}
+
+/*.validation-error-no-margin {*/
+    /*display: block;*/
+    /*color: #a94442;*/
+    /*margin-top: -10px;*/
+    /*margin-bottom: 10px;*/
+/*}*/
+.form__message-error {
+    display: block;
+    color: #a94442;
+}
+
+.form__field--error {
+    border-color: #a94442;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+.form__field--error:focus{
+    border-color: #a94442;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483
+}

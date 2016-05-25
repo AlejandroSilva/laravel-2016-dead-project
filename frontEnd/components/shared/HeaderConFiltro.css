@@ -18,6 +18,21 @@
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px grey;
     padding: 5px;
 }
+
+.contenedorInput{
+    height: 25px;
+    padding: 0;
+}
+.contenedorInput > input {
+    width: 170px; /*190px de .menu - 20px del button*/
+}
+.contenedorInput > button {
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px
+}
+
 .contenedorValores{
     height: 130px;
     border: 1px solid grey;

@@ -22,33 +22,29 @@ class RowAuditoriaSemanal extends React.Component{
     }
 
     guardarAuditoria() {
-        if(!this.props.puedeModificar)
-            return alert('no tiene permisos para realizar esta acción')
-
         let cambiosAuditoria = {}
 
-        // la FECHA es valida, y ha cambiado?
-        let estadoInputFecha = this.inputFecha.getEstado()
-        if (estadoInputFecha.valid && estadoInputFecha.dirty) {
-            cambiosAuditoria.fechaProgramada = estadoInputFecha.fecha
-        } else if (estadoInputFecha.valid === false) {
-            return console.log(`fecha ${estadoInputFecha.fecha} invalida`)
+        if(this.props.puedeModificar){
+            // la FECHA es valida, y ha cambiado?
+            let estadoInputFecha = this.inputFecha.getEstado()
+            if (estadoInputFecha.valid && estadoInputFecha.dirty) {
+                cambiosAuditoria.fechaProgramada = estadoInputFecha.fecha
+            } else if (estadoInputFecha.valid === false) {
+                return console.log(`fecha ${estadoInputFecha.fecha} invalida`)
+            }
+    
+            // el AUDITOR ha cambiado?
+            let estadoSelectAuditor = this.selectAuditor.getEstado()
+            if(estadoSelectAuditor.dirty)
+                cambiosAuditoria.idAuditor = estadoSelectAuditor.seleccionUsuario
         }
 
-        // el AUDITOR ha cambiado?
-        let estadoSelectAuditor = this.selectAuditor.getEstado()
-        if(estadoSelectAuditor.dirty)
-            cambiosAuditoria.idAuditor = estadoSelectAuditor.seleccionUsuario
-
-        // REALIZADA ha cambiado?
-        let estadoSelectRealizada = this.selectRealizada.getEstado()
-        if(estadoSelectRealizada.dirty)
-            cambiosAuditoria.realizada = estadoSelectRealizada.seleccionUsuario
-
-        // APROBADA ha cambiado?
-        let estadoSelectAprobada = this.selectAprobada.getEstado()
-        if(estadoSelectAprobada.dirty)
-            cambiosAuditoria.aprovada = estadoSelectAprobada.seleccionUsuario
+        if(this.props.puedeModificar || this.props.puedeRevisar){
+            // APROBADA ha cambiado?
+            let estadoSelectAprobada = this.selectAprobada.getEstado()
+            if(estadoSelectAprobada.dirty)
+                cambiosAuditoria.aprovada = estadoSelectAprobada.seleccionUsuario
+        }
 
         // la HORA DE LLEGADA DEL AUDITOR es valida y ha cambiado?
         // let estadoHoraAuditor = this.inputHoraAuditor.getEstado()
@@ -107,7 +103,7 @@ class RowAuditoriaSemanal extends React.Component{
                     <InputFecha
                         puedeModificar={this.props.puedeModificar}
                         ref={ref=>this.inputFecha=ref}
-                        diaSemana={moment(this.props.auditoria.fechaProgramada).format('dddd')}
+                        diaSemana={moment(this.props.auditoria.fechaProgramada).format('dd')}
                         fecha={this.props.auditoria.fechaProgramada}
                         onGuardar={this.guardarAuditoria.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}
@@ -161,50 +157,26 @@ class RowAuditoriaSemanal extends React.Component{
                             opcionNulaSeleccionable={true}
                             puedeModificar={this.props.puedeModificar}/>
                 </td>
-                {/* Realizada */}
-                <td className={css.tdRealizadaAprobada}>
-                    <Select
-                        ref={ref=>this.selectRealizada=ref}
-                        seleccionada={this.props.auditoria.realizada}
-                        onSelect={this.guardarAuditoria.bind(this)}
-                        opciones={[
-                            {valor: '0', texto: 'Pendiente'},
-                            {valor: '1', texto: 'Realizada'}
-                        ]}
-                        opcionNula={false}
-                        opcionNulaSeleccionable={false}
-                        puedeModificar={this.props.puedeModificar}/>
+                {/* (informado) Fecha Auditoria */}
+                <td className={css.tdFechaInformada}>
+                    {this.props.auditoria.fechaAuditoria==='0000-00-00'?
+                        <span className="label label-default">Pendiente</span> :
+                        <span className="label label-primary">{this.props.auditoria.fechaAuditoria}</span>
+                    }
                 </td>
-                {/* Aprobada */}
-                <td className={css.tdRealizadaAprobada}>
+                {/* Revisado (antes llamado "Aprobada" */}
+                <td className={css.tdRevisada}>
                     <Select
                         ref={ref=>this.selectAprobada=ref}
                         seleccionada={this.props.auditoria.aprovada}
                         onSelect={this.guardarAuditoria.bind(this)}
                         opciones={[
                             {valor: '0', texto: 'Pendiente'},
-                            {valor: '1', texto: 'Aprobada'}
+                            {valor: '1', texto: 'Revisada'}
                         ]}
                         opcionNula={false}
                         opcionNulaSeleccionable={false}
-                        puedeModificar={this.props.puedeModificar && this.props.auditoria.realizada==="1"}/>
-                </td>
-                {/* Estado Informado */}
-                <td className={css.tdRealizadaAprobada}>
-                    <Select
-                        seleccionada={this.props.auditoria.realizadaInformada}
-                        onSelect={()=>{}}
-                        opciones={[
-                            {valor: '0', texto: 'Pendiente'},
-                            {valor: '1', texto: 'Realizada'}
-                        ]}
-                        opcionNula={false}
-                        opcionNulaSeleccionable={false}
-                        puedeModificar={false}/>
-                </td>
-                {/* (informado) Fecha Auditoria */}
-                <td className={css.tdRealizadaAprobada}>
-                    {this.props.auditoria.fechaAuditoria!='0000-00-00'? this.props.auditoria.fechaAuditoria : ''}
+                        puedeModificar={this.props.puedeRevisar}/>
                 </td>
                 {/* Hora de Apertura del local */}
                 <td className={css.tdAperturaCierre}>
@@ -220,7 +192,7 @@ class RowAuditoriaSemanal extends React.Component{
                 </td>
                 {/* Dirección */}
                 <td className={css.tdDireccion}>
-                    <p>{this.props.auditoria.local.direccion.direccion}</p>
+                    {this.props.auditoria.local.direccion.direccion}
                 </td>
                 {/* Opciones */}
                 <td className={css.tdOpciones}>
@@ -242,6 +214,7 @@ class RowAuditoriaSemanal extends React.Component{
 RowAuditoriaSemanal.propTypes = {
     // Objetos
     puedeModificar: React.PropTypes.bool.isRequired,
+    puedeRevisar: React.PropTypes.bool.isRequired,
     index: React.PropTypes.number.isRequired,
     auditoria: React.PropTypes.object.isRequired,
     auditores: React.PropTypes.array.isRequired,

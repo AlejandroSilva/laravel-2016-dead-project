@@ -3,22 +3,25 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 // Componentes
-import InventarioForm from './components/inventario/InventarioForm.jsx'
+//import InventarioForm from './components/inventario/InventarioForm.jsx'
 import ProgramacionIGMensual from './components/programacionIGMensual/ProgramacionIGMensual.jsx'
 import ProgramacionIGSemanal from './components/programacionIGSemanal/ProgramacionIGSemanal.jsx'
 import ProgramacionAIMensual from './components/programacionAIMensual/ProgramacionAIMensual.jsx'
 import ProgramacionAISemanal from './components/programacionAISemanal/ProgramacionAISemanal.jsx'
 import { ProgramacionAIPendientes } from './components/programacionAIPendientes/ProgramacionAIPendientes.jsx'
 import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.jsx'
+import { GeoGestor } from './components/Geo/GeoGestor.jsx'
+import { NominaIG } from './components/nominaIG/nominaIG.jsx'
 
-/** FORMULARIO PARA LA CREACIÓN DE UN NUEVO FORMULARIO */
-let nuevoInventarioDOM = document.getElementById('nuevo-inventario')
-if (nuevoInventarioDOM){
-    ReactDOM.render(
-        <InventarioForm
-            clientes={window.laravelClientes}
-        />, nuevoInventarioDOM)
-}
+/** FORMULARIO PARA LA CREACIÓN DE UN NUEVO Inventario */
+// GET inventario/nuevo, NO SE OCUPA
+// let nuevoInventarioDOM = document.getElementById('nuevo-inventario')
+// if (nuevoInventarioDOM){
+//     ReactDOM.render(
+//         <InventarioForm
+//             clientes={window.laravelClientes}
+//         />, nuevoInventarioDOM)
+// }
 
 /** PROGRAMACIÓN INVENTARIO GENERAL */
 let programacionIGMensualDOM = document.getElementById('react-programacionIG-mensual')
@@ -70,6 +73,7 @@ if( programacionAISemanalDOM ){
     ReactDOM.render(
         <ProgramacionAISemanal
             puedeModificar={ window.laravelPuedeModificarAuditorias }
+            puedeRevisar={laravelPuedeRevisarAuditorias}
             clientes={clienteFCV}
             auditores={window.laravelAuditores}
         />, programacionAISemanalDOM)
@@ -85,6 +89,28 @@ if( mantenedorLocalesDOM ){
             formatoLocales={window.laravelFormatoLocales}
         />, mantenedorLocalesDOM)
 }
+
+/** GEO **/
+let geoGestorDOM = document.getElementById('react-geo-gestor')
+if( geoGestorDOM ){
+    ReactDOM.render(
+        <GeoGestor
+            // props
+        />, geoGestorDOM)
+}
+
+/** MANTENEDOR DE NOMINAS **/
+let mantenedorNominaIGDOM = document.getElementById('react-nominaIG-nominaIG')
+if( mantenedorNominaIGDOM ){
+    ReactDOM.render(
+        <NominaIG
+            usuario={undefined}
+            inventario={window.laravelInventario}
+            nomina={window.laravelNomina}
+            comunas={window.laravelComunas}
+        />, mantenedorNominaIGDOM)
+}
+
 
 // http://jamesknelson.com/push-state-vs-hash-based-routing-with-react-js/
 //class App extends React.Component{

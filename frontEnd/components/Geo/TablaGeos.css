@@ -1,0 +1,87 @@
+.tablaGeos {
+    table-layout: fixed;
+    width: 100%;
+    font-size: 12px;
+}
+
+.colNumeral{
+    background: white;
+    width: 20px;
+}
+
+/* Zona */
+.colZona{
+    background: white;
+    width: 100px;
+}
+
+/* Region */
+.colRegion{
+    background: white;
+    width: 150px;
+}
+
+/* Comuna */
+.colComuna{
+    background: white;
+    width: 210px;
+}
+.colComunaNombre{
+    background: white;
+    width: 140px;
+}
+.colComunaLocales{
+    background: white;
+    width: 70px;
+}
+
+/* Geo */
+.colGeo{
+    background: white;
+    width: 140px;
+}
+.colGeoNombre{
+    background: white;
+    width: 70px;
+}
+.colGeoMin{
+    background: white;
+    width: 35px;
+}
+.colGeoMax{
+    background: white;
+    width: 35px;
+}
+
+/* Subgeo */
+.colSubgeo{
+    background: white;
+    /*width: 140px;*/
+    width: auto !important;
+}
+.colSubgeoNombre{
+    background: white;
+    width: 140px;
+}
+.colSubgeoMin{
+    background: white;
+    width: 35px;
+}
+.colSubgeoMax{
+    background: orange;
+    /*width: 35px;*/
+    width: auto !important;
+}
+
+.colUNO{
+    background: grey;
+    width: 20%;
+}
+.colDOS{
+    background: grey;
+    width: 40%;
+}
+.colTRES{
+    background: grey;
+    width: 40%;
+}

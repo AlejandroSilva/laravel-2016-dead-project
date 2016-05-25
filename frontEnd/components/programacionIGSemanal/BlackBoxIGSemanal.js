@@ -11,6 +11,7 @@ export default class BlackBoxIGSemanal{
         this.filtroCaptadores = []
         this.filtroLocales = []
         this.filtroFechas = []
+        this.filtroFechaSubidaNomina = []
     }
     reset() {
         this.lista = []
@@ -21,6 +22,7 @@ export default class BlackBoxIGSemanal{
         this.filtroCaptadores = []
         this.filtroLocales = []
         this.filtroFechas = []
+        this.filtroFechaSubidaNomina = []
     }
     // Todo: Optimizar
     // Todo Modificar: el listado de clientes
@@ -91,6 +93,10 @@ export default class BlackBoxIGSemanal{
 
         // ##### Filtro Comunas (ordenado por codComuna)
         this.filtroComunas = _.chain(this.lista)
+            // solo dejar las comunas en las que su respectiva region este seleccionada
+            .filter(inventario=>{
+                return _.find(this.filtroRegiones, {'valor': inventario.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+            })
             .map(inventario=>{
                 let valor = inventario.local.direccion.cutComuna
                 let texto = inventario.local.direccion.comuna.nombre
@@ -172,6 +178,19 @@ export default class BlackBoxIGSemanal{
             .sortBy('texto')
             .value()
 
+        this.filtroFechaSubidaNomina = _.chain(this.lista)
+            .map(inventario=>{
+                let valor = inventario.nomina_dia.fechaSubidaNomina
+                let texto = valor=='0000-00-00'? `-- PENDIENTE --` : moment(valor).format('dddd DD MMMM')
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroFechaSubidaNomina, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('valor')
+            .value()
+
         // ##### Filtro Numero de Local
         // let locales = this.lista.map(inventario=>inventario.local.numero)
         // // convierte el texto a numero, y los ordena de menor a mayor
@@ -240,6 +259,9 @@ export default class BlackBoxIGSemanal{
                 .filter(inventario=>{
                     return _.find(this.filtroFechas, {'valor': inventario.fechaProgramada, 'seleccionado': true})
                 })
+                .filter(inventario=>{
+                    return _.find(this.filtroFechaSubidaNomina, {'valor': inventario.nomina_dia.fechaSubidaNomina, 'seleccionado': true})
+                })
                 .value(),
             filtros: {
                 filtroRegiones: this.filtroRegiones,
@@ -247,7 +269,8 @@ export default class BlackBoxIGSemanal{
                 filtroLideres: this.filtroLideres,
                 filtroCaptadores: this.filtroCaptadores,
                 filtroLocales: this.filtroLocales,
-                filtroFechas: this.filtroFechas
+                filtroFechas: this.filtroFechas,
+                filtroFechaSubidaNomina: this.filtroFechaSubidaNomina
             }
         }
     }

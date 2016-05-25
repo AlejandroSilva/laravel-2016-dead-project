@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'dev'),
 
     /*
     |--------------------------------------------------------------------------
@@ -109,6 +109,7 @@ return [
     */
 
     'log' => env('APP_LOG', 'daily'),
+    'log_max_files' => 90,
 
     /*
     |--------------------------------------------------------------------------
@@ -157,6 +158,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\HelpersServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
     ],
 
     /*
@@ -203,6 +205,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'Image' => Barryvdh\Snappy\Facades\SnappyImage::class,
     ],
 
 ];
