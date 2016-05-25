@@ -7,13 +7,11 @@
             padding-top: 2px !important;
             padding-bottom: 2px !important;
         }
-
         /* ######## Paneles de Informacion ########*/
         .panelDatos_heading{
             padding-top: 2px !important;
             padding-bottom: 2px !important;
         }
-
         .tablaDatos {
             font-size: 12px;
         }
@@ -21,7 +19,6 @@
             padding-top: 0 !important;
             padding-bottom: 0 !important;
         }
-
         /* ############# Dotación Seleccionada #############*/
         .tablaDotacion {
             table-layout: fixed;
@@ -55,26 +52,26 @@
                     <div class="panel-heading panelDatos_heading">Inventario</div>
                     <table class="table table-compact table-striped tablaDatos">
                         <tbody>
-                            <tr>
-                                <td>Cliente</td><td><b>{{ $inventario->local->cliente->nombreCorto }}</b></td>
-                                <td>Dotación asignada</td><td>{{ $nomina->dotacionAsignada }}</td>
-                            </tr>
-                            <tr>
-                                <td>Local</td><td><b>({{$inventario->local->numero}}) {{$inventario->local->nombre}}</b></td>
-                                <td></td><td></td>
-                            </tr>
-                            <tr>
-                                <td>Fecha programada</td><td><b>{{$inventario->fechaProgramada}}</b></td>
-                                <td></td><td></td>
-                            </tr>
-                            <tr>
-                                <td>Hr. llegada lider</td><td>{{$nomina->horaPresentacionLider}}</td>
-                                <td></td><td></td>
-                            </tr>
-                            <tr>
-                                <td>Hr. llegada equipo</td><td>{{$nomina->horaPresentacionEquipo}}</td>
-                                <td></td><td></td>
-                            </tr>
+                        <tr>
+                            <td>Cliente</td><td><b>{{ $inventario->local->cliente->nombreCorto }}</b></td>
+                            <td>Dotación asignada</td><td>{{ $nomina->dotacionAsignada }}</td>
+                        </tr>
+                        <tr>
+                            <td>Local</td><td><b>({{$inventario->local->numero}}) {{$inventario->local->nombre}}</b></td>
+                            <td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha programada</td><td><b>{{$inventario->fechaProgramada}}</b></td>
+                            <td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Hr. llegada lider</td><td>{{$nomina->horaPresentacionLider}}</td>
+                            <td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>Hr. llegada equipo</td><td>{{$nomina->horaPresentacionEquipo}}</td>
+                            <td></td><td></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -85,24 +82,24 @@
                     <div class="panel-heading panelDatos_heading">Local</div>
                     <table class="table table-compact tablaDatos">
                         <tbody>
-                            <tr>
-                                <td>Dirección</td><td>{{ $inventario->local->direccion->direccion }}</td>
-                                <td>Hr.Apertura</td><td>{{ $inventario->local->horaApertura }}</td></tr>
-                            <tr>
-                                <td>Comuna</td><td>{{ $inventario->local->direccion->comuna->nombre }}</td>
-                                <td>Hr.Cierre</td><td>{{ $inventario->local->horaCierre }}</td></tr>
-                            <tr>
-                                <td>Región</td><td>{{ $inventario->local->direccion->comuna->provincia->region->numero }}</td>
-                                <td>Teléfono 1</td><td>{{ $inventario->local->codArea1." ".$inventario->local->telefono1 }}</td>
-                            </tr>
-                            <tr>
-                                <td>Formato Local</td><td>{{ $inventario->local->formatoLocal->nombre  }}</td>
-                                <td>Teléfono 2</td><td>{{ $inventario->local->codArea2." ".$inventario->local->telefono2 }}</td>
-                            </tr>
-                            <tr>
-                                <td></td><td></td>
-                                <td>Correo</td><td>{{ $inventario->local->emailContacto }}</td>
-                            </tr>
+                        <tr>
+                            <td>Dirección</td><td>{{ $inventario->local->direccion->direccion }}</td>
+                            <td>Hr.Apertura</td><td>{{ $inventario->local->horaApertura }}</td></tr>
+                        <tr>
+                            <td>Comuna</td><td>{{ $inventario->local->direccion->comuna->nombre }}</td>
+                            <td>Hr.Cierre</td><td>{{ $inventario->local->horaCierre }}</td></tr>
+                        <tr>
+                            <td>Región</td><td>{{ $inventario->local->direccion->comuna->provincia->region->numero }}</td>
+                            <td>Teléfono 1</td><td>{{ $inventario->local->codArea1." ".$inventario->local->telefono1 }}</td>
+                        </tr>
+                        <tr>
+                            <td>Formato Local</td><td>{{ $inventario->local->formatoLocal->nombre  }}</td>
+                            <td>Teléfono 2</td><td>{{ $inventario->local->codArea2." ".$inventario->local->telefono2 }}</td>
+                        </tr>
+                        <tr>
+                            <td></td><td></td>
+                            <td>Correo</td><td>{{ $inventario->local->emailContacto }}</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -124,35 +121,35 @@
                             <col class="colCargo">
                         </colgroup>
                         <thead>
-                            <tr>
-                                <th>#</th><th>RUN</th><th>Nombre</th><th>Cargo</th>
-                            </tr>
+                        <tr>
+                            <th>#</th><th>RUN</th><th>Nombre</th><th>Cargo</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @if(isset($lider))
-                                <tr>
-                                    <td>L</td>
-                                    <td>{{ $lider->usuarioRUN."-".$lider->usuarioDV }}</td>
-                                    <td>{{ $lider->nombre1." ".$lider->apellidoPaterno }}</td>
-                                    <td>Lider</td>
-                                </tr>
-                            @endif
-                            @if(isset($supervisor))
-                                <tr>
-                                    <td>S</td>
-                                    <td>{{ $supervisor->usuarioRUN."-".$supervisor->usuarioDV }}</td>
-                                    <td>{{ $supervisor->nombre1." ".$supervisor->apellidoPaterno }}</td>
-                                    <td>Supervisor</td>
-                                </tr>
-                            @endif
-                            @for($i=0; $i<sizeof($dotacionTitular); $i++)
-                                <tr>
-                                    <td>{{$i+1}}</td>
-                                    <td>{{ $dotacionTitular[$i]->usuarioRUN."-".$dotacionTitular[$i]->usuarioDV }}</td>
-                                    <td>{{ $dotacionTitular[$i]->nombre1." ".$dotacionTitular[$i]->apellidoPaterno }}</td>
-                                    <td>Operador</td>
-                                </tr>
-                            @endfor
+                        @if(isset($lider))
+                            <tr>
+                                <td>L</td>
+                                <td>{{ $lider->usuarioRUN."-".$lider->usuarioDV }}</td>
+                                <td>{{ $lider->nombre1." ".$lider->apellidoPaterno }}</td>
+                                <td>Lider</td>
+                            </tr>
+                        @endif
+                        @if(isset($supervisor))
+                            <tr>
+                                <td>S</td>
+                                <td>{{ $supervisor->usuarioRUN."-".$supervisor->usuarioDV }}</td>
+                                <td>{{ $supervisor->nombre1." ".$supervisor->apellidoPaterno }}</td>
+                                <td>Supervisor</td>
+                            </tr>
+                        @endif
+                        @for($i=0; $i<sizeof($dotacionTitular); $i++)
+                            <tr>
+                                <td>{{$i+1}}</td>
+                                <td>{{ $dotacionTitular[$i]->usuarioRUN."-".$dotacionTitular[$i]->usuarioDV }}</td>
+                                <td>{{ $dotacionTitular[$i]->nombre1." ".$dotacionTitular[$i]->apellidoPaterno }}</td>
+                                <td>Operador</td>
+                            </tr>
+                        @endfor
                         </tbody>
                     </table>
                 </div>

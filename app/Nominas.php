@@ -1,18 +1,13 @@
 <?php
-
 namespace App;
-
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use App\EstadoNominas;
-
 class Nominas extends Model {
     // llave primaria
     public $primaryKey = 'idNomina';
-
     // este modelo tiene timestamps
     public $timestamps = false;
-
     // #### Relaciones
     public function inventario1() {
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
@@ -26,22 +21,18 @@ class Nominas extends Model {
         // devolver el inventario padre
         return $this->inventario1? $this->inventario1() : $this->inventario2();
     }
-
     public function lider(){
         //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\User', 'id', 'idLider');
     }
-
     public function supervisor(){
         //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\User', 'id', 'idSupervisor');
     }
-
     public function captador(){
         //     $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\User', 'id', 'idCaptador1');
     }
-
     public function dotacion(){
         // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
         return $this->belongsToMany('App\User', 'nominas_user', 'idNomina', 'idUser')
@@ -62,17 +53,15 @@ class Nominas extends Model {
             ->where('titular', false)
             ->orderBy('nominas_user.created_at', 'asc');
     }
-
     public function estado(){
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->hasOne('App\EstadoNominas', 'idEstadoNomina', 'idEstadoNomina');
     }
-    
+
     // #### Consultas
     public function usuarioEnDotacion($operador){
         return $this->dotacion()->find($operador->id);
     }
-
     // #### Scopes
 //    public function scopeWithLiderCaptadorDotacion($query){
 //        return $query->with([
@@ -81,7 +70,7 @@ class Nominas extends Model {
 //            'dotacion.roles'
 //        ]);
 //    }
-    
+
     // #### Formatear
     static function formatearSimple($nomina){
         return [
