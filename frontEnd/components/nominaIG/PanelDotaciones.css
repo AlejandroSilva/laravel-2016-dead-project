@@ -19,7 +19,7 @@
 
 /* Usuario RUN */
 .colUsuarioRUN {
-    width: 100px;;
+    width: 80px;;
 }
 .tdUsuarioRUN > input {
     width: 100%;
@@ -36,7 +36,7 @@
 
 /* Nombre */
 .colNombre {
-    width: 150px;
+    width: 185px;
 }
 .tdNombre > input {
     width: 100%;
@@ -44,7 +44,7 @@
 
 /* Cargo */
 .colCargo {
-    width: 80px;
+    width: 65px;
 }
 .colOpciones {
     width: auto;
