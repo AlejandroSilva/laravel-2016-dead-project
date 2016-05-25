@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Input;
 use Symfony\Component\HttpFoundation\Response;
 // Modelos
 use Auth;
-//use App\Locales;
+use App\Locales;
 use App\Clientes;
 use App\FormatoLocales;
 use App\Jornadas;
@@ -205,8 +205,8 @@ class LocalesController extends Controller {
         $cliente = Clientes::find($idCliente);
         if($cliente){
             $locales = Locales::with(['direccion'])
-                ->where('idCliente', '=', $idCliente)
-                ->get();
+                ->where('idCliente', '=', $idCliente)->paginate(15)
+                ;
             return view('operacional.locales.locales', [
                 'locales' => $locales,
                 'formatoLocales' => $formatoLocales,
@@ -233,7 +233,7 @@ class LocalesController extends Controller {
 
         $validator= Validator::make(Input::all(), $localesRules);
         if($validator->fails()) {
-            return Redirect::to("locales/cliente/$local->idCliente")->withErrors($validator,'error')->withInput();
+            return Redirect::to("admin/cliente/$local->idCliente")->withErrors($validator,'error')->withInput();
             
         }else{
             $direccion = $local->direccion;
@@ -292,7 +292,7 @@ class LocalesController extends Controller {
 
                 $local->save();
 
-                return Redirect::to("locales/cliente/$local->idCliente");
+                return Redirect::to("admin/cliente/$local->idCliente");
             }else{
                 return response()->json([], 404);
             }
@@ -307,7 +307,7 @@ class LocalesController extends Controller {
         $validator= Validator::make(Input::all(), $this->localesRules);
         if($validator->fails()){
             $idCliente = $request->idCliente;
-            return Redirect::to("locales/cliente/$idCliente")->withErrors($validator);
+            return Redirect::to("admin/cliente/$idCliente")->withErrors($validator);
         }else{
             $local = Locales::create( Input::all() );
             $idLocal = $local->idLocal;
@@ -322,6 +322,6 @@ class LocalesController extends Controller {
         $direccion->cutComuna = $request->cutComuna;
         $direccion->direccion = $request->direccion;
         $direccion->save();
-        return Redirect::to("locales/cliente/$local->idCliente");
+        return Redirect::to("admin/cliente/$local->idCliente");
     }
 }

@@ -322,9 +322,8 @@
                     <tbody>
                     @if(isset($locales))
                         @foreach($locales as $local)
-                            <form method="POST" action="/locales/{{$local->idLocal}}/editar">
+                            <form method="POST" action="/api/local/{{$local->idLocal}}/editar">
                                 <input name="_method" type="hidden" value="PUT">
-                                <input name="_token" type="hidden" value="{{csrf_token()}}">
                                 <tr>
                                     <td class="tdIdLocal">{{ $local->idLocal}}</td>
                                     <input type="hidden" value="{{ $local->idLocal}}" name="idLocal">
@@ -428,6 +427,7 @@
                     @endif
                     </tbody>
                 </table>
+                <div align="center">{!! $locales->links() !!}</div>
 
                 @if (count($errors->error) > 0)
                     <div class="alert alert-danger">
@@ -470,8 +470,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <form method="POST" action="/locales/post">
-                        <input name="_token" type="hidden" value="{{csrf_token()}}">
+                    <form method="POST" action="/api/local/nuevo">
                         <tr>
                             <td class="tdIdCliente">
                                 <select name="idCliente" required {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
@@ -593,4 +592,5 @@
                 @endif
             </div>
         </div>
+
     </div>

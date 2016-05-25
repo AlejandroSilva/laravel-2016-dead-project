@@ -11,7 +11,7 @@
             var cod = document.getElementById("id").value;
 
             console.log(cod);
-            window.location.href = '/locales/cliente/'+cod;
+            window.location.href = '/admin/cliente/'+cod;
         }
     </script>
 

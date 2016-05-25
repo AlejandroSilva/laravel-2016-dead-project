@@ -25,7 +25,7 @@ Route::group(['middleware' => ['web']], function (){
     Route::group(['middleware'=>['auth']], function(){
         // MANTENEDOR CLIENTES Y LOCALES
         Route::get('admin/clientes',      'ClientesController@show_Lista')->name('admin.clientes.lista');
-        Route::get('admin/locales',       'LocalesController@show_mantenedor')->name('admin.locales.lista');
+        //Route::get('admin/locales',       'LocalesController@show_mantenedor')->name('admin.locales.lista');
         // USUARIOS -MANTENEDOR USUARIOS-ROLES
         Route::get('admin/usuarios-roles',                          'PersonalController@showUsuariosRoles');
         // PERMISSIONS- MANTENEDOR PERMISSIONS-ROLES
@@ -57,6 +57,9 @@ Route::group(['middleware' => ['web']], function (){
         // AUDITORIAS - DESCARGA DE PDF
         Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porMes');
         Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porRango');
+        // LOCALES - MANTENEDOR
+        Route::get('admin/locales',                           'LocalesController@showClientes');
+        Route::get('admin/cliente/{idCliente}',        'LocalesController@api_getLocales');
         // USUARIOS - MANTENEDOR (DESARROLLO DETENIDO)
 //        Route::get('personal/nuevo',             'PersonalController@show_formulario')->name('personal.nuevo');
         // GEO - MANTENEDOR (DESARROLLO DETENIDO)
@@ -130,6 +133,11 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('roles',                        'PersonalController@api_nuevoRole');
         Route::put('role/{idRole}',                 'PersonalController@api_actualizarRole');
         Route::delete('role/{idRole}',              'PersonalController@api_eliminarRole');
+        //API MANTENEDOR LOCALES
+        Route::post('local/nuevo',                          'LocalesController@post_formulario');
+        Route::put('local/{idLocal}/editar',            'LocalesController@api_actualizarLocal');
+        
+        
 
         // API GEO (DESARROLLO DETENIDO)
 //        Route::get('geo/comunas',      'GeoController@api_getComunas');
@@ -156,64 +164,6 @@ Route::group(['middleware' => ['web']], function (){
         // API USUARIOS - RUTAS PUBLICAS UTILIZADAS POR LA OTRA APLICACION
         Route::get('usuario/{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
     });
-    
-    /*    
-    |--------------------------------------------------------------------------
-    | Administracion de Clientes y sus locales
-    |--------------------------------------------------------------------------
-    |*/
-    Route::group(['prefix' => 'clientes', 'middleware' => ['auth']], function(){
-        Route::get('/',                                   'ClientesController@show_Lista');
-        Route::post('/',                                  'ClientesController@postFormulario');
-        //Route::get('/cliente/{idCliente}/editar',                'ClientesController@api_get');
-        Route::put('cliente/{idCliente}/editar',                 'ClientesController@api_actualizar');
-        Route::get('locales',  'LocalesController@show_mantenedor')->name('admin.locales.lista');
-
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Administracion de formato_locales
-    |--------------------------------------------------------------------------
-    |*/
-    Route::group(['prefix' => 'formatoLocales', 'middleware' => ['auth']], function(){
-        Route::get('/',                              'LocalesController@api_getFormatos');
-        Route::post('/',                                    'LocalesController@postFormulario');
-        Route::put('/formato/{idFormato}/editar',                'LocalesController@api_actualizar');
-
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Administracion de regiones y zonas
-    |--------------------------------------------------------------------------
-    |*/
-    Route::group(['prefix' => 'regiones', 'middleware' => ['auth']], function(){
-        Route::get('/',                              'RegionesController@showMantenedorRegiones');
-        Route::put('/{cutRegion}/editar',            'RegionesController@api_actualizar');
-        Route::post('/zona',                         'RegionesController@postFormularioZona');
-        Route::put('/zona/{idZona}/editar',          'RegionesController@api_actualizarZona');
-
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Administracion de locales
-    |--------------------------------------------------------------------------
-    |*/
-    Route::group(['prefix' => 'locales', 'middleware' => ['auth']], function(){
-        Route::post('/post',                          'LocalesController@post_formulario');
-        Route::get('/',                           'LocalesController@showClientes');
-        Route::get('cliente/{idCliente}/',        'LocalesController@api_getLocales');
-        Route::put('{idLocal}/editar',            'LocalesController@api_actualizarLocal');
-    });
-
-    // API CLIENTES Y LOCALES
-    Route::get('api/clientes',                      'ClientesController@api_getClientes');
-    Route::get('api/cliente/{idCliente}/locales',   'ClientesController@api_getLocales');
-    Route::get('api/clientes/locales',              'ClientesController@api_getClientesWithLocales');
-    Route::get('api/locales/{idLocal}',             'LocalesController@api_getLocal');
-    Route::get('api/locales/{idLocal}/verbose',     'LocalesController@api_getLocalVerbose');
 });
 
     

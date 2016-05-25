@@ -85,7 +85,7 @@
                                 @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('admin/locales')? 'active': '' }}">
-                                        <a href="{{ route('admin.locales.lista') }}">(D) Mantenedor de Locales</a>
+                                        <a href="{{ url('admin/locales') }}">(D) Mantenedor de Locales</a>
                                     </li>
                                 @endif
                             </ul>
