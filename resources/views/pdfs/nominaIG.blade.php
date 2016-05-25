@@ -38,16 +38,16 @@
         }
         /* Nombre */
         .colNombre {
-            width: 150px;
+            width: auto;
         }
         .colCargo {
             /*width: 80px;*/
-            width: auto;
+            width: 80px;
         }
         .imgLider{
             margin: 0 auto;
             padding: 2px;
-            max-width: 120px !important;
+            max-width: 85px !important;
         }
     </style>
     <div class='container'>
@@ -136,7 +136,7 @@
                             <tr>
                                 <td>L</td>
                                 <td>{{ $lider->usuarioRUN."-".$lider->usuarioDV }}</td>
-                                <td>{{ $lider->nombre1." ".$lider->apellidoPaterno }}</td>
+                                <td>{{ $lider->nombreCompleto() }}</td>
                                 <td>Lider</td>
                             </tr>
                         @endif
@@ -144,7 +144,7 @@
                             <tr>
                                 <td>S</td>
                                 <td>{{ $supervisor->usuarioRUN."-".$supervisor->usuarioDV }}</td>
-                                <td>{{ $supervisor->nombre1." ".$supervisor->apellidoPaterno }}</td>
+                                <td>{{ $supervisor->nombreCompleto() }}</td>
                                 <td>Supervisor</td>
                             </tr>
                         @endif
@@ -152,7 +152,7 @@
                             <tr>
                                 <td>{{$i+1}}</td>
                                 <td>{{ $dotacionTitular[$i]->usuarioRUN."-".$dotacionTitular[$i]->usuarioDV }}</td>
-                                <td>{{ $dotacionTitular[$i]->nombre1." ".$dotacionTitular[$i]->apellidoPaterno }}</td>
+                                <td>{{ $dotacionTitular[$i]->nombreCompleto() }}</td>
                                 <td>Operador</td>
                             </tr>
                         @endfor
@@ -181,7 +181,7 @@
                                 <tr>
                                     <td>{{$i+1}}</td>
                                     <td>{{ $dotacionReemplazo[$i]->usuarioRUN."-".$dotacionReemplazo[$i]->usuarioDV }}</td>
-                                    <td>{{ $dotacionReemplazo[$i]->nombre1." ".$dotacionReemplazo[$i]->apellidoPaterno }}</td>
+                                    <td>{{ $dotacionReemplazo[$i]->nombreCompleto() }}</td>
                                     <td>Operador</td>
                                 </tr>
                             @endfor
@@ -194,7 +194,7 @@
             {{-- Imagen Lider --}}
             @if( isset($lider) )
                 @if( $lider->imagenPerfil!='' )
-                    <div class="col-xs-4">
+                    <div class="col-xs-2 col-xs-offset-1">
                         <div class="panel panel-primary">
                             <div class="panel-heading panelHeading_compacto">Lider</div>
                             <img class="img-responsive imgLider"

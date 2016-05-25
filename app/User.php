@@ -49,6 +49,10 @@ class User extends Authenticatable {
 //            ->with('role')
     }
 
+    public function nombreCompleto(){
+        return "$this->nombre1 $this->nombre2 $this->apellidoPaterno $this->apellidoMaterno";
+    }
+
     // #### Formatear
     static function formatearSimple($user){
         if(!$user)
@@ -57,7 +61,7 @@ class User extends Authenticatable {
             'id' => $user->id,
             'usuarioRUN' => $user->usuarioRUN,
             'usuarioDV' => $user->usuarioDV,
-            'nombre' => "$user->nombre1 $user->apellidoPaterno",
+            'nombre' => $user->nombreCompleto(),
             'nombre1' => $user->nombre1,
             'nombre2' => $user->nombre2,
             'apellidoPaterno' => $user->apellidoPaterno,
