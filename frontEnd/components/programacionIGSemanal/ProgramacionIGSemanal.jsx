@@ -189,7 +189,7 @@ class ProgramacionIGSemanal extends React.Component {
 
         api.inventario.getPorRangoYCliente(fechaInicio, fechaFin, idCliente)
             .then(inventarios=>{
-                console.log(`inventarios del rango ${fechaInicio} a ${fechaFin}, y cliente ${idCliente}`, inventarios)
+                //console.log(`inventarios del rango ${fechaInicio} a ${fechaFin}, y cliente ${idCliente}`, inventarios)
                 this.blackbox.reset()
                 inventarios.forEach(inventario=>this.blackbox.add(inventario))
 
