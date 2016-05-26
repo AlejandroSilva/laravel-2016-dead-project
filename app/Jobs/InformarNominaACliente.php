@@ -21,14 +21,14 @@ class InformarNominaACliente extends Job implements ShouldQueue {
 //        ['logistica@seiconsultores.cl', 'SEI']
     ];
     protected $SEI_nomina_bcc = [
-        ['asilva@seiconsultores.cl', 'Alejandro Silva'],
-        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
         ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
         ['clopez@seiconsultores.cl', 'Carlos Lopez'],
         ['gbriones@seiconsultores.cl', 'Gabriela Briones'],
         ['fpizarro@seiconsultores.cl', 'Francisca Pizarro'],
         ['psobarzo@seiconsultores.cl', 'Paula Sobarzo'],
-        ['logistica@seiconsultores.cl', 'SEI']
+        ['logistica@seiconsultores.cl', 'SEI'],
+        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
+        ['asilva@seiconsultores.cl', 'Alejandro Silva'],
     ];
     // Cliente 1: PUC
     protected $PUC_nomina_to = [
@@ -115,9 +115,15 @@ class InformarNominaACliente extends Job implements ShouldQueue {
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==2){                   // 2: FCV
+            // FCV tambien envia un correo al local (solo si esta definido)
+            $destinatariosFCV = $this->FCV_nomina_to;
+            $correoLocal = $local->emailContacto;
+            if($correoLocal)
+                array_push($destinatariosFCV, [$correoLocal, "Local $local->numero"]);
+
             $this->enviarGENERICA([
                 'subject' => "Nomina Cruz Verde Local Nº$local->numero",
-                'to' => $this->FCV_nomina_to,
+                'to' => $destinatariosFCV,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==3){                   // 3: CKY
@@ -156,14 +162,20 @@ class InformarNominaACliente extends Job implements ShouldQueue {
                     ->subject($datosCorreo['subject']);
                 if(App::environment('production')){
                     // enviar a los destinatarios
-                    foreach($datosCorreo['to'] as $destinatario)
+                    foreach($datosCorreo['to'] as $destinatario){
                         $message->to($destinatario[0], $destinatario[1]);
+                        Log::info("[prod] enviando TO: $destinatario[0] - $destinatario[1]");
+                    }
                     // enviar las copias ocultas
-                    foreach($datosCorreo['bcc'] as $destinatario)
+                    foreach($datosCorreo['bcc'] as $destinatario){
                         $message->bcc($destinatario[0], $destinatario[1]);
+                        Log::info("[prod] enviando BCC: $destinatario[0] - $destinatario[1]");
+                    }
                 }else{
-                    foreach($this->SEI_DESARROLLO as $destinatario)
+                    foreach($this->SEI_DESARROLLO as $destinatario){
                         $message->to($destinatario[0], $destinatario[1]);
+                        Log::info("[dev] enviando TO: $destinatario[0] - $destinatario[1]");
+                    }
                 }
             }
         );
