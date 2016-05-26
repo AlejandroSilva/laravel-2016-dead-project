@@ -17,12 +17,13 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     protected $nomina;
     protected $SEI_DESARROLLO = [
         ['pm5k.sk@gmail.com', 'ASILVA DESARROLLO'],
+//        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
 //        ['logistica@seiconsultores.cl', 'SEI']
     ];
     protected $SEI_nomina_bcc = [
         ['asilva@seiconsultores.cl', 'Alejandro Silva'],
         ['eponce@seiconsultores.cl', 'Esteban Ponce'],
-//        ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
+        ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
         ['clopez@seiconsultores.cl', 'Carlos Lopez'],
         ['gbriones@seiconsultores.cl', 'Gabriela Briones'],
         ['fpizarro@seiconsultores.cl', 'Francisca Pizarro'],
@@ -31,16 +32,16 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     ];
     // Cliente 1: PUC
     protected $PUC_nomina_to = [
-        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
-//        ['amundaca@sb.cl', 'Alvaro Mundaca']
+//        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
+        ['amundaca@sb.cl', 'Alvaro Mundaca']
     ];
     // Cliente 2: FCV
     protected $FCV_nomina_to = [
-        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
-//        ['gabriel.vera@cruzverde.cl', 'Gabriel Vera'],
-//        ['pajorquera@cruzverde.cl', 'Pamela Jorquera'],
-//        ['jorge.alcaya@cruzverde.cl', 'Jorge Alcaya'],
-//        ['mauricio.ojeda@cruzverde.cl', 'Mauricio Ojeda']
+//        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
+        ['gabriel.vera@cruzverde.cl', 'Gabriel Vera'],
+        ['pajorquera@cruzverde.cl', 'Pamela Jorquera'],
+        ['jorge.alcaya@cruzverde.cl', 'Jorge Alcaya'],
+        ['mauricio.ojeda@cruzverde.cl', 'Mauricio Ojeda']
     ];
     // Cliente 3: CKY
     protected $CKY_nomina_to = [
@@ -50,8 +51,8 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     ];
     // Cliente 5: SB
     protected $SB_nomina_to = [
-        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
-//        ['amundaca@sb.cl', 'Alvaro Mundaca']
+//        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
+        ['amundaca@sb.cl', 'Alvaro Mundaca']
         //TODO: otro mas
     ];
     // Cliente 7: CMT
