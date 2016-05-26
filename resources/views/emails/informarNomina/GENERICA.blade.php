@@ -4,7 +4,7 @@
     <p>SEI Consultores, informa nomina de personal para IG <b>{{ $local->nombre }}</b> se encuentra disponible.</p>
 
     {{-- Datos Inventario --}}
-    <table style="margin-top: 16px; margin-bottom: 16px; width: 600px;">
+    <table style="margin-top: 16px; margin-bottom: 16px; width: 700px;">
         <tbody>
         <tr>
             <td style="border: 1px solid #ddd;">Cliente</td>
@@ -40,7 +40,7 @@
     </table>
 
     {{-- Datos Local --}}
-    <table style="width: 600px">
+    <table style="width: 700px">
         <tbody>
             <tr>
                 <td style="border: 1px solid #ddd;">Dirección</td>
@@ -74,12 +74,12 @@
     </table>
 
     {{-- Tabla con la dotacion: IZQ dotacion, DER, foto Lider --}}
-    <table style="margin-top: 16px; margin-bottom: 32px;">
+    <table style="width: 700px; margin-top: 16px; margin-bottom: 32px;">
         <tbody>
             <tr>
                 <td>
-                    <table style="max-width: 400px; vertical-align: middle;
-                                margin-left: 32px; margin-right: 32px;
+                    <table style="max-width: 600px; vertical-align: middle;
+                                margin-right: 32px;
                                 border: 1px solid #ddd">
                         <thead>
                             <tr>
@@ -116,7 +116,7 @@
                             @foreach($dotacionTitular as $usuario)
                                 <tr>
                                     <td style="border: 1px solid #ddd;">{{$conteo++}}</td>
-                                    <td style="border: 1px solid #ddd;">{{ "$usuario->nombre1 $usuario->nombre2" }}</td>
+                                    <td style="border: 1px solid #ddd;">{{ $usuario->nombreCompleto() }}</td>
                                     <td style="border: 1px solid #ddd;">{{ "$usuario->usuarioRUN-$usuario->usuarioDV" }}</td>
                                     <td style="border: 1px solid #ddd;">Operador</td>
                                 </tr>
@@ -125,7 +125,7 @@
                             @foreach($dotacionReemplazo as $usuario)
                                 <tr>
                                     <td style="border: 1px solid #ddd;">{{$conteo++}}</td>
-                                    <td style="border: 1px solid #ddd;">{{ "$usuario->nombre1 $usuario->nombre2" }}</td>
+                                    <td style="border: 1px solid #ddd;">{{ $usuario->nombreCompleto() }}</td>
                                     <td style="border: 1px solid #ddd;">{{ "$usuario->usuarioRUN-$usuario->usuarioDV" }}</td>
                                     <td style="border: 1px solid #ddd;">Operador Reemplazo</td>
                                 </tr>
@@ -133,11 +133,11 @@
                         </tbody>
                     </table>
                 </td>
-                <td style="max-width: 180px;">
+                <td style="max-width: 90px;">
                     {{-- Imagen del Lider --}}
                     @if( isset($lider))
                         @if($lider->imagenPerfil != '')
-                            <img style="width: 80%; max-width: 130px; margin: 0 auto; padding: 5px;"
+                            <img style="max-width: 85px; margin: 0 auto; padding: 5px;"
                                  src="<?php echo $message->embed(public_path().'/imagenPerfil/'.$lider->imagenPerfil); ?>"/>
                         @endif
                     @endif
