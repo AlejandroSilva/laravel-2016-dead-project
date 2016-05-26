@@ -46,7 +46,15 @@
                                     </li>
                                 @endif
 
-                                {{-- INVENTARIO --}}
+                                {{-- Nominas --}}
+                                @if( Auth::user()->hasRole('Developer') )
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('nominas/captadores')? 'active': '' }}">
+                                        <a href="{{ url('nominas/captadores') }}">Nominas Captadores/as (D)</a>
+                                    </li>
+                                @endif
+
+                                {{-- GEO --}}
                                 @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('geo/')? 'active': '' }}">
@@ -70,17 +78,6 @@
                                     {{--</li>--}}
                                 @endif
 
-                                {{-- Nominas --}}
-                                @if( Auth::user()->hasRole('Developer') )
-                                    <li role="separator" class="divider"></li>
-                                    <li class="{{ Request::is('nominas')? 'active': '' }}">
-                                        <a href="{{ url('nominas') }}">(D) Nominas</a>
-                                    </li>
-                                    <li class="{{ Request::is('nomFinales')? 'active': '' }}">
-                                        <a href="{{ url('nomFinales') }}">(D) Nominas Finales</a>
-                                    </li>
-                                @endif
-
                                 {{-- Cliente / Locales --}}
                                 @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
@@ -102,7 +99,7 @@
                     @endif
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    @if( Auth::user()->hasRole('Administrador') )
+                    @if( Auth::check() && Auth::user()->hasRole('Administrador') )
                         <li class="{{ "dropdown " + (Request::is('admin*') ? 'active' : '')}}">
                             {{-- MENU PRINCIPAL: GESTION PRIVILEGIOS --}}
                             <a id="drop-operacional" href="#" class="dropdown-toggle" data-toggle="dropdown">
