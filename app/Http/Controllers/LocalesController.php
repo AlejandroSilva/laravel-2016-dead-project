@@ -228,9 +228,9 @@ class LocalesController extends Controller {
         $local = Locales::find($idLocal);
         // tomar las reglas originales, y agregar la excepcion
         $localesRules = $this->localesRules;
-        $localesRules["numero"] = "required|unique:locales,numero,$local->numero,numero";
-        $localesRules["nombre"] = "required|unique:locales,nombre,$local->nombre,nombre";
-
+        //$localesRules["numero"] = "required|unique:locales,numero,NULL,idLocal,idCliente,$local->idCliente";
+        $localesRules["numero"] = "required|unique:locales,numero,$local->numero,numero,idCliente,$local->idCliente";
+        $localesRules["nombre"] = "required|unique:locales,nombre,$local->nombre,nombre,idCliente,$local->idCliente";
         $validator= Validator::make(Input::all(), $localesRules);
         if($validator->fails()) {
             return Redirect::to("admin/cliente/$local->idCliente")->withErrors($validator,'error')->withInput();
@@ -303,8 +303,10 @@ class LocalesController extends Controller {
         $user = Auth::user();
         if(!$user || !$user->can('programaLocales_agregar'))
             return view('errors.403');
-
-        $validator= Validator::make(Input::all(), $this->localesRules);
+        $localesRules = $this->localesRules;
+        $localesRules["numero"] = "required|unique:locales,numero,NULL,id,idCliente,$request->idCliente";
+        $localesRules["nombre"] = "required|unique:locales,nombre,NULL,id,IdCliente,$request->idCliente";
+        $validator= Validator::make(Input::all(), $localesRules);
         if($validator->fails()){
             $idCliente = $request->idCliente;
             return Redirect::to("admin/cliente/$idCliente")->withErrors($validator);

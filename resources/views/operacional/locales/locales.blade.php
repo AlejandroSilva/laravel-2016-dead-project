@@ -512,9 +512,6 @@
 
                                 >
                             </td>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
                             <td class="tdHoraApertura">
                                 <input type="text" name="horaApertura"
                                         {{ $user->can('programaLocales_agregar')? '' : 'disabled' }}>
