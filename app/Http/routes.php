@@ -90,6 +90,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('inventario/{idInventario}',         'InventariosController@api_actualizar');
         Route::delete('inventario/{idInventario}',      'InventariosController@api_eliminar');
         // API DE NOMINAS
+        Route::get('nominas/buscar',                                'NominasController@api_buscar');
         Route::put('nomina/{idNomina}',                             'NominasController@api_actualizar');
         // -- cambios en la dotacion de las nominas
         Route::get('nomina/{idNomina}/dotacion',                    'NominasController@api_get');

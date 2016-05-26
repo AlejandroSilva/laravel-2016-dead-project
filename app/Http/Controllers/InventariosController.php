@@ -113,12 +113,10 @@ class InventariosController extends Controller {
 
             $inventario = new Inventarios();
             $inventario->idLocal = $request->idLocal;
-            // asignar la jornada entregada por parametros, o la que tenga por defecto el local
-            if($request->idJornada) {
-                $inventario->idJornada = $request->idJornada;
-            }else{
-                $inventario->idJornada = $local->idJornadaSugerida;
-            }
+            // asignar la jornada que tenga por defecto el local
+            $idJornada = $local->idJornadaSugerida;
+            $inventario->idJornada = $idJornada;
+
             $inventario->fechaProgramada = $request->fechaProgramada;
             $inventario->dotacionAsignadaTotal = $local->dotacionSugerida();
             $inventario->stockTeorico = $local->stock;
@@ -133,8 +131,9 @@ class InventariosController extends Controller {
             $nominaDia->dotacionAsignada = $local->dotacionSugerida();
             $nominaDia->dotacionCaptador1 = 0;
             $nominaDia->dotacionCaptador2 = 0;
-            $nominaDia->horaTermino = '';
-            $nominaDia->horaTerminoConteo = '';
+            // si la jornada es de "dia"(2), o "dia y noche"(4), entonces la nomina esta habilitada
+            $nominaDia->habilitada = ($idJornada==2 || $idJornada==4);
+            $nominaDia->idEstadoNomina = 2; // pendiente
             $nominaDia->save();
 
             $nominaNoche = new Nominas();
@@ -145,8 +144,9 @@ class InventariosController extends Controller {
             $nominaNoche->dotacionAsignada = $local->dotacionSugerida();
             $nominaNoche->dotacionCaptador1 = 0;
             $nominaNoche->dotacionCaptador2 = 0;
-            $nominaNoche->horaTermino = '';
-            $nominaNoche->horaTerminoConteo = '';
+            // si la jornada es de "noche"(3), o "dia y noche"(4), entonces la nomina esta habilitada
+            $nominaNoche->idEstadoNomina = ($idJornada==3 || $idJornada==4)? 2 : 1;
+            $nominaNoche->idEstadoNomina = 2; // pendiente
             $nominaNoche->save();
 
             $inventario->nominaDia()->associate($nominaDia);
@@ -207,8 +207,16 @@ class InventariosController extends Controller {
             }
             if(isset($request->dotacionAsignadaTotal))
                 $inventario->dotacionAsignadaTotal = $request->dotacionAsignadaTotal;
-            if(isset($request->idJornada))
-                $inventario->idJornada = $request->idJornada;
+            if(isset($request->idJornada)){
+                $idJornada = $request->idJornada;
+                // cambia el estado del inventario
+                $inventario->idJornada = $idJornada;
+                // cambiar el estado (habilitada) de las nominas
+                $inventario->nominaDia->habilitada   = ($idJornada==2 || $idJornada==4); // "dia"(2), o "dia y noche"(4)
+                $inventario->nominaNoche->habilitada = ($idJornada==3 || $idJornada==4); // "noche"(3), o "dia y noche"(4)
+                $inventario->nominaDia->save();
+                $inventario->nominaNoche->save();
+            }
             if(isset($request->stockTeorico))
                 $inventario->stockTeorico = $request->stockTeorico;
 

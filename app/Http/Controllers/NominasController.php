@@ -101,6 +101,29 @@ class NominasController extends Controller {
      * Rutas para consumo del API REST
      * ##########################################################
      */
+    // GET api/nominas/buscar
+    function api_buscar(Request $request){
+        $query = Inventarios::with([]);
+
+        // Fecha de Inicio
+        $fechaInicio = $request->query('fechaInicio');
+        if($fechaInicio){
+            $query->where('fechaProgramada', '>=', $fechaInicio);
+        }
+        // Fecha de Fin
+        $fechaFin = $request->query('fechaFin');
+        if($fechaFin){
+            $query->where('fechaProgramada', '<=', $fechaFin);
+        }
+
+
+
+        $inventarios = $query->get();
+        return response()->json(
+            $inventarios->map('\App\Inventarios::formatoClienteFormatoRegion_nominas')
+            , 200);
+    }
+
     // PUT api/nomina/{idNomina}  // Modificar antuguo, no entrega un formato compacto, se debe reescribir
     function api_actualizar($idNomina, Request $request){
         // identificar la nomina indicada
@@ -156,6 +179,8 @@ class NominasController extends Controller {
             return response()->json([], 404);
         }
     }
+
+    // -- cambios en la dotacion de las nominas
     // GET api/nomina/{idNomina}/dotacion
     function api_get($idNomina){
         $nomina = Nominas::find($idNomina);
@@ -249,7 +274,6 @@ class NominasController extends Controller {
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
         );
     }
-
     // POST api/nomina/{idNomina}/operador/{usuarioRUN}
     function api_agregarOperador($idNomina, $usuarioRUN, Request $request){
         // Todo: El usuario tiene los permisos para agregar un usuario a una nomina?
@@ -303,40 +327,6 @@ class NominasController extends Controller {
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
         );
     }
-    // PUT api/nomina/{idNomina}/operador/{operadorRUN}
-//    function api_modificarOperador($idNomina, $operadorRUN, Request $request){
-//        // la nomina existe?
-//        $nomina = Nominas::find($idNomina);
-//        if(!$nomina)
-//            return response()->json(['idNomina' => ['Nomina no encontrada']], 404);
-//
-//        // el operador existe?
-//        $operador = User::where('usuarioRUN', $operadorRUN)->first();
-//        if(!$operador)
-//            return response()->json(['operadorRUN' => ['Operador no encontrado']], 404);
-//
-//        $relacion = $nomina->dotacion()->find($operador->id);
-//
-//        // el operador ha sido asignado a la dotacion?
-//        if(!$relacion)
-//            return response()->json(['operadorRUN' => ['El operador no esta asignado a la dotacion']], 400);
-//
-//
-//        // cambiar Rol
-//        if(isset($request->idRoleAsignado)){
-//            // existe el rol?
-//            if(!Role::find($request->idRoleAsignado))
-//                return response()->json(['idRoleAsignado' => ['Rol no existe']], 400);
-//
-//            $relacion->pivot->idRoleAsignado = $request->idRoleAsignado;
-//            $relacion->pivot->save();
-//        }
-//
-//        // TODO: falta agregar el rol que tiene actualmente asignado
-//        return response()->json(
-//            Nominas::formatearDotacion(Nominas::find($nomina->idNomina))
-//        , 200);
-//    }
     function api_enviarNomina($idNomina){
         // Todo: revisar si tiene los permisos
         // la nomina existe?
