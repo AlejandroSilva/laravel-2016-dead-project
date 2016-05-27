@@ -48,8 +48,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ['rlopez@colloky.cl',           'Roberto Lopez'],
         ['jose.perez@colgram.com',      'Jose Perez'],
         ['ricardo.perez@colgram.com',   'Ricardo Perez Fuentes'],
-        ['manuel.vera@colgram.com',     'Manuel Vera'],
-        // TODO: falta correo
+        ['manuel.vera@colgram.com',     'Manuel Vera']
     ];
     // Cliente 5: SB
     protected $SB_nomina_to = [
