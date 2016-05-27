@@ -110,6 +110,7 @@ class Nominas extends Model {
             "dotacionAsignada" => $nomina->dotacionAsignada,
             "dotacionCaptador1" => $nomina->dotacionCaptador1,
             "fechaSubidaNomina" => $nomina->fechaSubidaNomina,
+            "turno" => $nomina->turno,
             "estado" => EstadoNominas::formatearSimple($nomina->estado)
         ];
     }

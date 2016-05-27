@@ -40,7 +40,7 @@ export class NominasCaptador extends React.Component {
                 </thead>
                 <tbody>
                     {this.props.nominas.length===0?
-                        <tr><td colSpan="9" className="text-center">Sin nóminas pendientes</td></tr> : null
+                        <tr><td colSpan="10" className="text-center">Sin nóminas pendientes</td></tr> : null
                     }
                     {this.props.nominas.map((nom, index)=>{
                         return <tr key={index}>
@@ -54,7 +54,7 @@ export class NominasCaptador extends React.Component {
                             <td>{nom.inventario.local.region_numero}</td>
                             <td>{nom.inventario.local.comuna_nombre}</td>
                             <td>{nom.inventario.local.direccion}</td>
-                            <td>... {/*nom.inventario.jornada*/}</td>
+                            <td>{nom.turno}</td>
                             {/* Estado */}
                             <td>
                                 <a href={`/programacionIG/nomina/${nom.idNomina}`} target="_blank"
