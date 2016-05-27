@@ -1,41 +1,41 @@
 <html>
 <head></head>
 <body>
-    <p>SEI Consultores, informa nomina de personal para IG <b>{{ $local->nombre }}</b> se encuentra disponible.</p>
+    <p style="margin-bottom: 16px;">SEI Consultores, informa nomina de personal para IG <b>{{ $local->nombre }}</b> se encuentra disponible.</p>
 
     {{-- Datos Inventario --}}
-    <table style="margin-top: 16px; margin-bottom: 16px; width: 700px;">
+    <table style="width: 700px">
         <tbody>
-        <tr>
-            <td style="border: 1px solid #ddd;">Cliente</td>
-            <td style="border: 1px solid #ddd;">{{ $inventario->local->cliente->nombreCorto }}</td>
-            <td style="border: 1px solid #ddd;">Dotación asignada</td>
-            <td style="border: 1px solid #ddd;">{{ $nomina->dotacionAsignada }}</td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid #ddd;">Local</td>
-            <td style="border: 1px solid #ddd;">({{$inventario->local->numero}}) {{$inventario->local->nombre}}</td>
-            <td style="border: 1px solid #ddd;"></td>
-            <td style="border: 1px solid #ddd;"></td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid #ddd;">Fecha programada</td>
-            <td style="border: 1px solid #ddd;">{{$inventario->fechaProgramadaF()}}</td>
-            <td style="border: 1px solid #ddd;"></td>
-            <td style="border: 1px solid #ddd;"></td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid #ddd;">Hr. llegada lider</td>
-            <td style="border: 1px solid #ddd;">{{$nomina->horaPresentacionLiderF()}}</td>
-            <td style="border: 1px solid #ddd;"></td>
-            <td style="border: 1px solid #ddd;"></td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid #ddd;">Hr. llegada equipo</td>
-            <td style="border: 1px solid #ddd;">{{$nomina->horaPresentacionEquipoF()}}</td>
-            <td style="border: 1px solid #ddd;"></td>
-            <td style="border: 1px solid #ddd;"></td>
-        </tr>
+            <tr>
+                <td style="border: 1px solid #ddd;">Cliente</td>
+                <td style="border: 1px solid #ddd;">{{ $inventario->local->cliente->nombreCorto }}</td>
+                <td style="border: 1px solid #ddd;">Dotación asignada</td>
+                <td style="border: 1px solid #ddd;">{{ $nomina->dotacionAsignada }}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ddd;">Local</td>
+                <td style="border: 1px solid #ddd;">({{$inventario->local->numero}}) {{$inventario->local->nombre}}</td>
+                <td style="border: 1px solid #ddd;"></td>
+                <td style="border: 1px solid #ddd;"></td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ddd;">Fecha programada</td>
+                <td style="border: 1px solid #ddd;">{{$inventario->fechaProgramadaF()}}</td>
+                <td style="border: 1px solid #ddd;"></td>
+                <td style="border: 1px solid #ddd;"></td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ddd;">Hr. llegada lider</td>
+                <td style="border: 1px solid #ddd;">{{$nomina->horaPresentacionLiderF()}}</td>
+                <td style="border: 1px solid #ddd;"></td>
+                <td style="border: 1px solid #ddd;"></td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ddd;">Hr. llegada equipo</td>
+                <td style="border: 1px solid #ddd;">{{$nomina->horaPresentacionEquipoF()}}</td>
+                <td style="border: 1px solid #ddd;"></td>
+                <td style="border: 1px solid #ddd;"></td>
+            </tr>
         </tbody>
     </table>
 
