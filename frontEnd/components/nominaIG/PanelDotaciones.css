@@ -49,3 +49,8 @@
 .colOpciones {
     width: auto;
 }
+
+/* Imagen de perfil */
+.imgCentrada {
+    margin: 0 auto;
+}

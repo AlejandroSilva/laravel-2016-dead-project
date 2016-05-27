@@ -12,6 +12,7 @@ import { ProgramacionAIPendientes } from './components/programacionAIPendientes/
 import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.jsx'
 import { GeoGestor } from './components/Geo/GeoGestor.jsx'
 import { NominaIG } from './components/nominaIG/nominaIG.jsx'
+import { NominasCaptador } from './components/nominasCaptador/NominasCaptador.jsx'
 
 /** FORMULARIO PARA LA CREACIÓN DE UN NUEVO Inventario */
 // GET inventario/nuevo, NO SE OCUPA
@@ -99,7 +100,7 @@ if( geoGestorDOM ){
         />, geoGestorDOM)
 }
 
-/** MANTENEDOR DE NOMINAS **/
+/** NOMINAS **/
 let mantenedorNominaIGDOM = document.getElementById('react-nominaIG-nominaIG')
 if( mantenedorNominaIGDOM ){
     ReactDOM.render(
@@ -111,6 +112,15 @@ if( mantenedorNominaIGDOM ){
         />, mantenedorNominaIGDOM)
 }
 
+let nominasCaptador = document.getElementById('react-nominas-captador')
+if( nominasCaptador ){
+    ReactDOM.render(
+        <NominasCaptador
+            nominas={window.laravelNominas}
+            // nomina={window.laravelNomina}
+            // comunas={window.laravelComunas}
+        />, nominasCaptador)
+}
 
 // http://jamesknelson.com/push-state-vs-hash-based-routing-with-react-js/
 //class App extends React.Component{

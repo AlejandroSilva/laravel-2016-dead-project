@@ -46,10 +46,13 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/mensual',          'InventariosController@showProgramacionMensual');
         Route::get('programacionIG/semanal',          'InventariosController@showProgramacionSemanal');
         // INVENTARIOS - DESCARGA DE PDF
-        Route::get('/pdf/inventarios/{mes}/cliente/{idCliente}',         'InventariosController@descargarPDF_porMes');
+        Route::get('/pdf/inventarios/{mes}/cliente/{idCliente}',    'InventariosController@descargarPDF_porMes');
         Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'InventariosController@descargarPDF_porRango');
         // INVENTARIO - MANTENEDOR DE NOMINAS
-        Route::get('programacionIG/nomina/{idNomina}',        'NominasController@show_nomina');
+        Route::get('programacionIG/nomina/{idNomina}',              'NominasController@show_nomina');
+        // NOMINAS - NOMINAS DE CAPTADOR
+        Route::get('nominas/captadores',                            'NominasController@show_captadores');
+        Route::get('nominas/captador/{idCaptador}',                 'NominasController@show_nominasCaptador');
         // AUDITORIAS - PROGRAMACION AI
         Route::get('programacionAI',                 'AuditoriasController@showProgramacionIndex');
         Route::get('programacionAI/mensual',          'AuditoriasController@showMensual');
@@ -143,7 +146,6 @@ Route::group(['middleware' => ['web']], function (){
     Route::group(['prefix'=>'api'], function(){
         // API INVENTARIOS
         Route::get('inventarios/buscar',                   'InventariosController@api_buscar');
-        Route::get('inventarios/buscar2',                  'InventariosController@api_buscar2');
         Route::post('inventarios/informar-archivo-final',  'InventariosController@api_informarArchivoFinal');
         // API DE NOMINAS
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-disponible', 'NominasController@api_informarDisponible');

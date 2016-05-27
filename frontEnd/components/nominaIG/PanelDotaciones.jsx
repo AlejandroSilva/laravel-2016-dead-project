@@ -116,7 +116,7 @@ export class PanelDotaciones extends React.Component {
                 <div className="panel panel-primary">
                     <div className={'panel-heading '+css.panelHeading_compacto}>Lider</div>
                     {this.props.lider && this.props.lider.imagenPerfil?
-                        <img className="img-responsive"
+                        <img className={"img-responsive "+css.imgCentrada}
                              src={`/imagenPerfil/${this.props.lider.imagenPerfil}`} alt=""/>
                         :
                         <p>Sin imagen</p>

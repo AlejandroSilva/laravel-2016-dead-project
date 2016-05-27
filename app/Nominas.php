@@ -128,6 +128,12 @@ class Nominas extends Model {
         $nominaArray['dotacionReemplazo']  =  $nomina->dotacionReemplazo->map('\App\User::formatearSimplePivotDotacion');
         return $nominaArray;
     }
+
+    static function formatearConInventario($nomina){
+        $_nomina = Nominas::formatearSimple($nomina);
+        $_nomina['inventario'] = Inventarios::formatoClienteFormatoRegion($nomina->inventario);
+        return $_nomina;
+    }
 //    static function formatearDotacion($nomina){
 //        return [
 //            'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatearSimplePivotDotacion'),

@@ -96,6 +96,38 @@ class NominasController extends Controller {
             ]);
         }
     }
+
+    // GET nominas/captadores
+    function show_captadores(){
+        // Todo: revisar los permisos
+        $rolCaptador = Role::where('name', 'Captador')->first();
+        $captadores = $rolCaptador? $rolCaptador->users : [];
+        
+        return view('nominas.captadores', [
+            'captadores' => $captadores
+        ]);
+    }
+    // GET nominas/captador/{idCaptador}
+    function show_nominasCaptador($idCaptador){
+        // todo revisar los permisos
+        $usuario = User::find($idCaptador);
+        if(!$usuario){
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Captador no encontrado', 'descripcion' => 'El captador que busca no ha sido encontrado.'
+            ]);
+        }
+
+        // buscar los "proximos" inventarios del captador
+        $nominas = $this->buscar( (object)[
+            'fechaInicio' => \Carbon\Carbon::now()->format("Y-m-d"),
+            'idCaptador1' => $idCaptador
+        ])
+            ->map('\App\Nominas::formatearConInventario');
+
+        return view('nominas.captador', [
+            'nominas' => $nominas
+        ]);
+    }
     /**
      * ##########################################################
      * Rutas para consumo del API REST
@@ -103,25 +135,15 @@ class NominasController extends Controller {
      */
     // GET api/nominas/buscar
     function api_buscar(Request $request){
-        $query = Inventarios::with([]);
+        // todo validar permisos y todo eso
 
-        // Fecha de Inicio
-        $fechaInicio = $request->query('fechaInicio');
-        if($fechaInicio){
-            $query->where('fechaProgramada', '>=', $fechaInicio);
-        }
-        // Fecha de Fin
-        $fechaFin = $request->query('fechaFin');
-        if($fechaFin){
-            $query->where('fechaProgramada', '<=', $fechaFin);
-        }
-
-
-
-        $inventarios = $query->get();
-        return response()->json(
-            $inventarios->map('\App\Inventarios::formatoClienteFormatoRegion_nominas')
-            , 200);
+        $nominas = $this->buscar( (object)[
+            'fechaInicio' => $request->query('fechaInicio'),
+            'fechaFin' => $request->query('fechaFin'),
+            'idCaptador1' => $request->query('idCaptador1')
+        ])
+            ->map('\App\Nominas::formatearConInventario');
+        return response()->json($nominas, 200);
     }
 
     // PUT api/nomina/{idNomina}  // Modificar antuguo, no entrega un formato compacto, se debe reescribir
@@ -462,5 +484,50 @@ class NominasController extends Controller {
             return response()->json(['msg'=>$errorMsg], 404);
         }
         return response()->json(['msg'=>'falta por implementar'], 404);
+    }
+
+
+    /* ***************************************************/
+
+    function buscar($peticion){
+        $query = Nominas::with([]);
+        $query->where('habilitada', true);
+
+        // Buscar por idCaptador1
+        if(isset($peticion->idCaptador1)){
+            $idCaptador1 = $peticion->idCaptador1;
+            $query->where('idCaptador1', $idCaptador1);
+        }
+
+        // Buscar por Fecha de Inicio
+        if(isset($peticion->fechaInicio)){
+            $fechaInicio = $peticion->fechaInicio;
+            $query
+                ->where(function($qq) use($fechaInicio){
+                    $qq
+                        ->whereHas('inventario1', function($q) use($fechaInicio){
+                            $q->where('fechaProgramada', '>=', $fechaInicio);
+                        })
+                        ->orWhereHas('inventario2', function($q) use($fechaInicio){
+                            $q->where('fechaProgramada', '>=', $fechaInicio);
+                        });
+                });
+        }
+
+        // Buscar por Fecha de Fin
+        if(isset($peticion->fechaFin)){
+            $fechaFin = $peticion->fechaFin;
+            $query
+                ->where(function($qq) use($fechaFin) {
+                    $qq->whereHas('inventario1', function ($q) use ($fechaFin) {
+                            $q->where('fechaProgramada', '<=', $fechaFin);
+                        })->orWhereHas('inventario2', function ($q) use ($fechaFin) {
+                            $q->where('fechaProgramada', '<=', $fechaFin);
+                        });
+                });
+        }
+
+//        $query->orderBy('inventario.fechaProgramada');
+        return $query->get();
     }
 }

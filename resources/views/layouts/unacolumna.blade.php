@@ -47,10 +47,10 @@
                                 @endif
 
                                 {{-- Nominas --}}
-                                @if( Auth::user()->hasRole('Developer') )
+                                @if( Auth::user()->hasRole('SupervisorInventario') )
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('nominas/captadores')? 'active': '' }}">
-                                        <a href="{{ url('nominas/captadores') }}">Nominas Captadores/as (D)</a>
+                                        <a href="{{ url('nominas/captadores') }}">Nominas Captadores/as</a>
                                     </li>
                                 @endif
 

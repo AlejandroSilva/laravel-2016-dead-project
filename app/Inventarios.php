@@ -20,10 +20,10 @@ class Inventarios extends Model {
         return $this->belongsTo('App\Locales', 'idLocal', 'idLocal');
     }
 
-//    public function jornada(){
-//        //return $this->hasOne('App\Model', 'foreign_key', 'local_key');
-//        return $this->hasOne('App\Jornadas', 'idJornada', 'idJornada');
-//    }
+    public function jornada(){
+        //return $this->hasOne('App\Model', 'foreign_key', 'local_key');
+        return $this->hasOne('App\Jornadas', 'idJornada', 'idJornada');
+    }
 
     public function nominaDia(){
 //        return $this->hasOne('App\Nominas', 'idNomina', 'idNominaDia');
@@ -68,6 +68,7 @@ class Inventarios extends Model {
         return [
             'idInventario' => $inventario->idInventario,
             'idJornada' => $inventario->idJornada,
+            'jornada' => $inventario->jornada->nombre,
             'inventario_fechaProgramada' => $inventario->fechaProgramada,
             'inventario_fechaProgramadaF' => $inventario->fechaProgramadaF(),
             'inventario_stockTeorico' => $inventario->stockTeorico,
