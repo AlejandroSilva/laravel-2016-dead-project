@@ -237,7 +237,8 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarInventario.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'stock')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'stock')}
-                        puedeModificar={puedeEditarInventario}
+                        // puedeModificar={puedeEditarInventario}
+                        puedeModificar={this.props.puedeModificar}
                     />
                 </td>
                 {/* Dotación Total */}
