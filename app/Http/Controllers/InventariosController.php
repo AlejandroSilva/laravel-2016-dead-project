@@ -134,6 +134,7 @@ class InventariosController extends Controller {
             // si la jornada es de "dia"(2), o "dia y noche"(4), entonces la nomina esta habilitada
             $nominaDia->habilitada = ($idJornada==2 || $idJornada==4);
             $nominaDia->idEstadoNomina = 2; // pendiente
+            $nominaDia->turno = 'Día';
             $nominaDia->save();
 
             $nominaNoche = new Nominas();
@@ -147,6 +148,7 @@ class InventariosController extends Controller {
             // si la jornada es de "noche"(3), o "dia y noche"(4), entonces la nomina esta habilitada
             $nominaNoche->idEstadoNomina = ($idJornada==3 || $idJornada==4)? 2 : 1;
             $nominaNoche->idEstadoNomina = 2; // pendiente
+            $nominaNoche->turno = 'Noche';
             $nominaNoche->save();
 
             $inventario->nominaDia()->associate($nominaDia);
