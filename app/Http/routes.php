@@ -85,7 +85,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('clientes',                      'ClientesController@api_getClientes');
         Route::get('cliente/{idCliente}/locales',   'ClientesController@api_getLocales');
         Route::get('clientes/locales',              'ClientesController@api_getClientesWithLocales');
-//        Route::get('locales/{idLocal}',             'LocalesController@api_getLocal');
+        Route::post('locales',                      'LocalesController@api_nuevo');
 //        Route::get('locales/{idLocal}/verbose',     'LocalesController@api_getLocalVerbose');
         // API INVENTARIOS
         Route::post('inventario/nuevo',                 'InventariosController@api_nuevo');

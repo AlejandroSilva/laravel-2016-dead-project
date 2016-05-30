@@ -11,6 +11,12 @@ class Locales extends Model{
     // este modelo tiene timestamps
     public $timestamps = true;
 
+    protected $fillable = [
+        'idCliente', 'idFormatoLocal', 'idJornadaSugerida', 'numero', 'nombre', 'horaApertura', 'horaCierre',
+        'emailContacto', 'telefono1', 'telefono2', 'stock', 'fechaStock'
+    ];
+    protected $guarded = ['idLocal'];
+
     // #### Relaciones
     public function cliente(){
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)

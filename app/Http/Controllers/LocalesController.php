@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Direcciones;
 use App\FormatoLocales;
 use App\Jornadas;
-use Illuminate\Http\Request;
+use App\Locales;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +17,7 @@ use Auth;
 use App\Clientes;
 
 class LocalesController extends Controller {
+
     /**
      * ##########################################################
      * Rutas que generan vistas
@@ -41,6 +45,53 @@ class LocalesController extends Controller {
      * Rutas para consumo del API REST
      * ##########################################################
      */
+
+    // POST api/locales
+    function api_nuevo(Request $request){
+        // Verificar que el usuario tenga los permisos para crear un local
+        $user = Auth::user();
+        if(!$user || !$user->can('adminLocales_agregar'))
+            return view('errors.403');
+
+        // Validar que el local sea valido
+        $crearLocal = Validator::make($request->all(), [
+            'idCliente' => 'required|max:10',
+            // formato local debe existir en la tabla
+            'idFormatoLocal' => 'required|exists:formato_locales,idFormatoLocal',
+            // jornada sugerida debe existir en la tabla
+            'idJornadaSugerida' => 'required|exists:jornadas,idJornada',
+            // valida que el numero y el nombre sean unicos, pero solo para el cliente indicado
+                                //unique:table,column,except,idColumn
+            'numero' => "required|unique:locales,numero,NULL,id,idCliente,$request->idCliente",
+            'nombre' => "required|unique:locales,nombre,NULL,id,IdCliente,$request->idCliente",
+            'horaApertura' => 'required|date_format:H:i:s',
+            'horaCierre' => 'required|date_format:H:i:s',
+            'emailContacto' => 'sometimes|max:50',
+            'codArea1' => 'sometimes|max:10',
+            'telefono1' => 'sometimes|max:20',
+            'codArea2' => 'sometimes|max:10',
+            'telefono2' => 'sometimes|max:20',
+            'stock' => 'required|numeric|digits_between:1,11',
+            'fechaStock' => 'required|date',
+            // En el mismo validator se revisa la direccion
+            'cutComuna'=> 'required|exists:comunas,cutComuna',
+            'direccion'=> 'required|max:150|'
+        ]);
+        if($crearLocal->fails())
+            return response()->json([$crearLocal->errors()], 400);
+        
+        // Crear el Local y la direccion
+        $local = Locales::create( $request->all() );
+        $direccion = new Direcciones([
+            'idLocal'=> $local->idLocal,
+            'direccion' => $request->direccion,
+            'cutComuna' => $request->cutComuna
+        ]);
+        $direccion->save();
+
+        return response()->json(Locales::formatearConClienteFormatoDireccionRegion($local));
+    }
+
 
     // GET api/locales/{idLocal}
     // Entrega la informacion de un local, sin sus relaciones

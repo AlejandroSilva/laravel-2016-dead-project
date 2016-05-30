@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Direcciones extends Model {
     // llave primaria
-    public $primaryKey = 'idDireccion';
+    public $primaryKey = 'idLocal';
 
     // este modelo tiene timestamps
     public $timestamps = true;
+
+    protected $fillable = ['idLocal', 'cutComuna', 'direccion'];
 
     // #### Relaciones
     public function comuna(){
