@@ -160,5 +160,3 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('usuario/{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
     });
 });
-
-//asd 
