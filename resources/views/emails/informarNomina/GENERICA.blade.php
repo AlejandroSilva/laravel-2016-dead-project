@@ -98,7 +98,7 @@
                             @if( isset($lider))
                                 <tr>
                                     <td style="border: 1px solid #ddd;">{{$conteo++}}</td>
-                                    <td style="border: 1px solid #ddd;">{{ "$lider->nombre1 $lider->nombre2" }}</td>
+                                    <td style="border: 1px solid #ddd;">{{ $lider->nombreCompleto() }}</td>
                                     <td style="border: 1px solid #ddd;">{{ "$lider->usuarioRUN-$lider->usuarioDV" }}</td>
                                     <td style="border: 1px solid #ddd;">Lider</td>
                                 </tr>
@@ -107,7 +107,7 @@
                             @if( isset($supervisor))
                                 <tr>
                                     <td style="border: 1px solid #ddd;">{{$conteo++}}</td>
-                                    <td style="border: 1px solid #ddd;">{{ "$supervisor->nombre1 $supervisor->nombre2" }}</td>
+                                    <td style="border: 1px solid #ddd;">{{ $supervisor->nombreCompleto() }}</td>
                                     <td style="border: 1px solid #ddd;">{{ "$supervisor->usuarioRUN-$supervisor->usuarioDV" }}</td>
                                     <td style="border: 1px solid #ddd;">Supervisor</td>
                                 </tr>
