@@ -399,11 +399,11 @@ class RowInventario extends React.Component{
                        className={cx(
                             'label',
                             // color depende del valor de la fechaSubida
-                            labelNominas[this.props.inventario.nomina_noche.idEstadoNomina],
+                            labelNominas[this.props.inventario.nomina_dia.idEstadoNomina],
                             inventarioDia? 'center-block' : 'hide'
                         )}
                        target="_blank">
-                        {estadoNominas[this.props.inventario.nomina_noche.idEstadoNomina]}
+                        {estadoNominas[this.props.inventario.nomina_dia.idEstadoNomina]}
                     </a>
                     {/* Nomina de Noche */}
                     <a href={`nomina/${this.props.inventario.nomina_noche.idNomina}`}
