@@ -97,7 +97,6 @@ class InventariosController extends Controller {
             'fechaProgramada'=> 'required',
             //'horaLlegada'=> 'required',
             //'stockTeorico'=> 'required',
-            //'dotacionAsignadaTotal'=> 'required'
         ]);
         if($validator->fails()){
             return response()->json([
@@ -120,7 +119,6 @@ class InventariosController extends Controller {
             $inventario->idJornada = $idJornada;
 
             $inventario->fechaProgramada = $request->fechaProgramada;
-            //$inventario->dotacionAsignadaTotal = 0;             // eliminar este campo, ya no se utiliza
             $inventario->stockTeorico = $local->stock;
             $inventario->fechaStock =   $local->fechaStock;
 
@@ -130,7 +128,6 @@ class InventariosController extends Controller {
             $nominaDia->horaPresentacionLider = $local->llegadaSugeridaLiderDia();
             $nominaDia->horaPresentacionEquipo = $local->llegadaSugeridaPersonalDia();
             // Todo: la dotacion sugerida deberia dividirse en dos cuando la jornada sea doble:
-            //$nominaDia->dotacionAsignada = 0;                   // eliminar este campo, ya no se utiliza
             $nominaDia->dotacionTotal = $inventario->dotacionTotalSugerido();
             $nominaDia->dotacionOperadores = $inventario->dotacionOperadoresSugerido();
             // si la jornada es de "dia"(2), o "dia y noche"(4), entonces la nomina esta habilitada
@@ -144,7 +141,6 @@ class InventariosController extends Controller {
             $nominaNoche->horaPresentacionLider = $local->llegadaSugeridaLiderNoche();
             $nominaNoche->horaPresentacionEquipo = $local->llegadaSugeridaPersonalNoche();
             // Todo: la dotacion sugerida deberia dividirse en dos cuando la jornada sea doble:
-            //$nominaNoche->dotacionAsignada = 0;                 // eliminar este campo, ya no se utiliza
             $nominaNoche->dotacionTotal = $inventario->dotacionTotalSugerido();
             $nominaNoche->dotacionOperadores = $inventario->dotacionOperadoresSugerido();
             // si la jornada es de "noche"(3), o "dia y noche"(4), entonces la nomina esta habilitada
@@ -209,8 +205,7 @@ class InventariosController extends Controller {
                 if($this->fecha_valida($request->fechaProgramada))
                     $inventario->fechaProgramada = $request->fechaProgramada;
             }
-//            if(isset($request->dotacionAsignadaTotal))
-//                $inventario->dotacionAsignadaTotal = $request->dotacionAsignadaTotal;
+
             if(isset($request->idJornada)){
                 $idJornada = $request->idJornada;
                 // cambia el estado del inventario
@@ -517,7 +512,7 @@ class InventariosController extends Controller {
     // Función generica para generar el archivo excel
     private function generarWorkbook($inventarios){
         $inventarios = $inventarios->toArray();
-        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha stock', 'Dotación Total', 'Dirección'];
+        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha stock', 'Dirección'];
 
         $inventariosArray = array_map(function($inventario){
             return [
@@ -529,7 +524,6 @@ class InventariosController extends Controller {
                 $inventario['local']['direccion']['comuna']['nombre'],
                 $inventario['local']['stock'],
                 $inventario['fechaStock'],
-                $inventario['dotacionAsignadaTotal'],
                 $inventario['local']['direccion']['direccion']
             ];
         }, $inventarios);
