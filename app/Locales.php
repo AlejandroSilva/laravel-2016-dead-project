@@ -104,6 +104,24 @@ class Locales extends Model{
         return "$carbon->hour:$minutes hrs.";
     }
 
+    // #### Acciones
+    public function actualizarStock($stock, $fechaStock){
+        // actualizar el stock
+        $this->stock = $stock;
+        $this->fechaStock = $fechaStock;
+        $this->save();
+
+        // actualizar los datos de los inventarios del local (solo los pendientes)
+        return [
+            'cliente' => $this->cliente->nombreCorto,
+            'local' => "($this->numero) $this->nombre",
+            'error' => '',
+            'estado' => "stock y fechaStock actualizado ($stock al $fechaStock)",
+            'inventarios' => $this->inventarios->map(function($inv) use($stock, $fechaStock){
+                return $inv->actualizarStock($stock, $fechaStock);
+            })
+        ];
+    }
 
     // #### Formatear
     static function formatearSimple($local){

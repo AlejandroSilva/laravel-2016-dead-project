@@ -63,6 +63,31 @@ class Inventarios extends Model {
         ]);
     }
 
+    // #### Acciones
+    public function actualizarStock($stock, $fechaStock){
+        $habDia= $this->nominaDia->habilitada;
+        $habNoche = $this->nominaNoche->habilitada;
+        $estadoDia = $this->nominaDia->estado;
+        $estadoNoche = $this->nominaNoche->estado;
+        // si la nomina de dia esta pendinete, o la de noche, entoncse cambiar el stock
+        if( ($habDia&&$estadoDia->idEstadoNomina==2) || ($habNoche&&$estadoNoche->idEstadoNomina==2) ){
+            $this->stockTeorico = $stock;
+            $this->fechaStock = $fechaStock;
+            $this->save();
+            return [
+                'fechaProgramada' => $this->fechaProgramadaF(),
+                'estado' => "stock y fechaStock actualizado ($stock al $fechaStock)",
+                'error' => ''
+            ];
+        }else{
+            return [
+                'fechaProgramada' => $this->fechaProgramadaF(),
+                'estado'=>'',
+                'error'=>'El inventario no esta Pendiente'
+            ];
+        }
+    }
+
     // #### Formatear
     static function formatoSimple($inventario){
         return [
