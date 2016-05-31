@@ -14,8 +14,7 @@ use App\Locales;
 class StockController extends Controller {
 
     function api_leerArchivo(){
-        $tableData = $this->leerArchivo('/home/asilva/Escritorio/stockFCV.xlsx');
-        return response()->json($tableData);
+        $tableData = $this->leerArchivo(public_path().'/actualizarStock/stockFCV-2016-05-31.xlsx');
 
         $data = collect($tableData);
         return response()->json(
