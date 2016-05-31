@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use Redirect;
 use Log;
+// Carbon
+use Carbon\Carbon;
 // Crypt
 use Crypt;
 // PHP Excel
@@ -118,7 +120,7 @@ class InventariosController extends Controller {
             $inventario->idJornada = $idJornada;
 
             $inventario->fechaProgramada = $request->fechaProgramada;
-            $inventario->dotacionAsignadaTotal = $local->dotacionSugerida();
+            //$inventario->dotacionAsignadaTotal = 0;             // eliminar este campo, ya no se utiliza
             $inventario->stockTeorico = $local->stock;
             $inventario->fechaStock =   $local->fechaStock;
 
@@ -128,9 +130,9 @@ class InventariosController extends Controller {
             $nominaDia->horaPresentacionLider = $local->llegadaSugeridaLiderDia();
             $nominaDia->horaPresentacionEquipo = $local->llegadaSugeridaPersonalDia();
             // Todo: la dotacion sugerida deberia dividirse en dos cuando la jornada sea doble:
-            $nominaDia->dotacionAsignada = $local->dotacionSugerida();
-            $nominaDia->dotacionCaptador1 = 0;
-            $nominaDia->dotacionCaptador2 = 0;
+            //$nominaDia->dotacionAsignada = 0;                   // eliminar este campo, ya no se utiliza
+            $nominaDia->dotacionTotal = $inventario->dotacionTotalSugerido();
+            $nominaDia->dotacionOperadores = $inventario->dotacionOperadoresSugerido();
             // si la jornada es de "dia"(2), o "dia y noche"(4), entonces la nomina esta habilitada
             $nominaDia->habilitada = ($idJornada==2 || $idJornada==4);
             $nominaDia->idEstadoNomina = 2; // pendiente
@@ -142,9 +144,9 @@ class InventariosController extends Controller {
             $nominaNoche->horaPresentacionLider = $local->llegadaSugeridaLiderNoche();
             $nominaNoche->horaPresentacionEquipo = $local->llegadaSugeridaPersonalNoche();
             // Todo: la dotacion sugerida deberia dividirse en dos cuando la jornada sea doble:
-            $nominaNoche->dotacionAsignada = $local->dotacionSugerida();
-            $nominaNoche->dotacionCaptador1 = 0;
-            $nominaNoche->dotacionCaptador2 = 0;
+            //$nominaNoche->dotacionAsignada = 0;                 // eliminar este campo, ya no se utiliza
+            $nominaNoche->dotacionTotal = $inventario->dotacionTotalSugerido();
+            $nominaNoche->dotacionOperadores = $inventario->dotacionOperadoresSugerido();
             // si la jornada es de "noche"(3), o "dia y noche"(4), entonces la nomina esta habilitada
             $nominaNoche->idEstadoNomina = ($idJornada==3 || $idJornada==4)? 2 : 1;
             $nominaNoche->idEstadoNomina = 2; // pendiente
@@ -207,8 +209,8 @@ class InventariosController extends Controller {
                 if($this->fecha_valida($request->fechaProgramada))
                     $inventario->fechaProgramada = $request->fechaProgramada;
             }
-            if(isset($request->dotacionAsignadaTotal))
-                $inventario->dotacionAsignadaTotal = $request->dotacionAsignadaTotal;
+//            if(isset($request->dotacionAsignadaTotal))
+//                $inventario->dotacionAsignadaTotal = $request->dotacionAsignadaTotal;
             if(isset($request->idJornada)){
                 $idJornada = $request->idJornada;
                 // cambia el estado del inventario
@@ -219,8 +221,19 @@ class InventariosController extends Controller {
                 $inventario->nominaDia->save();
                 $inventario->nominaNoche->save();
             }
-            if(isset($request->stockTeorico))
+            if(isset($request->stockTeorico)) {
+                // actualizar el stock del inventario
                 $inventario->stockTeorico = $request->stockTeorico;
+                $inventario->fechaStock = Carbon::now();
+                // actualizar el stock de la nomina de dia
+                $inventario->nominaDia->dotacionTotal = $inventario->dotacionTotalSugerido();
+                $inventario->nominaDia->dotacionOperadores = $inventario->dotacionOperadoresSugerido();
+                $inventario->nominaDia->save();
+                // actualizar el stock de la nomina de noche
+                $inventario->nominaNoche->dotacionTotal = $inventario->dotacionTotalSugerido();
+                $inventario->nominaNoche->dotacionOperadores = $inventario->dotacionOperadoresSugerido();
+                $inventario->nominaNoche->save();
+            }
 
             $resultado = $inventario->save();
 

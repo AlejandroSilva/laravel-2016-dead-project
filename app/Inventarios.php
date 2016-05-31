@@ -34,11 +34,49 @@ class Inventarios extends Model {
         return $this->belongsTo('App\Nominas', 'idNominaNoche', 'idNomina');
     }
 
-    // Consultas
+    // Consultas y Calulos
     public function fechaProgramadaF(){
         setlocale(LC_TIME, 'es_CL.utf-8');
         // fecha con formato: ejemplo: "2016-05-30" -> "lunes 30 de mayo, 2016"
         return Carbon::parse($this->fechaProgramada)->formatLocalized('%A %e de %B, %Y');
+    }
+    public function dotacionTotalSugerido($stock = null){
+        // si no se entrega el stock como parametro, se toma el stock actual del local
+        $stock = isset($stock)? $stock : $this->stockTeorico;
+
+        $producion = $this->local->formatoLocal->produccionSugerida;
+        // El ultimo stock actualizado / Produccion del tipo de local
+        $personasQueCuentan = round($stock/$producion);
+
+        // en todos los clientes, solo los operadores cuentan (total = operadores+lider)
+        if($this->local->cliente->idCliente!=3){
+            $total = $personasQueCuentan + 1;
+        }
+        // excepto en el cliente CKY, donde el lider tambien cuenta (total = operadores-1+lider = operadores)
+        else{
+            $total = $personasQueCuentan;
+        }
+        // retornar 0 en caso de ser negativo..
+        return $total<0? 0 : $total;
+    }
+    public function dotacionOperadoresSugerido($stock = null){
+        // si no se entrega el stock como parametro, se toma el stock actual del local
+        $stock = isset($stock)? $stock : $this->stockTeorico;
+
+        $producion = $this->local->formatoLocal->produccionSugerida;
+        // El ultimo stock actualizado / Produccion del tipo de local
+        $personasQueCuentan = round($stock/$producion);
+
+        // en todos los clientes, solo los operadores cuentan
+        if($this->local->cliente->idCliente!=3){
+            $operadores = $personasQueCuentan;
+        }
+        // excepto en el cliente CKY, donde el lider tambien cuenta (por lo que se lleva 1 operador menos)
+        else{
+            $operadores = $personasQueCuentan - 1;
+        }
+        // retornar 0 en caso de ser negativo..
+        return $operadores<0? 0 : $operadores;
     }
 
     // #### With scopes

@@ -21,7 +21,7 @@ class TablaMensual extends React.Component{
                     <col className={css.thRegion}/>
                     <col className={css.thComuna}/>
                     <col className={css.thStock}/>
-                    <col className={css.thDotacion}/>
+                    {/*<col className={css.thDotacion}/>*/}
                     <col className={css.thOpciones}/>
                 </colgroup>
                 <thead>
@@ -58,9 +58,7 @@ class TablaMensual extends React.Component{
                             />
                         </th>
                         <th className={css.thStock}>Stock</th>
-                        <th className={css.thDotacion}>Dot.Total</th>
-                        {/*<th className={css.thJornada}>Jornada</th>*/}
-                        {/*<th className={css.thEstado}>Estado</th>*/}
+                        {/*<th className={css.thDotacion}>Dot.Total</th>*/}
                         <th className={css.thOpciones}>Opciones</th>
                     </Sticky>
                 </thead>

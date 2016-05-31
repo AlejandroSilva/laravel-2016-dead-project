@@ -19,9 +19,10 @@ class RowInventarioMensual extends React.Component{
             this.inputFecha.focus()
         }else if(elemento==='stock'){
             this.inputStock.focus()
-        }else if(elemento==='dotacion'){
-            this.inputDotacionTotal.focus()
         }
+        // else if(elemento==='dotacion'){
+        //     this.inputDotacionTotal.focus()
+        // }
     }
     guardarInventario(){
         if(!this.props.puedeModificar)
@@ -38,12 +39,12 @@ class RowInventarioMensual extends React.Component{
         }
 
         // la DOTACION es valida y ha cambiado?
-        let estadoInputDotacionTotal = this.inputDotacionTotal.getEstado()
-        if (estadoInputDotacionTotal.valid && estadoInputDotacionTotal.dirty) {
-            cambiosInventario.dotacionAsignadaTotal = estadoInputDotacionTotal.valor
-        } else if (estadoInputDotacionTotal.valid === false) {
-            return console.log(`dotacion total: ${estadoInputDotacionTotal.valor} invalida`)
-        }
+        // let estadoInputDotacionTotal = this.inputDotacionTotal.getEstado()
+        // if (estadoInputDotacionTotal.valid && estadoInputDotacionTotal.dirty) {
+        //     cambiosInventario.dotacionAsignadaTotal = estadoInputDotacionTotal.valor
+        // } else if (estadoInputDotacionTotal.valid === false) {
+        //     return console.log(`dotacion total: ${estadoInputDotacionTotal.valor} invalida`)
+        // }
 
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
         if(JSON.stringify(cambiosInventario)!=="{}"){
@@ -124,7 +125,7 @@ class RowInventarioMensual extends React.Component{
                     />
                 </td>
                 {/* Dotación Total */}
-                <td className={css.tdDotacion}>
+                {/*<td className={css.tdDotacion}>
                     <InputDotacionSimple
                         ref={ref=>this.inputDotacionTotal=ref}
                         asignada={this.props.inventario.dotacionAsignadaTotal}
@@ -134,6 +135,7 @@ class RowInventarioMensual extends React.Component{
                         puedeModificar={this.props.puedeModificar}
                     />
                 </td>
+                */}
                 {/* Opciones    */}
                 <td className={css.tdOpciones}>
                     {

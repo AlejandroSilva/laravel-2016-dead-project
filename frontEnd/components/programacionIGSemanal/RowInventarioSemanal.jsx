@@ -39,8 +39,20 @@ class RowInventario extends React.Component{
     focusElemento(elemento){
         if(elemento==='dia'){
             this.inputDia.focus()
-        }else if(elemento==='dotacion'){
-            this.inputDotacionTotal.focus()
+        }else if(elemento==='dotacionTotal'){
+            // hace focus al primer input de la nomina que este habilitada
+            if(this.props.inventario.nomina_dia.habilitada=="1"){
+                this.inputDotacionDiaTotal.focus()
+            }else if(this.props.inventario.nomina_noche.habilitada=="1"){
+                this.inputDotacionNocheTotal.focus();
+            }
+        }else if(elemento==='dotacionOperadores'){
+            // hace focus al primer input de la nomina que este habilitada
+            if(this.props.inventario.nomina_dia.habilitada=="1"){
+                this.inputDotacionDiaOperadores.focus()
+            }else if(this.props.inventario.nomina_noche.habilitada=="1"){
+                this.inputDotacionNocheOperadores.focus();
+            }
         }else if(elemento==='stock'){
             this.inputStock.focus()
         }else{
@@ -61,13 +73,14 @@ class RowInventario extends React.Component{
             return console.log(`fecha ${estadoInputDia.fecha} invalida`)
         }
 
-        // la DOTACION es valida y ha cambiado?
-        let estadoInputDotacionTotal = this.inputDotacionTotal.getEstado()
-        if (estadoInputDotacionTotal.valid && estadoInputDotacionTotal.dirty) {
-            cambiosInventario.dotacionAsignadaTotal = estadoInputDotacionTotal.valor
-        } else if (estadoInputDotacionTotal.valid === false) {
-            return console.log(`dotacion total: ${estadoInputDotacionTotal.valor} invalida`)
-        }
+        // LOS DOS CAMPOS DE DOTACION AHORA VAN EL LA NOMINA
+        // // la DOTACION es valida y ha cambiado?
+        // let estadoInputDotacionTotal = this.inputDotacionTotal.getEstado()
+        // if (estadoInputDotacionTotal.valid && estadoInputDotacionTotal.dirty) {
+        //     cambiosInventario.dotacionAsignadaTotal = estadoInputDotacionTotal.valor
+        // } else if (estadoInputDotacionTotal.valid === false) {
+        //     return console.log(`dotacion total: ${estadoInputDotacionTotal.valor} invalida`)
+        // }
 
         // la JORNADA es valida y ha cambiado
         let estadoSelectJornada = this.selectJornada.getEstado()
@@ -89,7 +102,8 @@ class RowInventario extends React.Component{
     }
     guardarNominaDia() {
         this._guardarNomina(this.props.inventario.nomina_dia.idNomina, {
-            inputDotacion: this.inputDotacionDia.getEstado(),
+            inputDotacionTotal: this.inputDotacionDiaTotal.getEstado(),
+            inputDotacionOperadores: this.inputDotacionDiaOperadores.getEstado(),
             selectLider: this.selectLiderDia.getEstado(),
             selectSupervisor: this.selectSupervisorDia.getEstado(),
             selectCaptador1: this.selectCaptador1Dia.getEstado(),
@@ -99,7 +113,8 @@ class RowInventario extends React.Component{
     }
     guardarNominaNoche(){
         this._guardarNomina(this.props.inventario.nomina_noche.idNomina, {
-            inputDotacion: this.inputDotacionNoche.getEstado(),
+            inputDotacionTotal: this.inputDotacionNocheTotal.getEstado(),
+            inputDotacionOperadores: this.inputDotacionNocheOperadores.getEstado(),
             selectLider: this.selectLiderNoche.getEstado(),
             selectSupervisor: this.selectSupervisorNoche.getEstado(),
             selectCaptador1: this.selectCaptador1Noche.getEstado(),
@@ -114,10 +129,10 @@ class RowInventario extends React.Component{
         let cambiosNomina = {}
 
         // la DOTACION es valida y ha cambiado?
-        if (estados.inputDotacion.valid && estados.inputDotacion.dirty)
-            cambiosNomina.dotacionAsignada = estados.inputDotacion.valor
-        //else if (estados.inputDotacion.valid === false)
-        //    return console.log(`dotacion de la nomina: ${estados.inputDotacion.dotacion} invalida`)
+        if (estados.inputDotacionTotal.valid && estados.inputDotacionTotal.dirty)
+            cambiosNomina.dotacionTotal = estados.inputDotacionTotal.valor
+        if (estados.inputDotacionOperadores.valid && estados.inputDotacionOperadores.dirty)
+            cambiosNomina.dotacionOperadores = estados.inputDotacionOperadores.valor
 
         // el LIDER es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
         if (estados.selectLider.dirty)
@@ -243,34 +258,47 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Dotación Total */}
                 <td className={css.tdDotacionTotal}>
+                    {/* Dotaion de Dia */}
                     <InputDotacionMultiple
-                        /*style={{display: (idJornada==2 || idJornada==3)? 'block' : 'none'}}*/
+                        style={{display: inventarioDia? 'block' : 'none'}}
                         className="pull-left"
-                        ref={ref=>this.inputDotacionTotal=ref}
-                        asignada={this.props.inventario.dotacionAsignadaTotal}
-                        onGuardar={this.guardarInventario.bind(this)}
-                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
-                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}
+                        ref={ref=>this.inputDotacionDiaTotal=ref}
+                        asignada={this.props.inventario.nomina_dia.dotacionTotal}
+                        onGuardar={this.guardarNominaDia.bind(this)}
+                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionTotal')}
+                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionTotal')}
                         // puedeModificar={puedeEditarInventario}/>
                         puedeModificar={this.props.puedeModificar}/>
                     <InputDotacionMultiple
                         style={{display: inventarioDia? 'block' : 'none'}}
                         className="pull-right"
-                        ref={ref=>this.inputDotacionDia=ref}
-                        asignada={this.props.inventario.nomina_dia.dotacionAsignada}
+                        ref={ref=>this.inputDotacionDiaOperadores=ref}
+                        asignada={this.props.inventario.nomina_dia.dotacionOperadores}
                         onGuardar={this.guardarNominaDia.bind(this)}
-                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
-                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}
+                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionOperadores')}
+                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionOperadores')}
                         // puedeModificar={puedeEditarDia}/>
+                        puedeModificar={this.props.puedeModificar}/>
+
+                    {/* Dotacion de Noche*/}
+                    <InputDotacionMultiple
+                        style={{display: inventarioNoche? 'block' : 'none'}}
+                        className="pull-left"
+                        ref={ref=>this.inputDotacionNocheTotal=ref}
+                        asignada={this.props.inventario.nomina_noche.dotacionTotal}
+                        onGuardar={this.guardarNominaNoche.bind(this)}
+                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionTotal')}
+                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionTotal')}
+                        // puedeModificar={puedeEditarInventario}/>
                         puedeModificar={this.props.puedeModificar}/>
                     <InputDotacionMultiple
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         className="pull-right"
-                        ref={ref=>this.inputDotacionNoche=ref}
-                        asignada={this.props.inventario.nomina_noche.dotacionAsignada}
+                        ref={ref=>this.inputDotacionNocheOperadores=ref}
+                        asignada={this.props.inventario.nomina_noche.dotacionOperadores}
                         onGuardar={this.guardarNominaNoche.bind(this)}
-                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
-                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}
+                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionOperadores')}
+                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionOperadores')}
                         // puedeModificar={puedeEditarNoche}/>
                         puedeModificar={this.props.puedeModificar}/>
                 </td>

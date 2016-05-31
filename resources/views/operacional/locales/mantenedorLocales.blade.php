@@ -14,5 +14,6 @@
         window.laravelClientes = {!! $clientes !!};
         window.laravelJornadas = {!! $jornadas !!};
         window.laravelFormatoLocales = {!! $formatoLocales !!};
+        window.laravelComunas = {!! $comunas !!};
     </script>
 @stop

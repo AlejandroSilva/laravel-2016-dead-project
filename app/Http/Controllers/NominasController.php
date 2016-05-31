@@ -168,12 +168,12 @@ class NominasController extends Controller {
             // Captador 2
             if(isset($request->idCaptador2))
                 $nomina->idCaptador2 = $request->idCaptador2==''? null : $request->idCaptador2;
-            //  Dotacion Captador 1
-            if(isset($request->dotacionCaptador1))
-                $nomina->dotacionCaptador1 = $request->dotacionCaptador1;
-            //  Dotacion Captador 2
-            if(isset($request->dotacionCaptador2))
-                $nomina->dotacionCaptador2 = $request->dotacionCaptador2;
+            //  Dotacion Total
+            if(isset($request->dotacionTotal))
+                $nomina->dotacionTotal = $request->dotacionTotal;
+            //  Dotacion Operadores
+            if(isset($request->dotacionOperadores))
+                $nomina->dotacionOperadores = $request->dotacionOperadores;
             // Hora llegada Lider
             if(isset($request->horaPresentacionLider))
                 $nomina->horaPresentacionLider = $request->horaPresentacionLider;

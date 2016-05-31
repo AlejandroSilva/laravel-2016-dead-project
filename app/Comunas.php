@@ -27,4 +27,11 @@ class Comunas extends Model {
         // hasMany(modelo, child.fogeignKey, this.localKey)
         return $this->hasMany('App\Direcciones', 'cutComuna', 'cutComuna');
     }
+
+    public static function formatearSimple($comuna){
+        return [
+            'cutComuna' => $comuna->cutComuna,
+            'nombre' => $comuna->nombre
+        ];
+    }
 }

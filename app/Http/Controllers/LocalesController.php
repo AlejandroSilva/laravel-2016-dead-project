@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Auth;
 //use App\Locales;
 use App\Clientes;
+use App\Comunas;
 
 class LocalesController extends Controller {
 
@@ -36,7 +37,8 @@ class LocalesController extends Controller {
         return view('operacional.locales.mantenedorLocales', [
             'clientes'=>$clientes,
             'jornadas'=>$jornadas,
-            'formatoLocales'=>$formatos
+            'formatoLocales'=>$formatos,
+            'comunas' => Comunas::all()->map('\App\Comunas::formatearSimple')
         ]);
     }
 
@@ -64,8 +66,8 @@ class LocalesController extends Controller {
                                 //unique:table,column,except,idColumn
             'numero' => "required|unique:locales,numero,NULL,id,idCliente,$request->idCliente",
             'nombre' => "required|unique:locales,nombre,NULL,id,IdCliente,$request->idCliente",
-            'horaApertura' => 'required|date_format:H:i:s',
-            'horaCierre' => 'required|date_format:H:i:s',
+            'horaApertura' => 'required|date_format:H:i',
+            'horaCierre' => 'required|date_format:H:i',
             'emailContacto' => 'sometimes|max:50',
             'codArea1' => 'sometimes|max:10',
             'telefono1' => 'sometimes|max:20',
@@ -78,7 +80,7 @@ class LocalesController extends Controller {
             'direccion'=> 'required|max:150|'
         ]);
         if($crearLocal->fails())
-            return response()->json([$crearLocal->errors()], 400);
+            return response()->json($crearLocal->errors(), 400);
         
         // Crear el Local y la direccion
         $local = Locales::create( $request->all() );

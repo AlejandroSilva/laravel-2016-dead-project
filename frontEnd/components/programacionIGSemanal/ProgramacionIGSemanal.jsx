@@ -65,7 +65,7 @@ class ProgramacionIGSemanal extends React.Component {
         if(index<0){
             // al seleccionar "antes de la primera", se seleciona el ultimo
             this.rows[ultimoIndex].focusElemento(nombreElemento)
-        }else if(index>ultimoIndex){
+        }else if(index>=ultimoIndex){
             // al seleccionar "despues de la ultima", se selecciona el primero
             this.rows[ index%this.rows.length ].focusElemento(nombreElemento)
         }else{

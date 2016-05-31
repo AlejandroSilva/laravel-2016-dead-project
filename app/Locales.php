@@ -73,14 +73,6 @@ class Locales extends Model{
             return date('H:i:s', strtotime($this->horaCierre)-3600); // 3600 = 60min * 60seg
     }
 
-    public function dotacionSugerida(){
-        // El ultimo stock actualizado / Produccion del tipo de local
-        $producion = $this->formatoLocal->produccionSugerida;
-        $stock = $this->stock;
-
-        return round($stock/$producion);
-    }
-
 //    public function ultimoInventario(){
     public function inventarioRealizadoEn($annoMesDia){
         $fecha = explode('-', $annoMesDia);
