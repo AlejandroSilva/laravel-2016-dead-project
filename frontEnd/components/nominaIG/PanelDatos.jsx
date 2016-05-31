@@ -16,11 +16,11 @@ export class PanelDatos extends React.Component {
                         <tbody>
                         <tr>
                             <td>Cliente</td><td>{this.props.inventario.local.cliente.nombreCorto}</td>
-                            <td>Dotación asignada</td><td>{this.props.nomina.dotacionAsignada}</td>
+                            <td>Dotación Operadores</td><td>{this.props.nomina.dotacionOperadores}</td>
                         </tr>
                         <tr>
                             <td>Local</td><td>({this.props.inventario.local.numero}) {this.props.inventario.local.nombre}</td>
-                            <td></td><td></td>
+                            <td>Dotación Total</td><td>{this.props.nomina.dotacionTotal}</td>
                         </tr>
                         <tr>
                             <td>Fecha programada</td><td>{this.props.inventario.inventario_fechaProgramadaF}</td>

@@ -1,14 +1,7 @@
-import widgets from 'react-widgets'
-let DateTimePicker = widgets.DateTimePicker
-
-
 // Librerias
 import React from 'react'
 import ReactDOM from 'react-dom'
 let PropTypes = React.PropTypes
-// Styles
-import classNames from 'classnames/bind'
-let cx = classNames.bind(styles)
 // Moment
 import moment from 'moment'
 let momentLocalizer = require('react-widgets/lib/localizers/moment')
@@ -17,11 +10,13 @@ momentLocalizer(moment)
 import { validarRUN, obtenerVerificador } from '../shared/ValidadorRUN'
 // Forms
 import Form from 'react-formal'
-import formalInputs from './react-formal-inputs'
+import formalInputs from '../shared/react-formal-inputs/react-formal-inputs'
 Form.addInputTypes(formalInputs)
 import yup from 'yup'
 // Componentes
 import * as styles from './FormularioUsuario.css'
+import classNames from 'classnames/bind'
+let cx = classNames.bind(styles)
 
 
 const listaBancos = ['Banco Estado', 'Banco de Chile', 'Banco Internacional',  'Scotiank-Desarrollo',

@@ -290,7 +290,7 @@ export class NominaIG extends React.Component {
 
                 <PanelDotaciones
                     // general
-                    dotacionAsignada={this.props.nomina.dotacionAsignada}
+                    dotacionOperadores={this.props.nomina.dotacionOperadores}
                     dotacionEditable={this.state.idEstadoNomina==2} // considerar: estado, permisos, y otras variables
                     // dotacion 
                     lider={this.state.lider}

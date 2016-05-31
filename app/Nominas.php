@@ -107,8 +107,8 @@ class Nominas extends Model {
             "horaPresentacionLiderF" => $nomina->horaPresentacionLiderF(),
             "horaPresentacionEquipo" => $nomina->horaPresentacionEquipo,
             "horaPresentacionEquipoF" => $nomina->horaPresentacionEquipoF(),
-            "dotacionAsignada" => $nomina->dotacionAsignada,
-            "dotacionCaptador1" => $nomina->dotacionCaptador1,
+            "dotacionTotal" => $nomina->dotacionTotal,
+            "dotacionOperadores" => $nomina->dotacionOperadores,
             "fechaSubidaNomina" => $nomina->fechaSubidaNomina,
             "turno" => $nomina->turno,
             "estado" => EstadoNominas::formatearSimple($nomina->estado)

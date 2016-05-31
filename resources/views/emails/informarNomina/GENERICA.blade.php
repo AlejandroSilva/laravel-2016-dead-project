@@ -9,14 +9,14 @@
             <tr>
                 <td style="border: 1px solid #ddd;">Cliente</td>
                 <td style="border: 1px solid #ddd;">{{ $inventario->local->cliente->nombreCorto }}</td>
-                <td style="border: 1px solid #ddd;">Dotación asignada</td>
-                <td style="border: 1px solid #ddd;">{{ $nomina->dotacionAsignada }}</td>
+                <td style="border: 1px solid #ddd;">Dotación Operadores</td>
+                <td style="border: 1px solid #ddd;">{{ $nomina->dotacionOperadores }}</td>
             </tr>
             <tr>
                 <td style="border: 1px solid #ddd;">Local</td>
                 <td style="border: 1px solid #ddd;">({{$inventario->local->numero}}) {{$inventario->local->nombre}}</td>
-                <td style="border: 1px solid #ddd;"></td>
-                <td style="border: 1px solid #ddd;"></td>
+                <td style="border: 1px solid #ddd;">Dotación Total</td>
+                <td style="border: 1px solid #ddd;">{{ $nomina->dotacionTotal }}</td>
             </tr>
             <tr>
                 <td style="border: 1px solid #ddd;">Fecha programada</td>

@@ -60,11 +60,11 @@
                         <tbody>
                         <tr>
                             <td>Cliente</td><td><b>{{ $inventario->local->cliente->nombreCorto }}</b></td>
-                            <td>Dotación asignada</td><td>{{ $nomina->dotacionAsignada }}</td>
+                            <td>Dotación Operadores</td><td>{{ $nomina->dotacionOperadores }}</td>
                         </tr>
                         <tr>
                             <td>Local</td><td><b>({{$inventario->local->numero}}) {{$inventario->local->nombre}}</b></td>
-                            <td></td><td></td>
+                            <td>Dotación Total</td><td>{{ $nomina->dotacionTotal }}</td>
                         </tr>
                         <tr>
                             <td>Fecha programada</td><td><b>{{$inventario->fechaProgramadaF()}}</b></td>
