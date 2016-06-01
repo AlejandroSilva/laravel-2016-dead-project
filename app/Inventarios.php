@@ -109,12 +109,22 @@ class Inventarios extends Model {
         $estadoNoche = $this->nominaNoche->estado;
         // si la nomina de dia esta pendinete, o la de noche, entoncse cambiar el stock
         if( ($habDia&&$estadoDia->idEstadoNomina==2) || ($habNoche&&$estadoNoche->idEstadoNomina==2) ){
+            // actualizar el stock del inventario
             $this->stockTeorico = $stock;
             $this->fechaStock = $fechaStock;
             $this->save();
+
+            // actualizar la dotacion de las nominas
+            $this->nominaDia->dotacionTotal = $this->dotacionTotalSugerido();
+            $this->nominaDia->dotacionOperadores = $this->dotacionOperadoresSugerido();
+            $this->nominaDia->save();
+            $this->nominaNoche->dotacionTotal = $this->dotacionTotalSugerido();
+            $this->nominaNoche->dotacionOperadores = $this->dotacionOperadoresSugerido();
+            $this->nominaNoche->save();
+
             return [
                 'fechaProgramada' => $this->fechaProgramadaF(),
-                'estado' => "stock y fechaStock actualizado ($stock al $fechaStock)",
+                'estado' => "stock, fechaStock y dotacion actualizados ($stock al $fechaStock)",
                 'error' => ''
             ];
         }else{
