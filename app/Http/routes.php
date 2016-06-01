@@ -137,8 +137,8 @@ Route::group(['middleware' => ['web']], function (){
 
         // API GEO (DESARROLLO DETENIDO)
 //        Route::get('geo/comunas',      'GeoController@api_getComunas');
-        // CARGAR
-        Route::get('stock/leerArchivo', 'StockController@api_leerArchivo');
+        Route::get('stock/leerArchivo',             'StockController@api_leerArchivo');
+        Route::post('stock/upload',                 'StockController@api_uploadArchivo');
     });
     /*
     |--------------------------------------------------------------------------
