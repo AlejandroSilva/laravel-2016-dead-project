@@ -24,12 +24,19 @@ export default {
         getLocales: (idCliente)=>
             axios.get(`/api/cliente/${idCliente}/locales`)
     },
-    // locales: {
+    locales: {
         // get: (idLocal)=>
         //     axios.get(`/api/locales/${idLocal}`),
-        // getVerbose: (idLocal)=>
-        //     axios.get(`/api/locales/${idLocal}/verbose`)
-    // },
+        nuevo: (datos)=>
+            axios.post(`/api/locales`, datos),
+        enviarArchivoStock: (idCliente, archivo)=>{
+            let datos = new FormData();
+            datos.append('idCliente', idCliente)
+            datos.append('stockExcel', archivo)
+
+            return axios.post('/api/stock/upload', datos)
+        }
+    },
     inventario: {
         nuevo: (datos)=>
             axios.post(`/api/inventario/nuevo`, datos),

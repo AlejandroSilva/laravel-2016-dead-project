@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Auth;
 use Carbon\Carbon;
 // PHPExcel
 use PHPExcel;
@@ -16,7 +17,28 @@ use App\Clientes;
 use App\Locales;
 
 class StockController extends Controller {
+    /**
+     * ##########################################################
+     * Rutas que generan vistas
+     * ##########################################################
+     */
+    // GET admin/stock
+    function show_mantenedorStock(){
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-actualizarStock'))
+            return view('errors.403');
 
+        return view('admin.mantenedorStock', [
+            'clientes' => Clientes::all()
+        ]);
+    }
+
+    /**
+     * ##########################################################
+     * Rutas para consumo del API REST
+     * ##########################################################
+     */
+    // GET stock/leerArchivo        --      RUTA PARA HACER PRUEBAS, ELIMINAR
     function api_leerArchivo(){
         $tableData = $this->leerArchivo(public_path().'/actualizarStock/stockFCV-2016-05-31.xlsx');
 
@@ -30,7 +52,13 @@ class StockController extends Controller {
         );
     }
 
+    // POST stock/upload
     function api_uploadArchivo(Request $request){
+        // revisar permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-actualizarStock'))
+            return response()->json(['error' => 'No tiene permisos para realizar esta acción'], 403);
+
         // revisar que el cliente este fijado y exista
         if(!$request->idCliente)
             return response()->json(['error' => 'Debe indicar un cliente.'], 400);
@@ -75,7 +103,13 @@ class StockController extends Controller {
     }
 
 
-    function actualizarLocal($idCliente, $numero, $stock, $fechaStock){
+    /**
+     * ##########################################################
+     * funciones privadas
+     * ##########################################################
+     */
+
+    private function actualizarLocal($idCliente, $numero, $stock, $fechaStock){
         // todo: validar que el stock y la $fechaStock sean validos
 
         $local = Locales::where('idCliente', $idCliente)
@@ -95,8 +129,7 @@ class StockController extends Controller {
         }
     }
 
-
-    function leerArchivo($inputFileName){
+    private function leerArchivo($inputFileName){
         try {
             $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
             $objReader = PHPExcel_IOFactory::createReader($inputFileType);

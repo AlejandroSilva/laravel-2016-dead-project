@@ -107,6 +107,9 @@
                                     <li class="{{ Request::is('admin/locales')? 'active': '' }}">
                                         <a href="{{ route('admin.locales.lista') }}">Mantenedor de Locales (D)</a>
                                     </li>
+                                @endif
+
+                                @if( Auth::user()->can('admin-actualizarStock') )
                                     <li class="{{ Request::is('admin/stock')? 'active': '' }}">
                                         <a href="{{ url('admin/stock') }}">Stock de locales (D)</a>
                                     </li>
@@ -126,12 +129,12 @@
                                     <li class="{{ Request::is('user/changePassword')? 'active': '' }}">
                                         <a href="{{ url('user/changePassword') }}">Cambiar contraseña</a>
                                     </li>
+                                    <li role="separator" class="divider"></li>
+                                    {{--<li><a href="#">Configuración</a></li>--}}
+                                    <li><a href="/logout">Cerrar Sesión</a></li>
                                 @endif
                             </ul>
                         </li>
-
-                        {{--<li><a href="#">Configuración</a></li>--}}
-                        <li><a href="/logout">Cerrar Sesión</a></li>
                     @else
                         <li><a href="/login">Login</a></li>
                     @endif

@@ -39,6 +39,7 @@ class Clientes extends Model {
 
     // #### Formatear
     static function formatearSimple($cliente){
+        // la tabla es tan simple que no necesita ser modificado
         return $cliente;
     }
 }

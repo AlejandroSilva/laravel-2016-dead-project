@@ -13,6 +13,7 @@ import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.
 import { GeoGestor } from './components/Geo/GeoGestor.jsx'
 import { NominaIG } from './components/nominaIG/nominaIG.jsx'
 import { NominasCaptador } from './components/nominasCaptador/NominasCaptador.jsx'
+import { MantenedorStock } from './components/mantenedorStock/MantenedorStock.jsx'
 
 /** FORMULARIO PARA LA CREACIÓN DE UN NUEVO Inventario */
 // GET inventario/nuevo, NO SE OCUPA
@@ -88,7 +89,17 @@ if( mantenedorLocalesDOM ){
             clientes={window.laravelClientes}
             jornadas={window.laravelJornadas}
             formatoLocales={window.laravelFormatoLocales}
+            comunas={window.laravelComunas}
         />, mantenedorLocalesDOM)
+}
+/** MANTENEDOR STOCK **/
+let mantenedorStockDOM = document.getElementById('react-mantenedor-stock')
+if( mantenedorStockDOM ) {
+    ReactDOM.render(
+        <MantenedorStock
+            clientes={window.laravelClientes}
+        />, mantenedorStockDOM
+    )
 }
 
 /** GEO **/

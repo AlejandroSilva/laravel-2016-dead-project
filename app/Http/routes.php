@@ -24,8 +24,9 @@ Route::group(['middleware' => ['web']], function (){
     |*/
     Route::group(['middleware'=>['auth']], function(){
         // MANTENEDOR CLIENTES Y LOCALES
-        Route::get('admin/clientes',      'ClientesController@show_Lista')->name('admin.clientes.lista');
-        Route::get('admin/locales',       'LocalesController@show_mantenedor')->name('admin.locales.lista');
+        Route::get('admin/clientes',        'ClientesController@show_Lista')->name('admin.clientes.lista');
+        Route::get('admin/locales',         'LocalesController@show_mantenedor')->name('admin.locales.lista');
+        Route::get('admin/stock',           'StockController@show_mantenedorStock');
         // USUARIOS -MANTENEDOR USUARIOS-ROLES
         Route::get('admin/usuarios-roles',                          'PersonalController@showUsuariosRoles');
         // PERMISSIONS- MANTENEDOR PERMISSIONS-ROLES
@@ -137,7 +138,7 @@ Route::group(['middleware' => ['web']], function (){
 
         // API GEO (DESARROLLO DETENIDO)
 //        Route::get('geo/comunas',      'GeoController@api_getComunas');
-        Route::get('stock/leerArchivo',             'StockController@api_leerArchivo');
+        //  Route::get('stock/leerArchivo',             'StockController@api_leerArchivo');
         Route::post('stock/upload',                 'StockController@api_uploadArchivo');
     });
     /*
