@@ -65,26 +65,6 @@
                                     {{--<a href="{{ url('inventario/nuevo') }}">Nuevo Inventario</a>--}}
                                     {{--</li>--}}
                                 @endif
-
-                                {{-- INVENTARIO --}}
-                                @if( Auth::user()->hasRole('Developer') )
-                                    <li role="separator" class="divider"></li>
-                                    <li class="{{ Request::is('inventario/lista')? 'active': '' }}">
-                                        <a href="{{ url('inventario/lista') }}">(D) Lista de inventarios</a>
-                                    </li>
-                                    {{-- ya no se crean inventarios desde el menu, eliminar esto --}}
-                                    {{--<li class="{{ Request::is('inventario/nuevo')? 'active': '' }}">--}}
-                                        {{--<a href="{{ url('inventario/nuevo') }}">Nuevo Inventario</a>--}}
-                                    {{--</li>--}}
-                                @endif
-
-                                {{-- Cliente / Locales --}}
-                                @if( Auth::user()->hasRole('Developer') )
-                                    <li role="separator" class="divider"></li>
-                                    <li class="{{ Request::is('admin/locales')? 'active': '' }}">
-                                        <a href="{{ route('admin.locales.lista') }}">(D) Mantenedor de Locales</a>
-                                    </li>
-                                @endif
                             </ul>
                         </li>
 
@@ -120,6 +100,18 @@
                                 <li class="{{ Request::is('admin/permissions-roles')? 'active': '' }}">
                                     <a href="{{ url('admin/permissions-roles') }}">Asignación Roles/Permisos</a>
                                 </li>
+
+                                {{-- Cliente / Locales --}}
+                                @if( Auth::user()->hasRole('Developer') )
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('admin/locales')? 'active': '' }}">
+                                        <a href="{{ route('admin.locales.lista') }}">Mantenedor de Locales (D)</a>
+                                    </li>
+                                    <li class="{{ Request::is('admin/stock')? 'active': '' }}">
+                                        <a href="{{ url('admin/stock') }}">Stock de locales (D)</a>
+                                    </li>
+                                @endif
+
                             </ul>
                         </li>
                     @endif
