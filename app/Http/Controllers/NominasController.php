@@ -153,8 +153,8 @@ class NominasController extends Controller {
         if($nomina){
             // Actualizar con los datos entregados
             // Dotacion de la Nomina
-            if(isset($request->dotacionAsignada))
-                $nomina->dotacionAsignada = $request->dotacionAsignada;
+            //if(isset($request->dotacionAsignada))
+            //    $nomina->dotacionAsignada = $request->dotacionAsignada;
             // En el Lider, Supervisor, Captador1 y Captador 2 si la selecciona es '', se agrega un valor null al registro
             // Lider
             if(isset($request->idLider))
@@ -317,7 +317,7 @@ class NominasController extends Controller {
                 Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200);
         // Todo: trabajar este dato
         // Si la dotacion esta completa, no hacer nada y retornar el error
-        if(sizeof($nomina->dotacion) >= $nomina->dotacionAsignada)
+        if(sizeof($nomina->dotacion) >= $nomina->dotacionOperadores)
             return response()->json('Ha alcanzado el maximo de dotacion', 400);
         if($request->esTitular==true){
             // No hay problemas en este punto, agregar usuario y retornar la dotacion
