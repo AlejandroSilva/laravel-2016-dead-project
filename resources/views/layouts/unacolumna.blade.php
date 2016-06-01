@@ -111,7 +111,7 @@
 
                                 @if( Auth::user()->can('admin-actualizarStock') )
                                     <li class="{{ Request::is('admin/stock')? 'active': '' }}">
-                                        <a href="{{ url('admin/stock') }}">Stock de locales (D)</a>
+                                        <a href="{{ url('admin/stock') }}">Stock de Locales</a>
                                     </li>
                                 @endif
 
