@@ -64,7 +64,21 @@ class Nominas extends Model {
             ->where('titular', false)
             ->orderBy('nominas_user.created_at', 'asc');
     }
-    
+
+    public function tieneDotacionCompleta(){
+        $supervisor = $this->supervisor? 1 : 0;
+        $dotacionTitulares = $this->dotacionTitular()->count();
+        
+        if($this->inventario->local->cliente->idCliente!=3){
+            // en todos los clientes, solo los operadores cuentan
+            // entonces se revisa que la dotacionTitular sea menor a dotacionOperadores
+            return ($dotacionTitulares + $supervisor) >= $this->dotacionOperadores;
+        }else{
+            // Excepto en el cliente CKY, donde el lider tambien cuenta
+            return ($dotacionTitulares + $supervisor) >= ($this->dotacionOperadores - 1);
+        }
+    }
+
     public function estado(){
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->hasOne('App\EstadoNominas', 'idEstadoNomina', 'idEstadoNomina');

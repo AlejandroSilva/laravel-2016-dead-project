@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App;
+use Auth;
 use Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 use App\Jobs\InformarNominaACliente;
@@ -18,6 +19,7 @@ use App\Locales;
 use App\Nominas;
 use App\Role;
 use App\User;
+
 class NominasController extends Controller {
     /**
      * ##########################################################
@@ -26,10 +28,12 @@ class NominasController extends Controller {
      */
     // GET programacionIG/nomina/{idNomina}
     function show_nomina($idNomina){
-        // Todo: agregar seguriddad, solo para usuarios con permisos
-//        $user = Auth::user();
-//        if(!$user || !$user->can('programaAuditorias_ver'))
-//            return view('errors.403');
+        // verificar que el usuario tenga permisos para ver auditorias
+        // ToDo: revisar si es un captador, que solo pueda ver SUS auditorias
+        $user = Auth::user();
+        if(!$user || !$user->can('programaInventarios_ver'))
+            return view('errors.403');
+
         $nomina = Nominas::find($idNomina);
         if(!$nomina){
             return view('errors.errorConMensaje', [
@@ -40,7 +44,14 @@ class NominasController extends Controller {
         return view('operacional.nominas.nomina', [
             'nomina' => Nominas::formatearConLiderSupervisorCaptadorDotacion($nomina),
             'inventario' => Inventarios::formatoClienteFormatoRegion($nomina->inventario),
-            'comunas' => Comunas::all()
+            'comunas' => Comunas::all(),
+            'permisos' => [
+                // para poder enviar debe tener los permisos, O ser el captador asociado (ambos no son necesarios)
+                'modificarEnviar' => $user->can('nominaIG-modificar-enviar'),
+                'aprobar' => $user->can('nominaIG-aprobar'),
+                'informar' => $user->can('nominaIG-informar'),
+                'rectificar' => $user->can('nominaIG-rectificar')
+            ]
         ]);
     }
     // GET programacionIG/nomina/{idNomina}/pdf-preview
@@ -315,18 +326,19 @@ class NominasController extends Controller {
         if($operadorExiste)
             return response()->json(
                 Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200);
-        // Todo: trabajar este dato
-        // Si la dotacion esta completa, no hacer nada y retornar el error
-        if(sizeof($nomina->dotacion) >= $nomina->dotacionOperadores)
-            return response()->json('Ha alcanzado el maximo de dotacion', 400);
+
+        // Si es titular, ver si la dotacion esta completa
         if($request->esTitular==true){
+            if($nomina->tieneDotacionCompleta())
+                return response()->json('Ha alcanzado el maximo de dotacion', 400);
             // No hay problemas en este punto, agregar usuario y retornar la dotacion
             $nomina->dotacion()->save($operador, ['titular'=>true]);
         }else{
+            // No existe restriccion a cuantos operadores de reemplazo pueden haber
             // No hay problemas en este punto, agregar usuario y retornar la dotacion
             $nomina->dotacion()->save($operador, ['titular'=>false]);
         }
-        // se debe actualizar la dotacion
+        // se debe actualizar la dotacion antes de imprimirla
         return response()->json(
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
         );
