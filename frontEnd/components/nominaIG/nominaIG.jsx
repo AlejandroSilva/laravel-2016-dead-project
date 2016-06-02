@@ -201,7 +201,7 @@ export class NominaIG extends React.Component {
     // ######### Metodos para cambiar el estado de la nomina #########
     enviarNomina(){
         // al enviar una nomina, esta pasa al estado "enviada"
-        api.nomina.enviar(this.props.nomina.idNomina)
+        return api.nomina.enviar(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
             })
@@ -213,7 +213,7 @@ export class NominaIG extends React.Component {
     }
     aprobarNomina(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
-        api.nomina.aprobar(this.props.nomina.idNomina)
+        return api.nomina.aprobar(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
             })
@@ -225,7 +225,7 @@ export class NominaIG extends React.Component {
     }
     rechazarNomina(){
         // al rechazar una nomina, esta vuelve a quedar en estado pendiente
-        api.nomina.rechazar(this.props.nomina.idNomina)
+        return api.nomina.rechazar(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
             })
@@ -237,7 +237,7 @@ export class NominaIG extends React.Component {
     }
     informarNomina(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
-        api.nomina.informar(this.props.nomina.idNomina)
+        return api.nomina.informar(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
             })
@@ -249,7 +249,7 @@ export class NominaIG extends React.Component {
     }
     rectificarNomina(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
-        api.nomina.rectificar(this.props.nomina.idNomina)
+        return api.nomina.rectificar(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
             })
@@ -291,8 +291,11 @@ export class NominaIG extends React.Component {
                 <PanelDotaciones
                     // general
                     dotacionOperadores={this.props.nomina.dotacionOperadores}
-                    dotacionEditable={this.state.idEstadoNomina==2} // considerar: estado, permisos, y otras variables
-                    // dotacion 
+                    // para poder editar, se debe considerar: estado, permisos, y otras variables
+                    liderEditable={this.state.idEstadoNomina==2 && this.props.permisos.cambiarLider}
+                    supervisorEditable={this.state.idEstadoNomina==2 && this.props.permisos.cambiarSupervisor}
+                    dotacionEditable={this.state.idEstadoNomina==2 && this.props.permisos.cambiarDotacion}
+                    // dotacion
                     lider={this.state.lider}
                     supervisor={this.state.supervisor}
                     dotacionTitular={this.state.dotacionTitular}
@@ -314,6 +317,8 @@ export class NominaIG extends React.Component {
                     rechazarNomina={this.rechazarNomina.bind(this)}
                     informarNomina={this.informarNomina.bind(this)}
                     rectificarNomina={this.rectificarNomina.bind(this)}
+                    // permisos
+                    permisos={this.props.permisos}
                 />
 
                 <a href={`/programacionIG/nomina/${this.props.nomina.publicIdNomina}/pdf`} className="btn btn-xs pull-right">Descargar</a>
@@ -326,7 +331,9 @@ NominaIG.propTypes = {
     usuario: PropTypes.object.isRequired,
     inventario: PropTypes.object.isRequired,
     nomina: PropTypes.object.isRequired,
-    comunas: PropTypes.arrayOf(PropTypes.object).isRequired
+    comunas: PropTypes.arrayOf(PropTypes.object).isRequired,
+    // Permisos
+    permisos: PropTypes.object.isRequired
 }
 NominaIG.defaultProps = {
     usuario: {}

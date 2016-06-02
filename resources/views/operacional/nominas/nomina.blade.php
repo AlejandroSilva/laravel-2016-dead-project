@@ -8,8 +8,9 @@
     </div>
 
     <script>
-        window.laravelInventario = {!! json_encode($inventario) !!};
         window.laravelNomina = {!! json_encode($nomina) !!};
+        window.laravelInventario = {!! json_encode($inventario) !!};
         window.laravelComunas = {!! json_encode($comunas) !!};
+        window.laravelPermisos = {!! json_encode($permisos) !!};
     </script>
 @stop

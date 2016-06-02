@@ -8,10 +8,7 @@ use App\Jobs\InformarNominaACliente;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Log;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
-use Knp\Snappy\Pdf;
 // Modelos
 use App\Comunas;
 use App\Inventarios;
@@ -47,7 +44,10 @@ class NominasController extends Controller {
             'comunas' => Comunas::all(),
             'permisos' => [
                 // para poder enviar debe tener los permisos, O ser el captador asociado (ambos no son necesarios)
-                'modificarEnviar' => $user->can('nominaIG-modificar-enviar'),
+                'cambiarLider' => $user->can('nominaIG-cambiarLider'),
+                'cambiarSupervisor' => $user->can('nominaIG-cambiarSupervisor'),
+                'cambiarDotacion' => $user->can('nominaIG-cambiarDotacion'),
+                'enviar' => $user->can('nominaIG-enviar'),
                 'aprobar' => $user->can('nominaIG-aprobar'),
                 'informar' => $user->can('nominaIG-informar'),
                 'rectificar' => $user->can('nominaIG-rectificar')
@@ -139,6 +139,7 @@ class NominasController extends Controller {
             'nominas' => $nominas
         ]);
     }
+
     /**
      * ##########################################################
      * Rutas para consumo del API REST
@@ -224,7 +225,11 @@ class NominasController extends Controller {
     }
     // POST api/nomina/{idNomina}/lider/{usuarioRUN}
     function api_agregarLider($idNomina, $usuarioRUN){
-        // Todo: El usuario tiene los permisos para agregar un lider a una nomina?
+        // Revisar que el usuario tenga los permisos para cambiar el lider
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-cambiarLider'))
+            return response()->json(['error'=>'No tiene permisos para cambiar un Lider.'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
@@ -248,7 +253,11 @@ class NominasController extends Controller {
     }
     // DELETE api/nomina/{idNomina}/lider
     function api_quitarLider($idNomina){
-        // ToDo: revisar los permisos, y ver que no haya sido enviado
+        // Revisar que el usuario tenga los permisos para cambiar el lider
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-cambiarLider'))
+            return response()->json(['error'=>'No tiene permisos para cambiar un Lider.'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
@@ -266,7 +275,12 @@ class NominasController extends Controller {
     }
     // POST api/nomina/{idNomina}/supervisor/{usuarioRUN}
     function api_agregarSupervisor($idNomina, $usuarioRUN){
-        // Todo: El usuario tiene los permisos para agregar un supervisor a una nomina?
+        // solo el captador asociado Y las personas que tengan permiso pueden modificar al supervisor
+        // Todo: falta considerar al captador asociado a la nomina
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-cambiarSupervisor'))
+            return response()->json(['error'=>'No tiene permisos para cambiar un Supervisor.'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
@@ -291,7 +305,12 @@ class NominasController extends Controller {
     }
     // DELETE api/nomina/{idNomina}/supervisor
     function api_quitarSupervisor($idNomina){
-        // ToDo: revisar los permisos, y ver que no haya sido enviado
+        // solo el captador asociado Y las personas que tengan permiso pueden modificar al supervisor
+        // Todo: falta considerar al captador asociado a la nomina
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-cambiarSupervisor'))
+            return response()->json(['error'=>'No tiene permisos para cambiar un Supervisor.'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
@@ -309,7 +328,12 @@ class NominasController extends Controller {
     }
     // POST api/nomina/{idNomina}/operador/{usuarioRUN}
     function api_agregarOperador($idNomina, $usuarioRUN, Request $request){
-        // Todo: El usuario tiene los permisos para agregar un usuario a una nomina?
+        // solo el captador asociado Y las personas que tengan permiso pueden modificar la dotacion
+        // Todo: falta considerar al captador asociado a la nomina
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-cambiarDotacion'))
+            return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
@@ -345,6 +369,12 @@ class NominasController extends Controller {
     }
     // DELETE api/nomina/{idNomina}/operador/{usuarioRUN}
     function api_quitarOperador($idNomina, $usuarioRUN){
+        // solo el captador asociado Y las personas que tengan permiso pueden modificar la dotacion
+        // Todo: falta considerar al captador asociado a la nomina
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-cambiarDotacion'))
+            return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
@@ -362,7 +392,12 @@ class NominasController extends Controller {
         );
     }
     function api_enviarNomina($idNomina){
-        // Todo: revisar si tiene los permisos
+        // Puede enviar la nomina si tiene permisos O si es el captador asociado
+        // Todo: Falta la parte en que revisa que sea el captador asociado
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-enviar'))
+            return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
@@ -378,7 +413,11 @@ class NominasController extends Controller {
         );
     }
     function api_aprobarNomina($idNomina){
-        // Todo: revisar si tiene los permisos
+        // Puede aprobar la nomina solo si tiene los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-aprobar'))
+            return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
@@ -394,7 +433,11 @@ class NominasController extends Controller {
         );
     }
     function api_rechazarNomina($idNomina){
-        // Todo: revisar si tiene los permisos
+        // Puede rechazar la nomina solo si tiene los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-aprobar'))
+            return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
@@ -410,7 +453,11 @@ class NominasController extends Controller {
         );
     }
     function api_informarNomina($idNomina){
-        // Todo: revisar si tiene los permisos
+        // Puede informar la nomina (y enviar el correo) solo si tiene los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-informar'))
+            return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
@@ -430,7 +477,11 @@ class NominasController extends Controller {
         );
     }
     function api_rectificarNomina($idNomina){
-        // Todo: revisar si tiene los permisos
+        // Puede informar la nomina (y enviar el correo) solo si tiene los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('nominaIG-rectificar'))
+            return response()->json(['error'=>'No tiene permisos para rectificar la Nómina'], 403);
+
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)

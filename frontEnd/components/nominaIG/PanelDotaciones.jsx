@@ -41,7 +41,7 @@ export class PanelDotaciones extends React.Component {
                         <tbody>
                         {/* Lider */}
                         <RowOperador
-                            editable={this.props.dotacionEditable}
+                            editable={this.props.liderEditable}
                             correlativo={"L"}
                             operador={ this.props.lider }
                             cargo="Lider"
@@ -50,7 +50,7 @@ export class PanelDotaciones extends React.Component {
                         />
                         {/* Supervisor */}
                         <RowOperador
-                            editable={this.props.dotacionEditable}
+                            editable={this.props.supervisorEditable}
                             correlativo={"S"}
                             operador={ this.props.supervisor }
                             cargo="Supervisor"
@@ -136,6 +136,8 @@ export class PanelDotaciones extends React.Component {
 PanelDotaciones.propTypes = {
     // datos
     dotacionOperadores: PropTypes.string.isRequired,
+    liderEditable: PropTypes.bool.isRequired,
+    supervisorEditable: PropTypes.bool.isRequired,
     dotacionEditable: PropTypes.bool.isRequired,
     // dotacion
     lider: PropTypes.object,  // opcional

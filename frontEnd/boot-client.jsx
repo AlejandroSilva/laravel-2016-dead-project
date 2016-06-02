@@ -120,6 +120,7 @@ if( mantenedorNominaIGDOM ){
             inventario={window.laravelInventario}
             nomina={window.laravelNomina}
             comunas={window.laravelComunas}
+            permisos={window.laravelPermisos}
         />, mantenedorNominaIGDOM)
 }
 
