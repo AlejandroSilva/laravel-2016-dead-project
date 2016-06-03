@@ -585,14 +585,14 @@ class NominasController extends Controller {
             ['Cliente', $local->cliente->nombreCorto, 'Dotación Operadores', $nomina->dotacionOperadores],
             ['Local', "($local->numero) $local->nombre", 'Dotación Total', $nomina->dotacionTotal],
             ['Fecha Programada', $inventario->fechaProgramadaF(), ],
-            ['Hr. llegada Lider', $nomina->horaPresentacionLiderF()],
+            ['Hr. llegada Líder', $nomina->horaPresentacionLiderF()],
             ['Hr. llegada Equipo', $nomina->horaPresentacionEquipoF()],
             [],
             ['Datos de Local'],
-            ['Dirección', $local->direccion->direccion, 'Hr.Apertura', $local->horaAperturaF()],
-            ['Comuna', $local->direccion->comuna->nombre, 'Hr.Cierre', $local->horaCierreF()],
-            ['Región', $local->direccion->comuna->provincia->region->numero, 'Telefono 1', $local->telefono1],
-            ['Formato Local', $local->formatoLocal->nombre, 'Telefono 2', $local->telefono2],
+            ['Dirección', $local->direccion->direccion, 'Hr. Apertura', $local->horaAperturaF()],
+            ['Comuna', $local->direccion->comuna->nombre, 'Hr. Cierre', $local->horaCierreF()],
+            ['Región', $local->direccion->comuna->provincia->region->numero, 'Teléfono 1', $local->telefono1],
+            ['Formato Local', $local->formatoLocal->nombre, 'Teléfono 2', $local->telefono2],
             ['', '', 'Correo', $local->emailContacto ]
 
         ], NULL, 'A1');
@@ -606,7 +606,7 @@ class NominasController extends Controller {
         $lider = $nomina->lider;
         if(isset($lider))
             array_push($nominaCompleta, [
-                $lider->usuarioRUN, $lider->nombreCompleto(), $lider->usuarioRUN."-".$lider->usuarioDV, 'Lider'
+                $lider->usuarioRUN, $lider->nombreCompleto(), $lider->usuarioRUN."-".$lider->usuarioDV, 'Líder'
             ]);
         // Agregar Supervisor
         $super = $nomina->supervisor;
@@ -654,9 +654,10 @@ class NominasController extends Controller {
 
         // guardar y descargar el archivo
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-        $randomFileName = "archivos_temporales/nomina_".md5(uniqid(rand(), true)).".xlxs";
+        $randomFileName = "archivos_temporales/nomina_".$local->cliente->nombreCorto."-".$local->numero."_".md5(uniqid(rand(), true)).".xlsx";
+        $downloadFileName = "nomina ".$local->cliente->nombreCorto." ".$local->numero." ".$inventario->fechaProgramada.".xlsx";
         $excelWritter->save($randomFileName);
-        return response()->download($randomFileName, "NOMINA.xlsx");
+        return response()->download($randomFileName, $downloadFileName);
     }
     
     /* ***************************************************/
