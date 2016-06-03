@@ -47,18 +47,19 @@ class TablaAuditoriaSemanal extends React.Component{
                         </th>
                         <th className={css.thCliente}>CL</th>
                         <th className={css.thCeco}>
-                            CE
-                            {/*<HeaderConFiltro
+                            <HeaderConFiltro
                                 nombre="CE"
-                                filtro={this.props.filtros.filtroLocales || []}
-                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLocales')}
-                            />*/}
+                                filtro={this.props.filtros.filtroCeco || []}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroCeco')}
+                                busquedaExacta={true}
+                            />
                         </th>
                         <th className={css.thRegion}>
                             <HeaderConFiltro
                                 nombre="RG"
                                 filtro={this.props.filtros.filtroRegiones || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRegiones')}
+                                busquedaExacta={true}
                             />
                         </th>
                         <th className={css.thComuna}>

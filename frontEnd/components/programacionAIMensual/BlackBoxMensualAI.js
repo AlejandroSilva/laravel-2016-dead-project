@@ -5,23 +5,23 @@ export default class BlackBox{
     constructor(clientes){
         this.clientes = clientes
         this.lista = []
+        this.filtroFechas = []
         this.filtroClientes = []
+        this.filtroCeco = []
         this.filtroRegiones = []
         this.filtroComunas = []
-        this.filtroLocales = []
         this.filtroAuditores = []
-        this.filtroFechas = []
         this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idAuditoria no ha sido fijado
     }
     // Todo Modificar
     reset(){
         this.lista = []
+        this.filtroFechas = []
         this.filtroClientes = []
+        this.filtroCeco = []
         this.filtroRegiones = []
         this.filtroComunas = []
-        this.filtroLocales = []
         this.filtroAuditores = []
-        this.filtroFechas = []
         this.idDummy = 1
     }
     // Todo Modificar: el listado de clientes
@@ -224,7 +224,20 @@ export default class BlackBox{
             .uniqBy('valor')
             .sortBy('valor')
             .value()
-        
+
+        // ##### Filtro CECO (ordenado por numero)
+        this.filtroCeco = _.chain(this.lista)
+            .map(auditoria=>{
+                let valor = auditoria.local.numero
+                let texto = auditoria.local.numero
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroCeco, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .sortBy((ob)=>ob.valor.length, 'valor') // ordenar primero los numeros de dos digitos, luego los de 3 digitos...
+            .value()
+
         // ##### Filtro Clientes (ordenado por codRegion)
         this.filtroClientes = _.chain(this.lista)
             .map(auditoria=>{
@@ -301,6 +314,10 @@ export default class BlackBox{
                 .filter(auditoria=>{
                     return _.find(this.filtroClientes, {'valor': auditoria.local.idCliente, 'seleccionado': true})
                 })
+                // Filtrar por Ceco
+                .filter(auditoria=>{
+                    return _.find(this.filtroCeco, {'valor': auditoria.local.numero, 'seleccionado': true})
+                })
                 // Filtrar por Region
                 .filter(auditoria=>{
                     return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
@@ -319,11 +336,12 @@ export default class BlackBox{
                 })
                 .value(),
             filtros: {
+                filtroFechas: this.filtroFechas,
                 filtroClientes: this.filtroClientes,
+                filtroCeco: this.filtroCeco,
                 filtroRegiones: this.filtroRegiones,
                 filtroComunas: this.filtroComunas,
-                filtroAuditores: this.filtroAuditores,
-                filtroFechas: this.filtroFechas
+                filtroAuditores: this.filtroAuditores
             }
         }
     }

@@ -10,7 +10,7 @@ import ProgramacionAIMensual from './components/programacionAIMensual/Programaci
 import ProgramacionAISemanal from './components/programacionAISemanal/ProgramacionAISemanal.jsx'
 import { ProgramacionAIPendientes } from './components/programacionAIPendientes/ProgramacionAIPendientes.jsx'
 import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.jsx'
-import { GeoGestor } from './components/Geo/GeoGestor.jsx'
+// import { GeoGestor } from './components/Geo/GeoGestor.jsx'
 import { NominaIG } from './components/nominaIG/nominaIG.jsx'
 import { NominasCaptador } from './components/nominasCaptador/NominasCaptador.jsx'
 import { MantenedorStock } from './components/mantenedorStock/MantenedorStock.jsx'
@@ -103,13 +103,13 @@ if( mantenedorStockDOM ) {
 }
 
 /** GEO **/
-let geoGestorDOM = document.getElementById('react-geo-gestor')
-if( geoGestorDOM ){
-    ReactDOM.render(
-        <GeoGestor
-            // props
-        />, geoGestorDOM)
-}
+// let geoGestorDOM = document.getElementById('react-geo-gestor')
+// if( geoGestorDOM ){
+//     ReactDOM.render(
+//         <GeoGestor
+//             // props
+//         />, geoGestorDOM)
+// }
 
 /** NOMINAS **/
 let mantenedorNominaIGDOM = document.getElementById('react-nominaIG-nominaIG')

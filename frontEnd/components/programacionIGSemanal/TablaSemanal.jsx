@@ -52,12 +52,20 @@ class TablaInventarios extends React.Component{
                             />
                         </th>
                         <th className={css.thCliente}>CL</th>
-                        <th className={css.thCeco}>CE</th>
+                        <th className={css.thCeco}>
+                            <HeaderConFiltro
+                                nombre='CE'
+                                filtro={this.props.filtros.filtroCeco || []}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroCeco')}
+                                busquedaExacta={true}
+                            />
+                        </th>
                         <th className={css.thRegion}>
                             <HeaderConFiltro
                                 nombre='RG'
                                 filtro={this.props.filtros.filtroRegiones || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRegiones')}
+                                busquedaExacta={true}
                             />
                         </th>
                         <th className={css.thComuna}>
@@ -90,11 +98,13 @@ class TablaInventarios extends React.Component{
                         <th className={css.thHora}>Hr.Equipo</th>
                         <th className={css.thDireccion}>Dirección</th>
                         <th className={css.thNomina}>
-                            <HeaderConFiltro
+                            Nómina
+                            {/*<HeaderConFiltro
                                 nombre='Nómina'
                                 filtro={this.props.filtros.filtroFechaSubidaNomina || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroFechaSubidaNomina')}
                             />
+                            */}
                         </th>
                         <th className={css.thUnidadesReales}>U.Cont</th>
                         <th className={css.thUnidadesTeoricas}>U.Teo</th>

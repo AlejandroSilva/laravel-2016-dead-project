@@ -4,21 +4,25 @@ import moment from 'moment'
 export default class BlackBoxSemanal{
     constructor(){
         this.lista = []
-        this.filtroAuditores = []
+        this.filtroFechas = []
+        this.filtroCeco = []
         this.filtroRegiones = []
         this.filtroComunas = []
-        this.filtroAprobadas = []
-        this.filtroFechas = []
+        this.filtroAuditores = []
         this.filtroFechaAuditoria = []
+
+        this.filtroAprobadas = []
     }
     reset() {
         this.lista = []
-        this.filtroAuditores = []
+        this.filtroFechas = []
+        this.filtroCeco = []
         this.filtroRegiones = []
         this.filtroComunas = []
-        this.filtroAprobadas = []
-        this.filtroFechas = []
+        this.filtroAuditores = []
         this.filtroFechaAuditoria = []
+
+        this.filtroAprobadas = []
     }
     // Todo: Optimizar
     // Todo Modificar: el listado de clientes
@@ -81,6 +85,19 @@ export default class BlackBoxSemanal{
             .sortBy('valor')
             .value()
 
+        // ##### Filtro CECO (ordenado por numero)
+        this.filtroCeco = _.chain(this.lista)
+            .map(auditoria=>{
+                let valor = auditoria.local.numero
+                let texto = auditoria.local.numero
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroCeco, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .sortBy((ob)=>ob.valor.length, 'valor') // ordenar primero los numeros de dos digitos, luego los de 3 digitos...
+            .value()
+
         // ##### Filtro Regiones (ordenado por codRegion)
         this.filtroRegiones = _.chain(this.lista)
             .map(auditoria=>{
@@ -127,7 +144,7 @@ export default class BlackBoxSemanal{
             .sortBy('texto')
             .value()
 
-        // ##### Filtro Fecha Subida Nomina
+        // ##### Filtro Fecha Auditoria
         this.filtroFechaAuditoria = _.chain(this.lista)
             .map(auditoria=>{
                 let momentFecha = moment(auditoria.fechaAuditoria)
@@ -167,6 +184,14 @@ export default class BlackBoxSemanal{
 
         return {
             auditoriasFiltradas: _.chain(this.lista)
+                // Filtrar por Fecha
+                .filter(auditoria=>{
+                    return _.find(this.filtroFechas, {'valor': auditoria.fechaProgramada, 'seleccionado': true})
+                })
+                // Filtrar por Ceco
+                .filter(auditoria=>{
+                    return _.find(this.filtroCeco, {'valor': auditoria.local.numero, 'seleccionado': true})
+                })
                 // Filtrar por Region
                 .filter(auditoria=>{
                     return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
@@ -179,27 +204,24 @@ export default class BlackBoxSemanal{
                 .filter(auditoria=>{
                     return _.find(this.filtroAuditores, {'valor': auditoria.idAuditor, 'seleccionado': true})
                 })
-                // Filtrar por Fecha (dejar de lo ultimo, ya que es la mas lenta -comparacion de strings-)
+                // Filtrar por Fecha de Subida de Nomina
                 .filter(auditoria=>{
-                    return _.find(this.filtroFechas, {'valor': auditoria.fechaProgramada, 'seleccionado': true})
+                    return _.find(this.filtroFechaAuditoria, {'valor': auditoria.fechaAuditoria, 'seleccionado': true})
                 })
                 // Filtrar por Aprobada
                 .filter(auditoria=>{
                     return _.find(this.filtroAprobadas, {'valor': auditoria.aprovada, 'seleccionado': true})
                 })
-                // Filtrar por Fecha de Subida de Nomina
-                .filter(auditoria=>{
-                    return _.find(this.filtroFechaAuditoria, {'valor': auditoria.fechaAuditoria, 'seleccionado': true})
-                })
                 .value(),
             filtros: {
                 filtroFechas: this.filtroFechas,
+                filtroCeco: this.filtroCeco,
                 filtroRegiones: this.filtroRegiones,
                 filtroComunas: this.filtroComunas,
                 filtroAuditores: this.filtroAuditores,
-                filtroRealizadasInformada: this.filtroRealizadasInformada,
-                filtroAprobadas: this.filtroAprobadas,
-                filtroFechaAuditoria: this.filtroFechaAuditoria
+                filtroFechaAuditoria: this.filtroFechaAuditoria,
+
+                filtroAprobadas: this.filtroAprobadas
             }
         }
     }

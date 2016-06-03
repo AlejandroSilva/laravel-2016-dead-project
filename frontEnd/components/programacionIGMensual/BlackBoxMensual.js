@@ -5,21 +5,21 @@ export default class BlackBox{
     constructor(clientes){
         this.clientes = clientes
         this.lista = []
-        this.filtroClientes = []
+//        this.filtroClientes = []
+        this.filtroFechas = []
+        this.filtroCeco = []
         this.filtroRegiones = []
         this.filtroComunas = []
-        this.filtroLocales = []
-        this.filtroFechas = []
         this.idDummy = 1    // valor unico, sirve para identificar un dummy cuando un idInventario no ha sido fijado
     }
     // Todo Modificar
     reset(){
         this.lista = []
-        this.filtroClientes = []
+//        this.filtroClientes = []
+        this.filtroFechas = []
+        this.filtroCeco = []
         this.filtroRegiones = []
         this.filtroComunas = []
-        this.filtroLocales = []
-        this.filtroFechas = []
         this.idDummy = 1
     }
     // Todo Modificar: el listado de clientes
@@ -232,6 +232,19 @@ export default class BlackBox{
             .sortBy('valor')
             .value()
 
+        // ##### Filtro CECO (ordenado por numero)
+        this.filtroCeco = _.chain(this.lista)
+            .map(auditoria=>{
+                let valor = auditoria.local.numero
+                let texto = auditoria.local.numero
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroCeco, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .sortBy((ob)=>ob.valor.length, 'valor') // ordenar primero los numeros de dos digitos, luego los de 3 digitos...
+            .value()
+
         // ##### Filtro Regiones (ordenado por codRegion)
         this.filtroRegiones = _.chain(this.lista)
             .map(auditoria=>{
@@ -277,9 +290,14 @@ export default class BlackBox{
         return {
             //inventariosFiltrados: this.lista,
             inventariosFiltrados: _.chain(this.lista)
+                // Filtro por Clientes // deshabilitado
                 // .filter(auditoria=>{
                 //     return _.find(this.filtroClientes, {'valor': auditoria.local.idCliente, 'seleccionado': true})
                 // })
+                // Filtro por CECO
+                .filter(inventario=>{
+                    return _.find(this.filtroCeco, {'valor': inventario.local.numero, 'seleccionado': true})
+                })
                 // Filtro por Region
                 .filter(inventario=>{
                     return _.find(this.filtroRegiones, {'valor': inventario.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
@@ -288,16 +306,17 @@ export default class BlackBox{
                 .filter(inventario=>{
                     return _.find(this.filtroComunas, {'valor': inventario.local.direccion.cutComuna, 'seleccionado': true})
                 })
-                // Filtrar por Fecha (dejar de lo ultimo, ya que es la mas lenta -comparacion de strings-)
+                // Filtrar por Fecha (dejar de lo ultimo, ya que es la mas lenta -comparacion de strings- y la menos utilizada)
                 .filter(inventario=>{
                     return _.find(this.filtroFechas, {'valor': inventario.fechaProgramada, 'seleccionado': true})
                 })
                 .value(),
             filtros: {
-                filtroClientes: this.filtroClientes,
+                filtroFechas: this.filtroFechas,
+                filtroCeco: this.filtroCeco,
+                //filtroClientes: this.filtroClientes,
                 filtroRegiones: this.filtroRegiones,
-                filtroComunas: this.filtroComunas,
-                filtroFechas: this.filtroFechas
+                filtroComunas: this.filtroComunas
             }
         }
     }

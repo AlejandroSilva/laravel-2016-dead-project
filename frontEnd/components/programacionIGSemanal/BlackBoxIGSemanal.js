@@ -9,9 +9,9 @@ export default class BlackBoxIGSemanal{
         this.filtroComunas = []
         this.filtroLideres = []
         this.filtroCaptadores = []
-        this.filtroLocales = []
+        this.filtroCeco = []
         this.filtroFechas = []
-        this.filtroFechaSubidaNomina = []
+        //this.filtroFechaSubidaNomina = []
     }
     reset() {
         this.lista = []
@@ -20,9 +20,9 @@ export default class BlackBoxIGSemanal{
         this.filtroComunas = []
         this.filtroLideres = []
         this.filtroCaptadores = []
-        this.filtroLocales = []
+        this.filtroCeco = []
         this.filtroFechas = []
-        this.filtroFechaSubidaNomina = []
+        //this.filtroFechaSubidaNomina = []
     }
     // Todo: Optimizar
     // Todo Modificar: el listado de clientes
@@ -178,27 +178,31 @@ export default class BlackBoxIGSemanal{
             .sortBy('texto')
             .value()
 
-        this.filtroFechaSubidaNomina = _.chain(this.lista)
-            .map(inventario=>{
-                let valor = inventario.nomina_dia.fechaSubidaNomina
-                let texto = valor=='0000-00-00'? `-- PENDIENTE --` : moment(valor).format('dddd DD MMMM')
-
-                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
-                let opcion = _.find(this.filtroFechaSubidaNomina, {'valor': valor})
-                return opcion? opcion : {valor, texto, seleccionado: true}
-            })
-            .uniqBy('valor')
-            .sortBy('valor')
-            .value()
+        // this.filtroFechaSubidaNomina = _.chain(this.lista)
+        //     .map(inventario=>{
+        //         let valor = inventario.nomina_dia.fechaSubidaNomina
+        //         let texto = valor=='0000-00-00'? `-- PENDIENTE --` : moment(valor).format('dddd DD MMMM')
+        //
+        //         // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+        //         let opcion = _.find(this.filtroFechaSubidaNomina, {'valor': valor})
+        //         return opcion? opcion : {valor, texto, seleccionado: true}
+        //     })
+        //     .uniqBy('valor')
+        //     .sortBy('valor')
+        //     .value()
 
         // ##### Filtro Numero de Local
-        // let locales = this.lista.map(inventario=>inventario.local.numero)
-        // // convierte el texto a numero, y los ordena de menor a mayor
-        // let localesOrdenados = R.uniq(locales).sort((a, b)=>{ return (isNaN(a*1) || isNaN(b*1))? (a>b) : (a*1-b*1) })
-        // this.filtroLocales = localesOrdenados.map(textoUnico=>{
-        //     // si no existe la opcion, se crea y se selecciona por defecto
-        //     return this.filtroLocales.find(opc=>opc.texto===textoUnico) || { texto: textoUnico, seleccionado: true}
-        // })
+        this.filtroCeco = _.chain(this.lista)
+            .map(auditoria=>{
+                let valor = auditoria.local.numero
+                let texto = auditoria.local.numero
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroCeco, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .sortBy(op=>op.valor.length, 'valor') // ordenar primero los numeros de dos digitos, luego los de 3 digitos...
+            .value()
     }
     reemplazarFiltro(nombreFiltro, filtroActualizado) {
         if(this[nombreFiltro]) {
@@ -213,6 +217,10 @@ export default class BlackBoxIGSemanal{
 
         return {
             inventariosFiltrados: _.chain(this.lista)
+                // Filtrar por Ceco
+                .filter(inventario=>{
+                    return _.find(this.filtroCeco, {'valor': inventario.local.numero, 'seleccionado': true})
+                })
                 // Filtrar por Regiones
                 .filter(inventario=>{
                     return _.find(this.filtroRegiones, {'valor': inventario.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
@@ -259,21 +267,20 @@ export default class BlackBoxIGSemanal{
                 .filter(inventario=>{
                     return _.find(this.filtroFechas, {'valor': inventario.fechaProgramada, 'seleccionado': true})
                 })
-                .filter(inventario=>{
-                    return _.find(this.filtroFechaSubidaNomina, {'valor': inventario.nomina_dia.fechaSubidaNomina, 'seleccionado': true})
-                })
+                // Filtrar por Fecha subida nomina (ya no se ocupa)
+                // .filter(inventario=>{
+                //     return _.find(this.filtroFechaSubidaNomina, {'valor': inventario.nomina_dia.fechaSubidaNomina, 'seleccionado': true})
+                // })
                 .value(),
             filtros: {
                 filtroRegiones: this.filtroRegiones,
                 filtroComunas: this.filtroComunas,
                 filtroLideres: this.filtroLideres,
                 filtroCaptadores: this.filtroCaptadores,
-                filtroLocales: this.filtroLocales,
-                filtroFechas: this.filtroFechas,
-                filtroFechaSubidaNomina: this.filtroFechaSubidaNomina
+                filtroCeco: this.filtroCeco,
+                filtroFechas: this.filtroFechas
+                // filtroFechaSubidaNomina: this.filtroFechaSubidaNomina
             }
         }
     }
 }
-
-// Todo: en el servidor no esta ordenando los locales por numero, ni los lideres por nombre

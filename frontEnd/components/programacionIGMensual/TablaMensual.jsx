@@ -41,13 +41,21 @@ class TablaMensual extends React.Component{
                             />
                         </th>
                         <th className={css.thCliente}>Cliente</th>
-                        <th className={css.thCeco}>CE</th>
+                        <th className={css.thCeco}>
+                            <HeaderConFiltro
+                                nombre='CE'
+                                filtro={this.props.filtros.filtroCeco || []}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroCeco')}
+                                busquedaExacta={true}
+                            />
+                        </th>
                         <th className={css.thLocal}>Local</th>
                         <th className={css.thRegion}>
                             <HeaderConFiltro
                                 nombre="Región"
                                 filtro={this.props.filtros.filtroRegiones || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRegiones')}
+                                busquedaExacta={true}
                             />
                         </th>
                         <th className={css.thComuna}>

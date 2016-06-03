@@ -271,13 +271,6 @@ class ProgramacionAISemanal extends React.Component {
                             onRangeSelected = {this.onSelectRangoChanged.bind(this)}
                         />
                     </div>
-                    {/* SELECTOR DE NUMERO DE LOCAL */}
-                    <div className={'col-sm-2 form-group '}>
-                        <label className="control-label" htmlFor="selectSemana">Numero de Local</label>
-                        <input type="number"className='form-control'
-                               disabled
-                        />
-                    </div>
                 </div>
 
                 <a className="btn btn-success btn-xs pull-right"

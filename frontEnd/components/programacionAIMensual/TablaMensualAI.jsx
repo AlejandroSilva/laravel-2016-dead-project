@@ -1,5 +1,4 @@
 import React from 'react'
-import moment from 'moment'
 
 // Componentes
 import Sticky from '../shared/react-sticky/sticky.js'
@@ -52,11 +51,18 @@ class TablaMensualAI extends React.Component{
                                      actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroClientes')}
                                 />
                             </th>
-                            <th className={css.thCeco}>Ceco</th>
+                            <th className={css.thCeco}>
+                                <HeaderConFiltro nombre="CE"
+                                     filtro={this.props.filtros.filtroCeco || [] }
+                                     actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroCeco')}
+                                     busquedaExacta={true}
+                                />
+                            </th>
                             <th className={css.thRegion}>
                                 <HeaderConFiltro nombre="Región"
                                      filtro={this.props.filtros.filtroRegiones || [] }
                                      actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroRegiones')}
+                                     busquedaExacta={true}
                                 />
                             </th>
                             <th className={css.thComuna}>

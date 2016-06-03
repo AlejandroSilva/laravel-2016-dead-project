@@ -19,18 +19,26 @@
     padding: 5px;
 }
 
-.contenedorInput{
+/*.contenedorInput{
     height: 25px;
     padding: 0;
 }
 .contenedorInput > input {
-    width: 170px; /*190px de .menu - 20px del button*/
+    width: 170px; //190px de .menu - 20px del button
 }
 .contenedorInput > button {
     padding: 0;
     width: 20px;
     height: 20px;
     border-radius: 10px
+}
+.contenedorInput > input {
+    width: 170px; //190px de .menu - 20px del button
+}
+*/
+
+.inputTexto{
+    width: 190px; /*190px de .menu - 20px del button*/
 }
 
 .contenedorValores{
