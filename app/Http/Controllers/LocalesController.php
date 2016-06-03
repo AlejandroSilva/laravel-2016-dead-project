@@ -9,8 +9,8 @@ use App\FormatoLocales;
 use App\Jornadas;
 use App\Locales;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Symfony\Component\HttpFoundation\Response;
+//use App\Http\Controllers\Controller;
+//use Symfony\Component\HttpFoundation\Response;
 // Modelos
 use Auth;
 //use App\Locales;
@@ -28,7 +28,7 @@ class LocalesController extends Controller {
     function show_mantenedor(){
         // validar de que el usuario tenga los permisos
         $user = Auth::user();
-        if(!$user || !$user->hasRole('Administrador'))
+        if(!$user || !$user->can('admin-mantenedorLocales'))
             return view('errors.403');
 
         $clientes = Clientes::all();
@@ -52,7 +52,7 @@ class LocalesController extends Controller {
     function api_nuevo(Request $request){
         // Verificar que el usuario tenga los permisos para crear un local
         $user = Auth::user();
-        if(!$user || !$user->can('adminLocales_agregar'))
+        if(!$user || !$user->can('admin-mantenedorLocales'))
             return view('errors.403');
 
         // Validar que el local sea valido

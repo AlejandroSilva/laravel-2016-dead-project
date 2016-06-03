@@ -9,6 +9,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Log;
 use App\Http\Requests;
+// PHP Excel
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Style_Alignment;
 // Modelos
 use App\Comunas;
 use App\Inventarios;
@@ -55,8 +59,9 @@ class NominasController extends Controller {
         ]);
     }
     // GET programacionIG/nomina/{idNomina}/pdf-preview
+    // Esta ruta es publica, se utiliza para generar los PDFs
     function show_nomina_pdfPreview($idNomina){
-        // Todo validar permisos, token, etc...
+        // Todo validar permisos, con algo como token, request del mismo dominio, etc...
         $nomina = Nominas::find($idNomina);
         if(!$nomina){
             return view('errors.errorConMensaje', [
@@ -72,40 +77,6 @@ class NominasController extends Controller {
             'dotacionTitular' => $nomina->dotacionTitular,
             'dotacionReemplazo' => $nomina->dotacionReemplazo,
         ]);
-    }
-    // GET programacionIG/nomina/{publicIdNomina}/pdf           RUTA PUBLICA
-    function show_nomina_pdfDownload($publicIdNomina){
-        // intentar de des-encriptar el id de usuario
-        try {
-            $idNomina = Crypt::decrypt($publicIdNomina);
-        } catch (DecryptException $e) {
-            return view('errors.errorConMensaje', [
-                'titulo' => 'Link de descarga invalido',
-                'descripcion' => 'El link de descarga que ha ocupado es invalido, actualice la página desde donde lo obtuvo, o contacte al departamento de informática de SEI.'
-            ]);
-        }
-        $nomina = Nominas::find($idNomina);
-        if($nomina){
-            // nombre del archivo
-            $inventario = $nomina->inventario;
-            $cliente = $inventario->local->cliente->nombreCorto;
-            $ceco = $inventario->local->numero;
-            $fechaProgramada = $inventario->fechaProgramada;
-            $fileName = "nomina $cliente $ceco $fechaProgramada.pdf";
-            if(App::environment('production')) {
-                return \PDF::loadFile("http://sig.seiconsultores.cl/programacionIG/nomina/$idNomina/pdf-preview")
-                    ->download($fileName);
-            }else{
-                // stream, download
-                return \PDF::loadFile("http://localhost/programacionIG/nomina/$idNomina/pdf-preview")
-                    ->download($fileName);  //->stream('nomina.pdf');
-            }
-        }else{
-            return view('errors.errorConMensaje', [
-                'titulo' => 'Nomina no encontrada',
-                'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
-            ]);
-        }
     }
 
     // GET nominas/captadores
@@ -549,7 +520,145 @@ class NominasController extends Controller {
         return response()->json(['msg'=>'falta por implementar'], 404);
     }
 
+    // GET programacionIG/nomina/{publicIdNomina}/pdf           RUTA PUBLICA
+    function show_nomina_pdfDownload($publicIdNomina){
+        // intentar de des-encriptar el id de usuario
+        try {
+            $idNomina = Crypt::decrypt($publicIdNomina);
+        } catch (DecryptException $e) {
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Link de descarga invalido',
+                'descripcion' => 'El link de descarga que ha ocupado es invalido, actualice la página desde donde lo obtuvo, o contacte al departamento de informática de SEI.'
+            ]);
+        }
+        // buscar la nomina (si existe)
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina){
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Nomina no encontrada',
+                'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
+            ]);
+        }
 
+        // nombre del archivo
+        $inventario = $nomina->inventario;
+        $cliente = $inventario->local->cliente->nombreCorto;
+        $ceco = $inventario->local->numero;
+        $fechaProgramada = $inventario->fechaProgramada;
+        $fileName = "nomina $cliente $ceco $fechaProgramada.pdf";
+        if(App::environment('production')) {
+            return \PDF::loadFile("http://sig.seiconsultores.cl/programacionIG/nomina/$idNomina/pdf-preview")
+                ->download($fileName);
+        }else{
+            // stream, download
+            return \PDF::loadFile("http://localhost/programacionIG/nomina/$idNomina/pdf-preview")
+                ->download($fileName);  //->stream('nomina.pdf');
+        }
+    }
+
+    // GET programacionIG/nomina/{publicIdNomina}/excel           RUTA PUBLICA
+    function show_nomina_excelDownload($publicIdNomina) {
+        // intentar de des-encriptar el id de usuario
+        try {
+            $idNomina = Crypt::decrypt($publicIdNomina);
+        } catch (DecryptException $e) {
+            return view('errors.errorConMensaje', ['titulo' => 'Link de descarga invalido', 'descripcion' => 'El link de descarga que ha ocupado es invalido, actualice la página desde donde lo obtuvo, o contacte al departamento de informática de SEI.']);
+        }
+        // buscar la nomina (si existe)
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina){
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Nomina no encontrada',
+                'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
+            ]);
+        }
+
+        $inventario = $nomina->inventario;
+        $local = $inventario->local;
+        // crear el archivo
+        $workbook = new PHPExcel();  // workbook
+        $sheet = $workbook->getActiveSheet();
+
+        // Datos de Inventario y de Local
+        $sheet->fromArray([
+            ['Datos de Inventario:'],
+            ['Cliente', $local->cliente->nombreCorto, 'Dotación Operadores', $nomina->dotacionOperadores],
+            ['Local', "($local->numero) $local->nombre", 'Dotación Total', $nomina->dotacionTotal],
+            ['Fecha Programada', $inventario->fechaProgramadaF(), ],
+            ['Hr. llegada Lider', $nomina->horaPresentacionLiderF()],
+            ['Hr. llegada Equipo', $nomina->horaPresentacionEquipoF()],
+            [],
+            ['Datos de Local'],
+            ['Dirección', $local->direccion->direccion, 'Hr.Apertura', $local->horaAperturaF()],
+            ['Comuna', $local->direccion->comuna->nombre, 'Hr.Cierre', $local->horaCierreF()],
+            ['Región', $local->direccion->comuna->provincia->region->numero, 'Telefono 1', $local->telefono1],
+            ['Formato Local', $local->formatoLocal->nombre, 'Telefono 2', $local->telefono2],
+            ['', '', 'Correo', $local->emailContacto ]
+
+        ], NULL, 'A1');
+
+        // Dotación completa de la nomina
+        $nominaCompleta = [
+            ['Nomina:'],
+            ['Código', 'Nombre', 'RUN', 'Cargo']
+        ];
+        // Agregar Lider
+        $lider = $nomina->lider;
+        if(isset($lider))
+            array_push($nominaCompleta, [
+                $lider->usuarioRUN, $lider->nombreCompleto(), $lider->usuarioRUN."-".$lider->usuarioDV, 'Lider'
+            ]);
+        // Agregar Supervisor
+        $super = $nomina->supervisor;
+        if(isset($super))
+            array_push($nominaCompleta, [
+                $super->usuarioRUN, $super->nombreCompleto(), $super->usuarioRUN."-".$super->usuarioDV, 'Supervisor'
+            ]);
+        // Dotación Titular
+        $dTitular = $nomina->dotacionTitular;
+        for($i=0; $i<sizeof($dTitular); $i++){
+            $op = $dTitular[$i];
+            array_push($nominaCompleta, [
+                $op->usuarioRUN, $op->nombreCompleto(), $op->usuarioRUN."-".$op->usuarioDV, 'Operador'
+            ]);
+        }
+        // Dotación Reemplazo
+        $dReemplazo = $nomina->dotacionReemplazo;
+        for($i=0; $i<sizeof($dReemplazo); $i++){
+            $op = $dReemplazo[$i];
+            array_push($nominaCompleta, [
+                $op->usuarioRUN, $op->nombreCompleto(), $op->usuarioRUN."-".$op->usuarioDV, 'Operador Reemplazo'
+            ]);
+        }
+        //
+        $sheet->fromArray($nominaCompleta, NULL, 'A16');
+
+        // Aplicar estilos al documento
+        // Titulos en negrita
+        $sheet->getStyle('A1')->getFont()->setBold(true);
+        $sheet->getStyle('B2')->getFont()->setBold(true);
+        $sheet->getStyle('B3')->getFont()->setBold(true);
+        $sheet->getStyle('B4')->getFont()->setBold(true);
+        $sheet->getStyle('A8')->getFont()->setBold(true);
+        $sheet->getStyle('A16')->getFont()->setBold(true);
+        // las columnas deben tener un ancho "dinamico"
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        // las celdas alineadas a la izquierda
+        $sheet->getStyle("A")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+        $sheet->getStyle("B")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+        $sheet->getStyle("C")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+        $sheet->getStyle("D")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+
+        // guardar y descargar el archivo
+        $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+        $randomFileName = "archivos_temporales/nomina_".md5(uniqid(rand(), true)).".xlxs";
+        $excelWritter->save($randomFileName);
+        return response()->download($randomFileName, "NOMINA.xlsx");
+    }
+    
     /* ***************************************************/
 
     function buscar($peticion){

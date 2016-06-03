@@ -321,7 +321,8 @@ export class NominaIG extends React.Component {
                     permisos={this.props.permisos}
                 />
 
-                <a href={`/programacionIG/nomina/${this.props.nomina.publicIdNomina}/pdf`} className="btn btn-xs pull-right">Descargar</a>
+                <a href={`/programacionIG/nomina/${this.props.nomina.publicIdNomina}/pdf`} className="btn btn-xs pull-right">Descargar Pdf</a>
+                <a href={`/programacionIG/nomina/${this.props.nomina.publicIdNomina}/excel`} className="btn btn-xs pull-right">Descargar Excel</a>
             </div>
         )
     }
