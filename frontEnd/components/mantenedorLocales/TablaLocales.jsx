@@ -11,6 +11,7 @@ class TablaLocales extends React.Component{
         return <StickyContainer type={React.DOM.table} className={"table table-bordered table-condensed "+css.tableFixed}>
             <colgroup>
                 <col className={css.id}/>
+                <col className={css.cliente}/>
                 <col className={css.formatoLocal}/>
                 <col className={css.jornada}/>
                 <col className={css.numero}/>
@@ -24,6 +25,7 @@ class TablaLocales extends React.Component{
                 <col className={css.fechaStock}/>
                 <col className={css.comuna}/>
                 <col className={css.direccion}/>
+                <col className={css.opciones}/>
             </colgroup>
             <thead>
                 {/* TR que se pega al top de la pagina, es una TR, con instancia de 'Sticky' */}
@@ -33,6 +35,7 @@ class TablaLocales extends React.Component{
                     stickyStyle={{top: '50px'}}>
 
                     <th className={css.id}>id</th>
+                    <th className={css.cliente}>Cliente</th>
                     <th className={css.formatoLocal}>Formato Local</th>
                     <th className={css.jornada}>Jornada Sugerida</th>
                     <th className={css.numero}>Numero</th>
@@ -46,10 +49,12 @@ class TablaLocales extends React.Component{
                     <th className={css.fechaStock}>Fecha Stock</th>
                     <th className={css.comuna}>Comuna</th>
                     <th className={css.direccion}>Dirección</th>
+                    <th className={css.opciones}>Opciones</th>
                 </Sticky>
             </thead>
 
             <tbody>
+                {/* Mostrar lista de locales */}
                 {this.props.localesFiltrados.length===0
                     ? <tr><td colSpan="16" style={{textAlign: 'center'}}><b>Sin locales</b></td></tr>
                     : this.props.localesFiltrados.map((local, index)=>
@@ -60,6 +65,9 @@ class TablaLocales extends React.Component{
                         />
                     )
                 }
+
+                {/* Formulario para agregar local */}
+                {this.props.children}
             </tbody>
         </StickyContainer>
     }

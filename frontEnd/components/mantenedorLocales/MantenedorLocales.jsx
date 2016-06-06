@@ -1,13 +1,18 @@
 // Libs
 import React from 'react'
-import moment from 'moment'
-// moment.locale('es')
 import api from '../../apiClient/v1'
 import BlackBoxLocales from './BlackBoxLocales'
 
 // Component
 import TablaLocales from './TablaLocales.jsx'
 import AgregarLocal from './AgregarLocal.jsx'
+import { RowNuevoLocal } from './RowNuevoLocal.jsx'
+// ReactNotify
+import ReactNotify from 'react-notify'
+import * as ReactNotifyCSS from '../shared/ReactNotify.css'
+// Estilos
+import * as cssTooltip from './Tooltip.css' // css global
+
 
 class MantenedorLocales extends React.Component{
     constructor(props) {
@@ -41,13 +46,22 @@ class MantenedorLocales extends React.Component{
     actualizarLocal(){
         console.error('pendiente')
     }
+    agregarLocal(nuevoLocal){
+        // todo: agregar el blackbox
+        console.log('nuevo local agregado ', nuevoLocal)
+    }
     eliminarLocal(){
         console.error('pendiente')
+    }
+
+    mostrarError(titulo, cuerpo){
+        this.refs.notificator.error(titulo, cuerpo, 4 * 1000);
     }
 
     render(){
         return (
             <div>
+                <ReactNotify ref='notificator' className={ReactNotifyCSS}/>
                 <h1>Mantenedor de Locales</h1>
 
                 <AgregarLocal
@@ -63,11 +77,24 @@ class MantenedorLocales extends React.Component{
                          href={`/locales/pdf/${this.state.idCliente}`}
                          >Exportar</a>*/}
                     </h4>
+
                     <TablaLocales
                         localesFiltrados={this.state.localesFiltrados}
                         actualizarLocal={this.actualizarLocal.bind(this)}
                         eliminarLocal={this.eliminarLocal.bind(this)}
-                    />
+                    >
+                        {/* Formulario para agregar un nuevo local */}
+                        <RowNuevoLocal
+                            // Objetos
+                            clientes={this.props.clientes}
+                            jornadas={this.props.jornadas}
+                            formatoLocales={this.props.formatoLocales}
+                            comunas={this.props.comunas}
+                            // Metodos
+                            agregarLocal={this.agregarLocal.bind(this)}
+                            mostrarError={this.mostrarError.bind(this)}
+                        />
+                    </TablaLocales>
                 </div>
             </div>
         )
@@ -77,7 +104,8 @@ class MantenedorLocales extends React.Component{
 MantenedorLocales.propTypes = {
     clientes: React.PropTypes.array.isRequired,
     jornadas: React.PropTypes.array.isRequired,
-    formatoLocales: React.PropTypes.array.isRequired
+    formatoLocales: React.PropTypes.array.isRequired,
+    comunas: React.PropTypes.array.isRequired
 }
 
 export default MantenedorLocales

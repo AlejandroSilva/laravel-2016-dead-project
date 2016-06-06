@@ -16,59 +16,186 @@
     width: 30px;
     background: white;
 }
+/* Cliente */
+.cliente {
+    width: 60px;
+    background: white;
+}
+.cliente-td {
+    width: 60px;
+    background: white;
+}
+.cliente-td select {
+    width: 100%;
+    height: 20px;
+}
+
+/* FORMATO LOCAL */
 .formatoLocal {
     width: 80px;
     background: white;
 }
+.formatoLocal-td {
+    padding: 0 !important;
+}
+.formatoLocal-td select {
+    width: 100%;
+    height: 20px;
+}
+
+/* JORNADA */
 .jornada {
     width: 80px;
     background: white;
 }
+.jornada-td {
+    padding: 0 !important;
+}
+.jornada-td select {
+    width: 100%;
+    height: 20px;
+}
+
+/* NUMERO LOCAL / CECO */
 .numero {
     width: 60px;
     background: white;
 }
+.numero-td {
+    padding: 0 !important;
+}
+.numero-td input {
+    width: 100%;
+}
+
+/* NOMBRE DE LOCAL */
 .nombre {
     width: 75px;
     background: white;
 }
+.nombre-td {
+    padding: 0 !important;
+}
+.nombre-td input {
+    width: 100%;
+}
+
+/* HORA DE APERTURA */
 .horaApertura {
     width: 80px;
     background: white;
 }
+.horaApertura-td {
+    padding: 0 !important;
+}
+.horaApertura-td input {
+    width: 100%;
+}
+
+/* HORA DE CIERRE */
 .horaCierre {
     width: 80px;
     background: white;
 }
+.horaCierre-td {
+    padding: 0 !important;
+}
+.horaCierre-td input {
+    width: 100%;
+}
+
+/* EMAIL CONTACTO */
 .emailContacto {
     width: 150px;
     background: white;
 }
+.emailContacto-td {
+    padding: 0 !important;
+}
+.emailContacto-td input {
+    width: 100%;
+}
 
+/* TELEFONO 1 */
 .telefono1 {
     width: 80px;
     background: white;
 }
+.telefono1-td {
+    padding: 0 !important;
+}
+.telefono1-td input {
+    width: 100%;
+}
+
+/* TELEFONO 2*/
 .telefono2 {
     width: 80px;
     background: white;
 }
+.telefono2-td {
+    padding: 0 !important;
+}
+.telefono2-td input {
+    width: 100%;
+}
+
+/* STOCK */
 .stock {
     width: 60px;
     background: white;
 }
+.stock-td {
+    padding: 0 !important;
+}
+.stock-td input {
+    width: 100%;
+}
+
+/* FECHA STOCK */
 .fechaStock {
     width: 70px;
     background: white;
 }
+.fechaStock-td {
+    padding: 0 !important;
+}
+.fechaStock-td input {
+    width: 100%;
+}
 
-/* DIRECCION */
+/* COMUNA */
 .comuna {
     width: 80px;
     background: white
 }
+.comuna-td {
+    padding: 0 !important;
+}
+.comuna-td select {
+    width: 100%;
+    height: 20px;
+}
+
+/* DIRECCION */
 .direccion {
-    width: auto;
-    min-width: 140px;
+    width: 180px;
     background: white
 }
+.direccion-td {
+    padding: 0 !important;
+}
+.direccion-td input {
+    width: 100%;
+}
+
+/* OPCIONES */
+.opciones {
+    width: auto;
+    background: white
+}
+.opciones-td {
+    padding: 0 !important;
+}
+
+/* ################################################################### */

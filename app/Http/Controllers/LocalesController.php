@@ -78,6 +78,11 @@ class LocalesController extends Controller {
             // En el mismo validator se revisa la direccion
             'cutComuna'=> 'required|exists:comunas,cutComuna',
             'direccion'=> 'required|max:150|'
+        ],[
+            'required' => 'Obligatorio.',
+            'exists' => ':attribute no existe en la BD.',
+            'unique' => 'Ya existe un local con esos datos.',
+            'max' => 'Largo máximo :max.'
         ]);
         if($crearLocal->fails())
             return response()->json($crearLocal->errors(), 400);

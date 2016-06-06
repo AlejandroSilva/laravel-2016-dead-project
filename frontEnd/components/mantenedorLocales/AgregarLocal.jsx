@@ -1,3 +1,4 @@
+// Librerias
 import React from 'react'
 
 class AgregarLocal extends React.Component{
@@ -9,9 +10,6 @@ class AgregarLocal extends React.Component{
 
     render(){
         return <div className="form">
-            {/*<div className="row">
-                <h4 className="page-header" style={{marginTop: '1em'}}>Agregar locales:</h4>
-            </div>*/}
 
             <div className="row">
                 {/* Cliente */}
@@ -33,9 +31,9 @@ class AgregarLocal extends React.Component{
 }
 
 AgregarLocal.propTypes = {
-    clientes: React.PropTypes.array.isRequired,
-    jornadas: React.PropTypes.array.isRequired,
-    formatoLocales: React.PropTypes.array.isRequired,
-    seleccionarCliente: React.PropTypes.func.isRequired
+    // clientes: React.PropTypes.array.isRequired,
+    // jornadas: React.PropTypes.array.isRequired,
+    // formatoLocales: React.PropTypes.array.isRequired,
+    // seleccionarCliente: React.PropTypes.func.isRequired
 }
 export default AgregarLocal

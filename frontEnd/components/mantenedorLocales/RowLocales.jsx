@@ -8,6 +8,8 @@ class RowLocales extends React.Component{
         return <tr>
             <td className={css.id}>
                 {this.props.index}</td>
+            <td className={css.cliente}>
+                {this.props.local.idCliente}</td>
             <td className={css.formatoLocal}>
                 {this.props.local.idFormatoLocal}</td>
             <td className={css.jornada}>

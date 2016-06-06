@@ -44,6 +44,7 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
     "jquery": "^2.2.3",
-    "laravel-elixir": "^6.0.0-1"
+    "laravel-elixir": "^6.0.0-1",
+    "rc-tooltip": "^3.3.2"
   }
 }
