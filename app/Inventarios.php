@@ -151,13 +151,13 @@ class Inventarios extends Model {
     }
     static function formatoClienteFormatoRegion($inventario) {
         $inventarioArray = Inventarios::formatoSimple($inventario);
-        $inventarioArray['local'] = Locales::formatearConClienteFormatoDireccionRegion($inventario->local);
+        $inventarioArray['local'] = Locales::formatoLocal_completo($inventario->local);
         return $inventarioArray;
     }
 
     static function formatoClienteFormatoRegion_nominas ($inventario) {
         $_inventario = Inventarios::formatoSimple($inventario);
-        $_inventario['local'] = Locales::formatearConClienteFormatoDireccionRegion($inventario->local);
+        $_inventario['local'] = Locales::formatoLocal_completo($inventario->local);
         $_inventario['nominaDia']   = $inventario->nominaDia->habilitada? Nominas::formatearSimple($inventario->nominaDia) : null;
         $_inventario['nominaNoche'] = $inventario->nominaNoche->habilitada? Nominas::formatearSimple($inventario->nominaNoche) : null;
         return $_inventario;

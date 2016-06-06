@@ -4,8 +4,15 @@ import React from 'react'
 import * as css from './TablaLocales.css'
 
 class RowLocales extends React.Component{
+    shouldComponentUpdate(nextProps, nextState) {
+        let p = this.props
+        let np = nextProps
+        return p.index !== np.index &&
+            p.local.idLocal !== np.local.idLocal
+    }
+
     render(){
-        return <tr>
+        return <tr key="">
             <td className={css.id}>
                 {this.props.index}</td>
             <td className={css.cliente}>

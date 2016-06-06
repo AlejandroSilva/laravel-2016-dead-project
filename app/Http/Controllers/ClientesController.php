@@ -36,25 +36,4 @@ class ClientesController extends Controller {
     public function api_getClientes(){
         return Clientes::all();
     }
-
-    // GET api/cliente/{idCliente}/locales
-    public function api_getLocales($idCliente){
-        $cliente = Clientes::find($idCliente);
-        if($cliente){
-            $locales = Locales::with([
-                'direccion'
-            ])
-            ->where('idCliente', '=', $idCliente)
-            ->get();
-            return response()->json($locales, 200);
-        }else{
-            return response()->json([], 404);
-        }
-    }
-
-    // GET api/clientes/locales
-    public function api_getClientesWithLocales(){
-        return Clientes::allWithSimpleLocales();
-    }
-
 }

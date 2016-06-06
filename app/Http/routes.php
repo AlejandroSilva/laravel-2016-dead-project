@@ -85,8 +85,7 @@ Route::group(['middleware' => ['web']], function (){
     Route::group(['prefix'=>'api',  'middleware'=>['authAPI']], function() {
         // API CLIENTES Y LOCALES
         Route::get('clientes',                      'ClientesController@api_getClientes');
-        Route::get('cliente/{idCliente}/locales',   'ClientesController@api_getLocales');
-        Route::get('clientes/locales',              'ClientesController@api_getClientesWithLocales');
+        Route::get('cliente/{idCliente}/locales',   'LocalesController@api_getLocales');
         Route::post('locales',                      'LocalesController@api_nuevo');
 //        Route::get('locales/{idLocal}/verbose',     'LocalesController@api_getLocalVerbose');
         // API INVENTARIOS

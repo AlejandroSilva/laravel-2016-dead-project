@@ -42,12 +42,11 @@ class InventariosController extends Controller {
         $user = Auth::user();
         if(!$user || !$user->can('programaInventarios_ver'))
             return view('errors.403');
-
-        $clientesWithLocales = Clientes::allWithSimpleLocales();
+        
         return view('operacional.programacionIG.programacionIG-mensual', [
             'puedeAgregarInventarios'   => $user->can('programaInventarios_agregar')? "true":"false",
             'puedeModificarInventarios' => $user->can('programaInventarios_modificar')? "true":"false",
-            'clientes' => $clientesWithLocales,
+            'clientes' => Clientes::todos_conLocales(),
         ]);
     }
 

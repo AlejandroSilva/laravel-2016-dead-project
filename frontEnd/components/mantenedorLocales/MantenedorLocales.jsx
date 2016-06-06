@@ -20,7 +20,8 @@ class MantenedorLocales extends React.Component{
         this.blackbox = new BlackBoxLocales()
         this.state = {
             idCliente: 0,
-            localesFiltrados: [] 
+            localesFiltrados: [],
+            filtros: {}
         }
     }
     
@@ -36,9 +37,8 @@ class MantenedorLocales extends React.Component{
                 locales.forEach(local=>{
                     this.blackbox.add(local)
                 })
-                this.setState({
-                    localesFiltrados: this.blackbox.getListaFiltrada()
-                })
+                this.blackbox.actualizarFiltros()
+                this.setState(this.blackbox.getListaFiltrada())
             })
             //.catch(console.error)
     }
@@ -56,6 +56,13 @@ class MantenedorLocales extends React.Component{
 
     mostrarError(titulo, cuerpo){
         this.refs.notificator.error(titulo, cuerpo, 4 * 1000);
+    }
+
+    // Filtros
+    actualizarFiltro(nombreFiltro, filtro){
+        this.blackbox.reemplazarFiltro(nombreFiltro, filtro)
+        // actualizar los filtros, y la lista ordenada de locales
+        this.setState(this.blackbox.getListaFiltrada())
     }
 
     render(){
@@ -79,7 +86,11 @@ class MantenedorLocales extends React.Component{
                     </h4>
 
                     <TablaLocales
+                        // Objetos
                         localesFiltrados={this.state.localesFiltrados}
+                        filtros={this.state.filtros}
+                        // Metodos
+                        actualizarFiltro={this.actualizarFiltro.bind(this)}
                         actualizarLocal={this.actualizarLocal.bind(this)}
                         eliminarLocal={this.eliminarLocal.bind(this)}
                     >

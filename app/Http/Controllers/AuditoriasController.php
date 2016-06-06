@@ -40,16 +40,14 @@ class AuditoriasController extends Controller {
         $user = Auth::user();
         if(!$user || !$user->can('programaAuditorias_ver'))
             return view('errors.403');
-
-        // Array de Clientes
-        $clientesWithLocales = Clientes::allWithSimpleLocales();
+        
         // Array Auditores
         $rolAuditor = Role::where('name', 'Auditor')->first();
         $auditores = $rolAuditor!=null? $rolAuditor->users : '[]';
         return view('operacional.programacionAI.programacion-mensual', [
             'puedeAgregarAuditorias'   => $user->can('programaAuditorias_agregar')? "true":"false",
             'puedeModificarAuditorias' => $user->can('programaAuditorias_modificar')? "true":"false",
-            'clientes' => $clientesWithLocales,
+            'clientes' => Clientes::todos_conLocales(),
             'auditores' => $auditores
         ]);
     }

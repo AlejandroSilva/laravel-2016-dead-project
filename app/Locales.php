@@ -137,23 +137,24 @@ class Locales extends Model{
         ];
     }
 
-    static function formatearConClienteFormatoDireccionRegion($local){
-        $localArray = Locales::formatearSimple($local);
-        $localArray['cliente'] = Clientes::formatearSimple($local->cliente);
+    static function formatoLocal_completo($local){
+        $_local = Locales::formatearSimple($local);
+        $_local['cliente'] = Clientes::formatearSimple($local->cliente);
         // Formato de local
-        $localArray['idFormatoLocal'] = $local->idFormatoLocal;
-        $localArray['formatoLocal_nombre'] = $local->formatoLocal->nombre;
-        $localArray['formatoLocal_produccionSugerida'] = $local->formatoLocal->produccionSugerida;
-
+        $_local['idFormatoLocal'] = $local->idFormatoLocal;
+        $_local['formatoLocal_nombre'] = $local->formatoLocal->nombre;
+        $_local['formatoLocal_produccionSugerida'] = $local->formatoLocal->produccionSugerida;
+        // Jornada Sugerida
+        $_local['idJornadaSugerida'] = $local->jornada->idJornada;
         // direcion comuna provincia region
-        $localArray['direccion'] = $local->direccion->direccion;
+        $_local['direccion'] = $local->direccion->direccion;
         // Comuna
-        $localArray['cutComuna'] = $local->direccion->comuna->cutComuna;
-        $localArray['comuna_nombre'] = $local->direccion->comuna->nombre;
+        $_local['cutComuna'] = $local->direccion->comuna->cutComuna;
+        $_local['comuna_nombre'] = $local->direccion->comuna->nombre;
         // Region
-        $localArray['cutRegion'] = $local->direccion->comuna->provincia->region->cutRegion;
-        $localArray['region_numero'] = $local->direccion->comuna->provincia->region->numero;
+        $_local['cutRegion'] = $local->direccion->comuna->provincia->region->cutRegion;
+        $_local['region_numero'] = $local->direccion->comuna->provincia->region->numero;
 
-        return $localArray;
+        return $_local;
     }
 }

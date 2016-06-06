@@ -3,6 +3,7 @@ import React from 'react'
 // Componentes
 import Sticky from '../shared/react-sticky/sticky.js'
 import StickyContainer from '../shared/react-sticky/container.js'
+import HeaderConFiltro from '../shared/HeaderConFiltro.jsx'
 import RowLocales from './RowLocales.jsx'
 import * as css from './TablaLocales.css'
 
@@ -35,11 +36,37 @@ class TablaLocales extends React.Component{
                     stickyStyle={{top: '50px'}}>
 
                     <th className={css.id}>id</th>
-                    <th className={css.cliente}>Cliente</th>
-                    <th className={css.formatoLocal}>Formato Local</th>
+                    <th className={css.cliente}>
+                        <HeaderConFiltro
+                            nombre='Cliente'
+                            filtro={this.props.filtros.filtroCliente || []}
+                            actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroCliente')}
+                            //ordenarLista={this.props.ordenarAuditorias}
+                        />
+                    </th>
+                    <th className={css.formatoLocal}>
+                        <HeaderConFiltro
+                            nombre='Formato Local'
+                            filtro={this.props.filtros.filtroFormatoLocal || []}
+                            actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroFormatoLocal')}
+                        />
+                    </th>
                     <th className={css.jornada}>Jornada Sugerida</th>
-                    <th className={css.numero}>Numero</th>
-                    <th className={css.nombre}>Nombre</th>
+                    <th className={css.numero}>
+                        <HeaderConFiltro
+                            nombre='CECO'
+                            filtro={this.props.filtros.filtroCeco || []}
+                            actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroCeco')}
+                            busquedaExacta={true}
+                        />
+                    </th>
+                    <th className={css.nombre}>
+                        <HeaderConFiltro
+                            nombre='Nombre'
+                            filtro={this.props.filtros.filtroNombre || []}
+                            actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroNombre')}
+                        />
+                    </th>
                     <th className={css.horaApertura}>Hr.Apertura</th>
                     <th className={css.horaCierre}>Hr.Cierre</th>
                     <th className={css.emailContacto}>Email</th>
@@ -47,7 +74,13 @@ class TablaLocales extends React.Component{
                     <th className={css.telefono2}>Telefono 2</th>
                     <th className={css.stock}>Stock</th>
                     <th className={css.fechaStock}>Fecha Stock</th>
-                    <th className={css.comuna}>Comuna</th>
+                    <th className={css.comuna}>
+                        <HeaderConFiltro
+                            nombre='Comuna'
+                            filtro={this.props.filtros.filtroComuna || []}
+                            actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroComuna')}
+                        />
+                    </th>
                     <th className={css.direccion}>Dirección</th>
                     <th className={css.opciones}>Opciones</th>
                 </Sticky>
@@ -59,8 +92,8 @@ class TablaLocales extends React.Component{
                     ? <tr><td colSpan="16" style={{textAlign: 'center'}}><b>Sin locales</b></td></tr>
                     : this.props.localesFiltrados.map((local, index)=>
                         <RowLocales
-                            key={index}
-                            index={index}
+                            key={local.idLocal}
+                            index={index+1}
                             local={local}
                         />
                     )
@@ -74,6 +107,11 @@ class TablaLocales extends React.Component{
 }
 
 TablaLocales.propTypes = {
-    localesFiltrados: React.PropTypes.array.isRequired
+    // Objetos
+    localesFiltrados: React.PropTypes.array.isRequired,
+    filtros: React.PropTypes.objectOf(React.PropTypes.array).isRequired,
+    // Metodos
+    //ordenarAuditorias: React.PropTypes.func.isRequired,
+    actualizarFiltro: React.PropTypes.func.isRequired
 }
 export default TablaLocales

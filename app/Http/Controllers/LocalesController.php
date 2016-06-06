@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Direcciones;
-use App\FormatoLocales;
-use App\Jornadas;
-use App\Locales;
 use App\Http\Requests;
 //use App\Http\Controllers\Controller;
 //use Symfony\Component\HttpFoundation\Response;
 // Modelos
 use Auth;
-//use App\Locales;
 use App\Clientes;
 use App\Comunas;
+use App\Direcciones;
+use App\FormatoLocales;
+use App\Jornadas;
+use App\Locales;
 
 class LocalesController extends Controller {
 
@@ -30,14 +29,11 @@ class LocalesController extends Controller {
         $user = Auth::user();
         if(!$user || !$user->can('admin-mantenedorLocales'))
             return view('errors.403');
-
-        $clientes = Clientes::all();
-        $jornadas = Jornadas::all();
-        $formatos = FormatoLocales::all();
+        
         return view('operacional.locales.mantenedorLocales', [
-            'clientes'=>$clientes,
-            'jornadas'=>$jornadas,
-            'formatoLocales'=>$formatos,
+            'clientes' => Clientes::all(),
+            'jornadas' => Jornadas::all(),
+            'formatoLocales' => FormatoLocales::all(),
             'comunas' => Comunas::all()->map('\App\Comunas::formatearSimple')
         ]);
     }
@@ -47,6 +43,16 @@ class LocalesController extends Controller {
      * Rutas para consumo del API REST
      * ##########################################################
      */
+
+    // GET api/cliente/{idCliente}/locales
+    public function api_getLocales($idCliente){
+        $cliente = Clientes::find($idCliente);
+        if($cliente){
+            return response()->json($cliente->locales->map('\App\Locales::formatoLocal_completo'), 200);
+        }else{
+            return response()->json([], 404);
+        }
+    }
 
     // POST api/locales
     function api_nuevo(Request $request){
@@ -64,7 +70,7 @@ class LocalesController extends Controller {
             'idJornadaSugerida' => 'required|exists:jornadas,idJornada',
             // valida que el numero y el nombre sean unicos, pero solo para el cliente indicado
                                 //unique:table,column,except,idColumn
-            'numero' => "required|unique:locales,numero,NULL,id,idCliente,$request->idCliente",
+            'numero' => "required|numeric|unique:locales,numero,NULL,id,idCliente,$request->idCliente",
             'nombre' => "required|unique:locales,nombre,NULL,id,IdCliente,$request->idCliente",
             'horaApertura' => 'required|date_format:H:i',
             'horaCierre' => 'required|date_format:H:i',
@@ -82,7 +88,8 @@ class LocalesController extends Controller {
             'required' => 'Obligatorio.',
             'exists' => ':attribute no existe en la BD.',
             'unique' => 'Ya existe un local con esos datos.',
-            'max' => 'Largo máximo :max.'
+            'max' => 'Largo máximo :max.',
+            'numeric' => 'Debe ser un numero.'
         ]);
         if($crearLocal->fails())
             return response()->json($crearLocal->errors(), 400);
@@ -96,7 +103,7 @@ class LocalesController extends Controller {
         ]);
         $direccion->save();
 
-        return response()->json(Locales::formatearConClienteFormatoDireccionRegion($local));
+        return response()->json(Locales::formatoLocal_completo($local));
     }
 
 

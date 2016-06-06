@@ -19,21 +19,16 @@ class Clientes extends Model {
     /**
      * Entrega un listado con todos los clientes, y una vista simplificada de los locales que tiene asociado
      */
-    public static function allWithSimpleLocales(){
-        // query para obtener la lista de clientes con sus respectivos locales
-        $clientes = Clientes::with('locales')->get();
-
-        // a esta lista convertida en array, se mapea para filtrar los campos de los locales (demasiada informacion = consulta lenta)
-        return $clientes->map(function($cliente){
-            $clienteArray = $cliente->toArray();
-            $clienteArray['locales'] = $cliente->locales->map(function($local){
+    public static function todos_conLocales(){
+        return Clientes::all()->map(function($cliente){
+            $cliente->locales = $cliente->locales->map(function($local){
                 return [
-                    'idLocal'=>$local['idLocal'],
-                    'numero'=>$local['numero'],
-                    'nombre'=>$local['nombre']
+                    'idLocal'=> $local->idLocal,
+                    'numero' => $local->numero,
+                    'nombre' => $local->nombre
                 ];
             });
-            return $clienteArray;
+            return $cliente;
         });
     }
 
