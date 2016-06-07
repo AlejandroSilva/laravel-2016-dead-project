@@ -125,7 +125,8 @@ class Nominas extends Model {
             "dotacionOperadores" => $nomina->dotacionOperadores,
             "fechaSubidaNomina" => $nomina->fechaSubidaNomina,
             "turno" => $nomina->turno,
-            "estado" => EstadoNominas::formatearSimple($nomina->estado)
+            "estado" => EstadoNominas::formatearSimple($nomina->estado),
+            "rectificada" => $nomina->rectificada
         ];
     }
     static function formatearSimpleConPublicId($nomina){

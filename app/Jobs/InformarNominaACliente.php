@@ -113,7 +113,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ];
 
         if($cliente->idCliente==1){                         // 1: PREUNIC
-            $this->enviarGENERICA([
+            $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "Nomina PREUNIC Local Nº$local->numero",
                 'to' => $this->PUC_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
@@ -125,31 +125,36 @@ class InformarNominaACliente extends Job implements ShouldQueue {
             if($correoLocal)
                 array_push($destinatariosFCV, [$correoLocal, "Local $local->numero"]);
 
-            $this->enviarGENERICA([
-                'subject' => "Nomina Cruz Verde Local Nº$local->numero",
+            // Si el correo esta RECTIFICADO, cambiar el titulo
+            $subject = $this->nomina->rectificada==1?
+                "Nomina RECTIFICADA Cruz Verde Local Nº$local->numero"
+                :
+                "Nomina Cruz Verde Local Nº$local->numero";
+            $this->enviarCorreos('emails.informarNomina.FCV', [
+                'subject' => $subject,
                 'to' => $destinatariosFCV,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==3){                   // 3: CKY
-            $this->enviarGENERICA([
+            $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "Nomina CKY Local Nº$local->numero",
                 'to' => $this->CKY_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==5){                   // 5: SALCOBRAND
-            $this->enviarGENERICA([
+            $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "Nomina SB Local Nº$local->numero",
                 'to' => $this->SB_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==7){                   // 7: CMT
-            $this->enviarGENERICA([
+            $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "Nomina CMT Local Nº$local->numero",
                 'to' => $this->CMT_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
-        }else{
-            $this->enviarGENERICA([                         // Otros clientes
+        }else{                                              // Otros clientes
+            $this->enviarCorreos('emails.informarNomina.GENERICA', [                         
                 'subject' => "Nomina $cliente->nombreCorto Local Nº $local->numero (GENERICA)",
                 'to' => $this->SEI_nomina_bcc,
                 'bcc' => $this->SEI_nomina_bcc
@@ -158,8 +163,8 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         Log::info('#### JOB:InformarNominaACliente (fin) ####');
     }
 
-    private function enviarGENERICA($datosCorreo, $datosVista){
-        Mail::send('emails.informarNomina.GENERICA', $datosVista,
+    private function enviarCorreos($plantilla, $datosCorreo, $datosVista){
+        Mail::send($plantilla, $datosVista,
             function ($message) use($datosCorreo){
                 $message
                     ->from('no-responder@plataforma.seiconsultores.cl', 'SEI Consultores')

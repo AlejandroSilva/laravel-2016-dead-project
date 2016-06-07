@@ -457,11 +457,14 @@ class NominasController extends Controller {
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
         // la nomina esta Informada?
         if($nomina->idEstadoNomina!=5)
             return response()->json(['idNomina'=>'La nomina debe estar en estado Informada'], 400);
-        // al rectificar, se pasa al estado Pendiente
+
+        // al rectificar, se pasa al estado Pendiente, y se agrega el "flag" rectificada
         $nomina->idEstadoNomina = 2;
+        $nomina->rectificada = true;
         $nomina->save();
         // ToDo: enviar los correos
         return response()->json(
