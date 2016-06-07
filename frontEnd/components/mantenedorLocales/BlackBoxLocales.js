@@ -20,14 +20,14 @@ export default class BlackBoxLocales{
         let index = this.lista.findIndex(local=>local.idLocal===idLocal)
         if(index>=0) this.lista.splice(index, 1)
     }
-    // actualizarLocal(localActualizado){
-    //     this.lista = this.lista.map(local=> {
-    //         if (local.idLocal == localActualizado.idLocal) {
-    //             return localActualizado
-    //         }
-    //         return local
-    //     })
-    // }
+    actualizar(localActualizado){
+        this.lista = this.lista.map(local=> {
+            if (local.idLocal == localActualizado.idLocal) {
+                return localActualizado
+            }
+            return local
+        })
+    }
     /*** ################### FILTROS ################### ***/
 
     ordenarLista(){
@@ -113,7 +113,6 @@ export default class BlackBoxLocales{
         }
     }
     getListaFiltrada(){
-        // Todo: filtrar por clientes
         // Todo: filtrar por regiones
         return {
             // filtrar por clientes

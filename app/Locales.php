@@ -141,7 +141,7 @@ class Locales extends Model{
         $_local = Locales::formatearSimple($local);
         $_local['cliente'] = Clientes::formatearSimple($local->cliente);
         // Formato de local
-        $_local['idFormatoLocal'] = $local->idFormatoLocal;
+        $_local['idFormatoLocal'] = $local->formatoLocal->idFormatoLocal;
         $_local['formatoLocal_nombre'] = $local->formatoLocal->nombre;
         $_local['formatoLocal_produccionSugerida'] = $local->formatoLocal->produccionSugerida;
         // Jornada Sugerida

@@ -16,42 +16,17 @@
     width: 30px;
     background: white;
 }
-/* Cliente */
+
+/* CLIENTE */
 .cliente {
-    width: 60px;
+    width: 65px;
     background: white;
 }
 .cliente-td {
-    width: 60px;
+    width: 65px;
     background: white;
 }
 .cliente-td select {
-    width: 100%;
-    height: 20px;
-}
-
-/* FORMATO LOCAL */
-.formatoLocal {
-    width: 80px;
-    background: white;
-}
-.formatoLocal-td {
-    padding: 0 !important;
-}
-.formatoLocal-td select {
-    width: 100%;
-    height: 20px;
-}
-
-/* JORNADA */
-.jornada {
-    width: 80px;
-    background: white;
-}
-.jornada-td {
-    padding: 0 !important;
-}
-.jornada-td select {
     width: 100%;
     height: 20px;
 }
@@ -76,8 +51,34 @@
 .nombre-td {
     padding: 0 !important;
 }
-.nombre-td input {
+.nombre_input {
     width: 100%;
+}
+
+/* FORMATO LOCAL */
+.formatoLocal {
+    width: 100px;
+    background: white;
+}
+.formatoLocal-td {
+    padding: 0 !important;
+}
+.formatoLocal_select {
+    width: 100%;
+    height: 20px;
+}
+
+/* JORNADA */
+.jornada {
+    width: 80px;
+    background: white;
+}
+.jornada-td {
+    padding: 0 !important;
+}
+.jornada_select {
+    width: 100%;
+    height: 20px;
 }
 
 /* HORA DE APERTURA */
@@ -112,7 +113,7 @@
 .emailContacto-td {
     padding: 0 !important;
 }
-.emailContacto-td input {
+.emailContacto_input {
     width: 100%;
 }
 
@@ -124,7 +125,7 @@
 .telefono1-td {
     padding: 0 !important;
 }
-.telefono1-td input {
+.telefono1_input {
     width: 100%;
 }
 
@@ -136,7 +137,7 @@
 .telefono2-td {
     padding: 0 !important;
 }
-.telefono2-td input {
+.telefono2_input {
     width: 100%;
 }
 
@@ -148,7 +149,7 @@
 .stock-td {
     padding: 0 !important;
 }
-.stock-td input {
+.stock_input {
     width: 100%;
 }
 
@@ -172,7 +173,7 @@
 .comuna-td {
     padding: 0 !important;
 }
-.comuna-td select {
+.comuna_select {
     width: 100%;
     height: 20px;
 }
@@ -185,7 +186,7 @@
 .direccion-td {
     padding: 0 !important;
 }
-.direccion-td input {
+.direccion_input {
     width: 100%;
 }
 
@@ -199,3 +200,16 @@
 }
 
 /* ################################################################### */
+
+.inputDirty {
+    border: 2px solid #381615;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;   /*plomo*/
+    outline-color: #4f3534;
+}
+.inputError{
+    border: 2px solid #a94442;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    outline-color: #ce8483;
+}

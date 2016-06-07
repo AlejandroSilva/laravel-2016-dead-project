@@ -47,7 +47,7 @@ export class RowNuevoLocal extends React.Component{
         }
     }
     onCrear(){
-        api.locales.nuevo(this.state.datos)
+        api.local.nuevo(this.state.datos)
             .then(nuevoLocal=>{
                 // informamos que agregamos un nuevo local
                 this.props.agregarLocal(nuevoLocal)
@@ -93,44 +93,6 @@ export class RowNuevoLocal extends React.Component{
                 </Tooltip>
             </td>
 
-            {/* Formato de Local */}
-            <td className={cx('formatoLocal-td')}>
-                <Tooltip placement="bottom" trigger={[]} destroyTooltipOnHide={true}
-                         visible={this.state.errores.idFormatoLocal!=null}
-                         overlay={this.state.errores.idFormatoLocal?
-                            <span>{this.state.errores.idFormatoLocal.join('. ')}</span> : <span/>
-                        }>
-                    <select
-                        value={this.state.datos.idFormatoLocal}
-                        onChange={(evt)=>{
-                            this.setState({ datos: Object.assign(this.state.datos, {idFormatoLocal: evt.target.value}) })
-                        }}>
-                        {this.props.formatoLocales.map((formato, index)=>
-                            <option key={index} value={formato.idFormatoLocal}>{formato.nombre}</option>
-                        )}
-                    </select>
-                </Tooltip>
-            </td>
-
-            {/* Jornada */}
-            <td className={cx('jornada-td')}>
-                <Tooltip placement="bottom" trigger={[]} destroyTooltipOnHide={true}
-                         visible={this.state.errores.idJornadaSugerida!=null}
-                         overlay={this.state.errores.idJornadaSugerida?
-                            <span>{this.state.errores.idJornadaSugerida.join('. ')}</span> : <span/>
-                        }>
-                    <select
-                        value={this.state.datos.idJornadaSugerida}
-                        onChange={(evt)=>{
-                            this.setState({datos: Object.assign(this.state.datos, {idJornadaSugerida: evt.target.value})})
-                        }}>
-                        {this.props.jornadas.map((jornada, index)=>
-                            <option key={index} value={jornada.idJornada}>{jornada.nombre}</option>
-                        )}
-                    </select>
-                </Tooltip>
-            </td>
-
             {/* Numero de Local */}
             <td className={cx('numero-td')}>
                 <Tooltip placement="bottom" trigger={[]} destroyTooltipOnHide={true}
@@ -156,12 +118,52 @@ export class RowNuevoLocal extends React.Component{
                             <span>{this.state.errores.nombre.join('. ')}</span> : <span/>
                         }>
                     <input type="text"
-                           className={this.state.errores.nombre? cssRow.inputInvalid : ''}
+                           className={cssTabla.nombre_input +' '+ (this.state.errores.nombre?cssRow.inputInvalid:'')}
                            value={this.state.datos.nombre}
                            onChange={(evt)=>{
                                 this.setState({ datos: Object.assign(this.state.datos, {nombre: evt.target.value})})
                            }}
                     />
+                </Tooltip>
+            </td>
+
+            {/* Formato de Local */}
+            <td className={cx('formatoLocal-td')}>
+                <Tooltip placement="bottom" trigger={[]} destroyTooltipOnHide={true}
+                         visible={this.state.errores.idFormatoLocal!=null}
+                         overlay={this.state.errores.idFormatoLocal?
+                            <span>{this.state.errores.idFormatoLocal.join('. ')}</span> : <span/>
+                        }>
+                    <select
+                        className={cssTabla.formatoLocal_select}
+                        value={this.state.datos.idFormatoLocal}
+                        onChange={(evt)=>{
+                            this.setState({ datos: Object.assign(this.state.datos, {idFormatoLocal: evt.target.value}) })
+                        }}>
+                        {this.props.formatoLocales.map((formato, index)=>
+                            <option key={index} value={formato.idFormatoLocal}>{formato.nombre}</option>
+                        )}
+                    </select>
+                </Tooltip>
+            </td>
+
+            {/* Jornada */}
+            <td className={cx('jornada-td')}>
+                <Tooltip placement="bottom" trigger={[]} destroyTooltipOnHide={true}
+                         visible={this.state.errores.idJornadaSugerida!=null}
+                         overlay={this.state.errores.idJornadaSugerida?
+                            <span>{this.state.errores.idJornadaSugerida.join('. ')}</span> : <span/>
+                        }>
+                    <select
+                        value={this.state.datos.idJornadaSugerida}
+                        className={cssTabla.jornada_select}
+                        onChange={(evt)=>{
+                            this.setState({datos: Object.assign(this.state.datos, {idJornadaSugerida: evt.target.value})})
+                        }}>
+                        {this.props.jornadas.map((jornada, index)=>
+                            <option key={index} value={jornada.idJornada}>{jornada.nombre}</option>
+                        )}
+                    </select>
                 </Tooltip>
             </td>
 
@@ -202,6 +204,7 @@ export class RowNuevoLocal extends React.Component{
             {/* Email Contacto */}
             <td className={cx('emailContacto-td')}>
                 <input type="email"
+                       className={cssTabla.emailContacto_input}
                        value={this.state.datos.emailContacto}
                        onChange={(evt)=>{
                             this.setState({ datos: Object.assign(this.state.datos, {emailContacto: evt.target.value}) })
@@ -217,6 +220,7 @@ export class RowNuevoLocal extends React.Component{
                             <span>{this.state.errores.telefono1.join('. ')}</span> : <span/>
                         }>
                     <input type="text"
+                           className={cssTabla.telefono1_input}
                            value={this.state.datos.telefono1}
                            onChange={(evt)=>{
                                 this.setState({ datos: Object.assign(this.state.datos, {telefono1: evt.target.value}) })
@@ -233,6 +237,7 @@ export class RowNuevoLocal extends React.Component{
                             <span>{this.state.errores.telefono2.join('. ')}</span> : <span/>
                         }>
                     <input type="text"
+                           className={cssTabla.telefono2}
                            value={this.state.datos.telefono2}
                            onChange={(evt)=>{
                                 this.setState({ datos: Object.assign(this.state.datos, {telefono2: evt.target.value}) })
@@ -286,6 +291,7 @@ export class RowNuevoLocal extends React.Component{
                         }>
                     <select
                         value={this.state.datos.cutComuna}
+                        className={cssTabla.comuna_select}
                         onChange={(evt)=>{
                             this.setState({ datos: Object.assign(this.state.datos, {cutComuna: evt.target.value}) })
                         }}>
@@ -304,7 +310,7 @@ export class RowNuevoLocal extends React.Component{
                             <span>{this.state.errores.direccion.join('. ')}</span> : <span/>
                         }>
                     <input type="text"
-                           className={this.state.errores.direccion? cssRow.inputInvalid : ''}
+                           className={cssTabla.direccion_input +' '+ (this.state.errores.direccion?cssRow.inputInvalid:'')}
                            value={this.state.datos.direccion}
                            onChange={(evt)=>{
                                 this.setState({ datos: Object.assign(this.state.datos, {direccion: evt.target.value}) })
@@ -320,6 +326,7 @@ export class RowNuevoLocal extends React.Component{
                 >Agregar</button>
                 <button className="btn btn-xs btn-danger"
                         onClick={this.onCancelar.bind(this)}
+                        disabled={true}
                 >X</button>
             </td>
         </tr>

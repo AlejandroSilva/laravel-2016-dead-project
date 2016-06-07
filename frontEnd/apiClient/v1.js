@@ -24,11 +24,13 @@ export default {
         getLocales: (idCliente)=>
             axios.get(`/api/cliente/${idCliente}/locales`)
     },
-    locales: {
+    local: {
         // get: (idLocal)=>
         //     axios.get(`/api/locales/${idLocal}`),
         nuevo: (datos)=>
             axios.post(`/api/locales`, datos),
+        actualizar: (idLocal, datos) =>
+            axios.put(`/api/local/${idLocal}`, datos),
         enviarArchivoStock: (idCliente, archivo)=>{
             let datos = new FormData();
             datos.append('idCliente', idCliente)

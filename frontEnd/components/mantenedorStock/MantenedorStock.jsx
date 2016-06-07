@@ -25,7 +25,7 @@ export class MantenedorStock extends React.Component {
         // hacer una llamada con los elementos que se han adjuntado
         let idCliente = this.refSelectCliente.value
         let archivoExcel = ReactDOM.findDOMNode(this.refInputArchivo).files[0]
-        api.locales.enviarArchivoStock(idCliente, archivoExcel)
+        api.local.enviarArchivoStock(idCliente, archivoExcel)
             .then(datos=>{
                 // construir la tabla con el resultado
                 this.setState({resultado: datos})

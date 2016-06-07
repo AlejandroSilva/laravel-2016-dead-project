@@ -23,8 +23,30 @@ class MantenedorLocales extends React.Component{
             localesFiltrados: [],
             filtros: {}
         }
+
+        // referencia a cada una de las rows
+        this.rows = []
     }
-    
+    // se reciben nuevas props, o un nuevo state
+    componentWillUpdate(nextProps){
+        // cuando se actualiza el state, se generan posiciones "vacias" en el arreglo de rows
+        this.rows = this.rows.filter(input=>input!==null)
+    }
+    focusRow(index, nombreElemento){
+        let ultimoIndex = this.rows.length-1
+        if(index<0){
+            // al seleccionar "antes de la primera", se seleciona el ultimo
+            this.rows[ultimoIndex].focusElemento(nombreElemento)
+        }else if(index>ultimoIndex){
+            // al seleccionar "despues de la ultima", se selecciona el primero
+            this.rows[ index%this.rows.length ].focusElemento(nombreElemento)
+        }else{
+            // no es ni el ultimo, ni el primero
+            this.rows[index].focusElemento(nombreElemento)
+        }
+    }
+
+    // Cambiar en cliente en el Selector de clientes
     seleccionarCliente(idCliente){
         // todo buscar locales del cliente
         this.blackbox.reset()
@@ -40,15 +62,21 @@ class MantenedorLocales extends React.Component{
                 this.blackbox.actualizarFiltros()
                 this.setState(this.blackbox.getListaFiltrada())
             })
-            //.catch(console.error)
+        //.catch(console.error)
     }
 
-    actualizarLocal(){
-        console.error('pendiente')
+    actualizarLocal(idLocal, datos){
+        api.local.actualizar(idLocal, datos)
+            .then(localActualizado=>{
+                this.blackbox.actualizar(localActualizado)
+                this.blackbox.actualizarFiltros()
+                this.setState( this.blackbox.getListaFiltrada() )
+            })
     }
     agregarLocal(nuevoLocal){
-        // todo: agregar el blackbox
-        console.log('nuevo local agregado ', nuevoLocal)
+        this.blackbox.add(nuevoLocal)
+        this.blackbox.actualizarFiltros()
+        this.setState( this.blackbox.getListaFiltrada() )
     }
     eliminarLocal(){
         console.error('pendiente')
@@ -89,12 +117,17 @@ class MantenedorLocales extends React.Component{
                         // Objetos
                         localesFiltrados={this.state.localesFiltrados}
                         filtros={this.state.filtros}
+                        // Objetos para genera Opciones de los Select
+                        jornadas={this.props.jornadas}
+                        formatoLocales={this.props.formatoLocales}
+                        comunas={this.props.comunas}
+
                         // Metodos
                         actualizarFiltro={this.actualizarFiltro.bind(this)}
-                        actualizarLocal={this.actualizarLocal.bind(this)}
+                        apiActualizar={this.actualizarLocal.bind(this)}
                         eliminarLocal={this.eliminarLocal.bind(this)}
                     >
-                        {/* Formulario para agregar un nuevo local */}
+                        {/* Formulario para agregar local */}
                         <RowNuevoLocal
                             // Objetos
                             clientes={this.props.clientes}
