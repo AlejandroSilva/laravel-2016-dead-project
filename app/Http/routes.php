@@ -141,6 +141,7 @@ Route::group(['middleware' => ['web']], function (){
 //        Route::get('geo/comunas',      'GeoController@api_getComunas');
         //  Route::get('stock/leerArchivo',             'StockController@api_leerArchivo');
         Route::post('stock/upload',                 'StockController@api_uploadArchivo');
+        Route::post('stock/pegar',                  'StockController@api_pegarDatos');
     });
     /*
     |--------------------------------------------------------------------------

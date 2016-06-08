@@ -37,7 +37,9 @@ export default {
             datos.append('stockExcel', archivo)
 
             return axios.post('/api/stock/upload', datos)
-        }
+        },
+        enviarPegarStock: datos=>
+            axios.post('/api/stock/pegar', datos)
     },
     inventario: {
         nuevo: (datos)=>

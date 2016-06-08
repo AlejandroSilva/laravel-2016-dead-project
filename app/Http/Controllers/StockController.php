@@ -51,6 +51,33 @@ class StockController extends Controller {
             })
         );
     }
+    
+    // POST stock/pegar
+    function api_pegarDatos(Request $request){
+        // revisar permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-actualizarStock'))
+            return response()->json(['error' => 'No tiene permisos para realizar esta acción'], 403);
+
+        // revisar que el cliente este fijado y exista
+        if(!$request->idCliente)
+            return response()->json(['error' => 'Debe indicar un cliente.'], 400);
+        $idCliente = $request->idCliente;
+        $cliente = Clientes::find($idCliente);
+        if(!$cliente)
+            return response()->json(['error' => 'El cliente seleccionado no es valido.'], 400);
+
+        // Todo: validar que 'datos' sea un arreglo valido
+        $datos = collect($request->datos);
+
+        $hoy = Carbon::now()->format("Y-m-d");
+        return response()->json(
+            $datos->map(function($row) use ($cliente, $hoy){
+                // el cliente se pasa por parametro, y la fechaStock, es la fecha actual
+                return $this->actualizarLocal($cliente, $row['numero'], $row['stock'], $hoy);
+            })
+        );
+    }
 
     // POST stock/upload
     function api_uploadArchivo(Request $request){
@@ -66,7 +93,6 @@ class StockController extends Controller {
         $cliente = Clientes::find($idCliente);
         if(!$cliente)
             return response()->json(['error' => 'El cliente seleccionado no es valido.'], 400);
-
 
         // revisar que el archivo este adjunto
         if (!$request->hasFile('stockExcel'))
@@ -95,9 +121,9 @@ class StockController extends Controller {
         $data = collect($tableData);
         $hoy = Carbon::now()->format("Y-m-d");
         return response()->json(
-            $data->map(function($row) use ($idCliente, $hoy){
+            $data->map(function($row) use ($cliente, $hoy){
                 // el cliente se pasa por parametro, y la fechaStock, es la fecha actual
-                return $this->actualizarLocal($idCliente, $row['numero'], $row['stock'], $hoy);
+                return $this->actualizarLocal($cliente, $row['numero'], $row['stock'], $hoy);
             })
         );
     }
@@ -109,15 +135,15 @@ class StockController extends Controller {
      * ##########################################################
      */
 
-    private function actualizarLocal($idCliente, $numero, $stock, $fechaStock){
+    private function actualizarLocal($cliente, $numero, $stock, $fechaStock){
         // todo: validar que el stock y la $fechaStock sean validos
 
-        $local = Locales::where('idCliente', $idCliente)
+        $local = Locales::where('idCliente', $cliente->idCliente)
             ->where('numero', $numero)->first();
         // validar que el local exista
         if(!$local)
             return [
-                'cliente'=>$idCliente,
+                'cliente'=>$cliente->nombreCorto,
                 'local'=>$numero,
                 'error' => 'El local buscado no se encuentra.',
                 'estado' => '',
