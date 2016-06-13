@@ -47,11 +47,12 @@ class EnviarPeticionMaestra extends Command {
     ];
     // Cliente 2: FCV
     protected $FCV_nomina_to = [
-//        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
-        ['gabriel.vera@cruzverde.cl', 'Gabriel Vera'],
-        ['pajorquera@cruzverde.cl', 'Pamela Jorquera'],
-        ['jorge.alcaya@cruzverde.cl', 'Jorge Alcaya'],
-        ['mauricio.ojeda@cruzverde.cl', 'Mauricio Ojeda']
+        ['asilva@seiconsultores.cl', 'Marco Gamboa'],
+        ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
+//        ['gabriel.vera@cruzverde.cl', 'Gabriel Vera'],
+//        ['pajorquera@cruzverde.cl', 'Pamela Jorquera'],
+//        ['jorge.alcaya@cruzverde.cl', 'Jorge Alcaya'],
+//        ['mauricio.ojeda@cruzverde.cl', 'Mauricio Ojeda']
     ];
     // Cliente 3: CKY
     protected $CKY_nomina_to = [

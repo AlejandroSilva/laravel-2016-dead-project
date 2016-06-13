@@ -38,7 +38,8 @@ class Kernel extends ConsoleKernel {
 
         // FCV  - pedir todos los LUNES y JUEVES (exista o no inventario)
         $schedule->command('correo:peticionmaestra FCV')
-            ->weekdays()->mondays()->at('08:01');
+//            ->weekdays()->mondays()->at('08:01');
+            ->weekdays()->mondays()->at('18:10');
         $schedule->command('correo:peticionmaestra FCV')
             ->weekdays()->thursdays()->at('08:01');
 
