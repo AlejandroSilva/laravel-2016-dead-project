@@ -169,16 +169,14 @@ class RowInventario extends React.Component{
         let _ndia = this.props.inventario.nomina_dia
         let _nnoche = this.props.inventario.nomina_noche
         // puede eeditar si la nomina esta habilitada, y no esta en estado "informada"(5) o "informada excel"(6)
-        let puedeEditarDia = this.props.puedeModificar &&
-            _ndia.habilitada=="1" &&
-            _ndia.idEstadoNomina!=5 &&
-            _ndia.idEstadoNomina!=6
-        let puedeEditarNoche = this.props.puedeModificar &&
-            _nnoche.habilitada=="1" &&
-            _nnoche.idEstadoNomina!=5 &&
-            _nnoche.idEstadoNomina!=6
-        // el inventario se puede editar solo si una de las dos nominas son editables
-        let puedeEditarInventario = puedeEditarDia || puedeEditarNoche
+        let informadaDia   =_ndia.idEstadoNomina==5 || _ndia.idEstadoNomina==6
+        let informadaNoche =_nnoche.idEstadoNomina==5 || _nnoche.idEstadoNomina==6
+        // puede editar la NOMINA si tiene los permisos, esta habilitada, y esta no ha sido informada
+        let puedeEditarNominaDia   = this.props.puedeModificar && _ndia.habilitada=="1" && !informadaDia
+        let puedeEditarNominaNoche = this.props.puedeModificar && _nnoche.habilitada=="1" && !informadaNoche
+
+        // el inventario se puede editar solo si tiene los permisos, y no hay una nomina informada
+        let puedeEditar_fecha_turno_stock = this.props.puedeModificar && !informadaDia && !informadaNoche
 
         let _hrApertura = this.props.inventario.local.horaApertura.split(':')
         let txtHrApertura = `Apertura a las ${_hrApertura[0]}:${_hrApertura[1]}hrs`
@@ -198,7 +196,7 @@ class RowInventario extends React.Component{
                         diaSemana={moment(this.props.inventario.fechaProgramada).format('dd')}
                         fecha={this.props.inventario.fechaProgramada}
                         onGuardar={this.guardarInventario.bind(this)}
-                        puedeModificar={puedeEditarInventario}
+                        puedeModificar={puedeEditar_fecha_turno_stock}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dia')}/>
                 </td>
@@ -235,7 +233,7 @@ class RowInventario extends React.Component{
                             {valor:'4', texto:'día y noche'}
                         ]}
                         seleccionada={this.props.inventario.idJornada}
-                        puedeModificar={puedeEditarInventario}
+                        puedeModificar={puedeEditar_fecha_turno_stock}
                     />
                 </td>
                 {/* Tienda */}
@@ -253,7 +251,7 @@ class RowInventario extends React.Component{
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'stock')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'stock')}
                         // puedeModificar={puedeEditarInventario}
-                        puedeModificar={this.props.puedeModificar}
+                        puedeModificar={puedeEditar_fecha_turno_stock}
                     />
                 </td>
                 {/* Dotación Total */}
@@ -268,7 +266,7 @@ class RowInventario extends React.Component{
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionTotal')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionTotal')}
                         // puedeModificar={puedeEditarInventario}/>
-                        puedeModificar={this.props.puedeModificar}/>
+                        puedeModificar={puedeEditarNominaDia}/>
                     <InputDotacionMultiple
                         style={{display: inventarioDia? 'block' : 'none'}}
                         className="pull-right"
@@ -290,7 +288,7 @@ class RowInventario extends React.Component{
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionTotal')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionTotal')}
                         // puedeModificar={puedeEditarInventario}/>
-                        puedeModificar={this.props.puedeModificar}/>
+                        puedeModificar={puedeEditarNominaNoche}/>
                     <InputDotacionMultiple
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         className="pull-right"
@@ -311,7 +309,7 @@ class RowInventario extends React.Component{
                             opciones={this.props.opcionesLideres}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarDia}
+                            puedeModificar={puedeEditarNominaDia}
                     />
                     <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectLiderNoche=ref}
@@ -320,7 +318,7 @@ class RowInventario extends React.Component{
                             opciones={this.props.opcionesLideres}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarNoche}
+                            puedeModificar={puedeEditarNominaNoche}
                     />
                 </td>
                 {/* Supervisor */}
@@ -332,7 +330,7 @@ class RowInventario extends React.Component{
                             opciones={this.props.opcionesSupervisores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarDia}
+                            puedeModificar={puedeEditarNominaDia}
                     />
                     <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectSupervisorNoche=ref}
@@ -341,7 +339,7 @@ class RowInventario extends React.Component{
                             opciones={this.props.opcionesSupervisores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarNoche}
+                            puedeModificar={puedeEditarNominaNoche}
                     />
                 </td>
                 {/* Captador 1 */}
@@ -353,7 +351,7 @@ class RowInventario extends React.Component{
                             opciones={this.props.opcionesCaptadores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarDia}
+                            puedeModificar={puedeEditarNominaDia}
                     />
                     <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador1Noche=ref}
@@ -362,7 +360,7 @@ class RowInventario extends React.Component{
                             opciones={this.props.opcionesCaptadores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarNoche}
+                            puedeModificar={puedeEditarNominaNoche}
                     />
                 </td>
                 {/* Hora Presentación Lider */}
@@ -376,7 +374,7 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
-                        puedeModificar={this.props.puedeModificar}
+                        puedeModificar={puedeEditarNominaDia}
                     />
                     {/*<p style={{display: inventarioNoche? 'block' : 'none'}}>{this.props.inventario.hliderNoche}</p>*/}
                     <InputHora
@@ -387,7 +385,7 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
-                        puedeModificar={this.props.puedeModificar}
+                        puedeModificar={puedeEditarNominaNoche}
                     />
 
                 </td>
@@ -402,7 +400,7 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
-                        puedeModificar={this.props.puedeModificar}
+                        puedeModificar={puedeEditarNominaDia}
                     />
                     {/*<p style={{display: inventarioNoche? 'block' : 'none'}}>{this.props.inventario.hequipoNoche}</p>*/}
                     <InputHora
@@ -413,7 +411,7 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
-                        puedeModificar={this.props.puedeModificar}
+                        puedeModificar={puedeEditarNominaNoche}
                     />
                 </td>
                 {/* Dirección */}
