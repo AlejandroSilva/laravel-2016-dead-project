@@ -35,13 +35,13 @@ class InputStock extends React.Component{
         if((evt.keyCode===9 && evt.shiftKey===false) || evt.keyCode===40 || evt.keyCode===13){
             // 9 = tab, flechaAbajo = 40,  13 = enter
             evt.preventDefault()
-            this.props.onGuardar()
+            //this.props.onGuardar()    // se guarda al perder el focus
             this.props.focusRowSiguiente()
 
         }else if((evt.keyCode===9 && evt.shiftKey===true) || evt.keyCode===38) {
             // flechaArriba = 38, shift+tab
             evt.preventDefault()
-            this.props.onGuardar()
+            //this.props.onGuardar()    // se guarda al perder el focus
             this.props.focusRowAnterior()
         }
     }
