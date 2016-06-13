@@ -1,9 +1,11 @@
 <html>
 <head></head>
 <body>
-    <p style="margin-bottom: 16px;">
-        Estimados Ejecutivos, buenos días. Junto con saludarlos, pido por favor enviar en el transcurso del día su maestra de producción actualizada.
-    </p>
+    <div style="margin-bottom: 16px;">
+        <p>Estimados Ejecutivos, buenos días.</p>
+        <p>Junto con saludarlos, pido por favor enviar en el transcurso del día su maestra de producción actualizada.
+            Esto puede realizarse ingresando en la plataforma web <a href="http://inventario.seiconsultores.cl">http://inventario.seiconsultores.cl</a>.</p>
+    </div>
 
 
     <div style="margin-left: 16px; margin-bottom: 32px;">
