@@ -199,60 +199,34 @@ class InventariosController extends Controller {
         $inventario = Inventarios::find($idInventario);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
         if($inventario){
-            // actualizar fecha siempre y cuando sea valida dependiendo el mes
             if(isset($request->fechaProgramada)){
-                if($this->fecha_valida($request->fechaProgramada))
-                    $inventario->fechaProgramada = $request->fechaProgramada;
+                // actualizar fecha (si es valida) y generar un log
+                $inventario->actualizarFechaProgramada($request->fechaProgramada);
             }
 
             if(isset($request->idJornada)){
-                $idJornada = $request->idJornada;
-                // cambia el estado del inventario
-                $inventario->idJornada = $idJornada;
-                // cambiar el estado (habilitada) de las nominas
-                $inventario->nominaDia->habilitada   = ($idJornada==2 || $idJornada==4); // "dia"(2), o "dia y noche"(4)
-                $inventario->nominaNoche->habilitada = ($idJornada==3 || $idJornada==4); // "noche"(3), o "dia y noche"(4)
-                $inventario->nominaDia->save();
-                $inventario->nominaNoche->save();
+                // cambia la jornada del inventario, y cambiar el estado (habilitada) de las nominas asociadas
+                $inventario->actualizarJornada($request->idJornada);
             }
             if(isset($request->stockTeorico)) {
-                // actualizar el stock del inventario
-                $inventario->stockTeorico = $request->stockTeorico;
-                $inventario->fechaStock = Carbon::now();
-                // actualizar el stock de la nomina de dia
-                $inventario->nominaDia->dotacionTotal = $inventario->dotacionTotalSugerido();
-                $inventario->nominaDia->dotacionOperadores = $inventario->dotacionOperadoresSugerido();
-                $inventario->nominaDia->save();
-                // actualizar el stock de la nomina de noche
-                $inventario->nominaNoche->dotacionTotal = $inventario->dotacionTotalSugerido();
-                $inventario->nominaNoche->dotacionOperadores = $inventario->dotacionOperadoresSugerido();
-                $inventario->nominaNoche->save();
+                // actualizar el stock del local, y al mismo tiempo recalcular la dotacion de las nominas
+                $inventario->actualizarStock($request->stockTeorico, Carbon::now());
             }
 
-            $resultado = $inventario->save();
-
-            if($resultado) {
-                // mostrar el dato tal cual como esta en la BD
-                return response()->json(
-                    Inventarios::with([
-                        'local.cliente',
-                        'local.formatoLocal',
-                        'local.direccion.comuna.provincia.region',
-                        'nominaDia',
-                        'nominaNoche',
-                        'nominaDia.lider',
-                        'nominaNoche.lider',
-                        'nominaDia.captador',
-                        'nominaNoche.captador',
-                    ])->find($inventario->idInventario),
-                    200);
-            }else{
-                return response()->json([
-                    'request'=>$request->all(),
-                    'resultado'=>$resultado,
-                    'inventario'=>$inventario
-                ], 400);
-            }
+            // mostrar el dato tal cual como esta en la BD
+            return response()->json(
+                Inventarios::with([
+                    'local.cliente',
+                    'local.formatoLocal',
+                    'local.direccion.comuna.provincia.region',
+                    'nominaDia',
+                    'nominaNoche',
+                    'nominaDia.lider',
+                    'nominaNoche.lider',
+                    'nominaDia.captador',
+                    'nominaNoche.captador',
+                ])->find($inventario->idInventario),
+                200);
         }else{
             return response()->json([], 404);
         }
@@ -491,21 +465,6 @@ class InventariosController extends Controller {
 
         // retornar una collection, igual que el query original
         return collect($inventarios);
-    }
-
-    //Function para validar que la fecha sea valida
-    private function fecha_valida($fechaProgramada){
-        $fecha = explode('-', $fechaProgramada);
-        $anno = $fecha[0];
-        $mes  = $fecha[1];
-        $dia = $fecha[2];
-
-        // cuando se pone una fecha del tipo '2016-04-', checkdate lanza una excepcion
-        if( !isset($anno) || !isset($mes) || !isset($dia)) {
-            return false;
-        }else{
-            return checkdate($mes,$dia,$anno);
-        }
     }
     
     // Función generica para generar el archivo excel

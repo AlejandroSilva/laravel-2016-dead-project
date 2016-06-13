@@ -97,6 +97,7 @@ class Locales extends Model{
     }
 
     // #### Acciones
+    // actualizarStock se llama para cambiar el Stock de un local, y RECALCULAR LA DOTACION de sus inventarios (y nominas)
     public function actualizarStock($stock, $fechaStock){
         // actualizar el stock
         $this->stock = $stock;

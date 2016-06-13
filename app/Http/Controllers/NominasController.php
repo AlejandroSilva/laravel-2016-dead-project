@@ -140,8 +140,17 @@ class NominasController extends Controller {
             //    $nomina->dotacionAsignada = $request->dotacionAsignada;
             // En el Lider, Supervisor, Captador1 y Captador 2 si la selecciona es '', se agrega un valor null al registro
             // Lider
+
+
+
+            // pendiente, falta registrar cuando se realice un cambio de lider, supervisor, o captador a una nomina
+            // pendiente, falta registrar el cambio de Hr.Lider y Hr.Equipo
+
+
+
             if(isset($request->idLider))
                 $nomina->idLider = $request->idLider==''? null : $request->idLider;
+
             // Supervisor
             if(isset($request->idSupervisor))
                 $nomina->idSupervisor = $request->idSupervisor==''? null : $request->idSupervisor;
@@ -153,10 +162,12 @@ class NominasController extends Controller {
                 $nomina->idCaptador2 = $request->idCaptador2==''? null : $request->idCaptador2;
             //  Dotacion Total
             if(isset($request->dotacionTotal))
-                $nomina->dotacionTotal = $request->dotacionTotal;
+                $nomina->actualizarDotacionTotal($request->dotacionTotal, false); // actualizacion "manual", no genera alerta
+                //$nomina->dotacionTotal = $request->dotacionTotal;
             //  Dotacion Operadores
             if(isset($request->dotacionOperadores))
-                $nomina->dotacionOperadores = $request->dotacionOperadores;
+                $nomina->actualizarDotacionOperadores($request->dotacionOperadores, false); // actualizacion "manual", no genera alerta
+                //$nomina->dotacionOperadores = $request->dotacionOperadores;
             // Hora llegada Lider
             if(isset($request->horaPresentacionLider))
                 $nomina->horaPresentacionLider = $request->horaPresentacionLider;

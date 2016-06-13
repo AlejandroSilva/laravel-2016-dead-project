@@ -102,25 +102,65 @@ class Inventarios extends Model {
     }
 
     // #### Acciones
+    public function actualizarFechaProgramada($fechaProgramada){
+        // Solo si hay un cambio se actualiza y se registra el cambio
+        $fecha_original = $this->fechaProgramada;
+        if($fecha_original!= $fechaProgramada){
+            // si la fecha no es valida, no hacer nada...
+            if( !$this->fecha_valida($fechaProgramada) )
+                return;
+
+            $this->fechaProgramada = $fechaProgramada;
+            $this->save();
+
+            // Agregar al Log de las nominas la actualizacion de la fecha programada (no mostrar alerta por cambio de stock)
+            $this->nominaDia->addLog(  'La Fecha Programada cambio', "Desde $fecha_original a $this->fechaProgramada", 10);
+            $this->nominaNoche->addLog('La Fecha Programada cambio', "Desde $fecha_original a $this->fechaProgramada", 10);
+        }
+    }
+
+    public function actualizarJornada($idJornada){
+        // Solo si hay un cambio se actualiza y se registra el cambio
+        $jornada_original = $this->idJornada;
+        if($jornada_original!= $idJornada){
+            $this->idJornada = $idJornada;
+            $this->save();
+
+            // cambiar el estado (habilitada) de las nominas, (tambien genera el log)
+            $this->nominaDia->actualizarHabilitada( $idJornada==2||$idJornada==4 );      // "dia"(2), o "dia y noche"(4)
+            $this->nominaNoche->actualizarHabilitada( $idJornada==3||$idJornada==4 );    // "noche"(3), o "dia y noche"(4)
+        }
+    }
+
+    // se llama luego de se actualiza el stock de un Local, entonces se recalcula la dotacion de todos los inventarios
     public function actualizarStock($stock, $fechaStock){
         $habDia= $this->nominaDia->habilitada;
         $habNoche = $this->nominaNoche->habilitada;
         $estadoDia = $this->nominaDia->estado;
         $estadoNoche = $this->nominaNoche->estado;
-        // si la nomina de dia esta pendinete, o la de noche, entoncse cambiar el stock
-        if( ($habDia&&$estadoDia->idEstadoNomina==2) || ($habNoche&&$estadoNoche->idEstadoNomina==2) ){
-            // actualizar el stock del inventario
-            $this->stockTeorico = $stock;
-            $this->fechaStock = $fechaStock;
-            $this->save();
 
-            // actualizar la dotacion de las nominas
-            $this->nominaDia->dotacionTotal = $this->dotacionTotalSugerido();
-            $this->nominaDia->dotacionOperadores = $this->dotacionOperadoresSugerido();
-            $this->nominaDia->save();
-            $this->nominaNoche->dotacionTotal = $this->dotacionTotalSugerido();
-            $this->nominaNoche->dotacionOperadores = $this->dotacionOperadoresSugerido();
-            $this->nominaNoche->save();
+        // si una de las dos nominas (la de dia o de noche) esta pendiente, entoncse se puede cambiar el stock
+        if( ($habDia&&$estadoDia->idEstadoNomina==2) || ($habNoche&&$estadoNoche->idEstadoNomina==2) ){
+
+            // actualizar el stock del inventario
+            $stock_original = $this->stockTeorico;
+            if($stock!= $stock_original){
+                $this->stockTeorico = $stock;
+                $this->fechaStock = $fechaStock;
+                $this->save();
+
+                // Agregar al Log de las nominas la actualizacion del stock (no mostrar alerta por cambio de stock)
+                $this->nominaDia->addLog(  'El stock cambio', "Desde $stock_original a $this->stockTeorico", 1);
+                $this->nominaNoche->addLog('El stock cambio', "Desde $stock_original a $this->stockTeorico", 1);
+            }
+
+            // recalcular la dotacion de las nominas,
+            $alertarCambio = true;        // alertar si existe el cambio ya que este es "automatico"
+            // actualizar la dotaion de ambas, incluso si la nomina no esta visible
+            $this->nominaDia->actualizarDotacionTotal($this->dotacionTotalSugerido(), $alertarCambio);
+            $this->nominaDia->actualizarDotacionOperadores($this->dotacionOperadoresSugerido(), $alertarCambio);
+            $this->nominaNoche->actualizarDotacionTotal($this->dotacionTotalSugerido(), $alertarCambio);
+            $this->nominaNoche->actualizarDotacionOperadores($this->dotacionOperadoresSugerido(), $alertarCambio);
 
             return [
                 'fechaProgramada' => $this->fechaProgramadaF(),
@@ -161,5 +201,25 @@ class Inventarios extends Model {
         $_inventario['nominaDia']   = $inventario->nominaDia->habilitada? Nominas::formatearSimple($inventario->nominaDia) : null;
         $_inventario['nominaNoche'] = $inventario->nominaNoche->habilitada? Nominas::formatearSimple($inventario->nominaNoche) : null;
         return $_inventario;
+    }
+
+
+
+    /**
+     * helpers privados
+     */
+    //Function para validar que la fecha sea valida
+    private function fecha_valida($fechaProgramada){
+        $fecha = explode('-', $fechaProgramada);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+        $dia = $fecha[2];
+
+        // cuando se pone una fecha del tipo '2016-04-', checkdate lanza una excepcion
+        if( !isset($anno) || !isset($mes) || !isset($dia)) {
+            return false;
+        }else{
+            return checkdate($mes,$dia,$anno);
+        }
     }
 }

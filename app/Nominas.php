@@ -5,13 +5,17 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 // Modelos
 use App\EstadoNominas;
+use App\NominaLog;
 
 class Nominas extends Model {
     // llave primaria
     public $primaryKey = 'idNomina';
-    // este modelo tiene timestamps
+    // este modelo NO tiene timestamps
     public $timestamps = false;
-    
+    // campos asignables
+    protected $fillable = ['dotacionTotal', 'dotacionOperadores'];
+
+
     // #### Relaciones
     public function inventario1() {
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
@@ -65,26 +69,59 @@ class Nominas extends Model {
             ->orderBy('nominas_user.created_at', 'asc');
     }
 
-    public function tieneDotacionCompleta(){
-        $supervisor = $this->supervisor? 1 : 0;
-        $dotacionTitulares = $this->dotacionTitular()->count();
-        
-        if($this->inventario->local->cliente->idCliente!=3){
-            // en todos los clientes, solo los operadores cuentan
-            // entonces se revisa que la dotacionTitular sea menor a dotacionOperadores
-            return ($dotacionTitulares + $supervisor) >= $this->dotacionOperadores;
-        }else{
-            // Excepto en el cliente CKY, donde el lider tambien cuenta
-            return ($dotacionTitulares + $supervisor) >= ($this->dotacionOperadores - 1);
-        }
-    }
-
     public function estado(){
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->hasOne('App\EstadoNominas', 'idEstadoNomina', 'idEstadoNomina');
     }
 
-    // #### Consultas
+    public function logs(){
+        return $this->hasMany('App\NominaLog', 'idNomina', 'idNomina');
+    }
+
+    // #### Acciones
+    public function addLog($titulo, $texto, $importancia=1, $mostrarAlerta=false){
+        $this->logs()->save( new NominaLog([
+            'idNomina' => $this->idNomina,
+            'titulo' => $titulo,
+            'texto' => $texto,
+            'importancia' => $importancia,
+            'mostrarAlerta' => $mostrarAlerta
+        ]) );
+    }
+
+    // Utilizar este metodo para cambiar la dotacion (si la dotacion cambia, agregar un registro Log al historia
+    public function actualizarDotacionTotal($total, $mostrarAlerta=false){
+        // Solo si hay un cambio se actualiza y se registra el cambio
+        $total_original = $this->dotacionTotal;
+        if($total != $total_original){
+            $this->dotacionTotal = $total;
+            $this->save();
+            $this->addLog('Dotación Total cambio', "Cambio desde $total_original a $this->dotacionTotal", 1, $mostrarAlerta);
+        }
+    }
+    public function actualizarDotacionOperadores($operadores, $mostrarAlerta=false){
+        // Solo si hay un cambio se actualiza y se registra el cambio
+        $operadores_original = $this->dotacionOperadores;
+        if($operadores!= $operadores_original){
+            $this->dotacionOperadores = $operadores;
+            $this->save();
+            $this->addLog('Dotación Total cambio', "Cambio desde $operadores_original a $this->dotacionOperadores", 1, $mostrarAlerta);
+        }
+    }
+    public function actualizarHabilitada($habilitada, $mostrarAlerta=false){
+        // Solo si hay un cambio se actualiza y se registra el cambio
+        $habilitada_original = $this->habilitada;
+        if($habilitada!= $habilitada_original){
+            $this->habilitada = $habilitada;
+            $this->save();
+            if($this->habilitada==true)
+                $this->addLog('Nómina activa', "El turno ha cambiado y la nómina se ha vuelto activa", 1, $mostrarAlerta);
+            else
+                $this->addLog('Nómina inactiva', "El turno ha cambiado y la nómina se ha vuelto inactiva", 1, $mostrarAlerta);
+        }
+    }
+
+    // #### Helpers / Consultas
     public function usuarioEnDotacion($operador){
         return $this->dotacion()->find($operador->id);
     }
@@ -99,6 +136,19 @@ class Nominas extends Model {
         $carbon = Carbon::parse($this->horaPresentacionEquipo);
         $minutes = $carbon->minute < 10? "0$carbon->minute" : $carbon->minute;
         return "$carbon->hour:$minutes hrs.";
+    }
+    public function tieneDotacionCompleta(){
+        $supervisor = $this->supervisor? 1 : 0;
+        $dotacionTitulares = $this->dotacionTitular()->count();
+
+        if($this->inventario->local->cliente->idCliente!=3){
+            // en todos los clientes, solo los operadores cuentan
+            // entonces se revisa que la dotacionTitular sea menor a dotacionOperadores
+            return ($dotacionTitulares + $supervisor) >= $this->dotacionOperadores;
+        }else{
+            // Excepto en el cliente CKY, donde el lider tambien cuenta
+            return ($dotacionTitulares + $supervisor) >= ($this->dotacionOperadores - 1);
+        }
     }
 
     // #### Scopes
