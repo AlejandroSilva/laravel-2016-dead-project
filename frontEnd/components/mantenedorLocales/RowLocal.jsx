@@ -194,7 +194,7 @@ export class RowLocal extends React.Component{
                     />
                 </td>
                 <td>
-                    <button className="btn btn-xs btn-danger">X</button>
+                    <button className="btn btn-xs btn-danger" disabled>X</button>
                 </td>
             </tr>
         )
