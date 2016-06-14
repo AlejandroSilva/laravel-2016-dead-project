@@ -130,6 +130,7 @@ class EnviarPeticionStock extends Command {
             }
 
         } else if($nombreCliente=="FSB"){
+            $this->log("[PeticionMaestra] Cliente FSB: pedir stock actualizado todos los LUNES.");
             // FSB - pedir todos los LUNES
             // se asume de que cuando se llama este metodo, es porque ES LUNES, no se hacen validaciones
             $this->enviarCorreos('emails.peticionStock.GENERICA', [
@@ -156,17 +157,17 @@ class EnviarPeticionStock extends Command {
                     // enviar a los destinatarios
                     foreach($datosCorreo['to'] as $destinatario){
                         $message->to($destinatario[0], $destinatario[1]);
-                        $this->log("[prod] enviando TO: $destinatario[0] - $destinatario[1]");
+                        $this->log("[PeticionMaestra] enviando TO: $destinatario[0] - $destinatario[1]");
                     }
                     // enviar las copias ocultas
                     foreach($datosCorreo['bcc'] as $destinatario){
                         $message->bcc($destinatario[0], $destinatario[1]);
-                        $this->log("[prod] enviando BCC: $destinatario[0] - $destinatario[1]");
+                        $this->log("[PeticionMaestra] enviando BCC: $destinatario[0] - $destinatario[1]");
                     }
                 }else{
                     foreach($this->SEI_DESARROLLO as $destinatario){
                         $message->to($destinatario[0], $destinatario[1]);
-                        $this->log("[dev] enviando TO: $destinatario[0] - $destinatario[1]");
+                        $this->log("[PeticionMaestra-DEV] enviando TO: $destinatario[0] - $destinatario[1]");
                     }
                 }
             }

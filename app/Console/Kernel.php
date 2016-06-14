@@ -65,22 +65,18 @@ class Kernel extends ConsoleKernel {
         /** ################# Enviar correos programados pidiendo los archivos con STOCK ################# **/
         // PUC - pedir todos los LUNES
         $schedule->command('correo:peticionstock PUC')
-            //->weekdays()->mondays()->at('08:10');
-            ->weekdays()->tuesdays()->at('10:10');
+            ->weekdays()->mondays()->at('08:10');
 
         // FCV - pedir todos los LUNES
         $schedule->command('correo:peticionstock FCV')
-            //->weekdays()->mondays()->at('08:11');
-            ->weekdays()->tuesdays()->at('10:11');
+            ->weekdays()->mondays()->at('08:11');
 
         // CKY - pedir 2 dias habiles antes del inventario (si existe)
         $schedule->command('correo:peticionstock CKY')
-            //->weekdays()->at('08:12');
-            ->weekdays()->at('10:12');
+            ->weekdays()->at('08:12');
 
         // FSB - pedir todos los LUNES
         $schedule->command('correo:peticionstock FSB')
-            //->weekdays()->mondays()->at('08:13');
-            ->weekdays()->tuesdays()->at('10:13');
+            ->weekdays()->mondays()->at('08:13');
     }
 }
