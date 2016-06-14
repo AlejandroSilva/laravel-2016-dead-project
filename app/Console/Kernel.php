@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel {
         Commands\NominasPendientes::class,
         Commands\PersonalCargar::class,
         Commands\EnviarPeticionMaestra::class,
+        Commands\EnviarPeticionStock::class,
     ];
 
     /**
@@ -30,8 +31,10 @@ class Kernel extends ConsoleKernel {
 
         //$schedule->command('inspire')->hourly();
         //$schedule->command('nominas:pendientes')->dailyAt('08:00');	;
-
-        /* */
+        
+        
+        // Los correos no se envian todos a la misma hora, para evitar que se confundan los mensajes en los logs de laravel
+        /** ###################### Enviar correos programados pidiendo las MAESTRAS ###################### **/
         // PUC  - pedir todos los LUNES (exista o no inventario)
         $schedule->command('correo:peticionmaestra PUC')
             ->weekdays()->mondays()->at('08:00');
@@ -47,8 +50,9 @@ class Kernel extends ConsoleKernel {
             ->weekdays()->at('08:02');
 
         // CID  - pedir el mismo dia del inventario (si existe)
-        $schedule->command('correo:peticionmaestra CID')
-            ->weekdays()->at('08:03');
+        // NO ENVIAR MIENTRAS NO SE TENGA UNA LISTA DE CORREOS VALIDA
+//        $schedule->command('correo:peticionmaestra CID')
+//            ->weekdays()->at('08:03');
 
         // FSB  - pedir el mismo dia del inventario (enviar a vicente)
         $schedule->command('correo:peticionmaestra FSB')
@@ -57,5 +61,26 @@ class Kernel extends ConsoleKernel {
         // CMT  - pedir 2 dias habiles antes del inventario (si existe)
         $schedule->command('correo:peticionmaestra CMT')
             ->weekdays()->at('08:05');
+
+        /** ################# Enviar correos programados pidiendo los archivos con STOCK ################# **/
+        // PUC - pedir todos los LUNES
+        $schedule->command('correo:peticionstock PUC')
+            //->weekdays()->mondays()->at('08:10');
+            ->weekdays()->tuesdays()->at('10:10');
+
+        // FCV - pedir todos los LUNES
+        $schedule->command('correo:peticionstock FCV')
+            //->weekdays()->mondays()->at('08:11');
+            ->weekdays()->tuesdays()->at('10:11');
+
+        // CKY - pedir 2 dias habiles antes del inventario (si existe)
+        $schedule->command('correo:peticionstock CKY')
+            //->weekdays()->at('08:12');
+            ->weekdays()->at('10:12');
+
+        // FSB - pedir todos los LUNES
+        $schedule->command('correo:peticionstock FSB')
+            //->weekdays()->mondays()->at('08:13');
+            ->weekdays()->tuesdays()->at('10:13');
     }
 }
