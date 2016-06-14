@@ -45,8 +45,8 @@ class TablaLocales extends React.Component{
             <colgroup>
                 <col className={css.id}/>
                 <col className={css.cliente}/>
+                <col className={css.numero}/>
                 <col className={css.nombre}/>
-                <col className={css.ceco}/>
                 <col className={css.formatoLocal}/>
                 <col className={css.jornada}/>
                 <col className={css.horaApertura}/>
@@ -65,7 +65,7 @@ class TablaLocales extends React.Component{
                     <th className={css.id}>id</th>
                     <th className={css.cliente}>
                         <HeaderConFiltro
-                            nombre='Cliente'
+                            nombre='CL'
                             filtro={this.props.filtros.filtroCliente || []}
                             actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroCliente')}
                             //ordenarLista={this.props.ordenarAuditorias}
@@ -73,7 +73,7 @@ class TablaLocales extends React.Component{
                     </th>
                     <th className={css.numero}>
                         <HeaderConFiltro
-                            nombre='CECO'
+                            nombre='CE'
                             filtro={this.props.filtros.filtroCeco || []}
                             actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroCeco')}
                             busquedaExacta={true}
