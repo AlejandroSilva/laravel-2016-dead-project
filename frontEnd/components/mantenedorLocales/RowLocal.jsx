@@ -83,7 +83,7 @@ export class RowLocal extends React.Component{
         return (
             <tr key="">
                 <td className={css.id}>
-                    {this.props.index+1}
+                    <p title={this.props.local.idLocal}>{this.props.index+1}</p>
                 </td>
                 <td className={css.cliente}>
                     {this.props.local.cliente.nombreCorto}
