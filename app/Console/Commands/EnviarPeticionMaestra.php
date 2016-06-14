@@ -42,31 +42,30 @@ class EnviarPeticionMaestra extends Command {
         ['asilva@seiconsultores.cl', 'Alejandro Silva'],
     ];
     // Cliente 1: PUC
-    protected $PUC_nomina_to = [
+    protected $PUC_maestra_to = [
         ['amundaca@sb.cl', 'Alvaro Mundaca']
     ];
     // Cliente 2: FCV
-    protected $FCV_nomina_to = [
-//        ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
+    protected $FCV_maestra_to = [
         ['gabriel.vera@cruzverde.cl', 'Gabriel Vera'],
         ['pajorquera@cruzverde.cl', 'Pamela Jorquera'],
         ['jorge.alcaya@cruzverde.cl', 'Jorge Alcaya'],
         ['mauricio.ojeda@cruzverde.cl', 'Mauricio Ojeda']
     ];
     // Cliente 3: CKY
-    protected $CKY_nomina_to = [
+    protected $CKY_maestra_to = [
         ['rlopez@colloky.cl',           'Roberto Lopez'],
         ['jose.perez@colgram.com',      'Jose Perez'],
         ['ricardo.perez@colgram.com',   'Ricardo Perez Fuentes'],
         ['manuel.vera@colgram.com',     'Manuel Vera']
     ];
     // Cliente 4: CID
-    protected $CID_nomina_to = [
+    protected $CID_maestra_to = [
         ['asilva@seiconsultores',       'CID SIN LISTA DE CORREO'],
         ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
     ];
     // Cliente 5: SB
-    protected $SB_nomina_to = [
+    protected $FSB_maestra_to = [
         ['mbenavente@sb.cl', 'Marianela Benavente'],
         ['sguajardo@sb.cl', 'Silvia Guajardo'],
         ['controldeinventariosb@sb.cl', 'Control de Inventario'],
@@ -74,10 +73,8 @@ class EnviarPeticionMaestra extends Command {
         ['jnecochea@sb.cl', 'Janet Necochea']
     ];
     // Cliente 7: CMT
-    protected $CMT_nomina_to = [
-        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
-        //        ['bgamboa@seiconsultores.cl', 'Bernardita Gamboa']
-        // TODO: evelin, cerna, cesar
+    protected $CMT_maestra_to = [
+        ['cmartinez@construmart.cl', 'Cesar Martinez']
     ];
 
     public function handle() {
@@ -109,7 +106,7 @@ class EnviarPeticionMaestra extends Command {
         // enviar el correo al cliente
         $this->enviarCorreos('emails.peticionMaestra.GENERICA', [
             'subject' => 'Solicitud de Maestra PUC',
-            'to' => $this->PUC_nomina_to,
+            'to' => $this->PUC_maestra_to,
             'bcc' => $this->SEI_nomina_bcc
         ], []);
     }
@@ -122,7 +119,7 @@ class EnviarPeticionMaestra extends Command {
         // enviar el correo al cliente
         $this->enviarCorreos('emails.peticionMaestra.GENERICA', [
             'subject' => 'Solicitud de Maestra FCV',
-            'to' => $this->FCV_nomina_to,
+            'to' => $this->FCV_maestra_to,
             'bcc' => $this->SEI_nomina_bcc
         ], []);
     }
@@ -144,7 +141,7 @@ class EnviarPeticionMaestra extends Command {
             // enviar el correo al cliente
             $this->enviarCorreos('emails.peticionMaestra.GENERICA', [
                 'subject' => 'Solicitud de Maestra CKY',
-                'to' => $this->CKY_nomina_to,
+                'to' => $this->CKY_maestra_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], []);
         }else{
@@ -166,7 +163,7 @@ class EnviarPeticionMaestra extends Command {
             // enviar el correo al cliente
             $this->enviarCorreos('emails.peticionMaestra.GENERICA', [
                 'subject' => 'Solicitud de Maestra CID',
-                'to' => $this->CID_nomina_to,
+                'to' => $this->CID_maestra_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], []);
         }else{
@@ -188,7 +185,7 @@ class EnviarPeticionMaestra extends Command {
             // enviar el correo al cliente
             $this->enviarCorreos('emails.peticionMaestra.GENERICA', [
                 'subject' => 'Solicitud de Maestra FSB',
-                'to' => $this->SB_nomina_to,
+                'to' => $this->FSB_maestra_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], []);
         }else{
@@ -213,11 +210,11 @@ class EnviarPeticionMaestra extends Command {
             // enviar el correo al cliente
             $this->enviarCorreos('emails.peticionMaestra.GENERICA', [
                 'subject' => 'Solicitud de Maestra CMT',
-                'to' => $this->CMT_nomina_to,
+                'to' => $this->CMT_maestra_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], []);
         }else{
-            $this->log("[PeticionMaestra] CMT no tiene inventarios programados para el siguiente dia habil ($sgteHabil), no se enviara el correo.");
+            $this->log("[PeticionMaestra] CMT no tiene inventarios programados para el sub-siguiente dia habil ($sgteHabil), no se enviara el correo.");
         }
     }
     
