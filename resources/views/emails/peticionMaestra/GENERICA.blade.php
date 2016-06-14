@@ -14,8 +14,6 @@
     </div>
 
 
-    <p>Este es un correo automatico, favor no responder directamente. Ante cualquier duda, enviar un correo electrónico a <a href="mailto:clopez@seiconsultores.cl">clopez@seiconsultores.cl</a>, o
-        llamar al <a href="tel:(75 2) 747203">(75 2) 747203</a>.
-    </p>
+    <p>Este es un correo automatico, favor no responder directamente.</p>
 </body>
 </html>
