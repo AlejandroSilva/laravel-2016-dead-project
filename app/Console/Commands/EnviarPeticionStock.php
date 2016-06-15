@@ -88,7 +88,7 @@ class EnviarPeticionStock extends Command {
         $nombreCliente = $this->argument('nombreCortoCliente');
 
         if($nombreCliente=="PUC"){
-            $this->log("[PeticionMaestra] Cliente PUC: pedir stock actualizado todos los LUNES.");
+            $this->log("[PeticionStock] Cliente PUC: pedir stock actualizado todos los LUNES.");
 
             // se asume de que cuando se llama este metodo, es porque ES LUNES, no se hacen validaciones
             $this->enviarCorreos('emails.peticionStock.GENERICA', [
@@ -98,7 +98,7 @@ class EnviarPeticionStock extends Command {
             ], []);
             
         }else if($nombreCliente=="FCV"){
-            $this->log("[PeticionMaestra] Cliente FCV: pedir stock actualizado todos los LUNES.");
+            $this->log("[PeticionStock] Cliente FCV: pedir stock actualizado todos los LUNES.");
 
             // se asume de que cuando se llama este metodo, es porque ES LUNES, no se hacen validaciones
             $this->enviarCorreos('emails.peticionStock.GENERICA', [
@@ -108,7 +108,7 @@ class EnviarPeticionStock extends Command {
             ], []);
 
         } else if($nombreCliente=="CKY"){
-            $this->log("[PeticionMaestra] Cliente CKY: pedir 2 dias habiles ANTES del inventario (si existe).");
+            $this->log("[PeticionStock] Cliente CKY: pedir 2 dias habiles ANTES del inventario (si existe).");
 
             // Carbon busca el 2 dias habiles despues del dia actual (de la semana Jueves->Lunes)
             // documentacion: http://carbon.nesbot.com/docs/#api-addsub
@@ -117,7 +117,7 @@ class EnviarPeticionStock extends Command {
                 ->buscarInventarios($sgteHabil, $sgteHabil, null, 3, null, null)    // 3 = CKY
                 ->count();
             if( $totalInventarios>0 ){
-                $this->log("[PeticionMaestra] CKY tiene '$totalInventarios' inventarios programados para el sub-siguiente dia habil ($sgteHabil)...");
+                $this->log("[PeticionStock] CKY tiene '$totalInventarios' inventarios programados para el sub-siguiente dia habil ($sgteHabil)...");
                 
                 // enviar correo al cliente
                 $this->enviarCorreos('emails.peticionStock.GENERICA', [
@@ -126,11 +126,11 @@ class EnviarPeticionStock extends Command {
                     'bcc' => $this->SEI_stock_bcc
                 ], []);
             }else{
-                $this->log("[PeticionMaestra] CKY no tiene inventarios programados para el sub-siguiente dia habil ($sgteHabil), no se enviara el correo.");
+                $this->log("[PeticionStock] CKY no tiene inventarios programados para el sub-siguiente dia habil ($sgteHabil), no se enviara el correo.");
             }
 
         } else if($nombreCliente=="FSB"){
-            $this->log("[PeticionMaestra] Cliente FSB: pedir stock actualizado todos los LUNES.");
+            $this->log("[PeticionStock] Cliente FSB: pedir stock actualizado todos los LUNES.");
             // FSB - pedir todos los LUNES
             // se asume de que cuando se llama este metodo, es porque ES LUNES, no se hacen validaciones
             $this->enviarCorreos('emails.peticionStock.GENERICA', [
@@ -140,7 +140,7 @@ class EnviarPeticionStock extends Command {
             ], []);
 
         }else{
-            $this->log("[PeticionMaestra] cliente '$nombreCliente' no programado.");
+            $this->log("[PeticionStock] cliente '$nombreCliente' no programado.");
         }
         
         
@@ -157,17 +157,17 @@ class EnviarPeticionStock extends Command {
                     // enviar a los destinatarios
                     foreach($datosCorreo['to'] as $destinatario){
                         $message->to($destinatario[0], $destinatario[1]);
-                        $this->log("[PeticionMaestra] enviando TO: $destinatario[0] - $destinatario[1]");
+                        $this->log("[PeticionStock] enviando TO: $destinatario[0] - $destinatario[1]");
                     }
                     // enviar las copias ocultas
                     foreach($datosCorreo['bcc'] as $destinatario){
                         $message->bcc($destinatario[0], $destinatario[1]);
-                        $this->log("[PeticionMaestra] enviando BCC: $destinatario[0] - $destinatario[1]");
+                        $this->log("[PeticionStock] enviando BCC: $destinatario[0] - $destinatario[1]");
                     }
                 }else{
                     foreach($this->SEI_DESARROLLO as $destinatario){
                         $message->to($destinatario[0], $destinatario[1]);
-                        $this->log("[PeticionMaestra-DEV] enviando TO: $destinatario[0] - $destinatario[1]");
+                        $this->log("[PeticionStock-DEV] enviando TO: $destinatario[0] - $destinatario[1]");
                     }
                 }
             }
