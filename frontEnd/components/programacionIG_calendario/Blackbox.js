@@ -92,6 +92,8 @@ export class BlackBox{
             // buscar el dia de la nomina en cada una de las semanas
             let momentFechaProgramada = moment(nom.fechaProgramada)
             this.calendar.weeks.forEach(week=>{
+                // Todo-mejorar: isSame es muy costoso, se lleba casi todo el tiempo del loop (10ms cu)
+                // Todo-mejorar: Ej, 90 inventarios = 90nominas*30dias = 240 validaciones = 240 val*10ms = 2400ms = 2.4seg
                 let day = _.find(week.days, wDay=>momentFechaProgramada.isSame(wDay.day))
                 // si encontramos el dia (y la semana de la nomina)
                 if(day){
@@ -167,20 +169,16 @@ export class BlackBox{
     get_state(){
         let calendarState = {
             weeks: this.calendar.weeks.map(week=>{
-// console.time('usuariosConSummary')  // 0.03 a 0.6
+
                 // todo: hacer en este punto el calculo del maximo de nominas por usuario,
                 let usuariosConSummary = this.usuariosUnicos.map(usuario=> {
                     let usuarioConSummary = this.calcularSummaryUsuario_semana(week, usuario)
                     return usuarioConSummary
                 })
-// console.timeEnd('usuariosConSummary')
 
-   // console.time('week days map '+week.idWeek)
                 let days = week.days.map(day=>{
-   // console.time('day '+day.number)
                     // Construir los rows del dia
                     // se generan arrays con espacios en blanco por cada nomina que tenga el usuario EN LA MISMA SEMANA
-// console.time('day usuarios map')
                     let rowsUsuarios = day.usuarios.map(usuarioDia=>{
                         // buscar el usuarioDia, en el usuarioSemana
                         let usuarioSemana = _.find(usuariosConSummary, usuarioS=>usuarioS.id===usuarioDia.id)
@@ -190,13 +188,14 @@ export class BlackBox{
                         // rowUsuario es un arreglo lleno con nulls
                         let rowUsuario = new Array(totalRows)
                         rowUsuario.fill(null)
+
                         // llenar los primeros valores con los valores de la nomina
                         usuarioDia.nominas.forEach((nomina, index)=>{
                             rowUsuario[index] = nomina
                         })
                         return rowUsuario
                     })
-// console.timeEnd('day usuarios map')
+
                     // concatenar todos los arrays en un unico array
                     let rows = []
                     rowsUsuarios.forEach(row=>{
@@ -204,7 +203,6 @@ export class BlackBox{
                     })
                     
                     // la informacion del dia, para luego ser convertidas en "CARDS"
-   // console.timeEnd('day '+day.number)
                     return {
                         idDay: week.weekNumber*1000+day.number,
                         sameMonth: day.sameMonth,
@@ -213,7 +211,6 @@ export class BlackBox{
                         rows: rows
                     }
                 })
-   // console.timeEnd('week days map '+week.idWeek)
 
                 return {
                     idWeek: week.weekNumber,

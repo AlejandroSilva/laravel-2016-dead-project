@@ -35,6 +35,14 @@ export class ProgramacionIGCalendario extends React.Component {
     render(){
         return (
             <div className={cx('container')}>
+                <button onClick={()=>{
+                    // console.time('set_inventarios')
+                    this.blackbox.set_inventarios(this.props.inventarios)
+                    // console.timeEnd('set_inventarios')
+                    // console.time('get_state')
+                    this.setState({calendar: this.blackbox.get_state()})
+                    // console.timeEnd('get_state')
+                }}>Recalcular</button>
                 <div className={cx('month')}>
                     {/* Header con los días de la semana */}
                     <div className={cx('header-row')} >

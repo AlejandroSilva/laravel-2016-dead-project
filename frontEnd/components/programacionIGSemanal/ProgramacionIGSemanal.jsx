@@ -30,7 +30,7 @@ class ProgramacionIGSemanal extends React.Component {
         // }
 
         this.state = {
-            showModal: false,
+            showModal: true,
             // meses,
             // semanas: [],
             idCliente: 0,
@@ -308,7 +308,7 @@ class ProgramacionIGSemanal extends React.Component {
                     filtros={this.state.filtros}
                     actualizarFiltro={this.actualizarFiltro.bind(this)}
                 >
-                    {this.state.inventariosFiltrados.length===0
+                    {true/*this.state.inventariosFiltrados.length===0*/
                         ? <tr><td colSpan="19" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.state.inventariosFiltrados.map((inventario, index)=>{
                         let mostrarSeparador = false
