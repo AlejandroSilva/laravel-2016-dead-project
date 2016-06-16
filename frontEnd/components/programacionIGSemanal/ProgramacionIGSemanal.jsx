@@ -33,7 +33,7 @@ class ProgramacionIGSemanal extends React.Component {
             showModal: true,
             // meses,
             // semanas: [],
-            idCliente: 1,
+            idCliente: 0,
             // mesSeleccionado: '',
             // semanaSeleccionada: '',
             fechaInicialSeleccionada: moment( moment().format('YYYY-MM-01') ),
