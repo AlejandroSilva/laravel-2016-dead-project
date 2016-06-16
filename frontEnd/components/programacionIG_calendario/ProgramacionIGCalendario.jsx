@@ -41,10 +41,10 @@ export class ProgramacionIGCalendario extends React.Component {
                         <div className={cx('header-summary', 'card')}>Summary</div>
                         <div className={cx('header-weekday', 'card')}>Lunes</div>
                         <div className={cx('header-weekday', 'card')}>Martes</div>
-                        <div className={cx('header-weekday', 'card')}>Miercoles</div>
+                        <div className={cx('header-weekday', 'card')}>Miércoles</div>
                         <div className={cx('header-weekday', 'card')}>Jueves</div>
                         <div className={cx('header-weekday', 'card')}>Viernes</div>
-                        <div className={cx('header-weekday', 'card')}>Sabado</div>
+                        <div className={cx('header-weekday', 'card')}>Sábado</div>
                         <div className={cx('header-weekday', 'card')}>Domingo</div>
                     </div>
 
@@ -58,9 +58,9 @@ export class ProgramacionIGCalendario extends React.Component {
                                         <tr><th>Lider</th><th>Total</th></tr>
                                     </thead>
                                     <tbody>
-                                        {week.summary.lideres.map(lider=>{
-                                            return <tr key={lider.id}>
-                                                <td>{lider.nombre}</td><td>{lider.totalSemana}</td>
+                                        {week.summary.usuarios.map(usuario=>{
+                                            return <tr key={usuario.id}>
+                                                <td>{usuario.nombre}</td><td>{usuario.totalSemana}</td>
                                             </tr>
                                         })}
                                     </tbody>

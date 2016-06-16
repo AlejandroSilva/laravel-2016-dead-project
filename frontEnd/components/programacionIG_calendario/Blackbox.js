@@ -8,7 +8,7 @@ export class BlackBox{
         this.calendar = []
         this.immutableCalendar = {}
         this.nominas = []
-        this.lideresUnicos = []
+        this.usuariosUnicos = []
     }
     
     // a partir de dos fechas construye el calendario completo
@@ -46,7 +46,7 @@ export class BlackBox{
                             isWeekend: day.day()==6 || day.day()==0,
                             number: day.date(),
                             // estas variables se sobreescriben luego
-                            lideres: [
+                            usuarios: [
                                 //{id: 11, nombre: 'asd', nominas: []}
                             ]
                         }
@@ -63,31 +63,31 @@ export class BlackBox{
         this.nominas = this.inventarios_to_nominas(inventarios)
         //console.log('nominas', this.nominas)
 
-        // obtener la lista de lideres en el mes (solo los asignados a nominas validas)
-        this.lideresUnicos = _.chain(this.nominas)
+        // obtener la lista de usuarios en el mes (solo los asignados a nominas validas)
+        this.usuariosUnicos = _.chain(this.nominas)
             .map(nom=>{ return {id: nom.idLider, nombre: nom.lider} })
             .uniqBy('id')
             .sort('id')
             .value()
-        //console.log('lideres unicos', this.lideresUnicos)
+        //console.log('usuarios unicos', this.usuariosUnicos)
 
         // "reiniciar" el calendar
         this.calendar = this.immutableCalendar.toJS()
 
-        // paso 1: asignar los Lideres a las Semanas
+        // paso 1: asignar los USUARIOS a los DIAS
         this.calendar.weeks.forEach(week=>{
-            // Por cada dia de la semana, tambien se asigna un arrelo con lideres
+            // Por cada dia de la semana, tambien se asigna un arrelo con usuarios
             week.days.forEach(day=>{
-                day.lideres = this.lideresUnicos.map(lider=>({
-                    id: lider.id,
-                    nombre: lider.nombre,
+                day.usuarios = this.usuariosUnicos.map(usuario=>({
+                    id: usuario.id,
+                    nombre: usuario.nombre,
                     // se completan despues (en el paso 3)
                     nominas: []
                 }))
             })
         })
 
-        // paso 2: tomas la lista de nominas, y ASIGNAR cada nomina al DIA DEL CALENDARIO y al LIDER que le corresponde
+        // paso 2: tomas la lista de nominas, y ASIGNAR cada nomina al DIA DEL CALENDARIO y al USUARIO que le corresponde
         this.nominas.forEach(nom=>{
             // buscar el dia de la nomina en cada una de las semanas
             let momentFechaProgramada = moment(nom.fechaProgramada)
@@ -95,9 +95,9 @@ export class BlackBox{
                 let day = _.find(week.days, wDay=>momentFechaProgramada.isSame(wDay.day))
                 // si encontramos el dia (y la semana de la nomina)
                 if(day){
-                    // agregar al nomina al lider de ese dia
-                    let liderDia = _.find(day.lideres, liderD=>liderD.id==nom.idLider)
-                    liderDia.nominas.push(nom)
+                    // agregar al nomina al usuario de ese dia
+                    let usuarioDia = _.find(day.usuarios, usuarioD=>usuarioD.id==nom.idLider)
+                    usuarioDia.nominas.push(nom)
                     return
                 }
             })
@@ -141,23 +141,23 @@ export class BlackBox{
         return nominas
     }
 
-    calcularSummaryLider_semana(week, lider){
+    calcularSummaryUsuario_semana(week, usuario){
         let maximoSemana = 0
         let totalSemana = 0
 
-        // se recorre cada uno de los dias, revisando en cual de ellos el lider tiene mas nominas
+        // se recorre cada uno de los DIAS, revisando en cual de ellos el USUARIO tiene mas nominas
         week.days.forEach(day=>{
-            let liderDia = _.find(day.lideres, liderD=>liderD.id===lider.id)
+            let usuarioDia = _.find(day.usuarios, usuarioD=>usuarioD.id===usuario.id)
             // maximo de semana
-            let totalDia = liderDia.nominas.length
+            let totalDia = usuarioDia.nominas.length
             maximoSemana = totalDia>maximoSemana? totalDia : maximoSemana
             // total semana
             totalSemana += totalDia
         })
 
         return {
-            id: lider.id,
-            nombre: lider.nombre,
+            id: usuario.id,
+            nombre: usuario.nombre,
             maximoSemana,
             totalSemana
         }
@@ -167,39 +167,44 @@ export class BlackBox{
     get_state(){
         let calendarState = {
             weeks: this.calendar.weeks.map(week=>{
-                // todo: hacer en este punto el calculo del maximo de nominas por lider,
-                let lideresConSummary = this.lideresUnicos.map(lider=> {
-                    let liderConSummary = this.calcularSummaryLider_semana(week, lider)
-                    console.log(liderConSummary)
-                    return liderConSummary
+// console.time('usuariosConSummary')  // 0.03 a 0.6
+                // todo: hacer en este punto el calculo del maximo de nominas por usuario,
+                let usuariosConSummary = this.usuariosUnicos.map(usuario=> {
+                    let usuarioConSummary = this.calcularSummaryUsuario_semana(week, usuario)
+                    return usuarioConSummary
                 })
+// console.timeEnd('usuariosConSummary')
 
-                
+   // console.time('week days map '+week.idWeek)
                 let days = week.days.map(day=>{
+   // console.time('day '+day.number)
                     // Construir los rows del dia
-                    // se generan arrays con espacios en blanco por cada nomina que tenga el lider EN LA MISMA SEMANA
-                    let rowsLideres = day.lideres.map(liderDia=>{
-                        // buscar el liderDia, en el liderSemana
-                        let liderSemana = _.find(lideresConSummary, liderS=>liderS.id===liderDia.id)
+                    // se generan arrays con espacios en blanco por cada nomina que tenga el usuario EN LA MISMA SEMANA
+// console.time('day usuarios map')
+                    let rowsUsuarios = day.usuarios.map(usuarioDia=>{
+                        // buscar el usuarioDia, en el usuarioSemana
+                        let usuarioSemana = _.find(usuariosConSummary, usuarioS=>usuarioS.id===usuarioDia.id)
 
                         // se debe mostrar al menos una fila (vacia)
-                        let totalRows = liderSemana.maximoSemana>0? liderSemana.maximoSemana : 1
-                        // rowLider es un arreglo lleno con nulls
-                        let rowLider = new Array(totalRows)
-                        rowLider.fill(null)
+                        let totalRows = usuarioSemana.maximoSemana>0? usuarioSemana.maximoSemana : 1
+                        // rowUsuario es un arreglo lleno con nulls
+                        let rowUsuario = new Array(totalRows)
+                        rowUsuario.fill(null)
                         // llenar los primeros valores con los valores de la nomina
-                        liderDia.nominas.forEach((nomina, index)=>{
-                            rowLider[index] = nomina
+                        usuarioDia.nominas.forEach((nomina, index)=>{
+                            rowUsuario[index] = nomina
                         })
-                        return rowLider
+                        return rowUsuario
                     })
+// console.timeEnd('day usuarios map')
                     // concatenar todos los arrays en un unico array
                     let rows = []
-                    rowsLideres.forEach(row=>{
+                    rowsUsuarios.forEach(row=>{
                         rows = rows.concat(row)
                     })
                     
                     // la informacion del dia, para luego ser convertidas en "CARDS"
+   // console.timeEnd('day '+day.number)
                     return {
                         idDay: week.weekNumber*1000+day.number,
                         sameMonth: day.sameMonth,
@@ -208,11 +213,12 @@ export class BlackBox{
                         rows: rows
                     }
                 })
+   // console.timeEnd('week days map '+week.idWeek)
 
                 return {
                     idWeek: week.weekNumber,
                     summary: {
-                        lideres: lideresConSummary
+                        usuarios: usuariosConSummary
                     },
                     days: days
                 }

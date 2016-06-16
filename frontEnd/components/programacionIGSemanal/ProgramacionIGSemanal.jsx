@@ -30,7 +30,7 @@ class ProgramacionIGSemanal extends React.Component {
         // }
 
         this.state = {
-            showModal: true,
+            showModal: false,
             // meses,
             // semanas: [],
             idCliente: 0,
