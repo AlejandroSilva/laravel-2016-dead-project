@@ -92,12 +92,12 @@ export class ProgramacionIGCalendario extends React.Component {
                                     <div className={cx('card-body')}>
                                         <table className={'table table-condensed ' + cx('table')} >
                                             <tbody>
-                                                {day.rows.map((nom, index)=>{
-                                                    return nom?
-                                                        <tr key={nom.id}>
-                                                            <td>{nom.local}</td>
-                                                            <td>{nom.ciudad}</td>
-                                                            <td>{nom.dTotal}</td>
+                                                {day.rows.map((evento, index)=>{
+                                                    return evento?
+                                                        <tr key={evento.id}>
+                                                            <td>{evento.col1}</td>
+                                                            <td>{evento.col2}</td>
+                                                            <td>{evento.col3}</td>
                                                         </tr>
                                                         :
                                                         <tr key={index}><td>&nbsp;</td><td></td><td></td></tr>

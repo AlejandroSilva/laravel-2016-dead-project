@@ -189,9 +189,16 @@ export class BlackBox{
                         let rowUsuario = new Array(totalRows)
                         rowUsuario.fill(null)
 
-                        // llenar los primeros valores con los valores de la nomina
+                        // Todo: agregar las auditorias a los eventos
+                        // llenar los primeros EVENTOS con los valores de la nominas
                         usuarioDia.nominas.forEach((nomina, index)=>{
-                            rowUsuario[index] = nomina
+                            // convertir la nomina a un "evento"
+                            rowUsuario[index] = {
+                                id: nomina.id,
+                                col1: nomina.local,
+                                col2: nomina.ciudad,
+                                col3: nomina.dTotal
+                            }
                         })
                         return rowUsuario
                     })
