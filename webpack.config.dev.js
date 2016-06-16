@@ -39,7 +39,8 @@ module.exports = {
             {test: /\.jsx?$/, exclude: [/node_modules/, /public/], loader: 'babel' }
         ]
     },
-    devtool: 'eval',
+    //devtool: 'source-map',    // mapea mejor los errores en los archivos .jsx
+    devtool: 'eval',    // rapido para desarrollar
     plugins: [
         //new webpack.optimize.UglifyJsPlugin(),
         new ExtractTextPlugin('frontEnd.css', { allChunks: true })

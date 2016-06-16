@@ -8,6 +8,9 @@ import BlackBoxIGSemanal from './BlackBoxIGSemanal.js'
 import TablaSemanal from './TablaSemanal.jsx'
 import RowInventarioSemanal from './RowInventarioSemanal.jsx'
 import SelectRange from '../shared/SelectRange.jsx'
+import Modal from 'react-bootstrap/lib/Modal.js'
+import { ProgramacionIGCalendario } from '../programacionIG_calendario/ProgramacionIGCalendario.jsx'
+import cssModal from './modal.css'
 
 const format = 'YYYY-MM-DD'
 
@@ -27,9 +30,10 @@ class ProgramacionIGSemanal extends React.Component {
         // }
 
         this.state = {
+            showModal: true,
             // meses,
             // semanas: [],
-            idCliente: 0,
+            idCliente: 1,
             // mesSeleccionado: '',
             // semanaSeleccionada: '',
             fechaInicialSeleccionada: moment( moment().format('YYYY-MM-01') ),
@@ -210,6 +214,23 @@ class ProgramacionIGSemanal extends React.Component {
 
         return(
             <div>
+                <Modal
+                    show={this.state.showModal}
+                    onHide={()=>{ this.setState({showModal: false}) }}
+                    dialogClassName={cssModal.modalAmplio}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Programación IG Mensual</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+
+                        <ProgramacionIGCalendario
+                            inventarios={this.state.inventariosFiltrados}
+                        />
+
+                    </Modal.Body>
+                </Modal>
+
                 <h1>Programación semanal IG</h1>
                 <div>
                     {/* SELECTOR DE CLIENTE */}
@@ -275,6 +296,10 @@ class ProgramacionIGSemanal extends React.Component {
                 <a className="btn btn-success btn-xs pull-right"
                    href={`/pdf/inventarios/${fechaInicial}/al/${fechaFinal}/cliente/${this.state.idCliente}`}>
                     Exportar a Excel
+                </a>
+                <a className="btn btn-primary btn-xs pull-right"
+                   onClick={()=>{ this.setState({showModal: !this.state.showModal}) }}>
+                    Vista alternativa
                 </a>
                 
                 <TablaSemanal

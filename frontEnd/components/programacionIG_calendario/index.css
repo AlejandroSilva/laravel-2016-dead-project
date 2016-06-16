@@ -1,0 +1,105 @@
+.container {
+    /*background: #EEEEEE;*/
+}
+.month {
+    font-size: 12px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+/* Headers ROW */
+.header-row {
+    display: flex;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+.header-summary {
+    flex-grow: 1;   /*2*/
+    flex-shrink: 1;
+    flex-basis: 0;
+}
+.header-weekday {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+}
+
+
+/* Week ROW */
+.week-row {
+    display: flex;
+    text-align: center;
+}
+.week-summary {
+    flex-grow: 1;   /*2*/
+    flex-shrink: 1;
+    flex-basis: 0;
+}
+.day {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+}
+
+/* ############################################################ */
+
+.card {
+    margin: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: #fff;
+    border: 1px solid #EEEEEE;
+}
+.card-header {
+    border-radius: 0 0 8px 0;
+    width: 50px;
+    height: 18px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+}
+.card-body {
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    
+}
+.card-footer {
+
+}
+
+/** Themes para las cards **/
+/* Default para los dias "normales"*/
+.card-default > .card-header {
+    background: rgb(148, 201, 247);         /* celeste */
+}
+/* Warning: para los feriados */
+.card-warning > .card-header {
+    background: rgba(240, 128, 128, 0.5);   /* lightcoral */
+}
+/* Grey: para los dias que no son del mismo mes */
+.card-grey > .card-header {
+    background: rgba(211, 211, 211, 0.5);   /* lightgrey */
+}
+.card-grey .table {
+    color: grey;
+}
+/* Para las cards que no son dias */
+.card-none {
+
+}
+.card-none > .card-header {
+    /*background: lightblue;*/
+}
+
+
+.table {
+    font-size: 12px;
+    margin-bottom: 0;
+}
+.table > thead > tr > th {
+    padding: 0;
+    height: 18px;
+    border-bottom: 2px solid #ddd;
+}
+.table > tbody > tr > td {
+    padding: 0;
+}
