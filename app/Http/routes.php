@@ -164,7 +164,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('auditoria/cliente/{idCliente}/dia/{annoMesDia}/estado-general',   'AuditoriasController@api_estadoGeneral');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado', 'AuditoriasController@api_informarRealizado');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-fecha', 'AuditoriasController@api_informarFecha');
-        // API USUARIOS - RUTAS PUBLICAS UTILIZADAS POR LA OTRA APLICACION
+        // API USUARIOS
         Route::get('usuario/{idUsuario}/roles', 'PersonalController@api_getRolesUsuario');
+        Route::get('usuarios/descargar-excel',  'PersonalController@excel_descargarTodos');
     });
 });

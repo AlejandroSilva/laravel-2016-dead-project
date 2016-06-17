@@ -1,19 +1,26 @@
 <?php
 namespace App\Http\Controllers;
-use App\Permission;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use Hash;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use Log;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+// Utils
+use Hash;
+use Log;
+use Carbon\Carbon;
+// PHP Excel
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Style_Alignment;
 // Modelos
 use App\User;
 use App\Role;
+use App\Permission;
 // Permisos
 use Auth;
+
 class PersonalController extends Controller {
     private $userRules = [
         'usuarioRUN' => 'required|unique:users|max:15',
@@ -51,10 +58,7 @@ class PersonalController extends Controller {
      * Rutas que generan vistas
      * ##########################################################
      */
-    // GET personal/nuevo (SIN USO
-//    function show_formulario(){
-//        return view('operacional.personal.usuarios');
-//    }
+
     /**
      * ##########################################################
      * Rutas para consumo del API REST (CON autentificacion)
@@ -112,6 +116,44 @@ class PersonalController extends Controller {
             return response()->json([], 404);
         }
     }
+    // GET /api/usuarios/descargar-excel
+    public function excel_descargarTodos(){
+        $users = User::all()->map(function($user){
+            // codigo, verificador, nombre
+            return [$user->usuarioRUN, $user->usuarioDV, $user->nombreCompleto()];
+        })->toArray();
+
+        // crear el archivo
+        $workbook = new PHPExcel();  // workbook
+        $sheet = $workbook->getActiveSheet();
+
+        // asignar datos
+        $sheet->fromArray(['Código', 'DV', 'Nombre'], NULL, 'A1');
+        $sheet->fromArray($users, NULL, 'A2');
+
+        // Titulos en negrita
+        $sheet->getStyle('A1')->getFont()->setBold(true);
+        $sheet->getStyle('B1')->getFont()->setBold(true);
+        $sheet->getStyle('C1')->getFont()->setBold(true);
+        // las columnas deben tener un ancho "dinamico"
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        // las celdas alineadas a la derecha
+        $sheet->getStyle("A")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $sheet->getStyle("B")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $sheet->getStyle("C")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+        // guardar y descargar el archivo
+        $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
+        $ahora = Carbon::now()->format('Y-m-d_h.i.s');
+        $randomFileName = "archivos_temporales/usuarios_".$ahora."_".md5(uniqid(rand(), true)).".xlsx";
+        $downloadFileName = "usuarios_al_$ahora.xlsx";
+        $excelWritter->save($randomFileName);
+        return response()->download($randomFileName, $downloadFileName);
+    }
+    
+    
     /**
      * Funciones para cambio de contraseña
      */
