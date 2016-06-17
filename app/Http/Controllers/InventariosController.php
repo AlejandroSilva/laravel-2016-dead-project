@@ -586,33 +586,22 @@ class InventariosController extends Controller {
     }
 
     /* ***************************************************/
-
+    /*
     function buscarNUEVO($peticion){
+        // metodo no utilizado por ahora....
+
         $query = Inventarios::with([]);
 
         // Buscar por Fecha de Inicio
-        if(isset($peticion->fechaInicio)){
-            $query->where('fechaProgramada', '>=', $peticion->fechaInicio);
-        }
-        // Buscar por Fecha de Fin
-        if(isset($peticion->fechaFin)){
-            $query->where('fechaProgramada', '<=', $peticion->fechaFin);
-        }
+        if(isset($peticion['fechaInicio']) && isset($peticion['fechaFin']))
+            $query->fechaProgramadaEntre($peticion['fechaInicio'], $peticion['fechaFin']);
 
         // Buscar por idCaptador1
-        $idCaptador1 = $peticion->idCaptador1;
-        if(isset($idCaptador1)){
-            // buscar el captador en la nomina de "dia" O en la de "noche", la nomina debe estar "Habilitada"
-            $query
-                ->whereHas('nominaDia', function($q) use ($idCaptador1){
-                    $q->where('idCaptador1', $idCaptador1)->where('habilitada', true);
-                })
-                ->orWhereHas('nominaNoche', function($q) use ($idCaptador1){
-                    $q->where('idCaptador1', $idCaptador1)->where('habilitada', true);
-                });
-        }
+        if(isset($peticion['idCaptador1']))
+            $query->conCaptador($peticion['idCaptador1']);
 
         $query->orderBy('fechaProgramada');
         return $query->get();
     }
+    */
 }

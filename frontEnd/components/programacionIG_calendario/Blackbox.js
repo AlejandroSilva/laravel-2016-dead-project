@@ -26,7 +26,7 @@ export class BlackBox{
             if (weeksNumbers.indexOf(ref)<0)
                 return weeksNumbers.push(moment.week());
         });
-
+        
         let calendar = {
             weeks: weeksNumbers.map((weekNumber, index)=>{
                 let days = []

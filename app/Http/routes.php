@@ -117,11 +117,14 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('auditoria/nuevo', 'AuditoriasController@api_nuevo');
         Route::put('auditoria/{idAuditoria}', 'AuditoriasController@api_actualizar');
         Route::delete('auditoria/{idAuditoria}', 'AuditoriasController@api_eliminar');
+        
+        // API VISTA GENERAL
+        Route::get('vista-general/nominas-inventarios',    'VistaGeneralController@api_obtenerNominasAuditorias');
+        
         // API USUARIOS
         Route::put('usuario/{idUsuario}',           'PersonalController@api_actualizar');
         Route::get('usuarios/buscar',               'PersonalController@api_buscar');
         Route::post('usuarios/nuevo-operador',      'PersonalController@api_nuevoOperador');
-
         // API USUARIOS-ROLES
         Route::post('usuario/{idUsuario}/role/{idRole}',            'PersonalController@api_nuevo_rol');
         Route::delete('usuario/{idUsuario}/role/{idRole}',          'PersonalController@api_delete_rol');

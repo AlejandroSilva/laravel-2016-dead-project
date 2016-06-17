@@ -19,12 +19,10 @@ class Inventarios extends Model {
         //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\Locales', 'idLocal', 'idLocal');
     }
-
     public function jornada(){
         //return $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\Jornadas', 'idJornada', 'idJornada');
     }
-
     public function nominaDia(){
 //        return $this->hasOne('App\Nominas', 'idNomina', 'idNominaDia');
         return $this->belongsTo('App\Nominas', 'idNominaDia', 'idNomina');
@@ -101,6 +99,24 @@ class Inventarios extends Model {
         ]);
     }
 
+    // #### Scopes para hacer Querys
+    public function scopeFechaProgramadaEntre($query, $fechaInicio, $fechaFin){
+        // al parecer funciona, hacer mas pruebas
+        $query->where('fechaProgramada', '>=', $fechaInicio);
+        $query->where('fechaProgramada', '<=', $fechaFin);
+    }
+    public function scopeConCaptador($query, $idCaptador){
+        // no probado
+        // buscar el captador en la nomina de "dia" O en la de "noche", la nomina debe estar "Habilitada"
+        $query
+            ->whereHas('nominaDia', function($q) use ($idCaptador){
+                $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
+            })
+            ->orWhereHas('nominaNoche', function($q) use ($idCaptador){
+                $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
+            });
+    }
+    
     // #### Acciones
     public function actualizarFechaProgramada($fechaProgramada){
         // Solo si hay un cambio se actualiza y se registra el cambio
@@ -118,7 +134,6 @@ class Inventarios extends Model {
             $this->nominaNoche->addLog('La Fecha Programada cambio', "Desde $fecha_original a $this->fechaProgramada", 10);
         }
     }
-
     public function actualizarJornada($idJornada){
         // Solo si hay un cambio se actualiza y se registra el cambio
         $jornada_original = $this->idJornada;
@@ -194,7 +209,6 @@ class Inventarios extends Model {
         $inventarioArray['local'] = Locales::formatoLocal_completo($inventario->local);
         return $inventarioArray;
     }
-
     static function formatoClienteFormatoRegion_nominas ($inventario) {
         $_inventario = Inventarios::formatoSimple($inventario);
         $_inventario['local'] = Locales::formatoLocal_completo($inventario->local);
@@ -202,8 +216,6 @@ class Inventarios extends Model {
         $_inventario['nominaNoche'] = $inventario->nominaNoche->habilitada? Nominas::formatearSimple($inventario->nominaNoche) : null;
         return $_inventario;
     }
-
-
 
     /**
      * helpers privados
