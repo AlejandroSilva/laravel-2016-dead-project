@@ -119,8 +119,8 @@ class PersonalController extends Controller {
     // GET /api/usuarios/descargar-excel
     public function excel_descargarTodos(){
         $users = User::all()->map(function($user){
-            // codigo, verificador, nombre
-            return [$user->usuarioRUN, $user->usuarioDV, $user->nombreCompleto()];
+            // codigo, nombre
+            return [$user->usuarioRUN, $user->nombreCompleto()];
         })->toArray();
 
         // crear el archivo
@@ -128,21 +128,12 @@ class PersonalController extends Controller {
         $sheet = $workbook->getActiveSheet();
 
         // asignar datos
-        $sheet->fromArray(['Código', 'DV', 'Nombre'], NULL, 'A1');
-        $sheet->fromArray($users, NULL, 'A2');
+        $sheet->fromArray($users, NULL, 'A1');
 
-        // Titulos en negrita
-        $sheet->getStyle('A1')->getFont()->setBold(true);
-        $sheet->getStyle('B1')->getFont()->setBold(true);
-        $sheet->getStyle('C1')->getFont()->setBold(true);
         // las columnas deben tener un ancho "dinamico"
         $sheet->getColumnDimension('A')->setAutoSize(true);
         $sheet->getColumnDimension('B')->setAutoSize(true);
         $sheet->getColumnDimension('C')->setAutoSize(true);
-        // las celdas alineadas a la derecha
-        $sheet->getStyle("A")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $sheet->getStyle("B")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $sheet->getStyle("C")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
         // guardar y descargar el archivo
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
