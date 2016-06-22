@@ -10,6 +10,7 @@ import * as css from './calendarContainer.css'
 let cx = classNames.bind(css)
 // Componentes
 import { Calendar } from './Calendar.jsx'
+import HeaderConFiltro from '../shared/HeaderConFiltro.jsx'
 
 export class CalendarContainer extends React.Component {
     constructor(props) {
@@ -160,6 +161,7 @@ class HerramientasCalendario extends React.Component {
     render(){
         return (
             <div className="row">
+                {/* FILTRO POR MES */}
                 <div className="col-md-2">
                     {/*
                     <div className="form-group">
@@ -178,6 +180,23 @@ class HerramientasCalendario extends React.Component {
                         )}
                     </select>
                 </div>
+                {/* FILTRO POR USUARIO */}
+                {/*
+                <div className="col-md-2">
+                    <div style={{border: '1px solid grey'}}>
+                        <HeaderConFiltro
+                            nombre="Lideres"
+                            filtro={[
+                                {valor: '1', texto: '11', seleccionado: true},
+                                {valor: '2', texto: '22', seleccionado: true},
+                                {valor: '3', texto: '33', seleccionado: true},
+                            ]}
+                            actualizarFiltro={ ()=>{} }
+                        />
+                    </div>
+                </div>
+                 */}
+                {/* FILTRO POR NOMINA/AUDITORIA */}
                 <div className="col-md-2">
                     <div className="checkbox">
                         <label>
@@ -199,6 +218,7 @@ class HerramientasCalendario extends React.Component {
                         </label>
                     </div>
                 </div>
+                {/* FILTRO POR LIDERES Y AUTORES */}
                 <div className="col-md-2">
                     <div className="checkbox">
                         <label>
@@ -225,7 +245,7 @@ class HerramientasCalendario extends React.Component {
                             disabled={this.props.loading}
                     >Actualizar</button>
                 </div>
-                <div className="col-md-2"></div>
+                {/* RESERVADO */}
                 <div className="col-md-2"></div>
             </div>
         )
