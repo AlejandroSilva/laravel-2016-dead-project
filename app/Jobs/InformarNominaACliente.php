@@ -123,7 +123,8 @@ class InformarNominaACliente extends Job implements ShouldQueue {
             $destinatariosFCV = $this->FCV_nomina_to;
             $correoLocal = $local->emailContacto;
             if($correoLocal)
-                array_push($destinatariosFCV, [$correoLocal, "Local $local->numero"]);
+                array_unshift($destinatariosFCV, [$correoLocal, "Local $local->numero"]);   // agrega al inicio
+                //array_push($destinatariosFCV, [$correoLocal, "Local $local->numero"]);    // agrega al final
 
             // Si el correo esta RECTIFICADO, cambiar el titulo
             $subject = $this->nomina->rectificada==1?
