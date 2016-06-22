@@ -237,8 +237,8 @@ class Nominas extends Model {
             'fechaProgramada' => $nomina->inventario->fechaProgramada,
             // LOCAL
             'local' => $nomina->inventario->local->numero,
-            //'comuna' => $nomina->inventario->local->direccion->comuna->nombre,
-            'region' => $nomina->inventario->local->direccion->comuna->provincia->region->numero,
+            'comuna' => $nomina->inventario->local->direccion->comuna->nombre,
+            //'region' => $nomina->inventario->local->direccion->comuna->provincia->region->numero,
             // CLIENTE
             'cliente'=> $nomina->inventario->local->cliente->nombreCorto,
         ];

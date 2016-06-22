@@ -1,0 +1,116 @@
+.month {
+    font-size: 12px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+/* ############################# Calendar Header ##################### */
+
+/* Headers ROW */
+.header-flex-row {
+    display: flex;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+.card-header-summary {
+    flex-grow: 1;   /*2*/
+    flex-shrink: 1;
+    flex-basis: 0;
+}
+.card-header-weekday {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+}
+
+/* Week ROW */
+.week-flex-row {
+    display: flex;
+    text-align: center;
+}
+.card-week-summary {
+    flex-grow: 1;   /*2*/
+    flex-shrink: 1;
+    flex-basis: 0;
+}
+.day {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+}
+
+
+
+/* ############################### CardHeader ######################## */
+/* parar los dias normales */
+.dayNumber-normal {
+    border-radius: 0 0 8px 0;
+    width: 50px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+    background: rgb(148, 201, 247);         /* celeste */
+}
+/* para los feriados */
+.dayNumber-feriado {
+    border-radius: 0 0 8px 0;
+    width: 50px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+    background: rgba(240, 128, 128, 0.5);   /* lightcoral */
+}
+/* para los dias que no son del mismo mes */
+.dayNumber-otherMonth {
+    border-radius: 0 0 8px 0;
+    width: 50px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+    background: rgba(211, 211, 211, 0.5);   /* lightgrey */
+}
+
+/* ############################## CardBody ######################## */
+
+.table-card {
+    font-size: 10px;    /*12px;*/
+    margin-bottom: 0;
+    width: 100%;
+}
+.table-card > thead {
+    /* PENDIENTE */
+}
+
+/*.table-card > th {*/
+    /*padding: 0;*/
+    /*height: 18px;*/
+    /*border-bottom: 2px solid #ddd;*/
+/*}*/
+.table-card > tbody > tr > td {
+    line-height: 1;
+    white-space: nowrap;
+    padding: 2px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+.table-card > tbody > tr p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.td-checkbox {
+    padding: 1px !important;
+}
+.td-checkbox label{
+    margin: 0;
+}
+.td-checkbox input{
+    margin: 0;
+    width: 10px;
+    height: 10px;
+}
+.td-checkbox p{
+    display: inline-block;
+}
+
+.tr-unselected {
+    color: lightgrey;
+}
+
+/*.table-otherMonth .table {*/
+    /*color: grey;*/
+/*}*/

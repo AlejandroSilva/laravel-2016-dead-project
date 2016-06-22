@@ -46,9 +46,11 @@ class User extends Authenticatable {
         return $this->belongsToMany('App\Nominas', 'nominas_user', 'idUser', 'idNomina')
             ->withTimestamps()
             ->withPivot('titular', 'idRoleAsignado');
-//            ->with('role')
     }
 
+    public function nombreCorto(){
+        return "$this->nombre1 $this->apellidoPaterno";
+    }
     public function nombreCompleto(){
         return "$this->nombre1 $this->nombre2 $this->apellidoPaterno $this->apellidoMaterno";
     }

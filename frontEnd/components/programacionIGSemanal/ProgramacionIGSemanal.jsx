@@ -9,7 +9,7 @@ import TablaSemanal from './TablaSemanal.jsx'
 import RowInventarioSemanal from './RowInventarioSemanal.jsx'
 import SelectRange from '../shared/SelectRange.jsx'
 import Modal from 'react-bootstrap/lib/Modal.js'
-import { ProgramacionIGCalendario } from '../programacionIG_calendario/ProgramacionIGCalendario.jsx'
+import { CalendarContainer } from '../programacionIG_calendario/CalendarContainer.jsx'
 import cssModal from './modal.css'
 
 const format = 'YYYY-MM-DD'
@@ -30,7 +30,6 @@ class ProgramacionIGSemanal extends React.Component {
         // }
 
         this.state = {
-            showModal: true,
             // meses,
             // semanas: [],
             idCliente: 0,
@@ -214,23 +213,6 @@ class ProgramacionIGSemanal extends React.Component {
 
         return(
             <div>
-                <Modal
-                    show={this.state.showModal}
-                    onHide={()=>{ this.setState({showModal: false}) }}
-                    dialogClassName={cssModal.modalAmplio}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Programación IG Mensual</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-
-                        <ProgramacionIGCalendario
-                            inventarios={this.state.inventariosFiltrados}
-                        />
-
-                    </Modal.Body>
-                </Modal>
-
                 <h1>Programación semanal IG</h1>
                 <div>
                     {/* SELECTOR DE CLIENTE */}
@@ -297,10 +279,9 @@ class ProgramacionIGSemanal extends React.Component {
                    href={`/pdf/inventarios/${fechaInicial}/al/${fechaFinal}/cliente/${this.state.idCliente}`}>
                     Exportar a Excel
                 </a>
-                <a className="btn btn-primary btn-xs pull-right"
-                   onClick={()=>{ this.setState({showModal: !this.state.showModal}) }}>
-                    Vista alternativa
-                </a>
+                
+                <BotonVistaAlternativa />
+
                 
                 <TablaSemanal
                     ordenarInventarios={this.ordenarInventarios.bind(this)}
@@ -308,7 +289,9 @@ class ProgramacionIGSemanal extends React.Component {
                     filtros={this.state.filtros}
                     actualizarFiltro={this.actualizarFiltro.bind(this)}
                 >
-                    {true/*this.state.inventariosFiltrados.length===0*/
+                    {
+                        //true
+                        this.state.inventariosFiltrados.length===0
                         ? <tr><td colSpan="19" style={{textAlign: 'center'}}><b>No hay inventarios para mostrar en este periodo.</b></td></tr>
                         : this.state.inventariosFiltrados.map((inventario, index)=>{
                         let mostrarSeparador = false
@@ -349,3 +332,56 @@ ProgramacionIGSemanal.defaultProps = {
     puedeModificar: false
 }
 export default ProgramacionIGSemanal
+
+
+
+/* ************************************************************** */
+
+class BotonVistaAlternativa extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            modalVisible: false
+        }
+
+        // mostrar en el selector, los proximos 12 meses
+        this.meses = []
+        for (let desface = 0; desface < 12; desface++) {
+            let mes = moment().add(desface, 'month')
+            this.meses.push({
+                anno: mes.year(),
+                month: mes.month(),
+                valor: mes.format('YYYY-MM-01'),    // debe comenzar con el dia 1, o si no el webservice toma el mes anterior
+                texto: mes.format('MMMM YYYY')
+            })
+        }
+
+        this.showModal = ()=>{
+            this.setState({modalVisible: true})
+        }
+        this.hideModal =()=>{
+            this.setState({modalVisible: false})
+        }
+    }
+    render(){
+        return <div>
+            <a className="btn btn-primary btn-xs pull-right"
+               onClick={this.showModal}>
+                Vista alternativa
+            </a>
+            <Modal
+                show={this.state.modalVisible}
+                onHide={this.hideModal}
+                dialogClassName={cssModal.modalAmplio}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Programación IG Mensual</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <CalendarContainer
+                        meses={this.meses}
+                    />
+                </Modal.Body>
+            </Modal>
+        </div>
+    }
+}

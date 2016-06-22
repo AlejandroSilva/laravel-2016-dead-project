@@ -23,4 +23,14 @@ class Role extends EntrustRole {
             'description' => $role->description,
         ];
     }
+    
+    // #### Helpers / Getters
+    static function lideres(){
+        $rol = Role::where('name', 'Lider')->first();
+        return $rol? $rol->users : collect([]);
+    }
+    static function auditores(){
+        $rol = Role::where('name', 'Auditor')->first();
+        return $rol? $rol->users : collect([]);
+    }
 }

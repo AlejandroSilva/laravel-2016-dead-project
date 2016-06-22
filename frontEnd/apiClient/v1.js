@@ -105,5 +105,9 @@ export default {
             axios.get(`/api/usuarios/buscar?run=${run}`),
         nuevoOperador: (datos)=>
             axios.post(`/api/usuarios/nuevo-operador`, datos)
+    },
+    vistaGeneral: {
+        fetch: (annoMesDia, idCliente=0)=>
+            axios.get(`/api/vista-general/nominas-inventarios?idCliente=${idCliente}&annoMesDia=${annoMesDia}`),
     }
 }

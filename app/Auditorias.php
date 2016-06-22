@@ -43,7 +43,9 @@ class Auditorias extends Model {
             // Local
             'local' => $auditoria->local->numero,
             // Cliente
-            'cliente' => $auditoria->local->cliente->nombreCorto
+            'cliente' => $auditoria->local->cliente->nombreCorto,
+            // Comuna
+            'comuna' => $auditoria->local->direccion->comuna->nombre,
         ];
         // para optimizar, se puede guardar en "cache" la relacion auditoria->local->cliente->nombreCorto
     }

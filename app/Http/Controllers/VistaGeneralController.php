@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Carbon\Carbon;
 // Modelos
-use App\Nominas;
 use App\Auditorias;
+use App\Nominas;
+use App\Role;
 
 class VistaGeneralController extends Controller {
 
@@ -31,8 +32,16 @@ class VistaGeneralController extends Controller {
         $mes = Carbon::createFromFormat('Y-m-d', $annoMesDia);
         $desde = $mes->copy()->startOfMonth()->startOfWeek()->format('Y-m-d');
         $hasta = $mes->copy()->lastOfMonth()->endOfWeek()->format('Y-m-d');
-
-        // buscar las nominas 'activas'
+        
+        // Buscar los Auditores, y los lideres
+        $lideres = Role::lideres()->map(function($lider){
+            return ['id' => $lider->id, 'nombre' => $lider->nombreCorto()];
+        });
+        $auditores = Role::auditores()->map(function($lider){
+            return ['id' => $lider->id, 'nombre' => $lider->nombreCorto()];
+        });
+        
+        // Buscar las nominas 'activas'
         $nominas = Nominas::with([])
             // ... query de nominas
             ->habilitada()
@@ -41,7 +50,8 @@ class VistaGeneralController extends Controller {
             // ... mapeo de la collection
             ->map('\App\Nominas::formatear_vistaGeneral')
             ->sortBy('fechaProgramada');
-
+        
+        // Buscar las auditorias
         $auditorias = Auditorias::with([])
             // query de las auditorias
             ->soloFechasValidas()
@@ -49,14 +59,15 @@ class VistaGeneralController extends Controller {
             ->get()
             // ... mapeo del collection
             ->map('\App\Auditorias::formatear_vistaGeneral')
-            ->sortBy('fechaProgramada')
-            ;
+            ->sortBy('fechaProgramada');
             
         return response()->json([
             'query' => $annoMesDia,
-//            'calendar' => $calendar,
-            'totalAuditorias' => $auditorias->count(),
-            'totalNominas' => $nominas->count(),
+            'desde' => $desde,
+            'hasta' => $hasta,
+            //'calendar' => $calendar,
+            'lideres'=> $lideres,
+            'auditores'=> $auditores,
             'nominas' => $nominas->values(),
             'auditorias' => $auditorias->values(),
         ], 200, [], JSON_NUMERIC_CHECK); // convertir los campos con numero como INT
