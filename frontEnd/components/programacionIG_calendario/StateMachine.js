@@ -92,10 +92,16 @@ export class StateMachine{
                         let maximoNominas = 0
                         let maximoAuditorias = 0
                         this.nominasDia.forEach(dia=> {
-                            maximoNominas = dia.length > maximoNominas ? dia.length : maximoNominas
+                            // cuenta las nominas SELECCIONADAS en un dia
+                            //let maxDia = dia.filter(nom=>nom.isSelected).reduce((prev, actual)=>prev+1, 0)
+                            let maxDia = dia.length
+                            maximoNominas = maxDia>maximoNominas? maxDia : maximoNominas
                         })
                         this.auditoriasDia.forEach(dia=> {
-                            maximoAuditorias = dia.length > maximoAuditorias ? dia.length : maximoAuditorias
+                            // cuenta las nominas SELECCIONADAS en un dia
+                            //let maxDia = dia.filter(aud=>aud.isSelected).reduce((prev, actual)=>prev+1, 0)
+                            let maxDia = dia.length
+                            maximoAuditorias = maxDia>maximoAuditorias? maxDia:maximoAuditorias
                         })
                         let maxTotal = maximoNominas + maximoAuditorias
                         return maxTotal == 0 ? 1 : maxTotal

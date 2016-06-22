@@ -220,7 +220,10 @@ class HerramientasCalendario extends React.Component {
                     </div>
                 </div>
                 <div className="col-md-2">
-                    <button className="btn btn-primary btn-xs" onClick={this.fetch}>Actualizar</button>
+                    <button className="btn btn-primary btn-xs"
+                            onClick={this.fetch}
+                            disabled={this.props.loading}
+                    >Actualizar</button>
                 </div>
                 <div className="col-md-2"></div>
                 <div className="col-md-2"></div>
