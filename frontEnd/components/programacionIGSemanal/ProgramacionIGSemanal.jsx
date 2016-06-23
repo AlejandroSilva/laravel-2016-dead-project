@@ -341,7 +341,7 @@ class BotonVistaAlternativa extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            modalVisible: true
+            modalVisible: false
         }
 
         // mostrar en el selector, los proximos 12 meses
