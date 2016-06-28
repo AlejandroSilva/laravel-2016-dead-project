@@ -14,6 +14,7 @@ import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.
 import { NominaIG } from './components/nominaIG/nominaIG.jsx'
 import { NominasCaptador } from './components/nominasCaptador/NominasCaptador.jsx'
 import { MantenedorStock } from './components/mantenedorStock/MantenedorStock.jsx'
+import { MantenedorMaestra } from './modulos-logistica/MantenedorMaestra.jsx'
 
 /** FORMULARIO PARA LA CREACIÓN DE UN NUEVO Inventario */
 // GET inventario/nuevo, NO SE OCUPA
@@ -133,6 +134,20 @@ if( nominasCaptador ){
             // comunas={window.laravelComunas}
         />, nominasCaptador)
 }
+
+/** ************************************************************* **/
+/** ************************ LOGISTICA ************************** **/
+/** ************************************************************* **/
+/** MANTENEDOR MAESTRA **/
+let mantenedorMaestraDOM = document.getElementById('react-mantenedor-maestra')
+if( mantenedorMaestraDOM ) {
+    ReactDOM.render(
+        <MantenedorMaestra
+            productosMaestra={window.laravelProductosMaestra}
+        />, mantenedorMaestraDOM
+    )
+}
+
 
 // http://jamesknelson.com/push-state-vs-hash-based-routing-with-react-js/
 //class App extends React.Component{

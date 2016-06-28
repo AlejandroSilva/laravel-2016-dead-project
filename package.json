@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
+    "fixed-data-table": "^0.6.1",
     "immutable": "^3.8.1",
     "jquery": "^2.2.3",
     "laravel-elixir": "^6.0.0-1",

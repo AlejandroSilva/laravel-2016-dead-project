@@ -4,6 +4,7 @@
     <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
     <link rel='stylesheet' href='/vendor/react-widgets/react-widgets.min.css'>
+    <link rel='stylesheet' href='/vendor/fixed-data-table/fixed-data-table.css'>
     {{--<link rel='stylesheet' href='/css/styles.css'>--}}
     <style>
         body {
