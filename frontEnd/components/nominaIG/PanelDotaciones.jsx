@@ -11,8 +11,13 @@ export class PanelDotaciones extends React.Component {
         // el total de operadors no siempre es igual a los operadores asignados (this.props.dotacionOperadores),
         // PUEDE PASAR que esten asignados mas operadores que el limite
         // (por ejemplo: se asignan 10 operadores, y al actualizar el stock la cantidad baja a 7, entonces hay 3 operadores de mas)
-        let totalOperadores = this.props.dotacionOperadores>this.props.dotacionTitular.length?
-            this.props.dotacionOperadores : this.props.dotacionTitular.length
+        let operadoresAsignados = this.props.dotacionOperadores
+        // si esta asignado el supervisor, se agrega un operador menos
+        if(this.props.supervisor){
+            operadoresAsignados--
+        }
+        let operadoresReales = this.props.dotacionTitular.length
+        let totalOperadores = operadoresAsignados>operadoresReales? operadoresAsignados : operadoresReales
 
         return <div className="row">
             {/* Dotacion Titular */}

@@ -2,6 +2,7 @@
 <head>
     <title>Oportunidad - @yield('title')</title>
     <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
 
     <link rel='stylesheet' href='/vendor/react-widgets/react-widgets.min.css'>
     <link rel='stylesheet' href='/vendor/fixed-data-table/fixed-data-table.css'>
