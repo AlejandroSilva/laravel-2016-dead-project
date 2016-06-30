@@ -42,35 +42,68 @@ class Locales extends Model{
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Jornadas', 'idJornadaSugerida', 'idJornada');
     }
-
+    
+    public function almacenesAF(){
+        return $this->hasMany('App\AlmacenAF', 'idLocal', 'idLocal');
+    }
+    
+    // #### Helpers
     public function llegadaSugeridaLiderDia(){
         // La hora de llegada sugerida para el lider corresponde a 1 hora y media antes de la apertura de local
         if($this->horaApertura=='00:00:00')
             return '00:00:00';
-        else
-            return date('H:i:s', strtotime($this->horaApertura)-5400); // 5400 = 90min * 60seg
+        else{
+            if($this->idCliente==4){
+                // en CID, el lider debe llegar 1 hora antes de la apertura
+                return date('H:i:s', strtotime($this->horaApertura)-3600); // 3600 = 60min * 60seg
+            }else{
+                // en los otros clientes, el lider debe llegar 1:30 antes de la apertura
+                return date('H:i:s', strtotime($this->horaApertura)-5400); // 5400 = 90min * 60seg
+            }
+        }
     }
     public function llegadaSugeridaLiderNoche(){
-        // La hora de llegada sugerida para el lider corresponde a 1 hora y media antes del cierre de local
+        // La hora de llegada sugerida para el lider corresponde a 1:30hrs antes del cierre de local
         if($this->horaCierre=='00:00:00')
             return '00:00:00';
-        else
-            return date('H:i:s', strtotime($this->horaCierre)-5400); // 5400 = 90min * 60seg
+        else{
+            if($this->idCliente==4){
+                // en CID, el lider debe llegar 1 hora antes
+                return date('H:i:s', strtotime($this->horaCierre)-3600); // 3600 = 60min * 60seg
+            }else{
+                // en los otros clientes, el lider debe llegar 1:30 antes
+                return date('H:i:s', strtotime($this->horaCierre)-5400); // 5400 = 90min * 60seg
+            }
+        }
     }
 
     public function llegadaSugeridaPersonalDia(){
         // La hora de llegada sugerida para el lider corresponde a 1 hora y media antes de la apertura del local
         if($this->horaApertura=='00:00:00')
             return '00:00:00';
-        else
-            return date('H:i:s', strtotime($this->horaApertura)-3600); // 3600 = 60min * 60seg
+        else{
+            if($this->idCliente==4){
+                // en CID, el equipo debe llegar 00:30hrs antes de la apertura del local
+                return date('H:i:s', strtotime($this->horaApertura)-1800); // 3600 = 30min * 60seg
+            }else{
+                // en los otros clientes, el equipo debe llegar 01:00hrs antes
+                return date('H:i:s', strtotime($this->horaApertura)-3600); // 3600 = 60min * 60seg
+            }
+        }
     }
     public function llegadaSugeridaPersonalNoche(){
-        // La hora de llegada sugerida para el lider corresponde a 1 hora y media antes del cierre de local
+        // La hora de llegada sugerida para el equipo corresponde a 1 hora antes del cierre de local
         if($this->horaCierre=='00:00:00')
             return '00:00:00';
-        else
-            return date('H:i:s', strtotime($this->horaCierre)-3600); // 3600 = 60min * 60seg
+        else{
+            if($this->idCliente==4){
+                // en CID, el equipo debe llegar 00:30hrs antes del cierre del local
+                return date('H:i:s', strtotime($this->horaCierre)-1800); // 3600 = 30min * 60seg
+            }else{
+                // en los otros clientes, el equipo debe llegar 01:00hrs antes
+                return date('H:i:s', strtotime($this->horaCierre)-3600); // 3600 = 60min * 60seg
+            }
+        }
     }
 
 //    public function ultimoInventario(){
