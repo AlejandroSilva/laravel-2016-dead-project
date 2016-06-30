@@ -50,6 +50,10 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ['ricardo.perez@colgram.com',   'Ricardo Perez Fuentes'],
         ['manuel.vera@colgram.com',     'Manuel Vera']
     ];
+    // Cliente 4: CID
+    protected $CID_nomina_to = [
+        ['ximena.delgado@casaideas.com', 'Ximena Delgado']
+    ];
     // Cliente 5: SB
     protected $SB_nomina_to = [
 //        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
@@ -140,6 +144,12 @@ class InformarNominaACliente extends Job implements ShouldQueue {
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "Nomina CKY Local Nº$local->numero",
                 'to' => $this->CKY_nomina_to,
+                'bcc' => $this->SEI_nomina_bcc
+            ], $datosVista);
+        }else if($cliente->idCliente==4){                   // 4: CID
+            $this->enviarCorreos('emails.informarNomina.GENERICA', [
+                'subject' => "Nomina CID Local Nº$local->numero",
+                'to' => $this->CID_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==5){                   // 5: SALCOBRAND
