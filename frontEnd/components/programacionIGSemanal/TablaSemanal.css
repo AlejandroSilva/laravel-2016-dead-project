@@ -99,11 +99,11 @@
 
 /* TURNO */
 .thTurno{
-    width: 80px !important;
+    width: 45px !important;
     background: white;
 }
 .tdTurno{
-    width: 80px !important;
+    width: 45px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
@@ -111,11 +111,11 @@
     font-size: 14px !important;
 }
 .tdTurno > select {
-    width: 79px !important;
+    width: 44px !important;
     display: block;
     margin: 0 auto 1px auto;
     height:18px;
-    font-size: 12px;
+    font-size: 10px;
     line-height: 12px;
 }
 

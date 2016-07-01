@@ -227,10 +227,10 @@ class RowInventario extends React.Component{
                         ref={ref=>this.selectJornada=ref}
                         onSelect={this.guardarInventario.bind(this)}
                         opciones={[
-                            {valor:'1', texto:'no definido'},
-                            {valor:'2', texto:'día'},
-                            {valor:'3', texto:'noche'},
-                            {valor:'4', texto:'día y noche'}
+                            {valor:'1', texto:'ND'},
+                            {valor:'2', texto:'D'},
+                            {valor:'3', texto:'N'},
+                            {valor:'4', texto:'DyN'}
                         ]}
                         seleccionada={this.props.inventario.idJornada}
                         puedeModificar={puedeEditar_fecha_turno_stock}
@@ -238,7 +238,12 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Tienda */}
                 <td className={css.tdTienda}>
-                    <p>{this.props.inventario.local.nombre}</p>
+                    <OverlayTrigger
+                        placement="left"
+                        delay={0}
+                        overlay={<Tooltip id="yyy">{`Apertura: ${this.props.inventario.local.horaApertura}, Cierre:${this.props.inventario.local.horaCierre}`}</Tooltip>}>
+                        <p>{this.props.inventario.local.nombre}</p>
+                    </OverlayTrigger>
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
