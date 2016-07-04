@@ -61,8 +61,8 @@ class EnviarPeticionMaestra extends Command {
     ];
     // Cliente 4: CID
     protected $CID_maestra_to = [
-        ['asilva@seiconsultores',       'CID SIN LISTA DE CORREO'],
-        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
+        ['ximena.delgado@casaideas.com', 'Ximena Delgado'],
+        ['control.existencias@casaideas.com', 'Control existencias']
     ];
     // Cliente 5: SB
     protected $FSB_maestra_to = [

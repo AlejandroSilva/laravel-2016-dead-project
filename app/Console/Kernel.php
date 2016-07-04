@@ -50,9 +50,8 @@ class Kernel extends ConsoleKernel {
             ->weekdays()->at('08:02');
 
         // CID  - pedir el mismo dia del inventario (si existe)
-        // NO ENVIAR MIENTRAS NO SE TENGA UNA LISTA DE CORREOS VALIDA
-//        $schedule->command('correo:peticionmaestra CID')
-//            ->weekdays()->at('08:03');
+        $schedule->command('correo:peticionmaestra CID')
+            ->weekdays()->at('08:03');
 
         // FSB  - pedir el mismo dia del inventario (enviar a vicente)
         $schedule->command('correo:peticionmaestra FSB')
@@ -78,5 +77,7 @@ class Kernel extends ConsoleKernel {
         // FSB - pedir todos los LUNES
         $schedule->command('correo:peticionstock FSB')
             ->weekdays()->mondays()->at('08:13');
+        
+        // TODO: CASA IDEAS - NO SE ESTA PIDIENDO EL STOCK DE ESE DIA
     }
 }

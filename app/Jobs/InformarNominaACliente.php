@@ -52,7 +52,8 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     ];
     // Cliente 4: CID
     protected $CID_nomina_to = [
-        ['ximena.delgado@casaideas.com', 'Ximena Delgado']
+        ['ximena.delgado@casaideas.com', 'Ximena Delgado'],
+        ['control.existencias@casaideas.com', 'Control existencias']
     ];
     // Cliente 5: SB
     protected $SB_nomina_to = [

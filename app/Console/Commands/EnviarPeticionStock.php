@@ -61,8 +61,8 @@ class EnviarPeticionStock extends Command {
     ];
     // Cliente 4: CID
     protected $CID_stock_to = [
-        ['asilva@seiconsultores',       'CID SIN LISTA DE CORREO'],
-        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
+        ['ximena.delgado@casaideas.com', 'Ximena Delgado'],
+        ['control.existencias@casaideas.com', 'Control existencias']
     ];
     // Cliente 5: FSB
     protected $FSB_stock_to = [
