@@ -255,7 +255,6 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarInventario.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'stock')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'stock')}
-                        // puedeModificar={puedeEditarInventario}
                         puedeModificar={puedeEditar_fecha_turno_stock}
                     />
                 </td>
@@ -270,7 +269,6 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionTotal')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionTotal')}
-                        // puedeModificar={puedeEditarInventario}/>
                         puedeModificar={puedeEditarNominaDia}/>
                     <InputDotacionMultiple
                         style={{display: inventarioDia? 'block' : 'none'}}
@@ -280,8 +278,7 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionOperadores')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionOperadores')}
-                        // puedeModificar={puedeEditarDia}/>
-                        puedeModificar={this.props.puedeModificar}/>
+                        puedeModificar={puedeEditarNominaDia}/>
 
                     {/* Dotacion de Noche*/}
                     <InputDotacionMultiple
@@ -292,7 +289,6 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionTotal')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionTotal')}
-                        // puedeModificar={puedeEditarInventario}/>
                         puedeModificar={puedeEditarNominaNoche}/>
                     <InputDotacionMultiple
                         style={{display: inventarioNoche? 'block' : 'none'}}
@@ -302,8 +298,7 @@ class RowInventario extends React.Component{
                         onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionOperadores')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionOperadores')}
-                        // puedeModificar={puedeEditarNoche}/>
-                        puedeModificar={this.props.puedeModificar}/>
+                        puedeModificar={puedeEditarNominaNoche}/>
                 </td>
                 {/* Lider */}
                 <td className={css.tdUsuario}>
