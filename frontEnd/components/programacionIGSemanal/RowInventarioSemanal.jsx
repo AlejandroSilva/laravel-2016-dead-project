@@ -455,6 +455,35 @@ class RowInventario extends React.Component{
                 <td className={css.tdUnidadesTeoricas}>
                     {this.props.inventario.unidadesTeorico}
                 </td>
+                {/* Nómina de pago */}
+                <td className={css.tdNominaPago}>
+                    {/* Día */}
+                    <div style={{width: '60px'}}>
+                        {this.props.inventario.nomina_dia.urlNominaPago==''?
+                            <span className={cx('label label-default', inventarioDia? 'center-block' : 'hide')}>
+                                Pendiente
+                            </span>
+                            :
+                            <a href={this.props.inventario.nomina_dia.urlNominaPago} target="_blank"
+                               className={cx('label label-primary', inventarioDia? 'center-block' : 'hide')}>
+                                Disponible
+                            </a>
+                        }
+                    </div>
+                    {/* Noche */}
+                    <div style={{width: '60px'}}>
+                        {this.props.inventario.nomina_noche.urlNominaPago==''?
+                            <span className={cx('label label-default', inventarioNoche? 'center-block' : 'hide')}>
+                                Pendiente
+                            </span>
+                            :
+                            <a href={this.props.inventario.nomina_noche.urlNominaPago} target="_blank"
+                               className={cx('label label-primary', inventarioNoche? 'center-block' : 'hide')}>
+                                Disponible
+                            </a>
+                        }
+                    </div>
+                </td>
             </tr>
         )
     }

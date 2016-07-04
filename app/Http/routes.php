@@ -61,6 +61,22 @@ Route::group(['middleware' => ['web']], function (){
         // AUDITORIAS - DESCARGA DE PDF
         Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porMes');
         Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porRango');
+
+
+//        // ACTIVOS FIJOS
+//        Route::get('activo-fijo/local/{idLocal}',             'ActivosFijosController@get_indexLocal');
+////        Route::get('activo-fijo/local/{idLocal}/almacenes',   'ActivosFijosController@get_indexAlmacenesLocal');
+////        Route::get('activo-fijo/almacen/{idAlmacen}',         'ActivosFijosController@get_indexAlmacen');
+//
+//        // api
+//        Route::get('api/activo-fijo/cargar-productos',                      'MaestraController@api_leer');  // ELIMINAR
+//        Route::get('api/activo-fijo/cliente/{idCliente}/productos',         'MaestraController@api_get');
+//        Route::get('api/activo-fijo/cliente/{idCliente}/almacenesAF',       'ActivosFijosController@api_almacenes');
+//        Route::get('api/activo-fijo/local/{idLocal}/buscar-productos',      'ActivosFijosController@api_local_productos_buscar');
+//        Route::get('api/activo-fijo/almacen/{idAlmacen}/productos',         'ActivosFijosController@api_almacen_productos');
+//        Route::get('api/activo-fijo/almacen/{idAlmacen}/preguias',          'ActivosFijosController@api_almacen_preguias');
+
+
         // USUARIOS - MANTENEDOR (DESARROLLO DETENIDO)
 //        Route::get('personal/nuevo',             'PersonalController@show_formulario')->name('personal.nuevo');
         // GEO - MANTENEDOR (DESARROLLO DETENIDO)
@@ -157,6 +173,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('inventarios/informar-archivo-final',  'InventariosController@api_informarArchivoFinal');
         // API DE NOMINAS
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-disponible', 'NominasController@api_informarDisponible');
+        Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-nomina-pago','NominasController@api_informarNominaPago');
         // API AUDITORIAS
         Route::get('auditoria/mes/{annoMesDia}/cliente/{idCliente}',        'AuditoriasController@api_getPorMesYCliente');
         Route::get('auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}',    'AuditoriasController@api_getPorRangoYCliente');

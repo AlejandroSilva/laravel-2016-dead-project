@@ -20,11 +20,11 @@
 
 /* CORRELATIVO */
 .thCorrelativo {
-    width: 30px;
+    width: 22px;
     background: white;
 }
 .tdCorrelativo {
-    width: 30px;
+    width: 22px;
     vertical-align: middle !important;
 }
 
@@ -204,6 +204,7 @@
 .thHora{
     width: 62px !important;
     background: white;
+    padding-right: 0 !important;
 }
 .tdHora{
     width: 62px !important;
@@ -257,21 +258,35 @@
 /* UNIDADES */
 .thUnidadesReales {
     background: white;
-    width: 45px;
+    width: 43px;
     padding-left: 0 !important;;
+    padding-right: 0 !important;
 }
 .tdUnidadesReales {
     background: white;
-    width: 45px;
+    width: 43px;
     vertical-align: middle !important;
 }
 
 .thUnidadesTeoricas {
     background: white;
+    width: 40px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.tdUnidadesTeoricas {
+    background: white;
+    width: 40px !important;
+    vertical-align: middle !important;
+}
+
+/* NOMINA DE PAGO */
+.thNomimaPago {
+    background: white;
     width: auto !important;
     padding-left: 0 !important;
 }
-.tdUnidadesTeoricas {
+.tdNominaPago {
     background: white;
     width: auto !important;
     vertical-align: middle !important;

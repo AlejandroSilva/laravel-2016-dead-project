@@ -514,15 +514,15 @@ class NominasController extends Controller {
                     $nominaNoche->fechaSubidaNomina = Carbon::now();
                     $nominaDia->save();
                     $nominaNoche->save();
-                    Log::info("[NOMINA:INFORMAR_REALIZADO:OK] CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia' (idInventario '$inventario->idInventario') informado correctamente.");
+                    Log::info("[NOMINA:INFORMAR_DISPONIBLE:OK] CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia' (idInventario '$inventario->idInventario') informado correctamente.");
                 }else{
-                    Log::info("[NOMINA:INFORMAR_REALIZADO:ERROR] CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia' (idInventario '$inventario->idInventario') ya habia sido informado.");
+                    Log::info("[NOMINA:INFORMAR_DISPONIBLE:ERROR] CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia' (idInventario '$inventario->idInventario') ya habia sido informado.");
                 }
                 return response()->json(Inventarios::with(['nominaDia', 'nominaNoche'])->find($inventario->idInventario), 200);
             }else {
                 // inventario con esa fecha no existe
                 $errorMsg = "CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia'; no existe un inventario programado para el idLocal '$local->idLocal' en esa fecha.";
-                Log::info("[NOMINA:INFORMAR_REALIZADO:ERROR] $errorMsg");
+                Log::info("[NOMINA:INFORMAR_DISPONIBLE:ERROR] $errorMsg");
                 return response()->json(['msg' => $errorMsg], 404);
             }
         } else{
@@ -531,7 +531,40 @@ class NominasController extends Controller {
             Log::info("[NOMINA:INFORMAR_DISPONIBLE:ERROR] $errorMsg");
             return response()->json(['msg'=>$errorMsg], 404);
         }
-        return response()->json(['msg'=>'falta por implementar'], 404);
+    }
+
+    // POST nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-nomina-pago
+    function api_informarNominaPago($idCliente, $ceco, $annoMesDia, Request $request){
+        // El Local existe?
+        $local = Locales::where('idCliente', '=', $idCliente)
+            ->where('numero', '=', $ceco)
+            ->first();
+        if(!$local){
+            $errorMsg = "no existe el CECO '$ceco' del idCliente '$idCliente'";
+            Log::info("[NOMINA:INFORMAR_NOMINA_PAGO:ERROR] $errorMsg");
+            return response()->json(['msg'=>$errorMsg], 404);
+        }
+
+        // Existe un inventario en esa fecha?
+        $inventario = Inventarios::where('idLocal', '=', $local->idLocal)
+            ->where('fechaProgramada', $annoMesDia)
+            //->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+            //->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
+            ->first();
+        if(!$inventario){
+            $errorMsg = "CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia'; no existe un inventario programado para el idLocal '$local->idLocal' en esa fecha.";
+            Log::info("[NOMINA:INFORMAR_NOMINA_PAGO:ERROR] $errorMsg");
+            return response()->json(['msg' => $errorMsg], 404);
+        }
+
+        // actualizar la URL de las nominas de pago de los locales
+        $urlNomina = $request->urlNominaPago;
+        $inventario->nominaDia->urlNominaPago = $urlNomina;
+        $inventario->nominaDia->save();
+        $inventario->nominaNoche->urlNominaPago = $urlNomina;
+        $inventario->nominaNoche->save();
+        Log::info("[NOMINA:INFORMAR_NOMINA_PAGO:OK] CECO '$ceco', idCliente '$idCliente', dia '$annoMesDia' (urlNomina: $urlNomina)");
+        return response()->json(Inventarios::with(['nominaDia', 'nominaNoche'])->find($inventario->idInventario), 200);
     }
 
     // GET programacionIG/nomina/{publicIdNomina}/pdf           RUTA PUBLICA

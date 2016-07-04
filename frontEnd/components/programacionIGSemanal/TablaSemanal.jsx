@@ -34,6 +34,7 @@ class TablaInventarios extends React.Component{
                     <col className={css.thNomina}/>
                     <col className={css.thUnidadesReales}/>
                     <col className={css.thUnidadesTeoricas}/>
+                    <col className={css.thNomimaPago}/>
                 </colgroup>
                 <thead>
                     {/* TR que se pega al top de la pagina, es una TR, con instancia de 'Sticky' */}
@@ -108,6 +109,7 @@ class TablaInventarios extends React.Component{
                         </th>
                         <th className={css.thUnidadesReales}>U.Cont</th>
                         <th className={css.thUnidadesTeoricas}>U.Teo</th>
+                        <th className={css.thNomimaPago}>Nom.Pago</th>
                     </Sticky>
                 </thead>
                 <tbody>
