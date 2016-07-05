@@ -66,17 +66,21 @@ class PersonalController extends Controller {
      */
     // GET api/usuarios/buscar
     function api_buscar(Request $request){
-        $usuarios = [];
+        $query = User::with([]);
 
         // buscar por RUN?
         $run = $request->query('run');
         if(isset($run)){
-            $usuarios = User::where('usuarioRUN', $run)->get();
-        }else{
-            $usuarios = User::all();
+            $query->where('usuarioRUN', $run);
         }
-
-        return response()->json($usuarios->sortBy('id')->map(['\App\User', 'formatoCompleto'] ), 200);
+        
+        $usuarios = $query->get();
+        return response()->json(
+            $usuarios
+                ->sortBy('id')
+                ->map(['\App\User', 'formatoCompleto']), 
+            200
+        );
     }
 
     // POST api/usuarios/nuevo-operador

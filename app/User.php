@@ -56,6 +56,18 @@ class User extends Authenticatable {
     }
 
     // #### Formatear
+    static function formatearMinimo($user){
+        return [
+            'id' => $user->id,
+            'usuarioRUN' => $user->usuarioRUN,
+            'usuarioDV' => $user->usuarioDV,
+            'nombre' => $user->nombreCompleto(),
+            'roles' => $user->roles->map(function($role){
+                return $role->id;
+            })
+        ];
+    }
+    
     static function formatearSimple($user){
         if(!$user)
             return null;

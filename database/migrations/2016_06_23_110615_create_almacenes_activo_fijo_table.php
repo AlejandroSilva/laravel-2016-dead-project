@@ -9,7 +9,7 @@ class CreateAlmacenesActivoFijoTable extends Migration {
             $table->increments('idAlmacenAF');                      // Primary Key
             $table->integer('idLocal')->unsigned();                 // FK
             $table->integer('idUsuarioResponsable')->unsigned();    // FK
-            $table->string('descripcion', 60);
+            $table->string('nombre', 60);
 
             // FK Usuario Responsable
             $table->foreign('idUsuarioResponsable')
