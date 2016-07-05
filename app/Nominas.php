@@ -140,15 +140,7 @@ class Nominas extends Model {
     public function tieneDotacionCompleta(){
         $supervisor = $this->supervisor? 1 : 0;
         $dotacionTitulares = $this->dotacionTitular()->count();
-
-        if($this->inventario->local->cliente->idCliente!=3){
-            // en todos los clientes, solo los operadores cuentan
-            // entonces se revisa que la dotacionTitular sea menor a dotacionOperadores
-            return ($dotacionTitulares + $supervisor) >= $this->dotacionOperadores;
-        }else{
-            // Excepto en el cliente CKY, donde el lider tambien cuenta
-            return ($dotacionTitulares + $supervisor) >= ($this->dotacionOperadores - 1);
-        }
+        return ($dotacionTitulares + $supervisor) >= $this->dotacionOperadores;
     }
 
     // #### Scopes para hacer Querys
