@@ -70,8 +70,20 @@
 
                         @if( Auth::user()->hasRole('Administrador') )
                             <li class="">
-                                <a href="#">Gestión Logistica</a>
+                                <a id="drop-logistica" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    Gestión Logistica <span class="caret"></span>
+                                </a>
+                                @if( Auth::user()->hasRole('Developer') )
+                                    <ul class="dropdown-menu" aria-labelledby="drop-logistica">
+                                        <li class="{{ Request::is('activo-fijo/local/*')? 'active': '' }}">
+                                            <a href="{{ url('activo-fijo/local/1104') }}">Control Activos Local 99</a>
+                                        </li>
+                                    </ul>
+                                @endif
                             </li>
+                        @endif
+
+                        @if( Auth::user()->hasRole('Administrador') )
                             <li class="#">
                                 <a href="#">Gestión Financiera</a>
                             </li>
