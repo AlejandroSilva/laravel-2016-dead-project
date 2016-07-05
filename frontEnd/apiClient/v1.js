@@ -20,6 +20,26 @@ axiosRaw.interceptors.response.use((response)=>{
 })
 
 export default {
+    activoFijo: {
+        local: (idLocal)=>({
+            almacen: (idAlmacen)=>({
+                productos: ()=>
+                    axios.get(`/api/activo-fijo/local/${idLocal}/buscar-productos?almacen=${idAlmacen}`)
+            }),
+            almacenes: {
+                fetch: ()=>
+                    axios.get(`/api/activo-fijo/local/${idLocal}/almacen`),
+                nuevo: (datos)=>
+                    axios.post(`/api/activo-fijo/local/${idLocal}/almacen`, datos)
+            },
+            buscarProducto: (barra)=>
+                axios.get(`/api/activo-fijo/local/${idLocal}/buscar-productos?barra=${barra}`),
+            transferir: (productos)=>
+                axios.post(`/api/activo-fijo/local/${idLocal}/transferir-productos`, productos),
+            responsables: ()=>
+                axios.get(`/api/activo-fijo/local/${idLocal}/responsables`)
+        })
+    },
     cliente: {
         getLocales: (idCliente)=>
             axios.get(`/api/cliente/${idCliente}/locales`)
