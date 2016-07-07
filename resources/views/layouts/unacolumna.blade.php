@@ -75,8 +75,8 @@
                                 </a>
                                 @if( Auth::user()->hasRole('Developer') )
                                     <ul class="dropdown-menu" aria-labelledby="drop-logistica">
-                                        <li class="{{ Request::is('activo-fijo/local/*')? 'active': '' }}">
-                                            <a href="{{ url('activo-fijo/local/1104') }}">Control Activos Local 99</a>
+                                        <li class="{{ Request::is('activo-fijo')? 'active': '' }}">
+                                            <a href="{{ url('activo-fijo') }}">Control Activos Fijos</a>
                                         </li>
                                     </ul>
                                 @endif

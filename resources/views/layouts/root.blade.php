@@ -42,10 +42,12 @@
 </head>
 <body>
     @yield('hmtl-body')
-
-    <script async src="/app/bundle.js"></script>
+    {{-- Scroller para react-data-tables --}}
+    <script src="/vendor/zinga-scroller/Animate.js"></script>
+    <script src="/vendor/zinga-scroller/Scroller.js"></script>
     <script src="/vendor/jquery/jquery-2.2.1.min.js"></script>
     <script src="/vendor/bootstrap/bootstrap.min.js"></script>
+    <script async src="/app/bundle.js"></script>
 </body>
 </html>
 {{-- Styles en esta seccion hacen que se haga render mas rapido en la pagina --}}

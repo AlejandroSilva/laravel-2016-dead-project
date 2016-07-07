@@ -21,24 +21,32 @@ axiosRaw.interceptors.response.use((response)=>{
 
 export default {
     activoFijo: {
-        local: (idLocal)=>({
-            almacen: (idAlmacen)=>({
-                productos: ()=>
-                    axios.get(`/api/activo-fijo/local/${idLocal}/buscar-productos?almacen=${idAlmacen}`)
-            }),
-            almacenes: {
-                fetch: ()=>
-                    axios.get(`/api/activo-fijo/local/${idLocal}/almacen`),
-                nuevo: (datos)=>
-                    axios.post(`/api/activo-fijo/local/${idLocal}/almacen`, datos)
-            },
-            buscarProducto: (barra)=>
-                axios.get(`/api/activo-fijo/local/${idLocal}/buscar-productos?barra=${barra}`),
-            transferir: (productos)=>
-                axios.post(`/api/activo-fijo/local/${idLocal}/transferir-productos`, productos),
-            responsables: ()=>
-                axios.get(`/api/activo-fijo/local/${idLocal}/responsables`)
-        })
+        // productos : {
+        //     buscar: (barra)=>
+        //         axios.get(`/api/activo-fijo/productos/buscar?barra=${barra}`),
+        // },
+        articulos : {
+            buscarBarra: (barra)=>
+                axios.get(`/api/activo-fijo/articulos/buscar-barra?barra=${barra}`),
+            transferir: (articulos)=>
+                axios.post(`/api/activo-fijo/articulos/transferir`, articulos)
+        },
+        almacenes: {
+            buscar: ()=>
+                axios.get(`/api/activo-fijo/almacenes/buscar`),
+            nuevo: (datos)=>
+                axios.post(`/api/activo-fijo/almacen/nuevo`, datos)
+        },
+        almacen: (idAlmacen)=>({
+            productos: ()=>
+                axios.get(`/api/activo-fijo/productos/buscar?almacen=${idAlmacen}`),
+            articulos: ()=>
+                axios.get(`/api/activo-fijo/articulos/buscar?almacen=${idAlmacen}`)
+        }),
+        responsables: {
+            buscar: ()=>
+                axios.get(`/api/activo-fijo/responsables/buscar`)
+        }
     },
     cliente: {
         getLocales: (idCliente)=>

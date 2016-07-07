@@ -11,46 +11,70 @@ use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Shared_Date;
 // Modelos
+use App\ArticuloAF;
 use App\Clientes;
-//use App\ProductoAF;
-use App\AlmacenAF;
+use App\CodigoBarra;
+use App\ProductoAF;
 
 class MaestraController extends Controller {
 
-    // GET maestra-produccion/leer          -- function temporal, eliminar
-    function api_leer(){
+    // GET api/activo-fijo/cargar-productos         -- function temporal, eliminar
+    function api_cargar_productos(){
         ini_set('memory_limit','1024M');
-        $tableData = $this->leerArchivo('/home/asilva/Escritorio/maestraSEI.xls');
-        $almacenDisponible = AlmacenAF::find(1);
+        $tableData = $this->leerArchivoProductos('/home/asilva/Escritorio/maestra_activo_fijo/SEI_productos.xlsx');
 
-        // todo surgio un "problema": activo fijo no tiene la misma maestra de inventario
-        // maestra AF: 1 producto, una existencia
-        // maestra INV: 1 producto, muchas existencias
         // transaccion, es muy comun tener datos duplicados en las maestras
-        DB::transaction(function() use ($tableData, $almacenDisponible){
+        DB::transaction(function() use ($tableData){
             foreach($tableData as $data) {
-                $almacenDisponible->productosAF()->insert([
-                    'codActivoFijo'=>$data['codigo_activo'],
-                    'idAlmacenAF'=> 1,
-                    'idLocal' => 1104,
-                    'descripcion'=>$data['descripcion'],
-                    'precio'=> isset($data['precio'])? $data['precio'] : 0,
-                    'barra1'=> $data['barra1'],
-                    'barra2'=> $data['barra2'],
-                    'barra3'=> $data['barra3'],
+                ProductoAF::insert([
+                    'SKU'=>$data['a'],
+                    'descripcion'=>$data['b'],
+                    'valorMercado'=> $data['c']
                 ]);
             }
         });
         $data = collect($tableData);
         return response()->json($data->count());
     }
-    
+
+    // GET api/activo-fijo/cargar-articulos         -- function temporal, eliminar
+    function api_cargar_articulos(){
+        ini_set('memory_limit','1024M');
+        $tableData = $this->leerArchivoProductos('/home/asilva/Escritorio/maestra_activo_fijo/SEI_articulos.xlsx');
+
+        // transaccion, es muy comun tener datos duplicados en las maestras
+        DB::transaction(function() use ($tableData){
+
+            // insertar articulos
+//            foreach($tableData as $data) {
+//                ArticuloAF::insert([
+//                    'codArticuloAF'=>$data['d'],
+//                    'SKU'=>$data['a'],
+//                    'idAlmacenAF'=>1,
+//                    'fechaIncorporacion'=> '2016-07-07'
+//                ]);
+//            }
+
+            // insertar codigos barra
+            foreach($tableData as $data) {
+//                if(isset($data['e']))
+//                    CodigoBarra::insert([ 'barra' => $data['e'], 'codArticuloAF' => $data['d'] ]);
+//                if(isset($data['f']))
+//                    CodigoBarra::insert([ 'barra' => $data['f'], 'codArticuloAF' => $data['d'] ]);
+                if(isset($data['g']))
+                    CodigoBarra::insert([ 'barra' => $data['g'], 'codArticuloAF' => $data['d'] ]);
+            }
+        });
+        $data = collect($tableData);
+        return response()->json($data->count());
+    }
+
     /**
      * ##########################################################
      * funciones privadas
      * ##########################################################
      */
-    private function leerArchivo($inputFileName) {
+    private function leerArchivoProductos($inputFileName) {
         try {
             $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
             $objReader = PHPExcel_IOFactory::createReader($inputFileType);
@@ -69,12 +93,14 @@ class MaestraController extends Controller {
         // iniciar el 2, para saltarse el titulo
         for ($row = 2; $row <= $highestRow; $row++){
             array_push($tableData, [
-                'codigo_activo' =>  $sheet->getCell("A$row")->getValue(),
-                'descripcion'=>     $sheet->getCell("B$row")->getValue(),
-                'barra1'=>          $sheet->getCell("C$row")->getValue(),
-                'barra2'=>          $sheet->getCell("D$row")->getValue(),
-                'barra3'=>          $sheet->getCell("E$row")->getValue(),
-                'precio'=>          $sheet->getCell("F$row")->getValue(),
+                'a'=> $sheet->getCell("A$row")->getValue(),
+                'b'=> $sheet->getCell("B$row")->getValue(),
+                'c'=> $sheet->getCell("C$row")->getValue(),
+                'd'=> $sheet->getCell("D$row")->getValue(),
+                'e'=> $sheet->getCell("E$row")->getValue(),
+                'f'=> $sheet->getCell("F$row")->getValue(),
+                'g'=> $sheet->getCell("G$row")->getValue(),
+                'h'=> $sheet->getCell("H$row")->getValue(),
             ]);
         }
         return $tableData;

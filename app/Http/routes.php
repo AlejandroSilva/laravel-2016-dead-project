@@ -63,19 +63,22 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porRango');
 
 
-//        // ACTIVOS FIJOS
-//        Route::get('activo-fijo/local/{idLocal}',             'ActivosFijosController@get_indexLocal');
-////        Route::get('activo-fijo/local/{idLocal}/almacenes',   'ActivosFijosController@get_indexAlmacenesLocal');
-////        Route::get('activo-fijo/almacen/{idAlmacen}',         'ActivosFijosController@get_indexAlmacen');
-//
-//        // api
-//        Route::get('api/activo-fijo/cargar-productos',                      'MaestraController@api_leer');  // ELIMINAR
-//        Route::get('api/activo-fijo/cliente/{idCliente}/productos',         'MaestraController@api_get');
-//        Route::get('api/activo-fijo/cliente/{idCliente}/almacenesAF',       'ActivosFijosController@api_almacenes');
-//        Route::get('api/activo-fijo/local/{idLocal}/buscar-productos',      'ActivosFijosController@api_local_productos_buscar');
-//        Route::get('api/activo-fijo/almacen/{idAlmacen}/productos',         'ActivosFijosController@api_almacen_productos');
-//        Route::get('api/activo-fijo/almacen/{idAlmacen}/preguias',          'ActivosFijosController@api_almacen_preguias');
+        // ACTIVOS FIJOS
+        Route::get('activo-fijo',             'ActivosFijosController@get_index');
 
+        // api (ordenar luego)
+        Route::get('api/activo-fijo/productos/buscar',       'ActivosFijosController@api_productos_buscar');
+        Route::get('api/activo-fijo/articulos/buscar',       'ActivosFijosController@api_articulos_buscar');
+        Route::get('api/activo-fijo/articulos/buscar-barra', 'ActivosFijosController@api_articulos_buscarBarra');
+        Route::post('api/activo-fijo/articulos/transferir',  'ActivosFijosController@api_articulos_transferir');
+        Route::get('api/activo-fijo/almacenes/buscar',       'ActivosFijosController@api_almacenes_buscar');
+        Route::post('api/activo-fijo/almacen/nuevo',         'ActivosFijosController@api_almacen_nuevo');
+        Route::get('api/activo-fijo/preguias/buscar',        'ActivosFijosController@api_preguias_buscar');
+        Route::get('api/activo-fijo/responsables/buscar',    'ActivosFijosController@api_responsables_buscar');
+
+
+        Route::get('api/activo-fijo/cargar-productos',                      'MaestraController@api_cargar_productos');
+        Route::get('api/activo-fijo/cargar-articulos',                      'MaestraController@api_cargar_articulos');
 
         // USUARIOS - MANTENEDOR (DESARROLLO DETENIDO)
 //        Route::get('personal/nuevo',             'PersonalController@show_formulario')->name('personal.nuevo');

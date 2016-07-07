@@ -15,7 +15,7 @@ import { NominaIG } from './components/nominaIG/nominaIG.jsx'
 import { NominasCaptador } from './components/nominasCaptador/NominasCaptador.jsx'
 import { MantenedorStock } from './components/mantenedorStock/MantenedorStock.jsx'
 import { MantenedorMaestra } from './modulos-logistica/mantenedorMaestra/MantenedorMaestra.jsx'
-import { ActivoFijoLocal } from './modulos-logistica/activoFijoLocal/ActivoFijoLocal.jsx'
+import { ActivoFijo } from './modulos-logistica/activoFijo/ActivoFijo.jsx'
 
 /** FORMULARIO PARA LA CREACIÓN DE UN NUEVO Inventario */
 // GET inventario/nuevo, NO SE OCUPA
@@ -150,13 +150,12 @@ if( mantenedorMaestraDOM ) {
 }
 
 /**  ACTIVOS FIJO DE UN LOCAL **/
-let activoFijoLocalDOM = document.getElementById('react-activo-fijo-local')
-if( activoFijoLocalDOM ) {
+let activoFijoDOM = document.getElementById('react-activo-fijo-index')
+if( activoFijoDOM ) {
     ReactDOM.render(
-        <ActivoFijoLocal
-            local={window.laravelLocal}
+        <ActivoFijo
             almacenes={window.laravelAlmacenes}
-        />, activoFijoLocalDOM
+        />, activoFijoDOM
     )
 }
 
