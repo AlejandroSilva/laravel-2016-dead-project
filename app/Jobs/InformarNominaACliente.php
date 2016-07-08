@@ -66,9 +66,12 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     ];
     // Cliente 7: CMT
     protected $CMT_nomina_to = [
-        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
-//        ['bgamboa@seiconsultores.cl', 'Bernardita Gamboa']
-        // TODO: evelin, cerna, cesar
+        ['cmartinez@construmart.cl', 'Cesar Martinez'],
+        ['bespinaza@construmart.cl', 'Beatriz Espinaza'],
+        ['emolina@construmart.cl', 'Cesar Martinez'],
+        ['vcaamano@construmart.cl', 'Victor Caamaño'],
+        ['jjimenez@construmart.cl', 'Juan Carlos Jimenez Velasquez'],
+        ['ccerna@construmart.cl', 'Cristian Cerna'],
     ];
     
 
