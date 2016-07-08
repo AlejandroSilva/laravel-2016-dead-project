@@ -71,7 +71,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ['emolina@construmart.cl', 'Cesar Martinez'],
         ['vcaamano@construmart.cl', 'Victor Caamaño'],
         ['jjimenez@construmart.cl', 'Juan Carlos Jimenez Velasquez'],
-        ['ccerna@construmart.cl', 'Cristian Cerna'],
+        ['cristian.cerna@construmart.cl', 'Cristian Cerna'],
     ];
     
 
