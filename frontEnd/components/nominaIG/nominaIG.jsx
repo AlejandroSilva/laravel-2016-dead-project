@@ -261,6 +261,11 @@ export class NominaIG extends React.Component {
     }
 
     render(){
+        let operadoresAsignados = this.state.supervisor? this.state.dotacionTitular.length+1 : this.state.dotacionTitular.length
+        let totalAsignados = this.state.lider? operadoresAsignados +1 : operadoresAsignados
+        // la nomina tiene todos los captadores asignados? y el total corresponde a lo asignado?
+        let nominaCompleta = (this.state.dotacionTitular.length==operadoresAsignados) &&
+                             (this.props.nomina.dotacionTotal==totalAsignados)
         return (
             <div className="container">
                 <ReactNotify ref='notificator' className={ReactNotifyCSS}/>
@@ -317,6 +322,7 @@ export class NominaIG extends React.Component {
                     rechazarNomina={this.rechazarNomina.bind(this)}
                     informarNomina={this.informarNomina.bind(this)}
                     rectificarNomina={this.rectificarNomina.bind(this)}
+                    nominaCompleta={nominaCompleta}
                     // permisos
                     permisos={this.props.permisos}
                 />

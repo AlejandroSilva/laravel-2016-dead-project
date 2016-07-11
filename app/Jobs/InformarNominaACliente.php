@@ -184,8 +184,9 @@ class InformarNominaACliente extends Job implements ShouldQueue {
                 $message
                     ->from('no-responder@plataforma.seiconsultores.cl', 'SEI Consultores')
                     ->subject($datosCorreo['subject']);
+                
                 if(App::environment('production')){
-                    // enviar a los destinatarios
+                    // en produccion enviar las nominas a los destinatarios reales
                     foreach($datosCorreo['to'] as $destinatario){
                         $message->to($destinatario[0], $destinatario[1]);
                         Log::info("[prod] enviando TO: $destinatario[0] - $destinatario[1]");
@@ -196,6 +197,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
                         Log::info("[prod] enviando BCC: $destinatario[0] - $destinatario[1]");
                     }
                 }else{
+                    // en desarrollo solo enviar a la lista de SEI_DESARROLLO
                     foreach($this->SEI_DESARROLLO as $destinatario){
                         $message->to($destinatario[0], $destinatario[1]);
                         Log::info("[dev] enviando TO: $destinatario[0] - $destinatario[1]");

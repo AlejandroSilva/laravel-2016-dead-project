@@ -43,8 +43,10 @@ export class PanelEstados extends React.Component {
                 activo={idEstado==4}
                 acciones={[
                     {
-                        texto: 'Informar nómina', onclick: this.props.informarNomina,
-                        habilitado: idEstado==4 && this.props.permisos.informar
+                        // si la nomina no esta completa, en su total o en sus operadores, no puede ser informada...
+                        texto: this.props.nominaCompleta? 'Informar nómina' : 'Revise Operadores y/o Total asignado',
+                        onclick: this.props.informarNomina,
+                        habilitado: idEstado==4 && this.props.permisos.informar && this.props.nominaCompleta
                     }
                 ]}
             />
@@ -72,6 +74,7 @@ PanelEstados.propTypes = {
     rechazarNomina: PropTypes.func.isRequired,
     informarNomina: PropTypes.func.isRequired,
     rectificarNomina: PropTypes.func.isRequired,
+    nominaCompleta: PropTypes.bool.isRequired,
     // Permisos
     permisos: PropTypes.object.isRequired
 }
