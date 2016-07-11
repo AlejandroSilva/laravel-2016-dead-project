@@ -53,7 +53,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{idNomina}',              'NominasController@show_nomina');
         // NOMINAS - NOMINAS DE CAPTADOR
         Route::get('nominas/captadores',                            'NominasController@show_captadores');
-        Route::get('nominas/captador/{idCaptador}',                 'NominasController@show_nominasCaptador');
+        //Route::get('nominas/captador/{idCaptador}',                 'NominasController@show_nominasCaptador');
         // AUDITORIAS - PROGRAMACION AI
         Route::get('programacionAI',                 'AuditoriasController@showProgramacionIndex');
         Route::get('programacionAI/mensual',          'AuditoriasController@showMensual');
@@ -103,8 +103,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('inventario/{idInventario}',         'InventariosController@api_actualizar');
         Route::delete('inventario/{idInventario}',      'InventariosController@api_eliminar');
         // API DE NOMINAS
-        Route::get('nominas/buscar',                                'NominasController@api_buscar');
         Route::put('nomina/{idNomina}',                             'NominasController@api_actualizar');
+        Route::get('nominas/buscar',                                'NominasController@api_buscar');
         // -- cambios en la dotacion de las nominas
         Route::get('nomina/{idNomina}/dotacion',                    'NominasController@api_get');
         Route::post('nomina/{idNomina}/lider/{usuarioRUN}',         'NominasController@api_agregarLider');

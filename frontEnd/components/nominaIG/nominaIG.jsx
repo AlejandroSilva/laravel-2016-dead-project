@@ -183,7 +183,7 @@ export class NominaIG extends React.Component {
     onNuevoUsuario(datos){
         console.log('enviando', datos)
 
-        api.usuario.nuevoOperador(datos)
+        api.usuarios.nuevoOperador(datos)
             .then(usuario=>{
                 console.log('nuevo usuario creado', usuario)
                 this.agregarOperador(this.state.esTitular, usuario.usuarioRUN)

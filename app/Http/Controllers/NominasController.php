@@ -29,12 +29,12 @@ class NominasController extends Controller {
      */
     // GET programacionIG/nomina/{idNomina}
     function show_nomina($idNomina){
-        // verificar que el usuario tenga permisos para ver auditorias
-        // ToDo: revisar si es un captador, que solo pueda ver SUS auditorias
+        // el usuario esta logeado?
         $user = Auth::user();
-        if(!$user || !$user->can('programaInventarios_ver'))
+        if(!$user)
             return view('errors.403');
 
+        // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina){
             return view('errors.errorConMensaje', [
@@ -42,6 +42,13 @@ class NominasController extends Controller {
                 'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
             ]);
         }
+
+        // el usuario tiene los permisos para ver las nominas, O es el captador asignado?
+        $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
+        if(!$esElCaptadorAsignado && !$user->can(''))
+            return view('errors.403');
+
+
         return view('operacional.nominas.nomina', [
             'nomina' => Nominas::formatearConLiderSupervisorCaptadorDotacion($nomina),
             'inventario' => Inventarios::formatoClienteFormatoRegion($nomina->inventario),
@@ -50,8 +57,8 @@ class NominasController extends Controller {
                 // para poder enviar debe tener los permisos, O ser el captador asociado (ambos no son necesarios)
                 'cambiarLider' => $user->can('nominaIG-cambiarLider'),
                 'cambiarSupervisor' => $user->can('nominaIG-cambiarSupervisor'),
-                'cambiarDotacion' => $user->can('nominaIG-cambiarDotacion'),
-                'enviar' => $user->can('nominaIG-enviar'),
+                'cambiarDotacion' => $user->can('nominaIG-cambiarDotacion') || $esElCaptadorAsignado,
+                'enviar' => $user->can('nominaIG-enviar') || $esElCaptadorAsignado,
                 'aprobar' => $user->can('nominaIG-aprobar'),
                 'informar' => $user->can('nominaIG-informar'),
                 'rectificar' => $user->can('nominaIG-rectificar')
@@ -90,26 +97,26 @@ class NominasController extends Controller {
         ]);
     }
     // GET nominas/captador/{idCaptador}
-    function show_nominasCaptador($idCaptador){
-        // todo revisar los permisos
-        $usuario = User::find($idCaptador);
-        if(!$usuario){
-            return view('errors.errorConMensaje', [
-                'titulo' => 'Captador no encontrado', 'descripcion' => 'El captador que busca no ha sido encontrado.'
-            ]);
-        }
-
-        // buscar los "proximos" inventarios del captador
-        $nominas = $this->buscar( (object)[
-            'fechaInicio' => \Carbon\Carbon::now()->format("Y-m-d"),
-            'idCaptador1' => $idCaptador
-        ])
-            ->map('\App\Nominas::formatearConInventario');
-
-        return view('nominas.captador', [
-            'nominas' => $nominas
-        ]);
-    }
+//    function show_nominasCaptador($idCaptador){
+//        // todo revisar los permisos
+//        $usuario = User::find($idCaptador);
+//        if(!$usuario){
+//            return view('errors.errorConMensaje', [
+//                'titulo' => 'Captador no encontrado', 'descripcion' => 'El captador que busca no ha sido encontrado.'
+//            ]);
+//        }
+//
+//        // buscar los "proximos" inventarios del captador
+//        $nominas = $this->buscar( (object)[
+//            'fechaInicio' => \Carbon\Carbon::now()->format("Y-m-d"),
+//            'idCaptador1' => $idCaptador
+//        ])
+//            ->map('\App\Nominas::formatearConInventario');
+//
+//        return view('nominas.captador', [
+//            'nominas' => $nominas
+//        ]);
+//    }
 
     /**
      * ##########################################################
@@ -310,16 +317,21 @@ class NominasController extends Controller {
     }
     // POST api/nomina/{idNomina}/operador/{usuarioRUN}
     function api_agregarOperador($idNomina, $usuarioRUN, Request $request){
-        // solo el captador asociado Y las personas que tengan permiso pueden modificar la dotacion
-        // Todo: falta considerar al captador asociado a la nomina
+        // el usuario existe?
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-cambiarDotacion'))
+        if(!$user)
             return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
 
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
             return response()->json('Nomina no encontrada', 404);
+
+        // puede hacer el cambio? (tiene los permisos O es el captador asignado)
+        $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
+        if(!$esElCaptadorAsignado && !$user->can('nominaIG-cambiarDotacion'))
+            return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
+
         // la nomina se encuentra pendiente?
         if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'Para agregar el usuario, la nómina debe estar Pendiente'], 400);
@@ -327,6 +339,7 @@ class NominasController extends Controller {
         $operador = User::where('usuarioRUN', $usuarioRUN)->first();
         if(!$operador)
             return response()->json('', 204);
+
         // Si el operador ya esta en la nomina, no hacer nada y devolver la lista como esta
         $operadorExiste = $nomina->usuarioEnDotacion($operador);
         if($operadorExiste)
@@ -351,16 +364,21 @@ class NominasController extends Controller {
     }
     // DELETE api/nomina/{idNomina}/operador/{usuarioRUN}
     function api_quitarOperador($idNomina, $usuarioRUN){
-        // solo el captador asociado Y las personas que tengan permiso pueden modificar la dotacion
-        // Todo: falta considerar al captador asociado a la nomina
+        // el usuario existe?
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-cambiarDotacion'))
+        if(!$user)
             return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
 
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
             return response()->json('Nomina no encontrada', 404);
+
+        // puede hacer el cambio? (tiene los permisos O es el captador asignado)
+        $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
+        if(!$esElCaptadorAsignado && !$user->can('nominaIG-cambiarDotacion'))
+            return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
+
         // la nomina se encuentra pendiente?
         if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'Para quitar el usuario, la nómina debe estar Pendiente'], 400);
@@ -374,19 +392,25 @@ class NominasController extends Controller {
         );
     }
     function api_enviarNomina($idNomina){
-        // Puede enviar la nomina si tiene permisos O si es el captador asociado
-        // Todo: Falta la parte en que revisa que sea el captador asociado
+        // el usuario esta logeado?
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-enviar'))
+        if(!$user)
             return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
 
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+
+        // tiene los permisos para hacer el cambio? (tiene los permisos O es el captador asignado)
+        $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
+        if(!$esElCaptadorAsignado && !$user->can('nominaIG-enviar'))
+            return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
+
         // la nomina esta pendiente?
         if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'La nomina debe estar en estado Pendiente'], 400);
+
         // pasar al estado "Recibida"
         $nomina->idEstadoNomina = 3;
         $nomina->save();

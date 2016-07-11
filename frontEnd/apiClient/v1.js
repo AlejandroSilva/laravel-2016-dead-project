@@ -138,12 +138,16 @@ export default {
        comunas: ()=>
             axios.get(`/api/geo/comunas`)
     },
-    usuario: {
-        buscarRUN: (run)=>
-            axios.get(`/api/usuarios/buscar?run=${run}`),
+    usuarios: {
+        // buscarRUN: (run)=>
+        //     axios.get(`/api/usuarios/buscar?run=${run}`),
         nuevoOperador: (datos)=>
-            axios.post(`/api/usuarios/nuevo-operador`, datos)
+            axios.post(`/api/usuarios/nuevo-operador`, datos),
     },
+    usuario: (idUsuario)=>({
+        nominasAsignadas: (fechaHoy)=>
+            axios.get(`/api/nominas/buscar?idCaptador1=${idUsuario}&fechaInicio=${fechaHoy}`)
+    }),
     vistaGeneral: {
         fetch: (annoMesDia, idCliente=0)=>
             axios.get(`/api/vista-general/nominas-inventarios?idCliente=${idCliente}&annoMesDia=${annoMesDia}`),

@@ -9,6 +9,14 @@
                     Seleccione una opción del menu superior
                 </div>
             </div>
+
+            <div id="react-main-dashboard"></div>
         </div>
     </div>
+
+    <script>
+        window.laravelUsuario = {!! json_encode($user) !!};
+        window.laravelPermisos = {!! json_encode($perms) !!};
+        window.laravelFechaHoy = {!! json_encode($fechaHoy) !!};
+    </script>
 @endsection

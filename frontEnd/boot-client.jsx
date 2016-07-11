@@ -3,20 +3,36 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 // Componentes
-//import InventarioForm from './components/inventario/InventarioForm.jsx'
+// DASHBOARD
+import { Dashboard } from './modulos-dashboard/Dashboard.jsx'
+// LOGISTICA
 import ProgramacionIGMensual from './components/programacionIGMensual/ProgramacionIGMensual.jsx'
 import ProgramacionIGSemanal from './components/programacionIGSemanal/ProgramacionIGSemanal.jsx'
 import ProgramacionAIMensual from './components/programacionAIMensual/ProgramacionAIMensual.jsx'
 import ProgramacionAISemanal from './components/programacionAISemanal/ProgramacionAISemanal.jsx'
 import { ProgramacionAIPendientes } from './components/programacionAIPendientes/ProgramacionAIPendientes.jsx'
 import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.jsx'
-// import { GeoGestor } from './components/Geo/GeoGestor.jsx'
 import { NominaIG } from './components/nominaIG/nominaIG.jsx'
-import { NominasCaptador } from './components/nominasCaptador/NominasCaptador.jsx'
 import { MantenedorStock } from './components/mantenedorStock/MantenedorStock.jsx'
 import { MantenedorMaestra } from './modulos-logistica/mantenedorMaestra/MantenedorMaestra.jsx'
 import { ActivoFijo } from './modulos-logistica/activoFijo/ActivoFijo.jsx'
 
+/** ************************************************************* **/
+/** ************************ DASHBOARD ************************** **/
+/** ************************************************************* **/
+let mainDashboardDOM = document.getElementById('react-main-dashboard')
+if( mainDashboardDOM ){
+    ReactDOM.render(
+        <Dashboard
+            usuario={window.laravelUsuario}
+            // permisos={window.laravelPermisos}
+            fechaHoy={window.laravelFechaHoy}
+        />, mainDashboardDOM)
+}
+
+/** ************************************************************* **/
+/** ************************ LOGISTICA ************************** **/
+/** ************************************************************* **/
 /** FORMULARIO PARA LA CREACIÓN DE UN NUEVO Inventario */
 // GET inventario/nuevo, NO SE OCUPA
 // let nuevoInventarioDOM = document.getElementById('nuevo-inventario')
@@ -124,16 +140,6 @@ if( mantenedorNominaIGDOM ){
             comunas={window.laravelComunas}
             permisos={window.laravelPermisos}
         />, mantenedorNominaIGDOM)
-}
-
-let nominasCaptador = document.getElementById('react-nominas-captador')
-if( nominasCaptador ){
-    ReactDOM.render(
-        <NominasCaptador
-            nominas={window.laravelNominas}
-            // nomina={window.laravelNomina}
-            // comunas={window.laravelComunas}
-        />, nominasCaptador)
 }
 
 /** ************************************************************* **/
