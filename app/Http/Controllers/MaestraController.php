@@ -57,10 +57,10 @@ class MaestraController extends Controller {
 
             // insertar codigos barra
             foreach($tableData as $data) {
-//                if(isset($data['e']))
-//                    CodigoBarra::insert([ 'barra' => $data['e'], 'codArticuloAF' => $data['d'] ]);
-//                if(isset($data['f']))
-//                    CodigoBarra::insert([ 'barra' => $data['f'], 'codArticuloAF' => $data['d'] ]);
+                if(isset($data['e']))
+                    CodigoBarra::insert([ 'barra' => $data['e'], 'codArticuloAF' => $data['d'] ]);
+                if(isset($data['f']))
+                    CodigoBarra::insert([ 'barra' => $data['f'], 'codArticuloAF' => $data['d'] ]);
                 if(isset($data['g']))
                     CodigoBarra::insert([ 'barra' => $data['g'], 'codArticuloAF' => $data['d'] ]);
             }

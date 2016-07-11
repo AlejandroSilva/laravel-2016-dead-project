@@ -21,9 +21,9 @@ export class TablaArticulosAF extends React.Component {
                     width={600}
                     height={300}
                     // header
-                    headerHeight={35}
+                    headerHeight={30}
                     // rows
-                    rowHeight={20}
+                    rowHeight={22}
                     rowsCount={this.props.articulos.length}>
 
                     <Column
@@ -41,7 +41,7 @@ export class TablaArticulosAF extends React.Component {
                             <Cell className={cx('cell')}>
                                 {this.props.articulos[rowIndex].SKU}
                             </Cell> }
-                        width={50}
+                        width={40}
                         flexGrow={1}
                     />
                     <Column
@@ -59,7 +59,7 @@ export class TablaArticulosAF extends React.Component {
                             <Cell className={cx('cell')}>
                                 {this.props.articulos[rowIndex].codArt}
                             </Cell> }
-                        width={120}
+                        width={140}
                         flexGrow={1}
                     />
                     <Column

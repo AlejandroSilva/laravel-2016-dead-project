@@ -29,7 +29,9 @@ export default {
             buscarBarra: (barra)=>
                 axios.get(`/api/activo-fijo/articulos/buscar-barra?barra=${barra}`),
             transferir: (articulos)=>
-                axios.post(`/api/activo-fijo/articulos/transferir`, articulos)
+                axios.post(`/api/activo-fijo/articulos/transferir`, articulos),
+            entregar: (datos)=>
+                axios.post(`/api/activo-fijo/articulos/entregar`, datos)
         },
         almacenes: {
             buscar: ()=>
@@ -41,12 +43,20 @@ export default {
             productos: ()=>
                 axios.get(`/api/activo-fijo/productos/buscar?almacen=${idAlmacen}`),
             articulos: ()=>
-                axios.get(`/api/activo-fijo/articulos/buscar?almacen=${idAlmacen}`)
+                axios.get(`/api/activo-fijo/articulos/buscar?almacen=${idAlmacen}`),
+            preguias: ()=> 
+                axios.get(`/api/activo-fijo/preguias/buscar?almacen=${idAlmacen}`)
         }),
         responsables: {
             buscar: ()=>
                 axios.get(`/api/activo-fijo/responsables/buscar`)
-        }
+        },
+        preguia: (idPreguia)=>({
+            fetch: ()=>
+                axios.get(`/api/activo-fijo/preguia/${idPreguia}`),
+            devolver: (datos)=>
+                axios.post(`/api/activo-fijo/preguia/${idPreguia}/devolver`, datos)
+        })
     },
     cliente: {
         getLocales: (idCliente)=>

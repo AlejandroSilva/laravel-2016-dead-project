@@ -11,12 +11,17 @@ class AlmacenAF extends Model {
     protected $fillable = ['idLocal', 'idUsuarioResponsable', 'nombre'];
 
     // #### Relaciones
-    // Almacen tiene muchos ActivosFijos
-    public function productosAF(){
-        return $this->hasMany('App\ProductoAF', 'idAlmacenAF', 'idAlmacenAF');
-    }
     // muchos almacenes pertenecen a un Local/Ceco
     public function local(){
         return $this->belongsTo('App\Locales', 'idLocal', 'idLocal');
     }
+    // Almacen tiene muchos ActivosFijos
+    public function productosAF(){
+        return $this->hasMany('App\ProductoAF', 'idAlmacenAF', 'idAlmacenAF');
+    }
+    // Almacen tiene muchas preguias de despacho
+    // tiene una relacion de idAlmacenOrigen y idAlmacenDestino
+//    public function preguias(){
+//        return $this->hasMany('App\PreguiaDespacho', 'idAlmacenAF', 'idAlmacenAF');
+//    }
 }

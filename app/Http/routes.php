@@ -62,23 +62,12 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porMes');
         Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porRango');
 
-
         // ACTIVOS FIJOS
         Route::get('activo-fijo',             'ActivosFijosController@get_index');
-
         // api (ordenar luego)
-        Route::get('api/activo-fijo/productos/buscar',       'ActivosFijosController@api_productos_buscar');
-        Route::get('api/activo-fijo/articulos/buscar',       'ActivosFijosController@api_articulos_buscar');
-        Route::get('api/activo-fijo/articulos/buscar-barra', 'ActivosFijosController@api_articulos_buscarBarra');
-        Route::post('api/activo-fijo/articulos/transferir',  'ActivosFijosController@api_articulos_transferir');
-        Route::get('api/activo-fijo/almacenes/buscar',       'ActivosFijosController@api_almacenes_buscar');
-        Route::post('api/activo-fijo/almacen/nuevo',         'ActivosFijosController@api_almacen_nuevo');
-        Route::get('api/activo-fijo/preguias/buscar',        'ActivosFijosController@api_preguias_buscar');
-        Route::get('api/activo-fijo/responsables/buscar',    'ActivosFijosController@api_responsables_buscar');
 
-
-        Route::get('api/activo-fijo/cargar-productos',                      'MaestraController@api_cargar_productos');
-        Route::get('api/activo-fijo/cargar-articulos',                      'MaestraController@api_cargar_articulos');
+        Route::get('api/activo-fijo/cargar-productos',                      'MaestraController@api_cargar_productos');  // ELIMINAR
+        Route::get('api/activo-fijo/cargar-articulos',                      'MaestraController@api_cargar_articulos');  // ELIMINAR
 
         // USUARIOS - MANTENEDOR (DESARROLLO DETENIDO)
 //        Route::get('personal/nuevo',             'PersonalController@show_formulario')->name('personal.nuevo');
@@ -139,7 +128,20 @@ Route::group(['middleware' => ['web']], function (){
         
         // API VISTA GENERAL
         Route::get('vista-general/nominas-inventarios',    'VistaGeneralController@api_obtenerNominasAuditorias');
-        
+
+        // API ACTIVO FIJO
+        Route::get('api/activo-fijo/productos/buscar',              'ActivosFijosController@api_productos_buscar');
+        Route::get('api/activo-fijo/articulos/buscar',              'ActivosFijosController@api_articulos_buscar');
+        Route::get('api/activo-fijo/articulos/buscar-barra',        'ActivosFijosController@api_articulos_buscarBarra');
+        Route::post('api/activo-fijo/articulos/entregar',           'ActivosFijosController@api_articulos_entregar_a_almacen');
+        Route::post('api/activo-fijo/articulos/transferir',         'ActivosFijosController@api_articulos_transferir');
+        Route::get('api/activo-fijo/almacenes/buscar',              'ActivosFijosController@api_almacenes_buscar');
+        Route::post('api/activo-fijo/almacen/nuevo',                'ActivosFijosController@api_almacen_nuevo');
+        Route::get('api/activo-fijo/preguias/buscar',               'ActivosFijosController@api_preguias_buscar');
+        Route::get('api/activo-fijo/preguia/{idPreguia}',           'ActivosFijosController@api_preguia_fetch');
+        Route::post('api/activo-fijo/preguia/{idPreguia}/devolver', 'ActivosFijosController@api_preguia_devolver');
+        Route::get('api/activo-fijo/responsables/buscar',           'ActivosFijosController@api_responsables_buscar');
+
         // API USUARIOS
         Route::put('usuario/{idUsuario}',           'PersonalController@api_actualizar');
         Route::get('usuarios/buscar',               'PersonalController@api_buscar');

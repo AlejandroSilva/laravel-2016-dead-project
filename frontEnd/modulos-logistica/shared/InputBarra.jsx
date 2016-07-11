@@ -11,7 +11,7 @@ export class InputBarra extends React.Component {
                 <input
                     type="text"
                     style={{width:'50%'}}
-                    placeholder="Código Barra"
+                    placeholder="Ingresar Código Barra"
                     ref={ r=>this.refInput=r }
                     onKeyPress={ evt=>{
                         if(evt.key=='Enter'){

@@ -26,6 +26,12 @@ class ArticuloAF extends Model {
         return $this->hasMany('App\CodigoBarra', 'codArticuloAF', 'codArticuloAF');
     }
 
+    // tabla intermedia preguia-articulos
+    public function preguias(){
+        return $this->belongsToMany('App\PreguiaDespacho', 'preguia_articulo', 'codArticuloAF', 'idPreguia')
+        ->withPivot('retornado');
+    }
+    
     // #### Formatear
     static function formato_tablaArticulosAF($articulo){
         return [

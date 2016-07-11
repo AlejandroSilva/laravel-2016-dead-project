@@ -8,6 +8,7 @@ import { TablaArticulosAF } from './TablaArticulosAF.jsx'
 import { TablaPreguias } from './TablaPreguias.jsx'
 import { ModalContainer } from './ModalContainer.jsx'
 import { Transferencia } from './Transferencia.jsx'
+import { EntregaArticulos } from './EntregaArticulos.jsx'
 import { NuevoAlmacen } from './NuevoAlmacen.jsx'
 // Styles
 // import classNames from 'classnames/bind'
@@ -16,9 +17,11 @@ export class ActivoFijo extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            cargandoDatos: false,
             almacenes: this.props.almacenes,
             almacenSeleccionado: 0,
             almacenArticulos: [],
+            almacenPreguias: [],
             responsables: []
         }
         // ########## Metodos
@@ -29,8 +32,15 @@ export class ActivoFijo extends React.Component {
         }
         this.realizarTransferencia = (request)=>{
             return api.activoFijo.articulos.transferir(request)
-                .then(datos=>{
-                    // cuando la transferencia sea exitosa, actualizar los productos
+                // cuando la transferencia sea exitosa, actualizar los productos y las guias
+                .then(()=>{
+                    this.seleccionarAlmacen(this.state.almacenSeleccionado)
+                })
+        }
+        this.realizarEntrega = (request)=>{
+            return api.activoFijo.articulos.entregar(request)
+            // cuando la transferencia sea exitosa, actualizar los productos y las guias
+                .then(()=>{
                     this.seleccionarAlmacen(this.state.almacenSeleccionado)
                 })
         }
@@ -46,18 +56,38 @@ export class ActivoFijo extends React.Component {
         }
         // Almacenes
         this.seleccionarAlmacen = (idAlmacen)=>{
+            // si se estan cargando los datos, no permitir que se seleccione otro almacen
+            if(this.state.cargandoDatos)
+                return
+
             this.setState({
+                cargandoDatos: true,
                 almacenSeleccionado: idAlmacen,
-                almacenArticulos: []
+                almacenArticulos: [],
+                almacenPreguias: []
             })
             api.activoFijo.almacen(idAlmacen).articulos()
                 .then(articulos=>{
                     this.setState({
+                        cargandoDatos: false,
                         almacenArticulos: articulos
                     })
                 })
-                .catch(error=>{
-                    //almacenArticulos: []
+                .catch(()=>{
+                    this.setState({
+                        cargandoDatos: false,
+                        almacenArticulos: []
+                    })
+                })
+            api.activoFijo.almacen(idAlmacen).preguias()
+                .then(preguias=>{
+                    this.setState({
+                        // cargandoDatos: false,
+                        almacenPreguias: preguias
+                    })
+                })
+                .catch(()=>{
+                    //this.setState({cargandoDatos: false})
                 })
         }
         this.fetchAlmacenes = ()=>{
@@ -73,13 +103,25 @@ export class ActivoFijo extends React.Component {
                     this.fetchAlmacenes()
                 })
         }
+        // Preguias
+        this.fetchPreguia = (idPreguia)=>{
+            return api.activoFijo.preguia(idPreguia).fetch()
+        }
+        this.devolverArticulos =(idPreguia, datos)=>{
+            return api.activoFijo.preguia(idPreguia).devolver(datos)
+                .then(()=>{
+                    // actualizar articulos y guias
+                    this.seleccionarAlmacen(this.state.almacenSeleccionado)
+                })
+        }
+
     }
 
     componentWillMount(){
         // seleccionar un almacen por defecto si existe
-        let almacenes = this.state.almacenes
-        if(almacenes[0])
-            this.seleccionarAlmacen(almacenes[0].idAlmacenAF)
+        // let almacenes = this.state.almacenes
+        // if(almacenes[0])
+            this.seleccionarAlmacen(this.state.almacenSeleccionado)
     }
 
     render(){
@@ -88,6 +130,7 @@ export class ActivoFijo extends React.Component {
                 <div className="col-sm-2">
                     <h4>Almacenes</h4>
                     <SelectorAlmacenes
+                        cargandoDatos={this.state.cargandoDatos}
                         almacenes={this.state.almacenes}
                         almacenSeleccionado={this.state.almacenSeleccionado}
                         seleccionarAlmancen={this.seleccionarAlmacen}
@@ -98,21 +141,33 @@ export class ActivoFijo extends React.Component {
                 </div>
 
                 <div className="col-sm-6">
-                    <h4>Productos en el Almacen (¿saldo?)</h4>
-
+                    {/* ################# Productos ################ */}
+                    <h4>Articulos en Stock</h4>
                     <ModalContainer
                         titulo="Transferir productos"
                         buttonComponent={
-                            <a className="btn btn-primary btn-xs pull-right">
-                                Transferir productos
-                            </a>
+                            <a className="btn btn-primary btn-xs pull-right" disabled={this.state.almacenSeleccionado<2}>Transferir productos</a>
                         }
                     >
                         <Transferencia
-                            almacenes={this.state.almacenes}
+                            almacenes={this.state.almacenes.filter(alm=>alm.idAlmacenAF!=1)}
                             almacenOrigen={this.state.almacenSeleccionado}
                             buscarBarra={this.buscarBarra}
                             realizarTransferenia={this.realizarTransferencia}
+                        />
+                        {/*<FormularioPreGuia />*/}
+                    </ModalContainer>
+                    <ModalContainer
+                        titulo="Entregar articulos"
+                        buttonComponent={
+                            <a className="btn btn-primary btn-xs pull-right" disabled={this.state.almacenSeleccionado<2}>Entregar articulos</a>
+                        }
+                    >
+                        <EntregaArticulos
+                            almacenes={this.state.almacenes.filter(alma=>alma.idAlmacenAF!=1)}
+                            buscarBarra={this.buscarBarra}
+                            almacenDestino={this.state.almacenSeleccionado}
+                            realizarEntrega={this.realizarEntrega}
                         />
                         {/*<FormularioPreGuia />*/}
                     </ModalContainer>
@@ -121,9 +176,14 @@ export class ActivoFijo extends React.Component {
                         articulos={this.state.almacenArticulos}
                     />
 
+                    {/* ############ PRE-GUIAS DESPACHO ############ */}
                     <h4>Pre-guias de despacho</h4>
                     <TablaPreguias
-                        preguias={[]}
+                        preguias={this.state.almacenPreguias}
+                        fetchPreguia={this.fetchPreguia}
+                        devolverArticulos={this.devolverArticulos}
+                        // devolverArticulos={this.refModalDevolucion.devolverArticulos}
+                        // devolverArticulos={this.refModalDevolucion.devolverArticulos}
                     />
                 </div>
             </div>
@@ -141,16 +201,19 @@ ActivoFijo.propTypes = {
 
 
 const SelectorAlmacenes = (props)=>{
-    let {almacenes, almacenSeleccionado, seleccionarAlmancen, responsables, fetchResponsables, agregarAlmacen} = props
+    let {almacenes, almacenSeleccionado, seleccionarAlmancen,
+        responsables, fetchResponsables, agregarAlmacen, cargandoDatos} = props
     return (
         <div className="list-group">
             <button type="button" className={"list-group-item "+(almacenSeleccionado==0? 'active':'')}
                     onClick={seleccionarAlmancen.bind(this, 0)}
+                    disabled={cargandoDatos==true}
             >Todos</button>
             {almacenes.map(almacen=>
                 <button type="button" className={"list-group-item "+(almacenSeleccionado==almacen.idAlmacenAF? 'active':'')}
                         key={almacen.idAlmacenAF}
                         onClick={seleccionarAlmancen.bind(this, almacen.idAlmacenAF)}
+                        disabled={cargandoDatos==true}
                 >{almacen.nombre}</button>
             )}
 

@@ -38,9 +38,9 @@ export class Transferencia extends React.Component {
                     console.log(er)
                 })
         }
-        this.quitarProducto = (idProducto)=>{
+        this.quitarProducto = (codArt)=>{
             this.setState({
-                articulos: _.remove(this.state.articulos, producto=>producto.id!=idProducto)
+                articulos: _.remove(this.state.articulos, articulo=>articulo.codArt!=codArt)
             })
         }
         this._realizarTransferencia = ()=>{
@@ -48,6 +48,7 @@ export class Transferencia extends React.Component {
             // se realiza la transferencia de todos los articulos seleccionados
             this.props.realizarTransferenia({
                 codigosArticulos,
+                almacenOrigen: this.state.idAlmacenOrigen,
                 almacenDestino: this.state.idAlmacenDestino
             })
             .then(resp=>{
@@ -67,13 +68,13 @@ export class Transferencia extends React.Component {
             <div className="form-horizontal">
                 {/* Desde */}
                 <div className="form-group">
-                    <label className="col-xs-2">Desde</label>
-                    <div className="col-xs-10">
+                    <label className="col-xs-3">Tomar de:</label>
+                    <div className="col-xs-9">
                         <select className="form-control"
                                 value={this.state.idAlmacenOrigen}
                                 onChange={this.seleccionarAlmacenOrigen}
+                                disabled
                         >
-                            <option value="0" disabled>--</option>
                             {this.props.almacenes.map(almacen=>
                                 <option key={almacen.idAlmacenAF} value={almacen.idAlmacenAF}>{almacen.nombre}</option>
                             )}
@@ -83,13 +84,12 @@ export class Transferencia extends React.Component {
 
                 {/* Hacia */}
                 <div className="form-group">
-                    <label className="col-xs-2">Hacia</label>
-                    <div className="col-xs-10">
+                    <label className="col-xs-3">Entregar a:</label>
+                    <div className="col-xs-9">
                         <select className="form-control"
                                 value={this.state.idAlmacenDestino}
                                 onChange={this.seleccionarAlmacenDestino}
                         >
-                            <option value="0" disabled>--</option>
                             {this.props.almacenes.map(almacen=>
                                 <option key={almacen.idAlmacenAF} value={almacen.idAlmacenAF}>{almacen.nombre}</option>
                             )}
@@ -116,13 +116,13 @@ export class Transferencia extends React.Component {
                 </div>
 
                 {/* Botones Cancelar/Siguiente */}
-                <div>
-                    <button className="btn btn-default btn-block"
+                <div className="btn-group btn-group-justified">
+                    <button type='button' className="btn btn-default" style={{width: '50%'}}
                             // onClick={this.props.onCancel}>
                             onClick={this.context.$_hideModal}>
                         Cancelar
                     </button>
-                    <button className="btn btn-primary btn-block"
+                    <button type='button' className="btn btn-primary" style={{width: '50%'}}
                             // onClick={this.props.onCancel}>
                             disabled={ !almacenesSeleccionados || !almacenesDistintos || !articulosConOrigenValido || !unoOmasProductosSeleccionados}
                             onClick={this._realizarTransferencia}>

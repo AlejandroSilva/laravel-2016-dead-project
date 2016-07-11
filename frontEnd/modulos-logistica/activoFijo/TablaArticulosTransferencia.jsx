@@ -73,7 +73,7 @@ export class TablaArticulosTransferencia extends React.Component {
                         header={<Cell></Cell>}
                         cell={ ({rowIndex})=> <Cell>
                             <button className="btn btn-xs btn-danger"
-                                onClick={this.props.quitarProducto.bind(this, this.props.articulos[rowIndex].id)}
+                                onClick={this.props.quitarProducto.bind(this, this.props.articulos[rowIndex].codArt)}
                             >
                                 quitar
                             </button>
