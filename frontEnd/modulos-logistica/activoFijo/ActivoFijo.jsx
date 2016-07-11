@@ -56,7 +56,8 @@ export class ActivoFijo extends React.Component {
         }
         // Almacenes
         this.seleccionarAlmacen = (idAlmacen)=>{
-            console.log(idAlmacen)
+            idAlmacen = parseInt(idAlmacen)
+            
             // si se estan cargando los datos, no permitir que se seleccione otro almacen
             if(this.state.cargandoDatos)
                 return

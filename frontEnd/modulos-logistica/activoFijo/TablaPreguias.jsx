@@ -94,7 +94,9 @@ export class TablaPreguias extends React.Component {
                         header={<Cell>Destino</Cell>}
                         cell={ ({rowIndex})=>
                                 <Cell className={cx('cell')}>
-                                    {this.props.preguias[rowIndex].almacenDestino}
+                                <a onClick={this.props.seleccionarAlmancen.bind(this, this.props.preguias[rowIndex].idAlmacenDestino)}>
+                                        {this.props.preguias[rowIndex].almacenDestino}
+                                    </a>
                                 </Cell> }
                         width={80}
                     />
