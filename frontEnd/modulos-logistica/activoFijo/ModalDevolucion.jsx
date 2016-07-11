@@ -79,7 +79,7 @@ ModalDevolucion.propTypes = {
 export class TablaArticulosDevolucion extends React.Component {
     constructor(props) {
         super(props)
-        this.estados = ['---', 'entreado', 'retornado']
+        this.estados = ['---', 'entregado', 'retornado']
     }
     render()    {
         return (
