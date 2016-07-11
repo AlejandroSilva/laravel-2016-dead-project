@@ -45,7 +45,7 @@ class NominasController extends Controller {
 
         // el usuario tiene los permisos para ver las nominas, O es el captador asignado?
         $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
-        if(!$esElCaptadorAsignado && !$user->can(''))
+        if(!$esElCaptadorAsignado && !$user->can('programaInventarios_ver'))
             return view('errors.403');
 
 
