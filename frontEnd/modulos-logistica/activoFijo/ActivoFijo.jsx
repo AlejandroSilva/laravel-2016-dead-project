@@ -56,6 +56,7 @@ export class ActivoFijo extends React.Component {
         }
         // Almacenes
         this.seleccionarAlmacen = (idAlmacen)=>{
+            console.log(idAlmacen)
             // si se estan cargando los datos, no permitir que se seleccione otro almacen
             if(this.state.cargandoDatos)
                 return
@@ -128,6 +129,8 @@ export class ActivoFijo extends React.Component {
         return (
             <div className="row">
                 <div className="col-sm-2">
+                    <h4>Productos</h4>
+
                     <h4>Almacenes</h4>
                     <SelectorAlmacenes
                         cargandoDatos={this.state.cargandoDatos}
@@ -146,7 +149,7 @@ export class ActivoFijo extends React.Component {
                     <ModalContainer
                         titulo="Transferir productos"
                         buttonComponent={
-                            <a className="btn btn-primary btn-xs pull-right" disabled={this.state.almacenSeleccionado<2}>Transferir productos</a>
+                            <button className="btn btn-primary btn-xs pull-right" disabled={this.state.almacenSeleccionado<2}>Transferir productos</button>
                         }
                     >
                         <Transferencia
@@ -160,7 +163,7 @@ export class ActivoFijo extends React.Component {
                     <ModalContainer
                         titulo="Entregar articulos"
                         buttonComponent={
-                            <a className="btn btn-primary btn-xs pull-right" disabled={this.state.almacenSeleccionado<2}>Entregar articulos</a>
+                            <button className="btn btn-primary btn-xs pull-right" disabled={this.state.almacenSeleccionado<2}>Entregar articulos</button>
                         }
                     >
                         <EntregaArticulos
@@ -174,6 +177,7 @@ export class ActivoFijo extends React.Component {
 
                     <TablaArticulosAF
                         articulos={this.state.almacenArticulos}
+                        seleccionarAlmancen={this.seleccionarAlmacen}
                     />
 
                     {/* ############ PRE-GUIAS DESPACHO ############ */}
@@ -184,6 +188,7 @@ export class ActivoFijo extends React.Component {
                         devolverArticulos={this.devolverArticulos}
                         // devolverArticulos={this.refModalDevolucion.devolverArticulos}
                         // devolverArticulos={this.refModalDevolucion.devolverArticulos}
+                        seleccionarAlmancen={this.seleccionarAlmacen}
                     />
                 </div>
             </div>

@@ -38,7 +38,7 @@ export class TablaPreguias extends React.Component {
                     animation={false}
                     dialogClassName={cssModal.modalDevolucion}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Devolución de Artiulos</Modal.Title>
+                        <Modal.Title>Devolución de Articulos</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
 
@@ -84,7 +84,9 @@ export class TablaPreguias extends React.Component {
                         header={<Cell>Origen</Cell>}
                         cell={ ({rowIndex})=>
                                 <Cell className={cx('cell')}>
-                                    {this.props.preguias[rowIndex].almacenOrigen}
+                                    <a onClick={this.props.seleccionarAlmancen.bind(this, this.props.preguias[rowIndex].idAlmacenOrigen)}>
+                                        {this.props.preguias[rowIndex].almacenOrigen}
+                                    </a>
                                 </Cell> }
                         width={80}
                     />
@@ -119,5 +121,6 @@ TablaPreguias.propTypes = {
     // texto: PropTypes.string.isRequired,
     // objeto: PropTypes.object.isRequired,
     // arreglo: PropTypes.arrayOf(PropTypes.object).isRequired
+    seleccionarAlmancen: PropTypes.func.isRequired,
     fetchPreguia: PropTypes.func.isRequired
 }

@@ -66,7 +66,9 @@ export class TablaArticulosAF extends React.Component {
                         header={<Cell>Almacen</Cell>}
                         cell={ ({rowIndex})=>
                             <Cell className={cx('cell')}>
-                                <a href="#">{this.props.articulos[rowIndex].almacen}</a>
+                                <a onClick={this.props.seleccionarAlmancen.bind(this, this.props.articulos[rowIndex].idAlmacen)}>
+                                    {this.props.articulos[rowIndex].almacen}
+                                </a>
                             </Cell>}
                         width={80}
                         flexGrow={1}
