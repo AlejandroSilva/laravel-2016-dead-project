@@ -22,7 +22,7 @@ export class NominasCaptador extends React.Component {
     render(){
         return <div className="panel panel-default">
             <div className="panel-heading">
-                Proximas Nóminas
+                Próximas nóminas asignadas
             </div>
             <div className="panel-body">
                 <table className={cx("table table-bordered table-hover table-condensed", 'tablaNominas')}>

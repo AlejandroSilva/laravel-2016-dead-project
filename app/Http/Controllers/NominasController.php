@@ -132,8 +132,10 @@ class NominasController extends Controller {
             'fechaFin' => $request->query('fechaFin'),
             'idCaptador1' => $request->query('idCaptador1')
         ])
-            ->map('\App\Nominas::formatearConInventario');
-        return response()->json($nominas, 200);
+            ->sortBy('inventario.fechaProgramada')
+            ->map('\App\Nominas::formatearConInventario')
+            ->toArray();
+        return response()->json( array_values($nominas), 200);
     }
 
     // PUT api/nomina/{idNomina}  // Modificar antuguo, no entrega un formato compacto, se debe reescribir
@@ -147,13 +149,9 @@ class NominasController extends Controller {
             //    $nomina->dotacionAsignada = $request->dotacionAsignada;
             // En el Lider, Supervisor, Captador1 y Captador 2 si la selecciona es '', se agrega un valor null al registro
             // Lider
-
-
-
+            
             // pendiente, falta registrar cuando se realice un cambio de lider, supervisor, o captador a una nomina
             // pendiente, falta registrar el cambio de Hr.Lider y Hr.Equipo
-
-
 
             if(isset($request->idLider))
                 $nomina->idLider = $request->idLider==''? null : $request->idLider;
@@ -770,8 +768,7 @@ class NominasController extends Controller {
                         });
                 });
         }
-
-//        $query->orderBy('inventario.fechaProgramada');
+        // ordenar en el metodo controlador que lo llame
         return $query->get();
     }
 }
