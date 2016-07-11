@@ -200,7 +200,7 @@ class ActivosFijosController extends Controller {
 
             // 2 marcar los articulos de la guia como "retornado" (1) en la tabla pivot
             $preguia->articulos()->updateExistingPivot($cod, [
-                'estado'=>1
+                'estado'=>2
             ], true);
         }
 
