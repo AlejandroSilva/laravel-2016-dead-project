@@ -465,10 +465,16 @@ class NominasController extends Controller {
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
-            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
+            return response()->json(['idNomina'=>'Nómina no encontrada'], 404);
+
         // la nomina esta Aprobada?
         if($nomina->idEstadoNomina!=4)
-            return response()->json(['idNomina'=>'La nomina debe estar en estado Aprobada'], 400);
+            return response()->json(['idNomina'=>'La nómina debe estar en estado Aprobada'], 400);
+
+        // la nomina esta completa?
+        if(!$nomina->tieneDotacionCompleta())
+            return response()->json(['idNomina'=>'La nómina no esta completa'], 400);
+
         // pasasr al estado "informada"
         $nomina->idEstadoNomina = 5;
         $nomina->save();
