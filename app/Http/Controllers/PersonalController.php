@@ -20,6 +20,39 @@ use App\Role;
 use Auth;
 
 class PersonalController extends Controller {
+    private $userRules = [
+        'usuarioRUN' => 'required|unique:users|max:15',
+        'usuarioDV' => 'required|max:1',
+        'email' => 'max:60',
+        'emailPersonal' => 'max:60',
+        'nombre1' => 'required|min:3|max:20',
+        'nombre2' => 'max:20',
+        'apellidoPaterno' => 'required|min:3|max:20',
+        'apellidoMaterno' => 'max:20',
+        'fechaNacimiento' => 'required',
+        'telefono' => 'max:20',
+        'telefonoEmergencia' => 'max:20',
+        'direccion' => 'max:150',
+        'cutComuna' => 'required|exists:comunas,cutComuna',
+        'tipoContrato' => 'max:30',
+        'fechaInicioContrato' => 'date',
+        'fechaCertificadoAntecedentes' => 'date',
+        'banco' => 'max:30',
+        'tipoCuenta' => 'max:30',
+        'numeroCuenta' => 'max:20',
+    ];
+    /**
+     * ##########################################################
+     * Rutas que generan vistas
+     * ##########################################################
+     */
+    function show_personal_index(Request $request){
+        // todo validar permisos
+        return response()->view('operacional.personal.personal-index', [
+
+        ]);
+    }
+
     /**
      * ##########################################################
      * Rutas para consumo del API REST (CON autentificacion)
@@ -39,7 +72,7 @@ class PersonalController extends Controller {
         return response()->json(
             $usuarios
                 ->sortBy('id')
-                ->map(['\App\User', 'formatoCompleto']), 
+                ->map(['\App\User', 'formatoTablaMantenedorPersonal']),
             200
         );
     }
@@ -63,9 +96,19 @@ class PersonalController extends Controller {
             return response()->json( User::formatoCompleto($usuarioActualizado), 200);
         }
     }
-    
+
+    // GET usuario/{idUsuario}
+    function api_usuario_get($idUsuario){
+        // el usuario existe?
+        $user = User::find($idUsuario);
+        if(!$user)
+            return response()->json(['idUsuario'=>'El usuario no existe'], 400);
+
+        return response()->json( User::formatoCompleto($user) );
+    }
+
     // PUT api/usuario/{idUsuario}
-    public function api_usuario_actualizar($idUsuario){
+    function api_usuario_actualizar($idUsuario){
         return response()->json(['msg'=>'por implementar'], 501);
     }
     
@@ -75,7 +118,7 @@ class PersonalController extends Controller {
      * ##########################################################
      */
     // GET /api/usuario/{idUsuario}/roles
-    public function api_getRolesUsuario($idUsuario){
+    function api_getRolesUsuario($idUsuario){
         $usuario = User::find($idUsuario);
         if($usuario){
             return response()->json($usuario->roles, 200);
@@ -85,7 +128,7 @@ class PersonalController extends Controller {
     }
     
     // GET /api/usuarios/descargar-excel
-    public function excel_descargarTodos(){
+    function excel_descargarTodos(){
         $users = User::all()->map(function($user){
             // codigo, nombre
             return [$user->usuarioRUN, $user->nombreCompleto()];

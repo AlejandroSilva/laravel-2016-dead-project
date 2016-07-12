@@ -20,27 +20,6 @@ use Auth;
 // SI OCURREN PROBLEMAS DE DEPENDENCIA ACA, REVISAR "PersonalController", LOS METODOS SE EXTRAJERON DE ALLA
 
 class AuthController extends Controller {
-    private $userRules = [
-        'usuarioRUN' => 'required|unique:users|max:15',
-        'usuarioDV' => 'required|max:1',
-        'email' => 'max:60',
-        'emailPersonal' => 'max:60',
-        'nombre1' => 'required|min:3|max:20',
-        'nombre2' => 'max:20',
-        'apellidoPaterno' => 'required|min:3|max:20',
-        'apellidoMaterno' => 'max:20',
-        'fechaNacimiento' => 'required',
-        'telefono' => 'max:20',
-        'telefonoEmergencia' => 'max:20',
-        'direccion' => 'max:150',
-        'cutComuna' => 'required|exists:comunas,cutComuna',
-        'tipoContrato' => 'max:30',
-        'fechaInicioContrato' => 'date',
-        'fechaCertificadoAntecedentes' => 'date',
-        'banco' => 'max:30',
-        'tipoCuenta' => 'max:30',
-        'numeroCuenta' => 'max:20',
-    ];
     private $permissionRules = [
         'name' => 'required|unique:permissions',
         'description' => 'max:80'
