@@ -7,15 +7,16 @@ use App\CodigoBarra;
 use App\PreguiaDespacho;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+// Formularios y validacion
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 // Carbon
 use Carbon\Carbon;
 // Modelos
 use App\AlmacenAF;
-use App\Locales;
 use App\ProductoAF;
 use App\Role;
-use League\Flysystem\Adapter\Local;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ActivosFijosController extends Controller {
 
@@ -39,13 +40,60 @@ class ActivosFijosController extends Controller {
 
     // GET api/activo-fijo/productos/buscar
     public function api_productos_buscar(Request $request){
-        // todo: validar que exista, y que tenga los permisos para ver los productos
+        // todo: validar que tenga los permisos para ver los productos
 
         return response()->json(
             $this->_buscarProductos( (object)[
                 'SKU' => $request->query('SKU'),
             ])->map('\App\ProductoAF::formato_tablaProductosAF')
         );
+    }
+
+    // POST api/activo-fijo/productos/nuevo
+    function api_productos_nuevo(){
+        // todo: validar si se tienen los permisos para agregar un producto
+
+        $productoNuevoRules = [
+            'SKU' => 'required|max:32|unique:productos_activo_fijo',
+            'descripcion' => 'required|max:60',
+            'valorMercado' => 'required|integer',
+        ];
+        $errorMessages = [
+            'SKU.required' => 'SKU requerido',
+            'SKU.unique' => 'SKU ya existe',
+            'descripcion.required' => 'Descripción requerido',
+            'valorMercado.required' => 'valor requerido',
+            'valorMercado.integer' => 'debe ser un numero',
+        ];
+        $validator = Validator::make(Input::all(), $productoNuevoRules, $errorMessages);
+        if($validator->fails()){
+            $error = $validator->messages();
+            return response()->json($error, 400);
+        }
+
+        // crear el producto
+        $producto = ProductoAF::create(Input::all());
+        return response()->json($producto, 200);
+    }
+
+    // PUT activo-fijo/producto/{sku}
+    function api_producto_actualizar(Request $request, $sku){
+        // todo validar los pemisos
+
+        // producto existe?
+        $producto = ProductoAF::find($sku);
+        if(!$producto)
+            return response()->json(['sku', 'Producto no encontrado'], 400);
+
+        // el SKU no es actualizable, porque es el PK de otras tablas
+        // actualizar descripcion
+        if(isset($request->descripcion))
+            $producto->descripcion = $request->descripcion;
+        // actualizar valor mercado (validar el precio?)
+        if(isset($request->valorMercado))
+            $producto->valorMercado = $request->valorMercado;
+
+        $producto->save();
     }
 
     // GET api/activo-fijo/articulos/buscar

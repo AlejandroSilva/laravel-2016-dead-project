@@ -1,0 +1,44 @@
+.formulario-nuevo-producto {
+    margin-top: 1em;
+}
+.column-sku {
+    display: inline-block;
+    width: 200px;
+    margin-left: 30px;
+    padding: 8px;
+}
+.column-sku > input {
+    width: 100%;
+}
+
+.column-descripcion {
+    display: inline-block;
+    width: 350px;
+    padding: 8px;
+}
+.column-descripcion > input {
+    width: 100%;
+}
+
+.column-valor-mercado {
+    display: inline-block;
+    width: 120px;
+    padding: 8px;
+}
+.column-valor-mercado > input {
+    width: 100%;
+}
+
+.column-botones {
+    display: inline-block;
+    width: 100px;
+    padding: 8px;
+}
+.column-botones > button {
+    /* tiene 5px por defecto, se restan 4 pixeles de alto, y queda del mismo tamaño de los inputs que estan al lado*/
+    padding: 3px;
+}
+
+.error-msg {
+    color: red;
+}

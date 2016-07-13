@@ -133,6 +133,8 @@ Route::group(['middleware' => ['web']], function (){
 
         // API ACTIVO FIJO
         Route::get('activo-fijo/productos/buscar',                  'ActivosFijosController@api_productos_buscar');
+        Route::post('activo-fijo/productos/nuevo',                  'ActivosFijosController@api_productos_nuevo');
+        Route::put('activo-fijo/producto/{sku}',                    'ActivosFijosController@api_producto_actualizar');
         Route::get('activo-fijo/articulos/buscar',                  'ActivosFijosController@api_articulos_buscar');
         Route::get('activo-fijo/articulos/buscar-barra',            'ActivosFijosController@api_articulos_buscarBarra');
         Route::post('activo-fijo/articulos/entregar',               'ActivosFijosController@api_articulos_entregar_a_almacen');

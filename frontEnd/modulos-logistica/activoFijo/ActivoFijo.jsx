@@ -10,6 +10,7 @@ import { ModalContainer } from './ModalContainer.jsx'
 import { Transferencia } from './Transferencia.jsx'
 import { EntregaArticulos } from './EntregaArticulos.jsx'
 import { NuevoAlmacen } from './NuevoAlmacen.jsx'
+import { ModalMantenedorMaestra } from './MantenedorMaestra/ModalMantenedorMaestra.jsx'
 // Styles
 // import classNames from 'classnames/bind'
 
@@ -57,7 +58,7 @@ export class ActivoFijo extends React.Component {
         // Almacenes
         this.seleccionarAlmacen = (idAlmacen)=>{
             idAlmacen = parseInt(idAlmacen)
-            
+
             // si se estan cargando los datos, no permitir que se seleccione otro almacen
             if(this.state.cargandoDatos)
                 return
@@ -117,6 +118,23 @@ export class ActivoFijo extends React.Component {
                 })
         }
 
+        // Mantenedor Maestra
+        this.mostrarMantenedorMaestra = ()=>{
+            this.refModalMantenedorproductos.showModal()
+        }
+        this.fetchProductos = ()=>{
+            return api.activoFijo.productos.fetch()
+        }
+        this.actualizarProducto = (sku, datos)=>{
+            return api.activoFijo.producto(sku).actualizar(datos)
+                .then(productoActualizado=>{
+                    console.log('resp: ', productoActualizado)
+                })
+        }
+        this.agregarProducto = (datos)=>{
+            return api.activoFijo.productos.nuevo(datos)
+        }
+        
     }
 
     componentWillMount(){
@@ -131,6 +149,17 @@ export class ActivoFijo extends React.Component {
             <div className="row">
                 <div className="col-sm-2">
                     <h4>Productos</h4>
+                    <button type="button" className="btn btn-sm btn-default btn-block"
+                            onClick={this.mostrarMantenedorMaestra}>
+                        Maestra de Productos
+                    </button>
+                    <ModalMantenedorMaestra
+                        ref={ref=>this.refModalMantenedorproductos=ref}
+                        fetchProductos={this.fetchProductos}
+                        actualizarProducto={this.actualizarProducto}
+                        agregarProducto={this.agregarProducto}
+                    />
+
 
                     <h4>Almacenes</h4>
                     <SelectorAlmacenes

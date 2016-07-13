@@ -2,7 +2,7 @@
 import React from 'react'
 // Componentes
 import Modal from 'react-bootstrap/lib/Modal.js'
-// Sttyles
+// Styles
 import * as cssModal from './modal.css'
 
 

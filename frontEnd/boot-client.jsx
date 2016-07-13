@@ -15,7 +15,6 @@ import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.
 import { NominaIG } from './components/nominaIG/nominaIG.jsx'
 // OTROS
 import { MantenedorStock } from './components/mantenedorStock/MantenedorStock.jsx'
-import { MantenedorMaestra } from './modulos-logistica/mantenedorMaestra/MantenedorMaestra.jsx'
 import { ActivoFijo } from './modulos-logistica/activoFijo/ActivoFijo.jsx'
 import { MantenedorPersonal } from './modulos-administracion/MantenedorPersonal/MantenedorPersonal.jsx'
 
@@ -147,15 +146,6 @@ if( mantenedorNominaIGDOM ){
 /** ************************************************************* **/
 /** ************************** OTROS **************************** **/
 /** ************************************************************* **/
-/** MANTENEDOR MAESTRA **/
-let mantenedorMaestraDOM = document.getElementById('react-mantenedor-maestra')
-if( mantenedorMaestraDOM ) {
-    ReactDOM.render(
-        <MantenedorMaestra
-            productosMaestra={window.laravelProductosMaestra}
-        />, mantenedorMaestraDOM
-    )
-}
 
 /** ACTIVOS FIJO DE UN LOCAL **/
 let activoFijoDOM = document.getElementById('react-activo-fijo-index')

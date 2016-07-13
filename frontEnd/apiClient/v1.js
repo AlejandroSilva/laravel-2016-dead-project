@@ -56,7 +56,17 @@ export default {
                 axios.get(`/api/activo-fijo/preguia/${idPreguia}`),
             devolver: (datos)=>
                 axios.post(`/api/activo-fijo/preguia/${idPreguia}/devolver`, datos)
-        })
+        }),
+        producto: (sku)=>({
+            actualizar: (datos)=>
+                axios.put(`/api/activo-fijo/producto/${sku}`, datos)
+        }),
+        productos: {
+            nuevo: (datos)=>
+                axios.post(`api/activo-fijo/productos/nuevo`, datos),
+            fetch: ()=>
+                axios.get(`api/activo-fijo/productos/buscar`),
+        }
     },
     cliente: {
         getLocales: (idCliente)=>
@@ -142,6 +152,7 @@ export default {
         fetch: ()=>
             axios.get(`/api/usuarios/buscar`)
         ,
+        
         // buscarRUN: (run)=>
         //     axios.get(`/api/usuarios/buscar?run=${run}`),
         nuevoOperador: (datos)=>
