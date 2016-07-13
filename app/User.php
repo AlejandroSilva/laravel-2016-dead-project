@@ -118,9 +118,27 @@ class User extends Authenticatable {
         $userArray['numeroCuenta'] = $user->numeroCuenta;
         // Direccion
         $userArray['direccion'] = $user->direccion;
+        $userArray['cutComuna'] = $user->cutComuna;
         $userArray['comuna'] = $user->comuna->nombre;
         $userArray['provincia'] = $user->comuna->provincia->nombre;
         $userArray['region'] = $user->comuna->provincia->region->nombre;
         return $userArray;
+    }
+
+    static function formatoTablaMantenedorPersonal($user){
+        return [
+            'id' => $user->id,
+            'RUN' => "$user->usuarioRUN-$user->usuarioDV",
+            'nombre1' => $user->nombre1,
+            'nombre2' => $user->nombre2,
+            'apellidoPaterno' => $user->apellidoPaterno,
+            'apellidoMaterno' => $user->apellidoMaterno,
+            'fechaNacimiento' => $user->fechaNacimiento=='0000-00-00'? '' : $user->fechaNacimiento,
+            //'cutComuna' => $user->cutComuna,
+            'comuna' => $user->comuna->nombre,
+            'email' => $user->email,
+            'telefono' => $user->telefono,
+            'bloqueado' => $user->bloqueado=="1",
+        ];
     }
 }

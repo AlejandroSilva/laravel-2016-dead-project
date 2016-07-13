@@ -50,6 +50,7 @@
     "moment-range": "^2.2.0",
     "rc-tooltip": "^3.3.2",
     "react-addons-perf": "^15.1.0",
-    "react-addons-pure-render-mixin": "^15.1.0"
+    "react-addons-pure-render-mixin": "^15.1.0",
+    "react-tabs": "^0.7.0"
   }
 }

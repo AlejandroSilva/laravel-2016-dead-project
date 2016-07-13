@@ -13,9 +13,11 @@ import ProgramacionAISemanal from './components/programacionAISemanal/Programaci
 import { ProgramacionAIPendientes } from './components/programacionAIPendientes/ProgramacionAIPendientes.jsx'
 import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.jsx'
 import { NominaIG } from './components/nominaIG/nominaIG.jsx'
+// OTROS
 import { MantenedorStock } from './components/mantenedorStock/MantenedorStock.jsx'
 import { MantenedorMaestra } from './modulos-logistica/mantenedorMaestra/MantenedorMaestra.jsx'
 import { ActivoFijo } from './modulos-logistica/activoFijo/ActivoFijo.jsx'
+import { MantenedorPersonal } from './modulos-administracion/MantenedorPersonal/MantenedorPersonal.jsx'
 
 /** ************************************************************* **/
 /** ************************ DASHBOARD ************************** **/
@@ -89,12 +91,12 @@ if( programacionAIMensualDOM ){
 let programacionAISemanalDOM = document.getElementById('react-programacionAI-semanal')
 if( programacionAISemanalDOM ){
     /** IMPORANTE: POR EL MOMENTO SOLO SE MUESTRAN AUDITORIAS DE FCV **/
-    let clienteFCV = window.laravelClientes.filter(cliente=>cliente.nombreCorto==='FCV')
+    let clienteFCV_ = window.laravelClientes.filter(cliente=>cliente.nombreCorto==='FCV')
     ReactDOM.render(
         <ProgramacionAISemanal
             puedeModificar={ window.laravelPuedeModificarAuditorias }
             puedeRevisar={laravelPuedeRevisarAuditorias}
-            clientes={clienteFCV}
+            clientes={clienteFCV_}
             auditores={window.laravelAuditores}
         />, programacionAISemanalDOM)
 }
@@ -143,7 +145,7 @@ if( mantenedorNominaIGDOM ){
 }
 
 /** ************************************************************* **/
-/** ************************ LOGISTICA ************************** **/
+/** ************************** OTROS **************************** **/
 /** ************************************************************* **/
 /** MANTENEDOR MAESTRA **/
 let mantenedorMaestraDOM = document.getElementById('react-mantenedor-maestra')
@@ -155,13 +157,23 @@ if( mantenedorMaestraDOM ) {
     )
 }
 
-/**  ACTIVOS FIJO DE UN LOCAL **/
+/** ACTIVOS FIJO DE UN LOCAL **/
 let activoFijoDOM = document.getElementById('react-activo-fijo-index')
 if( activoFijoDOM ) {
     ReactDOM.render(
         <ActivoFijo
             almacenes={window.laravelAlmacenes}
         />, activoFijoDOM
+    )
+}
+
+/** MANTENEDOR USUARIOS **/
+let personalIndexDOM = document.getElementById('react-personal-index')
+if( personalIndexDOM ) {
+    ReactDOM.render(
+        <MantenedorPersonal
+            almacenes={window.laravelAlmacenes}
+        />, personalIndexDOM
     )
 }
 

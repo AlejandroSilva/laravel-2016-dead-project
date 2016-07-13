@@ -3,7 +3,7 @@ import React from 'react'
 let PropTypes = React.PropTypes
 // Componentes
 import { Table, Column, Cell } from 'fixed-data-table'
-import TouchExampleWrapper from '../shared/TouchExampleWrapper.jsx'
+import TouchExampleWrapper from '../../shared/TouchExampleWrapper.jsx'
 // Styles
 import classNames from 'classnames/bind'
 import * as css from './TablaArticulosAF.css'

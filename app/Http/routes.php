@@ -65,7 +65,10 @@ Route::group(['middleware' => ['web']], function (){
         // ACTIVOS FIJOS
         Route::get('activo-fijo',                                   'ActivosFijosController@get_index');
         // api (ordenar luego)
-
+        
+        // MANTENEDOR - USUARIOS
+        Route::get('personal',                                      'PersonalController@show_personal_index');
+        
         Route::get('api/activo-fijo/cargar-productos',              'MaestraController@api_cargar_productos');  // ELIMINAR
         Route::get('api/activo-fijo/cargar-articulos',              'MaestraController@api_cargar_articulos');  // ELIMINAR
 
@@ -142,9 +145,11 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('activo-fijo/responsables/buscar',               'ActivosFijosController@api_responsables_buscar');
 
         // API USUARIOS
+        Route::get('usuario/{idUsuario}',                           'PersonalController@api_usuario_get');
         Route::put('usuario/{idUsuario}',                           'PersonalController@api_usuario_actualizar');
         Route::get('usuarios/buscar',                               'PersonalController@api_usuarios_buscar');
         Route::post('usuarios/nuevo-operador',                      'PersonalController@api_operador_nuevo');
+
         // API USUARIOS-ROLES
         Route::post('usuario/{idUsuario}/role/{idRole}',            'AuthController@api_nuevo_rol');
         Route::delete('usuario/{idUsuario}/role/{idRole}',          'AuthController@api_delete_rol');
@@ -160,6 +165,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('role/{idRole}',                                 'AuthController@api_role_actualizar');
         Route::delete('role/{idRole}',                              'AuthController@api_eliminarRole');
 
+        // OTROS
+        Route::get('comunas',                                       'OtrosController@api_comunas');
         // API GEO (DESARROLLO DETENIDO)
 //        Route::get('geo/comunas',                                 'GeoController@api_getComunas');
 //        Route::get('stock/leerArchivo',                           'StockController@api_leerArchivo');

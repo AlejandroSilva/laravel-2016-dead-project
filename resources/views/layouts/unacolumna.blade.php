@@ -127,6 +127,14 @@
                                     </li>
                                 @endif
 
+                                {{-- Administrador de Personal --}}
+                                @if( Auth::user()->hasRole('Developer') )
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('personal')? 'active': '' }}">
+                                        <a href="{{ url('personal') }}">Mantenedor de Personal (D)</a>
+                                    </li>
+                                @endif
+
                             </ul>
                         </li>
                     @endif

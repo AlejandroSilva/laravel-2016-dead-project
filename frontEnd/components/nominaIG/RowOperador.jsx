@@ -3,7 +3,7 @@ import React from 'react'
 let PropTypes = React.PropTypes
 // Componentes
 import * as css from './PanelDotaciones.css'
-import { InputRun } from './InputRun.jsx'
+import { InputRun } from '../../shared/input/InputRun.jsx'
 // Validador Rut
 
 export class RowOperador extends React.Component {

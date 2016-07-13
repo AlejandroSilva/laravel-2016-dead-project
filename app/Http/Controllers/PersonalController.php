@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 //use Illuminate\Support\Facades\Redirect;
 //use Illuminate\Support\Facades\Session;
+use App\Inventarios;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
@@ -21,7 +22,7 @@ use Auth;
 
 class PersonalController extends Controller {
     private $userRules = [
-        'usuarioRUN' => 'required|unique:users|max:15',
+        'usuarioRUN' => 'required|max:15|unique:users',
         'usuarioDV' => 'required|max:1',
         'email' => 'max:60',
         'emailPersonal' => 'max:60',
@@ -109,9 +110,28 @@ class PersonalController extends Controller {
 
     // PUT api/usuario/{idUsuario}
     function api_usuario_actualizar($idUsuario){
-        return response()->json(['msg'=>'por implementar'], 501);
+        // todo validar permisos
+        
+        // el usuario existe?
+        $user = User::find($idUsuario);
+        if(!$user)
+            return response()->json(['idUsuario'=>'El usuario no existe'], 400);
+
+        // el "usuarioRUN" no puede repetirse con ningun otro, "excepto el mismo usuario de origen"
+        $actualizarRules = $this->userRules;
+        $actualizarRules['usuarioRUN'] = "required|max:15|unique:users,usuarioRUN,$idUsuario";
+
+        $validator = Validator::make(Input::all(), $actualizarRules);
+        if($validator->fails()){
+            $error = $validator->messages();
+            return response()->json($error, 400);
+        }
+
+        // todo validar que campos son los que realmente se puede actualizar
+        $user->update(Input::all());
+        return response()->json(['msg'=>'OK'], 200);
     }
-    
+
     /**
      * ##########################################################
      * API DE INTERACCION CON LA OTRA PLATAFORMA (publicas: SIN autentificacion)

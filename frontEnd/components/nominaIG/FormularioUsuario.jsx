@@ -7,10 +7,10 @@ import moment from 'moment'
 let momentLocalizer = require('react-widgets/lib/localizers/moment')
 momentLocalizer(moment)
 // Validador Rut
-import { validarRUN, obtenerVerificador } from '../shared/ValidadorRUN'
+import { validarRUN, obtenerVerificador } from '../../shared/ValidadorRUN'
 // Forms
 import Form from 'react-formal'
-import formalInputs from '../shared/react-formal-inputs/react-formal-inputs'
+import formalInputs from '../../shared/react-formal-inputs/react-formal-inputs'
 Form.addInputTypes(formalInputs)
 import yup from 'yup'
 // Componentes
