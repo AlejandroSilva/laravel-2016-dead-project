@@ -28,7 +28,7 @@ export class NominasCaptador extends React.Component {
                 <table className={cx("table table-bordered table-hover table-condensed", 'tablaNominas')}>
                     <thead>
                     <tr>
-                        <th>N°</th>
+                        <th>#</th>
                         {/* Inventario */}
                         <th>Fecha Programada</th>
                         <th>Cliente</th>
