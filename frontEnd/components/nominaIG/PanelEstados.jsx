@@ -47,6 +47,10 @@ export class PanelEstados extends React.Component {
                         texto: this.props.nominaCompleta? 'Informar nómina' : 'Revise Operadores y/o Total asignado',
                         onclick: this.props.informarNomina,
                         habilitado: idEstado==4 && this.props.permisos.informar && this.props.nominaCompleta
+                    },
+                    {
+                        texto: 'Rechazar nómina', onclick: this.props.rechazarNomina,
+                        habilitado: idEstado==4 && this.props.permisos.aprobar
                     }
                 ]}
             />

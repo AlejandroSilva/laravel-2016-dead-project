@@ -446,9 +446,9 @@ class NominasController extends Controller {
         $nomina = Nominas::find($idNomina);
         if(!$nomina)
             return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
-        // la nomina esta Recibida?
-        if($nomina->idEstadoNomina!=3)
-            return response()->json(['idNomina'=>'La nomina debe estar en estado Recibida'], 400);
+        // la nomina esta Recibida o Aprobada?
+        if($nomina->idEstadoNomina!=3 && $nomina->idEstadoNomina!=4)
+            return response()->json(['idNomina'=>'La nomina debe estar en estado Recibida o Aprobada'], 400);
         // volver al estado "Pendiente"
         $nomina->idEstadoNomina = 2;
         $nomina->save();
