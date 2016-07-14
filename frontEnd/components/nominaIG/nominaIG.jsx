@@ -264,8 +264,13 @@ export class NominaIG extends React.Component {
         let operadoresAsignados = this.state.supervisor? this.state.dotacionTitular.length+1 : this.state.dotacionTitular.length
         let totalAsignados = this.state.lider? operadoresAsignados +1 : operadoresAsignados
         // la nomina tiene todos los captadores asignados? y el total corresponde a lo asignado?
-        let nominaCompleta = (this.state.dotacionTitular.length==operadoresAsignados) &&
+        let nominaCompleta = (this.props.nomina.dotacionOperadores==operadoresAsignados) &&
                              (this.props.nomina.dotacionTotal==totalAsignados)
+        // console.log('operadoresAsignados', operadoresAsignados)
+        // console.log('totalAsignados', totalAsignados)
+        // console.log('dotacionOperadores==operadores asignados', this.props.nomina.dotacionOperadores, operadoresAsignados, this.props.nomina.dotacionOperadores==operadoresAsignados)
+        // console.log('dotacionTotal==totalAsignados', this.props.nomina.dotacionTotal, totalAsignados, this.props.nomina.dotacionTotal==totalAsignados)
+        // console.log("nominaCompleta", nominaCompleta)
         return (
             <div className="container">
                 <ReactNotify ref='notificator' className={ReactNotifyCSS}/>
