@@ -140,7 +140,7 @@
                     @if( Auth::check() )
                         <li>
                             <a id="drop-user" href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Bienvenido {{ Auth::user()->nombre1 }} <span class="caret"></span>
+                                {{ Auth::user()->nombre1 }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="drop-operacional">
                                 {{-- Menu usuario --}}

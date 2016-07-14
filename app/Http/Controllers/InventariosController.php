@@ -133,6 +133,7 @@ class InventariosController extends Controller {
             $nominaDia->habilitada = ($idJornada==2 || $idJornada==4);
             $nominaDia->idEstadoNomina = 2; // pendiente
             $nominaDia->turno = 'Día';
+            $nominaDia->fechaLimiteCaptador = Inventarios::calcularFechaLimiteCaptador($request->fechaProgramada);
             $nominaDia->save();
 
             $nominaNoche = new Nominas();
@@ -146,6 +147,7 @@ class InventariosController extends Controller {
             $nominaNoche->idEstadoNomina = ($idJornada==3 || $idJornada==4)? 2 : 1;
             $nominaNoche->idEstadoNomina = 2; // pendiente
             $nominaNoche->turno = 'Noche';
+            $nominaNoche->fechaLimiteCaptador = Inventarios::calcularFechaLimiteCaptador($request->fechaProgramada);
             $nominaNoche->save();
 
             $inventario->nominaDia()->associate($nominaDia);
@@ -201,6 +203,7 @@ class InventariosController extends Controller {
         if($inventario){
             if(isset($request->fechaProgramada)){
                 // actualizar fecha (si es valida) y generar un log
+                // como side-efect, tambien actualiza la fechaLimiteCaptador, la fecha limite para que envie la nomina completa
                 $inventario->actualizarFechaProgramada($request->fechaProgramada);
             }
 

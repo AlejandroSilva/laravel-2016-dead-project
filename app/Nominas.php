@@ -4,6 +4,7 @@ use Crypt;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 // Modelos
+use App\DiasHabiles;
 use App\EstadoNominas;
 use App\NominaLog;
 
@@ -184,7 +185,8 @@ class Nominas extends Model {
             "horaPresentacionEquipoF" => $nomina->horaPresentacionEquipoF(),
             "dotacionTotal" => $nomina->dotacionTotal,
             "dotacionOperadores" => $nomina->dotacionOperadores,
-            "fechaSubidaNomina" => $nomina->fechaSubidaNomina,
+            "fechaSubidaNomina" => $nomina->fechaSubidaNomina,              // al parece no se ocupa desde que se generan las nominas en esta misma plataforma, revisasr...
+            "fechaLimiteCaptador" => $nomina->fechaLimiteCaptador,
             "turno" => $nomina->turno,
             "estado" => EstadoNominas::formatearSimple($nomina->estado),
             "rectificada" => $nomina->rectificada

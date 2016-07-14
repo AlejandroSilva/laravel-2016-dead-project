@@ -76,6 +76,19 @@ class Inventarios extends Model {
         // retornar 0 en caso de ser negativo..
         return $operadores<0? 0 : $operadores;
     }
+    static function calcularFechaLimiteCaptador($fechaProgramada){
+        $cuartoDiasHabilAntes = DiasHabiles::with([])
+            // se toman todos los dias habiles ANTERIORES a la fecha de programacion
+            ->where('fecha', '<', $fechaProgramada)
+            ->where('habil', true)
+            ->orderBy('fecha', 'desc')
+            // saltar 3 dias habiles y tomar el 4°
+            ->skip(3)
+            ->take(1)
+            ->get()
+            ->first();
+        return $cuartoDiasHabilAntes->fecha;
+    }
 
     // #### With scopes
     public function scopeWithTodo($query){
@@ -132,6 +145,12 @@ class Inventarios extends Model {
             // Agregar al Log de las nominas la actualizacion de la fecha programada (no mostrar alerta por cambio de stock)
             $this->nominaDia->addLog(  'La Fecha Programada cambio', "Desde $fecha_original a $this->fechaProgramada", 10);
             $this->nominaNoche->addLog('La Fecha Programada cambio', "Desde $fecha_original a $this->fechaProgramada", 10);
+
+            // cuando se actualiza la fecha programada, tambien se acutaliza la fecha limite para que el Captador envie la nomina
+            $this->nominaDia->fechaLimiteCaptador = Inventarios::calcularFechaLimiteCaptador($this->fechaProgramada);
+            $this->nominaDia->save();
+            $this->nominaNoche->fechaLimiteCaptador = Inventarios::calcularFechaLimiteCaptador($this->fechaProgramada);
+            $this->nominaNoche->save();
         }
     }
     public function actualizarJornada($idJornada){
