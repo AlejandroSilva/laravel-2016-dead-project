@@ -174,6 +174,9 @@ class RowInventario extends React.Component{
         // puede editar la NOMINA si tiene los permisos, esta habilitada, y esta no ha sido informada
         let puedeEditarNominaDia   = this.props.puedeModificar && _ndia.habilitada=="1" && !informadaDia
         let puedeEditarNominaNoche = this.props.puedeModificar && _nnoche.habilitada=="1" && !informadaNoche
+        // el captador se puede editar siempre que se tengan los permisos y que la nomina este habilitada
+        let puedeEditarCaptadorDia = this.props.puedeModificar && _ndia.habilitada=="1"
+        let puedeEditarCaptadorNoche = this.props.puedeModificar && _nnoche.habilitada=="1"
 
         // el inventario se puede editar solo si tiene los permisos, y no hay una nomina informada
         let puedeEditar_fecha_turno_stock = this.props.puedeModificar && !informadaDia && !informadaNoche
@@ -351,7 +354,7 @@ class RowInventario extends React.Component{
                             opciones={this.props.opcionesCaptadores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarNominaDia}
+                            puedeModificar={puedeEditarCaptadorDia}
                     />
                     <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador1Noche=ref}
@@ -360,7 +363,7 @@ class RowInventario extends React.Component{
                             opciones={this.props.opcionesCaptadores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarNominaNoche}
+                            puedeModificar={puedeEditarCaptadorNoche}
                     />
                 </td>
                 {/* Hora Presentación Lider */}
