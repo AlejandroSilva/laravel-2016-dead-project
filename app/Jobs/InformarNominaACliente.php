@@ -120,9 +120,12 @@ class InformarNominaACliente extends Job implements ShouldQueue {
             'dotacionReemplazo' => $this->nomina->dotacionReemplazo,
         ];
 
+        // Si el correo esta RECTIFICADO, cambiar el titulo
+        $nominaRectificada = $this->nomina->rectificada==1? "Nomina RECTIFICADA" : "Nomina";
+
         if($cliente->idCliente==1){                         // 1: PREUNIC
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
-                'subject' => "Nomina PREUNIC Local Nº$local->numero",
+                'subject' => "$nominaRectificada PREUNIC Nº$local->numero",
                 'to' => $this->PUC_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
@@ -134,43 +137,38 @@ class InformarNominaACliente extends Job implements ShouldQueue {
                 array_unshift($destinatariosFCV, [$correoLocal, "Local $local->numero"]);   // agrega al inicio
                 //array_push($destinatariosFCV, [$correoLocal, "Local $local->numero"]);    // agrega al final
 
-            // Si el correo esta RECTIFICADO, cambiar el titulo
-            $subject = $this->nomina->rectificada==1?
-                "Nomina RECTIFICADA Cruz Verde Local Nº$local->numero"
-                :
-                "Nomina Cruz Verde Local Nº$local->numero";
             $this->enviarCorreos('emails.informarNomina.FCV', [
-                'subject' => $subject,
+                'subject' => "$nominaRectificada Cruz Verde Nº$local->numero",
                 'to' => $destinatariosFCV,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==3){                   // 3: CKY
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
-                'subject' => "Nomina CKY Local Nº$local->numero",
+                'subject' => "$nominaRectificada CKY Local Nº$local->numero",
                 'to' => $this->CKY_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==4){                   // 4: CID
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
-                'subject' => "Nomina CID Local Nº$local->numero",
+                'subject' => "$nominaRectificada CID Local Nº$local->numero",
                 'to' => $this->CID_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==5){                   // 5: SALCOBRAND
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
-                'subject' => "Nomina SB Local Nº$local->numero",
+                'subject' => "$nominaRectificada SB Local Nº$local->numero",
                 'to' => $this->SB_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==7){                   // 7: CMT
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
-                'subject' => "Nomina CMT Local Nº$local->numero",
+                'subject' => "$nominaRectificada CMT Local Nº$local->numero",
                 'to' => $this->CMT_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else{                                              // Otros clientes
-            $this->enviarCorreos('emails.informarNomina.GENERICA', [                         
-                'subject' => "Nomina $cliente->nombreCorto Local Nº $local->numero (GENERICA)",
+            $this->enviarCorreos('emails.informarNomina.GENERICA', [
+                'subject' => "$nominaRectificada $cliente->nombreCorto Local Nº $local->numero (GENERICA)",
                 'to' => $this->SEI_nomina_bcc,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
