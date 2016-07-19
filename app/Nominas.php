@@ -97,7 +97,7 @@ class Nominas extends Model {
         if($total != $total_original){
             $this->dotacionTotal = $total;
             $this->save();
-            $this->addLog('Dotación Total cambio', "Cambio desde $total_original a $this->dotacionTotal", 1, $mostrarAlerta);
+            $this->addLog('Cambio de dotación total', "Cambio desde $total_original a $this->dotacionTotal", 1, $mostrarAlerta);
         }
     }
     public function actualizarDotacionOperadores($operadores, $mostrarAlerta=false){

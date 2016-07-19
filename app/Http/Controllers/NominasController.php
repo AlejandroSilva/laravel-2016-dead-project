@@ -412,6 +412,8 @@ class NominasController extends Controller {
         // pasar al estado "Recibida"
         $nomina->idEstadoNomina = 3;
         $nomina->save();
+        $nomina->addLog('Enviada a SEI', 'se envia nomina a SEI para su aprobación', 1, 0);
+
         return response()->json(
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
         );
@@ -432,6 +434,8 @@ class NominasController extends Controller {
         // pasasr al estado "Aprobada"
         $nomina->idEstadoNomina = 4;
         $nomina->save();
+        $nomina->addLog('Aprobada por SEI', 'la nomina ha sido aprobada por SEI', 1, 0);
+
         return response()->json(
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
         );
@@ -452,36 +456,49 @@ class NominasController extends Controller {
         // volver al estado "Pendiente"
         $nomina->idEstadoNomina = 2;
         $nomina->save();
+        $nomina->addLog('Nomina rechazada', 'la nomina ha sido rechazada por SEI', 1, 0);
+
         return response()->json(
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
         );
     }
     function api_informarNomina($idNomina){
+        Log::info("[NOMINA:INFORMAR_CLIENTE] enviando nomina idNomina:$idNomina ...");
         // Puede informar la nomina (y enviar el correo) solo si tiene los permisos
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-informar'))
+        if(!$user || !$user->can('nominaIG-informar')){
+            Log::info("[NOMINA:INFORMAR_CLIENTE:error] idNomina:$idNomina. No tiene permisos");
             return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
+        }
 
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
-        if(!$nomina)
+        if(!$nomina){
+            Log::info("[NOMINA:INFORMAR_CLIENTE:error] idNomina:$idNomina. Nomina no encontrada");
             return response()->json(['idNomina'=>'Nómina no encontrada'], 404);
+        }
 
         // la nomina esta Aprobada?
-        if($nomina->idEstadoNomina!=4)
+        if($nomina->idEstadoNomina!=4){
+            Log::info("[NOMINA:INFORMAR_CLIENTE:error] idNomina:$idNomina. Debe estar Aprobada");
             return response()->json(['idNomina'=>'La nómina debe estar en estado Aprobada'], 400);
+        }
 
         // la nomina esta completa?
-        if(!$nomina->tieneDotacionCompleta())
+        if(!$nomina->tieneDotacionCompleta()){
+            Log::info("[NOMINA:INFORMAR_CLIENTE:error] idNomina:$idNomina. Dotacion incompleta");
             return response()->json(['idNomina'=>'La nómina no esta completa'], 400);
+        }
+
+        // enviar correo
+        dispatch(new InformarNominaACliente($nomina));
 
         // pasasr al estado "informada"
         $nomina->idEstadoNomina = 5;
         $nomina->save();
+        $nomina->addLog('Informada a cliente', 'se notifica al cliente por correo de la nomina', 1, 0);
 
-        // ToDo: enviar los correos
-        dispatch(new InformarNominaACliente($nomina));
-
+        Log::info("[NOMINA:INFORMAR_CLIENTE:ok] nomina idNomina:$idNomina enviada al cliente");
         return response()->json(
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
         );
@@ -505,6 +522,8 @@ class NominasController extends Controller {
         $nomina->idEstadoNomina = 2;
         $nomina->rectificada = true;
         $nomina->save();
+        $nomina->addLog('Rectificar', 'La nomina ha sido rectificada', 1, 0);
+
         // ToDo: enviar los correos
         return response()->json(
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
