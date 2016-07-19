@@ -150,7 +150,7 @@ class RowAuditoriaSemanal extends React.Component{
                 <td className={css.tdAuditor}>
                     <Select
                             ref={ref=>this.selectAuditor=ref}
-                            seleccionada={this.props.auditoria.idAuditor || ''}
+                            seleccionada={this.props.auditoria.idAuditor? ''+this.props.auditoria.idAuditor : ''}   // debe ser string
                             onSelect={this.guardarAuditoria.bind(this)}
                             opciones={opcionesAuditores}
                             opcionNula={true}
@@ -168,7 +168,7 @@ class RowAuditoriaSemanal extends React.Component{
                 <td className={css.tdRevisada}>
                     <Select
                         ref={ref=>this.selectAprobada=ref}
-                        seleccionada={this.props.auditoria.aprovada}
+                        seleccionada={''+this.props.auditoria.aprovada} // debe ser string
                         onSelect={this.guardarAuditoria.bind(this)}
                         opciones={[
                             {valor: '0', texto: 'Pendiente'},

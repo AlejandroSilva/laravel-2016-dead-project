@@ -210,7 +210,7 @@ export default class BlackBoxSemanal{
                 })
                 // Filtrar por Aprobada
                 .filter(auditoria=>{
-                    return _.find(this.filtroAprobadas, {'valor': auditoria.aprovada, 'seleccionado': true})
+                    return _.find(this.filtroAprobadas, {'valor': ''+auditoria.aprovada, 'seleccionado': true})
                 })
                 .value(),
             filtros: {
