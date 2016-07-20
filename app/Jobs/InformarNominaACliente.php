@@ -180,7 +180,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         Mail::send($plantilla, $datosVista,
             function ($message) use($datosCorreo){
                 $subject = $datosCorreo['subject'];
-                $this->log("[prod] subject: $subject");
+                Log::info("[prod] subject: $subject");
 
                 $message
                     ->from('no-responder@plataforma.seiconsultores.cl', 'SEI Consultores')
