@@ -179,9 +179,12 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     private function enviarCorreos($plantilla, $datosCorreo, $datosVista){
         Mail::send($plantilla, $datosVista,
             function ($message) use($datosCorreo){
+                $subject = $datosCorreo['subject'];
+                $this->log("[prod] subject: $subject");
+
                 $message
                     ->from('no-responder@plataforma.seiconsultores.cl', 'SEI Consultores')
-                    ->subject($datosCorreo['subject']);
+                    ->subject($subject);
                 
                 if(App::environment('production')){
                     // en produccion enviar las nominas a los destinatarios reales
