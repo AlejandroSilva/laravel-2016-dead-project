@@ -247,8 +247,15 @@ class AuditoriasController extends Controller {
      * ##########################################################
      */
 
-    // GET api/auditoria/{fecha1}/al/{fecha2}/auditor/{idCliente}
+    // GET api/auditoria/{fecha1}/al/{fecha2}/auditor/{idAuditor}
     function api_getPorRangoYAuditor($annoMesDia1, $annoMesDia2, $idAuditor){
+        // si el $idAuditor es 0, se muestran todas las autidorias en un periodo
+        if($idAuditor==0){
+            $auditorias = $this->buscarPorRangoYAuditor($annoMesDia1, $annoMesDia2, 0);
+            return response()->json($auditorias, 200);
+        }
+
+        // validar que el usuario exista
         if(User::find($idAuditor)){
             $auditorias = $this->buscarPorRangoYAuditor($annoMesDia1, $annoMesDia2, $idAuditor);
             return response()->json($auditorias, 200);
