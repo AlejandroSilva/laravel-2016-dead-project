@@ -21,6 +21,7 @@ export class NominaIG extends React.Component {
             esTitular: true,
             // --------
             idEstadoNomina: this.props.nomina.estado.idEstadoNomina,
+            haSidoRectificada: this.props.nomina.rectificada,
             lider: this.props.nomina.lider,
             supervisor: this.props.nomina.supervisor,
             dotacionTitular: this.props.nomina.dotacionTitular,
@@ -168,17 +169,6 @@ export class NominaIG extends React.Component {
                 this.refs.notificator.error("Error", msgs, 4*1000);
             })
     }
-    // modificarOperador(run, datos) {
-    //     datos.idRoleAsignado = 6;
-    //     api.nomina.modificarOperador(this.props.nomina.idNomina, run, datos)
-    //         .then(resp=>{
-    //             console.log(resp)
-    //         })
-    //         .catch(err=>{
-    //             alert('error al modificar ', err)
-    //             console.log(err)
-    //         })
-    // }
 
     onNuevoUsuario(datos){
         console.log('enviando', datos)
@@ -203,7 +193,10 @@ export class NominaIG extends React.Component {
         // al enviar una nomina, esta pasa al estado "enviada"
         return api.nomina.enviar(this.props.nomina.idNomina)
             .then(nomina=>{
-                this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
+                this.setState({
+                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    haSidoRectificada: nomina.rectificada,
+                })
             })
             .catch(err=>{
                 let msgs = _.values(err.data).join('. ')
@@ -215,7 +208,10 @@ export class NominaIG extends React.Component {
         // al aprobar una nomina, esta pasa al estado "aprobada"
         return api.nomina.aprobar(this.props.nomina.idNomina)
             .then(nomina=>{
-                this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
+                this.setState({
+                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    haSidoRectificada: nomina.rectificada,
+                })
             })
             .catch(err=> {
                 let msgs = _.values(err.data).join('. ')
@@ -227,7 +223,10 @@ export class NominaIG extends React.Component {
         // al rechazar una nomina, esta vuelve a quedar en estado pendiente
         return api.nomina.rechazar(this.props.nomina.idNomina)
             .then(nomina=>{
-                this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
+                this.setState({
+                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    haSidoRectificada: nomina.rectificada,
+                })
             })
             .catch(err=> {
                 let msgs = _.values(err.data).join('. ')
@@ -239,7 +238,10 @@ export class NominaIG extends React.Component {
         // al aprobar una nomina, esta pasa al estado "aprobada"
         return api.nomina.informar(this.props.nomina.idNomina)
             .then(nomina=>{
-                this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
+                this.setState({
+                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    haSidoRectificada: nomina.rectificada,
+                })
             })
             .catch(err=> {
                 let msgs = _.values(err.data).join('. ')
@@ -253,7 +255,7 @@ export class NominaIG extends React.Component {
             .then(nomina=>{
                 this.setState({
                     idEstadoNomina: nomina.estado.idEstadoNomina,
-                    rectificada: nomina.rectificada
+                    haSidoRectificada: nomina.rectificada,
                 })
             })
             .catch(err=> {
@@ -266,7 +268,10 @@ export class NominaIG extends React.Component {
         // al aprobar una nomina, esta pasa al estado "aprobada"
         return api.nomina.rectificar(this.props.nomina.idNomina)
             .then(nomina=>{
-                this.setState({idEstadoNomina: nomina.estado.idEstadoNomina})
+                this.setState({
+                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    haSidoRectificada: nomina.rectificada,
+                })
             })
             .catch(err=> {
                 let msgs = _.values(err.data).join('. ')
@@ -338,7 +343,7 @@ export class NominaIG extends React.Component {
 
                 <PanelEstados
                     idEstado={this.state.idEstadoNomina}
-                    haSidoRectificada={this.props.nomina.rectificada}
+                    haSidoRectificada={this.state.haSidoRectificada}
                     enviarNomina={this.enviarNomina.bind(this)}
                     aprobarNomina={this.aprobarNomina.bind(this)}
                     rechazarNomina={this.rechazarNomina.bind(this)}
