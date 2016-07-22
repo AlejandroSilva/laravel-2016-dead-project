@@ -1,7 +1,11 @@
 <html>
 <head></head>
 <body>
-    <p style="margin-bottom: 16px;">SEI Consultores, informa nomina de personal para IG <b>{{ $local->nombre }}</b> se encuentra disponible.</p>
+    @if($nomina->rectificada==1)
+        <p style="margin-bottom: 16px;">SEI Consultores, informa nomina de personal para IG <b>{{ $local->nombre }}</b> se encuentra disponible.</p>
+    @else
+        <p style="margin-bottom: 16px;">SEI Consultores, informa nomina RECTIFICADA de personal para IG <b>{{ $local->nombre }}</b> se encuentra disponible.</p>
+    @endif
 
     {{-- Datos Inventario --}}
     <table style="width: 700px">
@@ -78,15 +82,20 @@
         <tbody>
             <tr>
                 <td>
+                    {{-- TABLA PERSONAL TITULAR --}}
                     <table style="max-width: 600px; vertical-align: middle;
+                                width: 100%;
                                 margin-right: 32px;
                                 border: 1px solid #ddd">
                         <thead>
                             <tr>
-                                <th style="border: 1px solid #ddd; padding: 8px;">N°</th>
-                                <th style="border: 1px solid #ddd; padding: 8px;">Nombre</th>
-                                <th style="border: 1px solid #ddd; padding: 8px;">RUN</th>
-                                <th style="border: 1px solid #ddd; padding: 8px;">Cargo</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;" colspan="4">Titulares</th>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 2px 8px;">#</th>
+                                <th style="border: 1px solid #ddd; padding: 2px 8px;">Nombre</th>
+                                <th style="border: 1px solid #ddd; padding: 2px 8px;">RUN</th>
+                                <th style="border: 1px solid #ddd; padding: 2px 8px;">Cargo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,7 +106,7 @@
                             {{-- Lider --}}
                             @if( isset($lider))
                                 <tr>
-                                    <td style="border: 1px solid #ddd;">{{$conteo++}}</td>
+                                    <td style="border: 1px solid #ddd; text-align: center;">{{$conteo++}}</td>
                                     <td style="border: 1px solid #ddd;">{{ $lider->nombreCompleto() }}</td>
                                     <td style="border: 1px solid #ddd;">{{ "$lider->usuarioRUN-$lider->usuarioDV" }}</td>
                                     <td style="border: 1px solid #ddd;">Lider</td>
@@ -106,7 +115,7 @@
                             {{-- Supervisor (Opcional)--}}
                             @if( isset($supervisor))
                                 <tr>
-                                    <td style="border: 1px solid #ddd;">{{$conteo++}}</td>
+                                    <td style="border: 1px solid #ddd; text-align: center;">{{$conteo++}}</td>
                                     <td style="border: 1px solid #ddd;">{{ $supervisor->nombreCompleto() }}</td>
                                     <td style="border: 1px solid #ddd;">{{ "$supervisor->usuarioRUN-$supervisor->usuarioDV" }}</td>
                                     <td style="border: 1px solid #ddd;">Supervisor</td>
@@ -115,19 +124,37 @@
                             {{-- Dotacion Titular --}}
                             @foreach($dotacionTitular as $usuario)
                                 <tr>
-                                    <td style="border: 1px solid #ddd;">{{$conteo++}}</td>
+                                    <td style="border: 1px solid #ddd; text-align: center;">{{$conteo++}}</td>
                                     <td style="border: 1px solid #ddd;">{{ $usuario->nombreCompleto() }}</td>
                                     <td style="border: 1px solid #ddd;">{{ "$usuario->usuarioRUN-$usuario->usuarioDV" }}</td>
                                     <td style="border: 1px solid #ddd;">Operador</td>
                                 </tr>
                             @endforeach
-                            {{-- Dotacion Reemplazo --}}
+                        </tbody>
+                    </table>
+
+                    {{-- TABLA PERSONAL SUPLENTE--}}
+                    <table style="max-width: 600px; vertical-align: middle;
+                                width: 100%;
+                                margin-top: 16px;
+                                margin-right: 32px;
+                                border: 1px solid #ddd">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px;" colspan="4">Suplentes</th>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 2px 8px;">Nombre</th>
+                                <th style="border: 1px solid #ddd; padding: 2px 8px;">RUN</th>
+                                <th style="border: 1px solid #ddd; padding: 2px 8px;">Cargo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             @foreach($dotacionReemplazo as $usuario)
                                 <tr>
-                                    <td style="border: 1px solid #ddd;">{{$conteo++}}</td>
                                     <td style="border: 1px solid #ddd;">{{ $usuario->nombreCompleto() }}</td>
                                     <td style="border: 1px solid #ddd;">{{ "$usuario->usuarioRUN-$usuario->usuarioDV" }}</td>
-                                    <td style="border: 1px solid #ddd;">Operador Reemplazo</td>
+                                    <td style="border: 1px solid #ddd;">Operador Suplente</td>
                                 </tr>
                             @endforeach
                         </tbody>
