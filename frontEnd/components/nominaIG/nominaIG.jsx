@@ -247,6 +247,21 @@ export class NominaIG extends React.Component {
                 this.refs.notificator.error("Error", msgs, 4 * 1000);
             })
     }
+    completarSinCorreo(){
+        // al aprobar una nomina, esta pasa al estado "aprobada"
+        return api.nomina.completarSinCorreo(this.props.nomina.idNomina)
+            .then(nomina=>{
+                this.setState({
+                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    rectificada: nomina.rectificada
+                })
+            })
+            .catch(err=> {
+                let msgs = _.values(err.data).join('. ')
+                console.log('Error al aprobar nomina', err.data)
+                this.refs.notificator.error("Error", msgs, 4 * 1000);
+            })
+    }
     rectificarNomina(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
         return api.nomina.rectificar(this.props.nomina.idNomina)
@@ -268,7 +283,7 @@ export class NominaIG extends React.Component {
                        // && (this.props.nomina.dotacionOperadores==operadoresAsignados)
 
         // console.log('operadoresAsignados', operadoresAsignados)
-        // console.log('totalAsignados', totalAsignados)
+        console.log('totalAsignados', totalAsignados)
         // console.log('dotacionOperadores==operadores asignados', this.props.nomina.dotacionOperadores, operadoresAsignados, this.props.nomina.dotacionOperadores==operadoresAsignados)
         // console.log('dotacionTotal==totalAsignados', this.props.nomina.dotacionTotal, totalAsignados, this.props.nomina.dotacionTotal==totalAsignados)
         // console.log("nominaCompleta", nominaCompleta)
@@ -323,10 +338,12 @@ export class NominaIG extends React.Component {
 
                 <PanelEstados
                     idEstado={this.state.idEstadoNomina}
+                    haSidoRectificada={this.props.nomina.rectificada}
                     enviarNomina={this.enviarNomina.bind(this)}
                     aprobarNomina={this.aprobarNomina.bind(this)}
                     rechazarNomina={this.rechazarNomina.bind(this)}
                     informarNomina={this.informarNomina.bind(this)}
+                    completarSinCorreo={this.completarSinCorreo.bind(this)}
                     rectificarNomina={this.rectificarNomina.bind(this)}
                     nominaCompleta={nominaCompleta}
                     // permisos

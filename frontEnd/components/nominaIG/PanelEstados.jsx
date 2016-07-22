@@ -44,19 +44,23 @@ export class PanelEstados extends React.Component {
                 acciones={[
                     {
                         // si la nomina no esta completa, en su total o en sus operadores, no puede ser informada...
-                        texto: this.props.nominaCompleta? 'Informar nómina' : 'Revise Operadores y/o Total asignado',
+                        texto: this.props.nominaCompleta? 'Informar nómina por correo' : 'Revise Operadores y/o Total asignado',
                         onclick: this.props.informarNomina,
                         habilitado: idEstado==4 && this.props.permisos.informar && this.props.nominaCompleta
-                    },
-                    {
-                        texto: 'Rechazar nómina', onclick: this.props.rechazarNomina,
+                    }, {
+                        texto: 'Rechazar nómina',
+                        onclick: this.props.rechazarNomina,
                         habilitado: idEstado==4 && this.props.permisos.aprobar
+                    }, {
+                        texto: 'Completar sin envio de correo',
+                        onclick: this.props.completarSinCorreo,
+                        habilitado: idEstado==4 && this.props.permisos.rectificar  && this.props.haSidoRectificada==1
                     }
                 ]}
             />
             {/* Informada */}
             <Estado
-                titulo="Informada"
+                titulo={this.props.haSidoRectificada==1? "Informada (y rectificada)" : "Informada"}
                 descripcion="El cliente ha sido informado por correo"
                 activo={idEstado==5}
                 acciones={[
@@ -72,11 +76,13 @@ export class PanelEstados extends React.Component {
 
 PanelEstados.propTypes = {
     idEstado: PropTypes.number.isRequired,
+    haSidoRectificada: PropTypes.number.isRequired,
     // Se espera que estos metodos retornen una promesa:
     enviarNomina: PropTypes.func.isRequired,
     aprobarNomina: PropTypes.func.isRequired,
     rechazarNomina: PropTypes.func.isRequired,
     informarNomina: PropTypes.func.isRequired,
+    completarSinCorreo: PropTypes.func.isRequired,
     rectificarNomina: PropTypes.func.isRequired,
     nominaCompleta: PropTypes.bool.isRequired,
     // Permisos

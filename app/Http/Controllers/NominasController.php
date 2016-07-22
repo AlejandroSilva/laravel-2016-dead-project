@@ -462,7 +462,7 @@ class NominasController extends Controller {
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
         );
     }
-    function api_informarNomina($idNomina){
+    function api_informarNomina($idNomina, Request $request){
         Log::info("[NOMINA:INFORMAR_CLIENTE] enviando nomina idNomina:$idNomina ...");
         // Puede informar la nomina (y enviar el correo) solo si tiene los permisos
         $user = Auth::user();
@@ -490,15 +490,33 @@ class NominasController extends Controller {
             return response()->json(['idNomina'=>'La nómina no esta completa'], 400);
         }
 
-        // enviar correo
-        dispatch(new InformarNominaACliente($nomina));
+        // se puede omitir el cambio a informada, siempre que esta este siendo rectificada y se
+        // tengan los permisos (que el usuario pueda rectificar)
+        if(isset($request->omitirCorreo) && $request->omitirCorreo==true){
+            // validar que tenga los permisos
+            if(!$user->can('nominaIG-rectificar')){
+                Log::info("[NOMINA:INFORMAR_CLIENTE:ERROR] idNomina:$idNomina. No tiene permisos para informar sin enviar correo");
+                return response()->json(['error'=>'No tiene permisos para informar la nomina sin enviar el correo'], 403);
+            }
+            // todo valida si ha sido rectificada
+            if($nomina->rectificada==false){
+                Log::info("[NOMINA:INFORMAR_CLIENTE:ERROR] idNomina:$idNomina. No puede informar sin correo una nomina no rectificada");
+                return response()->json(['error'=>'No puede informar sin enviar el correo en una nomina no rectificada'], 403);
+            }
+
+            $nomina->addLog('Informada (sin correo)', 'se marca como informada pero no se envia el correo a los clientes', 1, 0);
+            Log::info("[NOMINA:INFORMAR_CLIENTE:OK] nomina idNomina:$idNomina marcada como enviada (pero no se envio el correo)");
+        }else{
+            // enviar correo
+            dispatch(new InformarNominaACliente($nomina));
+            $nomina->addLog('Informada a cliente', 'se notifica al cliente por correo de la nomina', 1, 0);
+            Log::info("[NOMINA:INFORMAR_CLIENTE:OK] nomina idNomina:$idNomina enviada al cliente");
+        }
 
         // pasasr al estado "informada"
         $nomina->idEstadoNomina = 5;
         $nomina->save();
-        $nomina->addLog('Informada a cliente', 'se notifica al cliente por correo de la nomina', 1, 0);
 
-        Log::info("[NOMINA:INFORMAR_CLIENTE:ok] nomina idNomina:$idNomina enviada al cliente");
         return response()->json(
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
         );
