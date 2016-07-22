@@ -580,14 +580,20 @@ class AuditoriasController extends Controller {
             'auditor'
         ])
             ->where('fechaProgramada', '>=', $annoMesDia1)
-            ->where('fechaProgramada', '<=', $annoMesDia2)
-            // Se filtran por auditor
-            ->whereHas('local', function($q) use ($idAuditor){
+            ->where('fechaProgramada', '<=', $annoMesDia2);
+
+        // Se filtran por auditor si esta definido
+        if($idAuditor!=0){
+            $query->whereHas('local', function($q) use ($idAuditor){
                 $q->where('idAuditor', '=', $idAuditor);
-            })
+            });
+        }
+
+        return $query
             ->orderBy('fechaProgramada', 'ASC')
-            ->orderBy('idLocal');
-        return $query->get()->toArray();
+            ->orderBy('idLocal')
+            ->get()
+            ->toArray();
     }
 
     // Function para validar que la fecha entregada sea valida
