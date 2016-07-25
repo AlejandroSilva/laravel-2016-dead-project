@@ -88,8 +88,8 @@ export default class BlackBoxSemanal{
         // ##### Filtro CECO (ordenado por numero)
         this.filtroCeco = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = auditoria.local.numero
-                let texto = auditoria.local.numero
+                let valor = ''+auditoria.local.numero
+                let texto = ''+auditoria.local.numero
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroCeco, {'valor': valor})
@@ -190,7 +190,7 @@ export default class BlackBoxSemanal{
                 })
                 // Filtrar por Ceco
                 .filter(auditoria=>{
-                    return _.find(this.filtroCeco, {'valor': auditoria.local.numero, 'seleccionado': true})
+                    return _.find(this.filtroCeco, {'valor': ''+auditoria.local.numero, 'seleccionado': true})
                 })
                 // Filtrar por Region
                 .filter(auditoria=>{

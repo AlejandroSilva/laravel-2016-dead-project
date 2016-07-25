@@ -194,13 +194,14 @@ export default class BlackBoxIGSemanal{
         // ##### Filtro Numero de Local
         this.filtroCeco = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = auditoria.local.numero
-                let texto = auditoria.local.numero
+                let valor = ''+auditoria.local.numero
+                let texto = ''+auditoria.local.numero // debe ser un string
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroCeco, {'valor': valor})
                 return opcion? opcion : {valor, texto, seleccionado: true}
             })
+            .uniqBy('valor')
             .sortBy(op=>op.valor.length, 'valor') // ordenar primero los numeros de dos digitos, luego los de 3 digitos...
             .value()
     }
@@ -219,7 +220,7 @@ export default class BlackBoxIGSemanal{
             inventariosFiltrados: _.chain(this.lista)
                 // Filtrar por Ceco
                 .filter(inventario=>{
-                    return _.find(this.filtroCeco, {'valor': inventario.local.numero, 'seleccionado': true})
+                    return _.find(this.filtroCeco, {'valor': ''+inventario.local.numero, 'seleccionado': true})
                 })
                 // Filtrar por Regiones
                 .filter(inventario=>{
