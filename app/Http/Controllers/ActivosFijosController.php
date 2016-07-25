@@ -18,6 +18,8 @@ use App\AlmacenAF;
 use App\AlmacenAF_ArticuloAF;
 use App\ProductoAF;
 use App\Role;
+// Permisos
+use Auth;
 
 class ActivosFijosController extends Controller {
 
@@ -28,6 +30,11 @@ class ActivosFijosController extends Controller {
      */
     // GET activo-fijo
     public function get_index(){
+        // validar de que el usuario tenga los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('activoFijo-verModulo'))
+            return view('errors.403');
+
         return response()->view('logistica.activoFijo.index', [
             'almacenes' => AlmacenAF::all()
         ]);

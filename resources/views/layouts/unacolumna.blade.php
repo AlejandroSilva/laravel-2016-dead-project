@@ -68,7 +68,7 @@
                             </ul>
                         </li>
 
-                        @if( Auth::user()->hasRole('Administrador') )
+                        @if( Auth::user()->can('activoFijo-verModulo') )
                             <li class="">
                                 <a id="drop-logistica" href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     Gestión Logistica <span class="caret"></span>
