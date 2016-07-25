@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\AlmacenAF;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+// Carbon
+use Carbon\Carbon;
 // DB
 use DB;
 // PHPExcel
@@ -68,6 +71,66 @@ class MaestraController extends Controller {
         $data = collect($tableData);
         return response()->json($data->count());
     }
+
+
+    function api_cargar_maestra(){
+        ini_set('memory_limit','1024M');
+        $tableData = $this->leerArchivoProductos('/home/asilva/Escritorio/maestra_sei.xlsx');
+
+        $almacenDisponible = AlmacenAF::find(1);
+        // transaccion, es muy comun tener datos duplicados en las maestras
+        DB::transaction(function() use ($tableData, $almacenDisponible){
+            // agregar productos
+            foreach($tableData as $data) {
+                $producto = ProductoAF::find($data['a']);
+                $prod = $producto;
+                if(!$producto){
+                    $prod = new ProductoAF([
+                        'SKU'=>$data['a'],
+                        'descripcion' => $data['b'],
+                        'valorMercado' => $data['f']
+                    ]);
+                    $prod->save();
+                }else{
+                    $producto->descripcion = $data['b'];
+                    $producto->valorMercado = $data['f'];
+                    $producto->save();
+                }
+
+                // agregar articulo
+                $articulo = new ArticuloAF([
+                    'fechaIncorporacion' => Carbon::now(),
+                    'stock' => $data['g'],
+                    'SKU' => $prod->SKU
+                ]);
+                $articulo->save();
+
+                // agregar barras
+                if(isset($data['c']) && $data['c']!=""){
+                    $codigo = new CodigoBarra(['barra'=> $data['c'], 'idArticuloAF' => $articulo->idArticuloAF]);
+                    $codigo->save();
+                }
+                if(isset($data['d'])){
+                    $codigo = new CodigoBarra(['barra'=> $data['d'], 'idArticuloAF' => $articulo->idArticuloAF]);
+                    $codigo->save();
+                }
+                if(isset($data['e'])){
+                    $codigo = new CodigoBarra(['barra'=> $data['e'], 'idArticuloAF' => $articulo->idArticuloAF]);
+                    $codigo->save();
+                }
+
+                // agregar productos a almacen DISPONIBLE
+                $almacenDisponible->articulos()->attach( $articulo->idArticuloAF, [
+                    'stockActual' => $data['g']
+                    ]
+                );
+            }
+        });
+        return response()->json(
+            collect($tableData)->count()
+        );
+    }
+
 
     /**
      * ##########################################################

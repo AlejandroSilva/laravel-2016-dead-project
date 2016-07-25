@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB;
 use App\ArticuloAF;
 use App\CodigoBarra;
 use App\PreguiaDespacho;
@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 // Modelos
 use App\AlmacenAF;
+use App\AlmacenAF_ArticuloAF;
 use App\ProductoAF;
 use App\Role;
 
@@ -96,60 +97,96 @@ class ActivosFijosController extends Controller {
         $producto->save();
     }
 
-    // GET api/activo-fijo/articulos/buscar
-    public function api_articulos_buscar(Request $request){
-        // todo: validar que exista, y que tenga los permisos para ver los articulos
-        return response()->json(
-            $this->_buscarArticulos( (object)[
-                'idAlmacenAF' => $request->query('almacen'),
-            ])->map('\App\ArticuloAF::formato_tablaArticulosAF')
-        );
+    // GET api/activo-fijo/almacen/{idAlmacen}/articulos
+    public function api_almacen_articulos($idAlmacen){
+        // retornar todos los articulos asociados a algun almance
+        $query = AlmacenAF_ArticuloAF::with([]);
+
+        if($idAlmacen!=0){
+            $query->where('idAlmacenAF', $idAlmacen);
+        }
+
+        return response()->json(array_values(
+            $articulos = $query->get()
+                ->map(function($almArt){
+                    return AlmacenAF_ArticuloAF::formato_tablaArticulos($almArt);
+                })
+                ->sortBy(['sku', 'baras', 'idAlmacen'])
+                ->toArray()
+        ));
     }
 
     // GET api/activo-fijo/articulos/buscar-barra
     public function api_articulos_buscarBarra(Request $request){
+        // la llamada es valida?
         $barra = $request->query('barra');
         if(!isset($barra))
             return response()->json([], 400);
 
+        // existe un articulo con ese barra?
         $codigobarra = CodigoBarra::find($barra);
         if(!$codigobarra)
             return response()->json(null);
 
-        return response()->json( ArticuloAF::formato_tablaArticulosAF( $codigobarra->articuloAF) );
+
+        return response()->json( ArticuloAF::formato_conExistenciasPorAlmacen( $codigobarra->articuloAF) );
     }
 
     // POST api/activo-fijo/articulos/entregar
     public function api_articulos_entregar_a_almacen(Request $request){
         // todo: 1 se verifica que todos los articulos existan y que esten en "disponible"
 
-        // 2: crear una "guia de entrega" en el destino
+        // crear una "guia de entrega", asignar su origen y su destino
+        $almacenDisponible = AlmacenAF::find(1);
         $almacenDestino = AlmacenAF::find($request->almacenDestino);
         if(!$almacenDestino)
             return response()->json('Almacen no encontrado', 400);
 
-        $preguiaEntrega = PreguiaDespacho::create([
-            'descripcion' => "entrega de articulos",
-            'idAlmacenOrigen' => 1,         // disponible
-            'idAlmacenDestino' => $almacenDestino->idAlmacenAF,
-            'fechaEmision' => Carbon::now(),
-        ]);
+        // si no tiene articulos seleccionados asignados, o todos tienen stock 0, no se crea la guia de despacho
+        // (no es necesario contar los articulos, si no viene ninguno $sinStockPorEntregar sigue siendo falso)
+        $sinStockPorEntregar = true;
+        foreach ($request->articulos as $articuloTrans){
+            if($articuloTrans['stockPorEntregar']!=0)
+                $sinStockPorEntregar = false;
+        };
+        if($sinStockPorEntregar)
+            return response()->json([], 200);
 
-        // 3: enviar los articulos al almacen de destino
-        foreach($request->codigosArticulos as $cod){
-            $articulo = ArticuloAF::find($cod);
-            // todo validar si el articulo existe o no
-            if(!$articulo) return;
 
-            // cambiar de almacen
-            $articulo->idAlmacenAF = $almacenDestino->idAlmacenAF;
-            $articulo->save();
+        // por seguridad, el proceso de cambio de stock debe ser ejecutado en el contexto de una transaccion
+        DB::transaction(function() use($request, $almacenDisponible, $almacenDestino) {
+            $preguiaEntrega = PreguiaDespacho::create(['descripcion' => "Entrega de articulos", 'idAlmacenOrigen' => 1,     // se entrega desde el almacen "Disponible"
+                'idAlmacenDestino' => $almacenDestino->idAlmacenAF, 'fechaEmision' => Carbon::now(),]);
 
-            // agregar a la lista de productos
-            $preguiaEntrega->articulos()->attach($articulo->codArticuloAF);
-        }
+            // 3: enviar los articulos al almacen de destino
+            foreach ($request->articulos as $articuloTrans) {
+                $idArticulo = $articuloTrans['idArticuloAF'];
+                $stockPorEntregar = $articuloTrans['stockPorEntregar'];
 
-        return response()->json($preguiaEntrega);
+                // validar que el articulo exista
+                $articulo = ArticuloAF::find($idArticulo);
+                if (!$articulo) return;
+
+                // si se esta asignado un stock de 0, no se agrega el articulo a la guia
+                if ($stockPorEntregar == 0) return;
+
+                // revisar que el stock que se esta entregando, este disponible en el almacen "Disponible"
+                if ($almacenDisponible->stockArticulo($idArticulo) >= $stockPorEntregar) {
+                    // Quitar el articulo del almacen Disponibles (disminuir su stock)
+                    $almacenDisponible->quitarStockArticulo($idArticulo, $stockPorEntregar);
+
+                    // Entregar el articulo al almacen de destino (aumentar su stock)
+                    $almacenDestino->agregarStockArticulo($idArticulo, $stockPorEntregar);
+
+                    // agregar el articulo a la preguia de despacho
+                    $preguiaEntrega->articulos()->attach($articulo->idArticuloAF, ['stockEntregado' => $stockPorEntregar, 'stockRetornado' => 0]);
+                } else {
+                    //
+                }
+            }
+
+            return response()->json($preguiaEntrega);
+        });
     }
 
     // POST api/activo-fijo/articulos/transferir
@@ -230,30 +267,52 @@ class ActivosFijosController extends Controller {
 
     // POST api/activo-fijo/preguia/{idPreguia}/devolver
     public function api_preguia_devolver(Request $request, $idPreguia){
-        $codigos = $request->codigosArticulos;
-        // todo validar permisos
+        // todo validar que tenga los permisos para retornar en esta preguia
+
+        // la preguia indicada existe?
         $preguia = PreguiaDespacho::find($idPreguia);
         if(!$preguia)
             return response()->json('Preguia no encontrada', 400);
 
-        // 1 mover cada uno de los articulos a "disponible"
-        foreach($codigos as $cod){
-            $articulo = ArticuloAF::find($cod);
-            // todo validar si el articulo existe o no
-            if(!$articulo) break;
+        // por seguridad, el proceso de cambio de stock debe ser ejecutado en el contexto de una transaccion
+        DB::transaction(function() use($request, $preguia){
+            $almacenDestino = $preguia->almacenDestino;
+            $almacenDisponible = AlmacenAF::find(1);
 
-            // cambiar de almacen hacia "disponible"
-            $articulo->idAlmacenAF = 1;
-            $articulo->save();
+            // mover cada uno de los articulos al almacen "Disponible"
+            foreach ($request->articulos as $articuloRetorno) {
+                $idArticulo = $articuloRetorno['idArticuloAF'];
+                $stockParaRetornar = $articuloRetorno['stockParaRetornar'];
 
-            // 2 marcar los articulos de la guia como "retornado" (1) en la tabla pivot
-            $preguia->articulos()->updateExistingPivot($cod, [
-                'estado'=>2
-            ], true);
-        }
+                $articulo = ArticuloAF::find($idArticulo);
+                // todo validar si el articulo existe o no
+                if (!$articulo) break;
+
+                // revisar que el stock que se esta retornando, sea igual o menor al stock que esta en el almacen
+                if ($almacenDestino->stockArticulo($idArticulo) >= $stockParaRetornar) {
+                    // quitar el stock en el almacen de destino
+                    $almacenDestino->quitarStockArticulo($idArticulo, $stockParaRetornar);
+
+                    // agregar el stock en el almacen 'Disponible'
+                    $almacenDisponible->agregarStockArticulo($idArticulo, $stockParaRetornar);
+
+                    // actualizar el stockRetornado en la preguia
+                    $pivot = $preguia->articulos()->find($idArticulo)->pivot;
+                    $pivot->stockRetornado += $stockParaRetornar;
+                    $pivot->save();
+                    //                $preguia->articulos()->updateExistingPivot($idArticulo, [
+                    //                    'stockRetornado' => $stockParaRetornar
+                    //                ]);
+
+                } else {
+                    // ERROR: se esta tratanto de retornar mas tock del que actualmente se tiene
+                    // ... no hacer nada con el articulo ...
+                }
+            }
+        });
 
         // TODO: 3 cambiar el estado de la guia a "retornada"
-        return response()->json($codigos);
+        return response()->json([]);
     }
 
     // GET api/activo-fijo/responsables/buscar

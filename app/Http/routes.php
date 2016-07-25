@@ -71,6 +71,7 @@ Route::group(['middleware' => ['web']], function (){
         
         Route::get('api/activo-fijo/cargar-productos',              'MaestraController@api_cargar_productos');  // ELIMINAR
         Route::get('api/activo-fijo/cargar-articulos',              'MaestraController@api_cargar_articulos');  // ELIMINAR
+        Route::get('api/activo-fijo/cargar-maestra',                'MaestraController@api_cargar_maestra');  // ELIMINAR
 
         
         // GEO - MANTENEDOR (DESARROLLO DETENIDO)
@@ -135,7 +136,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('activo-fijo/productos/buscar',                  'ActivosFijosController@api_productos_buscar');
         Route::post('activo-fijo/productos/nuevo',                  'ActivosFijosController@api_productos_nuevo');
         Route::put('activo-fijo/producto/{sku}',                    'ActivosFijosController@api_producto_actualizar');
-        Route::get('activo-fijo/articulos/buscar',                  'ActivosFijosController@api_articulos_buscar');
+        Route::get('activo-fijo/almacen/{idAlmacen}/articulos',     'ActivosFijosController@api_almacen_articulos');
         Route::get('activo-fijo/articulos/buscar-barra',            'ActivosFijosController@api_articulos_buscarBarra');
         Route::post('activo-fijo/articulos/entregar',               'ActivosFijosController@api_articulos_entregar_a_almacen');
         Route::post('activo-fijo/articulos/transferir',             'ActivosFijosController@api_articulos_transferir');
@@ -190,7 +191,7 @@ Route::group(['middleware' => ['web']], function (){
         // API AUDITORIAS
         Route::get('auditoria/mes/{annoMesDia}/cliente/{idCliente}',            'AuditoriasController@api_getPorMesYCliente');
         Route::get('auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}',        'AuditoriasController@api_getPorRangoYCliente');
-        Route::get('auditoria/{fecha1}/al/{fecha2}/auditor/{idCliente}',        'AuditoriasController@api_getPorRangoYAuditor');
+        Route::get('auditoria/{fecha1}/al/{fecha2}/auditor/{idAuditor}',        'AuditoriasController@api_getPorRangoYAuditor');
         Route::get('auditoria/cliente/{idCliente}/dia/{annoMesDia}/estado-general',                 'AuditoriasController@api_estadoGeneral');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado',   'AuditoriasController@api_informarRealizado');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-fecha',       'AuditoriasController@api_informarFecha');

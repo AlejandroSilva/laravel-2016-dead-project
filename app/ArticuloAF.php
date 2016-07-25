@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class ArticuloAF extends Model {
     protected $table = 'acticulos_activo_fijo';
     public $timestamps = false;
-    public $primaryKey = 'codArticuloAF';
-    public $incrementing = false;   // importantisima para cuando el PK sea un varchar
-    protected $fillable = ['SKU', 'descripcion', 'valorMercado'];
+    public $primaryKey = 'idArticuloAF';
+    //public $incrementing = false;   // importantisima para cuando el PK sea un varchar
+    protected $fillable = ['SKU', 'idArticuloAF', 'fechaIncorporacion', 'stock'];
+
 
     // #### Relaciones
     // muchos ArticulosAF perteneces o se originan en el mismo ProductoAF 
@@ -17,32 +18,63 @@ class ArticuloAF extends Model {
         return $this->belongsTo('App\ProductoAF', 'SKU', 'SKU');
     }
 
-    public function almacenAF(){
-        return $this->belongsTo('App\AlmacenAF', 'idAlmacenAF', 'idAlmacenAF');
-    }
-
     // cada articulo puede tener muchos codigos de barra, estos deben ser unicos
     public function barras(){
-        return $this->hasMany('App\CodigoBarra', 'codArticuloAF', 'codArticuloAF');
+        return $this->hasMany('App\CodigoBarra', 'idArticuloAF', 'idArticuloAF');
+    }
+
+    // un articulo puede estar en multiples almacenes
+    public function existencias_en_almacenes(){
+        return $this->belongsToMany('App\AlmacenAF', 'almacenAF_articuloAF', 'idArticuloAF', 'idAlmacenAF')
+            ->withPivot('stockActual');
+    }
+
+    // table intermedia artiulos-almacenes
+    // Un articulo, puede tener stock distribuido en muchos almacenes
+    public function almacenes(){
+        return $this->belongsToMany('App\AlmacenAF', 'almacenAF_articuloAF', 'idArticuloAF', 'idAlmacenAF')
+            ->withPivot('stockActual');
     }
 
     // tabla intermedia preguia-articulos
-    public function preguias(){
-        return $this->belongsToMany('App\PreguiaDespacho', 'preguia_articulo', 'codArticuloAF', 'idPreguia')
-        ->withPivot('retornado');
-    }
+//    public function preguias(){
+//        return $this->belongsToMany('App\PreguiaDespacho', 'preguia_articulo', 'codArticuloAF', 'idPreguia')
+//        ->withPivot('retornado');
+//    }
     
     // #### Formatear
     static function formato_tablaArticulosAF($articulo){
         return [
-            'SKU' => $articulo->SKU,
+            // articulo
+            'sku' => $articulo->SKU,
             'descripcion' => $articulo->productoAF->descripcion,
-            'codArt' => $articulo->codArticuloAF,    // entregar como string (por eso no puede ser PK)
-            'idAlmacen' => $articulo->idAlmacenAF,
-            'almacen' => $articulo->almacenAF->nombre,
+            'stock' => $articulo->stock,
             'barras' => $articulo->barras->map(function($barra){
                 return $barra->barra;
             }),
+            //'almacen' => $articulo->almacenAF->nombre,
+        ];
+    }
+
+    static function formato_conExistenciasPorAlmacen($articulo){
+        return [
+            'idArticuloAF'=> $articulo->idArticuloAF,
+            // articulo
+            'sku' => $articulo->SKU,
+            'descripcion' => $articulo->productoAF->descripcion,
+            'stock' => $articulo->stock,
+            'barras' => $articulo->barras->map(function($barra){
+                return $barra->barra;
+            }),
+            'existencias' => $articulo->existencias_en_almacenes
+                ->map(function($almaArti){
+                    //return $almaArti;
+                    return [
+                        'idAlmacenAF' => $almaArti->pivot->idAlmacenAF,
+                        'idArticuloAF' => $almaArti->pivot->idArticuloAF,
+                        'stockActual' => $almaArti->pivot->stockActual
+                    ];
+                })
         ];
     }
 }

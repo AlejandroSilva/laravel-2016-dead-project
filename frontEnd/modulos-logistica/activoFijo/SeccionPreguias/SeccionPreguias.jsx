@@ -7,11 +7,10 @@ import { Table, Column, Cell } from 'fixed-data-table'
 import { ModalDevolucion } from './ModalDevolucion.jsx'
 // Styles
 import classNames from 'classnames/bind'
-import * as css from './TablaArticulosAF.css'
-import * as cssModal from './modal.css'
+import * as css from './seccionPreguias.css'
 let cx = classNames.bind(css)
 
-export class TablaPreguias extends React.Component {
+export class SeccionPreguias extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -31,12 +30,13 @@ export class TablaPreguias extends React.Component {
     render(){
         return (
             <div>
+                {/* Modal */}
                 <Modal
                     show={this.state.modal_devolucionVisible}
                     //onEnter={this.props.onEnter}
                     onHide={this.hideModalDevolucion}
                     animation={false}
-                    dialogClassName={cssModal.modalDevolucion}>
+                    dialogClassName={cx('modalDevolucion')}>
                     <Modal.Header closeButton>
                         <Modal.Title>Devolución de Articulos</Modal.Title>
                     </Modal.Header>
@@ -52,6 +52,7 @@ export class TablaPreguias extends React.Component {
                     </Modal.Body>
                 </Modal>
 
+                {/* Table */}
                 <Table
                     rowHeight={30}
                     rowsCount={this.props.preguias.length}
@@ -61,7 +62,9 @@ export class TablaPreguias extends React.Component {
 
                     <Column
                         header={<Cell>id</Cell>}
-                        cell={ ({rowIndex})=> <Cell>{rowIndex+1}</Cell> }
+                        cell={ ({rowIndex})=>
+                            <Cell>{this.props.preguias[rowIndex].idPreguia}</Cell>
+                        }
                         width={30}
                     />
                     <Column
@@ -69,7 +72,8 @@ export class TablaPreguias extends React.Component {
                         cell={ ({rowIndex})=>
                                 <Cell className={cx('cell')}>
                                     {this.props.preguias[rowIndex].fechaEmision}
-                                </Cell> }
+                                </Cell>
+                        }
                         width={80}
                     />
                     <Column
@@ -118,7 +122,7 @@ export class TablaPreguias extends React.Component {
     }
 }
 
-TablaPreguias.propTypes = {
+SeccionPreguias.propTypes = {
     // numero: PropTypes.number.isRequired,
     // texto: PropTypes.string.isRequired,
     // objeto: PropTypes.object.isRequired,

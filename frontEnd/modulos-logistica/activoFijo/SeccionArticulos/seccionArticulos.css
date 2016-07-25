@@ -1,0 +1,64 @@
+/* MODALES */
+.modalTransferencia {
+    width: 100%;
+    max-width: 600px;       /* 380px en un telefono*/
+    background: #EEEEEE;
+}
+.modalEntrega {
+    width: 100%;
+    max-width: 630px;       /* 380px en un telefono*/
+    background: #EEEEEE;
+}
+
+
+/* HEADERS */
+.header-compact :global(.public_fixedDataTableCell_cellContent) {
+    padding: 2px;
+    font-size: 11px;
+}
+
+
+/* CONTENIDOS */
+/* TablaArticulosAF.jsx */
+.cell {
+    font-size: 12px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* TablaArticulosTransferencia */
+/* TablaArticulosDevolucion */
+.cell {
+    font-size: 12px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.cell-producto :global(.public_fixedDataTableCell_cellContent) {
+    padding: 2px 0px 2px 0;
+}
+.producto-sku {
+    margin: 0;
+}
+.producto-sku > span{
+    vertical-align: text-top;
+    font-size: 11px;
+    margin-right: 5px;
+}
+.producto-descripcion {
+    /*text-align: right;*/
+    margin: 0;
+    text-transform: lowercase;
+}
+
+.cell-barras :global(.public_fixedDataTableCell_cellContent) {
+    width: 150px;
+    padding: 2px 0px 2px 0;
+    height: 40px;
+    overflow-y: scroll;
+}
+.barra-codigo {
+    font-size: 12px;
+    margin-bottom: 0px;
+}
+

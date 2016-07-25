@@ -4,12 +4,9 @@ let PropTypes = React.PropTypes
 // API
 import api from '../../apiClient/v1'
 // Componentes
-import { TablaArticulosAF } from './TablaArticulosAF.jsx'
-import { TablaPreguias } from './TablaPreguias.jsx'
-import { ModalContainer } from './ModalContainer.jsx'
-import { Transferencia } from './Transferencia.jsx'
-import { EntregaArticulos } from './EntregaArticulos.jsx'
-import { NuevoAlmacen } from './NuevoAlmacen.jsx'
+import { SeccionPreguias } from './SeccionPreguias/SeccionPreguias.jsx'
+import { SeccionAlmacenes } from './SeccionAlmacenes/SeccionAlmacenes.jsx'
+import { SeccionArticulos } from './SeccionArticulos/SeccionArticulos.jsx'
 import { ModalMantenedorMaestra } from './MantenedorMaestra/ModalMantenedorMaestra.jsx'
 // Styles
 // import classNames from 'classnames/bind'
@@ -26,36 +23,6 @@ export class ActivoFijo extends React.Component {
             responsables: []
         }
         // ########## Metodos
-        // mostrar los productos asignados a un almacen
-        // buscar un productoAF
-        this.buscarBarra = (barra)=>{
-            return api.activoFijo.articulos.buscarBarra(barra)
-        }
-        this.realizarTransferencia = (request)=>{
-            return api.activoFijo.articulos.transferir(request)
-                // cuando la transferencia sea exitosa, actualizar los productos y las guias
-                .then(()=>{
-                    this.seleccionarAlmacen(this.state.almacenSeleccionado)
-                })
-        }
-        this.realizarEntrega = (request)=>{
-            return api.activoFijo.articulos.entregar(request)
-            // cuando la transferencia sea exitosa, actualizar los productos y las guias
-                .then(()=>{
-                    this.seleccionarAlmacen(this.state.almacenSeleccionado)
-                })
-        }
-        // responsables
-        this.fetchResponsables = ()=>{
-            if(this.state.responsables.length==0){
-                api.activoFijo.responsables.buscar()
-                    .then(responsables=>{
-                        this.setState({responsables})
-                    })
-                // catch error...
-            }
-        }
-        // Almacenes
         this.seleccionarAlmacen = (idAlmacen)=>{
             idAlmacen = parseInt(idAlmacen)
 
@@ -93,19 +60,51 @@ export class ActivoFijo extends React.Component {
                     //this.setState({cargandoDatos: false})
                 })
         }
-        this.fetchAlmacenes = ()=>{
-            return api.activoFijo.almacenes.buscar()
-                .then(almacenes=>{
-                    this.setState({almacenes})
-                })
+
+        // #### SeccionAlmacenes
+        this.fetchResponsables = ()=>{
+            if(this.state.responsables.length==0){
+                api.activoFijo.responsables.buscar()
+                    .then(responsables=>{
+                        this.setState({responsables})
+                    })
+                // catch error...
+            }
         }
         this.agregarAlmacen = (nombre, idResponsable)=>{
             return api.activoFijo.almacenes.nuevo({nombre, idResponsable})
                 .then(nuevoAlmacen=>{
                     // al crear un nuevo almacen, se actualiza la lista completa de almacenes...
-                    this.fetchAlmacenes()
+                    this._fetchAlmacenes()
                 })
         }
+        this._fetchAlmacenes = ()=>{
+            return api.activoFijo.almacenes.buscar()
+                .then(almacenes=>{
+                    this.setState({almacenes})
+                })
+        }
+
+        // #### SeccionArticulos
+        this.buscarBarra = (barra)=>{
+            return api.activoFijo.articulos.buscarBarra(barra)
+        }
+        this.realizarTransferencia = (request)=>{
+            return api.activoFijo.articulos.transferir(request)
+            // cuando la transferencia sea exitosa, actualizar los productos y las guias
+                .then(()=>{
+                    this.seleccionarAlmacen(this.state.almacenSeleccionado)
+                })
+        }
+        this.realizarEntrega = (request)=>{
+            return api.activoFijo.articulos.entregar(request)
+            // cuando la transferencia sea exitosa, actualizar los productos y las guias
+                .then(()=>{
+                    this.seleccionarAlmacen(this.state.almacenSeleccionado)
+                })
+        }
+
+
         // Preguias
         this.fetchPreguia = (idPreguia)=>{
             return api.activoFijo.preguia(idPreguia).fetch()
@@ -117,7 +116,6 @@ export class ActivoFijo extends React.Component {
                     this.seleccionarAlmacen(this.state.almacenSeleccionado)
                 })
         }
-
         // Mantenedor Maestra
         this.mostrarMantenedorMaestra = ()=>{
             this.refModalMantenedorproductos.showModal()
@@ -134,7 +132,6 @@ export class ActivoFijo extends React.Component {
         this.agregarProducto = (datos)=>{
             return api.activoFijo.productos.nuevo(datos)
         }
-        
     }
 
     componentWillMount(){
@@ -147,72 +144,55 @@ export class ActivoFijo extends React.Component {
     render(){
         return (
             <div className="row">
+                {/* Modales */}
+                <ModalMantenedorMaestra
+                    ref={ref=>this.refModalMantenedorproductos=ref}
+                    fetchProductos={this.fetchProductos}
+                    actualizarProducto={this.actualizarProducto}
+                    agregarProducto={this.agregarProducto}
+                />
+
+                {/* ################# MENU LATERAL ################# */}
                 <div className="col-sm-2">
                     <h4>Productos</h4>
                     <button type="button" className="btn btn-sm btn-default btn-block"
                             onClick={this.mostrarMantenedorMaestra}>
                         Maestra de Productos
                     </button>
-                    <ModalMantenedorMaestra
-                        ref={ref=>this.refModalMantenedorproductos=ref}
-                        fetchProductos={this.fetchProductos}
-                        actualizarProducto={this.actualizarProducto}
-                        agregarProducto={this.agregarProducto}
-                    />
-
 
                     <h4>Almacenes</h4>
-                    <SelectorAlmacenes
+                    <SeccionAlmacenes
+                        // metodos
+                        seleccionarAlmancen={this.seleccionarAlmacen}
+                        fetchResponsables={this.fetchResponsables}
+                        agregarAlmacen={this.agregarAlmacen}
+                        //Objetos
                         cargandoDatos={this.state.cargandoDatos}
                         almacenes={this.state.almacenes}
                         almacenSeleccionado={this.state.almacenSeleccionado}
-                        seleccionarAlmancen={this.seleccionarAlmacen}
                         responsables={this.state.responsables}
-                        fetchResponsables={this.fetchResponsables}
-                        agregarAlmacen={this.agregarAlmacen}
                     />
                 </div>
 
+                {/* ################# CUERPO CENTRAL ################ */}
                 <div className="col-sm-6">
-                    {/* ################# Productos ################ */}
-                    <h4>Articulos en Stock</h4>
-                    <ModalContainer
-                        titulo="Transferir productos"
-                        buttonComponent={
-                            <button className="btn btn-primary btn-xs pull-right" disabled={this.state.almacenSeleccionado<2}>Transferir productos</button>
-                        }
-                    >
-                        <Transferencia
-                            almacenes={this.state.almacenes.filter(alm=>alm.idAlmacenAF!=1)}
-                            almacenOrigen={this.state.almacenSeleccionado}
-                            buscarBarra={this.buscarBarra}
-                            realizarTransferenia={this.realizarTransferencia}
-                        />
-                        {/*<FormularioPreGuia />*/}
-                    </ModalContainer>
-                    <ModalContainer
-                        titulo="Entregar articulos"
-                        buttonComponent={
-                            <button className="btn btn-primary btn-xs pull-right" disabled={this.state.almacenSeleccionado<2}>Entregar articulos</button>
-                        }
-                    >
-                        <EntregaArticulos
-                            almacenes={this.state.almacenes.filter(alma=>alma.idAlmacenAF!=1)}
-                            buscarBarra={this.buscarBarra}
-                            almacenDestino={this.state.almacenSeleccionado}
-                            realizarEntrega={this.realizarEntrega}
-                        />
-                        {/*<FormularioPreGuia />*/}
-                    </ModalContainer>
+                    <SeccionArticulos
+                        // metodos
+                        seleccionarAlmacen={this.seleccionarAlmacen}
+                        buscarBarra={this.buscarBarra}
+                        realizarTransferencia={this.realizarTransferencia}
+                        realizarEntrega={this.realizarEntrega}
 
-                    <TablaArticulosAF
-                        articulos={this.state.almacenArticulos}
-                        seleccionarAlmancen={this.seleccionarAlmacen}
+                        // objetos
+                        almacenSeleccionado={this.state.almacenSeleccionado}
+                        almacenArticulos={this.state.almacenArticulos}
+                        almacenes={this.state.almacenes}
                     />
+
 
                     {/* ############ PRE-GUIAS DESPACHO ############ */}
                     <h4>Pre-guias de despacho</h4>
-                    <TablaPreguias
+                    <SeccionPreguias
                         preguias={this.state.almacenPreguias}
                         fetchPreguia={this.fetchPreguia}
                         devolverArticulos={this.devolverArticulos}
@@ -231,42 +211,4 @@ ActivoFijo.propTypes = {
     // texto: PropTypes.string.isRequired,
     // objeto: PropTypes.object.isRequired,
     // arreglo: PropTypes.arrayOf(PropTypes.object).isRequired
-}
-
-
-
-const SelectorAlmacenes = (props)=>{
-    let {almacenes, almacenSeleccionado, seleccionarAlmancen,
-        responsables, fetchResponsables, agregarAlmacen, cargandoDatos} = props
-    return (
-        <div className="list-group">
-            <button type="button" className={"list-group-item "+(almacenSeleccionado==0? 'active':'')}
-                    onClick={seleccionarAlmancen.bind(this, 0)}
-                    disabled={cargandoDatos==true}
-            >Todos</button>
-            {almacenes.map(almacen=>
-                <button type="button" className={"list-group-item "+(almacenSeleccionado==almacen.idAlmacenAF? 'active':'')}
-                        key={almacen.idAlmacenAF}
-                        onClick={seleccionarAlmancen.bind(this, almacen.idAlmacenAF)}
-                        disabled={cargandoDatos==true}
-                >{almacen.nombre}</button>
-            )}
-
-            <ModalContainer
-                titulo={"Agregar Almacen"}
-                buttonComponent={
-                    <button type="button"
-                            className="list-group-item default list-group-item-success">
-                        ** Agregar Almacen **
-                    </button>
-                }
-            >
-                <NuevoAlmacen
-                    responsables={responsables}
-                    fetchResponsables={fetchResponsables}
-                    agregarAlmacen={agregarAlmacen}
-                />
-            </ModalContainer>
-        </div>
-    )
 }

@@ -18,13 +18,13 @@ class PreguiaDespacho extends Model {
         return $this->hasOne('App\AlmacenAF', 'idAlmacenAF', 'idAlmacenOrigen');
     }
     public function almacenDestino(){
-        return $this->hasOne('App\AlmacenAF', 'idAlmacenAF', 'idAlmacenDestino');
+            return $this->hasOne('App\AlmacenAF', 'idAlmacenAF', 'idAlmacenDestino');
     }
 
     // tabla intermedia preguia-articulos
     public function articulos(){
-        return $this->belongsToMany('App\ArticuloAF', 'preguia_articulo', 'idPreguia', 'codArticuloAF')
-        ->withPivot('estado');
+        return $this->belongsToMany('App\ArticuloAF', 'preguia_articulo', 'idPreguia', 'idArticuloAF')
+        ->withPivot('stockEntregado', 'stockRetornado');
     }
 
     // #### Formatear
@@ -45,16 +45,24 @@ class PreguiaDespacho extends Model {
             'idPreguia' => $preguia->idPreguia,
             'descripcion' => $preguia->descripcion,
             'fechaEmision' => $preguia->fechaEmision,
+//            'idAlmacenDestino' => $preguia->idAlmacenDestino,
+//            'idAlmacenOrigen' => $preguia->idAlmacenOrigen,
             'descripcion' => $preguia->descripcion,
             'articulos' => $preguia->articulos->map(function($articulo){
+                //return $articulo;
                 return [
-                    'codArticuloAF' => $articulo->codArticuloAF,
+                    // articulo
+                    'idArticuloAF' => $articulo->idArticuloAF,
                     'SKU' => $articulo->SKU,
-                    'idAlmacen' => $articulo->idAlmacenAF,
-//                    fechaIncorporacion
                     'descripcion' => $articulo->productoAF->descripcion,
-                    'almacen' => $articulo->almacenAF->nombre,
-                    'estado' => $articulo->pivot->estado,
+                    'barras' => $articulo->barras->map(function($barra){
+                        return $barra->barra;
+                    }),
+
+                    // pivot
+                    'stockEntregado' => $articulo->pivot->stockEntregado,
+                    'stockRetornado' => $articulo->pivot->stockRetornado,
+                    'stockPendienteRetorno' => $articulo->pivot->stockEntregado - $articulo->pivot->stockRetornado
                 ];
             })
         ];

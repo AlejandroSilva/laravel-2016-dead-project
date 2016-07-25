@@ -43,7 +43,7 @@ export default {
             productos: ()=>
                 axios.get(`/api/activo-fijo/productos/buscar?almacen=${idAlmacen}`),
             articulos: ()=>
-                axios.get(`/api/activo-fijo/articulos/buscar?almacen=${idAlmacen}`),
+                axios.get(`/api/activo-fijo/almacen/${idAlmacen}/articulos`),
             preguias: ()=> 
                 axios.get(`/api/activo-fijo/preguias/buscar?almacen=${idAlmacen}`)
         }),
@@ -141,6 +141,8 @@ export default {
             axios.post(`/api/nomina/${idNomina}/estado-rechazar`),
         informar: (idNomina)=>
             axios.post(`/api/nomina/${idNomina}/estado-informar`),
+        completarSinCorreo: (idNomina)=>
+            axios.post(`/api/nomina/${idNomina}/estado-informar`, {omitirCorreo: true}),
         rectificar: (idNomina)=>
             axios.post(`/api/nomina/${idNomina}/estado-rectificar`)
     },

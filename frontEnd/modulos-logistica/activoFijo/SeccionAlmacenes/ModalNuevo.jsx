@@ -2,6 +2,42 @@
 import React from 'react'
 let PropTypes = React.PropTypes
 // Componentes
+import Modal from 'react-bootstrap/lib/Modal.js'
+// Styles
+import css from './almacenesStyles.css'
+
+export class ModalNuevoAlmacen extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            modalVisible: false
+        }
+        this.showModal = ()=>{
+            this.setState({modalVisible: true})
+        }
+        this.hideModal = ()=>{
+            this.setState({modalVisible: false})
+        }
+    }
+    render(){
+        return (
+            <Modal
+                show={this.state.modalVisible}
+                //onEnter={this.props.onEnter}
+                onHide={this.hideModal}
+                animation={false}
+                dialogClassName={css.modalNuevo}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Agregar Almacen</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {this.props.children}
+                </Modal.Body>
+            </Modal>
+        )
+    }
+}
 
 export class NuevoAlmacen extends React.Component {
     constructor(props) {
@@ -19,10 +55,10 @@ export class NuevoAlmacen extends React.Component {
         this.agregarAlmacen = ()=>{
             this.props.agregarAlmacen(this.state.nombre, this.state.idResponsable)
                 .then( ()=>{
-                    this.context.$_hideModal()
+                    this.props.hideModal()
                 })
         }
-        
+
     }
     componentWillMount(){
         this.props.fetchResponsables()
@@ -62,7 +98,7 @@ export class NuevoAlmacen extends React.Component {
                 {/* Botones Cancelar/Agregar */}
                 <div>
                     <button className="btn btn-default btn-block"
-                            onClick={this.context.$_hideModal}>
+                            onClick={this.props.hideModal}>
                         Cancelar
                     </button>
                     <button className="btn btn-primary btn-block"
@@ -75,13 +111,12 @@ export class NuevoAlmacen extends React.Component {
         )
     }
 }
-NuevoAlmacen.contextTypes = {
-    $_showModal: React.PropTypes.func,
-    $_hideModal: React.PropTypes.func
-}
+
 NuevoAlmacen.propTypes = {
-    // numero: PropTypes.number.isRequired,
-    // texto: PropTypes.string.isRequired,
-    // objeto: PropTypes.object.isRequired,
-    // arreglo: PropTypes.arrayOf(PropTypes.object).isRequired
+    // Metodos
+    hideModal: PropTypes.func.isRequired,
+    fetchResponsables: PropTypes.func.isRequired,
+    agregarAlmacen: PropTypes.func.isRequired,
+    // objetos
+    responsables: PropTypes.arrayOf(PropTypes.object).isRequired
 }

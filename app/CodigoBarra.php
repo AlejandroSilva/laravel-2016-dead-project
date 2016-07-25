@@ -9,11 +9,12 @@ class CodigoBarra extends Model {
     public $timestamps = false;
     public $primaryKey = 'barra';
     public $incrementing = false;   // importantisima para cuando el PK sea un varchar
-    protected $fillable = ['barra', 'codArticuloAF'];
+    protected $fillable = ['barra', 'idArticuloAF'];
+
 
     // #### Relaciones
     // un ArticulosAF puede tener muchos Barras
     public function articuloAF(){
-        return $this->belongsTo('App\ArticuloAF', 'codArticuloAF', 'codArticuloAF');
+        return $this->belongsTo('App\ArticuloAF', 'idArticuloAF', 'idArticuloAF');
     }
 }
