@@ -75,7 +75,7 @@ class MaestraController extends Controller {
 
     function api_cargar_maestra(){
         ini_set('memory_limit','1024M');
-        $tableData = $this->leerArchivoProductos('/home/asilva/Escritorio/maestra_sei.xlsx');
+        $tableData = $this->leerArchivoProductos( public_path('/seedFiles/stockMaestraFINAL.xlsx') );
 
         $almacenDisponible = AlmacenAF::find(1);
         // transaccion, es muy comun tener datos duplicados en las maestras
