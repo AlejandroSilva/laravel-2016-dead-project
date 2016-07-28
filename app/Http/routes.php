@@ -137,7 +137,9 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('activo-fijo/productos/nuevo',                  'ActivosFijosController@api_productos_nuevo');
         Route::put('activo-fijo/producto/{sku}',                    'ActivosFijosController@api_producto_actualizar');
 
-
+        Route::get('activo-fijo/almacen/{idAlmacen}/articulos',     'ActivosFijosController@api_almacen_articulos');
+        Route::put('activo-fijo/articulo/{idArticuloAF}',            'ActivosFijosController@api_articulo_actualizar');
+        Route::get('activo-fijo/articulos/buscar',                  'ActivosFijosController@api_articulos_buscar');
         Route::post('activo-fijo/articulos/entregar',               'ActivosFijosController@api_articulos_entregar_a_almacen');
         Route::post('activo-fijo/articulos/transferir',             'ActivosFijosController@api_articulos_transferir');
 
@@ -147,9 +149,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('activo-fijo/preguia/{idPreguia}',               'ActivosFijosController@api_preguia_fetch');
         Route::post('activo-fijo/preguia/{idPreguia}/devolver',     'ActivosFijosController@api_preguia_devolver');
         Route::get('activo-fijo/responsables/buscar',               'ActivosFijosController@api_responsables_buscar');
-
-        // API AUDITORIAS ANDROID
-        Route::get('auditorias-android/auditoria/{idAuditoria}/ird','AuditoriasAndroidController@api_auditoria_ird');
 
         // API USUARIOS
         Route::get('usuario/{idUsuario}',                           'PersonalController@api_usuario_get');
@@ -202,5 +201,8 @@ Route::group(['middleware' => ['web']], function (){
         // API USUARIOS
         Route::get('usuario/{idUsuario}/roles',                     'PersonalController@api_getRolesUsuario');
         Route::get('usuarios/descargar-excel',                      'PersonalController@excel_descargarTodos');
+
+        // API AUDITORIAS ANDROID (DESARROLLO)
+        Route::get('auditorias-android/auditoria/{idAuditoria}/ird','AuditoriasAndroidController@api_auditoria_ird');
     });
 });
