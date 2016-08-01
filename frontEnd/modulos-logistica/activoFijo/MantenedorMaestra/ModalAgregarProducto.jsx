@@ -50,10 +50,6 @@ export class ModalAgregarProducto extends React.Component{
                     console.log('agregar ok')
                     // al terminar, se oculta el modal
                     this.cancelarModal()
-                    // this.setState({
-                    //     producto: {SKU:'', descripcion:'', valorMercado:''},
-                    //     errors: {}
-                    // })
                 })
                 .catch(error=>{
                     if(error.status==400)
