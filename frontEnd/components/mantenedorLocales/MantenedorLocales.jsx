@@ -9,7 +9,7 @@ import AgregarLocal from './AgregarLocal.jsx'
 import { RowNuevoLocal } from './RowNuevoLocal.jsx'
 // ReactNotify
 import ReactNotify from 'react-notify'
-import * as ReactNotifyCSS from '../shared/ReactNotify.css'
+import * as ReactNotifyCSS from '../../shared/ReactNotify/ReactNotify.css'
 // Estilos
 import * as cssTooltip from './Tooltip.css' // css global
 

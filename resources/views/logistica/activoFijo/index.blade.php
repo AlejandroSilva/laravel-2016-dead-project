@@ -20,5 +20,6 @@
 
     <script>
         window.laravelAlmacenes = {!! json_encode($almacenes) !!};
+        window.laravelPermisos = {!! json_encode(array_values($permisos)) !!};
     </script>
 @stop

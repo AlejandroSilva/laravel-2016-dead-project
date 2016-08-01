@@ -147,12 +147,13 @@ if( mantenedorNominaIGDOM ){
 /** ************************** OTROS **************************** **/
 /** ************************************************************* **/
 
-/** ACTIVOS FIJO DE UN LOCAL **/
+/** ACTIVOS FIJOS **/
 let activoFijoDOM = document.getElementById('react-activo-fijo-index')
 if( activoFijoDOM ) {
     ReactDOM.render(
         <ActivoFijo
             almacenes={window.laravelAlmacenes}
+            permisos={window.laravelPermisos}
         />, activoFijoDOM
     )
 }

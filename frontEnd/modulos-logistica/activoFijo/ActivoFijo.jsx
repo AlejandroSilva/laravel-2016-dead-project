@@ -3,6 +3,7 @@ import React from 'react'
 // API
 import api from '../../apiClient/v1'
 // Componentes
+
 import { SeccionPreguias } from './SeccionPreguias/SeccionPreguias.jsx'
 import { SeccionAlmacenes } from './SeccionAlmacenes/SeccionAlmacenes.jsx'
 import { SeccionArticulos } from './SeccionArticulos/SeccionArticulos.jsx'
@@ -19,6 +20,11 @@ export class ActivoFijo extends React.Component {
             almacenPreguias: [],
             responsables: []
         }
+        // ########## Permisos
+        this.puedeAgregarProductos = this.props.permisos.indexOf('activoFijo-agregarProducto')!=-1
+        this.puedeModificarProductos = this.props.permisos.indexOf('activoFijo-modificarProducto')!=-1
+        this.puedeEliminarProductos = this.props.permisos.indexOf('activoFijo-eliminarProducto')!=-1
+
         // ########## Metodos
         this.seleccionarAlmacen = (idAlmacen)=>{
             idAlmacen = parseInt(idAlmacen)
@@ -132,6 +138,9 @@ export class ActivoFijo extends React.Component {
                 {/* Modales */}
                 <ModalMantenedorMaestra
                     ref={ref=>this.refModalMantenedorproductos=ref}
+                    puedeAgregarProductos={this.puedeAgregarProductos}
+                    puedeModificarProductos={this.puedeModificarProductos}
+                    puedeEliminarProductos={this.puedeEliminarProductos}
                 />
 
                 {/* ################# MENU LATERAL ################# */}
@@ -192,5 +201,5 @@ ActivoFijo.propTypes = {
     // numero: PropTypes.number.isRequired,
     // texto: PropTypes.string.isRequired,
     // objeto: PropTypes.object.isRequired,
-    // arreglo: PropTypes.arrayOf(PropTypes.object).isRequired
+    permisos: React.PropTypes.arrayOf(React.PropTypes.string).isRequired
 }

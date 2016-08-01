@@ -25,9 +25,13 @@ export default {
         //     buscar: (barra)=>
         //         axios.get(`/api/activo-fijo/productos/buscar?barra=${barra}`),
         // },
+        articulo: (idArticuloAF)=>({
+            actualizar: (datos)=>
+                axios.put(`/api/activo-fijo/articulo/${idArticuloAF}`, datos),
+        }),
         articulos : {
             buscarBarra: (barra)=>
-                axios.get(`/api/activo-fijo/articulos/buscar-barra?barra=${barra}`),
+                axios.get(`/api/activo-fijo/articulos/buscar?barra=${barra}&conExistencias=true`),
             transferir: (articulos)=>
                 axios.post(`/api/activo-fijo/articulos/transferir`, articulos),
             entregar: (datos)=>
@@ -58,8 +62,12 @@ export default {
                 axios.post(`/api/activo-fijo/preguia/${idPreguia}/devolver`, datos)
         }),
         producto: (sku)=>({
+            eliminar: ()=>
+                axios.delete(`api/activo-fijo/producto/${sku}`),
             actualizar: (datos)=>
-                axios.put(`/api/activo-fijo/producto/${sku}`, datos)
+                axios.put(`/api/activo-fijo/producto/${sku}`, datos),
+            articulos: ()=>
+                axios.get(`/api/activo-fijo/articulos/buscar?sku=${sku}`),
         }),
         productos: {
             nuevo: (datos)=>

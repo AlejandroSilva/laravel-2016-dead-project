@@ -5,8 +5,7 @@ import api from '../../apiClient/v1.js'
 let PropTypes = React.PropTypes
 // Componentes
 import ReactNotify from 'react-notify'
-import * as ReactNotifyCSS from '../shared/ReactNotify.css'
-//import * as css from './MantenedorStock.css'
+import * as ReactNotifyCSS from '../../shared/ReactNotify/ReactNotify.css'
 
 export class MantenedorStock extends React.Component {
     constructor(props) {

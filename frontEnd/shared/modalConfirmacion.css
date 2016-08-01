@@ -1,0 +1,24 @@
+/* Componente: ModalAgregarProducto */
+.modal-confirmacion{
+    width: 100%;
+    max-width: 400px;
+    background: #EEEEEE;
+}
+
+
+/* Componente: FormNuevoProducto */
+.error-msg {
+    color: red;
+}
+
+.modal-body {
+    padding: 10px;
+}
+.modal-footer {
+    padding: 10px;
+}
+.modal-footer button{
+    width: 50%;
+    display: inline-block;
+    margin-top: 0 !important;
+}

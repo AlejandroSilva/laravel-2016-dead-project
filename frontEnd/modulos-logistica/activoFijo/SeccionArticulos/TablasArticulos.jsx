@@ -25,7 +25,7 @@ export class TablaGeneralArticulos extends React.Component {
                     // header
                     headerHeight={30}
                     // rows
-                    rowHeight={22}
+                    rowHeight={40}
                     rowsCount={this.props.articulos.length}>
 
                     <Column
@@ -35,36 +35,25 @@ export class TablaGeneralArticulos extends React.Component {
                                 {rowIndex+1}
                             </Cell>}
                         width={35}
-                        flexGrow={1}
                     />
                     <Column
-                        header={<Cell>SKU</Cell>}
+                        header={<Cell>Producto</Cell>}
                         cell={ ({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                {this.props.articulos[rowIndex].sku}
-                            </Cell> }
-                        width={40}
-                        flexGrow={1}
-                    />
-                    <Column
-                        header={<Cell>Descripión</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                {this.props.articulos[rowIndex].descripcion}
-                            </Cell> }
-                        width={120}
-                        flexGrow={1}
+                            <CellProducto
+                                sku={this.props.articulos[rowIndex].SKU}
+                                descripcion={this.props.articulos[rowIndex].descripcion}
+                            />
+                        }
+                        width={150}
                     />
                     <Column
                         header={<Cell>Barras</Cell>}
                         cell={ ({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                {this.props.articulos[rowIndex].barras[0]}
-                                {this.props.articulos[rowIndex].barras[1]? `  ${this.props.articulos[rowIndex].barras[1]}` : ''}
-                                {this.props.articulos[rowIndex].barras[2]? `  ${this.props.articulos[rowIndex].barras[2]}` : ''}
-                            </Cell> }
-                        width={180}
-                        flexGrow={1}
+                            <CellBarras
+                                barras={this.props.articulos[rowIndex].barras}
+                            />
+                        }
+                        width={150}
                     />
                     <Column
                         header={<Cell>Almacen</Cell>}
@@ -74,17 +63,16 @@ export class TablaGeneralArticulos extends React.Component {
                                     {this.props.articulos[rowIndex].almacen}
                                 </a>
                             </Cell>}
-                        width={80}
+                        width={120}
                         flexGrow={1}
                     />
                     <Column
-                        header={<Cell>Stock Actual asignado</Cell>}
+                        header={<Cell className={cx('header-compact')} >Stock Asignado</Cell>}
                         cell={ ({rowIndex})=>
                             <Cell className={cx('cell')}>
                                 {this.props.articulos[rowIndex].stockActual}
                             </Cell> }
-                        width={95}
-                        flexGrow={1}
+                        width={90}
                     />
                 </Table>
             </TouchExampleWrapper>
@@ -110,6 +98,7 @@ export class TablaEntrega extends React.Component {
                     // Rows
                     rowHeight={40}
                     rowsCount={this.props.articulos.length}>
+                    {/* # */}
                     <Column
                         header={<Cell>#</Cell>}
                         cell={ ({rowIndex})=>
@@ -117,17 +106,18 @@ export class TablaEntrega extends React.Component {
                         }
                         width={30}
                     />
+                    {/* Producto */}
                     <Column
                         header={<Cell>Producto</Cell>}
                         cell={ ({rowIndex})=>
                             <CellProducto
-                                SKU={this.props.articulos[rowIndex].SKU}
+                                sku={this.props.articulos[rowIndex].SKU}
                                 descripcion={this.props.articulos[rowIndex].descripcion}
                             />
                         }
                         width={150}
-                        //flexGrow={1}
                     />
+                    {/* Barras */}
                     <Column
                         header={<Cell>Barras</Cell>}
                         cell={ ({rowIndex})=>
@@ -137,6 +127,7 @@ export class TablaEntrega extends React.Component {
                         }
                         width={150} // importante por el css
                     />
+                    {/* Stock disponible */}
                     <Column
                         header={<Cell className={cx('header-compact')} >
                             Stock Disponible
@@ -147,6 +138,7 @@ export class TablaEntrega extends React.Component {
                             </Cell> }
                         width={60}
                     />
+                    {/* Stock a entregar */}
                     <Column
                         header={<Cell className={cx('header-compact')}>Stock a entregar</Cell>}
                         cell={ ({rowIndex})=> <Cell>
@@ -190,6 +182,7 @@ export class TablaTransferencia extends React.Component {
                     // Rows
                     rowHeight={40}
                     rowsCount={this.props.articulos.length}>
+                    {/* # */}
                     <Column
                         header={<Cell>#</Cell>}
                         cell={ ({rowIndex})=>
@@ -197,17 +190,19 @@ export class TablaTransferencia extends React.Component {
                         }
                         width={30}
                     />
+                    {/* Producto */}
                     <Column
                         header={<Cell>Producto</Cell>}
                         cell={ ({rowIndex})=>
                             <CellProducto
-                                SKU={this.props.articulos[rowIndex].SKU}
+                                sku={this.props.articulos[rowIndex].SKU}
                                 descripcion={this.props.articulos[rowIndex].descripcion}
                             />
                         }
                         width={160}
                         //flexGrow={1}
                     />
+                    {/* Barras */}
                     <Column
                         header={<Cell>Barras</Cell>}
                         cell={ ({rowIndex})=>
@@ -215,8 +210,9 @@ export class TablaTransferencia extends React.Component {
                                 barras={this.props.articulos[rowIndex].barras}
                             />
                         }
-                        width={140}     // importante por el css
+                        width={150}     // importante por el css
                     />
+                    {/* Stock en Origen */}
                     <Column
                         header={<Cell className={cx('header-compact')} >Stock en origen</Cell>}
                         cell={ ({rowIndex})=>
@@ -225,6 +221,7 @@ export class TablaTransferencia extends React.Component {
                             </Cell> }
                         width={60}
                     />
+                    {/* Stock a transferir */}
                     <Column
                         header={<Cell className={cx('header-compact')} >Stock a transferir</Cell>}
                         cell={ ({rowIndex})=> <Cell>
@@ -256,12 +253,14 @@ const CellNumeral = ({numero})=>
     </Cell>
 
 
-const CellProducto = ({SKU, descripcion})=>
-    <Cell className={cx('cell-producto')}>
-        <p className={cx('producto-sku')} ><span>sku</span>{SKU}</p>
-        <p className={cx('producto-descripcion')} >{descripcion}</p>
-    </Cell>
+const CellProducto = ({sku, descripcion})=> {
 
+    console.log(sku, descripcion)
+    return <Cell className={cx('cell-producto')}>
+        <p className={cx('producto-sku')}><span>sku</span>{sku}</p>
+        <p className={cx('producto-descripcion')}>{descripcion}</p>
+    </Cell>
+}
 const CellBarras = ({barras})=>
     <Cell className={cx('cell-barras')}>
         {barras.map(barra=>

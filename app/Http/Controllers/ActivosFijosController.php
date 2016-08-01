@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 use DB;
-use App\ArticuloAF;
-use App\CodigoBarra;
+
 use App\PreguiaDespacho;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+//use App\Http\Requests;
+//use Symfony\Component\HttpFoundation\RedirectResponse;
 // Formularios y validacion
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -16,6 +15,7 @@ use Carbon\Carbon;
 // Modelos
 use App\AlmacenAF;
 use App\AlmacenAF_ArticuloAF;
+use App\ArticuloAF;
 use App\ProductoAF;
 use App\Role;
 // Permisos
@@ -36,7 +36,8 @@ class ActivosFijosController extends Controller {
             return view('errors.403');
 
         return response()->view('logistica.activoFijo.index', [
-            'almacenes' => AlmacenAF::all()
+            'almacenes' => AlmacenAF::all(),
+            'permisos' => $user->permisosAsignados()
         ]);
     }
 
@@ -60,6 +61,10 @@ class ActivosFijosController extends Controller {
     // POST api/activo-fijo/productos/nuevo
     public function api_productos_nuevo(){
         // todo: validar si se tienen los permisos para agregar un producto
+        $user = Auth::user();
+        if(!$user || !$user->can('activoFijo-agregarProducto'))
+            return response()->json(['error'=>'No tiene permisos para agregar un producto'], 403);
+
 
         $productoNuevoRules = [
             'SKU' => 'required|max:32|unique:productos_activo_fijo',
@@ -102,6 +107,25 @@ class ActivosFijosController extends Controller {
             $producto->valorMercado = $request->valorMercado;
 
         $producto->save();
+    }
+
+    public function api_producto_eliminar($sku){
+        // todo validar permisos
+
+        // producto existe?
+        $producto = ProductoAF::find($sku);
+        if(!$producto)
+            return response()->json(['sku', 'Producto no encontrado'], 400);
+
+        // tiene articulos?
+        if($producto->articulosAF()->count()>0)
+            return response()->json(
+                ['articulos'=>'el producto tiene articulos asociados, eliminelos e intente nuevamente'],
+                400
+            );
+
+        $producto->delete();
+        return response()->json([]);
     }
 
     // GET api/activo-fijo/almacen/{idAlmacen}/articulos

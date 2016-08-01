@@ -53,11 +53,15 @@ export class EntregaArticulos extends React.Component {
         this.seleccionarAlmacenDestino = (evt)=>{
             this.setState({idAlmacenDestino: evt.target.value})
         }
-        this.escanearProducto = (codigo)=>{
+        this.escanearProducto = (codigo, errorCallback)=>{
             this.props.buscarBarra(codigo)
-                .then(articulo=>{
+                .then(articulos=>{
+                    let articulo = articulos[0]
                     // articulo es {} cuando no se encuentra, entonces se revisa que tenga la propiedad codArt, y
                     // se agrega solo si no existe en el arreglo
+                    if(!articulo || !articulo.idArticuloAF)
+                        return errorCallback('No encontrado en maestra')
+
                     if(articulo.idArticuloAF!=undefined && _.find(this.state.articulos, {idArticuloAF: articulo.idArticuloAF})==undefined){
                         // se transforma el archivo cuando se recibe, para manejar un objeto mas simple
                         let _stockDisponible = articulo.existencias.reduce((exA, exB)=>{

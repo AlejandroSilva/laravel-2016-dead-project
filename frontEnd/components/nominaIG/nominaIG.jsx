@@ -5,7 +5,7 @@ import api from '../../apiClient/v1'
 // Componentes
 import * as css from './nominaIG.css'
 import ReactNotify from 'react-notify'
-import * as ReactNotifyCSS from '../shared/ReactNotify.css'
+import * as ReactNotifyCSS from '../../shared/ReactNotify/ReactNotify.css'
 import Modal from 'react-bootstrap/lib/Modal.js'
 import { FormularioUsuario } from './FormularioUsuario.jsx'
 import { PanelDatos } from './PanelDatos.jsx'

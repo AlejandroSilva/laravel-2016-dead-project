@@ -1,13 +1,27 @@
+.tablaProductos {
+    display: inline-block;
+}
+.tablaArticulos {
+    display: inline-block;
+    vertical-align: top;
+}
+.tablaBarras {
+    display: inline-block;
+    vertical-align: top;
+}
 
-.td-sku input{
+/* TextoCell */
+.texto-cell {
     width: 100%;
 }
-.td-descripcion input{
+.texto-cell input{
     width: 100%;
 }
+/* NumberCell */
 .td-precio input{
     width: 100%;
 }
-.td-barra input{
-    width: 100%;
+
+.selected-row {
+    color: orange;
 }

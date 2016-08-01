@@ -55,6 +55,17 @@ class User extends Authenticatable {
         return "$this->nombre1 $this->nombre2 $this->apellidoPaterno $this->apellidoMaterno";
     }
 
+    public function permisosAsignados(){
+        // buscar cada uno de los permisos que tiene el usuario
+        $perms = [];
+        foreach ($this->roles as $role) {
+            foreach ($role->perms as $perm){
+                array_push($perms, $perm->name);
+            }
+        }
+        return collect($perms)->unique()->toArray();
+    }
+
     // #### Formatear
     static function formatearMinimo($user){
         return [

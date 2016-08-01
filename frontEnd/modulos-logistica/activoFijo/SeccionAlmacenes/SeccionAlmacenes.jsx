@@ -3,6 +3,10 @@ import React from 'react'
 let PropTypes = React.PropTypes
 // Componentes
 import { ModalNuevoAlmacen, NuevoAlmacen } from './ModalNuevo.jsx'
+// Styles
+import classNames from 'classnames/bind'
+import * as css from './almacenesStyles.css'
+let cx = classNames.bind(css)
 
 export class SeccionAlmacenes extends React.Component {
     constructor(props) {
@@ -32,12 +36,20 @@ export class SeccionAlmacenes extends React.Component {
                 </ModalNuevoAlmacen>
 
                 <div className="list-group">
-                    <button type="button" className={"list-group-item "+(almacenSeleccionado==0? 'active':'')}
+                    <button type="button" className={cx(
+                            'list-group-item',
+                            'group-item-compact',
+                            {'active': almacenSeleccionado==0}
+                        )}
                             onClick={seleccionarAlmancen.bind(this, 0)}
                             disabled={cargandoDatos==true}
                     >Todos</button>
                     {almacenes.map(almacen=>
-                        <button type="button" className={"list-group-item "+(almacenSeleccionado==almacen.idAlmacenAF? 'active':'')}
+                        <button type="button" className={cx(
+                                'list-group-item',
+                                'group-item-compact',
+                                {'active': almacenSeleccionado==almacen.idAlmacenAF}
+                            )}
                                 key={almacen.idAlmacenAF}
                                 onClick={seleccionarAlmancen.bind(this, almacen.idAlmacenAF)}
                                 disabled={cargandoDatos==true}
