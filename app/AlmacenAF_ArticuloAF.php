@@ -24,7 +24,7 @@ class AlmacenAF_ArticuloAF extends Model {
     static function formato_tablaArticulos($almaArti) {
         return [
             // articulo
-            'sku' => $almaArti->articuloAF->SKU,
+            'SKU' => $almaArti->articuloAF->SKU,
             'descripcion' => $almaArti->articuloAF->productoAF->descripcion,
             'barras' => $almaArti->articuloAF->barras->map(function($barra){
                 return $barra->barra;

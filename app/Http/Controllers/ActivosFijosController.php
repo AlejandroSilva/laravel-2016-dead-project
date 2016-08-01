@@ -58,7 +58,7 @@ class ActivosFijosController extends Controller {
     }
 
     // POST api/activo-fijo/productos/nuevo
-    function api_productos_nuevo(){
+    public function api_productos_nuevo(){
         // todo: validar si se tienen los permisos para agregar un producto
 
         $productoNuevoRules = [
@@ -85,7 +85,7 @@ class ActivosFijosController extends Controller {
     }
 
     // PUT activo-fijo/producto/{sku}
-    function api_producto_actualizar(Request $request, $sku){
+    public function api_producto_actualizar(Request $request, $sku){
         // todo validar los pemisos
 
         // producto existe?
@@ -118,25 +118,78 @@ class ActivosFijosController extends Controller {
                 ->map(function($almArt){
                     return AlmacenAF_ArticuloAF::formato_tablaArticulos($almArt);
                 })
-                ->sortBy(['sku', 'baras', 'idAlmacen'])
+                ->sort(function($a, $b){
+                    // ordenados por sku, luego por el primer codigo de barra de cada uno, y finalmente por almacen
+                    return strcmp($a['SKU'], $b['SKU'])
+                        ?: strcmp($a['barras'][0], $b['barras'][0])
+                        ?: strcmp($a['idAlmacenAF'], $b['idAlmacenAF']);
+                })
                 ->toArray()
         ));
     }
 
-    // GET api/activo-fijo/articulos/buscar-barra
-    public function api_articulos_buscarBarra(Request $request){
-        // la llamada es valida?
+    // PUT api/activo-fijo/articulo/{idArticuloAF}
+    public function api_articulo_actualizar($idArticuloAF){
+        // todo: validar que tenga los permisos para actualizar
+
+        // verificar que el articulo exista
+        $articulo = ArticuloAF::find($idArticuloAF);
+        if(!$articulo){
+            return response()->json(['idArticulo', 'Articulo no encontrado'], 400);
+        }
+
+        $articuloRules = [
+            //'SKU' => 'required|max:32|unique:productos_activo_fijo',
+            'stock' => 'required|integer',
+        ];
+        $errorMessages = [
+            'stock.required' => 'stock requerido',
+            'stock.integer' => 'debe ser un numero',
+        ];
+        $validator = Validator::make(Input::all(), $articuloRules, $errorMessages);
+
+        if($validator->fails()){
+            $error = $validator->messages();
+            return response()->json($error, 400);
+        }
+
+        // si el input es valido, entonces actualizar
+        $articulo->stock = Input::get('stock');
+        $articulo->save();
+
+        return response()->json([]);
+    }
+
+    // GET api/activo-fijo/articulos/buscar
+    public function api_articulos_buscar(Request $request){
+        $query = ArticuloAF::with([]);
+
+        // va a filtrar por barras?
         $barra = $request->query('barra');
-        if(!isset($barra))
-            return response()->json([], 400);
+        if(isset($barra) ){
+            $query
+                ->where(function($q) use($barra){
+                    $q->whereHas('barras', function($qq) use($barra){
+                        $qq->where('barra', $barra);
+                    });
+                });
+        }
 
-        // existe un articulo con ese barra?
-        $codigobarra = CodigoBarra::find($barra);
-        if(!$codigobarra)
-            return response()->json(null);
+        // va a filtrar por sku?
+        $sku = $request->query('sku');
+        if(isset($sku)){
+            $query->where('SKU', $sku);
+        }
 
-
-        return response()->json( ArticuloAF::formato_conExistenciasPorAlmacen( $codigobarra->articuloAF) );
+        $articulos = $query
+            ->get()
+            ->sortBy('idArticuloAF');
+        // Dependiendo de esto se agregan las existencias del articulo en multiples almacenes
+        $responseConExistencia = $request->query('conExistencias');
+        if( isset($responseConExistencia) && $responseConExistencia=="true")
+            return response()->json( $articulos->map('\App\ArticuloAF::formato_conExistenciasPorAlmacen') );
+        else
+            return response()->json( $articulos->map('\App\ArticuloAF::formato_tablaArticulosAF') );
     }
 
     // POST api/activo-fijo/articulos/entregar

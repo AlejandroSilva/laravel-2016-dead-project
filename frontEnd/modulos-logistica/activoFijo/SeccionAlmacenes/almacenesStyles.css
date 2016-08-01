@@ -3,3 +3,9 @@
     max-width: 430px;
     background: #EEEEEE;
 }
+
+/* Listado */
+
+.group-item-compact {
+    padding: 6px 10px;
+}

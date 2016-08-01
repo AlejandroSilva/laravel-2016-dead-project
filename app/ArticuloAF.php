@@ -45,8 +45,9 @@ class ArticuloAF extends Model {
     // #### Formatear
     static function formato_tablaArticulosAF($articulo){
         return [
+            'idArticuloAF'=> $articulo->idArticuloAF,
             // articulo
-            'sku' => $articulo->SKU,
+            'SKU' => $articulo->SKU,
             'descripcion' => $articulo->productoAF->descripcion,
             'stock' => $articulo->stock,
             'barras' => $articulo->barras->map(function($barra){
@@ -60,7 +61,7 @@ class ArticuloAF extends Model {
         return [
             'idArticuloAF'=> $articulo->idArticuloAF,
             // articulo
-            'sku' => $articulo->SKU,
+            'SKU' => $articulo->SKU,
             'descripcion' => $articulo->productoAF->descripcion,
             'stock' => $articulo->stock,
             'barras' => $articulo->barras->map(function($barra){

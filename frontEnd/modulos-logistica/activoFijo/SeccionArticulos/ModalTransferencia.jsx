@@ -67,9 +67,10 @@ export class TransferenciaArticulos extends React.Component {
 
         this.escanearProducto = (codigo, errorCallback)=>{
             this.props.buscarBarra(codigo)
-                .then(articulo=>{
+                .then(articulos=>{
+                    let articulo = articulos[0]
                     // articulo es {} cuando no se encuentra, el articulo se encontro si tiene la propiedad idArticuloAF
-                    if(!articulo.idArticuloAF)
+                    if(!articulo || !articulo.idArticuloAF)
                         return errorCallback('No encontrado en maestra')
 
                     let existencia = _.find(articulo.existencias, {idAlmacenAF: this.state.idAlmacenOrigen})

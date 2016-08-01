@@ -1,7 +1,7 @@
 // Librerias
 import React from 'react'
 // Estilos
-import * as css from './InputTexto.css'
+import * as css from './inputs.css'
 
 export class InputTexto extends React.Component{
     constructor(props) {

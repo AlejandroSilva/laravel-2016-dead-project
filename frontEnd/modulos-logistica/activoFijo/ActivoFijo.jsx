@@ -1,6 +1,5 @@
 // Librerias
 import React from 'react'
-let PropTypes = React.PropTypes
 // API
 import api from '../../apiClient/v1'
 // Componentes
@@ -8,8 +7,6 @@ import { SeccionPreguias } from './SeccionPreguias/SeccionPreguias.jsx'
 import { SeccionAlmacenes } from './SeccionAlmacenes/SeccionAlmacenes.jsx'
 import { SeccionArticulos } from './SeccionArticulos/SeccionArticulos.jsx'
 import { ModalMantenedorMaestra } from './MantenedorMaestra/ModalMantenedorMaestra.jsx'
-// Styles
-// import classNames from 'classnames/bind'
 
 export class ActivoFijo extends React.Component {
     constructor(props) {
@@ -104,7 +101,6 @@ export class ActivoFijo extends React.Component {
                 })
         }
 
-
         // Preguias
         this.fetchPreguia = (idPreguia)=>{
             return api.activoFijo.preguia(idPreguia).fetch()
@@ -116,21 +112,10 @@ export class ActivoFijo extends React.Component {
                     this.seleccionarAlmacen(this.state.almacenSeleccionado)
                 })
         }
+
         // Mantenedor Maestra
         this.mostrarMantenedorMaestra = ()=>{
             this.refModalMantenedorproductos.showModal()
-        }
-        this.fetchProductos = ()=>{
-            return api.activoFijo.productos.fetch()
-        }
-        this.actualizarProducto = (sku, datos)=>{
-            return api.activoFijo.producto(sku).actualizar(datos)
-                .then(productoActualizado=>{
-                    console.log('resp: ', productoActualizado)
-                })
-        }
-        this.agregarProducto = (datos)=>{
-            return api.activoFijo.productos.nuevo(datos)
         }
     }
 
@@ -147,13 +132,10 @@ export class ActivoFijo extends React.Component {
                 {/* Modales */}
                 <ModalMantenedorMaestra
                     ref={ref=>this.refModalMantenedorproductos=ref}
-                    fetchProductos={this.fetchProductos}
-                    actualizarProducto={this.actualizarProducto}
-                    agregarProducto={this.agregarProducto}
                 />
 
                 {/* ################# MENU LATERAL ################# */}
-                <div className="col-sm-2">
+                <div className="col-sm-3">
                     <h4>Productos</h4>
                     <button type="button" className="btn btn-sm btn-default btn-block"
                             onClick={this.mostrarMantenedorMaestra}>
