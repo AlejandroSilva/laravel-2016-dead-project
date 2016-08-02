@@ -21,9 +21,14 @@ export class ActivoFijo extends React.Component {
             responsables: []
         }
         // ########## Permisos
-        this.puedeAgregarProductos = this.props.permisos.indexOf('activoFijo-agregarProducto')!=-1
-        this.puedeModificarProductos = this.props.permisos.indexOf('activoFijo-modificarProducto')!=-1
-        this.puedeEliminarProductos = this.props.permisos.indexOf('activoFijo-eliminarProducto')!=-1
+        // permisos producto
+        this.puedeAgregarProducto = this.props.permisos.indexOf('activoFijo-agregarProducto')!=-1
+        this.puedeModificarProducto = this.props.permisos.indexOf('activoFijo-modificarProducto')!=-1
+        this.puedeEliminarProducto = this.props.permisos.indexOf('activoFijo-eliminarProducto')!=-1
+        // permisos articulo
+        this.puedeAgregarArticulo = this.props.permisos.indexOf('activoFijo-agregarArticulo')!=-1
+        this.puedeModificarArticulo = this.props.permisos.indexOf('activoFijo-modificarArticulo')!=-1
+        this.puedeEliminarArticulo = this.props.permisos.indexOf('activoFijo-eliminarArticulo')!=-1
 
         // ########## Metodos
         this.seleccionarAlmacen = (idAlmacen)=>{
@@ -138,9 +143,15 @@ export class ActivoFijo extends React.Component {
                 {/* Modales */}
                 <ModalMantenedorMaestra
                     ref={ref=>this.refModalMantenedorproductos=ref}
-                    puedeAgregarProductos={this.puedeAgregarProductos}
-                    puedeModificarProductos={this.puedeModificarProductos}
-                    puedeEliminarProductos={this.puedeEliminarProductos}
+                    // permisos productos
+                    puedeAgregarProducto={this.puedeAgregarProducto}
+                    puedeModificarProducto={this.puedeModificarProducto}
+                    puedeEliminarProducto={this.puedeEliminarProducto}
+                    // permisos articulo
+                    puedeAgregarArticulo={this.puedeAgregarArticulo}
+                    puedeModificarArticulo={this.puedeModificarArticulo}
+                    puedeEliminarArticulo={this.puedeEliminarArticulo}
+
                 />
 
                 {/* ################# MENU LATERAL ################# */}

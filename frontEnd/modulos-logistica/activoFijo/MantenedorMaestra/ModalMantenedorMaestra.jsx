@@ -9,6 +9,9 @@ import * as ReactNotifyCSS from '../../../shared/ReactNotify/ReactNotify.css'
 import Modal from 'react-bootstrap/lib/Modal.js'
 import { Table, Column, Cell } from 'fixed-data-table'
 import { TablaProductos, TablaArticulos, TablaBarras } from './Tablas.jsx'
+import { ModalAgregarProducto } from './ModalAgregarProducto.jsx'
+import { ModalAgregarArticulo } from './ModalAgregarArticulo.jsx'
+import { ModalConfirmacion } from '../../../shared/ModalConfirmacion.jsx'
 
 // Styles
 import * as cssModal from '../modal.css'
@@ -16,7 +19,7 @@ import * as cssModal from '../modal.css'
 export class ModalMantenedorMaestra extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
+        const defaultState = {
             modalVisible: false,
             // TablaProductos
             productos: [],
@@ -25,11 +28,20 @@ export class ModalMantenedorMaestra extends React.Component {
             // TablaArticulos
             articulos: [],
             idArticuloSeleccionado: 0,
+            articulo_scrollToRow: 0,
             // TablaBarras
             barras: [],
-            barraSeleccionada: ''
+            barraSeleccionada: '',
+            barar_scrollToRow: 0,
         }
+        this.state = defaultState
         this.showModal = ()=>{
+            // dejar el state por defecto de la app
+            this.setState({
+                modalVisible: true,
+                ...defaultState
+            })
+            // buscar los productos
             this.buscarProductos()
         }
         this.hideModal = ()=>{
@@ -38,7 +50,8 @@ export class ModalMantenedorMaestra extends React.Component {
             })
         }
 
-        this.buscarProductos = ( onComplete=()=>{} )=>{
+        // FETCH
+        this.buscarProductos = (onComplete=()=>{}) =>{
             // onComplete es un callback opcional, que se ejecuta luego de actualizar la lista de productos
             api.activoFijo.productos.fetch()
                 .then(productos=>{
@@ -48,13 +61,26 @@ export class ModalMantenedorMaestra extends React.Component {
                     }, onComplete)
                 })
         }
+        this.buscarArticulosDeProducto = (onComplete=()=>{}) =>{
+            // buscar los articulos que tenga el producto
+            api.activoFijo.producto(this.state.productoSkuSeleccionado).articulos()
+                .then(articulos=>{
+                    this.setState({articulos}, onComplete)
+                })
+        }
 
-        // TablaProductos
+        // Productos: Tabla Principal
         this.seleccionarProducto = (skuProducto, rowIndex)=>{
             this.setState({
-                productoSkuSeleccionado: skuProducto,
                 // hacer scroll hasta el producto
-               producto_scrollToRow: rowIndex
+                productoSkuSeleccionado: skuProducto,
+                producto_scrollToRow: rowIndex,
+                // al seleccionar un producto, se deja de des-selecciona el ultimo articulo tomado
+                idArticuloSeleccionado: 0,
+                articulo_scrollToRow: 0,
+                // al seleccionar un producto, se deja de des-selecciona la ultima barra tomada
+                barraSeleccionada: '',
+                barar_scrollToRow: 0,
             }, ()=>{
                 // despues de seleccionar un producto, se descarga la lista actualizada de articulos
                 this.buscarArticulosDeProducto()
@@ -66,6 +92,16 @@ export class ModalMantenedorMaestra extends React.Component {
                     // todo: actualizar producto... esto es malo para el rendimiento, pero rapido de prototipar
                     this.buscarProductos()
                 })
+                .catch(err=>{
+                    let msgs = _.values(err.data).join('. ')
+                    console.error("Error al agregar un producto ", msgs)
+                    this.refNotify.error("Error al agregar un producto", msgs, 4*1000);
+                })
+        }
+
+        // Productos: Modal Agregar Producto
+        this.showModalAgregarProducto = ()=>{
+            this.refModalAgregarProducto.showModal()
         }
         this.agregarProducto = (datos)=>{
             let promise = api.activoFijo.productos.nuevo(datos)
@@ -88,9 +124,19 @@ export class ModalMantenedorMaestra extends React.Component {
                 // })
             return promise
         }
-        this.eliminarProducto = (sku)=>{
-            return api.activoFijo.producto(sku).eliminar()
+
+        // Producto: Modal Eliminar Producto
+        this.showModalEliminarProducto = ()=>{
+            this.refModalEliminarProducto.showModal()
+        }
+        this.hideModalEliminarProducto = ()=>{
+            this.refModalEliminarProducto.hideModal()
+        }
+        this.eliminarProductoSeleccionado = ()=>{
+            return api.activoFijo.producto(this.state.productoSkuSeleccionado).eliminar()
                 .then(resp=>{
+                    // cuando se elimine el producto, se oculta el modal
+                    this.hideModalEliminarProducto()
                     // una vez eliminado, se descarga la lista de productos nuevamente
                     // y se selecciona "ningun" producto
                     this.buscarProductos( ()=>{
@@ -103,24 +149,23 @@ export class ModalMantenedorMaestra extends React.Component {
                     })
                 })
                 .catch(err=>{
+                    this.hideModalEliminarProducto()
+
                     let msgs = _.values(err.data).join('. ')
                     console.error("Error al eliminar producto ", msgs)
                     this.refNotify.error("Error al eliminar producto", msgs, 4*1000);
                 })
         }
-        this.buscarArticulosDeProducto = ()=>{
-            // buscar los articulos que tenga el producto
-            api.activoFijo.producto(this.state.productoSkuSeleccionado).articulos()
-                .then(articulos=>{
-                    this.setState({articulos})
-                })
-        }
 
-        // Tabla Articulos
-        this.seleccionarArticulo = (articulo)=>{
+        // Articulos: Tabla Principal
+        this.seleccionarArticulo = (articulo, rowIndex)=>{
             this.setState({
                 idArticuloSeleccionado: articulo.idArticuloAF,
-                barras: articulo.barras
+                articulo_scrollToRow: rowIndex,
+                barras: articulo.barras,
+                // al seleccionar un producto, se deja de des-selecciona la ultima barra tomada
+                barraSeleccionada: '',
+                barar_scrollToRow: 0,
             })
         }
         this.actualizarArticulo = (idArticuloAF, datos)=>{
@@ -128,6 +173,54 @@ export class ModalMantenedorMaestra extends React.Component {
                 .then(articuloActualizado=>{
                     // todo: se actualiza un articulo, pero se vuelve a bajar todos los datos, deberia actualizarse solo un elemento
                     this.buscarArticulosDeProducto()
+                })
+                .catch(err=>{
+                    let msgs = _.values(err.data).join('. ')
+                    console.error("Error al eliminar producto ", msgs)
+                    this.refNotify.error("Error al eliminar producto", msgs, 4*1000);
+                })
+        }
+
+        // Articulos: Modal Agregar Articulo
+        this.showModalAgregarArticulo = ()=>{
+            this.refModalAgregarArticulo.showModal()
+        }
+        this.agregarArticulo = (datos)=>{
+            let resp = api.activoFijo.articulos.nuevo(datos)
+            resp
+                .then(resp=>{
+                    // actualizar los articulos del producto
+                    this.buscarArticulosDeProducto()
+                })
+            return resp
+        }
+
+        // Articulos: Modal Eliminar Articulo
+        this.showModalEliminarArticulo = ()=>{
+            this.refModalEliminarArticulo.showModal()
+        }
+        this.hideModalEliminarArticulo = ()=>{
+            this.refModalEliminarArticulo.hideModal()
+        }
+        this.eliminarArticulo = ()=>{
+            return api.activoFijo.articulo(this.state.idArticuloSeleccionado).eliminar()
+                .then(resp=>{
+                    // cuando se elimine el producto, se oculta el modal
+                    this.hideModalEliminarArticulo()
+                    // una vez eliminado, se descarga la lista de articulos del producto nuevamente
+                    this.buscarArticulosDeProducto( ()=>{
+                        // "articulo_scrollToRow" tiene el index del elemento seleccionado para eliminar, luego de
+                        // ser elinado, se puede seleccionar la misma posicion
+                        this.setState({
+                            //articulo_scrollToRow: this.state.articulo_scrollToRow,
+                            idArticuloSeleccionado: 0
+                        })
+                    })
+                })
+                .catch(err=>{
+                    let msgs = _.values(err.data).join('. ')
+                    console.error("Error al eliminar producto ", msgs)
+                    this.refNotify.error("Error al eliminar producto", msgs, 4*1000);
                 })
         }
 
@@ -152,31 +245,68 @@ export class ModalMantenedorMaestra extends React.Component {
                     {/* Notificaciones */}
                     <ReactNotify ref={ref=>this.refNotify=ref} className={ReactNotifyCSS}/>
 
+                    {/* === PRODUCTOS === */}
                     <TablaProductos
                         productos={this.state.productos}
                         skuSeleccionado={this.state.productoSkuSeleccionado}
                         scrollToRow={this.state.producto_scrollToRow}
-                        // permisos
-                        puedeModificar={true}
-                        puedeAgregarProductos={this.props.puedeAgregarProductos}
-                        puedeModificarProductos={this.props.puedeModificarProductos}
-                        puedeEliminarProductos={this.props.puedeEliminarProductos}
+                        // permisos producto
+                        puedeModificarProducto={this.props.puedeModificarProducto}
                         // Metodos
                         actualizarProducto={this.actualizarProducto}
                         seleccionarProducto={this.seleccionarProducto}
-                        agregarProducto={this.agregarProducto}
-                        eliminarProducto={this.eliminarProducto}
-                    />
+                    >
+                        <div className="pull-right">
+                            <button className="btn btn-xs btn-default"
+                                    onClick={this.showModalAgregarProducto}
+                                    // debe tener los permisos
+                                    disabled={!this.props.puedeAgregarProducto}>
+                                Agregar
+                            </button>
+                            <button className="btn btn-xs btn-default"
+                                    onClick={this.showModalEliminarProducto}
+                                    // debe tener los permisos y debe haber un producto seleccionado
+                                    disabled={!this.props.puedeEliminarProducto || this.state.productoSkuSeleccionado==''}>
+                                Eliminar
+                            </button>
+                        </div>
+
+                    </TablaProductos>
+
+                    {/* === ARTICULOS === */}
                     <TablaArticulos
-                        ref={ref=>this.refTablaArticulos=ref}
                         articulos={this.state.articulos}
                         idArticuloSeleccionado={this.state.idArticuloSeleccionado}
-                        // permisos
-                        puedeModificar={true}
+                        scrollToRow={this.state.articulo_scrollToRow}
+                        // permisos articulos
+                        puedeAgregarArticulo={this.props.puedeAgregarArticulo}
+                        puedeModificarArticulo={/*this.props.puedeModificarArticulo*/ true}
+                        puedeEliminarArticulo={/*this.props.puedeEliminarArticulo*/ true}
+
                         // Metodos
                         actualizarArticulo={this.actualizarArticulo}
                         seleccionarArticulo={this.seleccionarArticulo}
-                    />
+                        eliminarArticulo={this.eliminarArticulo}
+                    >
+                        <div className="pull-right">
+                            <button className="btn btn-xs btn-default"
+                                    // debe tener los permisos, y debe haber un producto seleccionado
+                                    disabled={!this.props.puedeAgregarArticulo || this.state.productoSkuSeleccionado==''}
+                                    onClick={this.showModalAgregarArticulo}
+                            >
+                                Agregar
+                            </button>
+                            <button className="btn btn-xs btn-default"
+                                    // debe tener los permisos y debe haber un articulo seleccionado
+                                    disabled={!this.props.puedeEliminarArticulo || this.state.idArticuloSeleccionado==0}
+                                    onClick={this.showModalEliminarArticulo}
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </TablaArticulos>
+
+                    {/* === BARRAS === */}
                     <TablaBarras
                         barras={this.state.barras}
                         barraSeleccionada={this.state.barraSeleccionada}
@@ -185,14 +315,56 @@ export class ModalMantenedorMaestra extends React.Component {
                         // metodos
                         seleccionarBarra={this.seleccionarBarra}
                     />
+
+
+                    {/* === MODALES === */}
+                    {/* Agregar Producto*/}
+                    <ModalAgregarProducto
+                        ref={ref=>this.refModalAgregarProducto=ref}
+                        agregarProducto={this.agregarProducto}
+                    />
+                    {/* Eliminar Producto */}
+                    <ModalConfirmacion
+                        ref={ref=>this.refModalEliminarProducto=ref}
+                        textModalHeader="¿Seguro que desea eliminar el Producto?"
+                        //textDescription="lkjasldkj"
+                        textCancel="Cancelar"
+                        textAccept="Eliminar"
+                        acceptClassname="btn-danger"
+                        // Metodos
+                        onAccept={this.eliminarProductoSeleccionado}
+                        onCancel={this.hideModalEliminarProducto}
+                    />
+                    {/* Agregar Articulo */}
+                    <ModalAgregarArticulo
+                        ref={ref=>this.refModalAgregarArticulo=ref}
+                        agregarArticulo={this.agregarArticulo}
+                        skuProducto={this.state.productoSkuSeleccionado}
+                    />
+                    {/* Eliminar Articulo */}
+                    <ModalConfirmacion
+                        ref={ref=>this.refModalEliminarArticulo=ref}
+                        textModalHeader="¿Seguro que desea eliminar el Articulo?"
+                        //textDescription="lkjasldkj"
+                        textCancel="Cancelar"
+                        textAccept="Eliminar"
+                        acceptClassname="btn-danger"
+                        // Metodos
+                        onAccept={this.eliminarArticulo}
+                        onCancel={this.hideModalEliminarArticulo}
+                    />
                 </Modal.Body>
             </Modal>
         )
     }
 }
 ModalMantenedorMaestra.propTypes = {
-    // Permisos
-    puedeAgregarProductos: PropTypes.bool.isRequired,
-    puedeModificarProductos: PropTypes.bool.isRequired,
-    puedeEliminarProductos: PropTypes.bool.isRequired
+    // Permisos productos
+    puedeAgregarProducto: PropTypes.bool.isRequired,
+    puedeModificarProducto: PropTypes.bool.isRequired,
+    puedeEliminarProducto: PropTypes.bool.isRequired,
+    // Permisos Articulos
+    puedeAgregarArticulo: PropTypes.bool.isRequired,
+    puedeModificarArticulo: PropTypes.bool.isRequired,
+    puedeEliminarArticulo: PropTypes.bool.isRequired
 }

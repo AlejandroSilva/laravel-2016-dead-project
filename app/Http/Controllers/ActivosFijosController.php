@@ -47,6 +47,7 @@ class ActivosFijosController extends Controller {
      * ##########################################################
      */
 
+    /** ####################### PRODUCTOS ###################### **/
     // GET api/activo-fijo/productos/buscar
     public function api_productos_buscar(Request $request){
         // todo: validar que tenga los permisos para ver los productos
@@ -60,11 +61,12 @@ class ActivosFijosController extends Controller {
 
     // POST api/activo-fijo/productos/nuevo
     public function api_productos_nuevo(){
-        // todo: validar si se tienen los permisos para agregar un producto
+        // validar si se tienen los permisos para agregar un producto
         $user = Auth::user();
         if(!$user || !$user->can('activoFijo-agregarProducto'))
-            return response()->json(['error'=>'No tiene permisos para agregar un producto'], 403);
-
+            return response()->json([
+                'error'=>['No tiene permisos para agregar un producto']
+            ], 403);
 
         $productoNuevoRules = [
             'SKU' => 'required|max:32|unique:productos_activo_fijo',
@@ -89,9 +91,12 @@ class ActivosFijosController extends Controller {
         return response()->json($producto, 200);
     }
 
-    // PUT activo-fijo/producto/{sku}
+    // PUT api/activo-fijo/producto/{sku}
     public function api_producto_actualizar(Request $request, $sku){
-        // todo validar los pemisos
+        // validar si se tienen los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('activoFijo-modificarProducto'))
+            return response()->json(['error'=>'No tiene permisos para modificar un producto'], 403);
 
         // producto existe?
         $producto = ProductoAF::find($sku);
@@ -109,8 +114,12 @@ class ActivosFijosController extends Controller {
         $producto->save();
     }
 
+    // DEL api/activo-fijo/producto/{sku}
     public function api_producto_eliminar($sku){
-        // todo validar permisos
+        // validar permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('activoFijo-eliminarProducto'))
+            return response()->json(['error'=>'No tiene permisos para eliminar el producto'], 403);
 
         // producto existe?
         $producto = ProductoAF::find($sku);
@@ -128,61 +137,7 @@ class ActivosFijosController extends Controller {
         return response()->json([]);
     }
 
-    // GET api/activo-fijo/almacen/{idAlmacen}/articulos
-    public function api_almacen_articulos($idAlmacen){
-        // retornar todos los articulos asociados a algun almance
-        $query = AlmacenAF_ArticuloAF::with([]);
-
-        if($idAlmacen!=0){
-            $query->where('idAlmacenAF', $idAlmacen);
-        }
-
-        return response()->json(array_values(
-            $articulos = $query->get()
-                ->map(function($almArt){
-                    return AlmacenAF_ArticuloAF::formato_tablaArticulos($almArt);
-                })
-                ->sort(function($a, $b){
-                    // ordenados por sku, luego por el primer codigo de barra de cada uno, y finalmente por almacen
-                    return strcmp($a['SKU'], $b['SKU'])
-                        ?: strcmp($a['barras'][0], $b['barras'][0])
-                        ?: strcmp($a['idAlmacenAF'], $b['idAlmacenAF']);
-                })
-                ->toArray()
-        ));
-    }
-
-    // PUT api/activo-fijo/articulo/{idArticuloAF}
-    public function api_articulo_actualizar($idArticuloAF){
-        // todo: validar que tenga los permisos para actualizar
-
-        // verificar que el articulo exista
-        $articulo = ArticuloAF::find($idArticuloAF);
-        if(!$articulo){
-            return response()->json(['idArticulo', 'Articulo no encontrado'], 400);
-        }
-
-        $articuloRules = [
-            //'SKU' => 'required|max:32|unique:productos_activo_fijo',
-            'stock' => 'required|integer',
-        ];
-        $errorMessages = [
-            'stock.required' => 'stock requerido',
-            'stock.integer' => 'debe ser un numero',
-        ];
-        $validator = Validator::make(Input::all(), $articuloRules, $errorMessages);
-
-        if($validator->fails()){
-            $error = $validator->messages();
-            return response()->json($error, 400);
-        }
-
-        // si el input es valido, entonces actualizar
-        $articulo->stock = Input::get('stock');
-        $articulo->save();
-
-        return response()->json([]);
-    }
+    /** ####################### ARTICULOS ###################### **/
 
     // GET api/activo-fijo/articulos/buscar
     public function api_articulos_buscar(Request $request){
@@ -273,7 +228,7 @@ class ActivosFijosController extends Controller {
         });
     }
 
-    // POST api/activo-fijo/articulos/transferir
+    // POST api/activo-fijo/articulos/transferir (INCOMPLETA)
     public function api_articulos_transferir(Request $request){
         // todo validar permisos
 
@@ -301,7 +256,7 @@ class ActivosFijosController extends Controller {
             //$preguiaOriginal = $articulo->preguias()->where el articulo este "no entregado"
 
             // TODO TERMINA ESTO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//            $preguiaOriginal->articulos()->find($cod)->
+            //            $preguiaOriginal->articulos()->find($cod)->
 
             // agregar el articulo a la guia de transferencia
             $preguiaTransferencia->articulos()->attach($articulo->codArticuloAF);
@@ -313,6 +268,97 @@ class ActivosFijosController extends Controller {
 
         return response()->json([]);
     }
+
+    // POST api/activo-fijo/articulos/nuevo
+    public function api_articulos_nuevo(Request $request) {
+        // validar si se tienen los permisos para agregar un producto
+        $user = Auth::user();
+        if(!$user || !$user->can('activoFijo-agregarArticulo'))
+            return response()->json(['error'=>['No tiene permisos para agregar un articulo']], 403);
+
+        $articuloNuevoRules = [
+            'SKU' => 'required|max:32|exists:productos_activo_fijo,SKU',
+            'stock' => 'required|integer|min:1',
+        ];
+        $errorMessages = [
+            'SKU.required' => 'SKU requerido',
+            'SKU.exists' => 'SKU no existe',
+            'stock.required' => 'stock requerido',
+            'stock.integer' => 'debe ser un número',
+            'stock.min' => 'debe ser como mínimo 1',
+        ];
+        $validator = Validator::make(Input::all(), $articuloNuevoRules, $errorMessages);
+        if($validator->fails()){
+            $error = $validator->messages();
+            return response()->json($error, 400);
+        }
+
+        // crear el producto
+        $articulo = ArticuloAF::create(Input::all());
+        return response()->json($articulo, 200);
+    }
+
+    // PUT api/activo-fijo/articulo/{idArticuloAF}
+    public function api_articulo_actualizar($idArticuloAF){
+        // validar si se tienen los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('activoFijo-modificarArticulo'))
+            return response()->json(['error'=>'No tiene permisos para modificar un articulo'], 403);
+
+        // verificar que el articulo exista
+        $articulo = ArticuloAF::find($idArticuloAF);
+        if(!$articulo){
+            return response()->json(['idArticulo', 'Articulo no encontrado'], 400);
+        }
+
+        $articuloRules = [
+            //'SKU' => 'required|max:32|unique:productos_activo_fijo',
+            'stock' => 'required|integer',
+        ];
+        $errorMessages = [
+            'stock.required' => 'stock requerido',
+            'stock.integer' => 'debe ser un numero',
+        ];
+        $validator = Validator::make(Input::all(), $articuloRules, $errorMessages);
+
+        if($validator->fails()){
+            $error = $validator->messages();
+            return response()->json($error, 400);
+        }
+
+        // si el input es valido, entonces actualizar
+        $articulo->stock = Input::get('stock');
+        $articulo->save();
+
+        return response()->json([]);
+    }
+
+    // DEL /api/activo-fijo/articulo/{idArticuloAF}
+    public function api_articulo_eliminar($idArticuloAF){
+        // validar si se tienen los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('activoFijo-eliminarArticulo'))
+            return response()->json(['error'=>'No tiene permisos para eliminar un articulo'], 403);
+
+        // verificar que el articulo exista
+        $articulo = ArticuloAF::find($idArticuloAF);
+        if(!$articulo){
+            return response()->json(['idArticulo', 'Articulo no encontrado'], 400);
+        }
+
+        // tiene articulos?
+        if($articulo->barras()->count()>0)
+            return response()->json(
+                ['barras'=>'el articulo tiene barras asociadas, eliminelas e intente nuevamente'],
+                400
+            );
+
+        $articulo->delete();
+        return response()->json([]);
+    }
+
+
+    /** ####################### ALMACENES ###################### **/
 
     // GET api/activo-fijo/almacenes/buscar
     public function api_almacenes_buscar(){
@@ -329,7 +375,33 @@ class ActivosFijosController extends Controller {
         ]);
         return response()->json('ok');
     }
-    
+
+    // GET api/activo-fijo/almacen/{idAlmacen}/articulos
+    public function api_almacen_articulos($idAlmacen){
+        // retornar todos los articulos asociados a algun almance
+        $query = AlmacenAF_ArticuloAF::with([]);
+
+        if($idAlmacen!=0){
+            $query->where('idAlmacenAF', $idAlmacen);
+        }
+
+        return response()->json(array_values(
+            $articulos = $query->get()
+                ->map(function($almArt){
+                    return AlmacenAF_ArticuloAF::formato_tablaArticulos($almArt);
+                })
+                ->sort(function($a, $b){
+                    // ordenados por sku, luego por el primer codigo de barra de cada uno, y finalmente por almacen
+                    return strcmp($a['SKU'], $b['SKU'])
+                        ?: strcmp($a['barras'][0], $b['barras'][0])
+                            ?: strcmp($a['idAlmacenAF'], $b['idAlmacenAF']);
+                })
+                ->toArray()
+        ));
+    }
+
+    /** ####################### PRE-GUIAS ###################### **/
+
     // GET api/activo-fijo/preguias/buscar
     public function api_preguias_buscar(Request $request){
         return response()->json(
@@ -398,6 +470,8 @@ class ActivosFijosController extends Controller {
         // TODO: 3 cambiar el estado de la guia a "retornada"
         return response()->json([]);
     }
+
+    /** ######################### OTROS ######################## **/
 
     // GET api/activo-fijo/responsables/buscar
     public function api_responsables_buscar(){

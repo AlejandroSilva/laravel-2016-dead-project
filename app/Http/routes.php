@@ -133,21 +133,27 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('vista-general/nominas-inventarios',             'VistaGeneralController@api_obtenerNominasAuditorias');
 
         // API ACTIVO FIJO
+        // productos
         Route::get('activo-fijo/productos/buscar',                  'ActivosFijosController@api_productos_buscar');
         Route::post('activo-fijo/productos/nuevo',                  'ActivosFijosController@api_productos_nuevo');
         Route::put('activo-fijo/producto/{sku}',                    'ActivosFijosController@api_producto_actualizar');
         Route::delete('activo-fijo/producto/{sku}',                 'ActivosFijosController@api_producto_eliminar');
-        Route::get('activo-fijo/almacen/{idAlmacen}/articulos',     'ActivosFijosController@api_almacen_articulos');
-        Route::put('activo-fijo/articulo/{idArticuloAF}',            'ActivosFijosController@api_articulo_actualizar');
+        // articulos
         Route::get('activo-fijo/articulos/buscar',                  'ActivosFijosController@api_articulos_buscar');
         Route::post('activo-fijo/articulos/entregar',               'ActivosFijosController@api_articulos_entregar_a_almacen');
         Route::post('activo-fijo/articulos/transferir',             'ActivosFijosController@api_articulos_transferir');
-
+        Route::post('activo-fijo/articulos/nuevo',                  'ActivosFijosController@api_articulos_nuevo');
+        Route::put('activo-fijo/articulo/{idArticuloAF}',           'ActivosFijosController@api_articulo_actualizar');
+        Route::delete('activo-fijo/articulo/{idArticuloAF}',        'ActivosFijosController@api_articulo_eliminar');
+        // almacenes
         Route::get('activo-fijo/almacenes/buscar',                  'ActivosFijosController@api_almacenes_buscar');
         Route::post('activo-fijo/almacen/nuevo',                    'ActivosFijosController@api_almacen_nuevo');
+        Route::get('activo-fijo/almacen/{idAlmacen}/articulos',     'ActivosFijosController@api_almacen_articulos');
+        // preguias
         Route::get('activo-fijo/preguias/buscar',                   'ActivosFijosController@api_preguias_buscar');
         Route::get('activo-fijo/preguia/{idPreguia}',               'ActivosFijosController@api_preguia_fetch');
         Route::post('activo-fijo/preguia/{idPreguia}/devolver',     'ActivosFijosController@api_preguia_devolver');
+        // otros
         Route::get('activo-fijo/responsables/buscar',               'ActivosFijosController@api_responsables_buscar');
 
         // API USUARIOS

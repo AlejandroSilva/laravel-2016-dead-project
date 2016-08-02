@@ -47,12 +47,11 @@ export class ModalAgregarProducto extends React.Component{
             // agregar el producto, quitar los mensajes de error, y dejar el formulario en blanco
             this.props.agregarProducto(this.state.producto)
                 .then(()=>{
-                    console.log('agregar ok')
                     // al terminar, se oculta el modal
                     this.cancelarModal()
                 })
                 .catch(error=>{
-                    if(error.status==400)
+                    if(error.status==400 || error.status==403)
                         this.setState({errors: error.data})
                 })
         }
@@ -100,6 +99,7 @@ export class ModalAgregarProducto extends React.Component{
                                 />
                                 <p className={cx('error-msg')}>{this.state.errors.valorMercado} &nbsp;</p>
                             </div>
+                            <p className={cx('error-msg')}>{this.state.errors.error} &nbsp;</p>
                         </form>
 
                     </Modal.Body>

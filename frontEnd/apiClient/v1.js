@@ -28,6 +28,8 @@ export default {
         articulo: (idArticuloAF)=>({
             actualizar: (datos)=>
                 axios.put(`/api/activo-fijo/articulo/${idArticuloAF}`, datos),
+            eliminar: ()=>
+                axios.delete(`/api/activo-fijo/articulo/${idArticuloAF}`),
         }),
         articulos : {
             buscarBarra: (barra)=>
@@ -35,7 +37,9 @@ export default {
             transferir: (articulos)=>
                 axios.post(`/api/activo-fijo/articulos/transferir`, articulos),
             entregar: (datos)=>
-                axios.post(`/api/activo-fijo/articulos/entregar`, datos)
+                axios.post(`/api/activo-fijo/articulos/entregar`, datos),
+            nuevo: (datos)=>
+                axios.post(`/api/activo-fijo/articulos/nuevo`, datos)
         },
         almacenes: {
             buscar: ()=>

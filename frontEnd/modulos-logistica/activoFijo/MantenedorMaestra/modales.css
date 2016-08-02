@@ -9,6 +9,7 @@
 /* Componente: FormNuevoProducto */
 .error-msg {
     color: red;
+    padding: 0;
 }
 
 .modal-body {

@@ -6,8 +6,6 @@ import { Table, Column, Cell } from 'fixed-data-table'
 import { InputTexto } from '../../shared/InputTexto.jsx'
 import { InputNumber } from '../../shared/InputNumber.jsx'
 import TouchExampleWrapper from '../../../shared/TouchExampleWrapper.jsx'
-import { ModalAgregarProducto } from './ModalAgregarProducto.jsx'
-import { ModalConfirmacion } from '../../../shared/ModalConfirmacion.jsx'
 // Styles
 import classNames from 'classnames/bind'
 import * as css from './tablaProductos.css'
@@ -23,23 +21,6 @@ export class TablaProductos extends React.Component {
             this.props.actualizarProducto(this.props.productos[row].SKU, reqData)
         }
     }
-    showModalAgregarProducto = ()=>{
-        this.refModalAgregarProducto.showModal()
-    }
-    showModalEliminarProducto = ()=>{
-        this.refModalEliminarProducto.showModal()
-    }
-    hideModalEliminarProducto = ()=>{
-        this.refModalEliminarProducto.hideModal()
-    }
-    eliminarProducto = ()=>{
-        this.props.eliminarProducto(this.props.skuSeleccionado)
-            .then(()=>{
-                // cuando se elimine el producto, se oculta el modal
-                this.hideModalEliminarProducto()
-            })
-    }
-
     render(){
         const {productos, skuSeleccionado, seleccionarProducto} = this.props
         return (
@@ -75,7 +56,7 @@ export class TablaProductos extends React.Component {
                         <Column
                             header={<Cell>Descripción</Cell>}
                             cell={ ({rowIndex})=>
-                                <TextoCell editable={this.props.puedeModificarProductos}
+                                <TextoCell editable={this.props.puedeModificarProducto}
                                            texto={productos[rowIndex].descripcion}
                                            filaSeleccionada={productos[rowIndex].SKU==skuSeleccionado}
                                            // metodos
@@ -87,7 +68,7 @@ export class TablaProductos extends React.Component {
                         <Column
                             header={<Cell>Valor mercado</Cell>}
                             cell={ ({rowIndex})=>
-                                <NumberCell editable={this.props.puedeModificarProductos}
+                                <NumberCell editable={this.props.puedeModificarProducto}
                                                number={productos[rowIndex].valorMercado}
                                                filaSeleccionada={productos[rowIndex].SKU==skuSeleccionado}
                                                // metodos
@@ -100,35 +81,8 @@ export class TablaProductos extends React.Component {
                     </Table>
                 </TouchExampleWrapper>
 
-                <div className="pull-right">
-                    <button className="btn btn-xs btn-default" onClick={this.showModalAgregarProducto}
-                            disabled={!this.props.puedeAgregarProductos}
-                    >
-                        Agregar
-                    </button>
-                    <button className="btn btn-xs btn-default" onClick={this.showModalEliminarProducto}
-                            disabled={!this.props.puedeEliminarProductos || this.props.skuSeleccionado==''}>
-                        Eliminar
-                    </button>
-                </div>
-
-
-                <ModalAgregarProducto
-                    ref={ref=>this.refModalAgregarProducto=ref}
-                    agregarProducto={this.props.agregarProducto}
-                    focusRow={this.focusRow}
-                />
-                <ModalConfirmacion
-                    ref={ref=>this.refModalEliminarProducto=ref}
-                    textModalHeader="¿Seguro que desea eliminar el Producto?"
-                    //textDescription="lkjasldkj"
-                    textCancel="Cancelar"
-                    textAccept="Eliminar"
-                    acceptClassname="btn-danger"
-                    // Metodos
-                    onAccept={this.eliminarProducto}
-                    onCancel={this.hideModalEliminarProducto}
-                />
+                {/* Menu de opciones */}
+                {this.props.children}
             </div>
         )
     }
@@ -138,15 +92,11 @@ TablaProductos.propTypes = {
     productos: PropTypes.arrayOf(PropTypes.object).isRequired,
     skuSeleccionado: PropTypes.string.isRequired,
     scrollToRow: PropTypes.number.isRequired,
-    // Permisos
-    puedeAgregarProductos: PropTypes.bool.isRequired,
-    puedeModificarProductos: PropTypes.bool.isRequired,
-    puedeEliminarProductos: PropTypes.bool.isRequired,
+    // Permisos productos
+    puedeModificarProducto: PropTypes.bool.isRequired,
     // Metodos
-    actualizarProducto: PropTypes.func.isRequired,
     seleccionarProducto: PropTypes.func.isRequired,
-    agregarProducto: PropTypes.func.isRequired,
-    eliminarProducto: PropTypes.func.isRequired
+    actualizarProducto: PropTypes.func.isRequired,
 }
 
 /** ########################################## ########################################## **/
@@ -168,6 +118,7 @@ export class TablaArticulos extends React.Component {
                         // Table
                         width={180 + 20}
                         height={400}
+                        scrollToRow={this.props.scrollToRow}
                         // Header
                         headerHeight={30}
                         // Row
@@ -180,7 +131,7 @@ export class TablaArticulos extends React.Component {
                                                number={articulos[rowIndex].idArticuloAF}
                                                filaSeleccionada={articulos[rowIndex].idArticuloAF==idArticuloSeleccionado}
                                                 // metodos
-                                               onClick={ seleccionarArticulo.bind(this, articulos[rowIndex]) }
+                                               onClick={ seleccionarArticulo.bind(this, articulos[rowIndex], rowIndex) }
                                                changeData={()=>{}}
                                     />}
                                 width={60}
@@ -188,11 +139,11 @@ export class TablaArticulos extends React.Component {
                             <Column
                                 header={<Cell>Stock Total</Cell>}
                                 cell={ ({rowIndex})=>
-                                    <NumberCell editable={this.props.puedeModificar}
+                                    <NumberCell editable={this.props.puedeModificarArticulo}
                                                 number={articulos[rowIndex].stock}
                                                 filaSeleccionada={articulos[rowIndex].idArticuloAF==idArticuloSeleccionado}
                                                 // metodos
-                                                onClick={ seleccionarArticulo.bind(this, articulos[rowIndex]) }
+                                                onClick={ seleccionarArticulo.bind(this, articulos[rowIndex], rowIndex) }
                                                 changeData={this.changeDataArticulo.bind(this, rowIndex, 'stock')}
                                     />}
                                 width={120}
@@ -200,14 +151,8 @@ export class TablaArticulos extends React.Component {
                     </Table>
                 </TouchExampleWrapper>
 
-                <div className="pull-right">
-                    <button className="btn btn-xs btn-default">
-                        Agregar
-                    </button>
-                    <button className="btn btn-xs btn-default">
-                        Eliminar
-                    </button>
-                </div>
+                {/* Menu de opciones */}
+                {this.props.children}
             </div>
         )
     }
@@ -216,11 +161,12 @@ TablaArticulos.propTypes = {
     // Objetos
     articulos: PropTypes.arrayOf(PropTypes.object).isRequired,
     idArticuloSeleccionado: PropTypes.number.isRequired,
-    // Permisos
-    puedeModificar: PropTypes.bool.isRequired,
+    scrollToRow: PropTypes.number.isRequired,
+    // Permisos Articulos
+    puedeModificarArticulo: PropTypes.bool.isRequired,
     // Metodos
-    actualizarArticulo: PropTypes.func.isRequired,
-    seleccionarArticulo: PropTypes.func.isRequired
+    seleccionarArticulo: PropTypes.func.isRequired,
+    actualizarArticulo: PropTypes.func.isRequired
 }
 
 
