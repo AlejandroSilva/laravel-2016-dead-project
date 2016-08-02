@@ -385,9 +385,7 @@ export class ModalMantenedorMaestra extends React.Component {
                         idArticuloSeleccionado={this.state.idArticuloSeleccionado}
                         scrollToRow={this.state.articulo_scrollToRow}
                         // permisos articulos
-                        puedeAgregarArticulo={this.props.puedeAgregarArticulo}
-                        puedeModificarArticulo={/*this.props.puedeModificarArticulo*/ true}
-                        puedeEliminarArticulo={/*this.props.puedeEliminarArticulo*/ true}
+                        puedeModificarArticulo={this.props.puedeModificarArticulo}
 
                         // Metodos
                         actualizarArticulo={this.actualizarArticulo}
@@ -416,8 +414,6 @@ export class ModalMantenedorMaestra extends React.Component {
                     <TablaBarras
                         barras={this.state.barras}
                         barraSeleccionado={this.state.barraSeleccionado}
-                        // permisos
-                        puedeModificar={true}
                         // metodos
                         seleccionarBarra={this.seleccionarBarra}
                     >
@@ -511,6 +507,5 @@ ModalMantenedorMaestra.propTypes = {
     puedeEliminarArticulo: PropTypes.bool.isRequired,
     // Permisos Barra
     puedeAgregarBarra: PropTypes.bool.isRequired,
-    puedeModificarBarra: PropTypes.bool.isRequired,
     puedeEliminarBarra: PropTypes.bool.isRequired
 }

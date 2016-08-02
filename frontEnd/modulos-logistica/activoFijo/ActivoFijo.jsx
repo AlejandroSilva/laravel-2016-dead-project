@@ -31,7 +31,6 @@ export class ActivoFijo extends React.Component {
         this.puedeEliminarArticulo = this.props.permisos.indexOf('activoFijo-eliminarArticulo')!=-1
         // permisos barras
         this.puedeAgregarBarra = this.props.permisos.indexOf('activoFijo-agregarBarra')!=-1
-        this.puedeModificarBarra = this.props.permisos.indexOf('activoFijo-modificarBarra')!=-1
         this.puedeEliminarBarra = this.props.permisos.indexOf('activoFijo-eliminarArticulo')!=-1
 
         // ########## Metodos

@@ -214,8 +214,6 @@ TablaBarras.propTypes = {
     // Objetos
     barras: PropTypes.arrayOf(PropTypes.string).isRequired,
     barraSeleccionado: PropTypes.string.isRequired,
-    // Permisos
-    puedeModificar: PropTypes.bool.isRequired,
     // Metodos
     //actualizarProducto: PropTypes.func.isRequired,
     seleccionarBarra: PropTypes.func.isRequired
