@@ -25,12 +25,13 @@ export class TablaProductos extends React.Component {
         const {productos, skuSeleccionado, seleccionarProducto} = this.props
         return (
             <div className={cx('tablaProductos')} >
-                <TouchExampleWrapper tableWidth={540+20} tableHeight={400}>
+                <h4 className={cx('titulo-tabla')}>Productos</h4>
+                <TouchExampleWrapper tableWidth={540+20} tableHeight={600}>
                     <Table
                     scrollToRow={this.props.scrollToRow}
                     // Table
                     width={540+20}
-                    height={400}
+                    height={600}
                     // Header
                     headerHeight={30}
                     // Row
@@ -113,11 +114,12 @@ export class TablaArticulos extends React.Component {
         const {articulos, idArticuloSeleccionado, seleccionarArticulo} = this.props
         return (
             <div className={cx('tablaArticulos')} >
-                <TouchExampleWrapper tableWidth={180 + 20} tableHeight={400} style={{display: 'inline-block'}}>
+                <h4 className={cx('titulo-tabla')}>Articulos</h4>
+                <TouchExampleWrapper tableWidth={180 + 20} tableHeight={600} style={{display: 'inline-block'}}>
                     <Table
                         // Table
                         width={180 + 20}
-                        height={400}
+                        height={600}
                         scrollToRow={this.props.scrollToRow}
                         // Header
                         headerHeight={30}
@@ -173,15 +175,16 @@ TablaArticulos.propTypes = {
 /** ########################################## ########################################## **/
 export class TablaBarras extends React.Component {
     render() {
-        const {barras, barraSeleccionada, seleccionarBarra} = this.props
+        const {barras, barraSeleccionado, seleccionarBarra} = this.props
         const width = 150
         return (
             <div className={cx('tablaBarras')} >
-                <TouchExampleWrapper tableWidth={width+20} tableHeight={400} style={{display: 'inline-block'}}>
+                <h4 className={cx('titulo-tabla')}>Barras</h4>
+                <TouchExampleWrapper tableWidth={width+20} tableHeight={600} style={{display: 'inline-block'}}>
                     <Table
                         // Table
                         width={width+ 20}
-                        height={400}
+                        height={600}
                         // Header
                         headerHeight={30}
                         // Row
@@ -192,7 +195,7 @@ export class TablaBarras extends React.Component {
                             cell={ ({rowIndex})=>
                                 <TextoCell editable={false}
                                            texto={barras[rowIndex]}
-                                           filaSeleccionada={barras[rowIndex] == barraSeleccionada}
+                                           filaSeleccionada={barras[rowIndex] == barraSeleccionado}
                                            // metodos
                                            onClick={ seleccionarBarra.bind(this, barras[rowIndex]) }
                                            changeData={()=>{}}
@@ -202,14 +205,7 @@ export class TablaBarras extends React.Component {
                     </Table>
                 </TouchExampleWrapper>
 
-                <div className="pull-right">
-                    <button className="btn btn-xs btn-default">
-                        Agregar
-                    </button>
-                    <button className="btn btn-xs btn-default">
-                        Eliminar
-                    </button>
-                </div>
+                {this.props.children}
             </div>
         )
     }
@@ -217,7 +213,7 @@ export class TablaBarras extends React.Component {
 TablaBarras.propTypes = {
     // Objetos
     barras: PropTypes.arrayOf(PropTypes.string).isRequired,
-    barraSeleccionada: PropTypes.string.isRequired,
+    barraSeleccionado: PropTypes.string.isRequired,
     // Permisos
     puedeModificar: PropTypes.bool.isRequired,
     // Metodos

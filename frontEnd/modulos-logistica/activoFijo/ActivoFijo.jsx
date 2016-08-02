@@ -29,6 +29,10 @@ export class ActivoFijo extends React.Component {
         this.puedeAgregarArticulo = this.props.permisos.indexOf('activoFijo-agregarArticulo')!=-1
         this.puedeModificarArticulo = this.props.permisos.indexOf('activoFijo-modificarArticulo')!=-1
         this.puedeEliminarArticulo = this.props.permisos.indexOf('activoFijo-eliminarArticulo')!=-1
+        // permisos barras
+        this.puedeAgregarBarra = this.props.permisos.indexOf('activoFijo-agregarBarra')!=-1
+        this.puedeModificarBarra = this.props.permisos.indexOf('activoFijo-modificarBarra')!=-1
+        this.puedeEliminarBarra = this.props.permisos.indexOf('activoFijo-eliminarArticulo')!=-1
 
         // ########## Metodos
         this.seleccionarAlmacen = (idAlmacen)=>{
@@ -151,7 +155,10 @@ export class ActivoFijo extends React.Component {
                     puedeAgregarArticulo={this.puedeAgregarArticulo}
                     puedeModificarArticulo={this.puedeModificarArticulo}
                     puedeEliminarArticulo={this.puedeEliminarArticulo}
-
+                    // permisos barra
+                    puedeAgregarBarra={this.puedeAgregarBarra}
+                    puedeModificarBarra={this.puedeModificarBarra}
+                    puedeEliminarBarra={this.puedeEliminarBarra}
                 />
 
                 {/* ################# MENU LATERAL ################# */}

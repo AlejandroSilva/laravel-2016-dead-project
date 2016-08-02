@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\AlmacenAF;
 use App\AlmacenAF_ArticuloAF;
 use App\ArticuloAF;
+use App\CodigoBarra;
 use App\ProductoAF;
 use App\Role;
 // Permisos
@@ -295,7 +296,7 @@ class ActivosFijosController extends Controller {
 
         // crear el producto
         $articulo = ArticuloAF::create(Input::all());
-        return response()->json($articulo, 200);
+        return response()->json(ArticuloAF::formato_tablaArticulosAF($articulo), 200);
     }
 
     // PUT api/activo-fijo/articulo/{idArticuloAF}
@@ -357,6 +358,58 @@ class ActivosFijosController extends Controller {
         return response()->json([]);
     }
 
+    /** ####################### ARTICULOS ###################### **/
+
+    // POST api/activo-fijo/barras/nuevo
+    public function api_barra_nueva(Request $request){
+        // validar si se tienen los permisos para agregar un producto
+        $user = Auth::user();
+        if(!$user || !$user->can('activoFijo-agregarBarra'))
+            return response()->json(['error'=>['No tiene permisos para agregar un codigo de barra']], 403);
+
+        $barraNuevoRules = [
+            // debe existir el articulo
+            'idArticuloAF' => 'required|exists:acticulos_activo_fijo,idArticuloAF',
+            // la barra debe ser unica
+            'barra' => 'required|string|unique:codigos_barra,barra'
+        ];
+        $errorMessages = [
+            'idArticuloAF.required' => 'Articulo requerido',
+            'idArticuloAF.exists' => 'Articulo no existe',
+            'barra.required' => 'barra requerido',
+            'barra.string' => 'debe ser un string',
+            'barra.unique' => 'ya existe un producto con ese código',
+        ];
+        $validator = Validator::make(Input::all(), $barraNuevoRules, $errorMessages);
+        if($validator->fails()){
+            $error = $validator->messages();
+            return response()->json($error, 400);
+        }
+
+        // crear la barra
+        CodigoBarra::create(Input::all());
+
+        // retornar el articulo con sus barras actualizadas
+        $articulo = ArticuloAF::find(Input::get('idArticuloAF'));
+        return response()->json(ArticuloAF::formato_tablaArticulosAF($articulo), 200);
+    }
+
+    // DELETE api/activo-fijo/barra/{codBarra}
+    public function api_barra_eliminar($codBarra){
+        // validar si se tienen los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('activoFijo-eliminarBarra'))
+            return response()->json(['error'=>'No tiene permisos para eliminar.'], 403);
+
+        // verificar que el articulo exista
+        $codigo = CodigoBarra::find($codBarra);
+        if(!$codigo){
+            return response()->json(['error', 'Código de barra no encontrado'], 400);
+        }
+
+        $codigo->delete();
+        return response()->json([]);
+    }
 
     /** ####################### ALMACENES ###################### **/
 

@@ -21,10 +21,14 @@ axiosRaw.interceptors.response.use((response)=>{
 
 export default {
     activoFijo: {
-        // productos : {
-        //     buscar: (barra)=>
-        //         axios.get(`/api/activo-fijo/productos/buscar?barra=${barra}`),
-        // },
+        barra: (barra)=>({
+            eliminar: ()=>
+                axios.delete(`/api/activo-fijo/barra/${barra}`),
+        }),
+        barras: ({
+            nuevo: (datos)=>
+                axios.post(`/api/activo-fijo/barras/nuevo`, datos),
+        }),
         articulo: (idArticuloAF)=>({
             actualizar: (datos)=>
                 axios.put(`/api/activo-fijo/articulo/${idArticuloAF}`, datos),

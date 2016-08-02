@@ -11,6 +11,7 @@ import { Table, Column, Cell } from 'fixed-data-table'
 import { TablaProductos, TablaArticulos, TablaBarras } from './Tablas.jsx'
 import { ModalAgregarProducto } from './ModalAgregarProducto.jsx'
 import { ModalAgregarArticulo } from './ModalAgregarArticulo.jsx'
+import { ModalAgregarBarra } from './ModalAgregarBarra.jsx'
 import { ModalConfirmacion } from '../../../shared/ModalConfirmacion.jsx'
 
 // Styles
@@ -31,8 +32,8 @@ export class ModalMantenedorMaestra extends React.Component {
             articulo_scrollToRow: 0,
             // TablaBarras
             barras: [],
-            barraSeleccionada: '',
-            barar_scrollToRow: 0,
+            barraSeleccionado: '',
+            barra_scrollToRow: 0,
         }
         this.state = defaultState
         this.showModal = ()=>{
@@ -65,25 +66,34 @@ export class ModalMantenedorMaestra extends React.Component {
             // buscar los articulos que tenga el producto
             api.activoFijo.producto(this.state.productoSkuSeleccionado).articulos()
                 .then(articulos=>{
-                    this.setState({articulos}, onComplete)
+                    onComplete(articulos)
+                })
+                .catch(()=>{
+                    onComplete([])
                 })
         }
 
-        // Productos: Tabla Principal
+        // Productos: Tabla Principal Productos
         this.seleccionarProducto = (skuProducto, rowIndex)=>{
             this.setState({
                 // hacer scroll hasta el producto
                 productoSkuSeleccionado: skuProducto,
                 producto_scrollToRow: rowIndex,
                 // al seleccionar un producto, se deja de des-selecciona el ultimo articulo tomado
+                articulos: [],
                 idArticuloSeleccionado: 0,
                 articulo_scrollToRow: 0,
                 // al seleccionar un producto, se deja de des-selecciona la ultima barra tomada
-                barraSeleccionada: '',
-                barar_scrollToRow: 0,
+                barras: [],
+                barraSeleccionado: '',
+                barra_scrollToRow: 0,
             }, ()=>{
                 // despues de seleccionar un producto, se descarga la lista actualizada de articulos
-                this.buscarArticulosDeProducto()
+                this.buscarArticulosDeProducto((articulos)=>{
+                    this.setState({
+                        articulos
+                    })
+                })
             })
         }
         this.actualizarProducto = (sku, datos)=>{
@@ -157,15 +167,15 @@ export class ModalMantenedorMaestra extends React.Component {
                 })
         }
 
-        // Articulos: Tabla Principal
+        // Articulos: Tabla Principal Articulos
         this.seleccionarArticulo = (articulo, rowIndex)=>{
             this.setState({
                 idArticuloSeleccionado: articulo.idArticuloAF,
                 articulo_scrollToRow: rowIndex,
                 barras: articulo.barras,
                 // al seleccionar un producto, se deja de des-selecciona la ultima barra tomada
-                barraSeleccionada: '',
-                barar_scrollToRow: 0,
+                barraSeleccionado: '',
+                barra_scrollToRow: 0,
             })
         }
         this.actualizarArticulo = (idArticuloAF, datos)=>{
@@ -190,7 +200,19 @@ export class ModalMantenedorMaestra extends React.Component {
             resp
                 .then(resp=>{
                     // actualizar los articulos del producto
-                    this.buscarArticulosDeProducto()
+                    this.buscarArticulosDeProducto((articulos)=>{
+                        // al crear un nuevo producto, se quita la seleccion de articulo, y barras
+                        this.setState({
+                            // articulos
+                            articulos,
+                            idArticuloSeleccionado: 0,
+                            articulo_scrollToRow: 0,
+                            // barras
+                            barras: [],
+                            barraSeleccionado: '',
+                            barra_scrollToRow: 0,
+                        })
+                    })
                 })
             return resp
         }
@@ -208,25 +230,109 @@ export class ModalMantenedorMaestra extends React.Component {
                     // cuando se elimine el producto, se oculta el modal
                     this.hideModalEliminarArticulo()
                     // una vez eliminado, se descarga la lista de articulos del producto nuevamente
-                    this.buscarArticulosDeProducto( ()=>{
+                    this.buscarArticulosDeProducto((articulos)=>{
                         // "articulo_scrollToRow" tiene el index del elemento seleccionado para eliminar, luego de
                         // ser elinado, se puede seleccionar la misma posicion
                         this.setState({
-                            //articulo_scrollToRow: this.state.articulo_scrollToRow,
-                            idArticuloSeleccionado: 0
+                            // articulos
+                            articulos,
+                            articulo_scrollToRow: this.state.articulo_scrollToRow,
+                            idArticuloSeleccionado: 0,
+                            // barras
+                            barras: [],
+                            barraSeleccionado: '',
+                            barra_scrollToRow: 0,
                         })
                     })
                 })
                 .catch(err=>{
+                    this.hideModalEliminarArticulo()
                     let msgs = _.values(err.data).join('. ')
                     console.error("Error al eliminar producto ", msgs)
                     this.refNotify.error("Error al eliminar producto", msgs, 4*1000);
                 })
         }
 
-        // Tabla Barras
+        // Barras: Tabla Principal Barras
         this.seleccionarBarra = (barra)=>{
-            console.log('barra', barra)
+            let indexBarra = this.state.barras.indexOf(bar=> bar==barra)
+            this.setState({
+                barraSeleccionado: barra,
+                barra_scrollToRow: indexBarra,
+            })
+        }
+
+        // Barras: Modal Agregar Barra
+        this.showModalAgregarBarra = ()=>{
+            this.refModalAgregarBarra.showModal()
+        }
+        this.agregarBarra = (datos)=>{
+            let resp = api.activoFijo.barras.nuevo(datos)
+            resp
+                .then(articuloActualizado=>{
+                    console.log(articuloActualizado)
+                    // ocultar modal (se hace en ModalAgregarBarra)
+                    let indexBarra = articuloActualizado.barras.indexOf(barra=> barra==datos.barra)
+
+                    this.setState({
+                           // actualizar la lista
+                        barras: articuloActualizado.barras,
+                           // seleccionar el nuevo barra
+                        barraSeleccionado: datos.barra,
+                        barra_scrollToRow: indexBarra,
+                    })
+
+                    // todo: mejorar esto
+                    // al agregar un barra, actualizar todos los articulos
+                    this.buscarArticulosDeProducto(articulos=>{
+                        this.setState({articulos})
+                    })
+                })
+            return resp
+        }
+
+        // Barras: Modal Eliminar Articulo
+        this.showModalEliminarBarra = ()=>{
+            this.refModalEliminarBarra.showModal()
+        }
+        this.hideModalEliminarBarra = ()=>{
+            this.refModalEliminarBarra.hideModal()
+        }
+        this.eliminarBarra = ()=>{
+            console.error('PENDIENTE, API eliminar barra')
+            return api.activoFijo.barra(this.state.barraSeleccionado).eliminar()
+                .then(resp=>{
+                    // cuando se elimine el producto, se oculta el modal
+                    this.hideModalEliminarBarra()
+                    // una vez eliminado, se descarga la lista de articulos del producto nuevamente
+                    this.buscarArticulosDeProducto(articulos=>{
+                        // buscar el nuevo id del idArticuloAFSeleccionado, es probable que tenga un indice diferente en lista actualizada
+                        let articulo = { barras:[] }
+                        let indexArticuloSeleccionado = -1
+                        articulos.forEach((art, index)=>{
+                            if(art.idArticuloAF==this.state.idArticuloSeleccionado){
+                                articulo = art
+                                indexArticuloSeleccionado = index
+                            }
+                        })
+
+                        this.setState({
+                            articulos,
+                            //idArticuloSeleccionado: 0,
+                            articulo_scrollToRow: indexArticuloSeleccionado,
+                            // TablaBarras
+                            barras: articulo.barras,
+                            barraSeleccionado: '',
+                            barra_scrollToRow: 0,
+                        })
+                    })
+                })
+                .catch(err=>{
+                    this.hideModalEliminarBarra()
+                    let msgs = _.values(err.data).join('. ')
+                    console.error("Error al eliminar codigo de barra", msgs)
+                    this.refNotify.error("Error al eliminar código de barra", msgs, 4*1000);
+                })
         }
     }
 
@@ -238,7 +344,7 @@ export class ModalMantenedorMaestra extends React.Component {
                 animation={false}
                 dialogClassName={cssModal.modalMantenedorProductos}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Maestra de Productos</Modal.Title>
+                    <Modal.Title>Maestra de Activo Fijo</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
@@ -309,12 +415,29 @@ export class ModalMantenedorMaestra extends React.Component {
                     {/* === BARRAS === */}
                     <TablaBarras
                         barras={this.state.barras}
-                        barraSeleccionada={this.state.barraSeleccionada}
+                        barraSeleccionado={this.state.barraSeleccionado}
                         // permisos
                         puedeModificar={true}
                         // metodos
                         seleccionarBarra={this.seleccionarBarra}
-                    />
+                    >
+                        <div className="pull-right">
+                            <button className="btn btn-xs btn-default"
+                                    // debe tener los permisos, y debe haber un articulo seleccionado
+                                    disabled={!this.props.puedeAgregarBarra || this.state.idArticuloSeleccionado==0}
+                                    onClick={this.showModalAgregarBarra}
+                            >
+                                Agregar
+                            </button>
+                            <button className="btn btn-xs btn-default"
+                                    // debe tener los permisos y debe haber un barra seleccionado
+                                    disabled={!this.props.puedeEliminarBarra || this.state.barraSeleccionado==''}
+                                    onClick={this.showModalEliminarBarra}
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </TablaBarras>
 
 
                     {/* === MODALES === */}
@@ -353,6 +476,25 @@ export class ModalMantenedorMaestra extends React.Component {
                         onAccept={this.eliminarArticulo}
                         onCancel={this.hideModalEliminarArticulo}
                     />
+                    {/* Agregar Barra*/}
+                    <ModalAgregarBarra
+                        ref={ref=>this.refModalAgregarBarra=ref}
+                        skuProducto={this.state.productoSkuSeleccionado}
+                        idArticuloSeleccionado={this.state.idArticuloSeleccionado}
+                        agregarBarra={this.agregarBarra}
+                    />
+                    {/* Eliminar Barra */}
+                    <ModalConfirmacion
+                        ref={ref=>this.refModalEliminarBarra=ref}
+                        textModalHeader="¿Seguro que desea eliminar el Código de Barra?"
+                        //textDescription="lkjasldkj"
+                        textCancel="Cancelar"
+                        textAccept="Eliminar"
+                        acceptClassname="btn-danger"
+                        // Metodos
+                        onAccept={this.eliminarBarra}
+                        onCancel={this.hideModalEliminarBarra}
+                    />
                 </Modal.Body>
             </Modal>
         )
@@ -366,5 +508,9 @@ ModalMantenedorMaestra.propTypes = {
     // Permisos Articulos
     puedeAgregarArticulo: PropTypes.bool.isRequired,
     puedeModificarArticulo: PropTypes.bool.isRequired,
-    puedeEliminarArticulo: PropTypes.bool.isRequired
+    puedeEliminarArticulo: PropTypes.bool.isRequired,
+    // Permisos Barra
+    puedeAgregarBarra: PropTypes.bool.isRequired,
+    puedeModificarBarra: PropTypes.bool.isRequired,
+    puedeEliminarBarra: PropTypes.bool.isRequired
 }

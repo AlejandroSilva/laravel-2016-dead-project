@@ -145,6 +145,9 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('activo-fijo/articulos/nuevo',                  'ActivosFijosController@api_articulos_nuevo');
         Route::put('activo-fijo/articulo/{idArticuloAF}',           'ActivosFijosController@api_articulo_actualizar');
         Route::delete('activo-fijo/articulo/{idArticuloAF}',        'ActivosFijosController@api_articulo_eliminar');
+        // barra
+        Route::post('activo-fijo/barras/nuevo',                     'ActivosFijosController@api_barra_nueva');
+        Route::delete('activo-fijo/barra/{codBarra}',               'ActivosFijosController@api_barra_eliminar');
         // almacenes
         Route::get('activo-fijo/almacenes/buscar',                  'ActivosFijosController@api_almacenes_buscar');
         Route::post('activo-fijo/almacen/nuevo',                    'ActivosFijosController@api_almacen_nuevo');
