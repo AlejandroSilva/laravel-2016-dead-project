@@ -9,6 +9,13 @@
     display: inline-block;
     vertical-align: top;
 }
+.tablaProductos :global(.public_fixedDataTableCell_cellContent),
+.tablaArticulos :global(.public_fixedDataTableCell_cellContent),
+.tablaBarras :global(.public_fixedDataTableCell_cellContent) {
+    /* tiene padding 8 por defecto */
+    padding: 1px;
+}
+
 .titulo-tabla {
     text-align: center;
     padding-top: 0;
@@ -25,7 +32,7 @@
     width: 100%;
 }
 /* NumberCell */
-.td-precio input{
+.number-cell input{
     width: 100%;
 }
 

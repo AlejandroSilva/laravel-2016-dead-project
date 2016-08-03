@@ -35,7 +35,7 @@ export class TablaProductos extends React.Component {
                     // Header
                     headerHeight={30}
                     // Row
-                    rowHeight={28}
+                    rowHeight={22}
                     rowsCount={productos.length}>
                         <Column
                             header={<Cell>#</Cell>}
@@ -124,7 +124,7 @@ export class TablaArticulos extends React.Component {
                         // Header
                         headerHeight={30}
                         // Row
-                        rowHeight={28}
+                        rowHeight={22}
                         rowsCount={articulos.length}>
                             <Column
                                 header={<Cell>ID</Cell>}
@@ -188,7 +188,7 @@ export class TablaBarras extends React.Component {
                         // Header
                         headerHeight={30}
                         // Row
-                        rowHeight={28}
+                        rowHeight={22}
                         rowsCount={barras.length}>
                         <Column
                             header={<Cell>Barra</Cell>}
@@ -221,9 +221,7 @@ TablaBarras.propTypes = {
 
 // ## ######################### Componentes privados ######################### ## //
 const TextoCell = ({texto, editable, filaSeleccionada, changeData, ...props})=>(
-    <Cell {...props}
-          className={cx('texto-cell', {'selected-row': filaSeleccionada})}
-    >
+    <Cell {...props} className={cx('texto-cell', {'selected-row': filaSeleccionada})}>
         <InputTexto
             asignada={texto}
             onGuardar={changeData}
@@ -234,9 +232,7 @@ const TextoCell = ({texto, editable, filaSeleccionada, changeData, ...props})=>(
     </Cell>
 )
 const NumberCell = ({number, editable, filaSeleccionada, changeData,  ...props})=>(
-    <Cell {...props}
-          className={cx('td-precio', {'selected-row': filaSeleccionada})}
-    >
+    <Cell {...props} className={cx('number-cell', {'selected-row': filaSeleccionada})}>
         <InputNumber
             asignada={number}
             onGuardar={changeData}
