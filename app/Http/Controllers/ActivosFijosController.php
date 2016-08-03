@@ -294,8 +294,13 @@ class ActivosFijosController extends Controller {
             return response()->json($error, 400);
         }
 
-        // crear el producto
+        // se crea el producto en la BD
         $articulo = ArticuloAF::create(Input::all());
+
+        // agregar al almacen disponible el "stock" entregado por el usuario
+        $almacenDisponible = AlmacenAF::find(1);
+        $almacenDisponible->agregarStockArticulo($articulo->idArticuloAF, Input::get('stock'));
+
         return response()->json(ArticuloAF::formato_tablaArticulosAF($articulo), 200);
     }
 
@@ -306,32 +311,45 @@ class ActivosFijosController extends Controller {
         if(!$user || !$user->can('activoFijo-modificarArticulo'))
             return response()->json(['error'=>'No tiene permisos para modificar un articulo'], 403);
 
-        // verificar que el articulo exista
-        $articulo = ArticuloAF::find($idArticuloAF);
-        if(!$articulo){
-            return response()->json(['idArticulo', 'Articulo no encontrado'], 400);
-        }
+        // IMPORTANTE: cambiar el stock de un articulo es particularmente delicado:
+        // ## aumentar la cantidad no se corren muchos riesgos
+        // ## disminuir la cantidad es complicado: hay que revisar que no se descuenten mas de los que estan asignados
+        //    a los distintos almacenes, para no generar inconsistencia con los datos, asegurar esa consistencia es
+        //    complicado (por la cantidad de validaciones), asi que por ahora se deshabilita la posibilidad de cambiar
+        //    el stock "a mano"
+        // ##### SI SE DESEA CAMBIAR EL STOCK, HAY QUE: CAMBIAR EL STOCK DE LA TABLA ARTICULOS, Y CAMBIAR EL      ######
+        // ##### STOCK DEL ARTICULO DE LA TABLA "DISPONIBLE"                                                      ######
 
-        $articuloRules = [
-            //'SKU' => 'required|max:32|unique:productos_activo_fijo',
-            'stock' => 'required|integer',
-        ];
-        $errorMessages = [
-            'stock.required' => 'stock requerido',
-            'stock.integer' => 'debe ser un numero',
-        ];
-        $validator = Validator::make(Input::all(), $articuloRules, $errorMessages);
+        return response()->json([
+            'error'=>['cambio manual del stock de un articulo deshabilitado, pida al administrador del sistema que realice el cambio manualmente']
+        ], 503);
 
-        if($validator->fails()){
-            $error = $validator->messages();
-            return response()->json($error, 400);
-        }
-
-        // si el input es valido, entonces actualizar
-        $articulo->stock = Input::get('stock');
-        $articulo->save();
-
-        return response()->json([]);
+//        // verificar que el articulo exista
+//        $articulo = ArticuloAF::find($idArticuloAF);
+//        if(!$articulo){
+//            return response()->json(['idArticulo', 'Articulo no encontrado'], 400);
+//        }
+//
+//        $articuloRules = [
+//            //'SKU' => 'required|max:32|unique:productos_activo_fijo',
+//            'stock' => 'required|integer',
+//        ];
+//        $errorMessages = [
+//            'stock.required' => 'stock requerido',
+//            'stock.integer' => 'debe ser un numero',
+//        ];
+//        $validator = Validator::make(Input::all(), $articuloRules, $errorMessages);
+//
+//        if($validator->fails()){
+//            $error = $validator->messages();
+//            return response()->json($error, 400);
+//        }
+//
+//        // si el input es valido, entonces actualizar
+//        $articulo->stock = Input::get('stock');
+//        $articulo->save();
+//
+//        return response()->json([]);
     }
 
     // DEL /api/activo-fijo/articulo/{idArticuloAF}
@@ -347,18 +365,46 @@ class ActivosFijosController extends Controller {
             return response()->json(['idArticulo', 'Articulo no encontrado'], 400);
         }
 
-        // tiene articulos?
+        // no se puede eliminar un articulo si tiene barras asociadas
         if($articulo->barras()->count()>0)
-            return response()->json(
-                ['barras'=>'el articulo tiene barras asociadas, eliminelas e intente nuevamente'],
-                400
-            );
+            return response()->json(['barras'=>'el Articulo tiene Códigos de Barra asociadas, eliminelos e intente nuevamente'], 400);
+
+        // no se puede eliminar un articulo si este ha sido agregado a una pre-guia de despacho
+        if($articulo->preguias->count() > 0)
+            return response()->json(['barras'=>'el Articulo tiene Pre-guias asociadas, no puede ser eliminado'], 400);
+
+        // no se puede eliminar un articulo si tiene stock asignado a un almacen
+        $erroresDeAlmacenes = $articulo->existencias_en_almacenes
+            ->map(function($almacenArticulo){
+                $pivot = $almacenArticulo->pivot;
+                // si el producto esta en un almacen que no sea "disponible", entonces se cuenta como un error
+                if($pivot->idAlmacenAF !=1 ){
+                    $almacen = AlmacenAF::find($pivot->idAlmacenAF);
+                    return ["Tiene stock asignado de $pivot->stockActual en el almacen '$almacen->nombre' (id:$pivot->idAlmacenAF)"];
+                }else
+                    return null;
+            })
+            ->filter(function($error){
+                return $error!=null;
+            });
+
+        // si existe stock del articulo algun almacen (distinto a "disponible"), entonces no se puede eliminar
+        if( $erroresDeAlmacenes->count()>0 ){
+            return response()->json( array_values( $erroresDeAlmacenes->toArray()), 400 );
+        }
+
+        // si llega hasta aca, eliminar el stock en "disponible", y luego eliminar el producto
+        $almacenDisponible = AlmacenAF::find(1);
+        $stockEnDisponible = $almacenDisponible->stockArticulo($articulo->idArticuloAF);
+        $almacenDisponible->quitarStockArticulo($articulo->idArticuloAF, $stockEnDisponible);
 
         $articulo->delete();
+
+        // TODO: lanza un error 500 cuando se elimina un articulo que tenga haya sido
         return response()->json([]);
     }
 
-    /** ####################### ARTICULOS ###################### **/
+    /** ######################### BARRAS ####################### **/
 
     // POST api/activo-fijo/barras/nuevo
     public function api_barra_nueva(Request $request){
@@ -444,9 +490,12 @@ class ActivosFijosController extends Controller {
                     return AlmacenAF_ArticuloAF::formato_tablaArticulos($almArt);
                 })
                 ->sort(function($a, $b){
+                    // puede existir el caso en donde un articulo no tenga codigo de barras
+                    $barra_A = isset($a['barras'][0])? $a['barras'][0] : '';
+                    $barra_B = isset($b['barras'][0])? $b['barras'][0] : '';
                     // ordenados por sku, luego por el primer codigo de barra de cada uno, y finalmente por almacen
                     return strcmp($a['SKU'], $b['SKU'])
-                        ?: strcmp($a['barras'][0], $b['barras'][0])
+                        ?: strcmp($barra_A, $barra_B)
                             ?: strcmp($a['idAlmacenAF'], $b['idAlmacenAF']);
                 })
                 ->toArray()

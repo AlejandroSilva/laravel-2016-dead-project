@@ -37,10 +37,10 @@ class ArticuloAF extends Model {
     }
 
     // tabla intermedia preguia-articulos
-//    public function preguias(){
-//        return $this->belongsToMany('App\PreguiaDespacho', 'preguia_articulo', 'codArticuloAF', 'idPreguia')
-//        ->withPivot('retornado');
-//    }
+    public function preguias(){
+        return $this->belongsToMany('App\PreguiaDespacho', 'preguia_articulo', 'idArticuloAF', 'idPreguia')
+            ->withPivot('stockEntregado', 'stockRetornado');
+    }
     
     // #### Formatear
     static function formato_tablaArticulosAF($articulo){
@@ -68,12 +68,11 @@ class ArticuloAF extends Model {
                 return $barra->barra;
             }),
             'existencias' => $articulo->existencias_en_almacenes
-                ->map(function($almaArti){
-                    //return $almaArti;
+                ->map(function($almacenArticulo){
                     return [
-                        'idAlmacenAF' => $almaArti->pivot->idAlmacenAF,
-                        'idArticuloAF' => $almaArti->pivot->idArticuloAF,
-                        'stockActual' => $almaArti->pivot->stockActual
+                        'idAlmacenAF' => $almacenArticulo->pivot->idAlmacenAF,
+                        'idArticuloAF' => $almacenArticulo->pivot->idArticuloAF,
+                        'stockActual' => $almacenArticulo->pivot->stockActual
                     ];
                 })
         ];

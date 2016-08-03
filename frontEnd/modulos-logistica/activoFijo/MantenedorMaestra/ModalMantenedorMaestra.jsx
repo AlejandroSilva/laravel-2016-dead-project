@@ -180,6 +180,7 @@ export class ModalMantenedorMaestra extends React.Component {
             })
         }
         this.actualizarArticulo = (idArticuloAF, datos)=>{
+            console.error("el API para actualizar el stock de un producto se deshabilito, en el codigo fuente existe mas información")
             api.activoFijo.articulo(idArticuloAF).actualizar(datos)
                 .then(articuloActualizado=>{
                     // todo: se actualiza un articulo, pero se vuelve a bajar todos los datos, deberia actualizarse solo un elemento
@@ -187,8 +188,8 @@ export class ModalMantenedorMaestra extends React.Component {
                 })
                 .catch(err=>{
                     let msgs = _.values(err.data).join('. ')
-                    console.error("Error al eliminar producto ", msgs)
-                    this.refNotify.error("Error al eliminar producto", msgs, 4*1000);
+                    console.error("Error al actualizar articulo", msgs)
+                    this.refNotify.error("Error al actualizar articulo", msgs, 4*1000);
                 })
         }
 

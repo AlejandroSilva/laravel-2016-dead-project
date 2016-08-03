@@ -24,7 +24,7 @@ class PreguiaDespacho extends Model {
     // tabla intermedia preguia-articulos
     public function articulos(){
         return $this->belongsToMany('App\ArticuloAF', 'preguia_articulo', 'idPreguia', 'idArticuloAF')
-        ->withPivot('stockEntregado', 'stockRetornado');
+            ->withPivot('stockEntregado', 'stockRetornado');
     }
 
     // #### Formatear
