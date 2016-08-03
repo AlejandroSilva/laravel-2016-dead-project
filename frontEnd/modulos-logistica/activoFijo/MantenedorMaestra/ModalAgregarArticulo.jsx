@@ -11,22 +11,22 @@ let cx = classNames.bind(css)
 export class ModalAgregarArticulo extends React.Component{
     constructor(props){
         super(props)
-        this.state = {
+        const defaultState = {
             modalVisible: false,
             articulo: {
-                stock: 0
+                stock: 1
             },
             errors: {}
+        }
+        this.state = {
+            ...defaultState
         }
 
         // Modal
         this.showModal = ()=>{
             this.setState({
-                modalVisible: true,
-                articulo: {
-                    stock: 0
-                },
-                errors: {}
+                ...defaultState,
+                modalVisible: true
             })
         }
         this.hideModal = ()=>{
