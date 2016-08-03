@@ -26,12 +26,12 @@ export class TablaProductos extends React.Component {
         return (
             <div className={cx('tablaProductos')} >
                 <h4 className={cx('titulo-tabla')}>Productos</h4>
-                <TouchExampleWrapper tableWidth={540+20} tableHeight={600}>
+                <TouchExampleWrapper tableWidth={540+20} tableHeight={500}>
                     <Table
                     scrollToRow={this.props.scrollToRow}
                     // Table
                     width={540+20}
-                    height={600}
+                    height={500}
                     // Header
                     headerHeight={30}
                     // Row
@@ -115,11 +115,11 @@ export class TablaArticulos extends React.Component {
         return (
             <div className={cx('tablaArticulos')} >
                 <h4 className={cx('titulo-tabla')}>Articulos</h4>
-                <TouchExampleWrapper tableWidth={180 + 20} tableHeight={600} style={{display: 'inline-block'}}>
+                <TouchExampleWrapper tableWidth={180 + 20} tableHeight={500} style={{display: 'inline-block'}}>
                     <Table
                         // Table
                         width={180 + 20}
-                        height={600}
+                        height={500}
                         scrollToRow={this.props.scrollToRow}
                         // Header
                         headerHeight={30}
@@ -180,11 +180,11 @@ export class TablaBarras extends React.Component {
         return (
             <div className={cx('tablaBarras')} >
                 <h4 className={cx('titulo-tabla')}>Barras</h4>
-                <TouchExampleWrapper tableWidth={width+20} tableHeight={600} style={{display: 'inline-block'}}>
+                <TouchExampleWrapper tableWidth={width+20} tableHeight={500} style={{display: 'inline-block'}}>
                     <Table
                         // Table
                         width={width+ 20}
-                        height={600}
+                        height={500}
                         // Header
                         headerHeight={30}
                         // Row
