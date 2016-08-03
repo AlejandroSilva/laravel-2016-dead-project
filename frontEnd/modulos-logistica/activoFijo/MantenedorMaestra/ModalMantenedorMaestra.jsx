@@ -15,6 +15,7 @@ import { ModalAgregarBarra } from './ModalAgregarBarra.jsx'
 import { ModalConfirmacion } from '../../../shared/ModalConfirmacion.jsx'
 
 // Styles
+import cx from 'classnames'
 import * as cssModal from '../modal.css'
 
 export class ModalMantenedorMaestra extends React.Component {
@@ -363,13 +364,13 @@ export class ModalMantenedorMaestra extends React.Component {
                         seleccionarProducto={this.seleccionarProducto}
                     >
                         <div className="pull-right">
-                            <button className="btn btn-xs btn-default"
+                            <button className={cx('btn btn-xs btn-default', {'hide': !this.props.puedeAgregarProducto})}
                                     onClick={this.showModalAgregarProducto}
                                     // debe tener los permisos
                                     disabled={!this.props.puedeAgregarProducto}>
                                 Agregar
                             </button>
-                            <button className="btn btn-xs btn-default"
+                            <button className={cx('btn btn-xs btn-default', {'hide': !this.props.puedeEliminarProducto})}
                                     onClick={this.showModalEliminarProducto}
                                     // debe tener los permisos y debe haber un producto seleccionado
                                     disabled={!this.props.puedeEliminarProducto || this.state.productoSkuSeleccionado==''}>
@@ -393,14 +394,14 @@ export class ModalMantenedorMaestra extends React.Component {
                         eliminarArticulo={this.eliminarArticulo}
                     >
                         <div className="pull-right">
-                            <button className="btn btn-xs btn-default"
+                            <button className={cx('btn btn-xs btn-default', {'hide': !this.props.puedeAgregarArticulo})}
                                     // debe tener los permisos, y debe haber un producto seleccionado
                                     disabled={!this.props.puedeAgregarArticulo || this.state.productoSkuSeleccionado==''}
                                     onClick={this.showModalAgregarArticulo}
                             >
                                 Agregar
                             </button>
-                            <button className="btn btn-xs btn-default"
+                            <button className={cx('btn btn-xs btn-default', {'hide': !this.props.puedeEliminarArticulo})}
                                     // debe tener los permisos y debe haber un articulo seleccionado
                                     disabled={!this.props.puedeEliminarArticulo || this.state.idArticuloSeleccionado==0}
                                     onClick={this.showModalEliminarArticulo}
@@ -418,14 +419,14 @@ export class ModalMantenedorMaestra extends React.Component {
                         seleccionarBarra={this.seleccionarBarra}
                     >
                         <div className="pull-right">
-                            <button className="btn btn-xs btn-default"
+                            <button className={cx('btn btn-xs btn-default', {'hide': !this.props.puedeAgregarBarra})}
                                     // debe tener los permisos, y debe haber un articulo seleccionado
                                     disabled={!this.props.puedeAgregarBarra || this.state.idArticuloSeleccionado==0}
                                     onClick={this.showModalAgregarBarra}
                             >
                                 Agregar
                             </button>
-                            <button className="btn btn-xs btn-default"
+                            <button className={cx('btn btn-xs btn-default', {'hide': !this.props.puedeEliminarBarra})}
                                     // debe tener los permisos y debe haber un barra seleccionado
                                     disabled={!this.props.puedeEliminarBarra || this.state.barraSeleccionado==''}
                                     onClick={this.showModalEliminarBarra}
