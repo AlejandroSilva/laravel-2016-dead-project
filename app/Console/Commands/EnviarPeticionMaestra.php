@@ -36,7 +36,6 @@ class EnviarPeticionMaestra extends Command {
     protected $SEI_DESARROLLO = [
         ['pm5k.sk@gmail.com', 'ASILVA GMAIL DEV'],
         ['asilva@seiconsultores.cl', 'ASILVA SEICONSULTORES DEV'],
-        ['web-w1m6Yi@mail-tester.com', 'mail tester'],
     ];
     protected $SEI_nomina_bcc = [
         ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
@@ -110,6 +109,7 @@ class EnviarPeticionMaestra extends Command {
             'to' => [
                 ['asilva@seiconsultores.cl', 'ASILVA SEICONSULTORES'],
                 ['pm5k.sk@gmail.com', 'ASILVA GMAIL'],
+                ['web-w1m6Yi@mail-tester.com', 'mail tester'],
             ],
             'bcc' => []
         ], []);
