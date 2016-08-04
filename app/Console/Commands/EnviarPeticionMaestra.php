@@ -34,7 +34,8 @@ class EnviarPeticionMaestra extends Command {
     }
 
     protected $SEI_DESARROLLO = [
-        ['pm5k.sk@gmail.com', 'ASILVA DESARROLLO'],
+        ['pm5k.sk@gmail.com', 'ASILVA GMAIL DEV'],
+        ['asilva@seiconsultores.cl', 'ASILVA SEICONSULTORES DEV'],
     ];
     protected $SEI_nomina_bcc = [
         ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
@@ -80,7 +81,9 @@ class EnviarPeticionMaestra extends Command {
     public function handle() {
         $nombreCliente = $this->argument('nombreCortoCliente');
 
-        if($nombreCliente=="PUC")
+        if($nombreCliente=="TEST")
+            $this->procesarTEST();
+        else if($nombreCliente=="PUC")
             $this->procesarPUC();
         else if($nombreCliente=="FCV")
             $this->procesarFCV();
@@ -96,7 +99,20 @@ class EnviarPeticionMaestra extends Command {
             $this->log("[PeticionMaestra] cliente '$nombreCliente' no programado.");
         }
     }
-    
+
+    private function procesarTEST(){
+        $this->log("[PeticionMaestra TEST] Cliente TEST: pedir maestra todos los XXX... esto se lanza manualmente");
+
+        // enviar el correo al cliente
+        $this->enviarCorreos('emails.peticionMaestra.GENERICA', [
+            'subject' => 'Solicitud de Maestra TEST',
+            'to' => [
+                ['asilva@seiconsultores.cl', 'ASILVA SEICONSULTORES'],
+                ['pm5k.sk@gmail.com', 'ASILVA GMAIL'],
+            ],
+            'bcc' => [[]]
+        ], []);
+    }
     
     private function procesarPUC(){
         $this->log("[PeticionMaestra] Cliente PUC: pedir maestra todos los dias LUNES...");
