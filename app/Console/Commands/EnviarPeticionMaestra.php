@@ -110,7 +110,7 @@ class EnviarPeticionMaestra extends Command {
                 ['asilva@seiconsultores.cl', 'ASILVA SEICONSULTORES'],
                 ['pm5k.sk@gmail.com', 'ASILVA GMAIL'],
             ],
-            'bcc' => [[]]
+            'bcc' => []
         ], []);
     }
     
