@@ -315,7 +315,7 @@ class NominasController extends Controller {
     }
     // POST api/nomina/{idNomina}/operador/{usuarioRUN}
     function api_agregarOperador($idNomina, $usuarioRUN, Request $request){
-        // el usuario existe?
+        // el usuario tiene permisos?
         $user = Auth::user();
         if(!$user)
             return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
@@ -333,10 +333,15 @@ class NominasController extends Controller {
         // la nomina se encuentra pendiente?
         if($nomina->idEstadoNomina!=2)
             return response()->json(['idNomina'=>'Para agregar el usuario, la nómina debe estar Pendiente'], 400);
+
         // el operador existe? se entrega un 204 y en el frontend se muestra un formulario
         $operador = User::where('usuarioRUN', $usuarioRUN)->first();
         if(!$operador)
             return response()->json('', 204);
+
+        // el operador esta bloqueado de participar?
+        if( $operador->bloqueado==true )
+            return response()->json(['error'=>'El usuario esta bloqueado, no puede participar de inventarios'], 400);
 
         // Si el operador ya esta en la nomina, no hacer nada y devolver la lista como esta
         $operadorExiste = $nomina->usuarioEnDotacion($operador);
