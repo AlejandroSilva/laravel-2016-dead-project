@@ -62,6 +62,10 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porMes');
         Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porRango');
 
+        // Archivo Maestro de clientes
+//        Route::get('archivo-maestro',                               'ArchivoMaestroController@showIndex');
+//        Route::post('api/archivo-maestro/upload',                   'ArchivoMaestroController@api_uploadArchivoMaestro');
+
         // ACTIVOS FIJOS
         Route::get('activo-fijo',                                   'ActivosFijosController@get_index');
         // api (ordenar luego)
@@ -206,6 +210,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('auditoria/{fecha1}/al/{fecha2}/auditor/{idAuditor}',        'AuditoriasController@api_getPorRangoYAuditor');
         Route::get('auditoria/cliente/{idCliente}/dia/{annoMesDia}/estado-general',                 'AuditoriasController@api_estadoGeneral');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado',   'AuditoriasController@api_informarRealizado');
+        Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-revisado',    'AuditoriasController@api_informarRevisado');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-fecha',       'AuditoriasController@api_informarFecha');
         // API USUARIOS
         Route::get('usuario/{idUsuario}/roles',                     'PersonalController@api_getRolesUsuario');

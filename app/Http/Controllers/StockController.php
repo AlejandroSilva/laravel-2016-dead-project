@@ -108,7 +108,7 @@ class StockController extends Controller {
         $nombreOriginal = $archivo->getClientOriginalName();
         $fileName = "$ahora $cliente->nombreCorto -- $nombreOriginal";
 
-        // guardar el archivo en una carpeta publica, y cambiar los permisos para que el grupo puea modifiarlos
+        // guardar el archivo en una carpeta publica, y cambiar los permisos para que el grupo pueda modifiarlos
         $archivo->move( public_path().'/actualizarStock/uploads', $fileName);
         chmod(public_path().'/actualizarStock/uploads/'.$fileName, 0774);   // 0744 por defecto
         
