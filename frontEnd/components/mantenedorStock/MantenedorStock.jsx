@@ -35,14 +35,12 @@ export class MantenedorStock extends React.Component {
 
     onFormSubmit(evt){
         evt.preventDefault();
+        // limpiar la tabla y los errores
         this.setState({
             realizandoPeticion: true,
             resultado: [],
             error: ''
         })
-
-        // limpiar la tabla y los errores
-        this.setState({error:'', resultado: []})
 
         // hacer una llamada con los elementos que se han adjuntado
         let archivoExcel = ReactDOM.findDOMNode(this.refInputArchivo).files[0]
