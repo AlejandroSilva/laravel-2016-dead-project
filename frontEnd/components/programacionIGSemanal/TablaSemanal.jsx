@@ -32,6 +32,7 @@ class TablaInventarios extends React.Component{
                     <col className={css.thHora}/>
                     <col className={css.thDireccion}/>
                     <col className={css.thNomina}/>
+                    <col className={css.thPatentes}/>
                     <col className={css.thUnidadesReales}/>
                     <col className={css.thUnidadesTeoricas}/>
                     <col className={css.thNomimaPago}/>
@@ -107,6 +108,7 @@ class TablaInventarios extends React.Component{
                             />
                             */}
                         </th>
+                        <th className={css.thPatentes}>PTT</th>
                         <th className={css.thUnidadesReales}>U.Cont</th>
                         <th className={css.thUnidadesTeoricas}>U.Teo</th>
                         <th className={css.thNomimaPago}>Nom.Pago</th>

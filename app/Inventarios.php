@@ -76,6 +76,16 @@ class Inventarios extends Model {
         // retornar 0 en caso de ser negativo..
         return $operadores<0? 0 : $operadores;
     }
+    public function __patentesSugeridas__por_ahora_no_se_usa(){
+        $idCliente = $this->local->idCliente;
+        if($idCliente==2 || $idCliente==5){
+            // para el cliente FCV(2) y FSB(5), se calcula PTT=stock/44
+            return $this->stockTeorico/44;
+        }else{
+            // para los otros clientes, se calcula PTT=stock/110
+            return $this->stockTeorico/110;
+        }
+    }
     static function calcularFechaLimiteCaptador($fechaProgramada){
         $cuartoDiasHabilAntes = DiasHabiles::with([])
             // se toman todos los dias habiles ANTERIORES a la fecha de programacion

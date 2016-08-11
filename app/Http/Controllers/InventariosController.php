@@ -463,6 +463,11 @@ class InventariosController extends Controller {
         $inventarios = collect($inventarios)->map(function($inventario) use ($idLider){
             $inventario['nomina_dia']['publicIdNomina']   = Crypt::encrypt($inventario['nomina_dia']['idNomina']);
             $inventario['nomina_noche']['publicIdNomina'] = Crypt::encrypt($inventario['nomina_noche']['idNomina']);
+            // calculo de las patentes (si es FCV(2) y FSB(5), se calcula por 44, otros clientes es por 110
+            $idCliente = $inventario['local']['idCliente'];
+            $inventario['patentes'] = ($idCliente==2 || $idCliente==5)?
+                round($inventario['stockTeorico']/44) :
+                round($inventario['stockTeorico']/110);
             return $inventario;
         })->toArray();
 

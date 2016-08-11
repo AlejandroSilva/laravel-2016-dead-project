@@ -30,14 +30,18 @@
 
 /* FECHA */
 .thFecha{
-    width: 135px !important;
+    width: 95px !important; /* 135 pixeles si tubiera el campo año*/
     background: white;
 }
 .tdFecha{
-    width: 135px !important;
+    width: 95px !important; /* 135 pixeles si tubiera el campo año*/
     background: white;
     vertical-align: middle !important;
     padding: 0px !important;
+}
+/* por espacio, se oculta el año*/
+.tdFecha input:nth-child(4) {
+    display: none;
 }
 
 /* CLIENTE */
@@ -255,6 +259,20 @@
     height: 18px !important;
 }
 
+/* PATENTES */
+.thPatentes {
+    width: 30px !important;
+    background: white;
+}
+.tdPatentes {
+    width: 30px !important;
+    background: white;
+    vertical-align: middle !important;
+    text-align: right;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 /* UNIDADES */
 .thUnidadesReales {
     background: white;
@@ -266,6 +284,7 @@
     background: white;
     width: 43px;
     vertical-align: middle !important;
+    text-align: right;
 }
 
 .thUnidadesTeoricas {
@@ -278,6 +297,7 @@
     background: white;
     width: 40px !important;
     vertical-align: middle !important;
+    text-align: right;
 }
 
 /* NOMINA DE PAGO */

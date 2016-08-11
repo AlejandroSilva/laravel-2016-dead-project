@@ -446,6 +446,10 @@ class RowInventario extends React.Component{
                         {estadoNominas[this.props.inventario.nomina_noche.idEstadoNomina]}
                     </a>
                 </td>
+                {/* Patentes */}
+                <td className={css.tdPatentes}>
+                    {this.props.inventario.patentes}
+                </td>
                 {/* Unidades */}
                 <td className={css.tdUnidadesReales}>
                     {this.props.inventario.unidadesReal}
