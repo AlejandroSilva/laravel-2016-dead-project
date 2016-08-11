@@ -48,7 +48,9 @@ export class EntregaArticulos extends React.Component {
         super(props)
         this.state = {
             idAlmacenDestino: this.props.almacenDestino,
-            articulos: []
+            articulos: [],
+            // todo: el scroll no esta funcionando bien, se mueve al "penultimo elemento"
+            articulo_scrollToRow: null
         }
         this.seleccionarAlmacenDestino = (evt)=>{
             this.setState({idAlmacenDestino: evt.target.value})
@@ -70,16 +72,19 @@ export class EntregaArticulos extends React.Component {
                         }, 0)
                         let articuloDisponible = {
                             idArticuloAF: articulo.idArticuloAF,
-                            sku: articulo.sku,
+                            SKU: articulo.SKU,
                             barras: articulo.barras,
                             descripcion: articulo.descripcion,
                             stockDisponible: _stockDisponible,
                             stockSeleccionado: _stockDisponible>0? 1 : 0    // si existen articulos disponibles, por defecto seleccionar 1
                         }
                         console.log(articuloDisponible)
+                        // se agrega el articulo al final del array
+                        let articulosActualizado = [...this.state.articulos, articuloDisponible]
+                        console.log(articulosActualizado, articulosActualizado.length-1)
                         this.setState({
-                            // se agrega el articulo al final del array
-                            articulos: [...this.state.articulos, articuloDisponible]
+                            articulos: articulosActualizado,
+                            articulo_scrollToRow: articulosActualizado.length-1
                         })
                     }
                 })
@@ -140,6 +145,7 @@ export class EntregaArticulos extends React.Component {
                 {/* Productos */}
                 <div>
                     <TablaEntrega
+                        scrollToRow={this.state.articulo_scrollToRow}
                         articulos={this.state.articulos}
                         cambiarCantidad={this.cambiarCantidad}
                     />

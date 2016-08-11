@@ -40,7 +40,7 @@ export class TablaGeneralArticulos extends React.Component {
                         header={<Cell>Producto</Cell>}
                         cell={ ({rowIndex})=>
                             <CellProducto
-                                sku={this.props.articulos[rowIndex].SKU}
+                                SKU={this.props.articulos[rowIndex].SKU}
                                 descripcion={this.props.articulos[rowIndex].descripcion}
                             />
                         }
@@ -84,19 +84,26 @@ export class TablaGeneralArticulos extends React.Component {
 /** ***************************************** ***************************************** **/
 export class TablaEntrega extends React.Component {
     render(){
+        const HEADER_HEIGTH = 30
+        const ROW_HEIGTH = 60
+        // console.log('scroll top ', this.props.scrollToRow*ROW_HEIGTH + 20)
         return (
-            <TouchExampleWrapper
-                tableWidth={600} // 630 -15 -15
-                tableHeight={250}
-            >
+            // <TouchExampleWrapper
+            //     tableWidth={600} // 630 -15 -15
+            //     //tableHeight={HEADER_HEIGTH + ROW_HEIGTH*6}
+            //     tableHeight={400}
+            // >
                 <Table
+                    //scrollToRow={this.props.scrollToRow}
+                    // todo: el scroll no esta funcionando bien, se mueve al "penultimo elemento"
+                    scrollTop={this.props.scrollToRow*ROW_HEIGTH + 20}
                     // Table
-                    width={390}
-                    height={250}
+                    width={600}
+                    height={HEADER_HEIGTH + ROW_HEIGTH*4 - 10}
                     // Header
-                    headerHeight={30}
+                    headerHeight={HEADER_HEIGTH}
                     // Rows
-                    rowHeight={40}
+                    rowHeight={ROW_HEIGTH}
                     rowsCount={this.props.articulos.length}>
                     {/* # */}
                     <Column
@@ -111,7 +118,7 @@ export class TablaEntrega extends React.Component {
                         header={<Cell>Producto</Cell>}
                         cell={ ({rowIndex})=>
                             <CellProducto
-                                sku={this.props.articulos[rowIndex].SKU}
+                                SKU={this.props.articulos[rowIndex].SKU}
                                 descripcion={this.props.articulos[rowIndex].descripcion}
                             />
                         }
@@ -134,7 +141,8 @@ export class TablaEntrega extends React.Component {
                         </Cell>}
                         cell={ ({rowIndex})=>
                             <Cell className={css.cell}>
-                                {this.props.articulos[rowIndex].stockDisponible}
+                                {/*{this.props.articulos[rowIndex].stockDisponible}*/}
+                                {this.props.scrollToRow==rowIndex? 'seleccionada' : '-' }
                             </Cell> }
                         width={60}
                     />
@@ -153,12 +161,12 @@ export class TablaEntrega extends React.Component {
                         width={60}
                     />
                 </Table>
-            </TouchExampleWrapper>
+            // </TouchExampleWrapper>
         )
     }
 }
 TablaEntrega.propTypes = {
-    // numero: PropTypes.number.isRequired,
+    scrollToRow: PropTypes.number,
     // texto: PropTypes.string.isRequired,
     cambiarCantidad: PropTypes.func.isRequired,
     // arreglo: PropTypes.arrayOf(PropTypes.object).isRequired
@@ -195,7 +203,7 @@ export class TablaTransferencia extends React.Component {
                         header={<Cell>Producto</Cell>}
                         cell={ ({rowIndex})=>
                             <CellProducto
-                                sku={this.props.articulos[rowIndex].SKU}
+                                SKU={this.props.articulos[rowIndex].SKU}
                                 descripcion={this.props.articulos[rowIndex].descripcion}
                             />
                         }
@@ -253,11 +261,9 @@ const CellNumeral = ({numero})=>
     </Cell>
 
 
-const CellProducto = ({sku, descripcion})=> {
-
-    console.log(sku, descripcion)
+const CellProducto = ({SKU, descripcion})=> {
     return <Cell className={cx('cell-producto')}>
-        <p className={cx('producto-sku')}><span>sku</span>{sku}</p>
+        <p className={cx('producto-sku')}><span>sku</span>{SKU}</p>
         <p className={cx('producto-descripcion')}>{descripcion}</p>
     </Cell>
 }
