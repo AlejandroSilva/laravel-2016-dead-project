@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Crypt;
 // PHP Excel
 use PHPExcel;
+use PHPExcel_Style;
 use PHPExcel_IOFactory;
 // Modelos
 use App\Clientes;
@@ -144,7 +145,7 @@ class InventariosController extends Controller {
             $nominaNoche->dotacionTotal = $inventario->dotacionTotalSugerido();
             $nominaNoche->dotacionOperadores = $inventario->dotacionOperadoresSugerido();
             // si la jornada es de "noche"(3), o "dia y noche"(4), entonces la nomina esta habilitada
-            $nominaNoche->idEstadoNomina = ($idJornada==3 || $idJornada==4)? 2 : 1;
+            $nominaNoche->habilitada = ($idJornada==3 || $idJornada==4);
             $nominaNoche->idEstadoNomina = 2; // pendiente
             $nominaNoche->turno = 'Noche';
             $nominaNoche->fechaLimiteCaptador = Inventarios::calcularFechaLimiteCaptador($request->fechaProgramada);
@@ -478,47 +479,101 @@ class InventariosController extends Controller {
     // Función generica para generar el archivo excel
     private function generarWorkbook($inventarios){
         $inventarios = $inventarios->toArray();
-        $inventariosHeader = ['Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Stock', 'Fecha stock', 'Dirección'];
+        $inventariosHeader = [
+            // Local
+            'Fecha', 'Cliente', 'CECO', 'Local', 'Región', 'Comuna', 'Dirección', 'Stock', 'Fecha stock', 'PTT',
+            // Nomina Dia
+            'Dot. Total', 'Dot.Operadores', 'Líder', 'Supervisor', 'Supervisor', 'Hr.Líder', 'Hr.Equipo', 'estado Nomina',
+            // Nomina Noche
+            'Dot. Total', 'Dot.Operadores', 'Líder', 'Supervisor', 'Supervisor', 'Hr.Líder', 'Hr.Equipo', 'estado Nomina',
+        ];
 
         $inventariosArray = array_map(function($inventario){
+            $diaHabilitada = $inventario['nomina_dia']['habilitada']==1;
+            $nocheHabilitada = $inventario['nomina_noche']['habilitada']==1;
             return [
+                // Local (A-J)
                 $inventario['fechaProgramada'],
                 $inventario['local']['cliente']['nombreCorto'],
                 $inventario['local']['numero'],
                 $inventario['local']['nombre'],
                 $inventario['local']['direccion']['comuna']['provincia']['region']['numero'],
                 $inventario['local']['direccion']['comuna']['nombre'],
+                $inventario['local']['direccion']['direccion'],
                 $inventario['local']['stock'],
                 $inventario['fechaStock'],
-                $inventario['local']['direccion']['direccion']
+                $inventario['patentes'],
+                // Nomina Dia (K-R)
+                $diaHabilitada? $inventario['nomina_dia']['dotacionTotal'] : '',
+                $diaHabilitada? $inventario['nomina_dia']['dotacionOperadores'] : '',
+                $diaHabilitada? $inventario['nomina_dia']['idLider'] : '',
+                $diaHabilitada? $inventario['nomina_dia']['idSupervisor'] : '',
+                $diaHabilitada? $inventario['nomina_dia']['idCaptador1'] : '',
+                $diaHabilitada? $inventario['nomina_dia']['horaPresentacionLider'] : '',
+                $diaHabilitada? $inventario['nomina_dia']['horaPresentacionEquipo'] : '',
+                $diaHabilitada? $inventario['nomina_dia']['idEstadoNomina'] : '',
+                // Nomina Noche (S-Z)
+                $nocheHabilitada? $inventario['nomina_noche']['dotacionTotal'] : '',
+                $nocheHabilitada? $inventario['nomina_noche']['dotacionOperadores'] : '',
+                $nocheHabilitada? $inventario['nomina_noche']['idLider'] : '',
+                $nocheHabilitada? $inventario['nomina_noche']['idSupervisor'] : '',
+                $nocheHabilitada? $inventario['nomina_noche']['idCaptador1'] : '',
+                $nocheHabilitada? $inventario['nomina_noche']['horaPresentacionLider'] : '',
+                $nocheHabilitada? $inventario['nomina_noche']['horaPresentacionEquipo'] : '',
+                $nocheHabilitada? $inventario['nomina_noche']['idEstadoNomina'] : '',
             ];
         }, $inventarios);
 
         // Nuevo archivo
         $workbook = new PHPExcel();  // workbook
         $sheet = $workbook->getActiveSheet();
-        $styleArray = array(
-            'font'  => array(
+        $boldStyle = [
+            'font'  => [
                 'bold'  => true,
                 'color' => array('rgb' => '000000'),
                 'size'  => 12,
                 'name'  => 'Verdana'
-            )
-        );
+            ]
+        ];
         $hora = date('d/m/Y h:i:s A',time()-10800);
 
-        $sheet->getStyle('A5:B5')->applyFromArray($styleArray);
-        $sheet->getStyle('C5:D5')->applyFromArray($styleArray);
-        $sheet->getStyle('E5:F5')->applyFromArray($styleArray);
-        $sheet->getStyle('G5:H5')->applyFromArray($styleArray);
-        $sheet->getStyle('I5:J5')->applyFromArray($styleArray);
-        $sheet->getColumnDimension('A')->setWidth(12.5);
-        $sheet->getColumnDimension('D')->setWidth(17);
-        $sheet->getColumnDimension('F')->setWidth(15);
-        $sheet->getColumnDimension('G')->setWidth(12.5);
-        $sheet->getColumnDimension('H')->setWidth(15);
-        $sheet->getColumnDimension('I')->setWidth(15);
-        $sheet->getColumnDimension('J')->setWidth(40);
+        $sheet->getStyle('A5:AR5')->applyFromArray($boldStyle);
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('F')->setAutoSize(true);
+        $sheet->getColumnDimension('G')->setAutoSize(true);
+        $sheet->getColumnDimension('H')->setAutoSize(true);
+        $sheet->getColumnDimension('I')->setAutoSize(true);
+        $sheet->getColumnDimension('J')->setAutoSize(true);
+
+        // Nomina Dia
+        $sheet->mergeCells('K4:R4');
+        $sheet->setCellValue('K4', 'Nómina de Día');
+        $sheet->getStyle('K4')->applyFromArray($boldStyle);
+        $sheet->getStyle("K4")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $sheet->getColumnDimension('K')->setAutoSize(true);
+        $sheet->getColumnDimension('L')->setAutoSize(true);
+        $sheet->getColumnDimension('M')->setAutoSize(true);
+        $sheet->getColumnDimension('N')->setAutoSize(true);
+        $sheet->getColumnDimension('O')->setAutoSize(true);
+        $sheet->getColumnDimension('P')->setAutoSize(true);
+        $sheet->getColumnDimension('Q')->setAutoSize(true);
+        $sheet->getColumnDimension('R')->setAutoSize(true);
+
+        // Nomina Noche
+        $sheet->mergeCells('S4:Z4');
+        $sheet->setCellValue('S4', 'Nómina de Noche');
+        $sheet->getStyle('S4')->applyFromArray($boldStyle);
+        //$sheet->getStyle('S4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $sheet->getColumnDimension('S')->setAutoSize(true);
+        $sheet->getColumnDimension('T')->setAutoSize(true);
+        $sheet->getColumnDimension('U')->setAutoSize(true);
+        $sheet->getColumnDimension('V')->setAutoSize(true);
+        $sheet->getColumnDimension('W')->setAutoSize(true);
+        $sheet->getColumnDimension('X')->setAutoSize(true);
+        $sheet->getColumnDimension('Y')->setAutoSize(true);
+        $sheet->getColumnDimension('Z')->setAutoSize(true);
+
         $sheet->setCellValue('F1', 'Generado el:');
         $sheet->setCellValue('G1', $hora);
         $sheet->fromArray($inventariosHeader, NULL, 'A5');
