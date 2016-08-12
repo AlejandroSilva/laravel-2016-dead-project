@@ -550,7 +550,7 @@ class InventariosController extends Controller {
         $sheet->mergeCells('K4:R4');
         $sheet->setCellValue('K4', 'Nómina de Día');
         $sheet->getStyle('K4')->applyFromArray($boldStyle);
-        $sheet->getStyle("K4")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        //$sheet->getStyle("K4")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
         $sheet->getColumnDimension('K')->setAutoSize(true);
         $sheet->getColumnDimension('L')->setAutoSize(true);
         $sheet->getColumnDimension('M')->setAutoSize(true);
