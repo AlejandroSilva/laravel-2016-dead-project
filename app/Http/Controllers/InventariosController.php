@@ -14,14 +14,12 @@ use Carbon\Carbon;
 use Crypt;
 // PHP Excel
 use PHPExcel;
-use PHPExcel_Style;
 use PHPExcel_IOFactory;
 // Modelos
 use App\Clientes;
 use App\Inventarios;
 use App\Locales;
 use App\Nominas;
-use App\User;
 // Auth
 use App\Role;
 use Auth;
@@ -506,18 +504,25 @@ class InventariosController extends Controller {
                 // Nomina Dia (K-R)
                 $diaHabilitada? $inventario['nomina_dia']['dotacionTotal'] : '',
                 $diaHabilitada? $inventario['nomina_dia']['dotacionOperadores'] : '',
-                $diaHabilitada? $inventario['nomina_dia']['idLider'] : '',
-                $diaHabilitada? $inventario['nomina_dia']['idSupervisor'] : '',
-                $diaHabilitada? $inventario['nomina_dia']['idCaptador1'] : '',
+                // si la nomina esta habilitada, y tiene un lider/supervisor/captador asignado, entonces mostrar su nombre y apellido
+                ($diaHabilitada && $inventario['nomina_dia']['lider']!=null)?
+                    $inventario['nomina_dia']['lider']['nombre1'].' '.$inventario['nomina_dia']['lider']['apellidoPaterno'] : '',
+                ($diaHabilitada && $inventario['nomina_dia']['supervisor']!=null)?
+                    $inventario['nomina_dia']['supervisor']['nombre1'].' '.$inventario['nomina_dia']['supervisor']['apellidoPaterno'] : '',
+                ($diaHabilitada && $inventario['nomina_dia']['captador']!=null)?
+                    $inventario['nomina_dia']['captador']['nombre1'].' '.$inventario['nomina_dia']['captador']['apellidoPaterno'] : '',
                 $diaHabilitada? $inventario['nomina_dia']['horaPresentacionLider'] : '',
                 $diaHabilitada? $inventario['nomina_dia']['horaPresentacionEquipo'] : '',
                 $diaHabilitada? $inventario['nomina_dia']['idEstadoNomina'] : '',
                 // Nomina Noche (S-Z)
                 $nocheHabilitada? $inventario['nomina_noche']['dotacionTotal'] : '',
                 $nocheHabilitada? $inventario['nomina_noche']['dotacionOperadores'] : '',
-                $nocheHabilitada? $inventario['nomina_noche']['idLider'] : '',
-                $nocheHabilitada? $inventario['nomina_noche']['idSupervisor'] : '',
-                $nocheHabilitada? $inventario['nomina_noche']['idCaptador1'] : '',
+                ($nocheHabilitada && $inventario['nomina_noche']['lider']!=null)?
+                    $inventario['nomina_noche']['lider']['nombre1'].' '.$inventario['nomina_noche']['lider']['apellidoPaterno'] : '',
+                ($nocheHabilitada && $inventario['nomina_noche']['supervisor']!=null)?
+                    $inventario['nomina_noche']['supervisor']['nombre1'].' '.$inventario['nomina_noche']['supervisor']['apellidoPaterno'] : '',
+                ($nocheHabilitada && $inventario['nomina_noche']['captador']!=null)?
+                    $inventario['nomina_noche']['captador']['nombre1'].' '.$inventario['nomina_noche']['captador']['apellidoPaterno'] : '',
                 $nocheHabilitada? $inventario['nomina_noche']['horaPresentacionLider'] : '',
                 $nocheHabilitada? $inventario['nomina_noche']['horaPresentacionEquipo'] : '',
                 $nocheHabilitada? $inventario['nomina_noche']['idEstadoNomina'] : '',

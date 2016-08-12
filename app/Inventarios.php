@@ -110,6 +110,8 @@ class Inventarios extends Model {
             'nominaNoche',
             'nominaDia.lider',
             'nominaNoche.lider',
+            'nominaDia.supervisor',
+            'nominaNoche.supervisor',
             'nominaDia.captador',
             'nominaNoche.captador',
         ]);
