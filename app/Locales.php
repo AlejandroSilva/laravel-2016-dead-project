@@ -49,15 +49,15 @@ class Locales extends Model{
     
     // #### Helpers
     public function llegadaSugeridaLiderDia(){
-        // La hora de llegada sugerida para el lider corresponde a 1 hora y media antes de la apertura de local
+        // La hora de llegada sugerida para el lider corresponde a 1:30hrs antes de la apertura de local
         if($this->horaApertura=='00:00:00')
             return '00:00:00';
         else{
             if($this->idCliente==4){
-                // en CID, el lider debe llegar 1 hora antes de la apertura
+                // en CID, el lider debe llegar 1:00hrs hora antes de la apertura
                 return date('H:i:s', strtotime($this->horaApertura)-3600); // 3600 = 60min * 60seg
             }else{
-                // en los otros clientes, el lider debe llegar 1:30 antes de la apertura
+                // en los otros clientes, el lider debe llegar 1:30hrs antes de la apertura
                 return date('H:i:s', strtotime($this->horaApertura)-5400); // 5400 = 90min * 60seg
             }
         }
@@ -78,16 +78,16 @@ class Locales extends Model{
     }
 
     public function llegadaSugeridaPersonalDia(){
-        // La hora de llegada sugerida para el lider corresponde a 1 hora y media antes de la apertura del local
+        // La hora de llegada sugerida para el equipo corresponde a 1:30hrs antes de la apertura del local (junto con el lider)
         if($this->horaApertura=='00:00:00')
             return '00:00:00';
         else{
             if($this->idCliente==4){
-                // en CID, el equipo debe llegar 00:30hrs antes de la apertura del local
-                return date('H:i:s', strtotime($this->horaApertura)-1800); // 3600 = 30min * 60seg
+                // en CID, el equipo debe llegar 01:00hrs antes de la apertura del local (junto con el lider)
+                return date('H:i:s', strtotime($this->horaApertura)-3600); // 3600 = 60min * 60seg
             }else{
                 // en los otros clientes, el equipo debe llegar 01:00hrs antes
-                return date('H:i:s', strtotime($this->horaApertura)-3600); // 3600 = 60min * 60seg
+                return date('H:i:s', strtotime($this->horaApertura)-5400); // 5400 = 90min * 60seg
             }
         }
     }
