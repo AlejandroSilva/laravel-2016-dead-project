@@ -50,7 +50,10 @@ class TablaInventarios extends React.Component{
                                 nombre='Fecha'
                                 filtro={this.props.filtros.filtroFechas || []}
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroFechas')}
-                                ordenarLista={this.props.ordenarInventarios}
+                                // se quita el boton de ordenar por dos motivos:
+                                // 1) espacio
+                                // 2) todas las listas por defecto se ordenan en la vista semanal, solo en la mensual se desordenan
+                                //ordenarLista={this.props.ordenarInventarios}
                             />
                         </th>
                         <th className={css.thCliente}>CL</th>

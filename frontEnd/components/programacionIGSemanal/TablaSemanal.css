@@ -30,14 +30,18 @@
 
 /* FECHA */
 .thFecha{
-    width: 95px !important; /* 135 pixeles si tubiera el campo año*/
+    width: 60px !important; /* 135 pixeles si tubiera el campo año (-30px por el mes, -40px por el año) */
     background: white;
 }
 .tdFecha{
-    width: 95px !important; /* 135 pixeles si tubiera el campo año*/
+    width: 60px !important; /* 135 pixeles si tubiera el campo año (-30px por el mes, -40px por el año) */
     background: white;
     vertical-align: middle !important;
     padding: 0px !important;
+}
+/* por espacio, se oculta el mes */
+.tdFecha input:nth-child(3) {
+    display: none;
 }
 /* por espacio, se oculta el año*/
 .tdFecha input:nth-child(4) {
@@ -150,11 +154,11 @@
 
 /* DOTACION TOTAL */
 .thDotacionTotal{
-    width: 70px !important;
+    width: 62px !important;
     background: white;
 }
 .tdDotacionTotal{
-    width: 70px !important;
+    width: 62px !important;
     background: white;
     vertical-align: middle !important;
     padding-left: 0 !important;
