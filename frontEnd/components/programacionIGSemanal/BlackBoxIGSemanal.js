@@ -53,12 +53,15 @@ export default class BlackBoxIGSemanal{
                 return dateA
             }
         }
+        let porCliente = (inventario)=>{
+            return inventario.local.idCliente
+        }
         let porStockTeorico = (inventario)=>{
             return inventario.stockTeorico*1
         }
         
         // ordenar por fechaprogramada, y por stock
-        this.lista = _.orderBy(this.lista, [porFechaProgramada, porStockTeorico], ['asc', 'desc'])
+        this.lista = _.orderBy(this.lista, [porFechaProgramada, porCliente, porStockTeorico], ['asc', 'asc', 'desc'])
     }
 
     actualizarFiltros(){
