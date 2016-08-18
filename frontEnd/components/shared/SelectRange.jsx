@@ -12,45 +12,44 @@ class SelectRange extends React.Component{
             startDate: this.props.startDateSelected,
             endDate: this.props.endDateSelected
         }
+
+        this.onChangeDate = (fechas)=>{
+            this.setState({
+                startDate: fechas.startDate,
+                endDate: fechas.endDate
+            })
+        }
+        this.toggleSelector = ()=>{
+            if(this.state.visible)
+                this.onCancel()
+            else
+                this._showSelector()
+        }
+        this._showSelector = ()=>{
+            this.setState({visible:true})
+        }
+        this._hideSelector = ()=>{
+            this.setState({visible:false})
+        }
+
+        this.onAccept = ()=>{
+            this._hideSelector()
+            this.props.onRangeSelected(this.state.startDate, this.state.endDate)
+        }
+        this.onCancel = ()=>{
+            this._hideSelector()
+            // dejar el valor original
+            this.setState({
+                startDate: this.props.startDateSelected,
+                endDate: this.props.endDateSelected
+            })
+        }
     }
     componentWillReceiveProps(nextProps){
         this.state = {
             startDate: nextProps.startDateSelected,
             endDate: nextProps.endDateSelected
         }
-    }
-
-
-    toggleSelector(){
-        if(this.state.visible)
-            this.onCancel()
-        else
-            this.showSelector()
-    }
-    showSelector(){
-        this.setState({visible:true})
-    }
-    hideSelector(){
-        this.setState({visible:false})
-    }
-    onChangeDate(fechas){
-        this.setState({
-            startDate: fechas.startDate,
-            endDate: fechas.endDate
-        })
-    }
-
-    onAccept(){
-        this.hideSelector()
-        this.props.onRangeSelected(this.state.startDate, this.state.endDate)
-    }
-    onCancel(){
-        this.hideSelector()
-        // dejar el valor original
-        this.setState({
-            startDate: this.props.startDateSelected,
-            endDate: this.props.endDateSelected
-        })
     }
     
     render(){
@@ -62,7 +61,7 @@ class SelectRange extends React.Component{
             <button className="btn btn-default"
                     style={{width:"100%"}}
                     type="button"
-                    onClick={this.toggleSelector.bind(this)}
+                    onClick={this.toggleSelector}
             >
                 <div className="pull-left">
                     <span className="glyphicon glyphicon-calendar"></span>
@@ -83,29 +82,29 @@ class SelectRange extends React.Component{
                 }}
                 startDate={this.state.startDate}
                 endDate={this.state.endDate}
-                onChange={this.onChangeDate.bind(this)}
+                onChange={this.onChangeDate}
                 calendars={1}
             />
             <div style={{
-                width: '260px',
+                width: '280px',
                 position: 'absolute',
                 top: '355px'
             }}>
+                <button type="button"
+                        className="btn btn-default"
+                        style={{
+                            width:"50%",
+                            display: this.state.visible? 'inline-block':'none'
+                        }}
+                        onClick={this.onCancel}
+                >Cancelar</button>
                 <button className="btn btn-primary" type="button"
                         style={{
                             width:"50%",
                             display: this.state.visible? 'inline-block':'none'
                         }}
-                        onClick={this.onAccept.bind(this)}
+                        onClick={this.onAccept}
                 >Aceptar</button>
-                <button type="button"
-                    className="btn btn-default"
-                    style={{
-                        width:"50%",
-                        display: this.state.visible? 'inline-block':'none'
-                    }}
-                    onClick={this.onCancel.bind(this)}
-                >Cancelar</button>
             </div>
         </div>
     }
