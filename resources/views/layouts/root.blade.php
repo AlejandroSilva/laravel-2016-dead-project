@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>SIG - @yield('title')</title>
+    <title>SIG - @yield('title', 'Sistema Información Gerencial')</title>
     <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
     <meta name="viewport" content="width=device-width, user-scalable=no">
 
