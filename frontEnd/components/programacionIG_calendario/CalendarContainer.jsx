@@ -4,13 +4,8 @@ import moment from 'moment'
 // Utils
 import api from '../../apiClient/v1'
 import {StateMachine} from './StateMachine.js'
-// Estilos
-import classNames from 'classnames/bind'
-import * as css from './calendarContainer.css'
-let cx = classNames.bind(css)
 // Componentes
 import { Calendar } from './Calendar.jsx'
-import HeaderConFiltro from '../shared/HeaderConFiltro.jsx'
 
 export class CalendarContainer extends React.Component {
     constructor(props) {
@@ -47,6 +42,7 @@ export class CalendarContainer extends React.Component {
                 // })
         }
 
+        // Filtros
         this.selectUser = (idUser)=> {
             let that = this
             return function () {
@@ -55,22 +51,22 @@ export class CalendarContainer extends React.Component {
                 that.setState({calendar: that.blackbox.get_state(),})
             }
         }
-        this.showNominas = (setSelect)=>{
-            this.blackbox.selectNominas(setSelect)
-            this.setState({calendar: this.blackbox.get_state()})
-        }
-        this.showAuditorias = (setSelect)=>{
-            this.blackbox.selectAuditorias(setSelect)
-            this.setState({calendar: this.blackbox.get_state()})
-        }
-        this.showLideres = (mostrar)=>{
-            this.blackbox.filtrarLideres(mostrar)
-            this.setState({calendar: this.blackbox.get_state()})
-        }
-        this.showAuditores = (mostrar)=>{
-            this.blackbox.filtrarAuditores(mostrar)
-            this.setState({calendar: this.blackbox.get_state()})
-        }
+        // this.showNominas = (setSelect)=>{
+        //     this.blackbox.selectNominas(setSelect)
+        //     this.setState({calendar: this.blackbox.get_state()})
+        // }
+        // this.showAuditorias = (setSelect)=>{
+        //     this.blackbox.selectAuditorias(setSelect)
+        //     this.setState({calendar: this.blackbox.get_state()})
+        // }
+        // this.showLideres = (mostrar)=>{
+        //     this.blackbox.filtrarLideres(mostrar)
+        //     this.setState({calendar: this.blackbox.get_state()})
+        // }
+        // this.showAuditores = (mostrar)=>{
+        //     this.blackbox.filtrarAuditores(mostrar)
+        //     this.setState({calendar: this.blackbox.get_state()})
+        // }
     }
 
     render(){
@@ -80,10 +76,10 @@ export class CalendarContainer extends React.Component {
                     loading={this.state.loading}
                     meses={this.props.meses}
                     fetch={this.fetch}
-                    showNominas={this.showNominas}
-                    showAuditorias={this.showAuditorias}
-                    showLideres={this.showLideres}
-                    showAuditores={this.showAuditores}
+                    //showNominas={this.showNominas}
+                    //showAuditorias={this.showAuditorias}
+                    //showLideres={this.showLideres}
+                    //showAuditores={this.showAuditores}
                 />
                 <Calendar
                     calendar={this.state.calendar}
@@ -93,7 +89,6 @@ export class CalendarContainer extends React.Component {
         )
     }
 }
-
 CalendarContainer.propTypes = {
     // inventarios: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
     // numero: React.PropTypes.number.isRequired,
@@ -115,26 +110,10 @@ class HerramientasCalendario extends React.Component {
             mostrarLideres: true,
             mostrarAuditores: true
         }
-        this.checkboxNominasChanged = ()=>{
-            let select = this.state.mostrarNominas
-            this.setState({mostrarNominas: !select})
-            this.props.showNominas(!select)
+        this.checkboxLiderChanged = ()=>{
+            console.log('lider seleccionado...')
         }
-        this.checkboxAuditoriasChanged = ()=>{
-            let select = this.state.mostrarAuditorias
-            this.setState({mostrarAuditorias: !select})
-            this.props.showAuditorias(!select)
-        }
-        this.checkboxLideresChanged = ()=>{
-            let select = this.state.mostrarLideres
-            this.setState({mostrarLideres: !select})
-            this.props.showLideres(!select)
-        }
-        this.checkboxAuditoresChanged = ()=>{
-            let select = this.state.mostrarAuditores
-            this.setState({mostrarAuditores: !select})
-            this.props.showAuditores(!select)
-        }
+
         this.fetch = ()=>{
             this.props.fetch(this.state.idCliente, this.state.mesSeleccionado)
         }
@@ -163,13 +142,6 @@ class HerramientasCalendario extends React.Component {
             <div className="row">
                 {/* FILTRO POR MES */}
                 <div className="col-md-2">
-                    {/*
-                    <div className="form-group">
-                        <select className="form-control">
-                            <option>Disabled select</option>
-                        </select>
-                    </div>
-                     */}
                     <select className='form-control'
                             value={this.state.mesSeleccionado}
                             onChange={this.selectMesChanged}
@@ -180,45 +152,24 @@ class HerramientasCalendario extends React.Component {
                         )}
                     </select>
                 </div>
-                {/* FILTRO POR USUARIO */}
+
+                {/* FILTRO POR LIDERES */}
+                <div className="col-md-2">
+                    {this.state.lideres.map(lider=>
+                        <div className="checkbox">
+                            <label>
+                                <input type="checkbox"
+                                       checked={lider.liderSeleccionado}
+                                       onChange={this.checkboxLiderChanged}
+                                       disabled={this.props.loading}
+                                />{lider.nombre}
+                            </label>
+                        </div>
+                    )}
+                </div>
+
+                {/* FILTRO POR AUDITORES */}
                 {/*
-                <div className="col-md-2">
-                    <div style={{border: '1px solid grey'}}>
-                        <HeaderConFiltro
-                            nombre="Lideres"
-                            filtro={[
-                                {valor: '1', texto: '11', seleccionado: true},
-                                {valor: '2', texto: '22', seleccionado: true},
-                                {valor: '3', texto: '33', seleccionado: true},
-                            ]}
-                            actualizarFiltro={ ()=>{} }
-                        />
-                    </div>
-                </div>
-                 */}
-                {/* FILTRO POR NOMINA/AUDITORIA */}
-                <div className="col-md-2">
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox"
-                                   checked={this.state.mostrarNominas}
-                                   onChange={this.checkboxNominasChanged}
-                                   disabled={this.props.loading}
-                            />Nominas
-                        </label>
-                    </div>
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox"
-                                   checked={this.state.mostrarAuditorias}
-                                   onChange={this.checkboxAuditoriasChanged}
-                                   disabled={this.props.loading}
-                            />
-                            Auditorias
-                        </label>
-                    </div>
-                </div>
-                {/* FILTRO POR LIDERES Y AUTORES */}
                 <div className="col-md-2">
                     <div className="checkbox">
                         <label>
@@ -239,6 +190,7 @@ class HerramientasCalendario extends React.Component {
                         </label>
                     </div>
                 </div>
+                 */}
                 <div className="col-md-2">
                     <button className="btn btn-primary btn-xs"
                             onClick={this.fetch}

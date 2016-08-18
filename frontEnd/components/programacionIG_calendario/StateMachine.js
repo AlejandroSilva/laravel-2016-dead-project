@@ -8,8 +8,8 @@ export class StateMachine{
         this.calendar = []
         this.immutableCalendar = {}
         this.nominas = []
-        this.lideres = []
-        this.auditores = []
+        // this.lideres = []
+        // this.auditores = []
         this.usuariosUnicos = []
     }
     
@@ -63,25 +63,54 @@ export class StateMachine{
         this.calendar = this.immutableCalendar.toJS()
     }
     set_usuarios(lideres, auditores){
-        this.lideres = _.sortBy(lideres, 'id')
-        this.auditores = _.sortBy(auditores, 'id')
-        let todos = lideres.concat(auditores)
-        this.usuariosUnicos = _.chain( todos )
-            .uniqBy('id')
-            .sortBy('id')
-            .value()
-        // agregar un dato para las nominas/auditorias sin lider/auditor
-        this.usuariosUnicos.push({
+        let usuarios = [{
             id: null,
-            nombre: 'SIN LIDER'
+            nombre: '-NO ASIGNADO-',
+            lider: true,
+            auditor: true
+        }]
+        lideres.forEach(lider=>{
+            let usuario = _.find(usuarios, {id: lider.id})
+            if(usuario) {
+                // si existe, se agrega el "rol"
+                usuario.lider = true
+            }else {
+                // si no existe, se agrega el usuario
+                usuarios.push({
+                    ...lider,
+                    lider: true,
+                    liderSeleccionado: true,
+                    auditor: false,
+                    auditorSeleccionado: true
+                })
+            }
         })
+        auditores.forEach(auditor=>{
+            let usuario = _.find(usuarios, {id: auditor.id})
+            if(usuario) {
+                // si existe, se agrega el "rol"
+                usuario.auditor = true
+            }else {
+                // si no existe, se agrega el usuario
+                usuarios.push({
+                    ...auditor,
+                    lider: false,
+                    liderSeleccionado: false,
+                    auditor: true,
+                    auditorSeleccionado: true
+                })
+            }
+        })
+
+        this.usuariosUnicos = _.sortBy(usuarios, 'id')
+        console.log('>>>>>>>', usuarios)
 
         // paso 1: asignar los USUARIOS a los DIAS - Por cada dia de la semana, tambien se inicia un arrelo con todos los usuarios
         this.calendar.weeks.forEach(week=>{
             let usuariosSemana = this.usuariosUnicos.map(usuario=> {
                 let nuevoUsuario = {
                     id: usuario.id,
-                    isSelected: true,
+//                    isSelected: true,
                     nombre: usuario.nombre,
                     // se completan despues (en el paso 3)
                     nominasSemana: [],
@@ -90,16 +119,14 @@ export class StateMachine{
                     auditoriasDia: [[], [], [], [], [], [], []], //(Array(7)).fill([])
                     maximoSemana: function maximoSemana() {
                         let maximoNominas = 0
-                        let maximoAuditorias = 0
                         this.nominasDia.forEach(dia=> {
-                            // cuenta las nominas SELECCIONADAS en un dia
-                            //let maxDia = dia.filter(nom=>nom.isSelected).reduce((prev, actual)=>prev+1, 0)
+                            // cuenta las nominas PROGRAMADAS en un dia
                             let maxDia = dia.length
                             maximoNominas = maxDia>maximoNominas? maxDia : maximoNominas
                         })
+                        let maximoAuditorias = 0
+                        // cuenta las nominas PROGRAMADAS en un dia
                         this.auditoriasDia.forEach(dia=> {
-                            // cuenta las nominas SELECCIONADAS en un dia
-                            //let maxDia = dia.filter(aud=>aud.isSelected).reduce((prev, actual)=>prev+1, 0)
                             let maxDia = dia.length
                             maximoAuditorias = maxDia>maximoAuditorias? maxDia:maximoAuditorias
                         })
@@ -130,38 +157,38 @@ export class StateMachine{
             })
         })
     }
-    selectUsuario(idUsuario){
-        // buscar el usuario en cada una de las semanas
-        this.calendar.weeks.forEach(week=>{
-            let usuarioW = _.find(week.usuarios, usuario=>usuario.id===idUsuario)
-            usuarioW.isSelected = !usuarioW.isSelected
-        })
-    }
-    filtrarLideres(mostrar){
-        // buscar lideres en cada una de las semanas
-        this.lideres.forEach(lider=>{
-            this.calendar.weeks.forEach(week=>{
-                let usuarioW = _.find(week.usuarios, usuario=>usuario.id===lider.id)
-                usuarioW.isSelected = mostrar
-            })
-        })
-    }
-    filtrarAuditores(mostrar){
-        // buscar auditores en cada una de las semanas
-        this.auditores.forEach(lider=>{
-            this.calendar.weeks.forEach(week=>{
-                let usuarioW = _.find(week.usuarios, usuario=>usuario.id===lider.id)
-                usuarioW.isSelected = mostrar
-            })
-        })
-    }
+    // selectUsuario(idUsuario){
+    //     // buscar el usuario en cada una de las semanas
+    //     this.calendar.weeks.forEach(week=>{
+    //         let usuarioW = _.find(week.usuarios, usuario=>usuario.id===idUsuario)
+    //         usuarioW.isSelected = !usuarioW.isSelected
+    //     })
+    // }
+    // filtrarLideres(mostrar){
+    //     // buscar lideres en cada una de las semanas
+    //     this.lideres.forEach(lider=>{
+    //         this.calendar.weeks.forEach(week=>{
+    //             let usuarioW = _.find(week.usuarios, usuario=>usuario.id===lider.id)
+    //             usuarioW.isSelected = mostrar
+    //         })
+    //     })
+    // }
+    // filtrarAuditores(mostrar){
+    //     // buscar auditores en cada una de las semanas
+    //     this.auditores.forEach(lider=>{
+    //         this.calendar.weeks.forEach(week=>{
+    //             let usuarioW = _.find(week.usuarios, usuario=>usuario.id===lider.id)
+    //             usuarioW.isSelected = mostrar
+    //         })
+    //     })
+    // }
     
     set_nominas(nominas){
         // paso 2: tomas la lista de nominas, y ASIGNAR cada nomina al DIA DEL CALENDARIO y al USUARIO que le corresponde
         // por cada nomina...
         this.nominas = nominas
         this.nominas.forEach(nom=>{
-            nom.isSelected = true
+//            nom.isSelected = true
             this.calendar.weeks.forEach(week=>{
                 // ...se busca la SEMANA Y EL DIA que esta programada en el calendario...
 
@@ -193,17 +220,16 @@ export class StateMachine{
         })
         //console.log('calendar', this.calendar)
     }
-    selectNominas(setSelect){
-        this.nominas.forEach(nomina=>{
-            nomina.isSelected = setSelect
-        })
-    }
+    // selectNominas(setSelect){
+    //     this.nominas.forEach(nomina=>{
+    //         nomina.isSelected = setSelect
+    //     })
+    // }
     
     set_auditorias(auditorias){
-
         this.auditorias = auditorias
         this.auditorias.forEach(auditoria=>{
-            auditoria.isSelected = true
+//            auditoria.isSelected = true
 
             this.calendar.weeks.forEach(week=> {
                 // ...se busca la SEMANA Y EL DIA que esta programada en el calendario...
@@ -221,11 +247,11 @@ export class StateMachine{
         })
         console.log('calendar', this.calendar)
     }
-    selectAuditorias(setSelect){
-        this.auditorias.forEach(aud=>{
-            aud.isSelected = setSelect
-        })
-    }
+    // selectAuditorias(setSelect){
+    //     this.auditorias.forEach(aud=>{
+    //         aud.isSelected = setSelect
+    //     })
+    // }
     
     // se analizan los datos, se construye un summary y finalmente se genera un estado para react
     get_state(){
@@ -283,7 +309,7 @@ export class StateMachine{
                     rowsUsuarios.forEach(row=>{
                         rows = rows.concat(row)
                     })
-                    
+
                     // la informacion del dia, para luego ser convertidas en "CARDS"
                     return {
                         idDay: week.weekNumber*1000+day.dayOfMonth,
@@ -320,13 +346,15 @@ export class StateMachine{
                 rowsSummaries.forEach(row=>{
                     summaryRows = summaryRows.concat(row)
                 })
-                
+
                 return {
                     idWeek: week.weekNumber,
                     summary: summaryRows,
                     days: days
                 }
-            })
+            }),
+            lideres: this.usuariosUnicos.filter(usuario=>usuario.lider==true),
+            auditores: this.usuariosUnicos.filter(usuario=>usuario.auditor==true)
         }
         
         console.log('state ', calendarState)

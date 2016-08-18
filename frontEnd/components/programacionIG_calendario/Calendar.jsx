@@ -39,25 +39,19 @@ Calendar.propTypes = {
     // arreglo: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
+const CalendarHeader = ()=>
+    <div className={cx('header-flex-row')} >
+        <Card className={cx('card-header-summary')}><CardHeader>Summary</CardHeader></Card>
+        <Card className={cx('card-header-weekday')}><CardHeader>Lunes</CardHeader></Card>
+        <Card className={cx('card-header-weekday')}><CardHeader>Martes</CardHeader></Card>
+        <Card className={cx('card-header-weekday')}><CardHeader>Miércoles</CardHeader></Card>
+        <Card className={cx('card-header-weekday')}><CardHeader>Jueves</CardHeader></Card>
+        <Card className={cx('card-header-weekday')}><CardHeader>Viernes</CardHeader></Card>
+        <Card className={cx('card-header-weekday')}><CardHeader>Sábado</CardHeader></Card>
+        <Card className={cx('card-header-weekday')}><CardHeader>Domingo</CardHeader></Card>
+    </div>
 
-
-const CalendarHeader = ()=>{
-    return (
-        <div className={cx('header-flex-row')} >
-            <Card className={cx('card-header-summary')}><CardHeader>Summary</CardHeader></Card>
-            <Card className={cx('card-header-weekday')}><CardHeader>Lunes</CardHeader></Card>
-            <Card className={cx('card-header-weekday')}><CardHeader>Martes</CardHeader></Card>
-            <Card className={cx('card-header-weekday')}><CardHeader>Miércoles</CardHeader></Card>
-            <Card className={cx('card-header-weekday')}><CardHeader>Jueves</CardHeader></Card>
-            <Card className={cx('card-header-weekday')}><CardHeader>Viernes</CardHeader></Card>
-            <Card className={cx('card-header-weekday')}><CardHeader>Sábado</CardHeader></Card>
-            <Card className={cx('card-header-weekday')}><CardHeader>Domingo</CardHeader></Card>
-        </div>
-    )
-}
-
-const Week = ({week, selectUser})=>{
-    return (
+const Week = ({week, selectUser})=>
         <div className={cx('week-flex-row')}>
             <CardSummary
                 summary={week.summary}
@@ -70,34 +64,30 @@ const Week = ({week, selectUser})=>{
                 />
             )}
         </div>
-    )
-}
 
-const CardSummary = ({summary, selectUser})=>{
-    return (
-        <Card className={cx('card-week-summary')}>
-            <CardHeader>
-                &nbsp;
-            </CardHeader>
-            <CardBody>
-                <table className={cx('table-card')} >
-                    <thead>
-                        <tr><th>Lider</th><th>T.Nom</th><th>T.Aud</th></tr>
-                    </thead>
-                    <tbody>
-                        {summary.map(summary=>
-                            <SummaryRow
-                                key={summary.id}
-                                summary={summary}
-                                selectUser={selectUser}
-                            />
-                        )}
-                    </tbody>
-                </table>
-            </CardBody>
-        </Card>
-    )
-}
+const CardSummary = ({summary, selectUser})=>
+    <Card className={cx('card-week-summary')}>
+        <CardHeader>
+            &nbsp;
+        </CardHeader>
+        <CardBody>
+            <table className={cx('table-card')} >
+                <thead>
+                    <tr><th>Lider</th><th>T.Nom</th><th>T.Aud</th></tr>
+                </thead>
+                <tbody>
+                    {summary.map(summary=>
+                        <SummaryRow
+                            key={summary.id}
+                            summary={summary}
+                            selectUser={selectUser}
+                        />
+                    )}
+                </tbody>
+            </table>
+        </CardBody>
+    </Card>
+
 const SummaryRow = ({summary, selectUser})=>(
         summary.idUsuario!=-1?
             <tr className={cx('')}>
@@ -123,7 +113,7 @@ const SummaryRow = ({summary, selectUser})=>(
 )
 
 
-const CardDay = ({day})=>(
+const CardDay = ({day})=>
     <Card className={cx('day')}>
         <CardHeader
             className={cx({
@@ -147,7 +137,6 @@ const CardDay = ({day})=>(
             </table>
         </CardBody>
     </Card>
-)
 
 /*
 class EventRow extends React.Component {
@@ -168,7 +157,7 @@ class EventRow extends React.Component {
     }
 }
 */
-const EventRow = ({evento})=>(
+const EventRow = ({evento})=>
     <tr className={cx({
         'tr-unselected': !evento.selected
     })}>
@@ -176,4 +165,3 @@ const EventRow = ({evento})=>(
         <td><p>{evento.col2}</p></td>
         <td><p>{evento.col3}</p></td>
     </tr>
-)
