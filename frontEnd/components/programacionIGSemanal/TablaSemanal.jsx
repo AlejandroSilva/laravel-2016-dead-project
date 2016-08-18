@@ -26,10 +26,10 @@ class TablaInventarios extends React.Component{
                     <col className={css.thStock}/>
                     <col className={css.thDotacionTotal}/>
                     <col className={css.thUsuario}/>
-                    <col className={css.thUsuario}/>
-                    <col className={css.thUsuario}/>
                     <col className={css.thHora}/>
                     <col className={css.thHora}/>
+                    <col className={css.thUsuario}/>
+                    <col className={css.thUsuario}/>
                     <col className={css.thDireccion}/>
                     <col className={css.thNomina}/>
                     <col className={css.thPatentes}/>
@@ -88,7 +88,11 @@ class TablaInventarios extends React.Component{
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroLideres')}
                             />
                         </th>
-                        <th className={css.thUsuario}>Supervisor</th>
+                        <th className={css.thHora}>Hr.Lider</th>
+                        <th className={css.thHora}>Hr.Equipo</th>
+                        <th className={css.thUsuario}>
+                            Supervisor
+                        </th>
                         <th className={css.thUsuario}>
                             <HeaderConFiltro
                                 nombre='Captador'
@@ -96,8 +100,6 @@ class TablaInventarios extends React.Component{
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroCaptadores')}
                             />
                         </th>
-                        <th className={css.thHora}>Hr.Lider</th>
-                        <th className={css.thHora}>Hr.Equipo</th>
                         <th className={css.thDireccion}>Dirección</th>
                         <th className={css.thNomina}>
                             Nómina

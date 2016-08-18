@@ -324,48 +324,6 @@ class RowInventario extends React.Component{
                             puedeModificar={puedeEditarNominaNoche}
                     />
                 </td>
-                {/* Supervisor */}
-                <td className={css.tdUsuario}>
-                    <Select style={{display: inventarioDia? 'block' : 'none'}}
-                            ref={ref=>this.selectSupervisorDia=ref}
-                            seleccionada={ this.props.inventario.nomina_dia.idSupervisor || ''}
-                            onSelect={this.guardarNominaDia.bind(this)}
-                            opciones={this.props.opcionesSupervisores}
-                            opcionNula={true}
-                            opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarNominaDia}
-                    />
-                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
-                            ref={ref=>this.selectSupervisorNoche=ref}
-                            seleccionada={ this.props.inventario.nomina_noche.idSupervisor || ''}
-                            onSelect={this.guardarNominaNoche.bind(this)}
-                            opciones={this.props.opcionesSupervisores}
-                            opcionNula={true}
-                            opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarNominaNoche}
-                    />
-                </td>
-                {/* Captador 1 */}
-                <td className={css.tdUsuario}>
-                    <Select style={{display: inventarioDia? 'block' : 'none'}}
-                            ref={ref=>this.selectCaptador1Dia=ref}
-                            seleccionada={this.props.inventario.nomina_dia.idCaptador1 || ''}
-                            onSelect={this.guardarNominaDia.bind(this)}
-                            opciones={this.props.opcionesCaptadores}
-                            opcionNula={true}
-                            opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarCaptadorDia}
-                    />
-                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
-                            ref={ref=>this.selectCaptador1Noche=ref}
-                            seleccionada={this.props.inventario.nomina_noche.idCaptador1 || ''}
-                            onSelect={this.guardarNominaNoche.bind(this)}
-                            opciones={this.props.opcionesCaptadores}
-                            opcionNula={true}
-                            opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarCaptadorNoche}
-                    />
-                </td>
                 {/* Hora Presentación Lider */}
                 <td className={css.tdHora}>
                     {/*<p style={{display: inventarioDia? 'block' : 'none'}}>{this.props.inventario.hliderDia}</p>*/}
@@ -415,6 +373,48 @@ class RowInventario extends React.Component{
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
                         puedeModificar={puedeEditarNominaNoche}
+                    />
+                </td>
+                {/* Supervisor */}
+                <td className={css.tdUsuario}>
+                    <Select style={{display: inventarioDia? 'block' : 'none'}}
+                            ref={ref=>this.selectSupervisorDia=ref}
+                            seleccionada={ this.props.inventario.nomina_dia.idSupervisor || ''}
+                            onSelect={this.guardarNominaDia.bind(this)}
+                            opciones={this.props.opcionesSupervisores}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
+                            puedeModificar={puedeEditarNominaDia}
+                    />
+                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
+                            ref={ref=>this.selectSupervisorNoche=ref}
+                            seleccionada={ this.props.inventario.nomina_noche.idSupervisor || ''}
+                            onSelect={this.guardarNominaNoche.bind(this)}
+                            opciones={this.props.opcionesSupervisores}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
+                            puedeModificar={puedeEditarNominaNoche}
+                    />
+                </td>
+                {/* Captador 1 */}
+                <td className={css.tdUsuario}>
+                    <Select style={{display: inventarioDia? 'block' : 'none'}}
+                            ref={ref=>this.selectCaptador1Dia=ref}
+                            seleccionada={this.props.inventario.nomina_dia.idCaptador1 || ''}
+                            onSelect={this.guardarNominaDia.bind(this)}
+                            opciones={this.props.opcionesCaptadores}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
+                            puedeModificar={puedeEditarCaptadorDia}
+                    />
+                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
+                            ref={ref=>this.selectCaptador1Noche=ref}
+                            seleccionada={this.props.inventario.nomina_noche.idCaptador1 || ''}
+                            onSelect={this.guardarNominaNoche.bind(this)}
+                            opciones={this.props.opcionesCaptadores}
+                            opcionNula={true}
+                            opcionNulaSeleccionable={true}
+                            puedeModificar={puedeEditarCaptadorNoche}
                     />
                 </td>
                 {/* Dirección */}
