@@ -293,7 +293,7 @@ class ProgramacionAISemanal extends React.Component {
                                 // Propiedades
                                 puedeModificar={this.props.puedeModificar}
                                 puedeRevisar={this.props.puedeRevisar}
-                                key={index}
+                                key={auditoria.idAuditoria}
                                 index={index}
                                 ref={ref=>this.rows[index]=ref}
                                 mostrarSeparador={mostrarSeparador}

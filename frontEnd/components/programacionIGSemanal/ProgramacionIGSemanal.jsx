@@ -197,7 +197,7 @@ class ProgramacionIGSemanal extends React.Component {
                         return <RowInventarioSemanal
                             // Propiedades
                             puedeModificar={this.props.puedeModificar}
-                            key={index}
+                            key={inventario.idInventario}
                             index={index}
                             ref={ref=>this.rows[index]=ref}
                             inventario={inventario}
