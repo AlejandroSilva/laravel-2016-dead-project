@@ -208,12 +208,11 @@ export default class BlackBox{
                 return dateA
             }
         }
-        let porStockTeorico = (inventario)=>{
-            return inventario.stockTeorico*1
-        }
+        let porCliente = (inventario)=> inventario.local.idCliente
+        let porStockTeorico = (inventario)=> inventario.stockTeorico*1
 
         // ordenar por fechaprogramada, por stock teorico
-        this.lista = _.orderBy(this.lista, [porFechaProgramada, porStockTeorico], ['asc', 'desc'])
+        this.lista = _.orderBy(this.lista, [porFechaProgramada, porCliente, porStockTeorico], ['asc', 'asc', 'desc'])
     }
 
     actualizarFiltros(){
