@@ -21,7 +21,7 @@ class HeaderConFiltro extends React.Component {
     componentDidMount() {
         document.addEventListener('click', this.onClickHandler.bind(this))
     }
-    componentWillUnMount() {
+    componentWillUnmount() {
         document.removeEventListener('click', this.onClickHandler.bind(this))
     }
     onClickHandler(evt) {
