@@ -144,6 +144,57 @@ class Nominas extends Model {
         return ($dotacionTitulares + $supervisor) >= $this->dotacionOperadores;
     }
 
+    public function lideresDisponibles(){
+        $turno = $this->turno;
+        $inventario = $this->inventario;
+        $fechaInventario =  $inventario->fechaProgramada;
+
+        $rolLider = \App\Role::where('name', 'Lider')->first();
+        // obtener todos los lideres
+        $_lideres = $rolLider!=null? $rolLider->users : [];
+
+        // quitar los que tengan un inventario en el mismo turno, el mismo dia
+        $lideres_collection = collect($_lideres);
+
+        // si hay un lider seleccionado, pero no esta en la lista de lideres, se puede deber a que:
+        // "es una nomina antigua con usuario/lider desvinculado", este usuario se debe agregar de todas formas a la lista
+        $liderNomina = $this->lider;
+        if( $liderNomina!=null ){
+            $lider_en_lista = $lideres_collection->first(function($key, $lider) use($liderNomina){
+                return $lider->id == $liderNomina->id;
+            });
+            if($lider_en_lista==null){
+                $lideres_collection->push( $liderNomina );
+            }
+        }
+
+        $lideres = $lideres_collection->map(function($lider) use ($fechaInventario, $turno){
+            return [
+                'nombre' => $lider->nombreCorto(),
+                'idUsuario' => $lider->id,
+                'fechaInicio' => $fechaInventario,
+                'fechaFin' => $fechaInventario,
+                'turno' => $turno,
+///**/          'nominas' => $lider->nominasComoTitular($fechaInventario, $fechaInventario, $turno),
+                // un lider esta disponible cuando no esta asignado a otra nomina en el mismo turno, Y cuando es el lider
+                // que esta asignado actualmente a la nomina
+                'disponible' => $lider->disponibleParaInventario($fechaInventario, $turno) ||
+                                $lider->id == $this->idLider
+            ];
+        });
+
+        // agregar al inicio, el lider "SIN LIDER"
+        $lideres->splice(0, 0, [[
+            'nombre' => '--',
+            'idUsuario' => '', // deberia ser null, pero en el front-end se usa '' como value de la opcion
+            'fechaInicio' => $fechaInventario,
+            'fechaFin' => $fechaInventario,
+            'turno' => $turno,
+            'disponible' => true
+        ]]);
+        return $lideres;
+    }
+
     // #### Scopes para hacer Querys
     public function scopeFechaProgramadaEntre($query, $fechaInicio, $fechaFin){
         // que la fecha sea MAYOR a la fechaInicio
@@ -169,7 +220,6 @@ class Nominas extends Model {
     }
     public function scopeHabilitada($query, $habilitada=true){
         $query->where('habilitada', $habilitada);
-        
     }
 
     // #### Formatear
@@ -243,4 +293,79 @@ class Nominas extends Model {
 //            'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatearSimplePivotDotacion')
 //        ];
 //    }
+
+    static function buscar($peticion){
+        $query = Nominas::with([]);
+        $query->where('habilitada', true);
+
+        // Buscar por Turno: 'Día' o 'Noche'
+        if(isset($peticion->turno)){
+            $turno = $peticion->turno;
+            $query->where('turno', $turno);
+        }
+
+        // Buscar por Lider
+        if(isset($peticion->idLider)){
+            $idLider = $peticion->idLider;
+            $query->where('idLider', $idLider);
+        }
+
+        // Buscar por Supervisor
+        if(isset($peticion->idSupervisor)){
+            $idSupervisor = $peticion->idSupervisor;
+            $query->where('idSupervisor', $idSupervisor);
+        }
+
+        // Buscar por idCaptador1 (no se ha usado, no puedo validar)
+//        if(isset($peticion->idCaptador1)){
+//            $idCaptador1 = $peticion->idCaptador1;
+//            $query->where('idCaptador1', $idCaptador1);
+//        }
+
+        // Buscar por Operador
+        if(isset($peticion->idOperador)){
+            $idOperador = $peticion->idOperador;
+            $query
+                ->where(function($q) use($idOperador){
+                    // $this->dotacion()->find($operador->id);
+                    $q
+                        ->whereHas('dotacion', function($qq) use($idOperador){
+                            // dotacion = tabla 'nominas_user'
+                            // $this->dotacion()->find($operador->id);
+                            $qq->where('idUser', $idOperador);
+                        });
+                });
+        }
+
+        // Buscar por Fecha de Inicio
+        if(isset($peticion->fechaInicio)){
+            $fechaInicio = $peticion->fechaInicio;
+            $query
+                ->where(function($qq) use($fechaInicio){
+                    $qq
+                        ->whereHas('inventario1', function($q) use($fechaInicio){
+                            $q->where('fechaProgramada', '>=', $fechaInicio);
+                        })
+                        ->orWhereHas('inventario2', function($q) use($fechaInicio){
+                            $q->where('fechaProgramada', '>=', $fechaInicio);
+                        });
+                });
+        }
+
+        // Buscar por Fecha de Fin
+        if(isset($peticion->fechaFin)){
+            $fechaFin = $peticion->fechaFin;
+            $query
+                ->where(function($qq) use($fechaFin) {
+                    $qq->whereHas('inventario1', function ($q) use ($fechaFin) {
+                        $q->where('fechaProgramada', '<=', $fechaFin);
+                    })->orWhereHas('inventario2', function ($q) use ($fechaFin) {
+                        $q->where('fechaProgramada', '<=', $fechaFin);
+                    });
+                });
+        }
+
+        // los resultados se deben ordenar en el metodo controlador que lo llame
+        return $query->get();
+    }
 }

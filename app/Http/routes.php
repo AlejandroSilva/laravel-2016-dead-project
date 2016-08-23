@@ -114,6 +114,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('nominas/buscar',                                'NominasController@api_buscar');
         // -- cambios en la dotacion de las nominas
         Route::get('nomina/{idNomina}/dotacion',                    'NominasController@api_get');
+        Route::get('nomina/{idNomina}/lideres-disponibles',         'NominasController@api_lideresDisponibles');
         Route::post('nomina/{idNomina}/lider/{usuarioRUN}',         'NominasController@api_agregarLider');
         Route::delete('nomina/{idNomina}/lider',                    'NominasController@api_quitarLider');
         Route::post('nomina/{idNomina}/supervisor/{usuarioRUN}',    'NominasController@api_agregarSupervisor');

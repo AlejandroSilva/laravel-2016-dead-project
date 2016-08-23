@@ -36,26 +36,74 @@ class User extends Authenticatable {
         'password', 'remember_token',
     ];
 
-    public function comuna(){
+    // #### Relaciones
+    function comuna(){
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Comunas', 'cutComuna', 'cutComuna');
     }
 
-    public function nomasEnLasQueHaParticipado(){
+
+    // #### Acciones
+
+    // #### Helpers / Getters
+    function __nomasEnLasQueHaParticipadoComoOperador__(){
         // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
         return $this->belongsToMany('App\Nominas', 'nominas_user', 'idUser', 'idNomina')
             ->withTimestamps()
             ->withPivot('titular', 'idRoleAsignado');
     }
 
-    public function nombreCorto(){
+    // Busca las nominas en las que ha participado como titular (lider, supervisor, o operador)
+    function nominasComoTitular($fechaInicio, $fechaFin, $turno=null){
+        // buscar nominas como "lider"
+        $nominasLider = \App\Nominas::buscar( (object)[
+            'turno' => $turno,
+            'fechaInicio' => $fechaInicio,
+            'fechaFin' => $fechaFin,
+            'idLider' => $this->id,
+        ]);
+
+        // buscar nominas como "supervisor"
+        $nominasSupervisor = \App\Nominas::buscar( (object)[
+            'turno' => $turno,
+            'fechaInicio' => $fechaInicio,
+            'fechaFin' => $fechaFin,
+            'idSupervisor' => $this->id
+        ]);
+
+        // buscar nominas como "operador"
+        $nominasOperador = \App\Nominas::buscar( (object)[
+            'turno' => $turno,
+            'fechaInicio' => $fechaInicio,
+            'fechaFin' => $fechaFin,
+            'idOperador' => $this->id
+        ]);
+
+        return (object)[
+            'comoLider' => $nominasLider,
+            'comoSupervisor' => $nominasSupervisor,
+            'comoOperador' => $nominasOperador
+        ];
+    }
+
+    function disponibleParaInventario($fecha, $turno){
+        // un usuario (asumiendo que es lider), esta disponible cuando no este asignado a otra nomina
+        // el mismo dia, y el mismo turno como lider, supervisor, o operador
+        $nominas = $this->nominasComoTitular($fecha, $fecha, $turno);
+
+        return  $nominas->comoLider->count()==0 &&
+                $nominas->comoSupervisor->count()==0 &&
+                $nominas->comoOperador->count()==0;
+    }
+
+    function nombreCorto(){
         return "$this->nombre1 $this->apellidoPaterno";
     }
-    public function nombreCompleto(){
+    function nombreCompleto(){
         return "$this->nombre1 $this->nombre2 $this->apellidoPaterno $this->apellidoMaterno";
     }
 
-    public function permisosAsignados(){
+    function permisosAsignados(){
         // buscar cada uno de los permisos que tiene el usuario
         $perms = [];
         foreach ($this->roles as $role) {

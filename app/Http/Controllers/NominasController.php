@@ -154,6 +154,7 @@ class NominasController extends Controller {
             // pendiente, falta registrar el cambio de Hr.Lider y Hr.Equipo
 
             if(isset($request->idLider))
+                // desde el front end, el value de 'sin lider' es igual a ''
                 $nomina->idLider = $request->idLider==''? null : $request->idLider;
 
             // Supervisor
@@ -210,6 +211,22 @@ class NominasController extends Controller {
             :
             response()->json([], 404);
     }
+
+    // GET api/nomina/{idNomina}/lideres-disponibles
+    function api_lideresDisponibles($idNomina){
+        // solo pueden acceder o
+        $user = Auth::user();
+        if(!$user)
+            return response()->json(['error'=>'No tiene permisos.'], 403);
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'Para asignar el Lider, la nómina debe estar Pendiente'], 400);
+
+        return response()->json( $nomina->lideresDisponibles() );
+    }
+
     // POST api/nomina/{idNomina}/lider/{usuarioRUN}
     function api_agregarLider($idNomina, $usuarioRUN){
         // Revisar que el usuario tenga los permisos para cambiar el lider

@@ -149,6 +149,8 @@ export default {
             axios.delete(`/api/nomina/${idNomina}/operador/${usuarioRUN}`),
         // modificarOperador: (idNomina, usuarioRUN, datos)=>
         //     axios.put(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, datos),
+        lideresDisponibles: (idNomina)=>
+            axios.get(`/api/nomina/${idNomina}/lideres-disponibles`),
         enviar: (idNomina)=>
             axios.post(`/api/nomina/${idNomina}/estado-enviar`),
         aprobar: (idNomina)=>

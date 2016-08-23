@@ -67,6 +67,9 @@ class ProgramacionIGSemanal extends React.Component {
     }
 
     // Metodos de los hijos
+    lideresDisponibles(idNomina){
+        return api.nomina.lideresDisponibles(idNomina)
+    }
     guardarInventario(idInventario, formInventario){
         api.inventario.actualizar(idInventario, formInventario)
             .then(inventarioActualizado=>{
@@ -206,6 +209,7 @@ class ProgramacionIGSemanal extends React.Component {
                             opcionesCaptadores={this.state.opcionesCaptadores}
                             mostrarSeparador={mostrarSeparador}
                             // Metodos
+                            lideresDisponibles={this.lideresDisponibles.bind(this)}
                             guardarInventario={this.guardarInventario.bind(this)}
                             guardarNomina={this.guardarNomina.bind(this)}
                             focusRow={this.focusRow.bind(this)}
