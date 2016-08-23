@@ -323,6 +323,7 @@ class RowInventario extends React.Component{
                 {/* Lider */}
                 <td className={css.tdUsuario}>
                     <SelectLider visible={inventarioDia}
+                                 editable={puedeEditarNominaDia}
                                  selectedValue={this.props.inventario.nomina_dia.idLider || ''}
                                  selectedLabel={
                                      // idealmente esto deberia calcularse en el backend...
@@ -336,6 +337,7 @@ class RowInventario extends React.Component{
                                  onChange={this.guardarNominaDia.bind(this)}
                     />
                     <SelectLider visible={inventarioNoche}
+                                 editable={puedeEditarNominaNoche}
                                  selectedValue={this.props.inventario.nomina_noche.idLider || ''}
                                  selectedLabel={
                                      // idealmente esto deberia calcularse en el backend...

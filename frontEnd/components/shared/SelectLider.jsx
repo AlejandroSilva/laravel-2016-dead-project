@@ -123,36 +123,47 @@ export class SelectLider extends React.Component {
     render(){
         return (
             <div className={cx('select-lider', {'hidden': this.props.visible==false})} ref={ref=>this.node=ref}>
-                <div className={cx('select', {'select-dirty': this.state.dirty})}  onClick={this._toggleOptionsList}>
-                    <div className={cx('select-text')} >
-                        {this.state.selectedLabel}
+                {this.props.editable ?
+                    <div>
+                        <div className={cx('select', {'select-dirty': this.state.dirty})}
+                             onClick={this._toggleOptionsList}>
+                            <div className={cx('select-text')}>
+                                {this.state.selectedLabel}
+                            </div>
+                            <div className={cx('select-icon', {
+                                'arrow-up': !this.state.open,
+                                'arrow-down': this.state.open
+                            })}>
+                            </div>
+                        </div>
+                        <ul className={cx('options', {'options-hidden': !this.state.open})}>
+                            {this.state.complete ?
+                                this.state.options.map((opt, index)=>
+                                    <li className={cx('option', 'no-select-text', {
+                                        'option-hover': this.state.hoverIndex == index,
+                                        'option-selected': this.state.selectedValue == opt.value,
+                                        'option-disabled': opt.enabled == false
+                                    })}
+                                        key={index}
+                                        onMouseEnter={this.onMouseEnterOption.bind(this, index)}
+                                        onMouseLeave={this.onMouseLeaveOption}
+                                        onClick={this._selectOption.bind(this, opt.enabled, opt.value)}
+                                    >
+                                        {opt.label}
+                                    </li>
+                                )
+                                :
+                                <li className={cx('option-loading', 'no-select-text')}> cargando ...</li>
+                            }
+                        </ul>
                     </div>
-                    <div className={cx('select-icon', {
-                        'arrow-up': !this.state.open,
-                        'arrow-down': this.state.open
-                    })}>
+                    :
+                    <div className={cx('select', 'select-disabled', {'select-dirty': this.state.dirty})}>
+                        <div className={cx('select-text')}>
+                            {this.state.selectedLabel}
+                        </div>
                     </div>
-                </div>
-                <ul className={cx('options', {'options-hidden': !this.state.open})}>
-                    {this.state.complete?
-                        this.state.options.map((opt, index)=>
-                            <li className={cx('option', 'no-select-text', {
-                                'option-hover': this.state.hoverIndex==index,
-                                'option-selected': this.state.selectedValue==opt.value,
-                                'option-disabled': opt.enabled==false
-                            })}
-                                key={index}
-                                onMouseEnter={this.onMouseEnterOption.bind(this, index)}
-                                onMouseLeave={this.onMouseLeaveOption}
-                                onClick={this._selectOption.bind(this, opt.enabled, opt.value)}
-                            >
-                                {opt.label}
-                            </li>
-                        )
-                        :
-                        <li className={cx('option-loading', 'no-select-text')} > cargando ...</li>
-                    }
-                </ul>
+                }
             </div>
         )
     }
@@ -160,6 +171,7 @@ export class SelectLider extends React.Component {
 
 SelectLider.propTypes = {
     visible: PropTypes.bool.isRequired,
+    editable: PropTypes.bool.isRequired,
     onOpenList: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     selectedLabel: PropTypes.string.isRequired,
