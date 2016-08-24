@@ -295,6 +295,8 @@ class Nominas extends Model {
 //    }
 
     static function buscar($peticion){
+        // todo: agregar la posibilidad de poner mas campos, como: 'estado'
+
         $query = Nominas::with([]);
         $query->where('habilitada', true);
 

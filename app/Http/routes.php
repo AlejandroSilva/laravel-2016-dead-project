@@ -167,6 +167,7 @@ Route::group(['middleware' => ['web']], function (){
         // API USUARIOS
         Route::get('usuario/{idUsuario}',                           'PersonalController@api_usuario_get');
         Route::put('usuario/{idUsuario}',                           'PersonalController@api_usuario_actualizar');
+        Route::get('usuario/{rut}/historial-nominas', /*DESARROLLO*/'PersonalController@api_historial_nominas'); /*DESARROLLO*/
         Route::get('usuarios/buscar',                               'PersonalController@api_usuarios_buscar');
         Route::post('usuarios/nuevo-operador',                      'PersonalController@api_operador_nuevo');
 

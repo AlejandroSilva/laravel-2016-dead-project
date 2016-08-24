@@ -132,6 +132,46 @@ class PersonalController extends Controller {
         return response()->json(['msg'=>'OK'], 200);
     }
 
+    // PUT api/usuario/{rut}/historial-nominas  /* EN DESARROLLO, NO SE OCUPA POR NINGUNA API */
+    function api_historial_nominas($rut){
+        $user = User::where('usuarioRUN', $rut)->first();
+        if(!$user)
+            return response()->json('rut no encontrado');
+
+        $nominas = $user->nominasComoTitular('2000-01-01', '2020-12-12');
+        $totalLider = $nominas->comoLider->count();
+        $totalSupervisor = $nominas->comoSupervisor->count();
+        $totalOperador = $nominas->comoOperador->count();
+
+        return response()->json([
+//                'usuario' => $user
+            'nombre' => $user->nombreCompleto(),
+            'totalLider' => $totalLider,
+            'totalSupervisor' => $totalSupervisor,
+            'totalOperador' => $totalOperador,
+            'nomLider' => $nominas->comoLider->map(function($inv){
+                return [
+                    'idNomina' => $inv->idNomina,
+                    'idEstadoNomina' => $inv->idEstadoNomina,
+                    'rectificada' => $inv->rectificada,
+                ];
+            }),
+            'nomSupervisor' => $nominas->comoSupervisor->map(function($inv){
+                return [
+                    'idNomina' => $inv->idNomina,
+                    'idEstadoNomina' => $inv->idEstadoNomina,
+                    'rectificada' => $inv->rectificada,
+                ];
+            }),
+            'nomOperador' => $nominas->comoOperador->map(function($inv){
+                return [
+                    'idNomina' => $inv->idNomina,
+                    'idEstadoNomina' => $inv->idEstadoNomina,
+                    'rectificada' => $inv->rectificada,
+                ];
+            })
+        ]);
+    }
     /**
      * ##########################################################
      * API DE INTERACCION CON LA OTRA PLATAFORMA (publicas: SIN autentificacion)
