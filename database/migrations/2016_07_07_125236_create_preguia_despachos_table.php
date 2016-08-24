@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePreguiaDespachosTable extends Migration {
+class CreatePreguiaDespachosTableNOPE extends Migration {
     public function up() {
         Schema::create('preguias_despacho', function (Blueprint $table) {
             $table->increments('idPreguia');                    // Primary Key

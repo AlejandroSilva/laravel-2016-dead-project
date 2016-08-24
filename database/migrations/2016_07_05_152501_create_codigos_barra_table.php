@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCodigosBarraTable extends Migration {
+class CreateCodigosBarraTableNOPE extends Migration {
 
     public function up() {
         Schema::create('codigos_barra', function (Blueprint $table) {
