@@ -54,7 +54,7 @@ export class PanelEstados extends React.Component {
                     }, {
                         texto: 'Completar sin envio de correo',
                         onclick: this.props.completarSinCorreo,
-                        habilitado: idEstado==4 && this.props.permisos.rectificar  && this.props.haSidoRectificada==1
+                        habilitado: idEstado==4 && this.props.permisos.rectificar // && this.props.haSidoRectificada==1
                     }
                 ]}
             />
