@@ -203,16 +203,16 @@ class InventariosController extends Controller {
             if(isset($request->fechaProgramada)){
                 // actualizar fecha (si es valida) y generar un log
                 // como side-efect, tambien actualiza la fechaLimiteCaptador, la fecha limite para que envie la nomina completa
-                $inventario->actualizarFechaProgramada($request->fechaProgramada);
+                $inventario->set_fechaProgramada($request->fechaProgramada);
             }
 
             if(isset($request->idJornada)){
                 // cambia la jornada del inventario, y cambiar el estado (habilitada) de las nominas asociadas
-                $inventario->actualizarJornada($request->idJornada);
+                $inventario->set_jornada($request->idJornada);
             }
             if(isset($request->stockTeorico)) {
                 // actualizar el stock del local, y al mismo tiempo recalcular la dotacion de las nominas
-                $inventario->actualizarStock($request->stockTeorico, Carbon::now());
+                $inventario->set_stock($request->stockTeorico, Carbon::now());
             }
 
             // mostrar el dato tal cual como esta en la BD

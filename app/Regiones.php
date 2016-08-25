@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Regiones extends Model {
     // llave primaria
     public $primaryKey = 'cutRegion';
-
     // este modelo no tiene timestamps
     public $timestamps = false;
 
@@ -16,7 +15,6 @@ class Regiones extends Model {
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Zonas', 'idZona', 'idZona');
     }
-
     public function provincias(){
         // hasMany(modelo, child.fogeignKey, this.localKey)
         return $this->hasMany('App\Provincias', 'cutRegion', 'cutRegion');

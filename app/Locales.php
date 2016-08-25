@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Locales extends Model{
     // llave primaria
     public $primaryKey = 'idLocal';
-
-    // este modelo tiene timestamps
+    // este modelo TIENE timestamps
     public $timestamps = true;
 
     protected $fillable = [
@@ -22,27 +21,22 @@ class Locales extends Model{
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Clientes', 'idCliente', 'idCliente');
     }
-
     public function formatoLocal(){
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\FormatoLocales', 'idFormatoLocal', 'idFormatoLocal');
     }
-
     public function direccion(){
         //return $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\Direcciones', 'idLocal', 'idLocal');
     }
-    
     public function inventarios(){
         //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
         return $this->hasMany('App\Inventarios', 'idLocal', 'idLocal');
     }
-
     public function jornada(){
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Jornadas', 'idJornadaSugerida', 'idJornada');
     }
-    
     public function almacenesAF(){
         return $this->hasMany('App\AlmacenAF', 'idLocal', 'idLocal');
     }
@@ -76,7 +70,6 @@ class Locales extends Model{
             }
         }
     }
-
     public function llegadaSugeridaPersonalDia(){
         // La hora de llegada sugerida para el equipo corresponde a 1:30hrs antes de la apertura del local (junto con el lider)
         if($this->horaApertura=='00:00:00')
@@ -106,16 +99,10 @@ class Locales extends Model{
         }
     }
 
-//    public function ultimoInventario(){
-    public function inventarioRealizadoEn($annoMesDia){
-        $fecha = explode('-', $annoMesDia);
-        return Inventarios::where('idLocal', '=', $this->idLocal)
-            ->whereRaw("extract(year from fechaProgramada) = ?", [$fecha[0]])
-            ->whereRaw("extract(month from fechaProgramada) = ?", [$fecha[1]])
-            ->first();
-    }
+    // #### Acciones
+    //
 
-    // #### Consultas
+    // ####  Getters
     public function horaAperturaF(){
         // Ejemplo: convertir "21:30:00" -> "21:30 hrs."
         $carbon = Carbon::parse($this->horaApertura);
@@ -129,9 +116,9 @@ class Locales extends Model{
         return "$carbon->hour:$minutes hrs.";
     }
 
-    // #### Acciones
-    // actualizarStock se llama para cambiar el Stock de un local, y RECALCULAR LA DOTACION de sus inventarios (y nominas)
-    public function actualizarStock($stock, $fechaStock){
+    // ####  Setters
+    // set_stock se llama para cambiar el Stock de un local, y RECALCULAR LA DOTACION de sus inventarios (y nominas)
+    public function set_stock($stock, $fechaStock){
         // actualizar el stock
         $this->stock = $stock;
         $this->fechaStock = $fechaStock;
@@ -144,12 +131,12 @@ class Locales extends Model{
             'error' => '',
             'estado' => "stock y fechaStock actualizado ($stock al $fechaStock)",
             'inventarios' => $this->inventarios->map(function($inv) use($stock, $fechaStock){
-                return $inv->actualizarStock($stock, $fechaStock);
+                return $inv->set_stock($stock, $fechaStock);
             })
         ];
     }
 
-    // #### Formatear
+    // #### Formatear respuestas
     static function formatearSimple($local){
         return [
             'idLocal' => $local->idLocal,
@@ -170,7 +157,6 @@ class Locales extends Model{
             'telefono2' => "$local->codArea2 $local->telefono2",
         ];
     }
-
     static function formatoLocal_completo($local){
         $_local = Locales::formatearSimple($local);
         $_local['cliente'] = Clientes::formatearSimple($local->cliente);
@@ -190,5 +176,14 @@ class Locales extends Model{
         $_local['region_numero'] = $local->direccion->comuna->provincia->region->numero;
 
         return $_local;
+    }
+
+    // #### Scopes para hacer Querys/Busquedas
+    public function inventarioRealizadoEn($annoMesDia){
+        $fecha = explode('-', $annoMesDia);
+        return Inventarios::where('idLocal', '=', $this->idLocal)
+            ->whereRaw("extract(year from fechaProgramada) = ?", [$fecha[0]])
+            ->whereRaw("extract(month from fechaProgramada) = ?", [$fecha[1]])
+            ->first();
     }
 }

@@ -15,7 +15,6 @@ class AlmacenAF extends Model {
     public function local(){
         return $this->belongsTo('App\Locales', 'idLocal', 'idLocal');
     }
-
     public function articulos(){
         return $this->belongsToMany('App\ArticuloAF', 'almacenAF_articuloAF', 'idAlmacenAF', 'idArticuloAF')
             ->withPivot('stockActual');
@@ -30,6 +29,7 @@ class AlmacenAF extends Model {
         return $existenciaEnAlmacen->pivot->stockActual;
     }
 
+    // #### Acciones
     // aumentar el stock del articulo en el almacenDestino (crearlo si no esta en el almacen)
     public function agregarStockArticulo($idArticulo, $stock){
         // ### ADVERTENCIA: se supone que al llegar aca, se comprobo que el Articulo existe, y tiene stock valido
@@ -48,7 +48,6 @@ class AlmacenAF extends Model {
             ]);
         }
     }
-
     public function quitarStockArticulo($idArticulo, $stock){
         // ### ADVERTENCIA: se supone que al llegar aca, se comprobo que el Articulo existe, y tiene stock valido
         // ### esto es, no se puede descontar mas de lo que tiene asignado.
@@ -71,14 +70,4 @@ class AlmacenAF extends Model {
             // ERROR: nunca se deberia quitar stock de un producto que no esta asociado al almacen, esto es un error
         }
     }
-
-    // Almacen tiene muchos ActivosFijos
-//    public function productosAF(){
-//        return $this->hasMany('App\ProductoAF', 'idAlmacenAF', 'idAlmacenAF');
-//    }
-    // Almacen tiene muchas preguias de despacho
-    // tiene una relacion de idAlmacenOrigen y idAlmacenDestino
-//    public function preguias(){
-//        return $this->hasMany('App\PreguiaDespacho', 'idAlmacenAF', 'idAlmacenAF');
-//    }
 }

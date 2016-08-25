@@ -20,14 +20,13 @@ class PreguiaDespacho extends Model {
     public function almacenDestino(){
             return $this->hasOne('App\AlmacenAF', 'idAlmacenAF', 'idAlmacenDestino');
     }
-
     // tabla intermedia preguia-articulos
     public function articulos(){
         return $this->belongsToMany('App\ArticuloAF', 'preguia_articulo', 'idPreguia', 'idArticuloAF')
             ->withPivot('stockEntregado', 'stockRetornado');
     }
 
-    // #### Formatear
+    // #### Formatear respuestas
     static function formato_tabla($preguia){
         //return $preguia;
         return [
@@ -73,5 +72,4 @@ class PreguiaDespacho extends Model {
  * Estados:
  * 0 entregado
  * 1 retornado
- * 
  */

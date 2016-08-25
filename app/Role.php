@@ -16,14 +16,6 @@ class Role extends EntrustRole {
 
     //description — A more detailed explanation of what the Role does. Also optional.
 
-    static function darFormatoSimple($role){
-        return [
-            'id' => $role->id,
-            'name' => $role->name,
-            'description' => $role->description,
-        ];
-    }
-    
     // #### Helpers / Getters
     static function lideres(){
         $rol = Role::where('name', 'Lider')->first();
@@ -32,5 +24,14 @@ class Role extends EntrustRole {
     static function auditores(){
         $rol = Role::where('name', 'Auditor')->first();
         return $rol? $rol->users : collect([]);
+    }
+
+    // #### Formatear respuestas
+    static function darFormatoSimple($role){
+        return [
+            'id' => $role->id,
+            'name' => $role->name,
+            'description' => $role->description,
+        ];
     }
 }

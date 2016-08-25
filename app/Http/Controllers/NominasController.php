@@ -168,11 +168,11 @@ class NominasController extends Controller {
                 $nomina->idCaptador2 = $request->idCaptador2==''? null : $request->idCaptador2;
             //  Dotacion Total
             if(isset($request->dotacionTotal))
-                $nomina->actualizarDotacionTotal($request->dotacionTotal, false); // actualizacion "manual", no genera alerta
+                $nomina->set_dotacionTotal($request->dotacionTotal);
                 //$nomina->dotacionTotal = $request->dotacionTotal;
             //  Dotacion Operadores
             if(isset($request->dotacionOperadores))
-                $nomina->actualizarDotacionOperadores($request->dotacionOperadores, false); // actualizacion "manual", no genera alerta
+                $nomina->set_dotacionOperadores($request->dotacionOperadores);
                 //$nomina->dotacionOperadores = $request->dotacionOperadores;
             // Hora llegada Lider
             if(isset($request->horaPresentacionLider))

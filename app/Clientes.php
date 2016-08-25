@@ -16,9 +16,14 @@ class Clientes extends Model {
         return $this->hasMany('App\Locales', 'idCliente', 'idCliente');
     }
 
-    /**
-     * Entrega un listado con todos los clientes, y una vista simplificada de los locales que tiene asociado
-     */
+    // #### Formatear respuestas
+    static function formatearSimple($cliente){
+        // la tabla es tan simple que no necesita ser modificado
+        return $cliente;
+    }
+
+    // #### Scopes para hacer Querys/Busquedas
+    // Entrega un listado con todos los clientes, y una vista simplificada de los locales que tiene asociado
     public static function todos_conLocales(){
         return Clientes::all()->map(function($cliente){
             $cliente->locales = $cliente->locales->map(function($local){
@@ -30,11 +35,5 @@ class Clientes extends Model {
             });
             return $cliente;
         });
-    }
-
-    // #### Formatear
-    static function formatearSimple($cliente){
-        // la tabla es tan simple que no necesita ser modificado
-        return $cliente;
     }
 }

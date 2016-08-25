@@ -16,18 +16,16 @@ class Comunas extends Model {
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Provincias', 'cutProvincia', 'cutProvincia');
     }
-
     public function subgeo(){
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Subgeo', 'idSubgeo', 'idSubgeo');
     }
-
     public function direcciones(){
-        // ToDo: falta por revisar
         // hasMany(modelo, child.fogeignKey, this.localKey)
         return $this->hasMany('App\Direcciones', 'cutComuna', 'cutComuna');
     }
 
+    // #### Formatear respuestas
     public static function formatearSimple($comuna){
         return [
             'cutComuna' => $comuna->cutComuna,
