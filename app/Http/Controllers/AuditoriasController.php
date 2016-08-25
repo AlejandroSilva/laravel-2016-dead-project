@@ -425,7 +425,8 @@ class AuditoriasController extends Controller {
         $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)
             ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
             ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
-            ->whereRaw("extract(day from fechaProgramada) = ?", [$dia])
+            // no considerar el dia, la plataforma "inventario.seiconsultores.cl" siempre se equivoca en +-1 o +-2 dias....
+            //->whereRaw("extract(day from fechaProgramada) = ?", [$dia])
             ->first();
         if(!$auditoria) {
             // auditoria con esa fecha no existe
