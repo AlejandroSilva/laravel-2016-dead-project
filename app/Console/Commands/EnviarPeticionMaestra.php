@@ -149,7 +149,7 @@ class EnviarPeticionMaestra extends Command {
         // documentacion: http://carbon.nesbot.com/docs/#api-addsub
         $sgteHabil = Carbon::now()->addWeekday()->toDateString();
 
-        $totalInventarios = app('App\Http\Controllers\InventariosController')
+        $totalInventarios = app('App\Http\Controllers\Legacy_InventariosController')
             ->buscarInventarios($sgteHabil, $sgteHabil, null, 3, null, null)    // 3 = CKY
             ->count();
         if( $totalInventarios>0 ){
@@ -171,7 +171,7 @@ class EnviarPeticionMaestra extends Command {
         $this->log("[PeticionMaestra] Cliente CID: pedir el mismo dia del inventario (si existe)");
         $hoy = Carbon::now()->toDateString();
 
-        $totalInventarios = app('App\Http\Controllers\InventariosController')
+        $totalInventarios = app('App\Http\Controllers\Legacy_InventariosController')
             ->buscarInventarios($hoy, $hoy, null, 4, null, null)    // 4 = CID
             ->count();
         if( $totalInventarios>0 ) {
@@ -193,7 +193,7 @@ class EnviarPeticionMaestra extends Command {
         $hoy = Carbon::now()->toDateString();
 
         // si "hoy" existe algun inventario programado para SB, entonces enviar un correo pidiendo la maestra
-        $totalInventarios = app('App\Http\Controllers\InventariosController')
+        $totalInventarios = app('App\Http\Controllers\Legacy_InventariosController')
             ->buscarInventarios($hoy, $hoy, null, 5, null, null)    // 5 = FSB
             ->count();
         if( $totalInventarios>0 ){
@@ -218,7 +218,7 @@ class EnviarPeticionMaestra extends Command {
         // documentacion: http://carbon.nesbot.com/docs/#api-addsub
         $sgteHabil = Carbon::now()->addWeekday(2)->toDateString();
 
-        $totalInventarios = app('App\Http\Controllers\InventariosController')
+        $totalInventarios = app('App\Http\Controllers\Legacy_InventariosController')
             ->buscarInventarios($sgteHabil, $sgteHabil, null, 7, null, null)    // 7 = CMT
             ->count();
         if( $totalInventarios>0 ){

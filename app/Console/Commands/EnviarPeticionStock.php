@@ -113,7 +113,7 @@ class EnviarPeticionStock extends Command {
             // Carbon busca el 2 dias habiles despues del dia actual (de la semana Jueves->Lunes)
             // documentacion: http://carbon.nesbot.com/docs/#api-addsub
             $sgteHabil = Carbon::now()->addWeekday(2)->toDateString();
-            $totalInventarios = app('App\Http\Controllers\InventariosController')
+            $totalInventarios = app('App\Http\Controllers\Legacy_InventariosController')
                 ->buscarInventarios($sgteHabil, $sgteHabil, null, 3, null, null)    // 3 = CKY
                 ->count();
             if( $totalInventarios>0 ){

@@ -249,7 +249,6 @@ class ProgramacionIGMensual extends React.Component{
                                     actualizarInventario={this.actualizarInventario.bind(this)}
                                     quitarInventario={this.quitarInventario.bind(this)}
                                     eliminarInventario={this.eliminarInventario.bind(this)}
-                                    ref={ref=>this.rows[index]=ref}
                                 />
                             })
                         }

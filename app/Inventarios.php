@@ -249,7 +249,7 @@ class Inventarios extends Model {
         $query->where('fechaProgramada', '>=', $fechaInicio);
         $query->where('fechaProgramada', '<=', $fechaFin);
     }
-    function scopeConCaptador($query, $idCaptador){
+    function scopeConCaptador___no_se_ocupa($query, $idCaptador){
         // no probado
         // buscar el captador en la nomina de "dia" O en la de "noche", la nomina debe estar "Habilitada"
         $query
