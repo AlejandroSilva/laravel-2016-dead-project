@@ -219,30 +219,6 @@ class Inventarios extends Model {
         return $_inventario;
     }
 
-    // #### 'with' scopes, se usan para agregar campos/relaciones en las respuestas json
-    function scopeWithTodo($query){
-        $query->with([
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region',
-            'nominaDia',
-            'nominaNoche',
-            'nominaDia.lider',
-            'nominaNoche.lider',
-            'nominaDia.supervisor',
-            'nominaNoche.supervisor',
-            'nominaDia.captador',
-            'nominaNoche.captador',
-        ]);
-    }
-    function scopeWithClienteFormatoRegion($query) {
-        $query->with([
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region'
-        ]);
-    }
-
     // #### Scopes para hacer Querys/Busquedas
     function scopeFechaProgramadaEntre($query, $fechaInicio, $fechaFin){
         // al parecer funciona, hacer mas pruebas

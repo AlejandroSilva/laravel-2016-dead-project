@@ -107,7 +107,7 @@ class Legacy_InventariosController extends Controller {
     // * ##########################################################
 
     // GET /pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}
-    public function descargarPDF_porRango($fechaInicio, $fechaFin, $idCliente){
+    function descargarPDF_porRango($fechaInicio, $fechaFin, $idCliente){
         //Se utiliza funcion privada que recorre inventarios por fecha inicio-final y por idCliente
         $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, null, $idCliente, null, null);
 
@@ -133,7 +133,7 @@ class Legacy_InventariosController extends Controller {
     }
 
     // GET /pdf/inventarios/{mes}/cliente/{idCliente}
-    public function descargarPDF_porMes($annoMesDia, $idCliente){
+    function descargarPDF_porMes($annoMesDia, $idCliente){
         //Se utiliza funcion privada que recorre inventarios por mes y dia
         $inventarios = $this->buscarInventarios(null, null, $annoMesDia, $idCliente, null, null, null);
 
@@ -273,8 +273,20 @@ class Legacy_InventariosController extends Controller {
     // *                   FUNCIONES PRIVADAS
     // * ##########################################################
 
-    public function buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina){
-        $query = \App\Inventarios::withTodo();
+    function buscarInventarios($fechaInicio, $fechaFin, $mes, $idCliente, $idLider, $fechaSubidaNomina){
+        $query = \App\Inventarios::with([
+            'local.cliente',
+            'local.formatoLocal',
+            'local.direccion.comuna.provincia.region',
+            'nominaDia',
+            'nominaNoche',
+            'nominaDia.lider',
+            'nominaNoche.lider',
+            'nominaDia.supervisor',
+            'nominaNoche.supervisor',
+            'nominaDia.captador',
+            'nominaNoche.captador',
+        ]);
 
         // Filtrar por rango de fecha si corresponde
         if(isset($fechaInicio) && isset($fechaFin)){
