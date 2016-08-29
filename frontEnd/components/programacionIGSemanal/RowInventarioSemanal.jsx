@@ -42,16 +42,16 @@ class RowInventario extends React.Component{
             this.inputDia.focus()
         }else if(elemento==='dotacionTotal'){
             // hace focus al primer input de la nomina que este habilitada
-            if(this.props.inventario.nomina_dia.habilitada=="1"){
+            if(this.props.inventario.ndia_habilitada=="1"){
                 this.inputDotacionDiaTotal.focus()
-            }else if(this.props.inventario.nomina_noche.habilitada=="1"){
+            }else if(this.props.inventario.nnoche_habilitada=="1"){
                 this.inputDotacionNocheTotal.focus();
             }
         }else if(elemento==='dotacionOperadores'){
             // hace focus al primer input de la nomina que este habilitada
-            if(this.props.inventario.nomina_dia.habilitada=="1"){
+            if(this.props.inventario.ndia_habilitada=="1"){
                 this.inputDotacionDiaOperadores.focus()
-            }else if(this.props.inventario.nomina_noche.habilitada=="1"){
+            }else if(this.props.inventario.nnoche_habilitada=="1"){
                 this.inputDotacionNocheOperadores.focus();
             }
         }else if(elemento==='stock'){
@@ -96,13 +96,13 @@ class RowInventario extends React.Component{
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
         if(JSON.stringify(cambiosInventario)!=="{}"){
             console.log(cambiosInventario)
-            this.props.guardarInventario(this.props.inventario.idInventario, cambiosInventario)
+            this.props.guardarInventario(this.props.inventario.inv_idInventario, cambiosInventario)
         }else{
             console.log('inventario sin cambios, no se actualiza')
         }
     }
     guardarNominaDia() {
-        this._guardarNomina(this.props.inventario.nomina_dia.idNomina, {
+        this._guardarNomina(this.props.inventario.ndia_idNomina, {
             inputDotacionTotal: this.inputDotacionDiaTotal.getEstado(),
             inputDotacionOperadores: this.inputDotacionDiaOperadores.getEstado(),
             selectLider: this.selectLiderDia.getEstado(),
@@ -113,7 +113,7 @@ class RowInventario extends React.Component{
         })
     }
     guardarNominaNoche(){
-        this._guardarNomina(this.props.inventario.nomina_noche.idNomina, {
+        this._guardarNomina(this.props.inventario.nnoche_idNomina, {
             inputDotacionTotal: this.inputDotacionNocheTotal.getEstado(),
             inputDotacionOperadores: this.inputDotacionNocheOperadores.getEstado(),
             selectLider: this.selectLiderNoche.getEstado(),
@@ -165,7 +165,7 @@ class RowInventario extends React.Component{
 
     cargarLideresDisponibles = (callback)=>{
         callback({options: [], complete: false})
-        this.props.lideresDisponibles(this.props.inventario.nomina_noche.idNomina)
+        this.props.lideresDisponibles(this.props.inventario.nnoche_idNomina)
             .then(usuarios=>{
                 // el callback modifica el state del componente SelectLider
                 callback({
@@ -180,41 +180,40 @@ class RowInventario extends React.Component{
     }
 
     render(){
-        const idJornada = this.props.inventario.idJornada
+        let inv = this.props.inventario
+        const idJornada = inv.inv_idJornada
         const inventarioDia = idJornada==2 || idJornada==4
         const inventarioNoche = idJornada==3 || idJornada==4
-        let _ndia = this.props.inventario.nomina_dia
-        let _nnoche = this.props.inventario.nomina_noche
         // puede eeditar si la nomina esta habilitada, y no esta en estado "informada"(5) o "informada excel"(6)
-        let informadaDia   =_ndia.idEstadoNomina==5 || _ndia.idEstadoNomina==6
-        let informadaNoche =_nnoche.idEstadoNomina==5 || _nnoche.idEstadoNomina==6
+        let informadaDia   = inv.ndia_idEstadoNomina==5 || inv.ndia_idEstadoNomina==6
+        let informadaNoche = inv.nnoche_idEstadoNomina==5 || inv.nnoche_idEstadoNomina==6
         // puede editar la NOMINA si tiene los permisos, esta habilitada, y esta no ha sido informada
-        let puedeEditarNominaDia   = this.props.puedeModificar && _ndia.habilitada=="1" && !informadaDia
-        let puedeEditarNominaNoche = this.props.puedeModificar && _nnoche.habilitada=="1" && !informadaNoche
+        let puedeEditarNominaDia   = this.props.puedeModificar && inv.ndia_habilitada=="1" && !informadaDia
+        let puedeEditarNominaNoche = this.props.puedeModificar && inv.nnoche_habilitada=="1" && !informadaNoche
         // el captador se puede editar siempre que se tengan los permisos y que la nomina este habilitada
-        let puedeEditarCaptadorDia = this.props.puedeModificar && _ndia.habilitada=="1"
-        let puedeEditarCaptadorNoche = this.props.puedeModificar && _nnoche.habilitada=="1"
+        let puedeEditarCaptadorDia = this.props.puedeModificar && inv.ndia_habilitada=="1"
+        let puedeEditarCaptadorNoche = this.props.puedeModificar && inv.nnoche_habilitada=="1"
 
         // el inventario se puede editar solo si tiene los permisos, y no hay una nomina informada
         let puedeEditar_fecha_turno_stock = this.props.puedeModificar && !informadaDia && !informadaNoche
 
-        let _hrApertura = this.props.inventario.local.horaApertura.split(':')
+        let _hrApertura = inv.local_horaApertura.split(':')
         let txtHrApertura = `Apertura a las ${_hrApertura[0]}:${_hrApertura[1]}hrs`
-        let _hrCierre = this.props.inventario.local.horaCierre.split(':')
+        let _hrCierre = inv.local_horaCierre.split(':')
         let txtHrCierre = `Cierre a las ${_hrCierre[0]}:${_hrCierre[1]}hrs`
 
         return (
             <tr className={this.props.mostrarSeparador? css.trSeparador: ''}>
                 {/* Correlativo */}
                 <td className={css.tdCorrelativo}>
-                    <p title={this.props.inventario.idInventario}>{this.props.index+1}</p>
+                    <p title={inv.inv_idInventario}>{this.props.index+1}</p>
                 </td>
                 {/* Fecha */}
                 <td className={css.tdFecha}>
                     <InputFecha
                         ref={ref=>this.inputDia=ref}
-                        diaSemana={moment(this.props.inventario.fechaProgramada).format('dd')}
-                        fecha={this.props.inventario.fechaProgramada}
+                        diaSemana={moment(inv.inv_fechaProgramada).format('dd')}
+                        fecha={inv.inv_fechaProgramada}
                         onGuardar={this.guardarInventario.bind(this)}
                         puedeModificar={puedeEditar_fecha_turno_stock}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}
@@ -222,24 +221,24 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Cliente*/}
                 <td className={css.tdCliente}>
-                    <p>{this.props.inventario.local.cliente.nombreCorto}</p>
+                    <p>{inv.cliente_nombreCorto}</p>
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
                     <OverlayTrigger
                         placement="left"
                         delay={0}
-                        overlay={<Tooltip id="yyy">{`Tipo de local: ${this.props.inventario.local.formato_local.nombre} (prod.Sugerida:${this.props.inventario.local.formato_local.produccionSugerida})`}</Tooltip>}>
-                        <p>{this.props.inventario.local.numero}</p>
+                        overlay={<Tooltip id="yyy">{`Tipo de local: ${inv.local_formatoLocal} (prod.Sugerida:${inv.local_produccionSugerida})`}</Tooltip>}>
+                        <p>{inv.local_ceco}</p>
                     </OverlayTrigger>
                 </td>
                 {/* Region */}
                 <td className={css.tdRegion}>
-                    <p>{this.props.inventario.local.direccion.comuna.provincia.region.numero}</p>
+                    <p>{inv.local_region}</p>
                 </td>
                 {/* Comuna */}
                 <td className={css.tdComuna}>
-                    <p>{this.props.inventario.local.direccion.comuna.nombre}</p>
+                    <p>{inv.local_comuna}</p>
                 </td>
                 {/* Turno */}
                 <td className={css.tdTurno}>
@@ -252,7 +251,7 @@ class RowInventario extends React.Component{
                             {valor:'3', texto:'N'},
                             {valor:'4', texto:'DyN'}
                         ]}
-                        seleccionada={this.props.inventario.idJornada}
+                        seleccionada={''+inv.inv_idJornada}
                         puedeModificar={puedeEditar_fecha_turno_stock}
                     />
                 </td>
@@ -261,17 +260,17 @@ class RowInventario extends React.Component{
                     <OverlayTrigger
                         placement="left"
                         delay={0}
-                        overlay={<Tooltip id="yyy">{`Apertura: ${this.props.inventario.local.horaApertura}, Cierre:${this.props.inventario.local.horaCierre}`}</Tooltip>}>
-                        <p>{this.props.inventario.local.nombre}</p>
+                        overlay={<Tooltip id="yyy">{`Apertura: ${inv.local_horaApertura}, Cierre:${inv.local_horaCierre}`}</Tooltip>}>
+                        <p>{inv.local_nombre}</p>
                     </OverlayTrigger>
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
-                    {/*<p><small>{numeral(this.props.inventario.local.stock).format('0,0')}</small></p>*/}
+                    {/*<p><small>{numeral(inv.inv_stockTeorico).format('0,0')}</small></p>*/}
                     <InputStock
                         ref={ref=>this.inputStock=ref}
-                        asignada={this.props.inventario.stockTeorico}
-                        tooltipText={'Stock al ' +(this.props.inventario.fechaStock)}
+                        asignada={''+inv.inv_stockTeorico}  // pide en string
+                        tooltipText={'Stock al ' +(inv.inv_fechaStock)}
                         onGuardar={this.guardarInventario.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'stock')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'stock')}
@@ -285,7 +284,7 @@ class RowInventario extends React.Component{
                         style={{display: inventarioDia? 'block' : 'none'}}
                         className="pull-left"
                         ref={ref=>this.inputDotacionDiaTotal=ref}
-                        asignada={this.props.inventario.nomina_dia.dotacionTotal}
+                        asignada={''+inv.ndia_dotTotal} // pide un string...
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionTotal')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionTotal')}
@@ -294,7 +293,7 @@ class RowInventario extends React.Component{
                         style={{display: inventarioDia? 'block' : 'none'}}
                         className="pull-right"
                         ref={ref=>this.inputDotacionDiaOperadores=ref}
-                        asignada={this.props.inventario.nomina_dia.dotacionOperadores}
+                        asignada={''+inv.ndia_dotOperadores} // pide un string...
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionOperadores')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionOperadores')}
@@ -305,7 +304,7 @@ class RowInventario extends React.Component{
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         className="pull-left"
                         ref={ref=>this.inputDotacionNocheTotal=ref}
-                        asignada={this.props.inventario.nomina_noche.dotacionTotal}
+                        asignada={''+inv.nnoche_dotTotal}  // pide un string...
                         onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionTotal')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionTotal')}
@@ -314,7 +313,7 @@ class RowInventario extends React.Component{
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         className="pull-right"
                         ref={ref=>this.inputDotacionNocheOperadores=ref}
-                        asignada={this.props.inventario.nomina_noche.dotacionOperadores}
+                        asignada={''+inv.nnoche_dotOperadores}  // pide un string...
                         onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacionOperadores')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacionOperadores')}
@@ -324,28 +323,16 @@ class RowInventario extends React.Component{
                 <td className={css.tdUsuario}>
                     <SelectLider visible={inventarioDia}
                                  editable={puedeEditarNominaDia}
-                                 selectedValue={this.props.inventario.nomina_dia.idLider || ''}
-                                 selectedLabel={
-                                     // idealmente esto deberia calcularse en el backend...
-                                     this.props.inventario.nomina_dia.lider?
-                                         `${this.props.inventario.nomina_dia.lider.nombre1} ${this.props.inventario.nomina_dia.lider.apellidoPaterno}`
-                                         :
-                                         '--'
-                                 }
+                                 selectedValue={inv.ndia_idLider || ''}
+                                 selectedLabel={inv.ndia_lider}
                                  onOpenList={this.cargarLideresDisponibles}
                                  ref={ref=>this.selectLiderDia=ref}
                                  onChange={this.guardarNominaDia.bind(this)}
                     />
                     <SelectLider visible={inventarioNoche}
                                  editable={puedeEditarNominaNoche}
-                                 selectedValue={this.props.inventario.nomina_noche.idLider || ''}
-                                 selectedLabel={
-                                     // idealmente esto deberia calcularse en el backend...
-                                     this.props.inventario.nomina_noche.lider?
-                                         `${this.props.inventario.nomina_noche.lider.nombre1} ${this.props.inventario.nomina_noche.lider.apellidoPaterno}`
-                                         :
-                                         '--'
-                                 }
+                                 selectedValue={inv.nnoche_idLider || ''}
+                                 selectedLabel={inv.nnoche_lider}
                                  onOpenList={this.cargarLideresDisponibles}
                                  ref={ref=>this.selectLiderNoche=ref}
                                  onChange={this.guardarNominaNoche.bind(this)}
@@ -353,7 +340,7 @@ class RowInventario extends React.Component{
                     {/*
                     <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectLiderDia=ref}
-                            seleccionada={ this.props.inventario.nomina_dia.idLider || ''}
+                            seleccionada={ inv.ndia_idLider || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
                             opciones={this.props.opcionesLideres}
                             opcionNula={true}
@@ -362,7 +349,7 @@ class RowInventario extends React.Component{
                     />
                     <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectLiderNoche_=ref}
-                            seleccionada={ this.props.inventario.nomina_noche.idLider}
+                            seleccionada={ inv.nnoche_idLider}
                             onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={this.props.opcionesLideres}
                             opcionNula={true}
@@ -373,22 +360,22 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Hora Presentación Lider */}
                 <td className={css.tdHora}>
-                    {/*<p style={{display: inventarioDia? 'block' : 'none'}}>{this.props.inventario.hliderDia}</p>*/}
+                    {/*<p style={{display: inventarioDia? 'block' : 'none'}}>{inv.ndia_hrLider}</p>*/}
                     <InputHora
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionLiderDia=ref}
-                        asignada={this.props.inventario.nomina_dia.horaPresentacionLider}
+                        asignada={inv.ndia_hrLider}
                         tooltipText={txtHrApertura}
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
                         puedeModificar={puedeEditarNominaDia}
                     />
-                    {/*<p style={{display: inventarioNoche? 'block' : 'none'}}>{this.props.inventario.hliderNoche}</p>*/}
+                    {/*<p style={{display: inventarioNoche? 'block' : 'none'}}>{inv.nnoche_hrLider}</p>*/}
                     <InputHora
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionLiderNoche=ref}
-                        asignada={this.props.inventario.nomina_noche.horaPresentacionLider}
+                        asignada={inv.nnoche_hrLider}
                         tooltipText={txtHrCierre}
                         onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>{}}
@@ -399,22 +386,22 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Hora Presentación Equipo*/}
                 <td className={css.tdHora}>
-                    {/*<p style={{display: inventarioDia? 'block' : 'none'}}>{this.props.inventario.hequipoDia}</p>*/}
+                    {/*<p style={{display: inventarioDia? 'block' : 'none'}}>{inv.ndia_hrEquipo}</p>*/}
                     <InputHora
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionEquipoDia=ref}
-                        asignada={this.props.inventario.nomina_dia.horaPresentacionEquipo}
+                        asignada={inv.ndia_hrEquipo}
                         tooltipText={txtHrApertura}
                         onGuardar={this.guardarNominaDia.bind(this)}
                         focusRowAnterior={()=>{}}
                         focusRowSiguiente={()=>{}}
                         puedeModificar={puedeEditarNominaDia}
                     />
-                    {/*<p style={{display: inventarioNoche? 'block' : 'none'}}>{this.props.inventario.hequipoNoche}</p>*/}
+                    {/*<p style={{display: inventarioNoche? 'block' : 'none'}}>{inv.nnoche_hrEquipo}</p>*/}
                     <InputHora
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionEquipoNoche=ref}
-                        asignada={this.props.inventario.nomina_noche.horaPresentacionEquipo}
+                        asignada={inv.nnoche_hrEquipo}
                         tooltipText={txtHrCierre}
                         onGuardar={this.guardarNominaNoche.bind(this)}
                         focusRowAnterior={()=>{}}
@@ -426,7 +413,7 @@ class RowInventario extends React.Component{
                 <td className={css.tdUsuario}>
                     <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectSupervisorDia=ref}
-                            seleccionada={ this.props.inventario.nomina_dia.idSupervisor || ''}
+                            seleccionada={ ''+inv.ndia_idSupervisor || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
                             opciones={this.props.opcionesSupervisores}
                             opcionNula={true}
@@ -435,7 +422,7 @@ class RowInventario extends React.Component{
                     />
                     <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectSupervisorNoche=ref}
-                            seleccionada={ this.props.inventario.nomina_noche.idSupervisor || ''}
+                            seleccionada={ ''+inv.nnoche_idSupervisor || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={this.props.opcionesSupervisores}
                             opcionNula={true}
@@ -447,7 +434,7 @@ class RowInventario extends React.Component{
                 <td className={css.tdUsuario}>
                     <Select style={{display: inventarioDia? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador1Dia=ref}
-                            seleccionada={this.props.inventario.nomina_dia.idCaptador1 || ''}
+                            seleccionada={''+inv.ndia_idCaptador1 || ''}
                             onSelect={this.guardarNominaDia.bind(this)}
                             opciones={this.props.opcionesCaptadores}
                             opcionNula={true}
@@ -456,64 +443,70 @@ class RowInventario extends React.Component{
                     />
                     <Select style={{display: inventarioNoche? 'block' : 'none'}}
                             ref={ref=>this.selectCaptador1Noche=ref}
-                            seleccionada={this.props.inventario.nomina_noche.idCaptador1 || ''}
+                            seleccionada={''+inv.nnoche_idCaptador1 || ''}
                             onSelect={this.guardarNominaNoche.bind(this)}
                             opciones={this.props.opcionesCaptadores}
                             opcionNula={true}
                             opcionNulaSeleccionable={true}
                             puedeModificar={puedeEditarCaptadorNoche}
                     />
+                    <div>
+                        {/*inv.nnoche_captadores.map(captador=>
+                            //WIP
+                            <p>{captador.nombre}</p>
+                        )*/}
+                    </div>
                 </td>
                 {/* Dirección */}
                 <td className={css.tdDireccion}>
-                    {this.props.inventario.local.direccion.direccion}
+                    {inv.local_direccion}
                 </td>
                 {/* Nómina*/}
                 <td className={css.tdNomina}>
                     {/* Nomina de Día */}
-                    <a href={`nomina/${this.props.inventario.nomina_dia.idNomina}`}
+                    <a href={`nomina/${inv.ndia_idNomina}`}
                        className={cx(
                             'label',
                             // color depende del valor de la fechaSubida
-                            labelNominas[this.props.inventario.nomina_dia.idEstadoNomina],
+                            labelNominas[inv.ndia_idEstadoNomina],
                             inventarioDia? 'center-block' : 'hide'
                         )}
                        target="_blank">
-                        {estadoNominas[this.props.inventario.nomina_dia.idEstadoNomina]}
+                        {estadoNominas[inv.ndia_idEstadoNomina]}
                     </a>
                     {/* Nomina de Noche */}
-                    <a href={`nomina/${this.props.inventario.nomina_noche.idNomina}`}
+                    <a href={`nomina/${inv.nnoche_idNomina}`}
                        className={cx(
                             'label',
                             // color depende del valor de la fechaSubida
-                            labelNominas[this.props.inventario.nomina_noche.idEstadoNomina],
+                            labelNominas[inv.nnoche_idEstadoNomina],
                             inventarioNoche? 'center-block' : 'hide'
                         )}
                        target="_blank">
-                        {estadoNominas[this.props.inventario.nomina_noche.idEstadoNomina]}
+                        {estadoNominas[inv.nnoche_idEstadoNomina]}
                     </a>
                 </td>
                 {/* Patentes */}
                 <td className={css.tdPatentes}>
-                    {this.props.inventario.patentes}
+                    {inv.inv_patentes}
                 </td>
                 {/* Unidades */}
                 <td className={css.tdUnidadesReales}>
-                    {this.props.inventario.unidadesReal}
+                    {inv.inv_unidadesReales}
                 </td>
                 <td className={css.tdUnidadesTeoricas}>
-                    {this.props.inventario.unidadesTeorico}
+                    {inv.inv_unidadesTeorico}
                 </td>
                 {/* Nómina de pago */}
                 <td className={css.tdNominaPago}>
                     {/* Día */}
                     <div style={{width: '60px'}}>
-                        {this.props.inventario.nomina_dia.urlNominaPago==''?
+                        {inv.ndia_urlNominaPago==''?
                             <span className={cx('label label-default', inventarioDia? 'center-block' : 'hide')}>
                                 Pendiente
                             </span>
                             :
-                            <a href={this.props.inventario.nomina_dia.urlNominaPago} target="_blank"
+                            <a href={inv.ndia_urlNominaPago} target="_blank"
                                className={cx('label label-primary', inventarioDia? 'center-block' : 'hide')}>
                                 Disponible
                             </a>
@@ -521,12 +514,12 @@ class RowInventario extends React.Component{
                     </div>
                     {/* Noche */}
                     <div style={{width: '60px'}}>
-                        {this.props.inventario.nomina_noche.urlNominaPago==''?
+                        {inv.nnoche_urlNominaPago==''?
                             <span className={cx('label label-default', inventarioNoche? 'center-block' : 'hide')}>
                                 Pendiente
                             </span>
                             :
-                            <a href={this.props.inventario.nomina_noche.urlNominaPago} target="_blank"
+                            <a href={inv.nnoche_urlNominaPago} target="_blank"
                                className={cx('label label-primary', inventarioNoche? 'center-block' : 'hide')}>
                                 Disponible
                             </a>

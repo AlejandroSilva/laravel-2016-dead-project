@@ -78,6 +78,19 @@ class InventariosController extends Controller {
     // *            RUTAS PARA CONSUMO DEL API REST
     // * ##########################################################
 
+    // GET api/inventario/buscar_2
+    function api_buscar_2(Request $request){
+        $inventarios = Inventarios::buscar((object)[
+            'fechaInicio' => $request->query('fechaInicio'),
+            'fechaFin' => $request->query('fechaFin'),
+            'idCliente' => $request->query('idCliente'),
+            'incluirConFechaPendiente' => $request->query('incluirConFechaPendiente')
+            //'idLider' => $request->query('idLider'),
+        ])
+            ->map('\App\Inventarios::formato_programacionIGSemanal');
+        return response()->json($inventarios);
+    }
+
     // POST api/inventario/nuevo
     function api_nuevo(Request $request){
         $validator = Validator::make($request->all(), [
@@ -209,19 +222,7 @@ class InventariosController extends Controller {
             }
 
             // mostrar el dato tal cual como esta en la BD
-            return response()->json(
-                Inventarios::with([
-                    'local.cliente',
-                    'local.formatoLocal',
-                    'local.direccion.comuna.provincia.region',
-                    'nominaDia',
-                    'nominaNoche',
-                    'nominaDia.lider',
-                    'nominaNoche.lider',
-                    'nominaDia.captador',
-                    'nominaNoche.captador',
-                ])->find($inventario->idInventario),
-                200);
+            return response()->json(Inventarios::formato_programacionIGSemanal($inventario), 200);
         }else{
             return response()->json([], 404);
         }

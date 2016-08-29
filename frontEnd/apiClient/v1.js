@@ -112,10 +112,11 @@ export default {
             axios.put(`/api/inventario/${idInventario}`, datos),
         eliminar: (idInventario)=>
             axios.delete(`/api/inventario/${idInventario}`),
+        // mes y cliente se usa en IG Mensual
         getPorMesYCliente: (annoMesDia, idCliente)=>
             axios.get(`/api/inventarios/buscar?mes=${annoMesDia}&idCliente=${idCliente}`),
-        getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>
-            axios.get(`/api/inventarios/buscar?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
+        buscar2: (fechaInicio, fechaFin, idCliente)=>
+            axios.get(`/api/inventarios/buscar-2?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
     },
     auditoria: {
         nuevo: (datos)=>

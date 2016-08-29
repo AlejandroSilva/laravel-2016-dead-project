@@ -105,6 +105,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('local/{idLocal}',                               'LocalesController@api_actualizar');
 //        Route::get('locales/{idLocal}/verbose',                   'LocalesController@api_getLocalVerbose');
         // API INVENTARIOS
+        Route::get('inventarios/buscar-2',                          'InventariosController@api_buscar_2');
         Route::post('inventario/nuevo',                             'InventariosController@api_nuevo');
         Route::get('inventario/{idInventario}',                     'InventariosController@api_get');
         Route::put('inventario/{idInventario}',                     'InventariosController@api_actualizar');

@@ -183,20 +183,7 @@ class NominasController extends Controller {
             $nomina->save();
             // entregar la informacion completa del inventario al que pertenece esta nomina
             $inventarioPadre = $nomina->inventario1? $nomina->inventario1 : $nomina->inventario2;
-            return response()->json(
-                Inventarios::with([
-                    'local.cliente',
-                    'local.formatoLocal',
-                    'local.direccion.comuna.provincia.region',
-                    'nominaDia',
-                    'nominaNoche',
-                    'nominaDia.lider',
-                    'nominaNoche.lider',
-                    'nominaDia.captador',
-                    'nominaNoche.captador',
-                ])->find($inventarioPadre->idInventario),
-                200
-            );
+            return response()->json(Inventarios::formato_programacionIGSemanal($inventarioPadre), 200);
         }else{
             return response()->json([], 404);
         }

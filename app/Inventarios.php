@@ -68,14 +68,14 @@ class Inventarios extends Model {
         // retornar 0 en caso de ser negativo..
         return $operadores<0? 0 : $operadores;
     }
-    function ______patentesSugeridas____sin_uso__(){
+    function patentesSugeridas(){
         $idCliente = $this->local->idCliente;
         if($idCliente==2 || $idCliente==5){
             // para el cliente FCV(2) y FSB(5), se calcula PTT=stock/44
-            return $this->stockTeorico/44;
+            return round($this->stockTeorico/44);
         }else{
             // para los otros clientes, se calcula PTT=stock/110
-            return $this->stockTeorico/110;
+            return round($this->stockTeorico/110);
         }
     }
     static function calcularFechaLimiteCaptador($fechaProgramada){
@@ -111,8 +111,20 @@ class Inventarios extends Model {
     // ####  Getters
     function fechaProgramadaF(){
         setlocale(LC_TIME, 'es_CL.utf-8');
-        // fecha con formato: ejemplo: "2016-05-30" -> "lunes 30 de mayo, 2016"
-        return Carbon::parse($this->fechaProgramada)->formatLocalized('%A %e de %B, %Y');
+        $fecha = explode('-', $this->fechaProgramada);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+        $dia  = $fecha[2];
+
+        // si no esta seleccionado el dia, se muestra con otro formado
+        if($dia==0){
+            // fecha con formato: ejemplo: "2016-05-00" -> "mayo, 2016"
+            // FIX: si se entrega 2016-02-01, el formato indica "enero, 2016, por eso se genera una fecha con dia "1"
+            return Carbon::parse( "$anno-$mes-01")->formatLocalized('%B, %Y');
+        }else{
+            // fecha con formato: ejemplo: "2016-05-30" -> "lunes 30 de mayo, 2016"
+            return Carbon::parse($this->fechaProgramada)->formatLocalized('%A %e de %B, %Y');
+        }
     }
 
     // ####  Setters
@@ -218,13 +230,77 @@ class Inventarios extends Model {
         $_inventario['nominaNoche'] = $inventario->nominaNoche->habilitada? Nominas::formatearSimple($inventario->nominaNoche) : null;
         return $_inventario;
     }
+    // formato utilizado en el modulo "Programacion Semanal IG"
+    static function formato_programacionIGSemanal($inventario){
+        return [
+            'inv_idInventario' => $inventario->idInventario,
+            'inv_fechaProgramadaF' => $inventario->fechaProgramadaF(),
+            'inv_fechaProgramada' => $inventario->fechaProgramada,
+            // dia texto, dia, mes anno separados...
+            'cliente_idCliente' => $inventario->local->idCliente,
+            'cliente_nombreCorto' => $inventario->local->cliente->nombreCorto,
+            'local_ceco' => $inventario->local->numero,
+            'local_nombre' => $inventario->local->nombre,
+            'local_idFormato' => $inventario->local->idFormatoLocal,
+            'local_formatoLocal' => $inventario->local->formatoLocal->nombre,
+            'local_produccionSugerida' => $inventario->local->formatoLocal->produccionSugerida,
+            'local_comuna' => $inventario->local->direccion->comuna->nombre,
+            'local_cutComuna' => $inventario->local->direccion->cutComuna,
+            'local_region' => $inventario->local->direccion->comuna->provincia->region->numero,
+            'local_cutRegion' => $inventario->local->direccion->comuna->provincia->cutRegion,
+            'local_direccion' => $inventario->local->direccion->direccion,
+            'local_horaApertura' => $inventario->local->horaApertura,
+            'local_horaCierre' => $inventario->local->horaCierre,
+
+            'inv_idJornada' => $inventario->idJornada,
+            'inv_jornada' => $inventario->jornada->nombre,
+            'inv_stockTeorico' => $inventario->stockTeorico,
+            'inv_fechaStock' => $inventario->fechaStock,
+
+            'inv_patentes' => $inventario->patentesSugeridas(),
+            'inv_unidadesReales' => $inventario->unidadesReal,
+            'inv_unidadesTeorico' => $inventario->unidadesTeorico,
+
+            // ######## NOMINA DIA ########
+            'ndia_idNomina' => $inventario->nominaDia->idNomina,
+            'ndia_dotTotal' => $inventario->nominaDia->dotacionTotal,
+            'ndia_dotOperadores' => $inventario->nominaDia->dotacionOperadores,
+            'ndia_idLider' => $inventario->nominaDia->idLider,
+            'ndia_lider' => $inventario->nominaDia->lider? $inventario->nominaDia->lider->nombreCorto() : '--',
+            'ndia_hrLider' => $inventario->nominaDia->horaPresentacionLider,
+            'ndia_hrEquipo' => $inventario->nominaDia->horaPresentacionEquipo,
+            'ndia_idSupervisor' => $inventario->nominaDia->idSupervisor,
+            'ndia_supervisor' => $inventario->nominaDia->supervisor? $inventario->nominaDia->supervisor->nombreCorto() : '--',
+            'ndia_idCaptador1' => $inventario->nominaDia->idCaptador1,
+            'ndia_captador1' => $inventario->nominaDia->captador1? $inventario->nominaDia->captador1->nombreCorto() : '--',
+            // captadores **
+            // estado nomina ** (cambiar proximamente)
+            'ndia_idEstadoNomina' => $inventario->nominaDia->idEstadoNomina,
+            'ndia_habilitada' => $inventario->nominaDia->habilitada,
+            'ndia_urlNominaPago' => $inventario->nominaDia->urlNominaPago,
+
+            // ####### NOMINA NOCHE #######
+            'nnoche_idNomina' => $inventario->nominaNoche->idNomina,
+            'nnoche_dotTotal' => $inventario->nominaNoche->dotacionTotal,
+            'nnoche_dotOperadores' => $inventario->nominaNoche->dotacionOperadores,
+            'nnoche_idLider' => $inventario->nominaNoche->idLider,
+            'nnoche_lider' => $inventario->nominaNoche->lider? $inventario->nominaNoche->lider->nombreCorto() : '--',
+            'nnoche_hrLider' => $inventario->nominaNoche->horaPresentacionLider,
+            'nnoche_hrEquipo' => $inventario->nominaNoche->horaPresentacionEquipo,
+            'nnoche_idSupervisor' => $inventario->nominaNoche->idSupervisor,
+            'nnoche_supervisor' => $inventario->nominaNoche->supervisor? $inventario->nominaNoche->supervisor->nombreCorto() : '--',
+            'nnoche_idCaptador1' => $inventario->nominaNoche->idCaptador1,
+            'nnoche_captador1' => $inventario->nominaNoche->captador1? $inventario->nominaNoche->captador1->nombreCorto() : '--',
+            // captadores **
+            // estado nomina ** (cambiar proximamente)
+            'nnoche_idEstadoNomina' => $inventario->nominaNoche->idEstadoNomina,
+            'nnoche_habilitada' => $inventario->nominaNoche->habilitada,
+            'nnoche_urlNominaPago' => $inventario->nominaNoche->urlNominaPago,
+        ];
+    }
 
     // #### Scopes para hacer Querys/Busquedas
-    function scopeFechaProgramadaEntre($query, $fechaInicio, $fechaFin){
-        // al parecer funciona, hacer mas pruebas
-        $query->where('fechaProgramada', '>=', $fechaInicio);
-        $query->where('fechaProgramada', '<=', $fechaFin);
-    }
+
     function scopeConCaptador___no_se_ocupa($query, $idCaptador){
         // no probado
         // buscar el captador en la nomina de "dia" O en la de "noche", la nomina debe estar "Habilitada"
@@ -235,5 +311,34 @@ class Inventarios extends Model {
             ->orWhereHas('nominaNoche', function($q) use ($idCaptador){
                 $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
             });
+    }
+
+    static function buscar($peticion){
+        // todo: deberian mejorar bastante los tiempos de respuesta, si se agregan los eager loading dentro del query
+        $query = Inventarios::with([]);
+
+        // Cliente (solo si existe y es dintito a 0)
+        $idCliente = $peticion->idCliente;
+        if( isset($idCliente) && $idCliente!=0) {
+            $query->whereHas('local', function ($q) use ($idCliente) {
+                $q->where('idCliente', '=', $idCliente);
+            });
+        }
+
+        // Fecha desde
+        if(isset($peticion->fechaInicio))
+            $query->where('fechaProgramada', '>=', $peticion->fechaInicio);
+
+        // Fecha hasta
+        if(isset($peticion->fechaFin))
+            $query->where('fechaProgramada', '<=', $peticion->fechaFin);
+
+        // Incluir con "fecha pendiente" en el resultado, solo si se indica explicitamente
+        $incluirConFechaPendiente = isset($peticion->incluirConFechaPendiente) && $peticion->incluirConFechaPendiente=='true';
+        if( $incluirConFechaPendiente==false )
+            $query->whereRaw("extract(day from fechaProgramada) != 0");
+
+        $query->orderBy('fechaProgramada', 'asc');
+        return $query->get();
     }
 }

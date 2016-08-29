@@ -123,7 +123,7 @@ class ProgramacionIGSemanal extends React.Component {
         let fechaInicio = this.state.fechaInicialSeleccionada.format(format)
         let fechaFin = this.state.fechaFinalSeleccionada.format(format)
 
-        api.inventario.getPorRangoYCliente(fechaInicio, fechaFin, idCliente)
+        api.inventario.buscar2(fechaInicio, fechaFin, idCliente)
             .then(inventarios=>{
                 //console.log(`inventarios del rango ${fechaInicio} a ${fechaFin}, y cliente ${idCliente}`, inventarios)
                 this.blackbox.reset()
@@ -196,11 +196,11 @@ class ProgramacionIGSemanal extends React.Component {
                         let mostrarSeparador = false
                         let sgteInventario = this.state.inventariosFiltrados[index+1]
                         if(sgteInventario)
-                            mostrarSeparador = inventario.fechaProgramada!==sgteInventario.fechaProgramada
+                            mostrarSeparador = inventario.inv_fechaProgramada!==sgteInventario.inv_fechaProgramada
                         return <RowInventarioSemanal
                             // Propiedades
                             puedeModificar={this.props.puedeModificar}
-                            key={inventario.idInventario}
+                            key={inventario.inv_idInventario}
                             index={index}
                             ref={ref=>this.rows[index]=ref}
                             inventario={inventario}
