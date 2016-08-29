@@ -60,7 +60,8 @@ class ProgramacionAIMensual extends React.Component{
             promesasFetch.push(
                 api.auditoria.nuevo({
                         idLocal: nuevaAuditoria.idLocal,
-                        fechaProgramada: this.refFormularioAgregar.getOpcionesSeleccionadas().mes
+                        fechaProgramada: nuevaAuditoria.fechaProgramada || this.refFormularioAgregar.getOpcionesSeleccionadas().mes,
+                        idAuditor: nuevaAuditoria.idAuditor
                     })
                     .then(auditoriaCreada=>{
                         this.blackbox.actualizarDatosAuditoria(nuevaAuditoria.idDummy, auditoriaCreada)
@@ -115,13 +116,12 @@ class ProgramacionAIMensual extends React.Component{
     }
 
     // Lista de inventarios que son "pegados desde excel"
-    agregarGrupoInventarios(idCliente, numerosLocales, annoMesDia){
-        console.log(numerosLocales)
+    agregarGrupoInventarios(datosAuditorias){
         let pegadoConProblemas = []
         // se evalua y agrega cada uno de los elementos
         let nuevosInventarios = []
-        numerosLocales.forEach(numero=> {
-            let [errores, nuevoInventario] = this.blackbox.crearDummy(idCliente, numero, annoMesDia)
+        datosAuditorias.forEach(datos=> {
+            let [errores, nuevoInventario] = this.blackbox.crearDummy(datos.idCliente, datos.ceco, datos.fecha, datos.idAuditor)
             if (errores){
                 pegadoConProblemas.push(errores)
             }else{
@@ -139,8 +139,8 @@ class ProgramacionAIMensual extends React.Component{
 
         return {
             pegadoConProblemas: pegadoConProblemas,
-            conteoTotal: numerosLocales.length,
-            conteoCorrectos: numerosLocales.length - pegadoConProblemas.length,
+            conteoTotal: datosAuditorias.length,
+            conteoCorrectos: datosAuditorias.length - pegadoConProblemas.length,
             conteoProblemas: pegadoConProblemas.length
         }
     }

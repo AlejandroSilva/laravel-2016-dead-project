@@ -119,12 +119,17 @@ export class FormularioAgregarAuditoria extends React.Component {
             let rows = texto.trim().split('\n')
             // quitar las filas vacias, y separar sus valores por el caracter tabulador
             rows = rows.filter(row=>row!=='')
-            let numerosLocales = rows.map(row=>{
-                return row.trim().split('\t')[0]
+            let datosAuditorias = rows.map(row=>{
+                let datos = row.trim().split('\t')
+                return {
+                    idCliente: idCliente,
+                    fecha: datos[0],
+                    ceco: datos[1],
+                    idAuditor: datos[2],
+                }
             })
-
-
-            let resultadoPegar = this.props.agregarGrupoInventarios(idCliente, numerosLocales, this.inputAnnoMesDia.value)
+            
+            let resultadoPegar = this.props.agregarGrupoInventarios(datosAuditorias)
             // guardar el resultado de agregar los elementos
             this.setState({
                 pegados: resultadoPegar
