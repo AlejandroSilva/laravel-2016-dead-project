@@ -61,7 +61,7 @@ class ProgramacionIGMensual extends React.Component{
 
             promesasFetch.push(
                 api.inventario.nuevo({
-                        idLocal: nuevoInventario.idLocal,
+                        idLocal: nuevoInventario.local_idLocal,
                         fechaProgramada: this.refFormularioAgregar.getOpcionesSeleccionadas().mes
                     })
                     .then(inventarioCreado=>{
@@ -102,7 +102,7 @@ class ProgramacionIGMensual extends React.Component{
 
         // cuando se agregar un inventario, se crea automaticamente (junto a su nomina)
         api.inventario.nuevo({
-            idLocal: nuevoInventario.local.idLocal,
+            idLocal: nuevoInventario.local_idLocal,
             fechaProgramada: this.refFormularioAgregar.getOpcionesSeleccionadas().mes
         })
             .then(inventarioCreado=>{
@@ -164,7 +164,7 @@ class ProgramacionIGMensual extends React.Component{
                 this.blackbox.reset()
                 inventarios.forEach(inventario=>{
                     // crear un dummy
-                    let nuevoInventario = this.blackbox.__crearDummy(annoMesDia, inventario.idLocal )
+                    let nuevoInventario = this.blackbox.__crearDummy(annoMesDia, inventario.local_idLocal )
                     this.blackbox.addFinal(nuevoInventario)
 
                     // actualizar los datos del inventario
@@ -193,7 +193,7 @@ class ProgramacionIGMensual extends React.Component{
         this.setState(this.blackbox.getListaFiltrada())
     }
     eliminarInventario(inventario){
-        api.inventario.eliminar(inventario.idInventario)
+        api.inventario.eliminar(inventario.inv_idInventario)
             .then(resp=>{
                 this.blackbox.remove(inventario.idDummy)
                 // actualizar los filtros, y la lista ordenada de locales
@@ -235,11 +235,11 @@ class ProgramacionIGMensual extends React.Component{
                             let mostrarSeparador = false
                             let sgteInventario = this.state.inventariosFiltrados[index+1]
                             if(sgteInventario)
-                                mostrarSeparador = inventario.fechaProgramada!==sgteInventario.fechaProgramada
+                                mostrarSeparador = inventario.inv_fechaProgramada!==sgteInventario.inv_fechaProgramada
                             return <RowInventarioMensual
                                     // Propiedades
                                     puedeModificar={this.props.puedeModificar}
-                                    key={index}
+                                    key={inventario.inv_idInventario || '_dum_'+inventario.idDummy}
                                     index={index}
                                     ref={ref=>this.rows[index]=ref}
                                     inventario={inventario}

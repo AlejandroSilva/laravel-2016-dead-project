@@ -114,7 +114,7 @@ export default {
             axios.delete(`/api/inventario/${idInventario}`),
         // mes y cliente se usa en IG Mensual
         getPorMesYCliente: (annoMesDia, idCliente)=>
-            axios.get(`/api/inventarios/buscar?mes=${annoMesDia}&idCliente=${idCliente}`),
+            axios.get(`/api/inventarios/buscar-2?mes=${annoMesDia}&idCliente=${idCliente}&incluirConFechaPendiente=true`),
         buscar2: (fechaInicio, fechaFin, idCliente)=>
             axios.get(`/api/inventarios/buscar-2?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
     },

@@ -239,6 +239,7 @@ class Inventarios extends Model {
             // dia texto, dia, mes anno separados...
             'cliente_idCliente' => $inventario->local->idCliente,
             'cliente_nombreCorto' => $inventario->local->cliente->nombreCorto,
+            'local_idLocal' => $inventario->idLocal,
             'local_ceco' => $inventario->local->numero,
             'local_nombre' => $inventario->local->nombre,
             'local_idFormato' => $inventario->local->idFormatoLocal,
@@ -332,6 +333,16 @@ class Inventarios extends Model {
         // Fecha hasta
         if(isset($peticion->fechaFin))
             $query->where('fechaProgramada', '<=', $peticion->fechaFin);
+
+        // Mes
+        if(isset($peticion->mes)){
+            $_fecha = explode('-', $peticion->mes);
+            $anno = $_fecha[0];
+            $mes  = $_fecha[1];
+            $query
+                ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
+        }
 
         // Incluir con "fecha pendiente" en el resultado, solo si se indica explicitamente
         $incluirConFechaPendiente = isset($peticion->incluirConFechaPendiente) && $peticion->incluirConFechaPendiente=='true';

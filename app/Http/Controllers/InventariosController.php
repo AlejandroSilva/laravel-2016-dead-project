@@ -81,9 +81,10 @@ class InventariosController extends Controller {
     // GET api/inventario/buscar_2
     function api_buscar_2(Request $request){
         $inventarios = Inventarios::buscar((object)[
+            'idCliente' => $request->query('idCliente'),
             'fechaInicio' => $request->query('fechaInicio'),
             'fechaFin' => $request->query('fechaFin'),
-            'idCliente' => $request->query('idCliente'),
+            'mes' => $request->query('mes'),
             'incluirConFechaPendiente' => $request->query('incluirConFechaPendiente')
             //'idLider' => $request->query('idLider'),
         ])
@@ -162,15 +163,8 @@ class InventariosController extends Controller {
             $resultado =  $inventario->save();
 
             if($resultado){
-                return response()->json(
-                    $inventario = Inventarios::with([
-                        'local.cliente',
-                        'local.formatoLocal',
-                        'local.direccion.comuna.provincia.region',
-                        'nominaDia',
-                        'nominaNoche'
-                    ])->find($inventario->idInventario)
-                    , 201);
+                $_inventario = Inventarios::find($inventario->idInventario);
+                return response()->json(Inventarios::formato_programacionIGSemanal($_inventario), 201);
             }else{
                 return response()->json([
                     'request'=> $request->all(),

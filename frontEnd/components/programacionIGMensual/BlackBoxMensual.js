@@ -5,7 +5,6 @@ export default class BlackBox{
     constructor(clientes){
         this.clientes = clientes
         this.lista = []
-//        this.filtroClientes = []
         this.filtroFechas = []
         this.filtroCeco = []
         this.filtroRegiones = []
@@ -15,7 +14,6 @@ export default class BlackBox{
     // Todo Modificar
     reset(){
         this.lista = []
-//        this.filtroClientes = []
         this.filtroFechas = []
         this.filtroCeco = []
         this.filtroRegiones = []
@@ -26,8 +24,8 @@ export default class BlackBox{
     addNuevo(inventario){
         // al agregar un elemento unico, se debe ubicar: DESPUES de los inventarios sin fecha, y ANTES que los inventarios con fecha
         // buscar el indice del primer inventario con fecha
-        let indexConFecha = this.lista.findIndex(invent=>{
-            let dia = invent.fechaProgramada.split('-')[2]
+        let indexConFecha = this.lista.findIndex(inv=>{
+            let dia = inv.inv_fechaProgramada.split('-')[2]
             return dia!=='00'
         })
         if(indexConFecha>=0){
@@ -42,8 +40,8 @@ export default class BlackBox{
     addNuevos(inventarios){
         // al agregar un elemento unico, se debe ubicar: DESPUES de los inventarios sin fecha, y ANTES que los inventarios con fecha
         // buscar el indice del primer inventario con fecha
-        let indexConFecha = this.lista.findIndex(invent=>{
-            let dia = invent.fechaProgramada.split('-')[2]
+        let indexConFecha = this.lista.findIndex(inv=>{
+            let dia = inv.inv_fechaProgramada.split('-')[2]
             return dia!=='00'
         })
         if(indexConFecha>=0){
@@ -89,40 +87,12 @@ export default class BlackBox{
     __crearDummy(annoMesDia, idLocal){
         return {
             idDummy: this.idDummy++,    // asignar e incrementar
-            idInventario: null,
-            idLocal: idLocal,
-            fechaProgramada: annoMesDia,
-            horaLlegada: null,
-            stockTeorico: '0',
-            dotacionAsignadaTotal: '0',
-            local: {
-                idLocal: idLocal,
-                nombre: '-',
-                numero: '-',
-                stock: 0,
-                fechaStock: 'YYYY-MM-DD',
-                nombreComuna: '-',
-                nombreProvincia: '-',
-                nombreRegion: '-',
-                dotacionSugerida: 0,
-                formato_local: {
-                    produccionSugerida: 0
-                },
-                cliente:{
-                    nombreCliente: '-'
-                },
-                direccion: {
-                    direccion: '-',
-                    comuna: {
-                        nombre: '',
-                        provincia:{
-                            region:{
-                                numero: '-'
-                            }
-                        }
-                    }
-                }
-            }
+            inv_idInventario: null,
+            local_idLocal: idLocal,
+            local_ceco: '-',
+            local_nombre: '',
+            inv_fechaProgramada: annoMesDia,
+            inv_stockTeorico: '0',
         }
     }
     crearDummy(idCliente, numeroLocal, annoMesDia){
@@ -167,6 +137,7 @@ export default class BlackBox{
 
         // ########### ok, se puede crear el inventario "vacio" ###########
         let dummy = this.__crearDummy(annoMesDia, local.idLocal)
+        console.log(annoMesDia, numeroLocal, local, dummy)
         return[ null, dummy]
     }
 
@@ -199,17 +170,17 @@ export default class BlackBox{
     /*** ################### FILTROS ################### ***/
     ordenarLista(){
         let porFechaProgramada = (inventario)=>{
-            let dateA = new Date(inventario.fechaProgramada)
+            let dateA = new Date(inventario.inv_fechaProgramada)
             if(dateA=='Invalid Date'){
-                let [annoA, mesA, diaA] = inventario.fechaProgramada.split('-')
+                let [annoA, mesA, diaA] = inventario.inv_fechaProgramada.split('-')
                 // OJO: (new Date('2016-04')) - (new Date('2016-03-31')), resulta en 0, y los ordena mal, por eso se resta 1
                 return new Date(`${annoA}-${mesA}`) - 1
             }else{
                 return dateA
             }
         }
-        let porCliente = (inventario)=> inventario.local.idCliente
-        let porStockTeorico = (inventario)=> inventario.stockTeorico*1
+        let porCliente = (inventario)=> inventario.cliente_idCliente
+        let porStockTeorico = (inventario)=> inventario.inv_stockTeorico
 
         // ordenar por fechaprogramada, por stock teorico
         this.lista = _.orderBy(this.lista, [porFechaProgramada, porCliente, porStockTeorico], ['asc', 'asc', 'desc'])
@@ -219,9 +190,9 @@ export default class BlackBox{
         // ##### Filtro fechas
         this.filtroFechas = _.chain(this.lista)
             .map(inventario=>{
-                let momentFecha = moment(inventario.fechaProgramada)
-                let valor = inventario.fechaProgramada
-                let texto = momentFecha.isValid()? momentFecha.format('dddd DD MMMM') : `-- ${inventario.fechaProgramada} --`
+                let momentFecha = moment(inventario.inv_fechaProgramada)
+                let valor = inventario.inv_fechaProgramada
+                let texto = momentFecha.isValid()? momentFecha.format('dddd DD MMMM') : `-- ${inventario.inv_fechaProgramada} --`
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroFechas, {'valor': valor})
@@ -234,8 +205,8 @@ export default class BlackBox{
         // ##### Filtro CECO (ordenado por numero)
         this.filtroCeco = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = ''+auditoria.local.numero
-                let texto = ''+auditoria.local.numero
+                let valor = ''+auditoria.local_ceco
+                let texto = ''+auditoria.local_ceco
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroCeco, {'valor': valor})
@@ -248,8 +219,8 @@ export default class BlackBox{
         // ##### Filtro Regiones (ordenado por codRegion)
         this.filtroRegiones = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = auditoria.local.direccion.comuna.provincia.region.cutRegion
-                let texto = auditoria.local.direccion.comuna.provincia.region.numero
+                let valor = auditoria.local_cutRegion
+                let texto = auditoria.local_region
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroRegiones, {'valor': valor})
@@ -263,11 +234,11 @@ export default class BlackBox{
         this.filtroComunas = _.chain(this.lista)
             // solo dejar las comunas en las que su respectiva region este seleccionada
             .filter(auditoria=>{
-                return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+                return _.find(this.filtroRegiones, {'valor': auditoria.local_cutRegion, 'seleccionado': true})
             })
             .map(auditoria=>{
-                let valor = auditoria.local.direccion.cutComuna
-                let texto = auditoria.local.direccion.comuna.nombre
+                let valor = auditoria.local_cutComuna
+                let texto = auditoria.local_comuna
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroComunas, {'valor': valor})
@@ -290,25 +261,21 @@ export default class BlackBox{
         return {
             //inventariosFiltrados: this.lista,
             inventariosFiltrados: _.chain(this.lista)
-                // Filtro por Clientes // deshabilitado
-                // .filter(auditoria=>{
-                //     return _.find(this.filtroClientes, {'valor': auditoria.local.idCliente, 'seleccionado': true})
-                // })
                 // Filtro por CECO
                 .filter(inventario=>{
-                    return _.find(this.filtroCeco, {'valor': ''+inventario.local.numero, 'seleccionado': true})
+                    return _.find(this.filtroCeco, {'valor': ''+inventario.local_ceco, 'seleccionado': true})
                 })
                 // Filtro por Region
                 .filter(inventario=>{
-                    return _.find(this.filtroRegiones, {'valor': inventario.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+                    return _.find(this.filtroRegiones, {'valor': inventario.local_cutRegion, 'seleccionado': true})
                 })
                 // Filtro por Comuna
                 .filter(inventario=>{
-                    return _.find(this.filtroComunas, {'valor': inventario.local.direccion.cutComuna, 'seleccionado': true})
+                    return _.find(this.filtroComunas, {'valor': inventario.local_cutComuna, 'seleccionado': true})
                 })
                 // Filtrar por Fecha (dejar de lo ultimo, ya que es la mas lenta -comparacion de strings- y la menos utilizada)
                 .filter(inventario=>{
-                    return _.find(this.filtroFechas, {'valor': inventario.fechaProgramada, 'seleccionado': true})
+                    return _.find(this.filtroFechas, {'valor': inventario.inv_fechaProgramada, 'seleccionado': true})
                 })
                 .value(),
             filtros: {
