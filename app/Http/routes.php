@@ -120,6 +120,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::delete('nomina/{idNomina}/lider',                    'NominasController@api_quitarLider');
         Route::post('nomina/{idNomina}/supervisor/{usuarioRUN}',    'NominasController@api_agregarSupervisor');
         Route::delete('nomina/{idNomina}/supervisor',               'NominasController@api_quitarSupervisor');
+        // aca las rutas faltantes
         Route::post('nomina/{idNomina}/operador/{usuarioRUN}',      'NominasController@api_agregarOperador');
         Route::delete('nomina/{idNomina}/operador/{usuarioRUN}',    'NominasController@api_quitarOperador');
 //        Route::put('nomina/{idNomina}/operador/{operadorRUN}',      'NominasController@api_modificarOperador');
@@ -194,7 +195,11 @@ Route::group(['middleware' => ['web']], function (){
 //        Route::get('stock/leerArchivo',                           'StockController@api_leerArchivo');
         Route::post('stock/upload',                                 'StockController@api_uploadArchivo');
         Route::post('stock/pegar',                                  'StockController@api_pegarDatos');
+
+        // UTILS
+        Route::post('utils/actualizar-consolidado-vencimiento', 'UtilConsolidadoController@actualizarConsolidado');
     });
+
     /*
     |--------------------------------------------------------------------------
     | API's PUBLICAS, UTILIZADAS POR LA OTRA APLICACION
