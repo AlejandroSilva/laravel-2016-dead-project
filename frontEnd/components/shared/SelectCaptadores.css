@@ -1,0 +1,152 @@
+.select-captadores {
+    width: 100%;
+    padding-left: 1px;
+    padding-right: 1px;
+}
+.hidden {
+    display: none;
+}
+
+/* ******************** CAPTADOR ******************** */
+@value SELECT_WIDTH: 85px;
+
+.captador-div {
+    display: flex;
+    font-size: 10px;
+}
+.captador-disabled {
+    /* pendiente de utilizar */
+}
+
+.captador-text {
+    height: 10px;
+    line-height: 18px;
+    white-space: nowrap;            /* una linea de texto para textos largos*/
+    word-wrap: break-word;
+    overflow: hidden;
+    width: 100%;
+    border: 1px solid rgb(169, 169, 169);
+    height: 18px;
+}
+.captador-ammount {
+    width: 20px;
+    height: 18px;
+    text-align: center;
+}
+/*input[type="number"]*/
+/* FIREFOX */
+.captador-ammount {
+    -moz-appearance: textfield;
+}
+/* CHROME */
+.captador-ammount::-webkit-outer-spin-button,
+.captador-ammount::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.captador-ammount-dirty {
+    border: 2px solid #381615;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;   /*plomo*/
+    outline-color: #4f3534;
+}
+
+/* ******************** OPCIONES CAPTADOR ******************** */
+@value OPTIONS_WIDTH: 100px;
+@value OPTIONS_HEIGHT: 150px;
+
+.dots-container {
+    margin: 0;
+    padding-top: 1px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.dots-container:hover {
+    background: lightgrey;
+}
+.dots{
+    width: 4px;
+    height: 4px;
+    /*border-radius: 50%;*/
+    background-color: #555;
+    box-shadow: 0px 6px 0px #555, 0px 12px 0px #555;
+}
+.options {
+    background: whitesmoke;
+    border: 1px solid rgb(169, 169, 169);
+    list-style: none;
+    padding: 2px;
+    margin-top: 0;
+    margin-bottom: 1px;
+    margin-left: 0;
+    margin-right: 0;
+    width: OPTIONS_WIDTH;
+    font-size: 10px;
+    position: absolute;
+    /* en casso de que tenga demasiados elementos */
+    max-height: OPTIONS_HEIGHT;
+    overflow: overlay;
+}
+.options-hidden {
+    list-style: none;
+    display: none;
+}
+.option {
+    color: rgb(51, 51, 51);
+    cursor: default; /* por defecto muestra el cursos de "text" */
+}
+.option-blankspace{
+    height: 5px;
+}
+.option:hover {
+    color: white;
+    background: cornflowerblue;
+}
+
+/* ******************** CAPTADOR NUEVO ******************** */
+.captador-nuevo {
+    display: flex;
+    font-size: 10px;
+}
+.captador-nuevo-select {
+    line-height: 10px;
+    height: 18px;
+    width: 100%;
+    margin: auto;
+}
+.captador-nuevo-opcion{
+    width: 8px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+}
+.captador-nuevo-opcion:hover{
+    background: lightgrey;
+}
+.captador-nuevo-opcion:after{
+    content: 'X';
+    font-weight: bold;
+    color: #555;
+}
+/* *************** SIN CAPTADOR SELECCIONADO ************** */
+.captador-vacio {
+    display: flex;
+}
+.captador-vacio-texto {
+    width: 100%;
+}
+.captador-vacio-opcion {
+    width: 8px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+}
+.captador-vacio-opcion:hover{
+    background: lightgrey;
+}
+.captador-vacio-opcion:after{
+    content: '+';
+    font-weight: bold;
+    color: #555;
+}

@@ -140,6 +140,12 @@ export default {
             axios.post(`/api/nomina/${idNomina}/lider/${usuarioRUN}`),
         quitarLider: (idNomina, usuarioRUN)=>
             axios.delete(`/api/nomina/${idNomina}/lider`),
+        agregarCaptador: (idNomina, idUsuario)=>
+            axios.post(`/api/nomina/${idNomina}/captador/${idUsuario}`),
+        quitarCaptador: (idNomina, idUsuario)=>
+            axios.delete(`/api/nomina/${idNomina}/captador/${idUsuario}`),
+        cambiarAsignadosCaptador: (idNomina, idUsuario, payload)=>
+            axios.put(`/api/nomina/${idNomina}/captador/${idUsuario}`, payload),
         agregarSupervisor: (idNomina, usuarioRUN)=>
             axios.post(`/api/nomina/${idNomina}/supervisor/${usuarioRUN}`),
         quitarSupervisor: (idNomina, usuarioRUN)=>

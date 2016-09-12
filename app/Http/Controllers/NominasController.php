@@ -317,6 +317,79 @@ class NominasController extends Controller {
             Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
         );
     }
+
+    // POST nomina/{idNomina}/captador/{idUsuario}
+    function api_agregarCaptador($idNomina, $idUsuario){
+        // todo revisar que tenga permisos
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'La nomina no existe'], 400);
+
+        // el usuario existe?
+        $user = User::find($idUsuario);
+        if(!$user)
+            return response()->json(['idUsuario'=>'El usuario no existe'], 400);
+
+        // todo, revisar que sea un captador
+
+        // revisar que no haya sido agregado anteriormente
+        $captadorAgregadoPreviamente = $nomina->captadores()->find($idUsuario);
+        if($captadorAgregadoPreviamente)
+            return response()->json(['idUsuario'=>'El captador ya esta asignado a la nomina'], 400);
+
+        // agregar el captador, por defecto se deja asignado 0 operadores
+        $nomina->captadores()->save($user, ['operadoresAsignados'=>0]);
+        return response()->json(
+            Inventarios::formato_programacionIGSemanal($nomina->inventario)
+        );
+    }
+    // DELETE 'nomina/{idNomina}/captador/{idUsuario}
+    function api_quitarCaptador($idNomina, $idUsuario){
+        // todo, revisar que tenga permisos
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'La nomina no existe'], 400);
+
+        // el usuario existe?
+        $user = User::find($idUsuario);
+        if(!$user)
+            return response()->json(['idUsuario'=>'El usuario no existe'], 400);
+
+        $nomina->captadores()->detach($idUsuario);
+
+        return response()->json(Inventarios::formato_programacionIGSemanal($nomina->inventario), 200);
+    }
+    // PUT nomina/{idNomina}/captador/{idUsuario}
+    function api_cambiarAsignadosDeCaptador($idNomina, $idUsuario, Request $request){
+        // todo, revisar que tenga permisos
+
+        // la nomina existe?
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'La nomina no existe'], 400);
+
+        // el usuario existe?
+        $user = User::find($idUsuario);
+        if(!$user)
+            return response()->json(['idUsuario'=>'El usuario no existe'], 400);
+
+        // todo validar el numero
+
+        $operadorNomina = $nomina->captadores()->find($idUsuario);
+        $operadorNomina->pivot->operadoresAsignados  = $request->asignados;
+        $operadorNomina->pivot->save();
+
+        // buscar inventario actualizado
+        $inventarioActualizado = Inventarios::find($nomina->inventario->idInventario);
+        return response()->json(
+            Inventarios::formato_programacionIGSemanal($inventarioActualizado)
+        );
+    }
+
     // POST api/nomina/{idNomina}/operador/{usuarioRUN}
     function api_agregarOperador($idNomina, $usuarioRUN, Request $request){
         // el usuario tiene permisos?

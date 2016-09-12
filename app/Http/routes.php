@@ -123,7 +123,9 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('nomina/{idNomina}/operador/{usuarioRUN}',      'NominasController@api_agregarOperador');
         Route::delete('nomina/{idNomina}/operador/{usuarioRUN}',    'NominasController@api_quitarOperador');
 //        Route::put('nomina/{idNomina}/operador/{operadorRUN}',      'NominasController@api_modificarOperador');
-        // -- cambio en los estados de las nominas
+        Route::post('nomina/{idNomina}/captador/{idUsuario}',       'NominasController@api_agregarCaptador');
+        Route::delete('nomina/{idNomina}/captador/{idUsuario}',     'NominasController@api_quitarCaptador');
+        Route::put('nomina/{idNomina}/captador/{idUsuario}',        'NominasController@api_cambiarAsignadosDeCaptador');
         Route::post('nomina/{idNomina}/estado-enviar',              'NominasController@api_enviarNomina');
         Route::post('nomina/{idNomina}/estado-aprobar',             'NominasController@api_aprobarNomina');
         Route::post('nomina/{idNomina}/estado-rechazar',            'NominasController@api_rechazarNomina');

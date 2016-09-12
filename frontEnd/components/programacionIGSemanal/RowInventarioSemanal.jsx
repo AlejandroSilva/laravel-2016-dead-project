@@ -10,7 +10,8 @@ import InputHora from '../shared/InputHora.jsx'
 import InputDotacionMultiple from '../shared/InputDotacionSimple.jsx'
 import InputStock from '../shared/InputStock.jsx'
 import Select from '../shared/Select.jsx'
-import {SelectLider} from '../shared/SelectLider.jsx'
+import { SelectLider } from '../shared/SelectLider.jsx'
+import { SelectCaptadores } from '../shared/SelectCaptadores.jsx'
 
 // Styles
 import * as css from './TablaSemanal.css'
@@ -432,30 +433,41 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Captador 1 */}
                 <td className={css.tdUsuario}>
-                    <Select style={{display: inventarioDia? 'block' : 'none'}}
-                            ref={ref=>this.selectCaptador1Dia=ref}
-                            seleccionada={''+inv.ndia_idCaptador1 || ''}
-                            onSelect={this.guardarNominaDia.bind(this)}
-                            opciones={this.props.opcionesCaptadores}
-                            opcionNula={true}
-                            opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarCaptadorDia}
+                    {/*<Select style={{display: inventarioDia? 'block' : 'none'}}*/}
+                            {/*ref={ref=>this.selectCaptador1Dia=ref}*/}
+                            {/*seleccionada={''+inv.ndia_idCaptador1 || ''}*/}
+                            {/*onSelect={this.guardarNominaDia.bind(this)}*/}
+                            {/*opciones={this.props.captadoresDisponibles}*/}
+                            {/*opcionNula={true}*/}
+                            {/*opcionNulaSeleccionable={true}*/}
+                            {/*puedeModificar={puedeEditarCaptadorDia}*/}
+                    {/*/>*/}
+                    {/*<Select style={{display: inventarioNoche? 'block' : 'none'}}*/}
+                            {/*ref={ref=>this.selectCaptador1Noche=ref}*/}
+                            {/*seleccionada={''+inv.nnoche_idCaptador1 || ''}*/}
+                            {/*onSelect={this.guardarNominaNoche.bind(this)}*/}
+                            {/*opciones={this.props.captadoresDisponibles}*/}
+                            {/*opcionNula={true}*/}
+                            {/*opcionNulaSeleccionable={true}*/}
+                            {/*puedeModificar={puedeEditarCaptadorNoche}*/}
+                    {/*/>*/}
+
+                    <SelectCaptadores
+                        visible={inventarioDia}
+                        captadoresDisponibles={this.props.captadoresDisponibles}
+                        captadores={inv.ndia_captadores}
+                        agregarCaptador={this.props.agregarCaptador.bind(this, inv.ndia_idNomina)}
+                        quitarCaptador={this.props.quitarCaptador.bind(this, inv.ndia_idNomina)}
+                        cambiarAsignados={this.props.cambiarAsignados.bind(this, inv.ndia_idNomina)}
                     />
-                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
-                            ref={ref=>this.selectCaptador1Noche=ref}
-                            seleccionada={''+inv.nnoche_idCaptador1 || ''}
-                            onSelect={this.guardarNominaNoche.bind(this)}
-                            opciones={this.props.opcionesCaptadores}
-                            opcionNula={true}
-                            opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarCaptadorNoche}
+                    <SelectCaptadores
+                        visible={inventarioNoche}
+                        captadoresDisponibles={this.props.captadoresDisponibles}
+                        captadores={inv.nnoche_captadores}
+                        agregarCaptador={this.props.agregarCaptador.bind(this, inv.nnoche_idNomina)}
+                        quitarCaptador={this.props.quitarCaptador.bind(this, inv.nnoche_idNomina)}
+                        cambiarAsignados={this.props.cambiarAsignados.bind(this, inv.nnoche_idNomina)}
                     />
-                    <div>
-                        {/*inv.nnoche_captadores.map(captador=>
-                            //WIP
-                            <p>{captador.nombre}</p>
-                        )*/}
-                    </div>
                 </td>
                 {/* Dirección */}
                 <td className={css.tdDireccion}>
@@ -538,13 +550,16 @@ RowInventario.propTypes = {
     inventario: React.PropTypes.object.isRequired,
     opcionesLideres: React.PropTypes.array.isRequired,
     opcionesSupervisores: React.PropTypes.array.isRequired,
-    opcionesCaptadores: React.PropTypes.array.isRequired,
+    captadoresDisponibles: React.PropTypes.array.isRequired,
     mostrarSeparador: React.PropTypes.bool.isRequired,
     // Metodos
     lideresDisponibles: React.PropTypes.func.isRequired,
     guardarInventario: React.PropTypes.func.isRequired,
     guardarNomina: React.PropTypes.func.isRequired,
-    focusRow: React.PropTypes.func.isRequired
+    focusRow: React.PropTypes.func.isRequired,
+    agregarCaptador: React.PropTypes.func.isRequired,
+    quitarCaptador: React.PropTypes.func.isRequired,
+    cambiarAsignados: React.PropTypes.func.isRequired
 }
 RowInventario.defaultProps = {
     mostrarSeparador: false

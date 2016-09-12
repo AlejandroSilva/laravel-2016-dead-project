@@ -274,7 +274,13 @@ class Inventarios extends Model {
             'ndia_supervisor' => $inventario->nominaDia->supervisor? $inventario->nominaDia->supervisor->nombreCorto() : '--',
             'ndia_idCaptador1' => $inventario->nominaDia->idCaptador1,
             'ndia_captador1' => $inventario->nominaDia->captador1? $inventario->nominaDia->captador1->nombreCorto() : '--',
-            // captadores **
+            'ndia_captadores' => $inventario->nominaDia->captadores->map(function($captador){
+                return [
+                    'idUsuario' => $captador->id,
+                    'nombre' => $captador->nombreCorto(),
+                    'asignados' => $captador->pivot->operadoresAsignados
+                ];
+            }),
             // estado nomina ** (cambiar proximamente)
             'ndia_idEstadoNomina' => $inventario->nominaDia->idEstadoNomina,
             'ndia_habilitada' => $inventario->nominaDia->habilitada,
@@ -292,7 +298,13 @@ class Inventarios extends Model {
             'nnoche_supervisor' => $inventario->nominaNoche->supervisor? $inventario->nominaNoche->supervisor->nombreCorto() : '--',
             'nnoche_idCaptador1' => $inventario->nominaNoche->idCaptador1,
             'nnoche_captador1' => $inventario->nominaNoche->captador1? $inventario->nominaNoche->captador1->nombreCorto() : '--',
-            // captadores **
+            'nnoche_captadores' => $inventario->nominaNoche->captadores->map(function($captador){
+                return [
+                    'idUsuario' => $captador->id,
+                    'nombre' => $captador->nombreCorto(),
+                    'asignados' => $captador->pivot->operadoresAsignados
+                ];
+            }),
             // estado nomina ** (cambiar proximamente)
             'nnoche_idEstadoNomina' => $inventario->nominaNoche->idEstadoNomina,
             'nnoche_habilitada' => $inventario->nominaNoche->habilitada,

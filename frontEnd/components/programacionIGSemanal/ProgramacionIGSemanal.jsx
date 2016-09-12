@@ -35,7 +35,7 @@ class ProgramacionIGSemanal extends React.Component {
             opcionesSupervisores: props.supervisores.map(usuario=>{
                  return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
             }),
-            opcionesCaptadores: props.captadores.map(usuario=>{
+            captadoresDisponibles: props.captadores.map(usuario=>{
                 return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
             })
         }
@@ -133,13 +133,44 @@ class ProgramacionIGSemanal extends React.Component {
                 this.setState( this.blackbox.getListaFiltrada() )        // {inventariosFiltrados: ...}
             })
     }
-    
     actualizarFiltro(nombreFiltro, filtro){
         this.blackbox.reemplazarFiltro(nombreFiltro, filtro)
         // actualizar los filtros, y la lista ordenada de locales
         this.setState(this.blackbox.getListaFiltrada())
     }
-    
+    nomina_agregarCaptador(idNomina, idCaptador){
+        api.nomina.agregarCaptador(idNomina, idCaptador)
+            .then(inventarioActualizado=>{
+                this.blackbox.actualizarInventario(inventarioActualizado)
+                this.setState( this.blackbox.getListaFiltrada() )
+            })
+            .catch(error=>{
+                console.log('error al agregar el captador', error)
+            })
+    }
+    nomina_quitarCaptador(idNomina, idCaptador){
+        api.nomina.quitarCaptador(idNomina, idCaptador)
+            .then(inventarioActualizado=>{
+                this.blackbox.actualizarInventario(inventarioActualizado)
+                this.setState( this.blackbox.getListaFiltrada() )
+            })
+            .catch(error=>{
+                console.log('error al quitar el captador', error)
+            })
+    }
+    nomina_cambiarAsignadosCaptador(idNomina, idCaptador, asignados){
+        //console.log('nomina_cambiarAsignadosCaptador', idNomina, idCaptador, asignados)
+
+        api.nomina.cambiarAsignadosCaptador(idNomina, idCaptador, {asignados})
+            .then(inventarioActualizado=>{
+                this.blackbox.actualizarInventario(inventarioActualizado)
+                this.setState( this.blackbox.getListaFiltrada() )
+            })
+            .catch(error=>{
+                console.log('error al asignar operadores al captador', error)
+            })
+    }
+
     render(){
         let fechaInicial = this.state.fechaInicialSeleccionada.format(format)
         let fechaFinal = this.state.fechaFinalSeleccionada.format(format)
@@ -206,13 +237,17 @@ class ProgramacionIGSemanal extends React.Component {
                             inventario={inventario}
                             opcionesLideres={this.state.opcionesLideres}
                             opcionesSupervisores={this.state.opcionesSupervisores}
-                            opcionesCaptadores={this.state.opcionesCaptadores}
+                            captadoresDisponibles={this.state.captadoresDisponibles}
                             mostrarSeparador={mostrarSeparador}
                             // Metodos
                             lideresDisponibles={this.lideresDisponibles.bind(this)}
                             guardarInventario={this.guardarInventario.bind(this)}
-                            guardarNomina={this.guardarNomina.bind(this)}
                             focusRow={this.focusRow.bind(this)}
+                            // Metodos para modificar nomina
+                            guardarNomina={this.guardarNomina.bind(this)}
+                            agregarCaptador={this.nomina_agregarCaptador.bind(this)}
+                            quitarCaptador={this.nomina_quitarCaptador.bind(this)}
+                            cambiarAsignados={this.nomina_cambiarAsignadosCaptador.bind(this)}
                         />
                     })}
                 </TablaSemanal>
