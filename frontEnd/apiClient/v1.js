@@ -112,10 +112,11 @@ export default {
             axios.put(`/api/inventario/${idInventario}`, datos),
         eliminar: (idInventario)=>
             axios.delete(`/api/inventario/${idInventario}`),
+        // mes y cliente se usa en IG Mensual
         getPorMesYCliente: (annoMesDia, idCliente)=>
-            axios.get(`/api/inventarios/buscar?mes=${annoMesDia}&idCliente=${idCliente}`),
-        getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>
-            axios.get(`/api/inventarios/buscar?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
+            axios.get(`/api/inventarios/buscar-2?mes=${annoMesDia}&idCliente=${idCliente}&incluirConFechaPendiente=true`),
+        buscar2: (fechaInicio, fechaFin, idCliente)=>
+            axios.get(`/api/inventarios/buscar-2?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
     },
     auditoria: {
         nuevo: (datos)=>
@@ -139,6 +140,12 @@ export default {
             axios.post(`/api/nomina/${idNomina}/lider/${usuarioRUN}`),
         quitarLider: (idNomina, usuarioRUN)=>
             axios.delete(`/api/nomina/${idNomina}/lider`),
+        agregarCaptador: (idNomina, idUsuario)=>
+            axios.post(`/api/nomina/${idNomina}/captador/${idUsuario}`),
+        quitarCaptador: (idNomina, idUsuario)=>
+            axios.delete(`/api/nomina/${idNomina}/captador/${idUsuario}`),
+        cambiarAsignadosCaptador: (idNomina, idUsuario, payload)=>
+            axios.put(`/api/nomina/${idNomina}/captador/${idUsuario}`, payload),
         agregarSupervisor: (idNomina, usuarioRUN)=>
             axios.post(`/api/nomina/${idNomina}/supervisor/${usuarioRUN}`),
         quitarSupervisor: (idNomina, usuarioRUN)=>

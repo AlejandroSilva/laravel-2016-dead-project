@@ -15,12 +15,12 @@ class AlmacenAF_ArticuloAF extends Model {
     public function almacenAF(){
         return $this->hasOne('App\AlmacenAF', 'idAlmacenAF', 'idAlmacenAF');
     }
-
     // un AlmacenArticulo tiene un Almance asociado
     public function articuloAF(){
         return $this->hasOne('App\ArticuloAF', 'idArticuloAF', 'idArticuloAF');
     }
 
+    // #### Formatear respuestas
     static function formato_tablaArticulos($almaArti) {
         return [
             // articulo

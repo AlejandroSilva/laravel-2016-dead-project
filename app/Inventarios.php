@@ -1,7 +1,5 @@
 <?php
-
 namespace App;
-
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 // Modelos
@@ -10,35 +8,29 @@ use App\Locales;
 class Inventarios extends Model {
     // llave primaria
     public $primaryKey = 'idInventario';
-
     // este modelo tiene timestamps
     public $timestamps = true;
 
     // #### Relaciones
-    public function local(){
+    function local(){
         //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\Locales', 'idLocal', 'idLocal');
     }
-    public function jornada(){
+    function jornada(){
         //return $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\Jornadas', 'idJornada', 'idJornada');
     }
-    public function nominaDia(){
-//        return $this->hasOne('App\Nominas', 'idNomina', 'idNominaDia');
+    function nominaDia(){
+        //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\Nominas', 'idNominaDia', 'idNomina');
     }
-    public function nominaNoche(){
-//        return $this->hasOne('App\Nominas', 'idNomina', 'idNominaNoche');
+    function nominaNoche(){
+        //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\Nominas', 'idNominaNoche', 'idNomina');
     }
 
-    // Consultas y Calulos
-    public function fechaProgramadaF(){
-        setlocale(LC_TIME, 'es_CL.utf-8');
-        // fecha con formato: ejemplo: "2016-05-30" -> "lunes 30 de mayo, 2016"
-        return Carbon::parse($this->fechaProgramada)->formatLocalized('%A %e de %B, %Y');
-    }
-    public function dotacionTotalSugerido($stock = null){
+    // #### Helpers
+    function dotacionTotalSugerido($stock = null){
         // si no se entrega el stock como parametro, se toma el stock actual del local
         $stock = isset($stock)? $stock : $this->stockTeorico;
 
@@ -57,7 +49,7 @@ class Inventarios extends Model {
         // retornar 0 en caso de ser negativo..
         return $total<0? 0 : $total;
     }
-    public function dotacionOperadoresSugerido($stock = null){
+    function dotacionOperadoresSugerido($stock = null){
         // si no se entrega el stock como parametro, se toma el stock actual del local
         $stock = isset($stock)? $stock : $this->stockTeorico;
 
@@ -76,14 +68,14 @@ class Inventarios extends Model {
         // retornar 0 en caso de ser negativo..
         return $operadores<0? 0 : $operadores;
     }
-    public function __patentesSugeridas__por_ahora_no_se_usa(){
+    function patentesSugeridas(){
         $idCliente = $this->local->idCliente;
         if($idCliente==2 || $idCliente==5){
             // para el cliente FCV(2) y FSB(5), se calcula PTT=stock/44
-            return $this->stockTeorico/44;
+            return round($this->stockTeorico/44);
         }else{
             // para los otros clientes, se calcula PTT=stock/110
-            return $this->stockTeorico/110;
+            return round($this->stockTeorico/110);
         }
     }
     static function calcularFechaLimiteCaptador($fechaProgramada){
@@ -99,56 +91,49 @@ class Inventarios extends Model {
             ->first();
         return $cuartoDiasHabilAntes->fecha;
     }
+    private function _fecha_valida($fechaProgramada){
+        $fecha = explode('-', $fechaProgramada);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+        $dia = $fecha[2];
 
-    // #### With scopes
-    public function scopeWithTodo($query){
-        $query->with([
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region',
-            'nominaDia',
-            'nominaNoche',
-            'nominaDia.lider',
-            'nominaNoche.lider',
-            'nominaDia.supervisor',
-            'nominaNoche.supervisor',
-            'nominaDia.captador',
-            'nominaNoche.captador',
-        ]);
-    }
-    public function scopeWithClienteFormatoRegion($query) {
-        $query->with([
-            'local.cliente',
-            'local.formatoLocal',
-            'local.direccion.comuna.provincia.region'
-        ]);
+        // cuando se pone una fecha del tipo '2016-04-', checkdate lanza una excepcion
+        if( !isset($anno) || !isset($mes) || !isset($dia)) {
+            return false;
+        }else{
+            return checkdate($mes,$dia,$anno);
+        }
     }
 
-    // #### Scopes para hacer Querys
-    public function scopeFechaProgramadaEntre($query, $fechaInicio, $fechaFin){
-        // al parecer funciona, hacer mas pruebas
-        $query->where('fechaProgramada', '>=', $fechaInicio);
-        $query->where('fechaProgramada', '<=', $fechaFin);
-    }
-    public function scopeConCaptador($query, $idCaptador){
-        // no probado
-        // buscar el captador en la nomina de "dia" O en la de "noche", la nomina debe estar "Habilitada"
-        $query
-            ->whereHas('nominaDia', function($q) use ($idCaptador){
-                $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
-            })
-            ->orWhereHas('nominaNoche', function($q) use ($idCaptador){
-                $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
-            });
-    }
-    
     // #### Acciones
-    public function actualizarFechaProgramada($fechaProgramada){
+    //
+
+    // ####  Getters
+    function fechaProgramadaF(){
+        setlocale(LC_TIME, 'es_CL.utf-8');
+        $fecha = explode('-', $this->fechaProgramada);
+        $anno = $fecha[0];
+        $mes  = $fecha[1];
+        $dia  = $fecha[2];
+
+        // si no esta seleccionado el dia, se muestra con otro formado
+        if($dia==0){
+            // fecha con formato: ejemplo: "2016-05-00" -> "mayo, 2016"
+            // FIX: si se entrega 2016-02-01, el formato indica "enero, 2016, por eso se genera una fecha con dia "1"
+            return Carbon::parse( "$anno-$mes-01")->formatLocalized('%B, %Y');
+        }else{
+            // fecha con formato: ejemplo: "2016-05-30" -> "lunes 30 de mayo, 2016"
+            return Carbon::parse($this->fechaProgramada)->formatLocalized('%A %e de %B, %Y');
+        }
+    }
+
+    // ####  Setters
+    function set_fechaProgramada($fechaProgramada){
         // Solo si hay un cambio se actualiza y se registra el cambio
         $fecha_original = $this->fechaProgramada;
         if($fecha_original!= $fechaProgramada){
             // si la fecha no es valida, no hacer nada...
-            if( !$this->fecha_valida($fechaProgramada) )
+            if( !$this->_fecha_valida($fechaProgramada) )
                 return;
 
             $this->fechaProgramada = $fechaProgramada;
@@ -165,7 +150,7 @@ class Inventarios extends Model {
             $this->nominaNoche->save();
         }
     }
-    public function actualizarJornada($idJornada){
+    function set_jornada($idJornada){
         // Solo si hay un cambio se actualiza y se registra el cambio
         $jornada_original = $this->idJornada;
         if($jornada_original!= $idJornada){
@@ -173,13 +158,12 @@ class Inventarios extends Model {
             $this->save();
 
             // cambiar el estado (habilitada) de las nominas, (tambien genera el log)
-            $this->nominaDia->actualizarHabilitada( $idJornada==2||$idJornada==4 );      // "dia"(2), o "dia y noche"(4)
-            $this->nominaNoche->actualizarHabilitada( $idJornada==3||$idJornada==4 );    // "noche"(3), o "dia y noche"(4)
+            $this->nominaDia->set_habilitada( $idJornada==2||$idJornada==4 );      // "dia"(2), o "dia y noche"(4)
+            $this->nominaNoche->set_habilitada( $idJornada==3||$idJornada==4 );    // "noche"(3), o "dia y noche"(4)
         }
     }
-
     // se llama luego de se actualiza el stock de un Local, entonces se recalcula la dotacion de todos los inventarios
-    public function actualizarStock($stock, $fechaStock){
+    function set_stock($stock, $fechaStock){
         $habDia= $this->nominaDia->habilitada;
         $habNoche = $this->nominaNoche->habilitada;
         $estadoDia = $this->nominaDia->estado;
@@ -201,12 +185,11 @@ class Inventarios extends Model {
             }
 
             // recalcular la dotacion de las nominas,
-            $alertarCambio = true;        // alertar si existe el cambio ya que este es "automatico"
             // actualizar la dotaion de ambas, incluso si la nomina no esta visible
-            $this->nominaDia->actualizarDotacionTotal($this->dotacionTotalSugerido(), $alertarCambio);
-            $this->nominaDia->actualizarDotacionOperadores($this->dotacionOperadoresSugerido(), $alertarCambio);
-            $this->nominaNoche->actualizarDotacionTotal($this->dotacionTotalSugerido(), $alertarCambio);
-            $this->nominaNoche->actualizarDotacionOperadores($this->dotacionOperadoresSugerido(), $alertarCambio);
+            $this->nominaDia->set_dotacionTotal($this->dotacionTotalSugerido());
+            $this->nominaDia->set_dotacionOperadores($this->dotacionOperadoresSugerido());
+            $this->nominaNoche->set_dotacionTotal($this->dotacionTotalSugerido());
+            $this->nominaNoche->set_dotacionOperadores($this->dotacionOperadoresSugerido());
 
             return [
                 'fechaProgramada' => $this->fechaProgramadaF(),
@@ -222,7 +205,7 @@ class Inventarios extends Model {
         }
     }
 
-    // #### Formatear
+    // #### Formatear respuestas
     static function formatoSimple($inventario){
         return [
             'idInventario' => $inventario->idInventario,
@@ -247,22 +230,138 @@ class Inventarios extends Model {
         $_inventario['nominaNoche'] = $inventario->nominaNoche->habilitada? Nominas::formatearSimple($inventario->nominaNoche) : null;
         return $_inventario;
     }
+    // formato utilizado en el modulo "Programacion Semanal IG"
+    static function formato_programacionIGSemanal($inventario){
+        return [
+            'inv_idInventario' => $inventario->idInventario,
+            'inv_fechaProgramadaF' => $inventario->fechaProgramadaF(),
+            'inv_fechaProgramada' => $inventario->fechaProgramada,
+            // dia texto, dia, mes anno separados...
+            'cliente_idCliente' => $inventario->local->idCliente,
+            'cliente_nombreCorto' => $inventario->local->cliente->nombreCorto,
+            'local_idLocal' => $inventario->idLocal,
+            'local_ceco' => $inventario->local->numero,
+            'local_nombre' => $inventario->local->nombre,
+            'local_idFormato' => $inventario->local->idFormatoLocal,
+            'local_formatoLocal' => $inventario->local->formatoLocal->nombre,
+            'local_produccionSugerida' => $inventario->local->formatoLocal->produccionSugerida,
+            'local_comuna' => $inventario->local->direccion->comuna->nombre,
+            'local_cutComuna' => $inventario->local->direccion->cutComuna,
+            'local_region' => $inventario->local->direccion->comuna->provincia->region->numero,
+            'local_cutRegion' => $inventario->local->direccion->comuna->provincia->cutRegion,
+            'local_direccion' => $inventario->local->direccion->direccion,
+            'local_horaApertura' => $inventario->local->horaApertura,
+            'local_horaCierre' => $inventario->local->horaCierre,
 
-    /**
-     * helpers privados
-     */
-    //Function para validar que la fecha sea valida
-    private function fecha_valida($fechaProgramada){
-        $fecha = explode('-', $fechaProgramada);
-        $anno = $fecha[0];
-        $mes  = $fecha[1];
-        $dia = $fecha[2];
+            'inv_idJornada' => $inventario->idJornada,
+            'inv_jornada' => $inventario->jornada->nombre,
+            'inv_stockTeorico' => $inventario->stockTeorico,
+            'inv_fechaStock' => $inventario->fechaStock,
 
-        // cuando se pone una fecha del tipo '2016-04-', checkdate lanza una excepcion
-        if( !isset($anno) || !isset($mes) || !isset($dia)) {
-            return false;
-        }else{
-            return checkdate($mes,$dia,$anno);
+            'inv_patentes' => $inventario->patentesSugeridas(),
+            'inv_unidadesReales' => $inventario->unidadesReal,
+            'inv_unidadesTeorico' => $inventario->unidadesTeorico,
+
+            // ######## NOMINA DIA ########
+            'ndia_idNomina' => $inventario->nominaDia->idNomina,
+            'ndia_dotTotal' => $inventario->nominaDia->dotacionTotal,
+            'ndia_dotOperadores' => $inventario->nominaDia->dotacionOperadores,
+            'ndia_idLider' => $inventario->nominaDia->idLider,
+            'ndia_lider' => $inventario->nominaDia->lider? $inventario->nominaDia->lider->nombreCorto() : '--',
+            'ndia_hrLider' => $inventario->nominaDia->horaPresentacionLider,
+            'ndia_hrEquipo' => $inventario->nominaDia->horaPresentacionEquipo,
+            'ndia_idSupervisor' => $inventario->nominaDia->idSupervisor,
+            'ndia_supervisor' => $inventario->nominaDia->supervisor? $inventario->nominaDia->supervisor->nombreCorto() : '--',
+            'ndia_idCaptador1' => $inventario->nominaDia->idCaptador1,
+            'ndia_captador1' => $inventario->nominaDia->captador1? $inventario->nominaDia->captador1->nombreCorto() : '--',
+            'ndia_captadores' => $inventario->nominaDia->captadores->map(function($captador){
+                return [
+                    'idUsuario' => $captador->id,
+                    'nombre' => $captador->nombreCorto(),
+                    'asignados' => $captador->pivot->operadoresAsignados
+                ];
+            }),
+            // estado nomina ** (cambiar proximamente)
+            'ndia_idEstadoNomina' => $inventario->nominaDia->idEstadoNomina,
+            'ndia_habilitada' => $inventario->nominaDia->habilitada,
+            'ndia_urlNominaPago' => $inventario->nominaDia->urlNominaPago,
+
+            // ####### NOMINA NOCHE #######
+            'nnoche_idNomina' => $inventario->nominaNoche->idNomina,
+            'nnoche_dotTotal' => $inventario->nominaNoche->dotacionTotal,
+            'nnoche_dotOperadores' => $inventario->nominaNoche->dotacionOperadores,
+            'nnoche_idLider' => $inventario->nominaNoche->idLider,
+            'nnoche_lider' => $inventario->nominaNoche->lider? $inventario->nominaNoche->lider->nombreCorto() : '--',
+            'nnoche_hrLider' => $inventario->nominaNoche->horaPresentacionLider,
+            'nnoche_hrEquipo' => $inventario->nominaNoche->horaPresentacionEquipo,
+            'nnoche_idSupervisor' => $inventario->nominaNoche->idSupervisor,
+            'nnoche_supervisor' => $inventario->nominaNoche->supervisor? $inventario->nominaNoche->supervisor->nombreCorto() : '--',
+            'nnoche_idCaptador1' => $inventario->nominaNoche->idCaptador1,
+            'nnoche_captador1' => $inventario->nominaNoche->captador1? $inventario->nominaNoche->captador1->nombreCorto() : '--',
+            'nnoche_captadores' => $inventario->nominaNoche->captadores->map(function($captador){
+                return [
+                    'idUsuario' => $captador->id,
+                    'nombre' => $captador->nombreCorto(),
+                    'asignados' => $captador->pivot->operadoresAsignados
+                ];
+            }),
+            // estado nomina ** (cambiar proximamente)
+            'nnoche_idEstadoNomina' => $inventario->nominaNoche->idEstadoNomina,
+            'nnoche_habilitada' => $inventario->nominaNoche->habilitada,
+            'nnoche_urlNominaPago' => $inventario->nominaNoche->urlNominaPago,
+        ];
+    }
+
+    // #### Scopes para hacer Querys/Busquedas
+
+    function scopeConCaptador___no_se_ocupa($query, $idCaptador){
+        // no probado
+        // buscar el captador en la nomina de "dia" O en la de "noche", la nomina debe estar "Habilitada"
+        $query
+            ->whereHas('nominaDia', function($q) use ($idCaptador){
+                $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
+            })
+            ->orWhereHas('nominaNoche', function($q) use ($idCaptador){
+                $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
+            });
+    }
+
+    static function buscar($peticion){
+        // todo: deberian mejorar bastante los tiempos de respuesta, si se agregan los eager loading dentro del query
+        $query = Inventarios::with([]);
+
+        // Cliente (solo si existe y es dintito a 0)
+        $idCliente = $peticion->idCliente;
+        if( isset($idCliente) && $idCliente!=0) {
+            $query->whereHas('local', function ($q) use ($idCliente) {
+                $q->where('idCliente', '=', $idCliente);
+            });
         }
+
+        // Fecha desde
+        if(isset($peticion->fechaInicio))
+            $query->where('fechaProgramada', '>=', $peticion->fechaInicio);
+
+        // Fecha hasta
+        if(isset($peticion->fechaFin))
+            $query->where('fechaProgramada', '<=', $peticion->fechaFin);
+
+        // Mes
+        if(isset($peticion->mes)){
+            $_fecha = explode('-', $peticion->mes);
+            $anno = $_fecha[0];
+            $mes  = $_fecha[1];
+            $query
+                ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
+                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
+        }
+
+        // Incluir con "fecha pendiente" en el resultado, solo si se indica explicitamente
+        $incluirConFechaPendiente = isset($peticion->incluirConFechaPendiente) && $peticion->incluirConFechaPendiente=='true';
+        if( $incluirConFechaPendiente==false )
+            $query->whereRaw("extract(day from fechaProgramada) != 0");
+
+        $query->orderBy('fechaProgramada', 'asc');
+        return $query->get();
     }
 }

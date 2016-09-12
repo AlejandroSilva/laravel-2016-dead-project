@@ -151,7 +151,7 @@ class StockController extends Controller {
             ];
         else{
             // actualizar stock del local, el mismo metodo actualiza el stock de los inventarios asociados
-            return $local->actualizarStock($stock, $fechaStock);
+            return $local->set_stock($stock, $fechaStock);
         }
     }
 

@@ -10,6 +10,7 @@ class NominaLog extends Model {
 
     protected $fillable = ['idNomina', 'titulo', 'texto', 'importancia', 'mostrarAlerta'];
 
+    // #### Relaciones
     public function nomina(){
         return $this->belongsTo('App\Nominas', 'idNomina', 'idNomina');
     }

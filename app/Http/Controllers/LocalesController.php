@@ -168,7 +168,7 @@ class LocalesController extends Controller {
         if(isset($request->stock) && !$errors->get('stock')){
             // al actualizar el stock de un local, hacerlo tambien con los inventarios asociados al local
             $ahora = Carbon::now()->format("Y-m-d h:i:s");
-            $local->actualizarStock($request->stock, $ahora);
+            $local->set_stock($request->stock, $ahora);
         }
         if(isset($request->direccion) && !$errors->get('direccion')){
             $local->direccion->direccion = $request->direccion;

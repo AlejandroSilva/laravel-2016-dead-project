@@ -20,20 +20,13 @@ class Auditorias extends Model {
         return $this->hasOne('App\User', 'id', 'idAuditor');
     }
 
-    // #### Scopes para hacer Querys
-    public function scopeSoloFechasValidas($query){
-        // si se selecciona un rango de dias, este podria llegar a incluir fechas sin el dia fijado, Ej: 2016-06-00
-        // este query remove todas las fechas que no tengan el dia fijado
-        $query->whereRaw("extract(day from fechaProgramada) != 0");
-    }
-    public function scopeFechaProgramadaEntre($query, $fechaInicio, $fechaFin){
-        // al parecer funciona, hacer mas pruebas
-        $query->where('fechaProgramada', '>=', $fechaInicio);
-        $query->where('fechaProgramada', '<=', $fechaFin);
-    }
-    
-    // #### Formatear
+    // ####  Getters
+    //
 
+    // ####  Setters
+    //
+
+    // #### Formatear respuestas
     // utilizado por: VistaGeneralController@api_vista
     static function formatear_vistaGeneral($auditoria){
         return (object) [
@@ -48,5 +41,17 @@ class Auditorias extends Model {
             'comuna' => $auditoria->local->direccion->comuna->nombre,
         ];
         // para optimizar, se puede guardar en "cache" la relacion auditoria->local->cliente->nombreCorto
+    }
+
+    // #### Scopes para hacer Querys
+    public function scopeSoloFechasValidas($query){
+        // si se selecciona un rango de dias, este podria llegar a incluir fechas sin el dia fijado, Ej: 2016-06-00
+        // este query remove todas las fechas que no tengan el dia fijado
+        $query->whereRaw("extract(day from fechaProgramada) != 0");
+    }
+    public function scopeFechaProgramadaEntre($query, $fechaInicio, $fechaFin){
+        // al parecer funciona, hacer mas pruebas
+        $query->where('fechaProgramada', '>=', $fechaInicio);
+        $query->where('fechaProgramada', '<=', $fechaFin);
     }
 }

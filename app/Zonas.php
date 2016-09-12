@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Zonas extends Model{
     // llave primaria
     public $primaryKey = 'idZona';
-
     // este modelo no tiene timestamps
     public $timestamps = false;
 

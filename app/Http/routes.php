@@ -47,8 +47,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/mensual',                        'InventariosController@showProgramacionMensual');
         Route::get('programacionIG/semanal',                        'InventariosController@showProgramacionSemanal');
         // INVENTARIOS - DESCARGA DE PDF
-        Route::get('/pdf/inventarios/{mes}/cliente/{idCliente}',    'InventariosController@descargarPDF_porMes');
-        Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'InventariosController@descargarPDF_porRango');
+        Route::get('/pdf/inventarios/{mes}/cliente/{idCliente}',                            'Legacy_InventariosController@descargarPDF_porMes');
+        Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'Legacy_InventariosController@descargarPDF_porRango');
         // INVENTARIO - MANTENEDOR DE NOMINAS
         Route::get('programacionIG/nomina/{idNomina}',              'NominasController@show_nomina');
         // NOMINAS - NOMINAS DE CAPTADOR
@@ -105,6 +105,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('local/{idLocal}',                               'LocalesController@api_actualizar');
 //        Route::get('locales/{idLocal}/verbose',                   'LocalesController@api_getLocalVerbose');
         // API INVENTARIOS
+        Route::get('inventarios/buscar-2',                          'InventariosController@api_buscar_2');
         Route::post('inventario/nuevo',                             'InventariosController@api_nuevo');
         Route::get('inventario/{idInventario}',                     'InventariosController@api_get');
         Route::put('inventario/{idInventario}',                     'InventariosController@api_actualizar');
@@ -122,7 +123,9 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('nomina/{idNomina}/operador/{usuarioRUN}',      'NominasController@api_agregarOperador');
         Route::delete('nomina/{idNomina}/operador/{usuarioRUN}',    'NominasController@api_quitarOperador');
 //        Route::put('nomina/{idNomina}/operador/{operadorRUN}',      'NominasController@api_modificarOperador');
-        // -- cambio en los estados de las nominas
+        Route::post('nomina/{idNomina}/captador/{idUsuario}',       'NominasController@api_agregarCaptador');
+        Route::delete('nomina/{idNomina}/captador/{idUsuario}',     'NominasController@api_quitarCaptador');
+        Route::put('nomina/{idNomina}/captador/{idUsuario}',        'NominasController@api_cambiarAsignadosDeCaptador');
         Route::post('nomina/{idNomina}/estado-enviar',              'NominasController@api_enviarNomina');
         Route::post('nomina/{idNomina}/estado-aprobar',             'NominasController@api_aprobarNomina');
         Route::post('nomina/{idNomina}/estado-rechazar',            'NominasController@api_rechazarNomina');
@@ -201,8 +204,8 @@ Route::group(['middleware' => ['web']], function (){
     |*/
     Route::group(['prefix'=>'api'], function(){
         // API INVENTARIOS
-        Route::get('inventarios/buscar',                            'InventariosController@api_buscar');
-        Route::post('inventarios/informar-archivo-final',           'InventariosController@api_informarArchivoFinal');
+        Route::get('inventarios/buscar',                            'Legacy_InventariosController@api_publica_buscar');
+        Route::post('inventarios/informar-archivo-final',           'Legacy_InventariosController@api_publica_informarArchivoFinal');
         // API DE NOMINAS
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-disponible', 'NominasController@api_informarDisponible');
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-nomina-pago','NominasController@api_informarNominaPago');

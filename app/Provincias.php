@@ -16,7 +16,6 @@ class Provincias extends Model{
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Regiones', 'cutRegion', 'cutRegion');
     }
-
     public function comunas(){
         // hasMany(modelo, child.fogeignKey, this.localKey)
         return $this->hasMany('App\Comunas', 'cutProvincia', 'cutProvincia');

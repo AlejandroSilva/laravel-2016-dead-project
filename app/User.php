@@ -13,25 +13,15 @@ class User extends Authenticatable {
 //    protected $table = 'users';     // table name
 //    public $primaryKey = 'id';      // llave primaria
 //    public $timestamps = true;      // este modelo tiene timestamps
-    
-    
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+
+    // The attributes that are mass assignable.
     protected $fillable = [
         'usuarioRUN', 'usuarioDV', 'email', 'emailPersonal',
         'nombre1', 'nombre2', 'apellidoPaterno', 'apellidoMaterno',
         'fechaNacimiento', 'telefono', 'telefonoEmergencia', 'direccion', 'cutComuna',
         'tipoContrato', 'fechaInicioContrato', 'fechaCertificadoAntecedentes', 'banco', 'tipoCuenta', 'numeroCuenta'
     ];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
+    // The attributes excluded from the model's JSON form.
     protected $hidden = [
         'password', 'remember_token',
     ];
@@ -41,18 +31,20 @@ class User extends Authenticatable {
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Comunas', 'cutComuna', 'cutComuna');
     }
-
-
-    // #### Acciones
-
-    // #### Helpers / Getters
-    function __nomasEnLasQueHaParticipadoComoOperador__(){
+    function nominasComoCaptador(){
+        // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
+        return $this->belongsToMany('App\Nominas', 'nominas_captadores', 'idCaptador', 'idNomina')
+            ->withTimestamps()
+            ->withPivot('titular', 'idRoleAsignado');
+    }
+    function __nominasComoOperador__sin_uso__(){
         // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
         return $this->belongsToMany('App\Nominas', 'nominas_user', 'idUser', 'idNomina')
             ->withTimestamps()
             ->withPivot('titular', 'idRoleAsignado');
     }
 
+    // #### Helpers
     // Busca las nominas en las que ha participado como titular (lider, supervisor, o operador)
     function nominasComoTitular($fechaInicio, $fechaFin, $turno=null){
         // buscar nominas como "lider"
@@ -86,23 +78,27 @@ class User extends Authenticatable {
         ];
     }
 
+    // Indica si el usuario, esta disponible para participar como lider en un inventario (no esta asignado a otro)
     function disponibleParaInventario($fecha, $turno){
         // un usuario (asumiendo que es lider), esta disponible cuando no este asignado a otra nomina
         // el mismo dia, y el mismo turno como lider, supervisor, o operador
         $nominas = $this->nominasComoTitular($fecha, $fecha, $turno);
 
         return  $nominas->comoLider->count()==0 &&
-                $nominas->comoSupervisor->count()==0 &&
-                $nominas->comoOperador->count()==0;
+        $nominas->comoSupervisor->count()==0 &&
+        $nominas->comoOperador->count()==0;
     }
 
+    // #### Acciones
+    //
+
+    // ####  Getters
     function nombreCorto(){
         return "$this->nombre1 $this->apellidoPaterno";
     }
     function nombreCompleto(){
         return "$this->nombre1 $this->nombre2 $this->apellidoPaterno $this->apellidoMaterno";
     }
-
     function permisosAsignados(){
         // buscar cada uno de los permisos que tiene el usuario
         $perms = [];
@@ -114,7 +110,10 @@ class User extends Authenticatable {
         return collect($perms)->unique()->toArray();
     }
 
-    // #### Formatear
+    // ####  Setters
+    //
+
+    // #### Formatear respuestas
     static function formatearMinimo($user){
         return [
             'id' => $user->id,
@@ -126,7 +125,6 @@ class User extends Authenticatable {
             })
         ];
     }
-    
     static function formatearSimple($user){
         if(!$user)
             return null;
@@ -150,7 +148,6 @@ class User extends Authenticatable {
             'roles' => $user->roles->map(['\App\Role', 'darFormatoSimple'])
         ];
     }
-    
     static function formatearSimplePivotDotacion($user){
         $userArray = User::formatearSimple($user);
         // informacion del pivot generado al unir un usuario con una dotacion
@@ -159,7 +156,6 @@ class User extends Authenticatable {
         //        $userArray['roleAsignado'] = $user->pivot;
         return $userArray;
     }
-
     static function formatoCompleto($user){
         $userArray = User::formatearSimple($user);
         $userArray['telefono'] = $user->telefono;
@@ -183,7 +179,6 @@ class User extends Authenticatable {
         $userArray['region'] = $user->comuna->provincia->region->nombre;
         return $userArray;
     }
-
     static function formatoTablaMantenedorPersonal($user){
         return [
             'id' => $user->id,

@@ -49,7 +49,7 @@ class RowInventarioMensual extends React.Component{
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
         if(JSON.stringify(cambiosInventario)!=="{}"){
             console.log('cambios en el inventario ',cambiosInventario)
-            this.props.actualizarInventario(this.props.inventario.idInventario, cambiosInventario, this.props.inventario.idDummy)
+            this.props.actualizarInventario(this.props.inventario.inv_idInventario, cambiosInventario, this.props.inventario.idDummy)
         }else{
             console.log('inventario sin cambios, no se actualiza')
         }
@@ -75,40 +75,40 @@ class RowInventarioMensual extends React.Component{
                     <InputFecha
                         puedeModificar={this.props.puedeModificar}
                         ref={ref=>this.inputFecha=ref}
-                        diaSemana={moment(this.props.inventario.fechaProgramada).format('dddd')}
-                        fecha={this.props.inventario.fechaProgramada}
+                        diaSemana={moment(this.props.inventario.inv_fechaProgramada).format('dddd')}
+                        fecha={this.props.inventario.inv_fechaProgramada}
                         onGuardar={this.guardarInventario.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dia')}/>
                 </td>
                 {/* Cliente*/}
                 <td className={css.tdCliente}>
-                    <p><small>{ this.props.inventario.local.cliente.nombreCorto }</small></p>
+                    <p><small>{ this.props.inventario.cliente_nombreCorto }</small></p>
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
                     <OverlayTrigger
                         placement="left"
                         delay={0}
-                        overlay={<Tooltip id="yyy">{`Tipo de local: ${this.props.inventario.local.formato_local.nombre}`}</Tooltip>}>
-                        <p><small><b>{this.props.inventario.local.numero}</b></small></p>
+                        overlay={<Tooltip id="yyy">{`Tipo de local: ${this.props.inventario.local_formatoLocal}`}</Tooltip>}>
+                        <p><small><b>{this.props.inventario.local_ceco}</b></small></p>
                     </OverlayTrigger>
                 </td>
                 {/* Local */}
                 <td className={css.tdLocal}>
-                    <p><small><b>{this.props.inventario.local.nombre}</b></small></p>
+                    <p><small><b>{this.props.inventario.local_nombre}</b></small></p>
                 </td>
                 {/* Region*/}
                 <td className={css.tdRegion}>
-                    <p style={{margin:0}}><small>{ this.props.inventario.local.direccion.comuna.provincia.region.numero }</small></p>
+                    <p style={{margin:0}}><small>{ this.props.inventario.local_region }</small></p>
                 </td>
                 {/* Comuna */}
                 <td className={css.tdComuna}>
                     <OverlayTrigger
                         placement="left"
                         delay={0}
-                        overlay={<Tooltip id="yyy">{'Dirección: '+(this.props.inventario.local.direccion.direccion)}</Tooltip>}>
-                        <p style={{margin:0}}><b><small>{ this.props.inventario.local.direccion.comuna.nombre }</small></b></p>
+                        overlay={<Tooltip id="yyy">{'Dirección: '+(this.props.inventario.local_direccion)}</Tooltip>}>
+                        <p style={{margin:0}}><b><small>{ this.props.inventario.local_comuna }</small></b></p>
                     </OverlayTrigger>
 
                 </td>
@@ -116,8 +116,8 @@ class RowInventarioMensual extends React.Component{
                 <td className={css.tdStock}>
                     <InputStock
                         ref={ref=>this.inputStock=ref}
-                        asignada={this.props.inventario.stockTeorico}
-                        tooltipText={'Stock al ' +(this.props.inventario.fechaStock)}
+                        asignada={''+this.props.inventario.inv_stockTeorico}
+                        tooltipText={'Stock al ' +(this.props.inventario.inv_fechaStock)}
                         onGuardar={this.guardarInventario.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'stock')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'stock')}
@@ -139,7 +139,7 @@ class RowInventarioMensual extends React.Component{
                 {/* Opciones    */}
                 <td className={css.tdOpciones}>
                     {
-                        this.props.inventario.idInventario ? (
+                        this.props.inventario.inv_idInventario ? (
                             // si esta creado, puede eliminar el inventario
                             this.props.puedeModificar===true?
                                 <button className="btn btn-xs btn-primary"
