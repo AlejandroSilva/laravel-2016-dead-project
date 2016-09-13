@@ -3,29 +3,26 @@
 @section('content')
 
     <style>
-
         .tdfechaprogramada{
             width: 230px !important;
-            font-size: 13px;
+            font-size: 12px;
             text-align: center;
-
         }
         .th{
-            font-size: 13px;
+            font-size: 12px;
             text-align: center;
         }
         .td {
-            font-size: 13px;
+            font-size: 12px;
             text-align: center;
         }
         .tdopcion{
-            font-size: 13px;
-            width: 180px;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
+            font-size: 12px;
+            width: 100px;
+
         }
         .tdopcion > a{
-            width: 120px;
+            width: 90%;
         }
     </style>
 
@@ -66,8 +63,7 @@
                                         <td class="td">{{$inventario['inventario']['local']['direccion']}}</td>
                                         <td class="td">{{$inventario['nombreLider']}}</td>
                                         <td class="tdopcion">
-                                            <a href='/inventario/{{$inventario['inventario']['idInventario']}}/archivo-final' class="btn btn-default center-block">Ver</a>
-                                            {{--<button href="hola" type="button" class="btn btn-default center-block">Dato</button>--}}
+                                            <a href='/inventario/{{$inventario['inventario']['idInventario']}}/archivo-final' class="btn btn-primary btn-xs center-block">Ver</a>
                                         </td>
                                     </tr>
                                     </form>
