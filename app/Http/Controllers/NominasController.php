@@ -137,6 +137,67 @@ class NominasController extends Controller {
             ->toArray();
         return response()->json( array_values($nominas), 200);
     }
+    function misInventarios(){
+        $idLider = 2;
+        $fechaActual = Carbon::now();
+        $terminoSemana = new Carbon('next sunday');
+        $annoMesDia1 = $fechaActual->format('Y-m-d');
+        $annoMesDia2 = $terminoSemana->format('Y-m-d');
+
+        $inventarios = $this->buscarInventarios((object)[
+            'fechaInicio' => $annoMesDia1,
+            'fechaFin' => $annoMesDia2,
+            'idLider' => $idLider
+        ])
+            ->map('\App\Nominas::formatearConInventario')
+            ->toArray();
+        dd($inventarios);
+        return view('operacional.inventario.inventario-lider-auditor',[
+            'inventarios' => $inventarios
+        ]);
+        //return response()->json( $auditorias, 200);
+    }
+    function buscarInventarios($peticion){
+        $query = Nominas::with([]);
+        $query->where('habilitada', true);
+
+        // Buscar por idCaptador1
+        if(isset($peticion->idLider)){
+            $idLider = $peticion->idLider;
+            $query->where('idLider', $idLider);
+        }
+
+        // Buscar por Fecha de Inicio
+        if(isset($peticion->fechaInicio)){
+            $fechaInicio = $peticion->fechaInicio;
+            $query
+                ->where(function($qq) use($fechaInicio){
+                    $qq
+                        ->whereHas('inventario1', function($q) use($fechaInicio){
+                            $q->where('fechaProgramada', '>=', $fechaInicio);
+                        })
+                        ->orWhereHas('inventario2', function($q) use($fechaInicio){
+                            $q->where('fechaProgramada', '>=', $fechaInicio);
+                        });
+                });
+        }
+
+        // Buscar por Fecha de Fin
+        if(isset($peticion->fechaFin)){
+            $fechaFin = $peticion->fechaFin;
+            $query
+                ->where(function($qq) use($fechaFin) {
+                    $qq->whereHas('inventario1', function ($q) use ($fechaFin) {
+                        $q->where('fechaProgramada', '<=', $fechaFin);
+                    })->orWhereHas('inventario2', function ($q) use ($fechaFin) {
+                        $q->where('fechaProgramada', '<=', $fechaFin);
+                    });
+                });
+        }
+        // ordenar en el metodo controlador que lo llame
+        return $query->get();
+    }
+
 
     // PUT api/nomina/{idNomina}  // Modificar antuguo, no entrega un formato compacto, se debe reescribir
     function api_actualizar($idNomina, Request $request){
