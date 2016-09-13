@@ -5,25 +5,21 @@
     <style>
 
         .tdfechaprogramada{
-            width: 100px !important;
-            font-size: 18px;
+            width: 230px !important;
+            font-size: 13px;
             text-align: center;
 
         }
-        .thfechaInventario{
-            font-size: 20px;
+        .th{
+            font-size: 13px;
             text-align: center;
         }
         .td {
-            font-size: 15px;
-            text-align: center;
-        }
-        .thOpcion{
-            font-size: 20px;
+            font-size: 13px;
             text-align: center;
         }
         .tdopcion{
-            font-size: 10px;
+            font-size: 13px;
             width: 180px;
             padding-left: 0 !important;
             padding-right: 0 !important;
@@ -44,13 +40,15 @@
                         <table class="table table-bordered table-hover table-condensed">
                             <thead>
                             <tr>
-                                <th class="thidInventario">Fecha programada</th>
-                                <th class="thfechaInventario">Cliente</th>
-                                <th class="thfechaInventario">Ceco</th>
-                                <th class="thfechaInventario">Región</th>
-                                <th class="thfechaInventario">Comuna</th>
-                                <th class="thfechaInventario">Lider</th>
-                                <th class="thOpcion">Archivo Final</th>
+                                <th class="th">Fecha programada</th>
+                                <th class="th">Cliente</th>
+                                <th class="th">Ceco</th>
+                                <th class="th">Local</th>
+                                <th class="th">Región</th>
+                                <th class="th">Comuna</th>
+                                <th class="th">Dirección</th>
+                                <th class="th">Lider</th>
+                                <th class="th">Archivo Final</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -59,14 +57,16 @@
                                     <form method="POST" action="">
                                         <input name="_method" type="hidden" value="PUT">
                                     <tr>
-                                        <td class="tdfechaprogramada">{{ $inventario->fechaProgramada}}</td>
-                                        <td class="td">{{$inventario->local->cliente->nombreCorto}}</td>
-                                        <td class="td">{{$inventario->local->numero}}</td>
-                                        <td class="td">{{$inventario->local->region_numero}}</td>
-                                        <td class="td">{{$inventario->local->comuna_nombre}}</td>
-                                        <td class="td">Lider</td>
+                                        <td class="tdfechaprogramada">{{$inventario['inventario']['inventario_fechaProgramadaF']}}</td>
+                                        <td class="td">{{$inventario['inventario']['local']['cliente']['nombreCorto']}}</td>
+                                        <td class="td">{{$inventario['inventario']['local']['numero']}}</td>
+                                        <td class="td">{{$inventario['inventario']['local']['nombre']}}</td>
+                                        <td class="td">{{$inventario['inventario']['local']['region_numero']}}</td>
+                                        <td class="td">{{$inventario['inventario']['local']['comuna_nombre']}}</td>
+                                        <td class="td">{{$inventario['inventario']['local']['direccion']}}</td>
+                                        <td class="td">{{$inventario['nombreLider']}}</td>
                                         <td class="tdopcion">
-                                            <a href='/inventario/{{$inventario->idInventario}}/archivo-final' class="btn btn-default center-block">Ver</a>
+                                            <a href='/inventario/{{$inventario['inventario']['idInventario']}}/archivo-final' class="btn btn-default center-block">Ver</a>
                                             {{--<button href="hola" type="button" class="btn btn-default center-block">Dato</button>--}}
                                         </td>
                                     </tr>

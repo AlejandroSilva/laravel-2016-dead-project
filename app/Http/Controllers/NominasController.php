@@ -149,9 +149,12 @@ class NominasController extends Controller {
             'fechaFin' => $annoMesDia2,
             'idLider' => $idLider
         ])
-            ->map('\App\Nominas::formatearConInventario')
-            ->toArray();
-        dd($inventarios);
+             ->sortBy('inventario.fechaProgramada')
+             ->map('\App\Nominas::formatearConInventario')
+            //->first();
+             ->toArray();
+             $inventarios = array_values($inventarios);
+        //dd($inventarios);
         return view('operacional.inventario.inventario-lider-auditor',[
             'inventarios' => $inventarios
         ]);

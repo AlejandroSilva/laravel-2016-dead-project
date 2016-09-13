@@ -200,6 +200,7 @@ class Nominas extends Model {
         return [
             "idNomina" => $nomina->idNomina,
             "idLider" => $nomina->idLider,
+            "nombreLider" => $nomina['lider']['nombre1']." ".$nomina['lider']['apellidoPaterno'],
             "idSupervisor" => $nomina->idSupervisor,
             "idCaptador1" => $nomina->idCaptador1,
             "horaPresentacionLider" => $nomina->horaPresentacionLider,
