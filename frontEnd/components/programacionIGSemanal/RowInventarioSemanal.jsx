@@ -108,7 +108,6 @@ class RowInventario extends React.Component{
             inputDotacionOperadores: this.inputDotacionDiaOperadores.getEstado(),
             selectLider: this.selectLiderDia.getEstado(),
             selectSupervisor: this.selectSupervisorDia.getEstado(),
-            selectCaptador1: this.selectCaptador1Dia.getEstado(),
             inputHoraPresentacionLider: this.inputHoraPresentacionLiderDia.getEstado(),
             inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoDia.getEstado()
         })
@@ -119,7 +118,6 @@ class RowInventario extends React.Component{
             inputDotacionOperadores: this.inputDotacionNocheOperadores.getEstado(),
             selectLider: this.selectLiderNoche.getEstado(),
             selectSupervisor: this.selectSupervisorNoche.getEstado(),
-            selectCaptador1: this.selectCaptador1Noche.getEstado(),
             inputHoraPresentacionLider: this.inputHoraPresentacionLiderNoche.getEstado(),
             inputHoraPresentacionEquipo: this.inputHoraPresentacionEquipoNoche.getEstado()
         })
@@ -143,10 +141,6 @@ class RowInventario extends React.Component{
         // el SUPERVISOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
         if (estados.selectSupervisor.dirty)
             cambiosNomina.idSupervisor = estados.selectSupervisor.seleccionUsuario
-
-        // el CAPTADOR es valido y ha cambiado? ("deberia" ser valido siempre y cuando no seleccionen la opcion "sin seleccion")
-        if (estados.selectCaptador1.dirty)
-            cambiosNomina.idCaptador1 = estados.selectCaptador1.seleccionUsuario
 
         // La HORA de llegada del equipo ha cambiado?
         if(estados.inputHoraPresentacionLider.dirty)
