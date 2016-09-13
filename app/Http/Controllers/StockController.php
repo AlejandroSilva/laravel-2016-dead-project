@@ -104,7 +104,7 @@ class StockController extends Controller {
             return response()->json(['error' => 'El archivo enviado no es valido, intentelo nuevamente.'], 400);
 
         // mover el archivo junto a los otros stocks enviados
-        $ahora = Carbon::now()->format("Y-m-d h:i:s");
+        $ahora = Carbon::now()->format("Y-m-d_h-i-s");
         $nombreOriginal = $archivo->getClientOriginalName();
         $fileName = "$ahora $cliente->nombreCorto -- $nombreOriginal";
 
