@@ -39,7 +39,7 @@
                             <tr>
                                 <th class="th">Fecha programada</th>
                                 <th class="th">Cliente</th>
-                                <th class="th">Ceco</th>
+                                <th class="th">CE</th>
                                 <th class="th">Local</th>
                                 <th class="th">Región</th>
                                 <th class="th">Comuna</th>

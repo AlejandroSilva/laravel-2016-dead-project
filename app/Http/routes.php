@@ -46,7 +46,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG',                                'InventariosController@showProgramacionIndex');
         Route::get('programacionIG/mensual',                        'InventariosController@showProgramacionMensual');
         Route::get('programacionIG/semanal',                        'InventariosController@showProgramacionSemanal');
-        Route::get('prueba/vista',                                  'NominasController@misInventarios');
+        Route::get('prueba/vista/misInventarios',                   'NominasController@misInventarios');
         // INVENTARIOS - DESCARGA DE PDF
         Route::get('/pdf/inventarios/{mes}/cliente/{idCliente}',                            'Legacy_InventariosController@descargarPDF_porMes');
         Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'Legacy_InventariosController@descargarPDF_porRango');
