@@ -77,7 +77,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('api/activo-fijo/cargar-articulos',              'MaestraController@api_cargar_articulos');  // ELIMINAR
         Route::get('api/activo-fijo/cargar-maestra',                'MaestraController@api_cargar_maestra');  // ELIMINAR
 
-        
+        // ARCHIVO FINAL INVENTARIO
+        Route::post('api/archivo-final-inventario/{idInventario}/upload-zip',  'ArchivoFinalInventarioController@api_uploadZIP');
         // GEO - MANTENEDOR (DESARROLLO DETENIDO)
 //        Route::get('geo',                                         'GeoController@show_index');//->name('geo.index');
     });

@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 // Modelos
 use App\Locales;
+use App\ActasInventariosFCV;
 
 class Inventarios extends Model {
     // llave primaria
@@ -106,7 +107,17 @@ class Inventarios extends Model {
     }
 
     // #### Acciones
-    //
+    function insertarOActualizarActa($datosActa){
+        $acta = ActasInventariosFCV::where('idInventario', $this->idInventario)->first();
+        // si ya existe un acta para este inventario, se actualizan los datos
+        if($acta){
+            $acta->update($datosActa);
+        }else{
+            // si no existe un acta para el inventario, se crea
+            $datosActa['idInventario'] = $this->idInventario;
+            ActasInventariosFCV::create($datosActa);
+        }
+    }
 
     // ####  Getters
     function fechaProgramadaF(){
