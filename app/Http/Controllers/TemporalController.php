@@ -32,7 +32,7 @@ class TemporalController extends Controller {
 
         $fileName = $archivo->getClientOriginalName();
         $archivo->move( public_path().'/otrosArchivos', $fileName);
-        chmod(public_path().'/otrosArchivos/'.$fileName, 0774);   // 0744 por defecto
+        chmod(public_path().'/otrosArchivos/'.$fileName, 0777);   // 0744 por defecto
 
         return view('temporal.enviarArchivo', [
             'msg'=>'Recibido correctamente'
