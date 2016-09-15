@@ -3,21 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
+use File;
 
 class TemporalController extends Controller {
-
     function show_index() {
-        return view('temporal.index');
+        $archivos = File::allFiles(public_path().'/otros-archivos' );
+        return view('temporal.index', [
+            'archivos' => $archivos
+        ]);
     }
 
     function post_archivo(Request $request){
-//        $archivo = $request->file('elarchivo');
-//        return view('temporal.enviarArchivo', [
-//            'msg'=>$archivo = $archivo->getClientOriginalName()
-//        ]);
-
         if (!$request->hasFile('thefile'))
             return view('temporal.enviarArchivo', [
                 'msg'=>'Debe seleccionar un archivo.'
@@ -31,8 +28,8 @@ class TemporalController extends Controller {
             ]);
 
         $fileName = $archivo->getClientOriginalName();
-        $archivo->move( public_path().'/otrosArchivos', $fileName);
-        chmod(public_path().'/otrosArchivos/'.$fileName, 0777);   // 0744 por defecto
+        $archivo->move( public_path().'/otros-archivos/', $fileName);
+        chmod(public_path().'/otros-archivos/'.$fileName, 0777);   // 0744 por defecto
 
         return view('temporal.enviarArchivo', [
             'msg'=>'Recibido correctamente'
