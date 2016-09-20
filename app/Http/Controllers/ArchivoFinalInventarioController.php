@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Auth;
 // Nominas
 use App\Inventarios;
 
@@ -30,21 +31,26 @@ class ArchivoFinalInventarioController extends Controller {
             return response()->json(['error' => 'El archivo adjuntado no es valido.'], 400);
 
         // mover el archivo a la carpeta correspondiente
-        $fullPath = \ArchivoFinalInventarioFCV::moverACarpeta($archivo, $cliente->nombreCorto, $local->numero, $inventario->fechaProgramada);
+        $archivoFinal = \ArchivoFinalInventarioFCV::moverACarpeta($archivo, $cliente->nombreCorto, $local->numero, $inventario->fechaProgramada);
 
-        // extrer el archivo de acta del izp
-        $resultadoExtraccion = \ArchivoFinalInventarioFCV::descomprimirZip($fullPath);
-        if( $resultadoExtraccion->error!=null )
+        // paso 1) Extraer el archivo de acta del zip
+        $resultadoExtraccion = \ArchivoFinalInventarioFCV::descomprimirZip($archivoFinal['fullPath']);
+        if( $resultadoExtraccion->error!=null ){
+            $inventario->agregarArchivoFinal(Auth::user(), $archivoFinal, $resultadoExtraccion->error);
             return response()->json(['error'=>$resultadoExtraccion->error], 400);
+        }
 
-        // Parsear el archivo de acta si este existe
+        // paso 2) Parsear el archivo de acta si este existe
         $resultadoActa = \ArchivoFinalInventarioFCV::parsearActa($resultadoExtraccion->acta_v1, $resultadoExtraccion->acta_v2, $local->numero);
-
-        if( $resultadoActa->error!=null )
+        if( $resultadoActa->error!=null ){
+            $inventario->agregarArchivoFinal(Auth::user(), $archivoFinal, $resultadoActa->error);
             return response()->json(['error'=>$resultadoActa->error], 400);
+        }
 
         // finalmente, actualizar el acta con los datos entregados
         $inventario->insertarOActualizarActa($resultadoActa->acta);
+        $inventario->agregarArchivoFinal(Auth::user(), $archivoFinal, null);
+
         return response()->json($resultadoActa->acta);
     }
 }

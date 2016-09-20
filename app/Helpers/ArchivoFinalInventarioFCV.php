@@ -4,7 +4,6 @@
 use Carbon\Carbon;
 
 class ArchivoFinalInventarioFCV{
-
     static function moverACarpeta($archivo, $nombreCliente, $ceco, $fechaProgramada){
         // mover el archivo junto a los otros stocks enviados
         $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
@@ -15,10 +14,14 @@ class ArchivoFinalInventarioFCV{
         $archivo->move( $path, $fileName);
 
         chmod($path.$fileName, 0774);   // 0744 por defecto
-        return $path.$fileName;
+        return [
+            'fullPath' => $path.$fileName,
+            'nombre_archivo' => $fileName,
+            'nombre_original' => $nombreOriginal,
+        ];
     }
 
-    static function descomprimirZip($file){
+    static function descomprimirZip($fullPath){
         $tmpPath = public_path()."/tmp/archivoFinalInventario/".md5(uniqid(rand(), true))."/";
         $archivoActa_v1 = 'archivo_salida_Acta.txt';
         $archivoActa_v2 = 'nuevo_formato.txt';
@@ -29,7 +32,7 @@ class ArchivoFinalInventarioFCV{
             'acta_v2' => null,          // acta "nueva" (sept-2016)
         ];
         $zip = new ZipArchive;      // documentacion: http://php.net/manual/es/ziparchive.extractto.php
-        if ($zip->open($file) === true) {
+        if ($zip->open($fullPath) === true) {
             // si se logra extraer correctamente el/los archivos, adjuntar su path en la respuesta
             $extraccionCorrecta_acta_v1 = $zip->extractTo($tmpPath, $archivoActa_v1);
             if($extraccionCorrecta_acta_v1)
