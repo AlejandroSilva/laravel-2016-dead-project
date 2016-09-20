@@ -29,9 +29,15 @@ class Inventarios extends Model {
         //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\Nominas', 'idNominaNoche', 'idNomina');
     }
-    function actaInventarioFCV(){
+
+    function actaInventarioFCV()
+    {
         //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
-        return $this->belongsTo('App\ActasInventariosFCV', 'idInventario','idInventario');
+        return $this->belongsTo('App\ActasInventariosFCV', 'idInventario', 'idInventario');
+    }
+    function archivosFinales(){
+        return $this->hasMany('App\ArchivoFinalInventario', 'idInventario', 'idInventario');
+
     }
 
     // #### Helpers
@@ -111,6 +117,16 @@ class Inventarios extends Model {
     }
 
     // #### Acciones
+    function agregarArchivoFinal($user, $archivoFinal, $error){
+        ArchivoFinalInventario::create([
+            'idInventario' => $this->idInventario,
+            'idSubidoPor' => $user? $user->id : null,
+            'nombre_archivo' => $archivoFinal['nombre_archivo'],
+            'nombre_original' => $archivoFinal['nombre_original'],
+            'resultado' => $error? $error : 'acta cargada correctamente',
+            //'fechapublicacion' => '0000-00-00'
+        ]);
+    }
     function insertarOActualizarActa($datosActa){
         $acta = ActasInventariosFCV::where('idInventario', $this->idInventario)->first();
         // si ya existe un acta para este inventario, se actualizan los datos
@@ -123,7 +139,7 @@ class Inventarios extends Model {
         }
     }
 
-    // ####  Getters
+    // #### Getters
     function fechaProgramadaF(){
         setlocale(LC_TIME, 'es_CL.utf-8');
         $fecha = explode('-', $this->fechaProgramada);
@@ -142,7 +158,7 @@ class Inventarios extends Model {
         }
     }
 
-    // ####  Setters
+    // #### Setters
     function set_fechaProgramada($fechaProgramada){
         // Solo si hay un cambio se actualiza y se registra el cambio
         $fecha_original = $this->fechaProgramada;
