@@ -29,6 +29,9 @@ class Inventarios extends Model {
         //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\Nominas', 'idNominaNoche', 'idNomina');
     }
+    function actasInventariosFCV(){
+        return $this->belongsTo('App\ActasInventariosFCV', 'idInventario', 'IdInventario');
+    }
 
     // #### Helpers
     function dotacionTotalSugerido($stock = null){
