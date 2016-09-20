@@ -1,6 +1,23 @@
 <?php
 
+// Carbon
+use Carbon\Carbon;
+
 class ArchivoFinalInventarioFCV{
+
+    static function moverACarpeta($archivo, $nombreCliente, $ceco, $fechaProgramada){
+        // mover el archivo junto a los otros stocks enviados
+        $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
+        $nombreOriginal = $archivo->getClientOriginalName();
+        $fileName = "[$timestamp][$nombreCliente][$ceco][$fechaProgramada] $nombreOriginal";
+        $path = public_path()."/$nombreCliente/archivoFinalInventario/";
+        // guardar el archivo en una carpeta publica, y cambiar los permisos para que el grupo pueda modifiarlos
+        $archivo->move( $path, $fileName);
+
+        chmod($path.$fileName, 0774);   // 0744 por defecto
+        return $path.$fileName;
+    }
+
     static function descomprimirZip($file){
         $tmpPath = public_path()."/tmp/archivoFinalInventario/".md5(uniqid(rand(), true))."/";
         $archivoActa_v1 = 'archivo_salida_Acta.txt';
@@ -10,7 +27,6 @@ class ArchivoFinalInventarioFCV{
             'error' => null,
             'acta_v1' => null,          // acta "original" (feb-2016)
             'acta_v2' => null,          // acta "nueva" (sept-2016)
-            //'acta_a_procesar' => null   // por defecto se selecciona la "ultima version" de la acta
         ];
         $zip = new ZipArchive;      // documentacion: http://php.net/manual/es/ziparchive.extractto.php
         if ($zip->open($file) === true) {
@@ -43,6 +59,31 @@ class ArchivoFinalInventarioFCV{
         return $datos;
     }
 
+    static function parsearActa($acta_v1, $acta_v2, $ceco_inventario){
+        $resultado = (object)[
+            'error' => null,
+            'acta' => null
+        ];
+        if( $acta_v2!=null )
+            $resultado->acta = \ArchivoFinalInventarioFCV::parsearActa_v2($acta_v2);
+        else if( $acta_v1!=null )
+            $resultado->acta = \ArchivoFinalInventarioFCV::parsearActa_v1($acta_v1);
+
+        // revisar que se haya parseado y encontrado correctaemnte el acta
+        if($resultado->acta==null) {
+            $resultado->error = 'No se encontro un archivo de acta dentro del zip';
+            return $resultado;
+        }
+
+        // verificar que el CECO local indicado en el acta, es el mismo que el CECO del local inventariado
+        $ceco_acta = $resultado->acta['ceco_local'];
+        if($ceco_acta!=$ceco_inventario){
+            $resultado->error = "El local indicado en el acta, no corresponde con el inventario seleccionado (acta:$ceco_acta|inventario:$ceco_inventario";
+            return $resultado;
+        }
+
+        return $resultado;
+    }
     static function parsearActa_v1($archivo){
         // leer datos del archivo .txt
         $datos = self::leerDatos($archivo);
@@ -117,7 +158,6 @@ class ArchivoFinalInventarioFCV{
             'total_item'                => get($datos['__'], '??'),
         ];
     }
-
     static function parsearActa_v2($archivo){
         // leer datos del archivo .txt
         $datos = self::leerDatos($archivo);
