@@ -60,7 +60,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionAI/semanal',                        'AuditoriasController@showSemanal');
         // AUDITORIAS - DESCARGA DE PDF
         Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porMes');
-        Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porRango');
+        Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',    'AuditoriasController@descargarPDF_porRango');
 
         // Archivo Maestro de clientes
 //        Route::get('archivo-maestro',                               'ArchivoMaestroController@showIndex');
