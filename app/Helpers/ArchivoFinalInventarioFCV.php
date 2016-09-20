@@ -128,7 +128,8 @@ class ArchivoFinalInventarioFCV{
         */
         return [
             'ceco_local'            => get($datos['cod_local'], '??'),
-            'fecha_inventario'      => get($datos['fecha_toma'], '??'),
+            // la fecha se recibe como '30/03/2016', pero para guardarlo como date en la BD debe estar como '2016-03-30'
+            'fecha_inventario'      => Carbon::createFromFormat('d/m/Y', get($datos['fecha_toma'], '0000-00-00') )->toDateString(),
             'cliente'               => get($datos['nombre_empresa'], '??'),
             'rut'                   => get($datos['__'], '??'),
             'supervisor'            => get($datos['__'], '??'),
@@ -136,8 +137,11 @@ class ArchivoFinalInventarioFCV{
             'nota_presentacion'     => get($datos['nota1'], '0'),
             'nota_supervisor'       => get($datos['nota2'], '???'),
             'nota_conteo'           => get($datos['nota3'], '???'),
-            'inicio_conteo'         => get($datos['captura_uno'], '???'),
-            'fin_conteo'            => get($datos['fin_captura'], '???'),
+            //inicio y fin de conteo se reciben como string, tambien se deben transformar a datetime
+            'inicio_conteo'         => isset($datos['captura_uno'])?
+                Carbon::createFromFormat('d/m/Y H:i:s', $datos['captura_uno'])->toDateTimeString() : '00/00/00 00:00:00',
+            'fin_conteo'            => isset($datos['fin_captura'])?
+                Carbon::createFromFormat('d/m/Y H:i:s', $datos['fin_captura'])->toDateTimeString() : '00/00/00 00:00:00',
             'fin_revisión'          => get($datos['__'], '??'),
             'horas_trabajadas'      => get($datos['__'], '??'),
             'dotacion_presupuestada'    => get($datos['__'], '??'),
@@ -172,7 +176,8 @@ class ArchivoFinalInventarioFCV{
 
         return [
             'ceco_local'            => get($datos['cod_local'], '??'),
-            'fecha_inventario'      => get($datos['??'], '??'),
+            // la fecha se recibe como '30/03/2016', pero para guardarlo como date en la BD debe estar como '2016-03-30'
+            'fecha_inventario'      => Carbon::createFromFormat('d/m/Y', get($datos['fecha_toma'], '00/00/0000') )->toDateString(),
             'cliente'               => get($datos['??'], '??'),
             'rut'                   => get($datos['__'], '??'),
             'supervisor'            => get($datos['__'], '??'),
@@ -180,8 +185,11 @@ class ArchivoFinalInventarioFCV{
             'nota_presentacion'     => get($datos['nota1'], '0'),
             'nota_supervisor'       => get($datos['nota2'], '???'),
             'nota_conteo'           => get($datos['nota3'], '???'),
-            'inicio_conteo'         => get($datos['captura_uno'], '???'),
-            'fin_conteo'            => get($datos['fin_captura'], '???'),
+            //inicio y fin de conteo se reciben como string, tambien se deben transformar a datetime
+            'inicio_conteo'         => isset($datos['captura_uno'])?
+                Carbon::createFromFormat('d/m/Y H:i:s', $datos['captura_uno'])->toDateTimeString() : '00/00/00 00:00:00',
+            'fin_conteo'            => isset($datos['fin_captura'])?
+                Carbon::createFromFormat('d/m/Y H:i:s', $datos['fin_captura'])->toDateTimeString() : '00/00/00 00:00:00',
             'fin_revisión'          => get($datos['__'], '??'),
             'horas_trabajadas'      => get($datos['__'], '??'),
             'dotacion_presupuestada'    => get($datos['__'], '??'),

@@ -23,7 +23,6 @@ class CreateArchivoFinalInventariosTable extends Migration {
             $table->text('nombre_original');
             $table->text('resultado');
 
-            $table->date('fecha_publicacion');
             $table->timestamps();
         });
     }

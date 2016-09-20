@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateActasInventariosFCVTable extends Migration {
+class CreateActasInventariosFcvTable extends Migration {
 
     public function up() {
         Schema::create('actas_inventarios_fcv', function (Blueprint $table) {
@@ -17,9 +17,9 @@ class CreateActasInventariosFCVTable extends Migration {
             $table->foreign('idInventario')->references('idInventario')->on('inventarios');
 
             // Otros campos
-            $table->integer('operadoresAsignados')->default(0);
+            $table->dateTime('fecha_publicacion');
             $table->text('ceco_local');
-            $table->text('fecha_inventario');
+            $table->date('fecha_inventario');
             $table->text('cliente');
             $table->text('rut');
             $table->text('supervisor');
@@ -27,8 +27,8 @@ class CreateActasInventariosFCVTable extends Migration {
             $table->text('nota_presentacion');
             $table->text('nota_supervisor');
             $table->text('nota_conteo');
-            $table->text('inicio_conteo');
-            $table->text('fin_conteo');
+            $table->dateTime('inicio_conteo');
+            $table->dateTime('fin_conteo');
             $table->text('fin_revisión');
             $table->text('horas_trabajadas');
             $table->text('dotacion_presupuestada');

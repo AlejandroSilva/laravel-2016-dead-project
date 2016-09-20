@@ -123,8 +123,7 @@ class Inventarios extends Model {
             'idSubidoPor' => $user? $user->id : null,
             'nombre_archivo' => $archivoFinal['nombre_archivo'],
             'nombre_original' => $archivoFinal['nombre_original'],
-            'resultado' => $error? $error : 'acta cargada correctamente',
-            //'fechapublicacion' => '0000-00-00'
+            'resultado' => $error? $error : 'acta cargada correctamente'
         ]);
     }
     function insertarOActualizarActa($datosActa){
