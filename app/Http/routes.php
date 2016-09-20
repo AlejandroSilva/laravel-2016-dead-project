@@ -79,6 +79,7 @@ Route::group(['middleware' => ['web']], function (){
 
         // ARCHIVO FINAL INVENTARIO
         Route::post('api/archivo-final-inventario/{idInventario}/upload-zip',  'ArchivoFinalInventarioController@api_uploadZIP');
+        Route::get('inventarios/{idInventario}/archivo-final',           'ArchivoFinalInventarioController@show_inventario');
         // GEO - MANTENEDOR (DESARROLLO DETENIDO)
 //        Route::get('geo',                                         'GeoController@show_index');//->name('geo.index');
     });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActasInventariosFCV;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 // Carbon
@@ -70,4 +71,14 @@ class ArchivoFinalInventarioController extends Controller {
         $inventario->insertarOActualizarActa($acta);
         return response()->json($acta);
     }
+
+    public function show_inventario($idInventario){
+        // existe el inventario?
+        $inventario = Inventarios::find($idInventario);
+        if(!$inventario)
+            return response()->json(['error' => 'El inventario indicado no existe'], 400);
+        $acta = $inventario->actaInventarioFCV;
+        return view('operacional.inventario.inventario-archivofinal', ['acta'=>$acta] );
+    }
+
 }
