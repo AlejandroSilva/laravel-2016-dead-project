@@ -181,9 +181,9 @@ thead {
                 <div class="panel-heading" align="center"><span class="glyphicon glyphicon-plus-sign"></span> Subir Archivo Final</div>
                 <div class="panel-body">
                     <div align="center">
-                    <form action="{{ URL::to('upload') }}" method="post" enctype="multipart/form-data">
+                    <form action="/api/archivo-final-inventario/{{ $acta->idInventario }}/upload-zip" method="post" enctype="multipart/form-data">
                         <label>Seleccione Archivo:</label>
-                        <input type="file" name="file" id="file">
+                        <input type="file" name="archivoFinalZip" id="archivoFinalZip">
                         <br><input type="submit" class="btn btn-primary btn-xs" value="ZIP Archivo Final" name="submit"></br>
                         <input type="hidden" value="{{ csrf_token() }}" name="_token">
                     </form>

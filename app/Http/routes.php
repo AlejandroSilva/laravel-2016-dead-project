@@ -78,8 +78,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('api/activo-fijo/cargar-maestra',                'MaestraController@api_cargar_maestra');  // ELIMINAR
 
         // ARCHIVO FINAL INVENTARIO
-        Route::post('api/archivo-final-inventario/{idInventario}/upload-zip',  'ArchivoFinalInventarioController@api_uploadZIP');
-        Route::get('inventarios/{idInventario}/archivo-final',           'ArchivoFinalInventarioController@show_inventario');
+
+
         // GEO - MANTENEDOR (DESARROLLO DETENIDO)
 //        Route::get('geo',                                         'GeoController@show_index');//->name('geo.index');
     });
@@ -92,8 +92,10 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{publicIdNomina}/pdf',    'NominasController@show_nomina_pdfDownload');
         Route::get('programacionIG/nomina/{publicIdNomina}/excel',  'NominasController@show_nomina_excelDownload');
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
+        Route::get('inventarios/{idInventario}/archivo-final',           'ArchivoFinalInventarioController@show_inventario');
+        Route::post('api/archivo-final-inventario/{idInventario}/upload-zip',  'ArchivoFinalInventarioController@api_uploadZIP');
     });
-    
+
     /*
     |--------------------------------------------------------------------------
     | API's PROTEGIDAS SOLO A USUARIOS

@@ -62,6 +62,8 @@ class ArchivoFinalInventarioController extends Controller {
         if(!$inventario)
             return response()->json(['error' => 'El inventario indicado no existe'], 400);
         $acta = $inventario->actaInventarioFCV;
+        if(!$acta)
+            return response()->json(['error' => 'La acta no existe'], 400);
         return view('operacional.inventario.inventario-archivofinal', ['acta'=>$acta] );
     }
 
