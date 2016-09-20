@@ -9,8 +9,10 @@
                     Seleccione una opción del menu superior
                 </div>
             </div>
-
             <div id="react-main-dashboard"></div>
+
+            {{-- Mis Inventarios --}}
+            @include('home.dashboard-tablaNominas', $nominas)
         </div>
     </div>
 
