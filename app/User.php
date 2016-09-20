@@ -53,7 +53,10 @@ class User extends Authenticatable {
             'fechaInicio' => $fechaInicio,
             'fechaFin' => $fechaFin,
             'idLider' => $this->id,
-        ]);
+        ])->map(function($nomina){
+           $nomina->cargoUsuario = "Líder";
+            return $nomina;
+        });
 
         // buscar nominas como "supervisor"
         $nominasSupervisor = \App\Nominas::buscar( (object)[
@@ -61,7 +64,10 @@ class User extends Authenticatable {
             'fechaInicio' => $fechaInicio,
             'fechaFin' => $fechaFin,
             'idSupervisor' => $this->id
-        ]);
+        ])->map(function($nomina){
+            $nomina->cargoUsuario = "Supervisor";
+            return $nomina;
+        });
 
         // buscar nominas como "operador"
         $nominasOperador = \App\Nominas::buscar( (object)[
@@ -69,12 +75,22 @@ class User extends Authenticatable {
             'fechaInicio' => $fechaInicio,
             'fechaFin' => $fechaFin,
             'idOperador' => $this->id
-        ]);
+        ])->map(function($nomina){
+            $nomina->cargoUsuario = "Operador";
+            return $nomina;
+        });
+
+        // unirlas todas (si esta repetida, se toma el valor de la ultima)
+        $todas = $nominasOperador
+            ->merge($nominasSupervisor)
+            ->merge($nominasLider)
+            ->sortBy('inventario.fechaProgramada');
 
         return (object)[
             'comoLider' => $nominasLider,
             'comoSupervisor' => $nominasSupervisor,
-            'comoOperador' => $nominasOperador
+            'comoOperador' => $nominasOperador,
+            'todas' => $todas
         ];
     }
 
