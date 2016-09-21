@@ -141,32 +141,26 @@ thead {
                     <div style="height:110px;overflow:auto;" class="panel-body">
                     <table class="table table-responsive table-hover tablefiles table-bordered">
                             <thead>
-                            <th width="10%">Local</th>
+                            <!--<th width="10%">Local</th>-->
                             <th>Fecha Subida</th>
-                            <th width="25%">Auditor</th>
-                            <th>Publicado</th>
-                            <th>Procesado</th>
-                            <th width="22%">Archivo</th>
-                            <th>Fecha Revisión</th>
-                            <th width="30%">Opciones</th>
+                            <th>Auditor</th>
+                            <th>Estado</th>
+                            <th>Archivo</th>
+                            <th>Opciones</th>
                             </thead>
+                        @foreach($archivos_finales as $af)
                             <tr>
-                                <td>220 Antofagasta 4</td>
-                                <td>22-03-2016</td>
-                                <td>21</td>
-                                <td>Si</td>
-                                <td>No</td>
-                                <td>21</td>
-                                <td>2016-10-03</td>
+                                <!--<td>{{-- $af->inventario->local->nombre --}}</td>-->
+                                <td width="15%">{{ $af->created_at }}</td>
+                                <td width="20%">{{ $af->usuario_auditor->nombre1 }} {{ $af->usuario_auditor->apellidoPaterno }}</td>
+                                <td width="30%">{{ $af->resultado }}</td>
+                                <td width="20%">{{ $af->nombre_original }}</td>
                                 <td>
-                                    <button class="btn btn-primary btn-xs" type="button"  aria-haspopup="true" aria-expanded="false">
-                                        Descargar
-                                    </button>
-                                    <button class="btn btn-danger btn-xs" type="button"  aria-haspopup="true" aria-expanded="false">
-                                        Eliminar
-                                    </button>
+                                    <a aria-haspopup="true" aria-expanded="false" href='/{{$af->idArchivoFinalInventario}}/descargar-zip' class="btn btn-primary btn-xs">Descargar</a>
+                                    <!--<a aria-haspopup="true" aria-expanded="false" href='/{{$af->idArchivoFinalInventario}}/eliminar-zip' class="btn btn-danger btn-xs">Eliminar</a>-->
                                 </td>
                             </tr>
+                        @endforeach
                         </table>
                     </div>
                 </div>

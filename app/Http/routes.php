@@ -94,6 +94,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
         Route::get('inventarios/{idInventario}/archivo-final',           'ArchivoFinalInventarioController@show_inventario');
         Route::post('api/archivo-final-inventario/{idInventario}/upload-zip',  'ArchivoFinalInventarioController@api_uploadZIP');
+        Route::get('/{idArchivoFinalInventario}/descargar-zip',           'ArchivoFinalInventarioController@download_ZIP');
     });
 
     /*

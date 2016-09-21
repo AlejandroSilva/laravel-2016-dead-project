@@ -31,8 +31,7 @@ class Inventarios extends Model {
     }
 
     function actaInventarioFCV()
-    {
-        //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
+    {   //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\ActasInventariosFCV', 'idInventario', 'idInventario');
     }
     function archivosFinales(){

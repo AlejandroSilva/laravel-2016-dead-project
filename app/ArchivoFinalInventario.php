@@ -19,6 +19,9 @@ class ArchivoFinalInventario extends Model {
         return $this->belongsTo('App\Inventarios', 'idInventario', 'idInventario');
     }
 
+    function usuario_auditor(){
+        return $this->belongsTo('App\User', 'idSubidoPor','id');
+    }
     // #### Helpers
     // #### Acciones
     // #### Getters

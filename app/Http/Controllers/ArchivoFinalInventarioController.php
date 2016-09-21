@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\ActasInventariosFCV;
+use App\ArchivoFinalInventario;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Auth;
+use Response;
+use Illuminate\Support\Facades\DB;
 // Nominas
 use App\Inventarios;
 
@@ -60,12 +63,48 @@ class ArchivoFinalInventarioController extends Controller {
         // existe el inventario?
         $inventario = Inventarios::find($idInventario);
         if(!$inventario)
-            return response()->json(['error' => 'El inventario indicado no existe'], 400);
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
+            ]);
         $acta = $inventario->actaInventarioFCV;
         if(!$acta)
-            return response()->json(['error' => 'La acta no existe'], 400);
-        return view('operacional.inventario.inventario-archivofinal', ['acta'=>$acta] );
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Acta no existe', 'descripcion' => 'El acta que busca no ha sido encontrada.'
+            ]);
+        return view('operacional.inventario.inventario-archivofinal', [
+            'acta'=>$acta,
+            'archivos_finales' => $inventario->archivosFinales
+        ] );
     }
+
+    public function download_ZIP($idArchivoFinalInventario){
+        $archivo = ArchivoFinalInventario::find($idArchivoFinalInventario);
+        if(!$archivo)
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Archivo No encontrado', 'descripcion' => 'El archivo que busca no se puede descargar.'
+            ]);
+        $download_archivo = $archivo->nombre_archivo;
+        $file= public_path(). "/FSB/archivoFinalInventario/". "$download_archivo";
+        $headers = array(
+            'Content-Type: application/octet-stream',
+        );
+        return Response::download($file, $download_archivo, $headers);
+    }
+
+    /*
+    public function delete_ZIP($idArchivoFinalInventario){
+        $archivo = ArchivoFinalInventario::find($idArchivoFinalInventario);
+        if($archivo){
+            DB::transaction(function() use($archivo){
+                $archivo->delete();
+                return response()->json([], 204);
+            });
+
+        }else{
+            return response()->json([], 404);
+        }
+    }
+    */
 
 }
 
