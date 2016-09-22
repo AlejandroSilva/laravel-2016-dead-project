@@ -91,8 +91,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{publicIdNomina}/excel',  'NominasController@show_nomina_excelDownload');
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
         //
-        Route::get('subir3',                                        'TemporalController@show_index');
-        Route::get('descargar-otro/{file}',                     'TemporalController@descargar_otro');
+        Route::get('subir',                                         'TemporalController@show_index');
+        Route::get('descargar-otro/{file}',                         'TemporalController@descargar_otro');
         Route::post('completado',                                   'TemporalController@post_archivo');
     });
     

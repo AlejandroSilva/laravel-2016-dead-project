@@ -16,7 +16,12 @@ class TemporalController extends Controller {
 
     function descargar_otro($file){
         $fileName = public_path().'/otros-archivos/'.$file;
-        return response()->download($fileName, $file);
+        return response()
+            ->download($fileName, $file, [
+                'Content-Type'=>'application/force-download',   // forzar la descarga en Opera Mini
+                'Pragma'=>'no-cache',
+                'Cache-Control'=>'no-cache, must-revalidate'
+            ]);
     }
 
     function post_archivo(Request $request){
