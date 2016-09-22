@@ -58,7 +58,7 @@ class ArchivoFinalInventarioController extends Controller {
         return response()->json($resultadoActa->acta);
     }
 
-
+    //función para mostrar los datos del acta, si existe un error no mostrará nada
     public function show_inventario($idInventario){
         // existe el inventario?
         $inventario = Inventarios::find($idInventario);
@@ -77,6 +77,7 @@ class ArchivoFinalInventarioController extends Controller {
         ] );
     }
 
+    //función para descargar un archivo .zip
     public function download_ZIP($idArchivoFinalInventario){
         $archivo = ArchivoFinalInventario::find($idArchivoFinalInventario);
         if(!$archivo)

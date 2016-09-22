@@ -36,7 +36,6 @@ class Inventarios extends Model {
     }
     function archivosFinales(){
         return $this->hasMany('App\ArchivoFinalInventario', 'idInventario', 'idInventario');
-
     }
 
     // #### Helpers

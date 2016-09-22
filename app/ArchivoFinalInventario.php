@@ -19,6 +19,7 @@ class ArchivoFinalInventario extends Model {
         return $this->belongsTo('App\Inventarios', 'idInventario', 'idInventario');
     }
 
+    // #### relación entre User y ArchivoFinalInventario para obtener nombre1, apellidoPaterno
     function usuario_auditor(){
         return $this->belongsTo('App\User', 'idSubidoPor','id');
     }

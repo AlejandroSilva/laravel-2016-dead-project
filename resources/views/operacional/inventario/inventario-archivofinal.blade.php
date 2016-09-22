@@ -43,22 +43,6 @@
         padding: 0px !important;
     }
 
-
-/*
-tbody {
-    display:block;
-    height:100px;
-    overflow:auto;
-}
-thead, tbody tr {
-    display:table;
-    width:100%;
-    table-layout:fixed;
-}
-thead {
-    width: calc( 100% - 1em )
-}
-*/
 </style>
 
 <div class="container-fluid">
@@ -69,22 +53,21 @@ thead {
                     <span class="glyphicon glyphicon-stats"></span>
                     Acta Inventario
                     <div class="btn-group pull-right">
-                    <button class="btn btn-primary btn-xs" type="button" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-primary btn-xs" type="button" disabled aria-haspopup="true" aria-expanded="false">
                         Editar Acta
                     </button>
                     <button
-                            class="btn btn-success btn-xs" type="button" aria-haspopup="true" aria-expanded="false">
+                            class="btn btn-success btn-xs" type="button" disabled aria-haspopup="true" aria-expanded="false">
                         Publicar
                     </button>
                     <button
-                            class="btn btn-info btn-xs" type="button" aria-haspopup="true" aria-expanded="false">
+                            class="btn btn-info btn-xs" type="button" disabled aria-haspopup="true" aria-expanded="false">
                         Despublicar
                     </button>
                     </div>
                 </div>
                 <div class="panel-body">
                         <table id="tabledatos" class="table table-responsive table-hover tabledatos table-bordered">
-
                             <tr>
                                 <tr><th>Fecha Inventario</th><td>{{ $acta->fecha_inventario }}</td>
                                 <th class="thstyle">Inicio Conteo</th><td>{{ $acta->inicio_conteo }}</td>
@@ -106,12 +89,12 @@ thead {
                                 <th class="thstyle">PTT Revisadas QF</th><td>{{ $acta->ptt_revisadas_qf }}</td>
                                 <th class="thstyle">Ítem Revisados Apoyo CV 2</th><td>{{ $acta->item_revisados_apoyo_cv_2 }}</td>
                             </tr>
-                            <tr><th>Quimico Farmaceutico</th><td>{{ $acta->quimico_farmaceutico }}</td>
+                            <tr><th>Químico Farmacéutico</th><td>{{ $acta->quimico_farmaceutico }}</td>
                                 <th class="thstyle">Dotación Presupuestada</th><td>{{ $acta->dotacion_presupuestada }}</td>
                                 <th class="thstyle">PTT Revisadas apoyo CV 1</th><td>{{ $acta->ptt_revisadas_apoyo_cv_1 }}</td>
                                 <th class="thstyle">Corregidas en revisión antes de sacar el ajuste</th><td>{{ $acta->unidades_corregidas_revision_previo_ajuste }}</td>
                             </tr>
-                            <tr><th>Nota Presentacion</th><td>{{ $acta->nota_presentacion }}</td>
+                            <tr><th>Nota Presentación</th><td>{{ $acta->nota_presentacion }}</td>
                                 <th class="thstyle">Dotación Efectivo</th><td>{{ $acta->dotacion_efectivo }}</td>
                                 <th class="thstyle">PTT Revisadas apoyo CV 2</th><td>{{ $acta->ptt_revisadas_apoyo_cv_2 }}</td>
                                 <th class="thstyle">Unidades Corregidas</th><td>{{ $acta->unidades_corregidas }}</td>
@@ -127,11 +110,11 @@ thead {
                                 <th class="thstyle"></th><td></td>
                             </tr>
                         </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 <div class="container-fluid">
     <div class="row">
@@ -141,23 +124,20 @@ thead {
                     <div style="height:110px;overflow:auto;" class="panel-body">
                     <table class="table table-responsive table-hover tablefiles table-bordered">
                             <thead>
-                            <!--<th width="10%">Local</th>-->
                             <th>Fecha Subida</th>
-                            <th>Auditor</th>
+                            <th>Subido por</th>
                             <th>Estado</th>
-                            <th>Archivo</th>
+                            <th>Nombre Archivo</th>
                             <th>Opciones</th>
                             </thead>
                         @foreach($archivos_finales as $af)
                             <tr>
-                                <!--<td>{{-- $af->inventario->local->nombre --}}</td>-->
                                 <td width="15%">{{ $af->created_at }}</td>
                                 <td width="20%">{{ $af->usuario_auditor->nombre1 }} {{ $af->usuario_auditor->apellidoPaterno }}</td>
                                 <td width="30%">{{ $af->resultado }}</td>
                                 <td width="20%">{{ $af->nombre_original }}</td>
                                 <td>
                                     <a aria-haspopup="true" aria-expanded="false" href='/{{$af->idArchivoFinalInventario}}/descargar-zip' class="btn btn-primary btn-xs">Descargar</a>
-                                    <!--<a aria-haspopup="true" aria-expanded="false" href='/{{$af->idArchivoFinalInventario}}/eliminar-zip' class="btn btn-danger btn-xs">Eliminar</a>-->
                                 </td>
                             </tr>
                         @endforeach
@@ -191,8 +171,8 @@ thead {
                 <div align="center">
                     <form action="{{ URL::to('upload') }}" method="post" enctype="multipart/form-data">
                         <label>Seleccione Archivo:</label>
-                        <input type="file" name="file" id="file">
-                        <br><input type="submit" class="btn btn-primary btn-xs" value="Archivo Acta TXT" name="submit"></br>
+                        <input type="file" name="file" id="file" disabled>
+                        <br><input type="submit" class="btn btn-primary btn-xs" disabled value="Archivo Acta TXT" name="submit"></br>
                         <input type="hidden" value="{{ csrf_token() }}" name="_token">
                     </form>
                 </div>
