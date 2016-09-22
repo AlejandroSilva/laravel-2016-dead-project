@@ -13,7 +13,6 @@ class TemporalController extends Controller {
             'archivos' => $archivos
         ]);
     }
-
     function descargar_otro($file){
         $fileName = public_path().'/otros-archivos/'.$file;
         return response()
@@ -23,7 +22,6 @@ class TemporalController extends Controller {
                 'Cache-Control'=>'no-cache, must-revalidate'
             ]);
     }
-
     function post_archivo(Request $request){
         if (!$request->hasFile('thefile'))
             return view('temporal.enviarArchivo', [
@@ -44,5 +42,22 @@ class TemporalController extends Controller {
         return view('temporal.enviarArchivo', [
             'msg'=>'Recibido correctamente'
         ]);
+    }
+
+    // GET usuarioComoOperador/{runUsuario}
+    function usuarioComoOperador($usuarioRUN){
+        $user = \App\User::where('usuarioRUN', $usuarioRUN)->first();
+        if(!$user)
+            return response()->json('run no encontrado', 200);
+
+        $datos = $user->__nominasComoOperador__sin_uso__;
+        return response()->json(
+            $datos->map(function($nomina){
+                $inventario = $nomina->inventario;
+                $local = $inventario->local;
+                $cliente = $local->cliente;
+                return "Local: $cliente->nombreCorto $local->nombre, Fecha: $inventario->fechaProgramada, idNomina: $nomina->idNomina";
+            })
+        );
     }
 }
