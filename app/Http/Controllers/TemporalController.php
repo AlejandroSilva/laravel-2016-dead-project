@@ -56,7 +56,8 @@ class TemporalController extends Controller {
                 $inventario = $nomina->inventario;
                 $local = $inventario->local;
                 $cliente = $local->cliente;
-                return "Local: $cliente->nombreCorto $local->nombre, Fecha: $inventario->fechaProgramada, idNomina: $nomina->idNomina";
+                $urlNomina = "http://sig.seiconsultores.cl/programacionIG/nomina/$nomina->idNomina";
+                return "Local: $cliente->nombreCorto $local->nombre, Fecha: $inventario->fechaProgramada, nomina: $urlNomina";
             })
         );
     }
