@@ -1,7 +1,4 @@
 import React from 'react'
-import numeral from 'numeral'
-import moment from 'moment'
-moment.locale('es')
 
 // Componentes
 import Tooltip from 'react-bootstrap/lib/Tooltip'
@@ -75,7 +72,8 @@ class RowInventarioMensual extends React.Component{
                     <InputFecha
                         puedeModificar={this.props.puedeModificar}
                         ref={ref=>this.inputFecha=ref}
-                        diaSemana={moment(this.props.inventario.inv_fechaProgramada).format('dddd')}
+                        diaSemana={ this.props.inventario.inv_fechaProgramadaDOW }
+                        topeFechaConAuditoria={this.props.inventario.local_topeFechaConAuditoria}
                         fecha={this.props.inventario.inv_fechaProgramada}
                         onGuardar={this.guardarInventario.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}

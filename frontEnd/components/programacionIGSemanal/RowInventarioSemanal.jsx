@@ -1,6 +1,4 @@
 import React from 'react'
-import moment from 'moment'
-moment.locale('es')
 
 // Componentes
 import Tooltip from 'react-bootstrap/lib/Tooltip'
@@ -207,7 +205,8 @@ class RowInventario extends React.Component{
                 <td className={css.tdFecha}>
                     <InputFecha
                         ref={ref=>this.inputDia=ref}
-                        diaSemana={moment(inv.inv_fechaProgramada).format('dd')}
+                        diaSemana={ inv.inv_fechaProgramadaDOW }
+                        topeFechaConAuditoria={inv.local_topeFechaConAuditoria}
                         fecha={inv.inv_fechaProgramada}
                         onGuardar={this.guardarInventario.bind(this)}
                         puedeModificar={puedeEditar_fecha_turno_stock}

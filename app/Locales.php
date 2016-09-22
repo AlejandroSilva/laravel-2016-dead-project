@@ -33,6 +33,10 @@ class Locales extends Model{
         //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
         return $this->hasMany('App\Inventarios', 'idLocal', 'idLocal');
     }
+    public function auditorias(){
+        //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
+        return $this->hasMany('App\Auditorias', 'idLocal', 'idLocal');
+    }
     public function jornada(){
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Jornadas', 'idJornadaSugerida', 'idJornada');
