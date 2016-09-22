@@ -27,7 +27,7 @@
 
     <ul>
         @foreach ($archivos as $archivo)
-            <li><a href="/otros-archivos/{{ $archivo->getFilename()  }}" download>{{ $archivo->getFilename() }}</a></li>
+            <li><a href="/descargar-otro/{{ $archivo->getFilename()  }}" download>{{ $archivo->getFilename() }}</a></li>
         @endforeach
     </ul>
 </body>

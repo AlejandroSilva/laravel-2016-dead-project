@@ -14,6 +14,11 @@ class TemporalController extends Controller {
         ]);
     }
 
+    function descargar_otro($file){
+        $fileName = public_path().'/otros-archivos/'.$file;
+        return response()->download($fileName, $file);
+    }
+
     function post_archivo(Request $request){
         if (!$request->hasFile('thefile'))
             return view('temporal.enviarArchivo', [
