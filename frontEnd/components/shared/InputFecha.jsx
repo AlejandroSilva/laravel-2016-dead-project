@@ -99,10 +99,10 @@ class InputFecha extends React.Component{
             : css.inputDiaInvalido
         return(
             <div className={"pull-right "+css.divContenedor}>
-                {this.props.topeFechaConAuditoria!=null?
+                {this.props.fechaConProblemas!=null?
                     <p className={css.diaSemanaConError}>
                         {this.props.diaSemana}
-                        <span>Auditoria programada para el dia: {this.props.topeFechaConAuditoria}</span>
+                        <span>{this.props.fechaConProblemas}</span>
                     </p>
                     :
                     <p className={css.diaSemana}>{this.props.diaSemana}</p>

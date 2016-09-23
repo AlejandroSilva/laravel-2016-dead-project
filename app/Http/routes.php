@@ -59,8 +59,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionAI/mensual',                        'AuditoriasController@showMensual');
         Route::get('programacionAI/semanal',                        'AuditoriasController@showSemanal');
         // AUDITORIAS - DESCARGA DE PDF
-        Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porMes');
-        Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porRango');
+        Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'Legacy_AuditoriasController@descargarPDF_porMes');
+        Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'Legacy_AuditoriasController@descargarPDF_porRango');
 
         // Archivo Maestro de clientes
 //        Route::get('archivo-maestro',                               'ArchivoMaestroController@showIndex');
@@ -90,7 +90,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{publicIdNomina}/pdf',    'NominasController@show_nomina_pdfDownload');
         Route::get('programacionIG/nomina/{publicIdNomina}/excel',  'NominasController@show_nomina_excelDownload');
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
-        //
+        // Rutas temporales, para testing, pruebas, y emergencias
         Route::get('subir',                                         'TemporalController@show_index');
         Route::get('descargar-otro/{file}',                         'TemporalController@descargar_otro');
         Route::post('completado',                                   'TemporalController@post_archivo');
@@ -141,7 +141,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('auditoria/nuevo',                              'AuditoriasController@api_nuevo');
         Route::put('auditoria/{idAuditoria}',                       'AuditoriasController@api_actualizar');
         Route::delete('auditoria/{idAuditoria}',                    'AuditoriasController@api_eliminar');
-        
+        Route::get('auditoria/buscar',                              'AuditoriasController@api_buscar');
+
         // API VISTA GENERAL
         Route::get('vista-general/nominas-inventarios',             'VistaGeneralController@api_obtenerNominasAuditorias');
 
@@ -215,9 +216,10 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-disponible', 'NominasController@api_informarDisponible');
         Route::post('nomina/cliente/{idCliente}/ceco/{CECO}/dia/{fecha}/informar-nomina-pago','NominasController@api_informarNominaPago');
         // API AUDITORIAS
-        Route::get('auditoria/mes/{annoMesDia}/cliente/{idCliente}',            'AuditoriasController@api_getPorMesYCliente');
-        Route::get('auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}',        'AuditoriasController@api_getPorRangoYCliente');
-        Route::get('auditoria/{fecha1}/al/{fecha2}/auditor/{idAuditor}',        'AuditoriasController@api_getPorRangoYAuditor');
+//        Route::get('auditoria/mes/{annoMesDia}/cliente/{idCliente}',            'AuditoriasController@api_getPorMesYCliente');    // reemplazada por "buscar"
+//        Route::get('auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}',        'AuditoriasController@api_getPorRangoYCliente');  // reemplazada por "buscar"
+        Route::get('auditoria/{fecha1}/al/{fecha2}/auditor/{idAuditor}',        'Legacy_AuditoriasController@api_getPorRangoYAuditor');
+
         Route::get('auditoria/cliente/{idCliente}/dia/{annoMesDia}/estado-general',                 'AuditoriasController@api_estadoGeneral');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado',   'AuditoriasController@api_informarRealizado');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-revisado',    'AuditoriasController@api_informarRevisado');

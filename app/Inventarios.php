@@ -84,7 +84,7 @@ class Inventarios extends Model {
         // si el dia no esta seleccionado, entonces no buscar el tope de fecha con otras auditorias
         $fecha = explode('-', $this->fechaProgramada);
         $dia = $fecha[2];
-        if(!isset($dia))
+        if(!isset($dia) || $dia=='00')
             return null;
 
         // no se puede hacer una auditoria el mismo dia, o 4 dias habiles despues de un inventario
@@ -100,7 +100,8 @@ class Inventarios extends Model {
             $fechas = $auditoriasCercanas->map(function($auditoria){
                 return $auditoria->fechaProgramada;
             })->toArray();
-            return implode(", ", $fechas);
+            $fechas = implode(", ", $fechas);
+            return "Auditoria programada para el dia: $fechas";
         } else
             return null;
 

@@ -126,9 +126,9 @@ export default {
         eliminar: (idAuditoria)=>
             axios.delete(`/api/auditoria/${idAuditoria}`),
         getPorMesYCliente: (annoMesDia, idCliente)=>
-            axios.get(`/api/auditoria/mes/${annoMesDia}/cliente/${idCliente}`),
+            axios.get(`/api/auditoria/buscar?idCliente=${idCliente}&mes=${annoMesDia}&incluirConFechaPendiente=true`),
         getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>
-            axios.get(`/api/auditoria/${fechaInicio}/al/${fechaFin}/cliente/${idCliente}`),
+            axios.get(`/api/auditoria/buscar?idCliente=${idCliente}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`),
         estadoGeneral: (idCliente, dia)=>
             axios.get(`/api/auditoria/cliente/${idCliente}/dia/${dia}/estado-general`)
     },

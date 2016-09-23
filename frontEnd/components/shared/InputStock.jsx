@@ -1,7 +1,5 @@
 // Librerias
 import React from 'react'
-import Tooltip from 'react-bootstrap/lib/Tooltip'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 // Estilos
 import * as css from './InputStock.css'
@@ -64,11 +62,7 @@ class InputStock extends React.Component{
         let classname = this.state.valid
             ? (this.state.dirty? css.inputStockDirty : css.inputStock)
             : css.inputStockInvalida
-        return(
-        <OverlayTrigger
-            placement="left"
-            delay={0}
-            overlay={<Tooltip id="yyy">{this.props.tooltipText}</Tooltip>}>
+        return <div className={css.divConTooltip}>
             <input
                 className={classname + " " + this.props.className}
                 style={this.props.style}
@@ -81,8 +75,15 @@ class InputStock extends React.Component{
                 onFocus={()=>{ this.inputStock.select() }}             // seleccionar el texto cuando se hace focus
                 disabled={this.props.puedeModificar? '':'disabled'}
             />
-        </OverlayTrigger>
-        )
+            {/* el tooltip es opcional */}
+            {this.props.tooltipText?
+                <div className={css.tooltip}>
+                    {this.props.tooltipText}
+                </div>
+                :
+                null
+            }
+        </div>
     }
 }
 InputStock.propTypes = {
@@ -94,8 +95,5 @@ InputStock.propTypes = {
     focusRowAnterior: React.PropTypes.func.isRequired,
     focusRowSiguiente: React.PropTypes.func.isRequired,
     onGuardar: React.PropTypes.func.isRequired
-}
-InputStock.defaultProps = {
-    tooltipText: '..'
 }
 export default InputStock
