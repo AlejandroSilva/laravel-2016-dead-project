@@ -92,6 +92,9 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{publicIdNomina}/pdf',    'NominasController@show_nomina_pdfDownload');
         Route::get('programacionIG/nomina/{publicIdNomina}/excel',  'NominasController@show_nomina_excelDownload');
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
+
+        Route::get('pruebaIndicadores', 'ArchivoFinalInventarioController@indicadores');
+
         // rutas definidas momentaneamente
         Route::get('inventarios/{idInventario}/archivo-final',           'ArchivoFinalInventarioController@show_inventario');
         Route::post('api/archivo-final-inventario/{idInventario}/upload-zip',  'ArchivoFinalInventarioController@api_uploadZIP');
@@ -99,8 +102,12 @@ Route::group(['middleware' => ['web']], function (){
         // ARCHIVO FINAL AUDITORIA
         Route::get('archivo-final-auditoria/{idArchivoCruzVerde}/descargar-zip',  'ArchivoFinalAuditoriaController@api_descargarZIP');
 
+
         //Maestra Productos
         Route::get('maestra-producto', 'MaestraController@show_maestra_producto');
+
+
+
     });
 
     /*

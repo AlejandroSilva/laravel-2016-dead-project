@@ -105,8 +105,13 @@ class ArchivoFinalInventarioController extends Controller {
             return response()->json([], 404);
         }
     }
-    */
 
+    function indicadores(){
+        //dd("fff");
+      return view('operacional.clientes.indicadores');
+    }
+
+    */
 }
 
 
