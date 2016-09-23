@@ -2,7 +2,7 @@
 <style  type="text/css">
 
     .tablefiles {
-        font-size: 1px;
+        font-size: 12px;
         padding: 0px !important;
         text-align: center;
     }
@@ -30,7 +30,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading" align="center"><span class="glyphicon glyphicon-folder-close"></span> Maestra Productos</div>
                 <div style="height:110px;overflow:auto;" class="panel-body">
@@ -83,7 +83,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading" align="center"><span class="glyphicon glyphicon-upload"></span> Subir Nueva Maestra</div>
                 <div align="center">
-                    <form action="{{ URL::to('upload') }}" method="post" enctype="multipart/form-data">
+                    <form action="/api/archivo-maestra/upload-excel" method="post" enctype="multipart/form-data">
                         <label>Seleccione Archivo:</label>
                         <input type="file" name="file" id="file">
                         <br><input type="submit" class="btn btn-primary btn-xs" value="Subir Maestra" name="submit"></br>

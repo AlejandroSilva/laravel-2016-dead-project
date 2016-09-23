@@ -105,7 +105,7 @@ Route::group(['middleware' => ['web']], function (){
 
         //Maestra Productos
         Route::get('maestra-producto', 'MaestraController@show_maestra_producto');
-
+        Route::post('api/archivo-maestra/upload-excel', 'MaestraFCVController@subir_maestra');
 
 
     });
