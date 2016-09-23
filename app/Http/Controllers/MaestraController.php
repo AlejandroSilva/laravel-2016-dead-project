@@ -18,6 +18,7 @@ use App\ArticuloAF;
 use App\Clientes;
 use App\CodigoBarra;
 use App\ProductoAF;
+use App\ArchivoMaestraFCV;
 
 class MaestraController extends Controller {
 
@@ -171,10 +172,6 @@ class MaestraController extends Controller {
 
     public function show_maestra_producto(){
         $maestraFCV = ArchivoMaestraFCV::all();
-        if(!$maestraFCV == null)
-            return view('errors.errorConMensaje', [
-                'titulo' => 'No se encontraron maestras', 'descripcion' => 'No hay maestras para mostrar'
-            ]);
         return view('operacional.maestra.maestra-producto', ['maestras' => $maestraFCV]);
     }
 

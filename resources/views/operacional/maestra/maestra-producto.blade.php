@@ -10,15 +10,15 @@
     .tablefiles th {
         text-align: center;
         font-size: 5px;
-        width: 15% !important;
+        width: 10% !important;
         padding: 0px !important;
 
     }
 
     .tablefiles td {
         text-align: center;
-        width: 20px;
-        padding: 2px !important;
+        width: 10px;
+        padding: 1px !important;
 
     }
 
@@ -39,13 +39,15 @@
                         <th>Nombre archivo</th>
                         <th>Subido Por</th>
                         <th>Fecha Subida</th>
-                        <th width="10px">Opciones</th>
+                        <th>Estado</th>
+                        <th width="1px">Opciones</th>
                         </thead>
                         @foreach($maestras as $maestra)
                             <tr>
                                 <td>{{ $maestra->nombreOriginal}}</td>
-                                <td>{{ $maestra->idUsuarioSubida }}</td>
+                                <td>{{ $maestra->usuario->nombreCompleto() }}</td>
                                 <td>{{ $maestra->created_at }}</td>
+                                <td>{{ $maestra->resultado }}</td>
                                 <td>
                                     <a aria-haspopup="true" aria-expanded="false"  class="btn btn-primary btn-xs">Descargar</a>
                                 </td>

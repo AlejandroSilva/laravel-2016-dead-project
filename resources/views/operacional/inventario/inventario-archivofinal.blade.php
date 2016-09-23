@@ -133,7 +133,7 @@
                         @foreach($archivos_finales as $af)
                             <tr>
                                 <td width="15%">{{ $af->created_at }}</td>
-                                <td width="20%">{{ $af->usuario_auditor->nombre1 }} {{ $af->usuario_auditor->apellidoPaterno }}</td>
+                                <td width="20%">{{ $af->usuario_auditor->nombreCompleto() }}</td>
                                 <td width="30%">{{ $af->resultado }}</td>
                                 <td width="20%">{{ $af->nombre_original }}</td>
                                 <td>
