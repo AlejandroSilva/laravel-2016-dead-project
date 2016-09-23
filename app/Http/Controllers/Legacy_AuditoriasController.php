@@ -10,6 +10,7 @@ use App\Clientes;
 // PHP Excel
 use PHPExcel;
 use PHPExcel_IOFactory;
+use App\User;
 
 class Legacy_AuditoriasController extends Controller {
     // * ##########################################################
