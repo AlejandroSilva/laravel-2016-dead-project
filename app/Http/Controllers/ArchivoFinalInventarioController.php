@@ -70,4 +70,8 @@ class ArchivoFinalInventarioController extends Controller {
         $inventario->insertarOActualizarActa($acta);
         return response()->json($acta);
     }
+    function indicadores(){
+        //dd("fff");
+      return view('operacional.clientes.indicadores');
+    }
 }
