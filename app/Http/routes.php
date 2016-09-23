@@ -60,7 +60,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionAI/semanal',                        'AuditoriasController@showSemanal');
         // AUDITORIAS - DESCARGA DE PDF
         Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porMes');
-        Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porRango');
+        Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',    'AuditoriasController@descargarPDF_porRango');
 
         // Archivo Maestro de clientes
 //        Route::get('archivo-maestro',                               'ArchivoMaestroController@showIndex');
@@ -78,7 +78,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('api/activo-fijo/cargar-maestra',                'MaestraController@api_cargar_maestra');  // ELIMINAR
 
         // ARCHIVO FINAL INVENTARIO
-        Route::post('api/archivo-final-inventario/{idInventario}/upload-zip',  'ArchivoFinalInventarioController@api_uploadZIP');
+
+
         // GEO - MANTENEDOR (DESARROLLO DETENIDO)
 //        Route::get('geo',                                         'GeoController@show_index');//->name('geo.index');
     });
@@ -91,9 +92,19 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{publicIdNomina}/pdf',    'NominasController@show_nomina_pdfDownload');
         Route::get('programacionIG/nomina/{publicIdNomina}/excel',  'NominasController@show_nomina_excelDownload');
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
+
         Route::get('pruebaIndicadores', 'ArchivoFinalInventarioController@indicadores');
+
+        // rutas definidas momentaneamente
+        Route::get('inventarios/{idInventario}/archivo-final',           'ArchivoFinalInventarioController@show_inventario');
+        Route::post('api/archivo-final-inventario/{idInventario}/upload-zip',  'ArchivoFinalInventarioController@api_uploadZIP');
+        Route::get('/{idArchivoFinalInventario}/descargar-zip',           'ArchivoFinalInventarioController@download_ZIP');
+        // ARCHIVO FINAL AUDITORIA
+        Route::get('archivo-final-auditoria/{idArchivoCruzVerde}/descargar-zip',  'ArchivoFinalAuditoriaController@api_descargarZIP');
+
+
     });
-    
+
     /*
     |--------------------------------------------------------------------------
     | API's PROTEGIDAS SOLO A USUARIOS

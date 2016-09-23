@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\ActasInventariosFCV;
+use App\ArchivoFinalInventario;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-// Carbon
-use Carbon\Carbon;
+use Auth;
+use Response;
+use Illuminate\Support\Facades\DB;
 // Nominas
 use App\Inventarios;
 
@@ -31,47 +34,84 @@ class ArchivoFinalInventarioController extends Controller {
         if (!$archivo->isValid())
             return response()->json(['error' => 'El archivo adjuntado no es valido.'], 400);
 
-        // mover el archivo junto a los otros stocks enviados
-        $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
-        $nombreOriginal = $archivo->getClientOriginalName();
-        $fileName = "[$timestamp][$cliente->nombreCorto][$local->numero][$inventario->fechaProgramada] $nombreOriginal";
-        $path = public_path()."/$cliente->nombreCorto/archivoFinalInventario/";
-        // guardar el archivo en una carpeta publica, y cambiar los permisos para que el grupo pueda modifiarlos
-        $archivo->move( $path, $fileName);
-        chmod($path.$fileName, 0774);   // 0744 por defecto
+        // mover el archivo a la carpeta correspondiente
+        $archivoFinal = \ArchivoFinalInventarioFCV::moverACarpeta($archivo, $cliente->nombreCorto, $local->numero, $inventario->fechaProgramada);
 
-        // extrer el archivo de acta del izp
-        $resultadoExtraccion = \ArchivoFinalInventarioFCV::descomprimirZip($path.$fileName);
-        if( $resultadoExtraccion->error!=null )
+        // paso 1) Extraer el archivo de acta del zip
+        $resultadoExtraccion = \ArchivoFinalInventarioFCV::descomprimirZip($archivoFinal['fullPath']);
+        if( $resultadoExtraccion->error!=null ){
+            $inventario->agregarArchivoFinal(Auth::user(), $archivoFinal, $resultadoExtraccion->error);
             return response()->json(['error'=>$resultadoExtraccion->error], 400);
+        }
 
-        // Parsear el archivo de acta si este existe
-        $acta = null;
-        if( $resultadoExtraccion->acta_v2!=null )
-            $acta = \ArchivoFinalInventarioFCV::parsearActa_v2($resultadoExtraccion->acta_v2);
-        else if( $resultadoExtraccion->acta_v1!=null )
-            $acta = \ArchivoFinalInventarioFCV::parsearActa_v1($resultadoExtraccion->acta_v1);
-
-        // revisar que se haya parseado y encontrado correctaemnte el acta
-        if($acta==null)
-            return response()->json(['error'=>'No se encontro un archivo de acta dentro del zip'], 400);
-
-        // verificar que el CECO local indicado en el acta, es el mismo que el CECO del local inventariado
-        $ceco_acta = $acta['ceco_local'];
-        $ceco_inventario = $inventario->local->numero;
-        if($ceco_acta!=$ceco_inventario){
-            return response()->json(
-                ['error'=>"El local indicado en el acta, no corresponde con el inventario seleccionado (acta:$ceco_acta|inventario:$ceco_inventario"],
-                400
-            );
+        // paso 2) Parsear el archivo de acta si este existe
+        $resultadoActa = \ArchivoFinalInventarioFCV::parsearActa($resultadoExtraccion->acta_v1, $resultadoExtraccion->acta_v2, $local->numero);
+        if( $resultadoActa->error!=null ){
+            $inventario->agregarArchivoFinal(Auth::user(), $archivoFinal, $resultadoActa->error);
+            return response()->json(['error'=>$resultadoActa->error], 400);
         }
 
         // finalmente, actualizar el acta con los datos entregados
-        $inventario->insertarOActualizarActa($acta);
-        return response()->json($acta);
+        $inventario->insertarOActualizarActa($resultadoActa->acta);
+        $inventario->agregarArchivoFinal(Auth::user(), $archivoFinal, null);
+
+        return response()->json($resultadoActa->acta);
     }
+
+    //función para mostrar los datos del acta, si existe un error no mostrará nada
+    public function show_inventario($idInventario){
+        // existe el inventario?
+        $inventario = Inventarios::find($idInventario);
+        if(!$inventario)
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
+            ]);
+        $acta = $inventario->actaInventarioFCV;
+        if(!$acta)
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Acta no existe', 'descripcion' => 'El acta que busca no ha sido encontrada.'
+            ]);
+        return view('operacional.inventario.inventario-archivofinal', [
+            'acta'=>$acta,
+            'archivos_finales' => $inventario->archivosFinales
+        ] );
+    }
+
+    //función para descargar un archivo .zip
+    public function download_ZIP($idArchivoFinalInventario){
+        $archivo = ArchivoFinalInventario::find($idArchivoFinalInventario);
+        if(!$archivo)
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Archivo No encontrado', 'descripcion' => 'El archivo que busca no se puede descargar.'
+            ]);
+        $download_archivo = $archivo->nombre_archivo;
+        $file= public_path(). "/FSB/archivoFinalInventario/". "$download_archivo";
+        $headers = array(
+            'Content-Type: application/octet-stream',
+        );
+        return Response::download($file, $download_archivo, $headers);
+    }
+
+    /*
+    public function delete_ZIP($idArchivoFinalInventario){
+        $archivo = ArchivoFinalInventario::find($idArchivoFinalInventario);
+        if($archivo){
+            DB::transaction(function() use($archivo){
+                $archivo->delete();
+                return response()->json([], 204);
+            });
+
+        }else{
+            return response()->json([], 404);
+        }
+    }
+
     function indicadores(){
         //dd("fff");
       return view('operacional.clientes.indicadores');
     }
+
+    */
 }
+
+

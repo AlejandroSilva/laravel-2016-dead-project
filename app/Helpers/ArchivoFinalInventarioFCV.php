@@ -1,7 +1,27 @@
 <?php
 
+// Carbon
+use Carbon\Carbon;
+
 class ArchivoFinalInventarioFCV{
-    static function descomprimirZip($file){
+    static function moverACarpeta($archivo, $nombreCliente, $ceco, $fechaProgramada){
+        // mover el archivo junto a los otros stocks enviados
+        $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
+        $nombreOriginal = $archivo->getClientOriginalName();
+        $fileName = "[$timestamp][$nombreCliente][$ceco][$fechaProgramada] $nombreOriginal";
+        $path = public_path()."/$nombreCliente/archivoFinalInventario/";
+        // guardar el archivo en una carpeta publica, y cambiar los permisos para que el grupo pueda modifiarlos
+        $archivo->move( $path, $fileName);
+
+        chmod($path.$fileName, 0774);   // 0744 por defecto
+        return [
+            'fullPath' => $path.$fileName,
+            'nombre_archivo' => $fileName,
+            'nombre_original' => $nombreOriginal,
+        ];
+    }
+
+    static function descomprimirZip($fullPath){
         $tmpPath = public_path()."/tmp/archivoFinalInventario/".md5(uniqid(rand(), true))."/";
         $archivoActa_v1 = 'archivo_salida_Acta.txt';
         $archivoActa_v2 = 'nuevo_formato.txt';
@@ -10,10 +30,9 @@ class ArchivoFinalInventarioFCV{
             'error' => null,
             'acta_v1' => null,          // acta "original" (feb-2016)
             'acta_v2' => null,          // acta "nueva" (sept-2016)
-            //'acta_a_procesar' => null   // por defecto se selecciona la "ultima version" de la acta
         ];
         $zip = new ZipArchive;      // documentacion: http://php.net/manual/es/ziparchive.extractto.php
-        if ($zip->open($file) === true) {
+        if ($zip->open($fullPath) === true) {
             // si se logra extraer correctamente el/los archivos, adjuntar su path en la respuesta
             $extraccionCorrecta_acta_v1 = $zip->extractTo($tmpPath, $archivoActa_v1);
             if($extraccionCorrecta_acta_v1)
@@ -43,6 +62,31 @@ class ArchivoFinalInventarioFCV{
         return $datos;
     }
 
+    static function parsearActa($acta_v1, $acta_v2, $ceco_inventario){
+        $resultado = (object)[
+            'error' => null,
+            'acta' => null
+        ];
+        if( $acta_v2!=null )
+            $resultado->acta = \ArchivoFinalInventarioFCV::parsearActa_v2($acta_v2);
+        else if( $acta_v1!=null )
+            $resultado->acta = \ArchivoFinalInventarioFCV::parsearActa_v1($acta_v1);
+
+        // revisar que se haya parseado y encontrado correctaemnte el acta
+        if($resultado->acta==null) {
+            $resultado->error = 'No se encontro un archivo de acta dentro del zip';
+            return $resultado;
+        }
+
+        // verificar que el CECO local indicado en el acta, es el mismo que el CECO del local inventariado
+        $ceco_acta = $resultado->acta['ceco_local'];
+        if($ceco_acta!=$ceco_inventario){
+            $resultado->error = "El local indicado en el acta, no corresponde con el inventario seleccionado (acta:$ceco_acta|inventario:$ceco_inventario";
+            return $resultado;
+        }
+
+        return $resultado;
+    }
     static function parsearActa_v1($archivo){
         // leer datos del archivo .txt
         $datos = self::leerDatos($archivo);
@@ -84,7 +128,8 @@ class ArchivoFinalInventarioFCV{
         */
         return [
             'ceco_local'            => get($datos['cod_local'], '??'),
-            'fecha_inventario'      => get($datos['fecha_toma'], '??'),
+            // la fecha se recibe como '30/03/2016', pero para guardarlo como date en la BD debe estar como '2016-03-30'
+            'fecha_inventario'      => Carbon::createFromFormat('d/m/Y', get($datos['fecha_toma'], '0000-00-00') )->toDateString(),
             'cliente'               => get($datos['nombre_empresa'], '??'),
             'rut'                   => get($datos['__'], '??'),
             'supervisor'            => get($datos['__'], '??'),
@@ -92,8 +137,11 @@ class ArchivoFinalInventarioFCV{
             'nota_presentacion'     => get($datos['nota1'], '0'),
             'nota_supervisor'       => get($datos['nota2'], '???'),
             'nota_conteo'           => get($datos['nota3'], '???'),
-            'inicio_conteo'         => get($datos['captura_uno'], '???'),
-            'fin_conteo'            => get($datos['fin_captura'], '???'),
+            //inicio y fin de conteo se reciben como string, tambien se deben transformar a datetime
+            'inicio_conteo'         => isset($datos['captura_uno'])?
+                Carbon::createFromFormat('d/m/Y H:i:s', $datos['captura_uno'])->toDateTimeString() : '00/00/00 00:00:00',
+            'fin_conteo'            => isset($datos['fin_captura'])?
+                Carbon::createFromFormat('d/m/Y H:i:s', $datos['fin_captura'])->toDateTimeString() : '00/00/00 00:00:00',
             'fin_revisión'          => get($datos['__'], '??'),
             'horas_trabajadas'      => get($datos['__'], '??'),
             'dotacion_presupuestada'    => get($datos['__'], '??'),
@@ -117,7 +165,6 @@ class ArchivoFinalInventarioFCV{
             'total_item'                => get($datos['__'], '??'),
         ];
     }
-
     static function parsearActa_v2($archivo){
         // leer datos del archivo .txt
         $datos = self::leerDatos($archivo);
@@ -129,7 +176,8 @@ class ArchivoFinalInventarioFCV{
 
         return [
             'ceco_local'            => get($datos['cod_local'], '??'),
-            'fecha_inventario'      => get($datos['??'], '??'),
+            // la fecha se recibe como '30/03/2016', pero para guardarlo como date en la BD debe estar como '2016-03-30'
+            'fecha_inventario'      => Carbon::createFromFormat('d/m/Y', get($datos['fecha_toma'], '00/00/0000') )->toDateString(),
             'cliente'               => get($datos['??'], '??'),
             'rut'                   => get($datos['__'], '??'),
             'supervisor'            => get($datos['__'], '??'),
@@ -137,8 +185,11 @@ class ArchivoFinalInventarioFCV{
             'nota_presentacion'     => get($datos['nota1'], '0'),
             'nota_supervisor'       => get($datos['nota2'], '???'),
             'nota_conteo'           => get($datos['nota3'], '???'),
-            'inicio_conteo'         => get($datos['captura_uno'], '???'),
-            'fin_conteo'            => get($datos['fin_captura'], '???'),
+            //inicio y fin de conteo se reciben como string, tambien se deben transformar a datetime
+            'inicio_conteo'         => isset($datos['captura_uno'])?
+                Carbon::createFromFormat('d/m/Y H:i:s', $datos['captura_uno'])->toDateTimeString() : '00/00/00 00:00:00',
+            'fin_conteo'            => isset($datos['fin_captura'])?
+                Carbon::createFromFormat('d/m/Y H:i:s', $datos['fin_captura'])->toDateTimeString() : '00/00/00 00:00:00',
             'fin_revisión'          => get($datos['__'], '??'),
             'horas_trabajadas'      => get($datos['__'], '??'),
             'dotacion_presupuestada'    => get($datos['__'], '??'),
