@@ -49,7 +49,7 @@
                                 <td>{{ $maestra->created_at }}</td>
                                 <td>{{ $maestra->resultado }}</td>
                                 <td>
-                                    <a aria-haspopup="true" aria-expanded="false"  class="btn btn-primary btn-xs">Descargar</a>
+                                    <a aria-haspopup="true" aria-expanded="false"  href='/{{$maestra->idArchivoMaestra}}/descargar-maestra'  class="btn btn-primary btn-xs">Descargar</a>
                                 </td>
                             </tr>
                         @endforeach

@@ -14,6 +14,7 @@ use PHPExcel_IOFactory;
 use PHPExcel_Shared_Date;
 // Modelos
 use App\Clientes;
+use Response;
 use App\ArchivoMaestraFCV;
 
 class MaestraFCVController extends Controller
@@ -132,14 +133,14 @@ class MaestraFCVController extends Controller
         return view('operacional.maestra.maestra-producto', ['maestras' => $maestraFCV]);
     }
     
-    public function download_Maestra($idArchivoFinalInventario){
-        $archivo = ArchivoFinalInventario::find($idArchivoFinalInventario);
-        if(!$archivo)
+    public function download_Maestra($idArchivoMaestra){
+        $maestra = ArchivoMaestraFCV::find($idArchivoMaestra);
+        if(!$maestra)
             return view('errors.errorConMensaje', [
                 'titulo' => 'Archivo No encontrado', 'descripcion' => 'El archivo que busca no se puede descargar.'
             ]);
-        $download_archivo = $archivo->nombre_archivo;
-        $file= public_path(). "/FSB/archivoFinalInventario/". "$download_archivo";
+        $download_archivo = $maestra->nombreArchivo;
+        $file= public_path(). "/actualizarStock/". "$download_archivo";
         $headers = array(
             'Content-Type: application/octet-stream',
         );
