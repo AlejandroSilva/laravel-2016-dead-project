@@ -99,6 +99,8 @@ Route::group(['middleware' => ['web']], function (){
         // ARCHIVO FINAL AUDITORIA
         Route::get('archivo-final-auditoria/{idArchivoCruzVerde}/descargar-zip',  'ArchivoFinalAuditoriaController@api_descargarZIP');
 
+        //Maestra Productos
+        Route::get('maestra-producto', 'MaestraController@show_maestra_producto');
     });
 
     /*
