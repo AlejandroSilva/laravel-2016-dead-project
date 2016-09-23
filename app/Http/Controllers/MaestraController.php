@@ -170,11 +170,15 @@ class MaestraController extends Controller {
     }
 
     public function show_maestra_producto(){
-        return view('operacional.maestra.maestra-producto');
+        $maestraFCV = ArchivoMaestraFCV::all();
+        if(!$maestraFCV == null)
+            return view('errors.errorConMensaje', [
+                'titulo' => 'No se encontraron maestras', 'descripcion' => 'No hay maestras para mostrar'
+            ]);
+        return view('operacional.maestra.maestra-producto', ['maestras' => $maestraFCV]);
     }
 
 
-    
     public function download_Maestra($idArchivoFinalInventario){
         $archivo = ArchivoFinalInventario::find($idArchivoFinalInventario);
         if(!$archivo)

@@ -41,15 +41,16 @@
                         <th>Fecha Subida</th>
                         <th width="10px">Opciones</th>
                         </thead>
-
+                        @foreach($maestras as $maestra)
                             <tr>
-                                <td>acta_doble_402_aug_(n2165).zip</td>
-                                <td>Alejandro Silva</td>
-                                <td>2016-09-20 16:27:09</td>
+                                <td>{{ $maestra->nombreOriginal}}</td>
+                                <td>{{ $maestra->idUsuarioSubida }}</td>
+                                <td>{{ $maestra->created_at }}</td>
                                 <td>
                                     <a aria-haspopup="true" aria-expanded="false"  class="btn btn-primary btn-xs">Descargar</a>
                                 </td>
                             </tr>
+                        @endforeach
                     </table>
                 </div>
             </div>
