@@ -9,7 +9,7 @@
 
     .tablefiles th {
         text-align: center;
-        font-size: 5px;
+        font-size: 12px;
         width: 10% !important;
         padding: 0px !important;
 
