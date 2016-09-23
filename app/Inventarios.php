@@ -79,20 +79,21 @@ class Inventarios extends Model {
         }
     }
     function tieneTopeFechaConAuditoria(){
+        // verifica si existe una auditoria programada cerca de este inventario
+
         // si el dia no esta seleccionado, entonces no buscar el tope de fecha con otras auditorias
         $fecha = explode('-', $this->fechaProgramada);
         $dia = $fecha[2];
         if(!isset($dia))
             return null;
 
-        // verifica si existe una auditoria programada cerca de esta inventario
         // no se puede hacer una auditoria el mismo dia, o 4 dias habiles despues de un inventario
-        $fecha_diaAnterior = DiasHabiles::find($this->fechaProgramada)->diasHabilesAntes(1);
-        $fecha_4diasHabilesDespues = DiasHabiles::find($this->fechaProgramada)->diasHabilesDespues(4);
+        $fecha_0diaHabilAntes = DiasHabiles::find($this->fechaProgramada)->diasHabilesAntes(0);
+        $fecha_3diasHabilesDespues = DiasHabiles::find($this->fechaProgramada)->diasHabilesDespues(3);
 
         $auditoriasCercanas = Auditorias::whereRaw("idLocal = $this->idLocal")
-            ->whereRaw("fechaProgramada >= '$fecha_diaAnterior->fecha'")
-            ->whereRaw("fechaProgramada <= '$fecha_4diasHabilesDespues->fecha'")
+            ->whereRaw("fechaProgramada >= '$fecha_0diaHabilAntes->fecha'")
+            ->whereRaw("fechaProgramada <= '$fecha_3diasHabilesDespues->fecha'")
             ->get();
 
         if($auditoriasCercanas->count()>0){
@@ -106,8 +107,8 @@ class Inventarios extends Model {
         // Se Guarda para hacer debug
 //        return [
 //            'fechaProgramada'=>$this->fechaProgramada,
-//            'fechaInicioBusqueda'=>$fecha_diaAnterior->fecha,
-//            'fechaFinBusqueda'=>$fecha_4diasHabilesDespues->fecha,
+//            'fechaInicioBusqueda'=>$fecha_0diaHabilAntes->fecha,
+//            'fechaFinBusqueda'=>$fecha_3diasHabilesDespues->fecha,
 //            'auditorias'=>$auditoriasCercanas,
 //            'tieneTopeFechaConAuditoria' => $auditoriasCercanas->count()>0
 //        ];
