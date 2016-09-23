@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class ArchivoMaestraFCV extends Model{
-    public $table = 'archivos_maestra_fcv';
+    public $table = 'archivo_maestra_fcv';
     // PK
     public $primaryKey = 'idArchivoMaestra';
 
