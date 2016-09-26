@@ -1,6 +1,4 @@
 import React from 'react'
-import moment from 'moment'
-moment.locale('es')
 
 // Componentes
 import InputFecha from '../shared/InputFecha.jsx'

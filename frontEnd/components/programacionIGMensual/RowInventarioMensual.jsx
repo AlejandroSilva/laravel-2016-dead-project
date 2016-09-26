@@ -1,7 +1,4 @@
 import React from 'react'
-import numeral from 'numeral'
-import moment from 'moment'
-moment.locale('es')
 
 // Componentes
 import InputFecha from '../shared/InputFecha.jsx'

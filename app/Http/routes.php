@@ -59,13 +59,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionAI/mensual',                        'AuditoriasController@showMensual');
         Route::get('programacionAI/semanal',                        'AuditoriasController@showSemanal');
         // AUDITORIAS - DESCARGA DE PDF
-
-        Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'AuditoriasController@descargarPDF_porMes');
-        Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',    'AuditoriasController@descargarPDF_porRango');
-
         Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'Legacy_AuditoriasController@descargarPDF_porMes');
         Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'Legacy_AuditoriasController@descargarPDF_porRango');
-
 
         // Archivo Maestro de clientes
 //        Route::get('archivo-maestro',                               'ArchivoMaestroController@showIndex');
@@ -107,8 +102,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('/{idArchivoFinalInventario}/descargar-zip',           'ArchivoFinalInventarioController@download_ZIP');
         // ARCHIVO FINAL AUDITORIA
         Route::get('archivo-final-auditoria/{idArchivoCruzVerde}/descargar-zip',  'ArchivoFinalAuditoriaController@api_descargarZIP');
-
-
         //Maestra Productos
         Route::get('maestra-producto', 'MaestraFCVController@show_maestra_producto');
         Route::post('api/archivo-maestra/upload-excel', 'MaestraFCVController@subir_maestra');

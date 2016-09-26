@@ -16,4 +16,13 @@ class MaestraFCV extends Model{
     public function archivoMaestraFCV(){
         return $this->belongsTo('App\ArchivoMaestraFCV', 'idArchivoMaestra', 'idArchivoMaestra');
     }
+    //Acciones
+    static function agregarArchivoMaestra($user, $archivoFinal){
+        ArchivoMaestraFCV::create([
+            'idUsuarioSubida' => $user? $user->id : null,
+            'nombreArchivo' => $archivoFinal['nombre_archivo'],
+            'nombreOriginal' => $archivoFinal['nombre_original'],
+            'resultado' => 'acta cargada correctamente'
+        ]);
+    }
 }

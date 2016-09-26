@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 // Modelos
 use App\Locales;
-use App\ActasInventariosFCV;
 
 class Inventarios extends Model {
     // llave primaria
@@ -90,7 +89,6 @@ class Inventarios extends Model {
             return round($this->stockTeorico/110);
         }
     }
-
     function tieneTopeFechaConAuditoria(){
         // verifica si existe una auditoria programada cerca de este inventario
 
