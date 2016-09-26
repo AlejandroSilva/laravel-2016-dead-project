@@ -16,11 +16,32 @@ use PHPExcel_Shared_Date;
 use App\Clientes;
 use App\ArchivoMaestraFCV;
 use App\MaestraFCV;
+use Auth;
 
 class MaestraFCVController extends Controller
 {
-    function api_cargar_maestra(){
+    function subir_maestra(Request $request)
+    {
+        // se adjunto un archivo?
+        if (!$request->hasFile('file'))
+            return view('errors.errorConMensaje', [
+                'titulo' => 'error', 'descripcion' => 'Debe adjuntar el archivo.'
+            ]);
+            //return response()->json(['error' => 'Debe adjuntar el archivo.'], 400);
+
+        // el archivo es valido?
+        $archivo = $request->file('file');
+        if (!$archivo->isValid())
+            return view('errors.errorConMensaje', [
+                'titulo' => 'error', 'descripcion' => 'Archivo adjunto no es valido.'
+            ]);
+            //return response()->json(['error' => 'El archivo adjuntado no es valido.'], 400);
         
+        //Mover maestra 
+        $maestraFinal = \ArchivoMaestraFCVHelper::moverAcarpeta($archivo);
+        MaestraFCV::agregarArchivoMaestra(Auth::user(), $maestraFinal);
+        \ArchivoMaestraFCVHelper::guardarRegistro($maestraFinal);
+        return response()->json(['guardado'], 200);
     }
 
     public function show_maestra_producto(){

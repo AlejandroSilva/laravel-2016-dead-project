@@ -11,7 +11,7 @@ class ArchivoMaestraFCV extends Model{
 
     public $timestamps = true;
     //Campos asignables
-    protected $fillable = ['idUsuarioSubida',  'nombreArchivo', 'nombreOriginal', 'fechaSubida', 'resultado'];
+    protected $fillable = ['idUsuarioSubida',  'nombreArchivo', 'nombreOriginal', 'resultado'];
     
     //Relaciones
     function usuario(){
