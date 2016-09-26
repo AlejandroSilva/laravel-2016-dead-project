@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import moment from 'moment'
 
 export default class BlackBoxSemanal{
     constructor(){
@@ -37,7 +36,7 @@ export default class BlackBoxSemanal{
     // Todo modificar el listado de clientes
     actualizarAuditoria(auditoriaActualizada){
         this.lista = this.lista.map(auditoria=> {
-            if (auditoria.idAuditoria == auditoriaActualizada.idAuditoria) {
+            if (auditoria.aud_idAuditoria == auditoriaActualizada.aud_idAuditoria) {
                 //auditoria = Object.assign(auditoria, auditoriaActualizada)
                 return auditoriaActualizada
             }
@@ -51,9 +50,9 @@ export default class BlackBoxSemanal{
 
     ordenarLista(){
         let porFechaProgramada = (auditoria)=>{
-            let dateA = new Date(auditoria.fechaProgramada)
+            let dateA = new Date(auditoria.aud_fechaProgramada)
             if(dateA=='Invalid Date'){
-                let [annoA, mesA, diaA] = auditoria.fechaProgramada.split('-')
+                let [annoA, mesA, diaA] = auditoria.aud_fechaProgramada.split('-')
                 // OJO: (new Date('2016-04')) - (new Date('2016-03-31')), resulta en 0, y los ordena mal, por eso se resta 1
                 return new Date(`${annoA}-${mesA}`) - 1
             }else{
@@ -61,9 +60,9 @@ export default class BlackBoxSemanal{
             }
         }
         let porAuditor = (auditoria)=>{
-            return auditoria.auditor? `${auditoria.auditor.nombre1} ${auditoria.auditor.apellidoPaterno}` : '--'
+            return auditoria.aud_auditor
         }
-        let porComuna = (auditoria)=>auditoria.local.direccion.comuna.cutComuna
+        let porComuna = (auditoria)=>auditoria.local_cutComuna
 
         // ordenar por fechaprogramada, por auditor, y finalmente por comuna
         this.lista = _.sortBy(this.lista, porFechaProgramada, porAuditor, porComuna)
@@ -73,9 +72,8 @@ export default class BlackBoxSemanal{
         // ##### Filtro fechas
         this.filtroFechas = _.chain(this.lista)
             .map(auditoria=>{
-                let momentFecha = moment(auditoria.fechaProgramada)
-                let valor = auditoria.fechaProgramada
-                let texto = momentFecha.isValid()? momentFecha.format('dddd DD MMMM') : `-- ${auditoria.fechaProgramada} --`
+                let valor = auditoria.aud_fechaProgramada
+                let texto = auditoria.aud_fechaProgramadaFbreve
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroFechas, {'valor': valor})
@@ -88,8 +86,8 @@ export default class BlackBoxSemanal{
         // ##### Filtro CECO (ordenado por numero)
         this.filtroCeco = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = ''+auditoria.local.numero
-                let texto = ''+auditoria.local.numero
+                let valor = ''+auditoria.local_ceco
+                let texto = ''+auditoria.local_ceco
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroCeco, {'valor': valor})
@@ -101,8 +99,8 @@ export default class BlackBoxSemanal{
         // ##### Filtro Regiones (ordenado por codRegion)
         this.filtroRegiones = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = auditoria.local.direccion.comuna.provincia.region.cutRegion
-                let texto = auditoria.local.direccion.comuna.provincia.region.numero
+                let valor = auditoria.local_cutRegion
+                let texto = auditoria.local_region
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroRegiones, {'valor': valor})
@@ -116,11 +114,11 @@ export default class BlackBoxSemanal{
         this.filtroComunas = _.chain(this.lista)
             // solo dejar las comunas en las que su respectiva region este seleccionada
             .filter(auditoria=>{
-                return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+                return _.find(this.filtroRegiones, {'valor': auditoria.local_cutRegion, 'seleccionado': true})
             })
             .map(auditoria=>{
-                let valor = auditoria.local.direccion.cutComuna
-                let texto = auditoria.local.direccion.comuna.nombre
+                let valor = auditoria.local_cutComuna
+                let texto = auditoria.local_comuna
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroComunas, {'valor': valor})
@@ -133,8 +131,8 @@ export default class BlackBoxSemanal{
         // ##### Filtro Auditores
         this.filtroAuditores = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = auditoria.idAuditor
-                let texto = auditoria.auditor? `${auditoria.auditor.nombre1} ${auditoria.auditor.apellidoPaterno}` : '-- NO ASIGNADO --'
+                let valor = auditoria.aud_idAuditor
+                let texto = auditoria.aud_auditor
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroAuditores, {'valor': valor})
@@ -147,9 +145,8 @@ export default class BlackBoxSemanal{
         // ##### Filtro Fecha Auditoria
         this.filtroFechaAuditoria = _.chain(this.lista)
             .map(auditoria=>{
-                let momentFecha = moment(auditoria.fechaAuditoria)
-                let valor = auditoria.fechaAuditoria
-                let texto = momentFecha.isValid()? momentFecha.format('dddd DD MMMM') : `-- PENDIENTE --`
+                let valor = auditoria.aud_fechaAuditoria
+                let texto = auditoria.aud_fechaProgramadaFbreve
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroFechaAuditoria, {'valor': valor})
@@ -186,31 +183,31 @@ export default class BlackBoxSemanal{
             auditoriasFiltradas: _.chain(this.lista)
                 // Filtrar por Fecha
                 .filter(auditoria=>{
-                    return _.find(this.filtroFechas, {'valor': auditoria.fechaProgramada, 'seleccionado': true})
+                    return _.find(this.filtroFechas, {'valor': auditoria.aud_fechaProgramada, 'seleccionado': true})
                 })
                 // Filtrar por Ceco
                 .filter(auditoria=>{
-                    return _.find(this.filtroCeco, {'valor': ''+auditoria.local.numero, 'seleccionado': true})
+                    return _.find(this.filtroCeco, {'valor': ''+auditoria.local_ceco, 'seleccionado': true})
                 })
                 // Filtrar por Region
                 .filter(auditoria=>{
-                    return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+                    return _.find(this.filtroRegiones, {'valor': auditoria.local_cutRegion, 'seleccionado': true})
                 })
                 // Filtrar por Comuna
                 .filter(auditoria=>{
-                    return _.find(this.filtroComunas, {'valor': auditoria.local.direccion.cutComuna, 'seleccionado': true})
+                    return _.find(this.filtroComunas, {'valor': auditoria.local_cutComuna, 'seleccionado': true})
                 })
                 // Filtrar por Auditor
                 .filter(auditoria=>{
-                    return _.find(this.filtroAuditores, {'valor': auditoria.idAuditor, 'seleccionado': true})
+                    return _.find(this.filtroAuditores, {'valor': auditoria.aud_idAuditor, 'seleccionado': true})
                 })
                 // Filtrar por Fecha de Subida de Nomina
                 .filter(auditoria=>{
-                    return _.find(this.filtroFechaAuditoria, {'valor': auditoria.fechaAuditoria, 'seleccionado': true})
+                    return _.find(this.filtroFechaAuditoria, {'valor': auditoria.aud_fechaAuditoria, 'seleccionado': true})
                 })
                 // Filtrar por Aprobada
                 .filter(auditoria=>{
-                    return _.find(this.filtroAprobadas, {'valor': ''+auditoria.aprovada, 'seleccionado': true})
+                    return _.find(this.filtroAprobadas, {'valor': ''+auditoria.aud_aprobada, 'seleccionado': true})
                 })
                 .value(),
             filtros: {
@@ -220,7 +217,6 @@ export default class BlackBoxSemanal{
                 filtroComunas: this.filtroComunas,
                 filtroAuditores: this.filtroAuditores,
                 filtroFechaAuditoria: this.filtroFechaAuditoria,
-
                 filtroAprobadas: this.filtroAprobadas
             }
         }

@@ -4,11 +4,8 @@ import moment from 'moment'
 moment.locale('es')
 
 // Componentes
-import Tooltip from 'react-bootstrap/lib/Tooltip'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from '../shared/InputFecha.jsx'
 import InputStock from '../shared/InputStock.jsx'
-import InputDotacionSimple from '../shared/InputDotacionSimple.jsx'
 
 // Styles
 import * as css from './TablaMensual.css'
@@ -20,9 +17,6 @@ class RowInventarioMensual extends React.Component{
         }else if(elemento==='stock'){
             this.inputStock.focus()
         }
-        // else if(elemento==='dotacion'){
-        //     this.inputDotacionTotal.focus()
-        // }
     }
     guardarInventario(){
         if(!this.props.puedeModificar)
@@ -75,7 +69,8 @@ class RowInventarioMensual extends React.Component{
                     <InputFecha
                         puedeModificar={this.props.puedeModificar}
                         ref={ref=>this.inputFecha=ref}
-                        diaSemana={moment(this.props.inventario.inv_fechaProgramada).format('dddd')}
+                        diaSemana={this.props.inventario.inv_fechaProgramadaDOW}
+                        fechaConProblemas={this.props.inventario.local_topeFechaConAuditoria}
                         fecha={this.props.inventario.inv_fechaProgramada}
                         onGuardar={this.guardarInventario.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}
@@ -83,16 +78,14 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* Cliente*/}
                 <td className={css.tdCliente}>
-                    <p><small>{ this.props.inventario.cliente_nombreCorto }</small></p>
+                    <p><small>{this.props.inventario.cliente_nombreCorto}</small></p>
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
-                    <OverlayTrigger
-                        placement="left"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">{`Tipo de local: ${this.props.inventario.local_formatoLocal}`}</Tooltip>}>
-                        <p><small><b>{this.props.inventario.local_ceco}</b></small></p>
-                    </OverlayTrigger>
+                    <p className={css.textoConTooltip}>
+                        <b>{this.props.inventario.local_ceco}</b>
+                        <span>Tipo de local: {this.props.inventario.local_formatoLocal}</span>
+                    </p>
                 </td>
                 {/* Local */}
                 <td className={css.tdLocal}>
@@ -104,13 +97,10 @@ class RowInventarioMensual extends React.Component{
                 </td>
                 {/* Comuna */}
                 <td className={css.tdComuna}>
-                    <OverlayTrigger
-                        placement="left"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">{'Dirección: '+(this.props.inventario.local_direccion)}</Tooltip>}>
-                        <p style={{margin:0}}><b><small>{ this.props.inventario.local_comuna }</small></b></p>
-                    </OverlayTrigger>
-
+                    <p className={css.textoConTooltip}>
+                        <b><small>{this.props.inventario.local_comuna}</small></b>
+                        <span>Dirección: {this.props.inventario.local_direccion}</span>
+                    </p>
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
@@ -124,18 +114,6 @@ class RowInventarioMensual extends React.Component{
                         puedeModificar={false}
                     />
                 </td>
-                {/* Dotación Total */}
-                {/*<td className={css.tdDotacion}>
-                    <InputDotacionSimple
-                        ref={ref=>this.inputDotacionTotal=ref}
-                        asignada={this.props.inventario.dotacionAsignadaTotal}
-                        onGuardar={this.guardarInventario.bind(this)}
-                        focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dotacion')}
-                        focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dotacion')}
-                        puedeModificar={this.props.puedeModificar}
-                    />
-                </td>
-                */}
                 {/* Opciones    */}
                 <td className={css.tdOpciones}>
                     {
