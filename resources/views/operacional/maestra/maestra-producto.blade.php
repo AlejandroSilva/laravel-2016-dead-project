@@ -71,7 +71,7 @@
                             <td>
                                 <label>Descargar dump bd</label>
                                 <br>
-                                <a aria-haspopup="true" aria-expanded="false" class="btn btn-primary btn-xs">Descargar</a>
+                                <a aria-haspopup="true" disabled aria-expanded="false" class="btn btn-primary btn-xs">Descargar</a>
                             </td>
                         </form>
 
