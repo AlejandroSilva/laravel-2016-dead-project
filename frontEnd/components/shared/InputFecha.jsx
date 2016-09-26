@@ -100,6 +100,14 @@ class InputFecha extends React.Component{
         return(
             <div className={"pull-right "+css.divContenedor}>
                 <p className={css.diaSemana}>{this.props.diaSemana==='Invalid date'? '': this.props.diaSemana}</p>
+                {this.props.fechaConProblemas!=null?
+                    <p className={css.diaSemanaConError}>
+                        {this.props.diaSemana}
+                        <span>{this.props.fechaConProblemas}</span>
+                    </p>
+                    :
+                    <p className={css.diaSemana}>{this.props.diaSemana}</p>
+                }
                 <input className={classnameDia}
                        ref={ref=>this.inputDia=ref}
                        value={this.state.dia}

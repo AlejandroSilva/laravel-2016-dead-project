@@ -59,9 +59,9 @@ class ProgramacionAIMensual extends React.Component{
             // crear todos los locales (y sus nominas)
             promesasFetch.push(
                 api.auditoria.nuevo({
-                        idLocal: nuevaAuditoria.idLocal,
-                        fechaProgramada: nuevaAuditoria.fechaProgramada || this.refFormularioAgregar.getOpcionesSeleccionadas().mes,
-                        idAuditor: nuevaAuditoria.idAuditor
+                        idLocal: nuevaAuditoria.local_idLocal,
+                        fechaProgramada: nuevaAuditoria.aud_fechaProgramada || this.refFormularioAgregar.getOpcionesSeleccionadas().mes,
+                        idAuditor: nuevaAuditoria.aud_idAuditor
                     })
                     .then(auditoriaCreada=>{
                         this.blackbox.actualizarDatosAuditoria(nuevaAuditoria.idDummy, auditoriaCreada)
@@ -102,7 +102,7 @@ class ProgramacionAIMensual extends React.Component{
 
         // cuando se agregar un inventario, se crea automaticamente (junto a su nomina)
         api.auditoria.nuevo({
-            idLocal: auditoriaDummy.local.idLocal,
+            idLocal: auditoriaDummy.local_idLocal,
             fechaProgramada: this.refFormularioAgregar.getOpcionesSeleccionadas().mes
         })
             .then(auditoriaCreada=>{
@@ -153,7 +153,7 @@ class ProgramacionAIMensual extends React.Component{
                 this.blackbox.reset()
                 auditorias.forEach(auditoria=>{
                     // crear un dummy
-                    let auditoriaDummy = this.blackbox.__crearDummy(annoMesDia, auditoria.idLocal )
+                    let auditoriaDummy = this.blackbox.__crearDummy(annoMesDia, auditoria.local_idLocal)
                     this.blackbox.addFinal(auditoriaDummy)
 
                     // actualizar los datos del auditoria
@@ -183,8 +183,8 @@ class ProgramacionAIMensual extends React.Component{
     }
     eliminarAuditoria(auditoria){
         console.log('eliminando ', auditoria)
-        api.auditoria.eliminar(auditoria.idAuditoria)
-            .then((resp)=>{
+        api.auditoria.eliminar(auditoria.aud_idAuditoria)
+            .then(resp=>{
                 this.blackbox.remove(auditoria.idDummy)
                 // actualizar los filtros, y la lista ordenada de locales
                 this.setState(this.blackbox.getListaFiltrada())
@@ -236,11 +236,11 @@ class ProgramacionAIMensual extends React.Component{
                                 let mostrarSeparador = false
                                 let sgteAuditoria = this.state.auditoriasFiltradas[index+1]
                                 if(sgteAuditoria)
-                                    mostrarSeparador = auditoria.fechaProgramada!==sgteAuditoria.fechaProgramada
+                                    mostrarSeparador = auditoria.aud_fechaProgramada!==sgteAuditoria.aud_fechaProgramada
                                 return <RowAuditoriaMensual
                                     // Propiedades
                                     puedeModificar={this.props.puedeModificar}
-                                    key={index}
+                                    key={auditoria.aud_idAuditoria}
                                     index={index}
                                     ref={ref=>this.rows[index]=ref}
                                     mostrarSeparador={mostrarSeparador}

@@ -214,7 +214,10 @@ export class FormularioAgregarAuditoria extends React.Component {
                         <input className="form-control" type="text" name="locales" placeholder="pegar aca los datos de Excel"
                                onPaste={this.agregarLocalesAlPegar.bind(this)}
                                disabled={this.props.puedeAgregar? '':'disabled'}/>
-                        <p style={{marginTop: '1em'}}>Abra Excel, seleccione los datos de la columna <b>CECO</b>, <b>COPIE</b> el contendo y <b>PEGUELO</b> en la cuandro de texto.</p>
+                        <p style={{marginTop: '1em'}}>
+                            Abra Excel, seleccione los datos de las columnas <b>Fecha</b> y <b>CECO</b>, <b>COPIE</b> el contendo y <b>PEGUELO</b> en la cuandro de texto.
+                            La fecha debe tener el formato <b>AAAA-MM-DD</b>.
+                        </p>
                     </div>
 
                     {/* Pegar datos */}

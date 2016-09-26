@@ -1,11 +1,6 @@
 import React from 'react'
-import numeral from 'numeral'
-import moment from 'moment'
-moment.locale('es')
 
 // Componentes
-import Tooltip from 'react-bootstrap/lib/Tooltip'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from '../shared/InputFecha.jsx'
 import Select from '../shared/Select.jsx'
 
@@ -43,7 +38,7 @@ class RowAuditoriaMensual extends React.Component{
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
         if(JSON.stringify(cambiosAuditoria)!=='{}'){
             console.log('cambiosAuditoria ', cambiosAuditoria)
-            this.props.actualizarAuditoria(this.props.auditoria.idAuditoria, cambiosAuditoria, this.props.auditoria.idDummy)
+            this.props.actualizarAuditoria(this.props.auditoria.aud_idAuditoria, cambiosAuditoria, this.props.auditoria.idDummy)
         }else{
             console.log('auditoria sin cambios, no se actualiza')
         }
@@ -54,7 +49,6 @@ class RowAuditoriaMensual extends React.Component{
     eliminarAuditoria(){
         if(!this.props.puedeModificar)
             return alert('no tiene permisos para realizar esta acción')
-
         this.props.eliminarAuditoria(this.props.auditoria)
     }
 
@@ -62,26 +56,6 @@ class RowAuditoriaMensual extends React.Component{
         const auditores = this.props.auditores.map(usuario=>{
             return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
         })
-        // SOLUCION TEMPORAL....
-        let tooltipCECO = ''
-        if(this.props.auditoria.inventarioEnELMismoMes!==null){
-            let momentInventario = moment(this.props.auditoria.inventarioEnELMismoMes.fechaProgramada)
-            let momentAuditoria = moment(this.props.auditoria.fechaProgramada)
-            if(momentInventario.isValid()){
-                if(momentAuditoria.isValid()){
-                    let diasDiferencia = momentInventario.diff(momentAuditoria, 'days');
-                    let textoDiferencia = diasDiferencia>0? `(${diasDiferencia} después)` : (diasDiferencia<0? `(${-diasDiferencia} antes)` : '')
-                    tooltipCECO = `Inventario programado para el: \n ${momentInventario.format('DD-MM-YYYY')} ${textoDiferencia}`
-                }else{
-                    tooltipCECO = `Inventario programado para el: \n ${momentInventario.format('DD-MM-YYYY')}`
-                }
-            }else {
-                let [anno, mes, dia] = this.props.auditoria.inventarioEnELMismoMes.fechaProgramada.split('-')
-                tooltipCECO = `Inventario programado para el: 00-${mes}-${anno}`
-            }
-        }else{
-            tooltipCECO = 'Sin inventario en el mismo mes'
-        }
 
         return (
             <tr className={this.props.mostrarSeparador? css.trSeparador: ''}>
@@ -94,54 +68,49 @@ class RowAuditoriaMensual extends React.Component{
                     <InputFecha
                         puedeModificar={this.props.puedeModificar}
                         ref={ref=>this.inputFecha=ref}
-                        diaSemana={moment(this.props.auditoria.fechaProgramada).format('dddd')}
-                        fecha={this.props.auditoria.fechaProgramada}
+                        diaSemana={this.props.auditoria.aud_fechaProgramadaDOW}
+                        fechaConProblemas={this.props.auditoria.local_topeFechaConInventario}
+                        fecha={this.props.auditoria.aud_fechaProgramada}
                         onGuardar={this.guardarAuditoria.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dia')}/>
                 </td>
                 {/* Cliente*/}
                 <td className={css.tdCliente}>
-                    <p><small>{this.props.auditoria.local.cliente.nombreCorto}</small></p>
+                    <p><small>{this.props.auditoria.cliente_nombreCorto}</small></p>
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
-                    <OverlayTrigger
-                        placement="right"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">
-                        {tooltipCECO}</Tooltip>}>
-                        <p><small><b>{this.props.auditoria.local.numero}</b></small></p>
-                    </OverlayTrigger>
+                    <b>{this.props.auditoria.local_ceco}</b>
                 </td>
                 {/* Region*/}
                 <td className={css.tdRegion}>
-                    <p style={{margin:0}}><small>{ this.props.auditoria.local.direccion.comuna.provincia.region.numero }</small></p>
+                    <p style={{margin:0}}>
+                        <small>{ this.props.auditoria.local_region }</small>
+                    </p>
                 </td>
                 {/* Comuna */}
                 <td className={css.tdComuna}>
-                    { this.props.auditoria.local.direccion.comuna.nombre }
+                    {this.props.auditoria.local_comuna}
                 </td>
                 {/* Local */}
                 <td className={css.tdLocal}>
-                    <p><small><b>{this.props.auditoria.local.nombre}</b></small></p>
+                    <p><small><b>{this.props.auditoria.local_nombre}</b></small></p>
                 </td>
 
                 {/* Stock */}
                  <td className={css.tdStock}>
-                     <OverlayTrigger
-                         placement="left"
-                         delay={0}
-                         overlay={<Tooltip id="yyy">{'Stock al '+(this.props.auditoria.local.fechaStock)}</Tooltip>}>
-                         <p><small>{numeral(this.props.auditoria.local.stock).format('0,0')}</small></p>
-                     </OverlayTrigger>
+                     <p className={css.textoConTooltip}>
+                         {this.props.auditoria.local_stockF}
+                         <span>{'Stock al '+(this.props.auditoria.local_fechaStock)}</span>
+                     </p>
                  </td>
 
                 {/* Auditor */}
                 <td className={css.tdAuditor}>
                     <Select
                             ref={ref=>this.selectAuditor=ref}
-                            seleccionada={ this.props.auditoria.idAuditor || ''}
+                            seleccionada={ ''+this.props.auditoria.aud_idAuditor}
                             onSelect={this.guardarAuditoria.bind(this)}
                             opciones={auditores}
                             opcionNula={true}
@@ -152,19 +121,19 @@ class RowAuditoriaMensual extends React.Component{
                 {/* Hora de Apertura del local */}
                 <td className={css.tdAperturaCierre}>
                     <input type="time"
-                           value={this.props.auditoria.local.horaApertura}
+                           value={this.props.auditoria.local_horaApertura}
                            disabled/>
                 </td>
                 {/* hora de Cierre de local */}
                 <td className={css.tdAperturaCierre}>
                     <input type="time"
-                           value={this.props.auditoria.local.horaCierre}
+                           value={this.props.auditoria.local_horaCierre}
                            disabled/>
                 </td>
 
                 {/* Direccion */}
                 <td className={css.tdDireccion}>
-                    {this.props.auditoria.local.direccion.direccion}
+                    {this.props.auditoria.local_direccion}
                 </td>
                 {/* Opciones    */}
                 <td className={css.tdOpciones}>

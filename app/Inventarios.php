@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 // Modelos
 use App\Locales;
-use App\ActasInventariosFCV;
 
 class Inventarios extends Model {
     // llave primaria
@@ -89,6 +88,42 @@ class Inventarios extends Model {
             // para los otros clientes, se calcula PTT=stock/110
             return round($this->stockTeorico/110);
         }
+    }
+    function tieneTopeFechaConAuditoria(){
+        // verifica si existe una auditoria programada cerca de este inventario
+
+        // si el dia no esta seleccionado, entonces no buscar el tope de fecha con otras auditorias
+        $fecha = explode('-', $this->fechaProgramada);
+        $dia = $fecha[2];
+        if(!isset($dia) || $dia=='00')
+            return null;
+
+        // no se puede hacer una auditoria el mismo dia, o 4 dias habiles despues de un inventario
+        $fecha_0diaHabilAntes = DiasHabiles::find($this->fechaProgramada)->diasHabilesAntes(0);
+        $fecha_3diasHabilesDespues = DiasHabiles::find($this->fechaProgramada)->diasHabilesDespues(3);
+
+        $auditoriasCercanas = Auditorias::whereRaw("idLocal = $this->idLocal")
+            ->whereRaw("fechaProgramada >= '$fecha_0diaHabilAntes->fecha'")
+            ->whereRaw("fechaProgramada <= '$fecha_3diasHabilesDespues->fecha'")
+            ->get();
+
+        if($auditoriasCercanas->count()>0){
+            $fechas = $auditoriasCercanas->map(function($auditoria){
+                return $auditoria->fechaProgramada;
+            })->toArray();
+            $fechas = implode(", ", $fechas);
+            return "Auditoria programada para el dia: $fechas";
+        } else
+            return null;
+
+        // Se Guarda para hacer debug
+//        return [
+//            'fechaProgramada'=>$this->fechaProgramada,
+//            'fechaInicioBusqueda'=>$fecha_0diaHabilAntes->fecha,
+//            'fechaFinBusqueda'=>$fecha_3diasHabilesDespues->fecha,
+//            'auditorias'=>$auditoriasCercanas,
+//            'tieneTopeFechaConAuditoria' => $auditoriasCercanas->count()>0
+//        ];
     }
     static function calcularFechaLimiteCaptador($fechaProgramada){
         $cuartoDiasHabilAntes = DiasHabiles::with([])
