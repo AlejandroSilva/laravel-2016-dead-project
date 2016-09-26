@@ -16,27 +16,11 @@ class ProgramacionAISemanal extends React.Component {
         super(props)
         this.blackbox = new BlackBoxSemanal()
 
-        // IMPORTANTE: No eliminar el codigo para seleccionar mes ni semana, puede ser que vuelvan a pedir que se incluya
-
-        // mostrar en el selector, los proximos 12 meses
-        // let meses = []
-        // for (let desface = 0; desface < 12; desface++) {
-        //     let mes = moment().add(desface, 'month')
-        //     meses.push({
-        //         valor: mes.format('YYYY-MM-00'),
-        //         texto: mes.format('MMMM  YYYY')
-        //     })
-        // }
-
         this.state = {
-//            meses,
-//            semanas: [],
             idCliente: 2,       // Seleccionar FCV por defecto
             numeroLocal: '',
-//            mesSeleccionado: '',
-//            semanaSeleccionada: '',
             fechaInicialSeleccionada: moment( moment().format('YYYY-MM-01') ),
-            fechaFinalSeleccionada: moment().endOf('month'),
+            fechaFinalSeleccionada: moment().endOf('week'),
             // Auditorias y Filtros
             filtros: {},
             auditoriasFiltradas: []
@@ -77,19 +61,6 @@ class ProgramacionAISemanal extends React.Component {
             this.buscarAuditorias()
         })
     }
-    // Select de Semana seleccionado
-    // onSelectMesChanged(evt){
-    //     this.seleccionarMes(evt.target.value)
-    //     // this.setState({
-    //     //     mesSeleccionado: evt.target.value
-    //     // }, ()=>{
-    //     //     // tdo generar las semanas
-    //     // })
-    // }
-    // Select de Semana seleccionado
-    // onSelectSemanaChanged(evt){
-    //     this.seleccionarSemana(evt.target.value)
-    // }
     onSelectRangoChanged(momentumFechaInicio, momentumFechaFinal){
         this.setState({
             fechaInicialSeleccionada: momentumFechaInicio,
@@ -101,56 +72,6 @@ class ProgramacionAISemanal extends React.Component {
             // se llama al metodo seleccionar semana, que hace lo mismo
             this.buscarAuditorias(fechaInicio, fechaFinal)
         })
-    }
-    // seleccionarSemana(fechaInicio, fechaFin){
-    //     this.buscarAuditorias(fechaInicio, fechaFin)
-    // }
-    // seleccionarMes(mesSeleccionado){
-    //     // console.log('mes seleccionado ', mes)
-    //     // al seleccionar un mes, se deben generar sus semanas correspondientes
-    //     const [anno, mes, dia]= mesSeleccionado.split('-')
-    //     let primerDia = moment(`${anno}-${mes}`)
-    //     let totalDiasMes = primerDia.daysInMonth()
-    //     let ultimoDia = moment(`${anno}-${mes}-${totalDiasMes}`)
-    //
-    //     // // lunes y domingo de la semana del primer inventario
-    //     let lunes = moment(primerDia).isoWeekday(1).day(1)
-    //     let domingo = moment(primerDia).isoWeekday(1).day(7)
-    //
-    //     let semanas = []
-    //     while(lunes<=ultimoDia){
-    //         //console.log(`semana del ${lunes.format(format)} al ${domingo.format(format)}`)
-    //         semanas.push({
-    //             value: `${lunes.format(format)}/${domingo.format(format)}`,
-    //             texto: `${lunes.format('DD MMMM')} - ${domingo.format('DD MMMM')}`
-    //         })
-    //         lunes.add(1, 'w')
-    //         domingo.add(1, 'w')
-    //     }
-    //     this.setState({
-    //         mesSeleccionado: mesSeleccionado,
-    //         semanas: semanas
-    //     }, ()=>{
-    //         this.seleccionarSemana(semanas[0].value)
-    //     })
-    // }
-    // seleccionarSemana(semanaSeleccionada){
-    //     let [fechaInicio, fechaFin] = semanaSeleccionada.split('/')
-    //     let momentFechaInicio = moment(fechaInicio)
-    //     let momentFechaFin = moment(fechaFin)
-    //
-    //     console.log(semanaSeleccionada)
-    //     this.setState({
-    //         semanaSeleccionada: semanaSeleccionada,
-    //         fechaInicialSeleccionada: momentFechaInicio,
-    //         fechaFinalSeleccionada: momentFechaFin
-    //     }, ()=>{
-    //         this.buscarAuditorias()
-    //     })
-    // }
-
-    onBuscarPorNumeroLocal(evt){
-        //let numero = evt.target.value
     }
 
     // Filtros
@@ -222,45 +143,10 @@ class ProgramacionAISemanal extends React.Component {
                                 onChange={this.onSelectClienteChanged.bind(this)}>
                             <option value="0">Todos</option>
                             {this.props.clientes.map((cliente, index)=>{
-                                //return <option key={index} value={cliente.idCliente}>{"asdas" + cliente.nombre}</option
                                 return <option key={index} value={cliente.idCliente}>{`${cliente.nombreCorto} - ${cliente.nombre}`}</option>
                             })}
                         </select>
                     </div>
-
-                    {/* SELECTOR DE MES */}
-                    {/*<div className={'col-sm-2 form-group '}>
-                        <label className="control-label" htmlFor="selectMes">Mes</label>
-                        <select className="form-control"  name="selectMes"
-                                value={this.state.mesSeleccionado}
-                                //ref={ref=>this.inputIdCliente=ref}
-                                onChange={this.onSelectMesChanged.bind(this)}
-                        >
-                            {this.state.meses.map((mes,i)=>{
-                                return <option key={i} value={mes.valor}>{mes.texto}</option>
-                            })}
-                        </select>
-                    </div>
-                    */}
-                    {/* SELECTOR DE SEMANA */}
-                    {/*
-                    <div className={'col-sm-3 form-group '}>
-                        <label className="control-label" htmlFor="selectSemana">Semana</label>
-                        <select className="form-control"  name="selectSemana"
-                                value={this.state.semanaSeleccionada}
-                                //ref={ref=>this.inputIdCliente=ref}
-                                onChange={this.onSelectSemanaChanged.bind(this)}>
-//**** <option key={0} value=""></option> cuelga la app
-                            {this.state.semanas.length===0?
-                                null
-                                :
-                                this.state.semanas.map((semana, index)=>
-                                    <option key={index} value={semana.value}>{semana.texto}</option>
-                                )
-                            }
-                        </select>
-                    </div>
-                    */}
                     {/* SELECTOR UN RANGO DE FECHAS */}
                     <div className={'col-sm-3 form-group '}>
                         <label className="control-label" htmlFor="selectSemana">Rango de Fecha</label>
@@ -288,12 +174,12 @@ class ProgramacionAISemanal extends React.Component {
                             let mostrarSeparador = false
                             let sgteInventario = this.state.auditoriasFiltradas[index+1]
                             if(sgteInventario)
-                                mostrarSeparador = auditoria.fechaProgramada!==sgteInventario.fechaProgramada
+                                mostrarSeparador = auditoria.aud_fechaProgramada!==sgteInventario.aud_fechaProgramada
                             return <RowAuditoriaSemanal
                                 // Propiedades
                                 puedeModificar={this.props.puedeModificar}
                                 puedeRevisar={this.props.puedeRevisar}
-                                key={auditoria.idAuditoria}
+                                key={auditoria.aud_idAuditoria}
                                 index={index}
                                 ref={ref=>this.rows[index]=ref}
                                 mostrarSeparador={mostrarSeparador}

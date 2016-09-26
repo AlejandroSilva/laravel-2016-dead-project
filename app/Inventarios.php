@@ -82,6 +82,42 @@ class Inventarios extends Model {
             return round($this->stockTeorico/110);
         }
     }
+    function tieneTopeFechaConAuditoria(){
+        // verifica si existe una auditoria programada cerca de este inventario
+
+        // si el dia no esta seleccionado, entonces no buscar el tope de fecha con otras auditorias
+        $fecha = explode('-', $this->fechaProgramada);
+        $dia = $fecha[2];
+        if(!isset($dia) || $dia=='00')
+            return null;
+
+        // no se puede hacer una auditoria el mismo dia, o 4 dias habiles despues de un inventario
+        $fecha_0diaHabilAntes = DiasHabiles::find($this->fechaProgramada)->diasHabilesAntes(0);
+        $fecha_3diasHabilesDespues = DiasHabiles::find($this->fechaProgramada)->diasHabilesDespues(3);
+
+        $auditoriasCercanas = Auditorias::whereRaw("idLocal = $this->idLocal")
+            ->whereRaw("fechaProgramada >= '$fecha_0diaHabilAntes->fecha'")
+            ->whereRaw("fechaProgramada <= '$fecha_3diasHabilesDespues->fecha'")
+            ->get();
+
+        if($auditoriasCercanas->count()>0){
+            $fechas = $auditoriasCercanas->map(function($auditoria){
+                return $auditoria->fechaProgramada;
+            })->toArray();
+            $fechas = implode(", ", $fechas);
+            return "Auditoria programada para el dia: $fechas";
+        } else
+            return null;
+
+        // Se Guarda para hacer debug
+//        return [
+//            'fechaProgramada'=>$this->fechaProgramada,
+//            'fechaInicioBusqueda'=>$fecha_0diaHabilAntes->fecha,
+//            'fechaFinBusqueda'=>$fecha_3diasHabilesDespues->fecha,
+//            'auditorias'=>$auditoriasCercanas,
+//            'tieneTopeFechaConAuditoria' => $auditoriasCercanas->count()>0
+//        ];
+    }
     static function calcularFechaLimiteCaptador($fechaProgramada){
         $cuartoDiasHabilAntes = DiasHabiles::with([])
             // se toman todos los dias habiles ANTERIORES a la fecha de programacion
@@ -259,6 +295,7 @@ class Inventarios extends Model {
             'inv_idInventario' => $inventario->idInventario,
             'inv_fechaProgramadaF' => $inventario->fechaProgramadaF(),
             'inv_fechaProgramada' => $inventario->fechaProgramada,
+            'inv_fechaProgramadaDOW' => DiasHabiles::diaDeLaSemana($inventario->fechaProgramada),
             // dia texto, dia, mes anno separados...
             'cliente_idCliente' => $inventario->local->idCliente,
             'cliente_nombreCorto' => $inventario->local->cliente->nombreCorto,
@@ -275,6 +312,7 @@ class Inventarios extends Model {
             'local_direccion' => $inventario->local->direccion->direccion,
             'local_horaApertura' => $inventario->local->horaApertura,
             'local_horaCierre' => $inventario->local->horaCierre,
+            'local_topeFechaConAuditoria' => $inventario->tieneTopeFechaConAuditoria(),
 
             'inv_idJornada' => $inventario->idJornada,
             'inv_jornada' => $inventario->jornada->nombre,

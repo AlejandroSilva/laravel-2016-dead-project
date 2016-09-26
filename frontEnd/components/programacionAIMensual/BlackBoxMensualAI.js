@@ -1,4 +1,3 @@
-import moment from 'moment'
 import _ from 'lodash'
 
 export default class BlackBox{
@@ -28,8 +27,8 @@ export default class BlackBox{
     addNuevo(auditoria){
         // al agregar un elemento unico, se debe ubicar: DESPUES de los inventarios sin fecha, y ANTES que los inventarios con fecha
         // buscar el indice del primer inventario con fecha
-        let indexConFecha = this.lista.findIndex(invent=>{
-            let dia = invent.fechaProgramada.split('-')[2]
+        let indexConFecha = this.lista.findIndex(auditoria=>{
+            let dia = auditoria.aud_fechaProgramada.split('-')[2]
             return dia!=='00'
         })
         if(indexConFecha>=0){
@@ -41,43 +40,43 @@ export default class BlackBox{
         }
     }
     // igual que el anterior, pero con un arreglo
-    addNuevos(inventarios){
-        // al agregar un elemento unico, se debe ubicar: DESPUES de los inventarios sin fecha, y ANTES que los inventarios con fecha
+    addNuevos(auditorias){
+        // al agregar un elemento unico, se debe ubicar: DESPUES de los auditorias sin fecha, y ANTES que los auditorias con fecha
         // buscar el indice del primer inventario con fecha
-        let indexConFecha = this.lista.findIndex(invent=>{
-            let dia = invent.fechaProgramada.split('-')[2]
+        let indexConFecha = this.lista.findIndex(aud=>{
+            let dia = aud.aud_fechaProgramada.split('-')[2]
             return dia!=='00'
         })
         if(indexConFecha>=0){
             // se encontro el indice
-            this.lista.splice(indexConFecha, 0, ...inventarios)
+            this.lista.splice(indexConFecha, 0, ...auditorias)
         }else{
             // no hay ninguno con fecha, agregar al final
-            this.lista = this.lista.concat(inventarios)
+            this.lista = this.lista.concat(auditorias)
         }
     }
-    addInicio(inventario){
+    addInicio(auditoria){
         // unshift agrega un elemento al inicio del array
-        this.lista.unshift(inventario)
+        this.lista.unshift(auditoria)
     }
-    addFinal(inventario){
-        this.lista.push(inventario)
+    addFinal(auditoria){
+        this.lista.push(auditoria)
     }
     // Todo Modificar: el listado de clientes
     remove(idDummy){
-        let index = this.lista.findIndex(inventario=>inventario.idDummy===idDummy)
+        let index = this.lista.findIndex(auditoria=>auditoria.idDummy===idDummy)
         if(index>=0) this.lista.splice(index, 1)
     }
     yaExiste(idLocal, annoMesDia){
-        let inventariosDelLocal = this.lista.filter(inventario=>inventario.idLocal===idLocal)
+        let auditoriaDelLocal = this.lista.filter(auditoria=>auditoria.local_idLocal===idLocal)
         // buscar si se tiene inventarios para este local
-        if(inventariosDelLocal.length===0){
+        if(auditoriaDelLocal.length===0){
             return false
         }
         // buscar si alguna fecha coincide
         let existe = false
-        inventariosDelLocal.forEach(inventario=>{
-            if(inventario.fechaProgramada===annoMesDia){
+        auditoriaDelLocal.forEach(auditoria=>{
+            if(auditoria.aud_idAuditoria===annoMesDia){
                 // se tiene el mismo local, con la misma fecha inventariado
                 console.log('ya programado')
                 existe = true
@@ -90,31 +89,22 @@ export default class BlackBox{
     __crearDummy(annoMesDia, idLocal, auditor){
         return {
             idDummy: this.idDummy++,    // asignar e incrementar
-            idAuditoria: null,
-            idLocal: idLocal,
-            fechaProgramada: annoMesDia,
-            idAuditor: auditor,
-            inventarioEnELMismoMes: null,
-            local: {
-                idLocal: idLocal,
-                idJornadaSugerida: 4, // no definida
-                nombre: '-',
-                numero: '-',
-                stock: 0,
-                fechaStock: 'YYYY-MM-DD',
-                direccion: {
-                    comuna: {
-                        provincia:{
-                            region:{
-                                numero: ''
-                            }
-                        }
-                    }
-                },
-                cliente: {
-                    nombreCorto: ''
-                }
-            }
+            aud_idAuditoria: null,
+            aud_fechaProgramada: annoMesDia,
+            aud_fechaProgramadaFbreve: '',
+            aud_fechaProgramadaDOW: '',
+            aud_idAuditor: auditor,
+            local_idLocal: idLocal,
+            local_ceco: '-',
+            local_direccion: '',
+            local_comuna: '',
+            local_region: '',
+            local_nombre: '-',
+            local_stock: '',
+            local_horaApertura: '',
+            local_horaCierre: '',
+            local_fechaStock: '',
+            cliente_nombreCorto: ''
         }
     }
     crearDummy(idCliente, numeroLocal, annoMesDia, auditor){
@@ -163,28 +153,12 @@ export default class BlackBox{
     }
 
     // Todo modificar el listado de clientes
-    actualizarDatosLocal(local){
-        // actualizar los datos del local de todos los inventarios que lo tengan
-        this.lista = this.lista.map(inventario=>{
-            if(inventario.local.idLocal==local.idLocal){
-
-                inventario.local = Object.assign(inventario.local, local)
-                // si no hay una dotacion asignada, ver la sugerida
-                if(inventario.dotacionAsignada===null){
-                    inventario.dotacionAsignada = local.dotacionSugerida
-                }
+    actualizarDatosAuditoria(idDummy, auditoriaActualizada){
+        this.lista = this.lista.map(auditoria=> {
+            if (auditoria.idDummy == idDummy) {
+                auditoria = Object.assign(auditoria, auditoriaActualizada)
             }
-            return inventario
-        })
-        this.actualizarFiltros()
-    }
-    // Todo modificar el listado de clientes
-    actualizarDatosAuditoria(idDummy, inventarioActualizado){
-        this.lista = this.lista.map(inventario=> {
-            if (inventario.idDummy == idDummy) {
-                inventario = Object.assign(inventario, inventarioActualizado)
-            }
-            return inventario
+            return auditoria
         })
     }
     
@@ -192,19 +166,17 @@ export default class BlackBox{
     
     ordenarLista(){
         let porFechaProgramada = (auditoria)=>{
-            let dateA = new Date(auditoria.fechaProgramada)
+            let dateA = new Date(auditoria.aud_fechaProgramada)
             if(dateA=='Invalid Date'){
-                let [annoA, mesA, diaA] = auditoria.fechaProgramada.split('-')
+                let [annoA, mesA, diaA] = auditoria.aud_fechaProgramada.split('-')
                 // OJO: (new Date('2016-04')) - (new Date('2016-03-31')), resulta en 0, y los ordena mal, por eso se resta 1
                 return new Date(`${annoA}-${mesA}`) - 1
             }else{
                 return dateA
             }
         }
-        let porAuditor = (auditoria)=>{
-            return auditoria.auditor? `${auditoria.auditor.nombre1} ${auditoria.auditor.apellidoPaterno}` : '--'
-        }
-        let porComuna = (auditoria)=>auditoria.local.direccion.comuna.cutComuna
+        let porAuditor = (auditoria)=>auditoria.aud_auditor
+        let porComuna = (auditoria)=>auditoria.local_cutComuna
 
         // ordenar por fechaprogramada, por auditor, y finalmente por comuna
         this.lista = _.sortBy(this.lista, porFechaProgramada, porAuditor, porComuna)
@@ -214,9 +186,8 @@ export default class BlackBox{
         // ##### Filtro fechas
         this.filtroFechas = _.chain(this.lista)
             .map(auditoria=>{
-                let momentFecha = moment(auditoria.fechaProgramada)
-                let valor = auditoria.fechaProgramada
-                let texto = momentFecha.isValid()? momentFecha.format('dddd DD MMMM') : `-- ${auditoria.fechaProgramada} --`
+                let valor = auditoria.aud_fechaProgramada
+                let texto = auditoria.aud_fechaProgramadaFbreve
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroFechas, {'valor': valor})
@@ -229,8 +200,8 @@ export default class BlackBox{
         // ##### Filtro CECO (ordenado por numero)
         this.filtroCeco = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = ''+auditoria.local.numero
-                let texto = ''+auditoria.local.numero
+                let valor = ''+auditoria.local_ceco
+                let texto = ''+auditoria.local_ceco
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroCeco, {'valor': valor})
@@ -242,8 +213,8 @@ export default class BlackBox{
         // ##### Filtro Clientes (ordenado por codRegion)
         this.filtroClientes = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = auditoria.local.idCliente
-                let texto = auditoria.local.cliente.nombreCorto
+                let valor = auditoria.cliente_idCliente
+                let texto = auditoria.cliente_nombreCorto
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroClientes, {'valor': valor})
@@ -256,8 +227,8 @@ export default class BlackBox{
         // ##### Filtro Regiones (ordenado por codRegion)
         this.filtroRegiones = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = auditoria.local.direccion.comuna.provincia.region.cutRegion
-                let texto = auditoria.local.direccion.comuna.provincia.region.numero
+                let valor = auditoria.local_cutRegion
+                let texto = auditoria.local_region
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroRegiones, {'valor': valor})
@@ -271,11 +242,11 @@ export default class BlackBox{
         this.filtroComunas = _.chain(this.lista)
             // solo dejar las comunas en las que su respectiva region este seleccionada
             .filter(auditoria=>{
-                return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+                return _.find(this.filtroRegiones, {'valor': auditoria.local_cutRegion, 'seleccionado': true})
             })
             .map(auditoria=>{
-                let valor = auditoria.local.direccion.cutComuna
-                let texto = auditoria.local.direccion.comuna.nombre
+                let valor = auditoria.local_cutComuna
+                let texto = auditoria.local_comuna
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroComunas, {'valor': valor})
@@ -288,8 +259,8 @@ export default class BlackBox{
         // ##### Filtro Auditores
         this.filtroAuditores = _.chain(this.lista)
             .map(auditoria=>{
-                let valor = auditoria.idAuditor
-                let texto = auditoria.auditor? `${auditoria.auditor.nombre1} ${auditoria.auditor.apellidoPaterno}` : '-- NO ASIGNADO --'
+                let valor = auditoria.aud_idAuditor
+                let texto = auditoria.aud_auditor
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroAuditores, {'valor': valor})
@@ -313,27 +284,27 @@ export default class BlackBox{
             auditoriasFiltradas: _.chain(this.lista)
                 // Filtrar por Cliente
                 .filter(auditoria=>{
-                    return _.find(this.filtroClientes, {'valor': auditoria.local.idCliente, 'seleccionado': true})
+                    return _.find(this.filtroClientes, {'valor': auditoria.cliente_idCliente, 'seleccionado': true})
                 })
                 // Filtrar por Ceco
                 .filter(auditoria=>{
-                    return _.find(this.filtroCeco, {'valor': ''+auditoria.local.numero, 'seleccionado': true})
+                    return _.find(this.filtroCeco, {'valor': ''+auditoria.local_ceco, 'seleccionado': true})
                 })
                 // Filtrar por Region
                 .filter(auditoria=>{
-                    return _.find(this.filtroRegiones, {'valor': auditoria.local.direccion.comuna.provincia.region.cutRegion, 'seleccionado': true})
+                    return _.find(this.filtroRegiones, {'valor': auditoria.local_cutRegion, 'seleccionado': true})
                 })
                 // Filtrar por Comuna
                 .filter(auditoria=>{
-                    return _.find(this.filtroComunas, {'valor': auditoria.local.direccion.cutComuna, 'seleccionado': true})
+                    return _.find(this.filtroComunas, {'valor': auditoria.local_cutComuna, 'seleccionado': true})
                 })
                 // Filtrar por Auditor
                 .filter(auditoria=>{
-                    return _.find(this.filtroAuditores, {'valor': auditoria.idAuditor, 'seleccionado': true})
+                    return _.find(this.filtroAuditores, {'valor': auditoria.aud_idAuditor, 'seleccionado': true})
                 })
                 // Filtrar por Fecha (dejar de lo ultimo, ya que es la mas lenta -comparacion de strings-)
                 .filter(auditoria=>{
-                    return _.find(this.filtroFechas, {'valor': auditoria.fechaProgramada, 'seleccionado': true})
+                    return _.find(this.filtroFechas, {'valor': auditoria.aud_fechaProgramada, 'seleccionado': true})
                 })
                 .value(),
             filtros: {

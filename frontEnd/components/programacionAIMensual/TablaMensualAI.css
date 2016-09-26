@@ -55,6 +55,7 @@
 .tdCeco {
     composes: thCeco;
     vertical-align: middle !important;
+    font-size: 10px;
 }
 /* Local */
 .thLocal {
@@ -123,6 +124,7 @@
     vertical-align: middle !important;
 }
 .tdStock > p{
+    font-size: 10px;
     text-align: right;
 }
 
@@ -190,4 +192,19 @@
 .tdOpciones {
     width: auto !important;
     vertical-align: middle !important;
+}
+
+/* el tooltip esta dentro del span */
+.textoConTooltip span{
+    z-index:10;
+    display:none;
+}
+.textoConTooltip:hover span{
+    display:inline;
+    position:absolute;
+    border-radius: 8px;
+    color:#EEE;
+    background: #222222;
+    padding: 4px 8px;
+    font-size: 12px;
 }
