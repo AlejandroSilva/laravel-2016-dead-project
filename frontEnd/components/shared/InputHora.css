@@ -9,3 +9,18 @@
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #635353;   /*plomo*/
     outline-color: #4f3534;
 }
+
+/* el tooltip esta dentro de un div */
+.divConTooltip .tooltip{
+    z-index:10;
+    display:none;
+}
+.divConTooltip:hover .tooltip{
+    display:inline;
+    position:absolute;
+    border-radius: 8px;
+    color:#EEE;
+    background: #222222;
+    padding: 4px 8px;
+    font-size: 12px;
+}

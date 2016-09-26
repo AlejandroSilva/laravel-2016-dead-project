@@ -1,10 +1,6 @@
 import React from 'react'
-import moment from 'moment'
-moment.locale('es')
 
 // Componentes
-import Tooltip from 'react-bootstrap/lib/Tooltip'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from '../shared/InputFecha.jsx'
 import InputHora from '../shared/InputHora.jsx'
 import InputDotacionMultiple from '../shared/InputDotacionSimple.jsx'
@@ -74,15 +70,6 @@ class RowInventario extends React.Component{
         } else if (estadoInputDia.valid === false) {
             return console.log(`fecha ${estadoInputDia.fecha} invalida`)
         }
-
-        // LOS DOS CAMPOS DE DOTACION AHORA VAN EL LA NOMINA
-        // // la DOTACION es valida y ha cambiado?
-        // let estadoInputDotacionTotal = this.inputDotacionTotal.getEstado()
-        // if (estadoInputDotacionTotal.valid && estadoInputDotacionTotal.dirty) {
-        //     cambiosInventario.dotacionAsignadaTotal = estadoInputDotacionTotal.valor
-        // } else if (estadoInputDotacionTotal.valid === false) {
-        //     return console.log(`dotacion total: ${estadoInputDotacionTotal.valor} invalida`)
-        // }
 
         // la JORNADA es valida y ha cambiado
         let estadoSelectJornada = this.selectJornada.getEstado()
@@ -186,8 +173,8 @@ class RowInventario extends React.Component{
         let puedeEditarNominaDia   = this.props.puedeModificar && inv.ndia_habilitada=="1" && !informadaDia
         let puedeEditarNominaNoche = this.props.puedeModificar && inv.nnoche_habilitada=="1" && !informadaNoche
         // el captador se puede editar siempre que se tengan los permisos y que la nomina este habilitada
-        let puedeEditarCaptadorDia = this.props.puedeModificar && inv.ndia_habilitada=="1"
-        let puedeEditarCaptadorNoche = this.props.puedeModificar && inv.nnoche_habilitada=="1"
+        // let puedeEditarCaptadorDia = this.props.puedeModificar && inv.ndia_habilitada=="1"
+        // let puedeEditarCaptadorNoche = this.props.puedeModificar && inv.nnoche_habilitada=="1"
 
         // el inventario se puede editar solo si tiene los permisos, y no hay una nomina informada
         let puedeEditar_fecha_turno_stock = this.props.puedeModificar && !informadaDia && !informadaNoche
@@ -207,7 +194,8 @@ class RowInventario extends React.Component{
                 <td className={css.tdFecha}>
                     <InputFecha
                         ref={ref=>this.inputDia=ref}
-                        diaSemana={moment(inv.inv_fechaProgramada).format('dd')}
+                        diaSemana={ inv.inv_fechaProgramadaDOW }
+                        fechaConProblemas={inv.local_topeFechaConAuditoria}
                         fecha={inv.inv_fechaProgramada}
                         onGuardar={this.guardarInventario.bind(this)}
                         puedeModificar={puedeEditar_fecha_turno_stock}
@@ -220,12 +208,10 @@ class RowInventario extends React.Component{
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
-                    <OverlayTrigger
-                        placement="left"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">{`Tipo de local: ${inv.local_formatoLocal} (prod.Sugerida:${inv.local_produccionSugerida})`}</Tooltip>}>
-                        <p>{inv.local_ceco}</p>
-                    </OverlayTrigger>
+                    <p className={css.textoConTooltip}>
+                        {inv.local_ceco}
+                        <span>Tipo de local: {inv.local_formatoLocal} (prod.Sugerida:{inv.local_produccionSugerida})</span>
+                    </p>
                 </td>
                 {/* Region */}
                 <td className={css.tdRegion}>
@@ -252,16 +238,13 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Tienda */}
                 <td className={css.tdTienda}>
-                    <OverlayTrigger
-                        placement="left"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">{`Apertura: ${inv.local_horaApertura}, Cierre:${inv.local_horaCierre}`}</Tooltip>}>
-                        <p>{inv.local_nombre}</p>
-                    </OverlayTrigger>
+                    <p className={css.textoConTooltip}>
+                        {inv.local_nombre}
+                        <span>Apertura: {inv.local_horaApertura}, Cierre:{inv.local_horaCierre}</span>
+                    </p>
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
-                    {/*<p><small>{numeral(inv.inv_stockTeorico).format('0,0')}</small></p>*/}
                     <InputStock
                         ref={ref=>this.inputStock=ref}
                         asignada={''+inv.inv_stockTeorico}  // pide en string
@@ -332,30 +315,9 @@ class RowInventario extends React.Component{
                                  ref={ref=>this.selectLiderNoche=ref}
                                  onChange={this.guardarNominaNoche.bind(this)}
                     />
-                    {/*
-                    <Select style={{display: inventarioDia? 'block' : 'none'}}
-                            ref={ref=>this.selectLiderDia=ref}
-                            seleccionada={ inv.ndia_idLider || ''}
-                            onSelect={this.guardarNominaDia.bind(this)}
-                            opciones={this.props.opcionesLideres}
-                            opcionNula={true}
-                            opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarNominaDia}
-                    />
-                    <Select style={{display: inventarioNoche? 'block' : 'none'}}
-                            ref={ref=>this.selectLiderNoche_=ref}
-                            seleccionada={ inv.nnoche_idLider}
-                            onSelect={this.guardarNominaNoche.bind(this)}
-                            opciones={this.props.opcionesLideres}
-                            opcionNula={true}
-                            opcionNulaSeleccionable={true}
-                            puedeModificar={puedeEditarNominaNoche}
-                    />
-                    */}
                 </td>
                 {/* Hora Presentación Lider */}
                 <td className={css.tdHora}>
-                    {/*<p style={{display: inventarioDia? 'block' : 'none'}}>{inv.ndia_hrLider}</p>*/}
                     <InputHora
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionLiderDia=ref}
@@ -366,7 +328,6 @@ class RowInventario extends React.Component{
                         focusRowSiguiente={()=>{}}
                         puedeModificar={puedeEditarNominaDia}
                     />
-                    {/*<p style={{display: inventarioNoche? 'block' : 'none'}}>{inv.nnoche_hrLider}</p>*/}
                     <InputHora
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionLiderNoche=ref}
@@ -377,11 +338,9 @@ class RowInventario extends React.Component{
                         focusRowSiguiente={()=>{}}
                         puedeModificar={puedeEditarNominaNoche}
                     />
-
                 </td>
                 {/* Hora Presentación Equipo*/}
                 <td className={css.tdHora}>
-                    {/*<p style={{display: inventarioDia? 'block' : 'none'}}>{inv.ndia_hrEquipo}</p>*/}
                     <InputHora
                         style={{display: inventarioDia? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionEquipoDia=ref}
@@ -392,7 +351,6 @@ class RowInventario extends React.Component{
                         focusRowSiguiente={()=>{}}
                         puedeModificar={puedeEditarNominaDia}
                     />
-                    {/*<p style={{display: inventarioNoche? 'block' : 'none'}}>{inv.nnoche_hrEquipo}</p>*/}
                     <InputHora
                         style={{display: inventarioNoche? 'block' : 'none'}}
                         ref={ref=>this.inputHoraPresentacionEquipoNoche=ref}
@@ -427,25 +385,6 @@ class RowInventario extends React.Component{
                 </td>
                 {/* Captador 1 */}
                 <td className={css.tdUsuario}>
-                    {/*<Select style={{display: inventarioDia? 'block' : 'none'}}*/}
-                            {/*ref={ref=>this.selectCaptador1Dia=ref}*/}
-                            {/*seleccionada={''+inv.ndia_idCaptador1 || ''}*/}
-                            {/*onSelect={this.guardarNominaDia.bind(this)}*/}
-                            {/*opciones={this.props.captadoresDisponibles}*/}
-                            {/*opcionNula={true}*/}
-                            {/*opcionNulaSeleccionable={true}*/}
-                            {/*puedeModificar={puedeEditarCaptadorDia}*/}
-                    {/*/>*/}
-                    {/*<Select style={{display: inventarioNoche? 'block' : 'none'}}*/}
-                            {/*ref={ref=>this.selectCaptador1Noche=ref}*/}
-                            {/*seleccionada={''+inv.nnoche_idCaptador1 || ''}*/}
-                            {/*onSelect={this.guardarNominaNoche.bind(this)}*/}
-                            {/*opciones={this.props.captadoresDisponibles}*/}
-                            {/*opcionNula={true}*/}
-                            {/*opcionNulaSeleccionable={true}*/}
-                            {/*puedeModificar={puedeEditarCaptadorNoche}*/}
-                    {/*/>*/}
-
                     <SelectCaptadores
                         visible={inventarioDia}
                         captadoresDisponibles={this.props.captadoresDisponibles}

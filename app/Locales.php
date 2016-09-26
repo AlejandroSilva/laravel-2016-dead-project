@@ -33,6 +33,10 @@ class Locales extends Model{
         //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
         return $this->hasMany('App\Inventarios', 'idLocal', 'idLocal');
     }
+    public function auditorias(){
+        //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
+        return $this->hasMany('App\Auditorias', 'idLocal', 'idLocal');
+    }
     public function jornada(){
         // belongsTo(modelo, this.fogeignKey, parent.otherKey)
         return $this->belongsTo('App\Jornadas', 'idJornadaSugerida', 'idJornada');
@@ -115,6 +119,10 @@ class Locales extends Model{
         $minutes = $carbon->minute < 10? "0$carbon->minute" : $carbon->minute;
         return "$carbon->hour:$minutes hrs.";
     }
+    public function stockF(){
+        // agregar un punto en los miles y millones: Ej. de '68431' a '68.431'
+        return number_format($this->stock);
+    }
 
     // ####  Setters
     // set_stock se llama para cambiar el Stock de un local, y RECALCULAR LA DOTACION de sus inventarios (y nominas)
@@ -142,7 +150,6 @@ class Locales extends Model{
             'idLocal' => $local->idLocal,
             'nombre' => $local->nombre,
             'numero' => $local->numero,
-            'idLocal' => $local->idLocal,
             // stock
             'stock' => $local->stock,
             'fechaStock' => $local->fechaStock,

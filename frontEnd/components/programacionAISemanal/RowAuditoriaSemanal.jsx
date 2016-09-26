@@ -1,11 +1,6 @@
 import React from 'react'
-import numeral from 'numeral'
-import moment from 'moment'
-moment.locale('es')
 
 // Componentes
-import Tooltip from 'react-bootstrap/lib/Tooltip'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import InputFecha from '../shared/InputFecha.jsx'
 import Select from '../shared/Select.jsx'
 
@@ -46,16 +41,10 @@ class RowAuditoriaSemanal extends React.Component{
                 cambiosAuditoria.aprovada = estadoSelectAprobada.seleccionUsuario
         }
 
-        // la HORA DE LLEGADA DEL AUDITOR es valida y ha cambiado?
-        // let estadoHoraAuditor = this.inputHoraAuditor.getEstado()
-        // console.log('hora auditor ', estadoHoraAuditor)
-        // if (estadoHoraAuditor.dirty)
-        //     cambiosAuditoria.horaPresentacionAuditor = estadoHoraAuditor.hora
-
         // almenos uno de los ementos debe estar "dirty" para guardar los cambios
         if(JSON.stringify(cambiosAuditoria)!=="{}"){
             console.log(cambiosAuditoria)
-            this.props.guardarAuditoria(this.props.auditoria.idAuditoria, cambiosAuditoria)
+            this.props.guardarAuditoria(this.props.auditoria.aud_idAuditoria, cambiosAuditoria)
         }else{
             console.log('auditoria sin cambios, no se actualiza')
         }
@@ -64,7 +53,6 @@ class RowAuditoriaSemanal extends React.Component{
     eliminarAuditoria(){
         if(!this.props.puedeModificar)
             return alert('no tiene permisos para realizar esta acción')
-
         this.props.eliminarAuditoria(this.props.auditoria)
     }
 
@@ -72,85 +60,56 @@ class RowAuditoriaSemanal extends React.Component{
         const opcionesAuditores = this.props.auditores.map(usuario=>{
             return {valor: usuario.id, texto:`${usuario.nombre1} ${usuario.apellidoPaterno}`}
         })
-        // SOLUCION TEMPORAL....
-        let tooltipCECO = ''
-        if(this.props.auditoria.inventarioEnELMismoMes!==null){
-            let momentInventario = moment(this.props.auditoria.inventarioEnELMismoMes.fechaProgramada)
-            let momentAuditoria = moment(this.props.auditoria.fechaProgramada)
-            if(momentInventario.isValid()){
-                if(momentAuditoria.isValid()){
-                    let diasDiferencia = momentInventario.diff(momentAuditoria, 'days');
-                    let textoDiferencia = diasDiferencia>0? `(${diasDiferencia} después)` : (diasDiferencia<0? `(${-diasDiferencia} antes)` : '')
-                    tooltipCECO = `Inventario programado para el: \n ${momentInventario.format('DD-MM-YYYY')} ${textoDiferencia}`
-                }else{
-                    tooltipCECO = `Inventario programado para el: \n ${momentInventario.format('DD-MM-YYYY')}`
-                }
-            }else {
-                let [anno, mes, dia] = this.props.auditoria.inventarioEnELMismoMes.fechaProgramada.split('-')
-                tooltipCECO = `Inventario programado para el: 00-${mes}-${anno}`
-            }
-        }else{
-            tooltipCECO = 'Sin inventario en el mismo mes'
-        }
         return (
             <tr className={this.props.mostrarSeparador? css.trSeparador: ''}>
                 {/* Correlativo */}
                 <td className={css.tdCorrelativo}>
-                    <p title={this.props.auditoria.idAuditoria}>{this.props.index+1}</p>
+                    <p title={this.props.auditoria.aud_idAuditoria}>{this.props.index+1}</p>
                 </td>
                 {/* Fecha */}
                 <td className={css.tdFecha}>
                     <InputFecha
                         puedeModificar={this.props.puedeModificar}
                         ref={ref=>this.inputFecha=ref}
-                        diaSemana={moment(this.props.auditoria.fechaProgramada).format('dd')}
-                        fecha={this.props.auditoria.fechaProgramada}
+                        diaSemana={this.props.auditoria.aud_fechaProgramadaDOW}
+                        fechaConProblemas={this.props.auditoria.local_topeFechaConInventario}
+                        fecha={this.props.auditoria.aud_fechaProgramada}
                         onGuardar={this.guardarAuditoria.bind(this)}
                         focusRowAnterior={()=>this.props.focusRow(this.props.index-1, 'dia')}
                         focusRowSiguiente={()=>this.props.focusRow(this.props.index+1, 'dia')}/>
                 </td>
                 {/* Cliente*/}
                 <td className={css.tdCliente}>
-                    <p>{this.props.auditoria.local.cliente.nombreCorto}</p>
+                    <p>{this.props.auditoria.cliente_nombreCorto}</p>
                 </td>
                 {/* CECO */}
                 <td className={css.tdCeco}>
-                    <OverlayTrigger
-                        placement="right"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">
-                        {tooltipCECO}</Tooltip>}>
-                        <p>
-                            <small><b>{this.props.auditoria.local.numero}</b></small>
-                        </p>
-                    </OverlayTrigger>
+                    <small><b>{this.props.auditoria.local_ceco}</b></small>
                 </td>
                 {/* Region */}
                 <td className={css.tdRegion}>
-                    <p>{this.props.auditoria.local.direccion.comuna.provincia.region.numero}</p>
+                    <p>{this.props.auditoria.local_region}</p>
                 </td>
                 {/* Comuna */}
                 <td className={css.tdComuna}>
-                    <p style={{margin:0}}><b><small>{this.props.auditoria.local.direccion.comuna.nombre}</small></b></p>
+                    <p style={{margin:0}}><b><small>{this.props.auditoria.local_comuna}</small></b></p>
                 </td>
                 {/* Local */}
                 <td className={css.tdTienda}>
-                    <p><small><b>{this.props.auditoria.local.nombre}</b></small></p>
+                    <p><small><b>{this.props.auditoria.local_nombre}</b></small></p>
                 </td>
                 {/* Stock */}
                 <td className={css.tdStock}>
-                    <OverlayTrigger
-                        placement="left"
-                        delay={0}
-                        overlay={<Tooltip id="yyy">{'Stock al '+(this.props.auditoria.local.fechaStock)}</Tooltip>}>
-                        <p><small>{numeral(this.props.auditoria.local.stock).format('0,0')}</small></p>
-                    </OverlayTrigger>
+                    <p className={css.textoConTooltip}>
+                        {this.props.auditoria.local_stockF}
+                        <span>Stock al {this.props.auditoria.local_fechaStock}</span>
+                    </p>
                 </td>
                 {/* Auditor */}
                 <td className={css.tdAuditor}>
                     <Select
                             ref={ref=>this.selectAuditor=ref}
-                            seleccionada={this.props.auditoria.idAuditor? ''+this.props.auditoria.idAuditor : ''}   // debe ser string
+                            seleccionada={this.props.auditoria.aud_idAuditor? ''+this.props.auditoria.aud_idAuditor : ''}   // debe ser string
                             onSelect={this.guardarAuditoria.bind(this)}
                             opciones={opcionesAuditores}
                             opcionNula={true}
@@ -159,16 +118,16 @@ class RowAuditoriaSemanal extends React.Component{
                 </td>
                 {/* (informado) Fecha Auditoria */}
                 <td className={css.tdFechaInformada}>
-                    {this.props.auditoria.fechaAuditoria==='0000-00-00'?
+                    {this.props.auditoria.aud_fechaAuditoria==='0000-00-00'?
                         <span className="label label-default">Pendiente</span> :
-                        <span className="label label-primary">{this.props.auditoria.fechaAuditoria}</span>
+                        <span className="label label-primary">{this.props.auditoria.aud_fechaAuditoria}</span>
                     }
                 </td>
                 {/* Revisado (antes llamado "Aprobada" */}
                 <td className={css.tdRevisada}>
                     <Select
                         ref={ref=>this.selectAprobada=ref}
-                        seleccionada={''+this.props.auditoria.aprovada} // debe ser string
+                        seleccionada={''+this.props.auditoria.aud_aprobada} // debe ser string
                         onSelect={this.guardarAuditoria.bind(this)}
                         opciones={[
                             {valor: '0', texto: 'Pendiente'},
@@ -180,19 +139,15 @@ class RowAuditoriaSemanal extends React.Component{
                 </td>
                 {/* Hora de Apertura del local */}
                 <td className={css.tdAperturaCierre}>
-                    <input type="time"
-                           value={this.props.auditoria.local.horaApertura}
-                           disabled/>
+                    <input type="time" value={this.props.auditoria.local_horaApertura} disabled/>
                 </td>
                 {/* hora de Cierre de local */}
                 <td className={css.tdAperturaCierre}>
-                    <input type="time"
-                           value={this.props.auditoria.local.horaCierre}
-                           disabled/>
+                    <input type="time" value={this.props.auditoria.local_horaCierre} disabled/>
                 </td>
                 {/* Dirección */}
                 <td className={css.tdDireccion}>
-                    {this.props.auditoria.local.direccion.direccion}
+                    {this.props.auditoria.local_direccion}
                 </td>
                 {/* Opciones */}
                 <td className={css.tdOpciones}>

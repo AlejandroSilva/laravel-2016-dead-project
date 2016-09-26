@@ -24,7 +24,7 @@ class ProgramacionIGSemanal extends React.Component {
             // seleccionar el mes completo
             // fechaInicialSeleccionada: moment( moment().format('YYYY-MM-01') ),
             // fechaFinalSeleccionada: moment().endOf('month'),
-            fechaInicialSeleccionada: moment(),
+            fechaInicialSeleccionada: moment().subtract(1, 'days'),
             fechaFinalSeleccionada: moment().endOf('week'),
             // Inventarios y Filtros
             filtros: {},
@@ -111,7 +111,7 @@ class ProgramacionIGSemanal extends React.Component {
         }, ()=>{
             let fechaInicio = this.state.fechaInicialSeleccionada.format('YYYY-MM-DD')
             let fechaFinal  = this.state.fechaFinalSeleccionada.format('YYYY-MM-DD')
-            console.log(`rango seleccionado ${fechaInicio} al ${fechaFinal}`)
+            //console.log(`rango seleccionado ${fechaInicio} al ${fechaFinal}`)
             // se llama al metodo seleccionar semana, que hace lo mismo
             this.buscarInventarios(fechaInicio, fechaFinal)
         })
