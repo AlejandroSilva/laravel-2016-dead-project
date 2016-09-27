@@ -8,6 +8,9 @@
         height: 400px;
         overflow-y: scroll;
     }
+    .td-no-wrap{
+        white-space: nowrap;
+    }
 </style>
 
 <div class="container">
@@ -23,8 +26,8 @@
                     <table class="table table-responsive table-hover table-bordered tabla-documentos">
                         <thead>
                             <th>Nombre archivo</th>
-                            <th>Subido Por</th>
-                            <th>Fecha Subida</th>
+                            <th>Subido por</th>
+                            <th>Fecha subida</th>
                             <th>Estado</th>
                             <th>Valida</th>
                             <th>Resultado</th>
@@ -33,9 +36,9 @@
                             @foreach($archivos as $archivo)
                                 <tr class="{{ $archivo->muestraValida? 'success' : 'warning' }}">
                                     <td>{{ $archivo->nombre_original}}</td>
-                                    <td>{{ $archivo->subidoPor? $archivo->subidoPor->nombreCorto() : '-'}}</td>
-                                    <td>{{ $archivo->created_at }}</td>
-                                    <td>{{ $archivo->muestraValida? 'valida' : 'con errores' }}</td>
+                                    <td class="td-no-wrap">{{ $archivo->subidoPor? $archivo->subidoPor->nombreCorto() : '-'}}</td>
+                                    <td class="td-no-wrap">{{ $archivo->created_at }}</td>
+                                    <td class="td-no-wrap">{{ $archivo->muestraValida? 'valida' : 'con errores' }}</td>
                                     <td>{{ $archivo->resultado }}</td>
                                     <td>
                                         <a href='/muestra-vencimiento-fcv/{{$archivo->idArchivoMuestraVencimientoFCV}}/descargar' class="btn btn-primary btn-xs">Descargar</a>
