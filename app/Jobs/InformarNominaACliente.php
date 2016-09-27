@@ -17,7 +17,6 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     protected $nomina;
     protected $SEI_DESARROLLO = [
         ['pm5k.sk@gmail.com', 'ASILVA DESARROLLO'],
-//        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
 //        ['logistica@seiconsultores.cl', 'SEI']
     ];
     protected $SEI_nomina_bcc = [
@@ -27,7 +26,6 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ['fpizarro@seiconsultores.cl', 'Francisca Pizarro'],
         ['psobarzo@seiconsultores.cl', 'Paula Sobarzo'],
         ['logistica@seiconsultores.cl', 'SEI'],
-        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
         ['asilva@seiconsultores.cl', 'Alejandro Silva'],
     ];
     // Cliente 1: PUC
