@@ -57,7 +57,7 @@ class MaestraFCVController extends Controller
                 'titulo' => 'Archivo No encontrado', 'descripcion' => 'El archivo que busca no se puede descargar.'
             ]);
         $download_archivo = $maestra->nombreArchivo;
-        $file= public_path(). "/actualizarStock/". "$download_archivo";
+        $file= public_path(). "/FCV/maestrasFCV/". "$download_archivo";
         $headers = array(
             'Content-Type: application/octet-stream',
         );
