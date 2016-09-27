@@ -39,7 +39,6 @@ class EnviarPeticionMaestra extends Command {
     ];
     protected $SEI_nomina_bcc = [
         ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
-        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
         ['asilva@seiconsultores.cl', 'Alejandro Silva'],
     ];
     // Cliente 1: PUC

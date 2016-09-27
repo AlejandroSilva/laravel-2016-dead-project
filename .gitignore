@@ -19,8 +19,7 @@ node_modules/
 
 # arhivos dinamicamente creados para ser descargados por los usuarios, deben ser eliminados con un CRON...
 /public/pmensual_*.xlxs
-/public/archivos_temporales/*.xlxs
-/public/actualizarStock/uploads/*
+public/archivos_temporales/
 public/actualizarStock/uploads/
 public/archivos_temporales/
 public/otros-archivos/

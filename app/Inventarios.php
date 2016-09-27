@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 // Modelos
 use App\Locales;
+use App\ActasInventariosFCV;
 
 class Inventarios extends Model {
     // llave primaria
@@ -27,6 +28,9 @@ class Inventarios extends Model {
     function nominaNoche(){
         //return $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\Nominas', 'idNominaNoche', 'idNomina');
+    }
+    function archivosFinales(){
+        return $this->hasMany('App\ArchivoFinalInventario', 'idInventario', 'idInventario');
     }
 
     // #### Helpers
@@ -142,9 +146,28 @@ class Inventarios extends Model {
     }
 
     // #### Acciones
-    //
+    function agregarArchivoFinal($user, $archivoFinal, $error){
+        ArchivoFinalInventario::create([
+            'idInventario' => $this->idInventario,
+            'idSubidoPor' => $user? $user->id : null,
+            'nombre_archivo' => $archivoFinal['nombre_archivo'],
+            'nombre_original' => $archivoFinal['nombre_original'],
+            'resultado' => $error? $error : 'acta cargada correctamente'
+        ]);
+    }
+    function insertarOActualizarActa($datosActa){
+        $acta = ActasInventariosFCV::where('idInventario', $this->idInventario)->first();
+        // si ya existe un acta para este inventario, se actualizan los datos
+        if($acta){
+            $acta->update($datosActa);
+        }else{
+            // si no existe un acta para el inventario, se crea
+            $datosActa['idInventario'] = $this->idInventario;
+            ActasInventariosFCV::create($datosActa);
+        }
+    }
 
-    // ####  Getters
+    // #### Getters
     function fechaProgramadaF(){
         setlocale(LC_TIME, 'es_CL.utf-8');
         $fecha = explode('-', $this->fechaProgramada);
@@ -163,7 +186,7 @@ class Inventarios extends Model {
         }
     }
 
-    // ####  Setters
+    // #### Setters
     function set_fechaProgramada($fechaProgramada){
         // Solo si hay un cambio se actualiza y se registra el cambio
         $fecha_original = $this->fechaProgramada;
@@ -254,18 +277,18 @@ class Inventarios extends Model {
             'inventario_dotacionAsignadaTotal' => $inventario->dotacionAsignadaTotal,
         ];
     }
-    static function formatoClienteFormatoRegion($inventario) {
-        $inventarioArray = Inventarios::formatoSimple($inventario);
-        $inventarioArray['local'] = Locales::formatoLocal_completo($inventario->local);
-        return $inventarioArray;
-    }
-    static function formatoClienteFormatoRegion_nominas ($inventario) {
-        $_inventario = Inventarios::formatoSimple($inventario);
-        $_inventario['local'] = Locales::formatoLocal_completo($inventario->local);
-        $_inventario['nominaDia']   = $inventario->nominaDia->habilitada? Nominas::formatearSimple($inventario->nominaDia) : null;
-        $_inventario['nominaNoche'] = $inventario->nominaNoche->habilitada? Nominas::formatearSimple($inventario->nominaNoche) : null;
-        return $_inventario;
-    }
+//    static function formatoClienteFormatoRegion($inventario) {
+//        $inventarioArray = Inventarios::formatoSimple($inventario);
+//        $inventarioArray['local'] = Locales::formatoLocal_completo($inventario->local);
+//        return $inventarioArray;
+//    }
+//    static function formatoClienteFormatoRegion_nominas ($inventario) {
+//        $_inventario = Inventarios::formatoSimple($inventario);
+//        $_inventario['local'] = Locales::formatoLocal_completo($inventario->local);
+//        $_inventario['nominaDia']   = $inventario->nominaDia->habilitada? Nominas::formatearSimple($inventario->nominaDia) : null;
+//        $_inventario['nominaNoche'] = $inventario->nominaNoche->habilitada? Nominas::formatearSimple($inventario->nominaNoche) : null;
+//        return $_inventario;
+//    }
     // formato utilizado en el modulo "Programacion Semanal IG"
     static function formato_programacionIGSemanal($inventario){
         return [
@@ -351,19 +374,6 @@ class Inventarios extends Model {
     }
 
     // #### Scopes para hacer Querys/Busquedas
-
-    function scopeConCaptador___no_se_ocupa($query, $idCaptador){
-        // no probado
-        // buscar el captador en la nomina de "dia" O en la de "noche", la nomina debe estar "Habilitada"
-        $query
-            ->whereHas('nominaDia', function($q) use ($idCaptador){
-                $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
-            })
-            ->orWhereHas('nominaNoche', function($q) use ($idCaptador){
-                $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
-            });
-    }
-
     static function buscar($peticion){
         // todo: deberian mejorar bastante los tiempos de respuesta, si se agregan los eager loading dentro del query
         $query = Inventarios::with([]);

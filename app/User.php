@@ -53,7 +53,10 @@ class User extends Authenticatable {
             'fechaInicio' => $fechaInicio,
             'fechaFin' => $fechaFin,
             'idLider' => $this->id,
-        ]);
+        ])->map(function($nomina){
+           $nomina->cargoUsuario = "Líder";
+            return $nomina;
+        });
 
         // buscar nominas como "supervisor"
         $nominasSupervisor = \App\Nominas::buscar( (object)[
@@ -61,7 +64,10 @@ class User extends Authenticatable {
             'fechaInicio' => $fechaInicio,
             'fechaFin' => $fechaFin,
             'idSupervisor' => $this->id
-        ]);
+        ])->map(function($nomina){
+            $nomina->cargoUsuario = "Supervisor";
+            return $nomina;
+        });
 
         // buscar nominas como "operador"
         $nominasOperador = \App\Nominas::buscar( (object)[
@@ -69,12 +75,33 @@ class User extends Authenticatable {
             'fechaInicio' => $fechaInicio,
             'fechaFin' => $fechaFin,
             'idOperador' => $this->id
-        ]);
+        ])->map(function($nomina){
+            $nomina->cargoUsuario = "Operador";
+            return $nomina;
+        });
+
+        // unirlas todas (si esta repetida, se toma el valor de la ultima)
+        $todas = $nominasOperador
+            ->merge($nominasSupervisor)
+            ->merge($nominasLider)
+            ->sortBy('inventario.fechaProgramada');
 
         return (object)[
             'comoLider' => $nominasLider,
             'comoSupervisor' => $nominasSupervisor,
-            'comoOperador' => $nominasOperador
+            'comoOperador' => $nominasOperador,
+            'todas' => $todas
+        ];
+    }
+    function experiencia(){
+        // todo: la experiencia deberia contemplar solo las nominas que han sido terminadas
+        // es decir, debe buscar en las nominasFinales/nominasDePago
+        $nominas = $this->nominasComoTitular(null, null, null);
+        return (object)[
+            'comoLider' => count($nominas->comoLider),
+            'comoSupervisor' => count($nominas->comoSupervisor),
+            'comoOperador' => count($nominas->comoOperador),
+            //'todas' => $nominas->todas
         ];
     }
 
@@ -114,6 +141,22 @@ class User extends Authenticatable {
     //
 
     // #### Formatear respuestas
+    // usado por Nominas::formatoPanelNomina
+    static function formatoPanelNomina($user){
+        if(!$user) return null;
+        $experiencia = $user->experiencia();
+        return [
+            'id' => $user->id,
+            'usuarioRUN' => $user->usuarioRUN,
+            'usuarioDV' => $user->usuarioDV,
+            'nombreCompleto' => $user->nombreCompleto(),
+            'imagenPerfil' => $user->imagenPerfil,
+            'experienciaComoLider' => $experiencia->comoLider,
+            'experienciaComoSupervisor' => $experiencia->comoSupervisor,
+            'experienciaComoOperador' => $experiencia->comoOperador
+        ];
+    }
+
     static function formatearMinimo($user){
         return [
             'id' => $user->id,
@@ -147,14 +190,6 @@ class User extends Authenticatable {
             //                []
             'roles' => $user->roles->map(['\App\Role', 'darFormatoSimple'])
         ];
-    }
-    static function formatearSimplePivotDotacion($user){
-        $userArray = User::formatearSimple($user);
-        // informacion del pivot generado al unir un usuario con una dotacion
-        $userArray['idRoleAsignado'] = $user->pivot->idRoleAsignado;
-        //          WIP, ESTO NO FUNCIONABA
-        //        $userArray['roleAsignado'] = $user->pivot;
-        return $userArray;
     }
     static function formatoCompleto($user){
         $userArray = User::formatearSimple($user);
