@@ -20,8 +20,8 @@ export class PanelDotaciones extends React.Component {
         let totalOperadores = operadoresAsignados>operadoresReales? operadoresAsignados : operadoresReales
 
         return <div className="row">
-            {/* Dotacion Titular */}
-            <section className="col-sm-5">
+            <section className="col-sm-10">
+                {/* Dotacion Titular */}
                 <div className="panel panel-primary">
                     <div className={'panel-heading '+css.panelHeading_compacto}>Personal Asignado</div>
                     <table className={'table table-striped table-bordered table-hover table-condensed '+css.tablaDotacion}>
@@ -31,6 +31,7 @@ export class PanelDotaciones extends React.Component {
                             <col className={css.colUsuarioDV}/>
                             <col className={css.colNombre}/>
                             <col className={css.colCargo}/>
+                            <col className={css.colExperiencia}/>
                             <col className={css.colOpciones}/>
                         </colgroup>
                         <thead>
@@ -40,6 +41,7 @@ export class PanelDotaciones extends React.Component {
                             <th>DV</th>
                             <th>Nombre</th>
                             <th>Cargo</th>
+                            <th>Experiencia</th>
                             <th>Opciones</th>
                         </tr>
                         </thead>
@@ -48,7 +50,7 @@ export class PanelDotaciones extends React.Component {
                         <RowOperador
                             editable={this.props.liderEditable}
                             correlativo={"L"}
-                            operador={ this.props.lider }
+                            personal={ this.props.lider }
                             cargo="Lider"
                             agregarUsuario={this.props.agregarLider}
                             quitarUsuario={this.props.quitarLider}
@@ -57,7 +59,7 @@ export class PanelDotaciones extends React.Component {
                         <RowOperador
                             editable={this.props.supervisorEditable}
                             correlativo={"S"}
-                            operador={ this.props.supervisor }
+                            personal={ this.props.supervisor }
                             cargo="Supervisor"
                             agregarUsuario={this.props.agregarSupervisor}
                             quitarUsuario={this.props.quitarSupervisor}
@@ -68,8 +70,8 @@ export class PanelDotaciones extends React.Component {
                             return <RowOperador
                                 editable={this.props.dotacionEditable}
                                 key={index}
-                                correlativo={""+(index+1)}
-                                operador={operador}
+                                correlativo={`${index+1}`}
+                                personal={operador}
                                 cargo="Operador"
                                 agregarUsuario={this.props.agregarOperadorTitular}
                                 quitarUsuario={this.props.quitarOperador}
@@ -78,10 +80,8 @@ export class PanelDotaciones extends React.Component {
                         </tbody>
                     </table>
                 </div>
-            </section>
 
-            {/* Dotacion Reemplazo */}
-            <section className="col-sm-5">
+                {/* Dotacion Reemplazo */}
                 <div className="panel panel-primary">
                     <div className={'panel-heading '+css.panelHeading_compacto}>Personal Reemplazo</div>
                     <table className={'table table-striped table-bordered table-hover table-condensed '+css.tablaDotacion}>
@@ -91,6 +91,7 @@ export class PanelDotaciones extends React.Component {
                             <col className={css.colUsuarioDV}/>
                             <col className={css.colNombre}/>
                             <col className={css.colCargo}/>
+                            <col className={css.colExperiencia}/>
                             <col className={css.colOpciones}/>
                         </colgroup>
                         <thead>
@@ -100,6 +101,7 @@ export class PanelDotaciones extends React.Component {
                             <th>DV</th>
                             <th>Nombre</th>
                             <th>Cargo</th>
+                            <th>Experiencia</th>
                             <th>Opciones</th>
                         </tr>
                         </thead>
@@ -110,8 +112,8 @@ export class PanelDotaciones extends React.Component {
                             return <RowOperador
                                 editable={this.props.dotacionEditable}
                                 key={index}
-                                correlativo={""+(index+1)}
-                                operador={ operador }
+                                correlativo={`${index+1}`}
+                                personal={ operador }
                                 cargo="Operador"
                                 agregarUsuario={this.props.agregarOperadorReemplazo}
                                 quitarUsuario={this.props.quitarOperador}
@@ -140,7 +142,7 @@ export class PanelDotaciones extends React.Component {
 
 PanelDotaciones.propTypes = {
     // datos
-    dotacionOperadores: PropTypes.string.isRequired,
+    dotacionOperadores: PropTypes.number.isRequired,
     liderEditable: PropTypes.bool.isRequired,
     supervisorEditable: PropTypes.bool.isRequired,
     dotacionEditable: PropTypes.bool.isRequired,
