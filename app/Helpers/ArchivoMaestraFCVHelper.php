@@ -32,6 +32,7 @@ class ArchivoMaestraFCVHelper{
         ini_set('memory_limit','1024M');
         ini_set('max_execution_time', 540);
         $datos = self::leerArchivoMaestra($path['fullPath']);
+        dd($datos);
         DB::transaction(function() use ($datos, $idArchivo){
             foreach ($datos as $dato){
                 $maestra = new MaestraFCV([
@@ -57,17 +58,21 @@ class ArchivoMaestraFCVHelper{
         }
         //  Get worksheet dimensions
         $sheet = $objPHPExcel->getSheet(0);
-        $highestRow = $sheet->getHighestRow();
+        //dd($sheet);
+        $array = $sheet->toArray(null,true,true,true);
+
+        $highestRow = count($array);
+        //dd($highestRow);
         //  Loop through each row of the worksheet in turn
         $tableData = [];
-        // iniciar el 2, para saltarse el titulo
+        // inicia en la row 2 para no leer el titulo
         for ($row = 2; $row <= $highestRow; $row++){
             array_push($tableData, [
-                'a'=> $sheet->getCell("A$row")->getValue(),
-                'b'=> $sheet->getCell("B$row")->getValue(),
-                'c'=> $sheet->getCell("C$row")->getValue(),
-                'd'=> $sheet->getCell("D$row")->getValue(),
-                'e'=> $sheet->getCell("E$row")->getValue(),
+                'a'=> $array[$row]['A'],
+                'b'=> $array[$row]['B'],
+                'c'=> $array[$row]['C'],
+                'd'=> $array[$row]['D'],
+                'e'=> $array[$row]['E']
             ]);
         }
         return $tableData;
