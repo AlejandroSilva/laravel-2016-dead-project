@@ -25,18 +25,17 @@ class ArchivoMaestraFCVHelper{
     static function guardarRegistro($path){
         ini_set('memory_limit','1024M');
         ini_set('max_execution_time', 540);
-        //dd($path['fullPath']);
         $datos = self::leerArchivoMaestra($path['fullPath']);
-        dd($datos);
         DB::transaction(function() use ($datos){
             foreach ($datos as $dato){
+                //$codigo = $dato['a'];
                 $maestra = new \App\MaestraFCV([
                     'idArchivoMaestra'=>1,
-                    'codigoProducto'=>$dato['a'],
-                    'descriptor'=>$dato['b'],
-                    'codigo'=>$dato['c'],
-                    'laboratorio'=>$dato['d'],
-                    'clasificacionTerapeutica'=>$dato['e']
+                    'codigoProducto'=>isset($dato['a'])? $dato['a'] : '1',
+                    'descriptor'=>isset($dato['b'])? $dato['b'] : '1',
+                    'codigo'=> isset($dato['c'])? $dato['c'] : '1',
+                    'laboratorio'=>isset($dato['d'])? $dato['d'] : '----',
+                    'clasificacionTerapeutica'=>isset($dato['e'])? $dato['e'] : '----'
                 ]);
                 $maestra->save();
             }
