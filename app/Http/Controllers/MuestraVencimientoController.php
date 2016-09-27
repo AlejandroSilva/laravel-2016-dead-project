@@ -11,6 +11,11 @@ class MuestraVencimientoController extends Controller {
 
     // GET muestra-vencimiento-fcv
     function show_indexFCV(){
+        // verificar permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-maestra-fcv'))
+            return response()->view('errors.403', [], 403);
+
         $archivos = ArchivoMuestraVencimientoFCV::all()
             ->sortByDesc('created_at');
         return response()->view('muestraVencimiento.index', [
@@ -20,6 +25,11 @@ class MuestraVencimientoController extends Controller {
 
     // POST muestra-vencimiento-fcv/subir-muestra-fcv
     function api_subirMuestraFCV(Request $request){
+        // verificar permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-maestra-fcv'))
+            return response()->view('errors.403', [], 403);
+
         if (!$request->hasFile('muestraVencimiento'))
             return redirect()->route("indexMuestraVencimientoFCV")
                 ->with('mensaje-error', 'Debe adjuntar la muestra de vencimiento');
@@ -66,6 +76,11 @@ class MuestraVencimientoController extends Controller {
 
     // GET muestra-vencimiento-fcv/{idMuestra}/descargar
     function descargar_muestraFCV($idArchivoMuestraVencimiento){
+        // verificar permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-maestra-fcv'))
+            return response()->view('errors.403', [], 403);
+
         // existe el registro en la BD?
         $archivoMVencimiento = ArchivoMuestraVencimientoFCV::find($idArchivoMuestraVencimiento);
         if(!$archivoMVencimiento)

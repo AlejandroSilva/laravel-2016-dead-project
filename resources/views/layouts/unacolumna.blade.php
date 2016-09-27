@@ -54,16 +54,12 @@
                                     </li>
                                 @endif
 
-                                {{-- GEO --}}
-                                @if( Auth::user()->hasRole('Developer') )
-                                    <li role="separator" class="divider"></li>
-                                    <li class="{{ Request::is('geo/')? 'active': '' }}">
-                                        <a href="{{ url('geo/') }}">(D) GEO gestor</a>
+                                {{-- Maestra, Muestras de vencimiento e IRD--}}
+                                <li role="separator" class="divider"></li>
+                                @if( Auth::user()->can('admin-maestra-fcv') )
+                                    <li class="{{ Request::is('muestra-vencimiento-fcv')? 'active': '' }}">
+                                        <a href="{{ url('muestra-vencimiento-fcv') }}">Muestra de vencimiento FCV</a>
                                     </li>
-                                    {{-- ya no se crean inventarios desde el menu, eliminar esto --}}
-                                    {{--<li class="{{ Request::is('inventario/nuevo')? 'active': '' }}">--}}
-                                    {{--<a href="{{ url('inventario/nuevo') }}">Nuevo Inventario</a>--}}
-                                    {{--</li>--}}
                                 @endif
                             </ul>
                         </li>
@@ -106,10 +102,10 @@
                                 </li>
                                 <li role="separator" class="divider"></li>
                                 <li class="{{ Request::is('admin/usuarios-roles')? 'active': '' }}">
-                                    <a href="{{ url('admin/usuarios-roles') }}">Asignación Usuarios/Roles</a>
+                                    <a href="{{ url('admin/usuarios-roles') }}">Usuarios <-> Roles</a>
                                 </li>
                                 <li class="{{ Request::is('admin/permissions-roles')? 'active': '' }}">
-                                    <a href="{{ url('admin/permissions-roles') }}">Asignación Roles/Permisos</a>
+                                    <a href="{{ url('admin/permissions-roles') }}">Roles <-> Permisos</a>
                                 </li>
 
                                 {{-- Cliente / Locales --}}
