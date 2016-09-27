@@ -2,9 +2,9 @@
 // Carbon
 use Carbon\Carbon;
 use DB;
-use PHPExcel_IOFactory;
-
-
+// Modelos
+use App\ArchivoMaestraFCV;
+use App\MaestraFCV;
 
 class ArchivoMaestraFCVHelper{
     static function moverAcarpeta($archivo){
@@ -23,17 +23,22 @@ class ArchivoMaestraFCVHelper{
         ];
     }
     static function guardarRegistro($path){
+        //Obtener el nombre del archivo que trae el path
+        $nombreArchivo = $path['nombre_archivo'];
+        //Obtener el modelo asociado con ese nombre en la BD
+        $archivo = ArchivoMaestraFCV::where('nombreArchivo', '=', $nombreArchivo)->first();
+        //Obtener el idArchivo mediante el archivo extraido
+        $idArchivo = $archivo->idArchivoMaestra;
         ini_set('memory_limit','1024M');
         ini_set('max_execution_time', 540);
         $datos = self::leerArchivoMaestra($path['fullPath']);
-        DB::transaction(function() use ($datos){
+        DB::transaction(function() use ($datos, $idArchivo){
             foreach ($datos as $dato){
-                //$codigo = $dato['a'];
-                $maestra = new \App\MaestraFCV([
-                    'idArchivoMaestra'=>1,
-                    'codigoProducto'=>isset($dato['a'])? $dato['a'] : '1',
-                    'descriptor'=>isset($dato['b'])? $dato['b'] : '1',
-                    'codigo'=> isset($dato['c'])? $dato['c'] : '1',
+                $maestra = new MaestraFCV([
+                    'idArchivoMaestra'=>$idArchivo,
+                    'codigoProducto'=>isset($dato['a'])? $dato['a'] : '00000',
+                    'descriptor'=>isset($dato['b'])? $dato['b'] : '-----',
+                    'codigo'=> isset($dato['c'])? $dato['c'] : '00000',
                     'laboratorio'=>isset($dato['d'])? $dato['d'] : '----',
                     'clasificacionTerapeutica'=>isset($dato['e'])? $dato['e'] : '----'
                 ]);
@@ -67,5 +72,4 @@ class ArchivoMaestraFCVHelper{
         }
         return $tableData;
     }
-    
 }
