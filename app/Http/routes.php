@@ -38,10 +38,6 @@ Route::group(['middleware' => ['web']], function (){
         // CAMBIO DE CONTRASEÑA
         Route::get('user/changePassword',                           'AuthController@show_changePassword');
         Route::post('user/changePassword',                          'AuthController@post_change_password');
-        // INVENTARIOS - MANTENEDOR (DESARROLLO DETENIDO)
-//        Route::get('inventario',                                  'InventariosController@showIndex');
-//        Route::get('inventario/nuevo',                            'InventariosController@showNuevo');
-//        Route::get('inventario/lista',                            'InventariosController@showLista');
         // INVENTARIOS - PROGRAMACION IG
         Route::get('programacionIG',                                'InventariosController@showProgramacionIndex');
         Route::get('programacionIG/mensual',                        'InventariosController@showProgramacionMensual');
@@ -53,7 +49,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{idNomina}',              'NominasController@show_nomina');
         // NOMINAS - NOMINAS DE CAPTADOR
         Route::get('nominas/captadores',                            'NominasController@show_captadores');
-        //Route::get('nominas/captador/{idCaptador}',                 'NominasController@show_nominasCaptador');
         // AUDITORIAS - PROGRAMACION AI
         Route::get('programacionAI',                                'AuditoriasController@showProgramacionIndex');
         Route::get('programacionAI/mensual',                        'AuditoriasController@showMensual');
@@ -68,19 +63,20 @@ Route::group(['middleware' => ['web']], function (){
 
         // ACTIVOS FIJOS
         Route::get('activo-fijo',                                   'ActivosFijosController@get_index');
-        // api (ordenar luego)
         
         // MANTENEDOR - USUARIOS
         Route::get('personal',                                      'PersonalController@show_personal_index');
-        
-        Route::get('api/activo-fijo/cargar-productos',              'MaestraController@api_cargar_productos');  // ELIMINAR
-        Route::get('api/activo-fijo/cargar-articulos',              'MaestraController@api_cargar_articulos');  // ELIMINAR
-        Route::get('api/activo-fijo/cargar-maestra',                'MaestraController@api_cargar_maestra');  // ELIMINAR
+//        Route::get('api/activo-fijo/cargar-productos',              'MaestraController@api_cargar_productos');  // ELIMINAR
+//        Route::get('api/activo-fijo/cargar-articulos',              'MaestraController@api_cargar_articulos');  // ELIMINAR
+//        Route::get('api/activo-fijo/cargar-maestra',                'MaestraController@api_cargar_maestra');  // ELIMINAR
 
         // ARCHIVO FINAL INVENTARIO
         Route::post('api/archivo-final-inventario/{idInventario}/upload-zip',  'ArchivoFinalInventarioController@api_uploadZIP');
-        // GEO - MANTENEDOR (DESARROLLO DETENIDO)
-//        Route::get('geo',                                         'GeoController@show_index');//->name('geo.index');
+
+        // MUESTRAS DE VENCIMIENTO
+        Route::get('muestra-vencimiento-fcv',                           'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
+        Route::post('muestra-vencimiento-fcv/subir-muestra-fcv',        'MuestraVencimientoController@api_subirMuestraFCV');
+        Route::get('muestra-vencimiento-fcv/{idMuestra}/descargar',     'MuestraVencimientoController@descargar_muestraFCV');
     });
     /*
     |--------------------------------------------------------------------------
@@ -113,7 +109,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('cliente/{idCliente}/locales',                   'LocalesController@api_getLocales');
         Route::post('locales',                                      'LocalesController@api_nuevo');
         Route::put('local/{idLocal}',                               'LocalesController@api_actualizar');
-//        Route::get('locales/{idLocal}/verbose',                   'LocalesController@api_getLocalVerbose');
         // API INVENTARIOS
         Route::get('inventarios/buscar-2',                          'InventariosController@api_buscar_2');
         Route::post('inventario/nuevo',                             'InventariosController@api_nuevo');
@@ -132,7 +127,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::delete('nomina/{idNomina}/supervisor',               'NominasController@api_quitarSupervisor');
         Route::post('nomina/{idNomina}/operador/{usuarioRUN}',      'NominasController@api_agregarOperador');
         Route::delete('nomina/{idNomina}/operador/{usuarioRUN}',    'NominasController@api_quitarOperador');
-//        Route::put('nomina/{idNomina}/operador/{operadorRUN}',      'NominasController@api_modificarOperador');
         Route::post('nomina/{idNomina}/captador/{idUsuario}',       'NominasController@api_agregarCaptador');
         Route::delete('nomina/{idNomina}/captador/{idUsuario}',     'NominasController@api_quitarCaptador');
         Route::put('nomina/{idNomina}/captador/{idUsuario}',        'NominasController@api_cambiarAsignadosDeCaptador');
@@ -202,9 +196,6 @@ Route::group(['middleware' => ['web']], function (){
 
         // OTROS
         Route::get('comunas',                                       'OtrosController@api_comunas');
-        // API GEO (DESARROLLO DETENIDO)
-//        Route::get('geo/comunas',                                 'GeoController@api_getComunas');
-//        Route::get('stock/leerArchivo',                           'StockController@api_leerArchivo');
         Route::post('stock/upload',                                 'StockController@api_uploadArchivo');
         Route::post('stock/pegar',                                  'StockController@api_pegarDatos');
     });

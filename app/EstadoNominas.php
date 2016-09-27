@@ -14,6 +14,7 @@ class EstadoNominas extends Model {
     //
 
     // #### Formatear respuestas
+    // utilizada en Nomina::formatearSimple
     static function formatearSimple($estado){
         return [
             'idEstadoNomina' => $estado->idEstadoNomina,

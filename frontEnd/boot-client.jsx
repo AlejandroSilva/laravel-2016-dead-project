@@ -34,15 +34,6 @@ if( mainDashboardDOM ){
 /** ************************************************************* **/
 /** ************************ LOGISTICA ************************** **/
 /** ************************************************************* **/
-/** FORMULARIO PARA LA CREACIÓN DE UN NUEVO Inventario */
-// GET inventario/nuevo, NO SE OCUPA
-// let nuevoInventarioDOM = document.getElementById('nuevo-inventario')
-// if (nuevoInventarioDOM){
-//     ReactDOM.render(
-//         <InventarioForm
-//             clientes={window.laravelClientes}
-//         />, nuevoInventarioDOM)
-// }
 
 /** PROGRAMACIÓN INVENTARIO GENERAL */
 let programacionIGMensualDOM = document.getElementById('react-programacionIG-mensual')
@@ -121,22 +112,11 @@ if( mantenedorStockDOM ) {
     )
 }
 
-/** GEO **/
-// let geoGestorDOM = document.getElementById('react-geo-gestor')
-// if( geoGestorDOM ){
-//     ReactDOM.render(
-//         <GeoGestor
-//             // props
-//         />, geoGestorDOM)
-// }
-
 /** NOMINAS **/
 let mantenedorNominaIGDOM = document.getElementById('react-nominaIG-nominaIG')
 if( mantenedorNominaIGDOM ){
     ReactDOM.render(
         <NominaIG
-            usuario={undefined}
-            inventario={window.laravelInventario}
             nomina={window.laravelNomina}
             comunas={window.laravelComunas}
             permisos={window.laravelPermisos}

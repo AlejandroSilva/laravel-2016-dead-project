@@ -277,18 +277,18 @@ class Inventarios extends Model {
             'inventario_dotacionAsignadaTotal' => $inventario->dotacionAsignadaTotal,
         ];
     }
-    static function formatoClienteFormatoRegion($inventario) {
-        $inventarioArray = Inventarios::formatoSimple($inventario);
-        $inventarioArray['local'] = Locales::formatoLocal_completo($inventario->local);
-        return $inventarioArray;
-    }
-    static function formatoClienteFormatoRegion_nominas ($inventario) {
-        $_inventario = Inventarios::formatoSimple($inventario);
-        $_inventario['local'] = Locales::formatoLocal_completo($inventario->local);
-        $_inventario['nominaDia']   = $inventario->nominaDia->habilitada? Nominas::formatearSimple($inventario->nominaDia) : null;
-        $_inventario['nominaNoche'] = $inventario->nominaNoche->habilitada? Nominas::formatearSimple($inventario->nominaNoche) : null;
-        return $_inventario;
-    }
+//    static function formatoClienteFormatoRegion($inventario) {
+//        $inventarioArray = Inventarios::formatoSimple($inventario);
+//        $inventarioArray['local'] = Locales::formatoLocal_completo($inventario->local);
+//        return $inventarioArray;
+//    }
+//    static function formatoClienteFormatoRegion_nominas ($inventario) {
+//        $_inventario = Inventarios::formatoSimple($inventario);
+//        $_inventario['local'] = Locales::formatoLocal_completo($inventario->local);
+//        $_inventario['nominaDia']   = $inventario->nominaDia->habilitada? Nominas::formatearSimple($inventario->nominaDia) : null;
+//        $_inventario['nominaNoche'] = $inventario->nominaNoche->habilitada? Nominas::formatearSimple($inventario->nominaNoche) : null;
+//        return $_inventario;
+//    }
     // formato utilizado en el modulo "Programacion Semanal IG"
     static function formato_programacionIGSemanal($inventario){
         return [
@@ -374,19 +374,6 @@ class Inventarios extends Model {
     }
 
     // #### Scopes para hacer Querys/Busquedas
-
-    function scopeConCaptador___no_se_ocupa($query, $idCaptador){
-        // no probado
-        // buscar el captador en la nomina de "dia" O en la de "noche", la nomina debe estar "Habilitada"
-        $query
-            ->whereHas('nominaDia', function($q) use ($idCaptador){
-                $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
-            })
-            ->orWhereHas('nominaNoche', function($q) use ($idCaptador){
-                $q->where('idCaptador1', $idCaptador)->where('habilitada', true);
-            });
-    }
-
     static function buscar($peticion){
         // todo: deberian mejorar bastante los tiempos de respuesta, si se agregan los eager loading dentro del query
         $query = Inventarios::with([]);

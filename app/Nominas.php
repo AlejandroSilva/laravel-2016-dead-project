@@ -99,6 +99,9 @@ class Nominas extends Model {
     }
 
     // ####  Getters
+    function getPublicId(){
+        return Crypt::encrypt($this->idNomina);
+    }
     function horaPresentacionLiderF(){
         // Ejemplo: convertir "21:30:00" -> "21:30 hrs."
         $carbon = Carbon::parse($this->horaPresentacionLider);
@@ -216,21 +219,43 @@ class Nominas extends Model {
             "rectificada" => $nomina->rectificada
         ];
     }
-    static function formatearSimpleConPublicId($nomina){
-        // no en todas las ocaciones se necesita el publicIdNomina, es de 128 bits y puede resultar costoso de descargar
-        $nominaArray = Nominas::formatearSimple($nomina);
-        $nominaArray['publicIdNomina'] = Crypt::encrypt($nomina->idNomina);
-        return $nominaArray;
+
+    // utilizado por: NominasController@
+    static function formatoPanelNomina($nomina){
+        return [
+            'idNomina' => $nomina->idNomina,
+            'idNominaPublica' => $nomina->getPublicId(),
+            'idEstadoNomina' => $nomina->estado->idEstadoNomina,
+            "rectificada" => $nomina->rectificada,
+            'lider' => User::formatoPanelNomina($nomina->lider),
+            'supervisor' => User::formatoPanelNomina($nomina->supervisor),
+            'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatoPanelNomina'),
+            'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatoPanelNomina'),
+            'nominaCompleta' => 'calculo pendiente',
+            'dotacionTotal' => $nomina->dotacionTotal,
+            'dotacionOperadores' => $nomina->dotacionOperadores,
+            'horaPresentacionLiderF' => $nomina->horaPresentacionLiderF(),
+            'horaPresentacionEquipoF' => $nomina->horaPresentacionEquipoF(),
+            'turno' => $nomina->turno,
+            // informacion del Inventario
+            'inv_fechaProgramadaF' => $nomina->inventario->fechaProgramadaF(),
+            // informacion del Cliente
+            'cliente_nombreCorto' => $nomina->inventario->local->cliente->nombreCorto,
+            // informacion del Local
+            'local_numero' => $nomina->inventario->local->numero,
+            'local_nombre' => $nomina->inventario->local->nombre,
+            'local_direccion' => $nomina->inventario->local->direccion->direccion,
+            'local_horaAperturaF' => $nomina->inventario->local->horaAperturaF(),
+            'local_horaCierreF' => $nomina->inventario->local->horaCierreF(),
+            'local_comuna' => $nomina->inventario->local->direccion->comuna->nombre,
+            'local_region' => $nomina->inventario->local->direccion->comuna->provincia->region->numero,
+            'local_telefono1' => $nomina->inventario->local->telefono1,
+            'local_telefono2' => $nomina->inventario->local->telefono2,
+            'local_emailContacto' => $nomina->inventario->local->emailContacto,
+            'local_formato' => $nomina->inventario->local->formatoLocal->nombre,
+        ];
     }
-    static function formatearConLiderSupervisorCaptadorDotacion($nomina){
-        $nominaArray = Nominas::formatearSimpleConPublicId($nomina);
-        $nominaArray['lider'] =  User::formatearSimple($nomina->lider);
-        $nominaArray['supervisor'] =  User::formatearSimple($nomina->supervisor);
-        $nominaArray['captador']  =  User::formatearSimple($nomina->captador1);
-        $nominaArray['dotacionTitular']  =  $nomina->dotacionTitular->map('\App\User::formatearSimplePivotDotacion');
-        $nominaArray['dotacionReemplazo']  =  $nomina->dotacionReemplazo->map('\App\User::formatearSimplePivotDotacion');
-        return $nominaArray;
-    }
+    // utilizado por: NominasController@api_buscar
     static function formatearConInventario($nomina){
         $_nomina = Nominas::formatearSimple($nomina);
         $_nomina['inventario'] = Inventarios::formatoClienteFormatoRegion($nomina->inventario);

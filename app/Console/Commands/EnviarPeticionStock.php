@@ -38,7 +38,6 @@ class EnviarPeticionStock extends Command {
     ];
     protected $SEI_stock_bcc = [
         ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
-        ['eponce@seiconsultores.cl', 'Esteban Ponce'],
         ['asilva@seiconsultores.cl', 'Alejandro Silva'],
     ];
     // Cliente 1: PUC

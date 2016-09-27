@@ -38,8 +38,15 @@ class NominasController extends Controller {
         $nomina = Nominas::find($idNomina);
         if(!$nomina){
             return view('errors.errorConMensaje', [
-                'titulo' => 'Nomina no encontrada',
+                'titulo' => 'Nómina no encontrada',
                 'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
+            ]);
+        }
+        // la nomina esta habilitada?
+        if(!$nomina->habilitada){
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Nómina no habilitada',
+                'descripcion' => 'La nomina que ha solicitado se encuentra deshabilitada. Es problable que el turno del inventario haya cambiado.'
             ]);
         }
 
@@ -50,8 +57,7 @@ class NominasController extends Controller {
 
 
         return view('operacional.nominas.nomina', [
-            'nomina' => Nominas::formatearConLiderSupervisorCaptadorDotacion($nomina),
-            'inventario' => Inventarios::formatoClienteFormatoRegion($nomina->inventario),
+            'nomina' => Nominas::formatoPanelNomina($nomina),
             'comunas' => Comunas::all(),
             'permisos' => [
                 // para poder enviar debe tener los permisos, O ser el captador asociado (ambos no son necesarios)
@@ -96,27 +102,6 @@ class NominasController extends Controller {
             'captadores' => $captadores
         ]);
     }
-    // GET nominas/captador/{idCaptador}
-//    function show_nominasCaptador($idCaptador){
-//        // todo revisar los permisos
-//        $usuario = User::find($idCaptador);
-//        if(!$usuario){
-//            return view('errors.errorConMensaje', [
-//                'titulo' => 'Captador no encontrado', 'descripcion' => 'El captador que busca no ha sido encontrado.'
-//            ]);
-//        }
-//
-//        // buscar los "proximos" inventarios del captador
-//        $nominas = $this->buscar( (object)[
-//            'fechaInicio' => \Carbon\Carbon::now()->format("Y-m-d"),
-//            'idCaptador1' => $idCaptador
-//        ])
-//            ->map('\App\Nominas::formatearConInventario');
-//
-//        return view('nominas.captador', [
-//            'nominas' => $nominas
-//        ]);
-//    }
 
     /**
      * ##########################################################
@@ -194,7 +179,7 @@ class NominasController extends Controller {
     function api_get($idNomina){
         $nomina = Nominas::find($idNomina);
         return $nomina?
-            response()->json(Nominas::formatearConLiderSupervisorCaptadorDotacion($nomina))
+            response()->json(Nominas::formatoPanelNomina($nomina))
             :
             response()->json([], 404);
     }
@@ -239,7 +224,7 @@ class NominasController extends Controller {
         $nomina->save();
         // entregar nomina actualizada
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 201
         );
     }
     // DELETE api/nomina/{idNomina}/lider
@@ -261,7 +246,7 @@ class NominasController extends Controller {
         $nomina->save();
         // entregar nomina actualizada
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 201
         );
     }
     // POST api/nomina/{idNomina}/supervisor/{usuarioRUN}
@@ -291,7 +276,7 @@ class NominasController extends Controller {
         $nomina->save();
         // entregar nomina actualizada
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 201
         );
     }
     // DELETE api/nomina/{idNomina}/supervisor
@@ -314,7 +299,7 @@ class NominasController extends Controller {
         $nomina->save();
         // entregar nomina actualizada
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200
         );
     }
 
@@ -424,7 +409,7 @@ class NominasController extends Controller {
         $operadorExiste = $nomina->usuarioEnDotacion($operador);
         if($operadorExiste)
             return response()->json(
-                Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200);
+                Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200);
 
         // Si es titular, ver si la dotacion esta completa
         if($request->esTitular==true){
@@ -439,7 +424,7 @@ class NominasController extends Controller {
         }
         // se debe actualizar la dotacion antes de imprimirla
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 201
         );
     }
     // DELETE api/nomina/{idNomina}/operador/{usuarioRUN}
@@ -468,7 +453,7 @@ class NominasController extends Controller {
             return response()->json('Operador no encontrado', 404);
         $nomina->dotacion()->detach($usuario);
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 201
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 201
         );
     }
     function api_enviarNomina($idNomina){
@@ -497,7 +482,7 @@ class NominasController extends Controller {
         $nomina->addLog('Enviada a SEI', 'se envia nomina a SEI para su aprobación', 1, 0);
 
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200
         );
     }
     function api_aprobarNomina($idNomina){
@@ -519,7 +504,7 @@ class NominasController extends Controller {
         $nomina->addLog('Aprobada por SEI', 'la nomina ha sido aprobada por SEI', 1, 0);
 
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200
         );
     }
     function api_rechazarNomina($idNomina){
@@ -541,7 +526,7 @@ class NominasController extends Controller {
         $nomina->addLog('Nomina rechazada', 'la nomina ha sido rechazada por SEI', 1, 0);
 
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200
         );
     }
     function api_informarNomina($idNomina, Request $request){
@@ -600,7 +585,7 @@ class NominasController extends Controller {
         $nomina->save();
 
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200
         );
     }
     function api_rectificarNomina($idNomina){
@@ -626,7 +611,7 @@ class NominasController extends Controller {
 
         // ToDo: enviar los correos
         return response()->json(
-            Nominas::formatearConLiderSupervisorCaptadorDotacion( Nominas::find($nomina->idNomina) ), 200
+            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200
         );
     }
     /**
