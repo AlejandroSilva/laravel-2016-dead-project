@@ -96,27 +96,6 @@ class NominasController extends Controller {
             'captadores' => $captadores
         ]);
     }
-    // GET nominas/captador/{idCaptador}
-//    function show_nominasCaptador($idCaptador){
-//        // todo revisar los permisos
-//        $usuario = User::find($idCaptador);
-//        if(!$usuario){
-//            return view('errors.errorConMensaje', [
-//                'titulo' => 'Captador no encontrado', 'descripcion' => 'El captador que busca no ha sido encontrado.'
-//            ]);
-//        }
-//
-//        // buscar los "proximos" inventarios del captador
-//        $nominas = $this->buscar( (object)[
-//            'fechaInicio' => \Carbon\Carbon::now()->format("Y-m-d"),
-//            'idCaptador1' => $idCaptador
-//        ])
-//            ->map('\App\Nominas::formatearConInventario');
-//
-//        return view('nominas.captador', [
-//            'nominas' => $nominas
-//        ]);
-//    }
 
     /**
      * ##########################################################
