@@ -35,7 +35,7 @@ class ArchivoFinalInventarioController extends Controller {
             return response()->json(['error' => 'El archivo adjuntado no es valido.'], 400);
 
         // mover el archivo a la carpeta correspondiente
-        $archivoFinal = \ArchivoFinalInventarioFCV::moverACarpeta($archivo, $cliente->nombreCorto, $local->numero, $inventario->fechaProgramada);
+        $archivoFinal = \ArchivosHelper::moverArchivoFinalInventario($archivo, $cliente->nombreCorto, $local->numero, $inventario->fechaProgramada);
 
         // paso 1) Extraer el archivo de acta del zip
         $resultadoExtraccion = \ArchivoFinalInventarioFCV::descomprimirZip($archivoFinal['fullPath']);

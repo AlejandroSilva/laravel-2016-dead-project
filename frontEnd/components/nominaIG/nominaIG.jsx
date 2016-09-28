@@ -20,7 +20,7 @@ export class NominaIG extends React.Component {
             RUNbuscado: '',
             esTitular: true,
             // --------
-            idEstadoNomina: this.props.nomina.estado.idEstadoNomina,
+            idEstadoNomina: this.props.nomina.idEstadoNomina,
             haSidoRectificada: this.props.nomina.rectificada,
             lider: this.props.nomina.lider,
             supervisor: this.props.nomina.supervisor,
@@ -194,7 +194,7 @@ export class NominaIG extends React.Component {
         return api.nomina.enviar(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({
-                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    idEstadoNomina: nomina.idEstadoNomina,
                     haSidoRectificada: nomina.rectificada,
                 })
             })
@@ -209,7 +209,7 @@ export class NominaIG extends React.Component {
         return api.nomina.aprobar(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({
-                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    idEstadoNomina: nomina.idEstadoNomina,
                     haSidoRectificada: nomina.rectificada,
                 })
             })
@@ -224,7 +224,7 @@ export class NominaIG extends React.Component {
         return api.nomina.rechazar(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({
-                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    idEstadoNomina: nomina.idEstadoNomina,
                     haSidoRectificada: nomina.rectificada,
                 })
             })
@@ -239,7 +239,7 @@ export class NominaIG extends React.Component {
         return api.nomina.informar(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({
-                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    idEstadoNomina: nomina.idEstadoNomina,
                     haSidoRectificada: nomina.rectificada,
                 })
             })
@@ -254,7 +254,7 @@ export class NominaIG extends React.Component {
         return api.nomina.completarSinCorreo(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({
-                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    idEstadoNomina: nomina.idEstadoNomina,
                     haSidoRectificada: nomina.rectificada,
                 })
             })
@@ -269,7 +269,7 @@ export class NominaIG extends React.Component {
         return api.nomina.rectificar(this.props.nomina.idNomina)
             .then(nomina=>{
                 this.setState({
-                    idEstadoNomina: nomina.estado.idEstadoNomina,
+                    idEstadoNomina: nomina.idEstadoNomina,
                     haSidoRectificada: nomina.rectificada,
                 })
             })
@@ -315,7 +315,6 @@ export class NominaIG extends React.Component {
                 </Modal>
 
                 <PanelDatos
-                    inventario={this.props.inventario}
                     nomina={this.props.nomina}
                 />
 
@@ -354,22 +353,14 @@ export class NominaIG extends React.Component {
                     // permisos
                     permisos={this.props.permisos}
                 />
-
-                <a href={`/programacionIG/nomina/${this.props.nomina.publicIdNomina}/pdf`} className="btn btn-xs pull-right">Descargar Pdf</a>
-                <a href={`/programacionIG/nomina/${this.props.nomina.publicIdNomina}/excel`} className="btn btn-xs pull-right">Descargar Excel</a>
             </div>
         )
     }
 }
 
 NominaIG.propTypes = {
-    usuario: PropTypes.object.isRequired,
-    inventario: PropTypes.object.isRequired,
     nomina: PropTypes.object.isRequired,
     comunas: PropTypes.arrayOf(PropTypes.object).isRequired,
     // Permisos
     permisos: PropTypes.object.isRequired
-}
-NominaIG.defaultProps = {
-    usuario: {}
 }

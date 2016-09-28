@@ -12,29 +12,30 @@ export class RowOperador extends React.Component {
         this.ref_usuarioDV.value = usuarioDV
     }
     render(){
-        var operador = this.props.operador
-
-        if(operador){
+        if(this.props.personal){
             // si el operador esta definido, mostrar sus datos
             return (
                 <tr key={1}>
                     <td>{this.props.correlativo}</td>
                     <td className={css.tdUsuarioRUN}>
-                        <input type="text" value={operador.usuarioRUN} disabled/>
+                        <input type="text" value={this.props.personal.usuarioRUN} disabled/>
                     </td>
                     <td className={css.tdUsuarioDV}>
-                        <input type="text" value={operador.usuarioDV} disabled/>
+                        <input type="text" value={this.props.personal.usuarioDV} disabled/>
                     </td>
                     <td className={css.tdNombre}>
-                        <input type="text" value={operador.nombre} disabled/>
+                        <input type="text" value={this.props.personal.nombreCompleto} disabled/>
                     </td>
                     <td>
                         {this.props.cargo}
                     </td>
                     <td>
+                        {`Lid: ${this.props.personal.experienciaComoLider}, Sup: ${this.props.personal.experienciaComoSupervisor}, Ope: ${this.props.personal.experienciaComoOperador}`}
+                    </td>
+                    <td>
                         {this.props.editable ?
                             <button className="btn btn-xs btn-warning"
-                                    onClick={()=>{ this.props.quitarUsuario(this.props.operador.usuarioRUN) }}
+                                    onClick={()=>{ this.props.quitarUsuario(this.props.personal.usuarioRUN) }}
                             >Quitar</button>
                             :
                             null
@@ -67,6 +68,9 @@ export class RowOperador extends React.Component {
                         {this.props.cargo}
                     </td>
                     <td>
+                        {/* experiencia */}
+                    </td>
+                    <td>
                         {/*<a href="#" className="btn btn-small">Quitar</a>*/}
                     </td>
                 </tr>
@@ -78,12 +82,9 @@ export class RowOperador extends React.Component {
 RowOperador.propTypes = {
     editable: PropTypes.bool.isRequired,
     correlativo: PropTypes.string.isRequired,
-    operador: PropTypes.object,
+    personal: PropTypes.object,
     cargo: PropTypes.string,
     agregarUsuario: PropTypes.func.isRequired,
     quitarUsuario: PropTypes.func.isRequired
     // comunas: PropTypes.arrayOf(PropTypes.object).isRequired
-}
-RowOperador.defaultProps = {
-    // usuario: {}
 }
