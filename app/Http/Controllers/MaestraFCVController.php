@@ -38,10 +38,19 @@ class MaestraFCVController extends Controller
             //return response()->json(['error' => 'El archivo adjuntado no es valido.'], 400);
         
         //Mover maestra 
-        $maestraFinal = \ArchivoMaestraFCVHelper::moverAcarpeta($archivo);
-        MaestraFCV::agregarArchivoMaestra(Auth::user(), $maestraFinal);
-        \ArchivoMaestraFCVHelper::guardarRegistro($maestraFinal);
-        return response()->json(['guardado'], 200);
+        $moverArchivo=\ArchivoMaestraFCVHelper::moverAcarpeta($archivo);
+        //Agregar datos del archivo en la BD
+        $archivoMaestraFCV = ArchivoMaestraFCV::agregarArchivoMaestra(Auth::user(), $moverArchivo);
+        //Recorrer archivo con phpExcel
+        $resultadoExcel = \ArchivoMaestraFCVHelper::leerArchivoMaestra($archivoMaestraFCV->getFullPath());
+        //Parsear los datos del archivo
+        $parseo = \ArchivoMaestraFCVHelper::parseo($resultadoExcel->datos, $archivoMaestraFCV->idArchivoMaestra);
+        //dd($parseo);
+        $guardar = $archivoMaestraFCV->guardarRegistro($parseo->datos);
+        if($guardar!=null){
+            return response()->json(['guardado'], 200);    
+        }
+        return response()->json(['finalizado'], 200);
     }
 
     public function show_maestra_producto(){
