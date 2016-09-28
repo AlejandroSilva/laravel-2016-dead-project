@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Auth;
+use File;
 // Nominas
 use App\Inventarios;
 
@@ -52,5 +53,26 @@ class ArchivoFinalInventarioController extends Controller {
         $inventario->agregarArchivoFinal(Auth::user(), $archivoFinal, null);
 
         return response()->json($resultadoActa->acta);
+    }
+
+    // GET archivo-final-inventario/excel-actas
+    function temp_descargarExcelActas(){
+            // archivo con ruta fija
+            $fullPath = public_path()."/actas-septiembre-2016.xlsx";
+            $nombreOriginal = "actas-septiembre-2016.xlsx";
+
+            // existe el archivo fisicamente en el servidor?
+            if(!File::exists($fullPath))
+                return response()->view('errors.errorConMensaje', [
+                    'titulo' =>  'Archivo no encontrado',
+                    'descripcion' => 'El archivo que busca no ha sido encontrado. Contactese con el departamento de informática.',
+                ]);
+
+            return response()
+                ->download($fullPath, $nombreOriginal, [
+                    'Content-Type'=>'application/force-download',   // forzar la descarga en Opera Mini
+                    'Pragma'=>'no-cache',
+                    'Cache-Control'=>'no-cache, must-revalidate'
+                ]);
     }
 }

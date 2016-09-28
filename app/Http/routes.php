@@ -96,6 +96,10 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('descargar-otro/{file}',                         'TemporalController@descargar_otro');
         Route::post('completado',                                   'TemporalController@post_archivo');
         Route::get('usuarioComoOperador/{runUsuario}',              'TemporalController@usuarioComoOperador');
+
+        // ARCHIVO FINAL DE INVENTARIO / ACTAS
+        // ruta temporal
+        Route::get('archivo-final-inventario/excel-actas',         'ArchivoFinalInventarioController@temp_descargarExcelActas');
     });
     
     /*
