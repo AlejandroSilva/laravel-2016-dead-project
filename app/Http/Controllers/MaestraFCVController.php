@@ -20,12 +20,16 @@ use Auth;
 
 class MaestraFCVController extends Controller
 {
-    function subir_maestra(Request $request)
-    {
+    function subir_maestra(Request $request){
+        // ver que el usuario tenga los permisos correspondientes
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-maestra-fcv'))
+            return response()->view('errors.403', [], 403);
+        
         // se adjunto un archivo?
         if (!$request->hasFile('file'))
             return view('errors.errorConMensaje', [
-                'titulo' => 'error', 'descripcion' => 'Debe adjuntar el archivo.'
+                'titulo' => 'error', 'descripcion' => 'Debe adjuntar el archivo excel.'
             ]);
             //return response()->json(['error' => 'Debe adjuntar el archivo.'], 400);
 
@@ -37,22 +41,35 @@ class MaestraFCVController extends Controller
             ]);
             //return response()->json(['error' => 'El archivo adjuntado no es valido.'], 400);
         
-        //Mover maestra 
+        //Mover maestra a una carpeta en el servidor
         $moverArchivo=\ArchivoMaestraFCVHelper::moverAcarpeta($archivo);
-        //Agregar datos del archivo en la BD
+        //Guardar archivo en la DB
         $archivoMaestraFCV = ArchivoMaestraFCV::agregarArchivoMaestra(Auth::user(), $moverArchivo);
-        //Recorrer archivo con phpExcel
-        $resultadoExcel = \ArchivoMaestraFCVHelper::leerArchivoMaestra($archivoMaestraFCV->getFullPath());
+        //Lee excel de maestra y lo asigna a un arreglo siempre y cuando no se origine un error
+        $resultadoExcel = \ExcelHelper::leerExcel($archivoMaestraFCV->getFullPath());
+        //Cuando no puede leer el excel retorna un error
+        if($resultadoExcel->error!=null){
+            $archivoMaestraFCV->setResultado($resultadoExcel->error);
+            return view('errors.errorConMensaje',[
+                'titulo' => 'error', 'descripcion' => $resultadoExcel->error
+            ]);
+        }
         //Parsear los datos del archivo
         $parseo = \ArchivoMaestraFCVHelper::parseo($resultadoExcel->datos, $archivoMaestraFCV->idArchivoMaestra);
-        //dd($parseo);
-        $guardar = $archivoMaestraFCV->guardarRegistro($parseo->datos);
-        if($guardar!=null){
-            return response()->json(['guardado'], 200);    
+        if($parseo->error!=null){
+            $archivoMaestraFCV->setResultado($parseo->error);
+            return redirect()->route("maestraFCV")
+                ->with('mensaje-error', $parseo->error);
         }
-        return response()->json(['finalizado'], 200);
-    }
+        //insertando datos parseados en la BD
+        $archivoMaestraFCV->guardarRegistro($parseo->datos);
+        $archivoMaestraFCV->setResultado("archivo cargado correctamente en la base de datos");
 
+        return view('success.successConMensaje',[
+            'titulo' => 'Cargado correctamente', 'descripcion' => $archivoMaestraFCV->resultado
+        ]);
+    }
+    
     public function show_maestra_producto(){
         $maestraFCV = ArchivoMaestraFCV::all();
         return view('operacional.maestra.maestra-producto', ['maestras' => $maestraFCV]);

@@ -24,6 +24,11 @@ class ArchivoMaestraFCV extends Model{
     static function getPathCarpetaArchivos(){
                 return public_path()."/FCV/maestrasFCV/";
      }
+    function setResultado($resultado){
+        $this->resultado = $resultado;
+        $this->save();
+        
+    }
     function getFullPath(){
            return self::getPathCarpetaArchivos().$this->nombreArchivo;
     }

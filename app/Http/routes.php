@@ -98,7 +98,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('archivo-final-auditoria/{idArchivoCruzVerde}/descargar-zip',  'ArchivoFinalAuditoriaController@api_descargarZIP');
 
         //Maestra Productos
-        Route::get('maestra-producto', 'MaestraFCVController@show_maestra_producto');
+        Route::get('maestra-producto', 'MaestraFCVController@show_maestra_producto')->name('maestraFCV');
         Route::post('api/archivo-maestra/upload-excel', 'MaestraFCVController@subir_maestra');
 
         // Rutas temporales, para testing, pruebas, y emergencias

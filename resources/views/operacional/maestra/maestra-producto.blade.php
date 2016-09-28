@@ -91,6 +91,13 @@
                     </form>
                 </div>
             </div>
+            <div class="col-sm-8 col-sm-offset-2">
+                @if(session('mensaje-error'))
+                    <div class="alert alert-danger" role="alert">
+                        {{session('mensaje-error')}}
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 </div>

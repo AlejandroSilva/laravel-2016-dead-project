@@ -21,13 +21,19 @@ class ArchivoMaestraFCVHelper{
         $now = Carbon::now()->toDateTimeString();
         $highestRow = count($arrayArchivo);
         $tableData = [];
+        //Definimos la variable error
+        $error = '';
         
         for ($row = 2; $row <= $highestRow; $row++){
-            $codigoProducto = isset($arrayArchivo[$row]['A'])? $arrayArchivo[$row]['A'] : '0000';
-            $descriptor = isset($arrayArchivo[$row]['B'])? $arrayArchivo[$row]['B'] : 'sin descriptor';
-            $codigo = isset($arrayArchivo[$row]['C'])? $arrayArchivo[$row]['C'] : '0000';
-            $laboratorio = isset($arrayArchivo[$row]['D'])? $arrayArchivo[$row]['D'] : 'sin lab';
-            $clasificacionTerapeutica = isset($arrayArchivo[$row]['E'])? $arrayArchivo[$row]['E'] : 'sin clas';
+            $codigoProducto = isset($arrayArchivo[$row]['A'])? $arrayArchivo[$row]['A'] : null;
+            $descriptor = isset($arrayArchivo[$row]['B'])? $arrayArchivo[$row]['B'] : null;
+            $codigo = isset($arrayArchivo[$row]['C'])? $arrayArchivo[$row]['C'] : null;
+            $laboratorio = isset($arrayArchivo[$row]['D'])? $arrayArchivo[$row]['D'] : null;
+            $clasificacionTerapeutica = isset($arrayArchivo[$row]['E'])? $arrayArchivo[$row]['E'] : null;
+            // validar de que los campos no vengan con datos nulos
+            $rowValido = self::_camposValidos($row, $codigoProducto, $descriptor, $codigo, $laboratorio, $clasificacionTerapeutica);
+            if( $rowValido!=null )
+                $error = $error.$rowValido; // si se concatena un null con un string, el resultado es un string
 
             array_push($tableData,[
                 'idArchivoMaestra' => $idArchivo,
@@ -41,25 +47,23 @@ class ArchivoMaestraFCVHelper{
             ]);
         }
         return (object)[
-            'datos' => $tableData
+            'datos' => $tableData,
+            'error' => $error
         ];
     }
-    static function leerArchivoMaestra($inputFileName) {
-        $response = (object)[
-            'datos' => null
-        ];
-        ini_set('memory_limit','1024M');
-        ini_set('max_execution_time', 540);
-        $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
-        $objReader = PHPExcel_IOFactory::createReader($inputFileType);
-        $objReader->setReadDataOnly(true);
-        /**  Advise the Reader of which WorkSheets we want to load  **/
-        $objReader->setLoadSheetsOnly("Hoja1");
-        $objPHPExcel = $objReader->load($inputFileName);
-        //  Get worksheet dimensions
-        $sheet = $objPHPExcel->getSheet(0);
-        $response->datos = $sheet->toArray(null,true,true,true);
-        
-        return $response;
+    //Validar que los campos no contengas valores nulos
+    private static function _camposValidos($row, $codigoProducto, $descriptor, $codigo, $laboratorio, $clasificacionTerapeutica){
+        // todo: validar el tipo, que no sean string vacios, que sean numeros, etc
+        if($codigoProducto==null)
+            return "En la fila $row, falta el campo 'codigoProducto'. ";
+        if($descriptor==null)
+            return "En la fila $row, falta el campo 'descriptor'. ";
+        if($codigo==null)
+            return "En la fila $row, falta el campo 'codigo'. ";
+        if($laboratorio==null)
+            return "En la fila $row, falta el campo 'laboratorio'. ";
+        if($clasificacionTerapeutica==null)
+            return "En la fila $row, falta el campo 'clasificacionTerapeutica'. ";
+        return null;
     }
 }
