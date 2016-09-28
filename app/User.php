@@ -93,6 +93,17 @@ class User extends Authenticatable {
             'todas' => $todas
         ];
     }
+    function experiencia(){
+        // todo: la experiencia deberia contemplar solo las nominas que han sido terminadas
+        // es decir, debe buscar en las nominasFinales/nominasDePago
+        $nominas = $this->nominasComoTitular(null, null, null);
+        return (object)[
+            'comoLider' => count($nominas->comoLider),
+            'comoSupervisor' => count($nominas->comoSupervisor),
+            'comoOperador' => count($nominas->comoOperador),
+            //'todas' => $nominas->todas
+        ];
+    }
 
     // Indica si el usuario, esta disponible para participar como lider en un inventario (no esta asignado a otro)
     function disponibleParaInventario($fecha, $turno){
@@ -130,6 +141,22 @@ class User extends Authenticatable {
     //
 
     // #### Formatear respuestas
+    // usado por Nominas::formatoPanelNomina
+    static function formatoPanelNomina($user){
+        if(!$user) return null;
+        $experiencia = $user->experiencia();
+        return [
+            'id' => $user->id,
+            'usuarioRUN' => $user->usuarioRUN,
+            'usuarioDV' => $user->usuarioDV,
+            'nombreCompleto' => $user->nombreCompleto(),
+            'imagenPerfil' => $user->imagenPerfil,
+            'experienciaComoLider' => $experiencia->comoLider,
+            'experienciaComoSupervisor' => $experiencia->comoSupervisor,
+            'experienciaComoOperador' => $experiencia->comoOperador
+        ];
+    }
+
     static function formatearMinimo($user){
         return [
             'id' => $user->id,
@@ -163,14 +190,6 @@ class User extends Authenticatable {
             //                []
             'roles' => $user->roles->map(['\App\Role', 'darFormatoSimple'])
         ];
-    }
-    static function formatearSimplePivotDotacion($user){
-        $userArray = User::formatearSimple($user);
-        // informacion del pivot generado al unir un usuario con una dotacion
-        $userArray['idRoleAsignado'] = $user->pivot->idRoleAsignado;
-        //          WIP, ESTO NO FUNCIONABA
-        //        $userArray['roleAsignado'] = $user->pivot;
-        return $userArray;
     }
     static function formatoCompleto($user){
         $userArray = User::formatearSimple($user);

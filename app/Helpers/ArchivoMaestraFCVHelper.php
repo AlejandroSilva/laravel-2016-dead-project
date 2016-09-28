@@ -1,10 +1,6 @@
 <?php
 // Carbon
 use Carbon\Carbon;
-use DB;
-// Modelos
-use App\ArchivoMaestraFCV;
-use App\MaestraFCV;
 
 class ArchivoMaestraFCVHelper{
     static function moverAcarpeta($archivo){
@@ -17,59 +13,57 @@ class ArchivoMaestraFCVHelper{
 
         chmod($path.$fileName, 0774);   // 0744 por defecto
         return [
-            'fullPath' => $path.$fileName,
             'nombre_archivo' => $fileName,
             'nombre_original' => $nombreOriginal,
         ];
     }
-    static function guardarRegistro($path){
-        //Obtener el nombre del archivo que trae el path
-        $nombreArchivo = $path['nombre_archivo'];
-        //Obtener el modelo asociado con ese nombre en la BD
-        $archivo = ArchivoMaestraFCV::where('nombreArchivo', '=', $nombreArchivo)->first();
-        //Obtener el idArchivo mediante el archivo extraido
-        $idArchivo = $archivo->idArchivoMaestra;
-        ini_set('memory_limit','1024M');
-        ini_set('max_execution_time', 540);
-        $datos = self::leerArchivoMaestra($path['fullPath']);
-        DB::transaction(function() use ($datos, $idArchivo){
-            foreach ($datos as $dato){
-                $maestra = new MaestraFCV([
-                    'idArchivoMaestra'=>$idArchivo,
-                    'codigoProducto'=>isset($dato['a'])? $dato['a'] : '00000',
-                    'descriptor'=>isset($dato['b'])? $dato['b'] : '-----',
-                    'codigo'=> isset($dato['c'])? $dato['c'] : '00000',
-                    'laboratorio'=>isset($dato['d'])? $dato['d'] : '----',
-                    'clasificacionTerapeutica'=>isset($dato['e'])? $dato['e'] : '----'
-                ]);
-                $maestra->save();
-            }
-        });
-    }
-    static function leerArchivoMaestra($inputFileName) {
-        try {
-            $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = PHPExcel_IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($inputFileName);
-        } catch (Exception $e) {
-            die('Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME) . '": ' . $e->getMessage());
-            return [];
-        }
-        //  Get worksheet dimensions
-        $sheet = $objPHPExcel->getSheet(0);
-        $highestRow = $sheet->getHighestRow();
-        //  Loop through each row of the worksheet in turn
+    static function parseo($arrayArchivo, $idArchivo){
+        $now = Carbon::now()->toDateTimeString();
+        $highestRow = count($arrayArchivo);
         $tableData = [];
-        // iniciar el 2, para saltarse el titulo
+        //Definimos la variable error
+        $error = '';
+        
         for ($row = 2; $row <= $highestRow; $row++){
-            array_push($tableData, [
-                'a'=> $sheet->getCell("A$row")->getValue(),
-                'b'=> $sheet->getCell("B$row")->getValue(),
-                'c'=> $sheet->getCell("C$row")->getValue(),
-                'd'=> $sheet->getCell("D$row")->getValue(),
-                'e'=> $sheet->getCell("E$row")->getValue(),
+            $codigoProducto = isset($arrayArchivo[$row]['A'])? $arrayArchivo[$row]['A'] : null;
+            $descriptor = isset($arrayArchivo[$row]['B'])? $arrayArchivo[$row]['B'] : null;
+            $codigo = isset($arrayArchivo[$row]['C'])? $arrayArchivo[$row]['C'] : null;
+            $laboratorio = isset($arrayArchivo[$row]['D'])? $arrayArchivo[$row]['D'] : null;
+            $clasificacionTerapeutica = isset($arrayArchivo[$row]['E'])? $arrayArchivo[$row]['E'] : null;
+            // validar de que los campos no vengan con datos nulos
+            $rowValido = self::_camposValidos($row, $codigoProducto, $descriptor, $codigo, $laboratorio, $clasificacionTerapeutica);
+            if( $rowValido!=null )
+                $error = $error.$rowValido; // si se concatena un null con un string, el resultado es un string
+
+            array_push($tableData,[
+                'idArchivoMaestra' => $idArchivo,
+                'codigoProducto' => $codigoProducto,
+                'descriptor' => $descriptor,
+                'codigo' => $codigo,
+                'laboratorio' => $laboratorio,
+                'clasificacionTerapeutica' => $clasificacionTerapeutica,
+                'created_at' => $now,
+                'updated_at' => $now
             ]);
         }
-        return $tableData;
+        return (object)[
+            'datos' => $tableData,
+            'error' => $error
+        ];
+    }
+    //Validar que los campos no contengas valores nulos
+    private static function _camposValidos($row, $codigoProducto, $descriptor, $codigo, $laboratorio, $clasificacionTerapeutica){
+        // todo: validar el tipo, que no sean string vacios, que sean numeros, etc
+        if($codigoProducto==null)
+            return "En la fila $row, falta el campo 'codigoProducto'. ";
+        if($descriptor==null)
+            return "En la fila $row, falta el campo 'descriptor'. ";
+        if($codigo==null)
+            return "En la fila $row, falta el campo 'codigo'. ";
+        if($laboratorio==null)
+            return "En la fila $row, falta el campo 'laboratorio'. ";
+        if($clasificacionTerapeutica==null)
+            return "En la fila $row, falta el campo 'clasificacionTerapeutica'. ";
+        return null;
     }
 }

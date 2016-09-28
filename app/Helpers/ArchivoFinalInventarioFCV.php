@@ -4,22 +4,6 @@
 use Carbon\Carbon;
 
 class ArchivoFinalInventarioFCV{
-    static function moverACarpeta($archivo, $nombreCliente, $ceco, $fechaProgramada){
-        // mover el archivo junto a los otros stocks enviados
-        $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
-        $nombreOriginal = $archivo->getClientOriginalName();
-        $fileName = "[$timestamp][$nombreCliente][$ceco][$fechaProgramada] $nombreOriginal";
-        $path = public_path()."/$nombreCliente/archivoFinalInventario/";
-        // guardar el archivo en una carpeta publica, y cambiar los permisos para que el grupo pueda modifiarlos
-        $archivo->move( $path, $fileName);
-
-        chmod($path.$fileName, 0774);   // 0744 por defecto
-        return [
-            'fullPath' => $path.$fileName,
-            'nombre_archivo' => $fileName,
-            'nombre_original' => $nombreOriginal,
-        ];
-    }
 
     static function descomprimirZip($fullPath){
         $tmpPath = public_path()."/tmp/archivoFinalInventario/".md5(uniqid(rand(), true))."/";

@@ -46,6 +46,9 @@
 .colCargo {
     width: 65px;
 }
+.colExperiencia {
+    width: 150px;
+}
 .colOpciones {
     width: auto;
 }

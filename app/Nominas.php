@@ -127,24 +127,24 @@ class Nominas extends Model
     }
 
     // ####  Getters
-    function horaPresentacionLiderF()
-    {
+    function getPublicId(){
+        return Crypt::encrypt($this->idNomina);
+    }
+    function horaPresentacionLiderF(){
         // Ejemplo: convertir "21:30:00" -> "21:30 hrs."
         $carbon = Carbon::parse($this->horaPresentacionLider);
         $minutes = $carbon->minute < 10 ? "0$carbon->minute" : $carbon->minute;
         return "$carbon->hour:$minutes hrs.";
     }
 
-    function horaPresentacionEquipoF()
-    {
+    function horaPresentacionEquipoF(){
         // Ejemplo: convertir "21:30:00" -> "21:30 hrs."
         $carbon = Carbon::parse($this->horaPresentacionEquipo);
         $minutes = $carbon->minute < 10 ? "0$carbon->minute" : $carbon->minute;
         return "$carbon->hour:$minutes hrs.";
     }
 
-    function lideresDisponibles()
-    {
+    function lideresDisponibles(){
         $turno = $this->turno;
         $inventario = $this->inventario;
         $fechaInventario = $inventario->fechaProgramada;
@@ -197,8 +197,7 @@ class Nominas extends Model
 
     // ####  Setters
     // Utilizar este metodo para cambiar la dotacion (si la dotacion cambia, agregar un registro Log al historia
-    function set_dotacionTotal($total)
-    {
+    function set_dotacionTotal($total){
         // Solo si hay un cambio se actualiza y se registra el cambio
         $total_original = $this->dotacionTotal;
         if ($total != $total_original) {
@@ -208,8 +207,7 @@ class Nominas extends Model
         }
     }
 
-    function set_dotacionOperadores($operadores)
-    {
+    function set_dotacionOperadores($operadores){
         // Solo si hay un cambio se actualiza y se registra el cambio
         $operadores_original = $this->dotacionOperadores;
         if ($operadores != $operadores_original) {
@@ -219,8 +217,7 @@ class Nominas extends Model
         }
     }
 
-    function set_habilitada($habilitada)
-    {
+    function set_habilitada($habilitada){
         // Solo si hay un cambio se actualiza y se registra el cambio
         $habilitada_original = $this->habilitada;
         if ($habilitada != $habilitada_original) {
@@ -234,8 +231,7 @@ class Nominas extends Model
     }
 
     // #### Formatear respuestas
-    static function formatearSimple($nomina)
-    {
+    static function formatearSimple($nomina){
         return [
             "idNomina" => $nomina->idNomina,
             "idLider" => $nomina->idLider,
@@ -256,35 +252,49 @@ class Nominas extends Model
         ];
     }
 
-    static function formatearSimpleConPublicId($nomina)
-    {
-        // no en todas las ocaciones se necesita el publicIdNomina, es de 128 bits y puede resultar costoso de descargar
-        $nominaArray = Nominas::formatearSimple($nomina);
-        $nominaArray['publicIdNomina'] = Crypt::encrypt($nomina->idNomina);
-        return $nominaArray;
+    // utilizado por: NominasController@
+    static function formatoPanelNomina($nomina){
+        return [
+            'idNomina' => $nomina->idNomina,
+            'idNominaPublica' => $nomina->getPublicId(),
+            'idEstadoNomina' => $nomina->estado->idEstadoNomina,
+            "rectificada" => $nomina->rectificada,
+            'lider' => User::formatoPanelNomina($nomina->lider),
+            'supervisor' => User::formatoPanelNomina($nomina->supervisor),
+            'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatoPanelNomina'),
+            'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatoPanelNomina'),
+            'nominaCompleta' => 'calculo pendiente',
+            'dotacionTotal' => $nomina->dotacionTotal,
+            'dotacionOperadores' => $nomina->dotacionOperadores,
+            'horaPresentacionLiderF' => $nomina->horaPresentacionLiderF(),
+            'horaPresentacionEquipoF' => $nomina->horaPresentacionEquipoF(),
+            'turno' => $nomina->turno,
+            // informacion del Inventario
+            'inv_fechaProgramadaF' => $nomina->inventario->fechaProgramadaF(),
+            // informacion del Cliente
+            'cliente_nombreCorto' => $nomina->inventario->local->cliente->nombreCorto,
+            // informacion del Local
+            'local_numero' => $nomina->inventario->local->numero,
+            'local_nombre' => $nomina->inventario->local->nombre,
+            'local_direccion' => $nomina->inventario->local->direccion->direccion,
+            'local_horaAperturaF' => $nomina->inventario->local->horaAperturaF(),
+            'local_horaCierreF' => $nomina->inventario->local->horaCierreF(),
+            'local_comuna' => $nomina->inventario->local->direccion->comuna->nombre,
+            'local_region' => $nomina->inventario->local->direccion->comuna->provincia->region->numero,
+            'local_telefono1' => $nomina->inventario->local->telefono1,
+            'local_telefono2' => $nomina->inventario->local->telefono2,
+            'local_emailContacto' => $nomina->inventario->local->emailContacto,
+            'local_formato' => $nomina->inventario->local->formatoLocal->nombre,
+        ];
     }
-
-    static function formatearConLiderSupervisorCaptadorDotacion($nomina)
-    {
-        $nominaArray = Nominas::formatearSimpleConPublicId($nomina);
-        $nominaArray['lider'] = User::formatearSimple($nomina->lider);
-        $nominaArray['supervisor'] = User::formatearSimple($nomina->supervisor);
-        $nominaArray['captador'] = User::formatearSimple($nomina->captador1);
-        $nominaArray['dotacionTitular'] = $nomina->dotacionTitular->map('\App\User::formatearSimplePivotDotacion');
-        $nominaArray['dotacionReemplazo'] = $nomina->dotacionReemplazo->map('\App\User::formatearSimplePivotDotacion');
-        return $nominaArray;
-    }
-
-    static function formatearConInventario($nomina)
-    {
+    // utilizado por: NominasController@api_buscar
+    static function formatearConInventario($nomina){
         $_nomina = Nominas::formatearSimple($nomina);
         $_nomina['inventario'] = Inventarios::formatoClienteFormatoRegion($nomina->inventario);
         return $_nomina;
     }
-
     // utilizado por: VistaGeneralController@api_vista
-    static function formatear_vistaGeneral($nomina)
-    {
+    static function formatear_vistaGeneral($nomina){
         return (object)[
             'id' => $nomina->idNomina,
             'turno' => $nomina->turno,   // no es neceario mostrar 'jornada' del inventario
@@ -308,8 +318,7 @@ class Nominas extends Model
     }
 
     // #### Scopes para hacer Querys/Busquedas
-    function scopeFechaProgramadaEntre($query, $fechaInicio, $fechaFin)
-    {
+    function scopeFechaProgramadaEntre($query, $fechaInicio, $fechaFin){
         // que la fecha sea MAYOR a la fechaInicio
         $query
             ->where(function ($qq) use ($fechaInicio) {
@@ -332,14 +341,12 @@ class Nominas extends Model
             });
     }
 
-    function scopeHabilitada($query, $habilitada = true)
-    {
+    function scopeHabilitada($query, $habilitada = true){
         $query->where('habilitada', $habilitada);
     }
 
     // #### Buscar / Filtrar Nominas
-    static function buscar($peticion)
-    {
+    static function buscar($peticion){
         // todo: agregar la posibilidad de poner mas campos, como: 'estado'
 
         $query = Nominas::with([]);
