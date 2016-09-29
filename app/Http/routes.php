@@ -100,12 +100,12 @@ Route::group(['middleware' => ['web']], function (){
         //Maestra Productos
         Route::get('maestra-producto', 'MaestraFCVController@show_maestra_producto')->name('maestraFCV');
         Route::post('api/archivo-maestra/upload-excel', 'MaestraFCVController@subir_maestra');
-
+        Route::get('{idArchivoMaestra}/descargar-maestra', 'MaestraFCVController@download_Maestra');
+        
         // Rutas temporales, para testing, pruebas, y emergencias
         Route::get('subir',                                         'TemporalController@show_index');
         Route::get('descargar-otro/{file}',                         'TemporalController@descargar_otro');
         Route::post('completado',                                   'TemporalController@post_archivo');
-        Route::get('/{idArchivoMaestra}/descargar-maestra', 'MaestraFCVController@download_Maestra');
         Route::get('usuarioComoOperador/{runUsuario}',              'TemporalController@usuarioComoOperador');
     });
 

@@ -6,7 +6,7 @@ class ArchivoMaestraFCVHelper{
     static function moverAcarpeta($archivo){
         $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
         $nombreOriginal = $archivo->getClientOriginalName();
-        $fileName = "[$timestamp]$nombreOriginal";
+        $fileName = "[$timestamp] $nombreOriginal";
         $path = public_path()."/FCV/maestrasFCV/";
         // guardar el archivo en una carpeta publica, y cambiar los permisos para que el grupo pueda modifiarlos
         $archivo->move( $path, $fileName);

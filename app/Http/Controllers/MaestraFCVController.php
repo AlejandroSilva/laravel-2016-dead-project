@@ -50,7 +50,7 @@ class MaestraFCVController extends Controller
         $resultadoExcel = \ExcelHelper::leerExcel($archivoMaestraFCV->getFullPath());
         //Cuando no puede leer el excel retorna un error
         if($resultadoExcel->error!=null){
-            $archivoMaestraFCV->setResultado($resultadoExcel->error);
+            $archivoMaestraFCV->setResultado($resultadoExcel->error, false);
             return view('errors.errorConMensaje',[
                 'titulo' => 'error', 'descripcion' => $resultadoExcel->error
             ]);
@@ -58,13 +58,13 @@ class MaestraFCVController extends Controller
         //Parsear los datos del archivo
         $parseo = \ArchivoMaestraFCVHelper::parseo($resultadoExcel->datos, $archivoMaestraFCV->idArchivoMaestra);
         if($parseo->error!=null){
-            $archivoMaestraFCV->setResultado($parseo->error);
+            $archivoMaestraFCV->setResultado($parseo->error, false);
             return redirect()->route("maestraFCV")
                 ->with('mensaje-error', $parseo->error);
         }
         //insertando datos parseados en la BD
         $archivoMaestraFCV->guardarRegistro($parseo->datos);
-        $archivoMaestraFCV->setResultado("archivo cargado correctamente en la base de datos");
+        $archivoMaestraFCV->setResultado("archivo cargado correctamente en la base de datos", true);
 
         return view('success.successConMensaje',[
             'titulo' => 'Cargado correctamente', 'descripcion' => $archivoMaestraFCV->resultado

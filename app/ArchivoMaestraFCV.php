@@ -24,8 +24,9 @@ class ArchivoMaestraFCV extends Model{
     static function getPathCarpetaArchivos(){
                 return public_path()."/FCV/maestrasFCV/";
      }
-    function setResultado($resultado){
+    function setResultado($resultado, $maestraValida){
         $this->resultado = $resultado;
+        $this->maestraValida = $maestraValida;
         $this->save();
         
     }
@@ -37,17 +38,13 @@ class ArchivoMaestraFCV extends Model{
             'idUsuarioSubida' => $user? $user->id : null,
             'nombreArchivo' => $archivoFinal['nombre_archivo'],
             'nombreOriginal' => $archivoFinal['nombre_original'],
-            'resultado' => 'acta cargada correctamente'
+            'resultado' => 'archivo en proceso'
         ]);
     }
     
     function guardarRegistro($tableData){
         $chunk = array_chunk($tableData,100,true);
-        //Alejandro
-        /*DB::transaction(function () use($chunk) {
-            DB::table('maestra_fcv')->insert($chunk);
-        });*/
-        // se demora 1,5 min
+        
         DB::transaction(function() use ($chunk) {
             foreach ($chunk as $dato) {
                 DB::table('maestra_fcv')->insert($dato);
