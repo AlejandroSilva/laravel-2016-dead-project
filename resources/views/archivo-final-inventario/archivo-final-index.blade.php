@@ -1,6 +1,12 @@
 @extends('layouts.unacolumna')
 
 <div class="container-fluid">
+    <h3>
+        {{$inventario->local->cliente->nombreCorto }}
+        <b>{{$inventario->local->numero}}</b>:
+        {{$inventario->local->nombre}},
+        {{$inventario->fechaProgramadaF()}}
+    </h3>
     <div class="row">
         {{-- Datos del acta --}}
         @include('archivo-final-inventario.comp-datos-acta')

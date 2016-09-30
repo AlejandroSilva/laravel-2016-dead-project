@@ -29,9 +29,25 @@ class ActasInventariosFCV extends Model {
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\Inventarios', 'idInventario', 'idInventario');
     }
+    public function publicadaPor(){
+        return $this->hasOne('App\User', 'id', 'idPublicadoPor');
+    }
 
     // #### Helpers
+    function estaPublicada(){
+        return $this->fecha_publicacion != '0000-00-00 00:00:00';
+    }
     // #### Acciones
+    function publicar($user){
+        $this->fecha_publicacion = Carbon::now();
+        $this->idPublicadoPor = $user->id;
+        $this->save();
+    }
+    function despublicar(){
+        $this->fecha_publicacion = null;
+        $this->idPublicadoPor = null;
+        $this->save();
+    }
     // #### Getters
     function getHorasTrabajadas(){
         // fechas validas?
@@ -50,6 +66,10 @@ class ActasInventariosFCV extends Model {
     // #### Scopes para hacer Querys/Busquedas
     // #### Buscar / Filtrar Nominas
     static function buscar(){
-        return ActasInventariosFCV::get();
+        $query =  ActasInventariosFCV::where('fecha_publicacion', '!=', '0000-00-00 00:00:00');
+
+        // pendinte: ordenar por la fecha programada del inventario, no de la tabla acta
+        // $query->orderBy('inventario.fechaProgramada', 'asc');
+        return $query->get();
     }
 }

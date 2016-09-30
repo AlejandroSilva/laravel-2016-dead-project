@@ -3,7 +3,7 @@
         <span class="glyphicon glyphicon-plus-sign"></span> Subir archivo final ZIP
     </div>
     <div class="panel-body">
-        <form class="form-horizontal" action="/inventario/{{$idInventario}}/subir-zip-fcv" method="post" enctype="multipart/form-data">
+        <form class="form-horizontal" action="/inventario/{{$inventario->idInventario}}/subir-zip-fcv" method="post" enctype="multipart/form-data">
             <input type="hidden" value="{{ csrf_token() }}" name="_token">
 
             <div class="col-sm-12">

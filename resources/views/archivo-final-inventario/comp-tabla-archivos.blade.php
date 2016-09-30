@@ -26,18 +26,24 @@
                 <th>resultado</th>
                 <th>opciones</th>
             </thead>
-            @foreach($archivos_finales as $archivo)
-                <tr class="{{ $archivo->actaValida? 'success' : 'warning' }}">
-                    <td>{{ $archivo->nombre_original }}</td>
-                    <td>{{ $archivo->subidoPor? $archivo->subidoPor->nombreCorto() : '-' }}</td>
-                    <td>{{ $archivo->created_at }}</td>
-                    <td>{{ $archivo->actaValida? 'valida' : 'con errores' }}</td>
-                    <td>{{ $archivo->resultado }}</td>
-                    <td>
-                        <a href='/archivo-final-inventario/{{$archivo->idArchivoFinalInventario}}/descargar' class="btn btn-primary btn-xs">Descargar</a>
-                    </td>
+            @if( sizeof($archivos_finales)>0 )
+                @foreach($archivos_finales as $archivo)
+                    <tr class="{{ $archivo->actaValida? 'success' : 'warning' }}">
+                        <td>{{ $archivo->nombre_original }}</td>
+                        <td>{{ $archivo->subidoPor? $archivo->subidoPor->nombreCorto() : '-' }}</td>
+                        <td>{{ $archivo->created_at }}</td>
+                        <td>{{ $archivo->actaValida? 'valida' : 'con errores' }}</td>
+                        <td>{{ $archivo->resultado }}</td>
+                        <td>
+                            <a href='/archivo-final-inventario/{{$archivo->idArchivoFinalInventario}}/descargar' class="btn btn-primary btn-xs">Descargar</a>
+                        </td>
+                    </tr>
+                @endforeach
+            @else
+                <tr class="warning">
+                    <td colspan="6" style="text-align: center">No se ha cargado ningún archivo</td>
                 </tr>
-            @endforeach
+            @endif
         </table>
     </div>
 </div>

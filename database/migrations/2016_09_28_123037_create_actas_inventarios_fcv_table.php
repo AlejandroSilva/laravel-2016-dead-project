@@ -14,10 +14,13 @@ class CreateActasInventariosFcvTable extends Migration {
             $table->integer('idInventario')->unsigned();
             // FK: un 'acta' tiene informacion extraida de un 'archivoFinalInventario'
             $table->integer('idArchivoFinalInventario')->unsigned()->nullable();
+            // FK: un archivo es 'publicado por' un usuairo
+            $table->integer('idPublicadoPor')->unsigned()->nullable();
 
             // referencias a otras tablas
             $table->foreign('idInventario')->references('idInventario')->on('inventarios');
             $table->foreign('idArchivoFinalInventario')->references('idArchivoFinalInventario')->on('archivos_finales_inventarios');
+            $table->foreign('idPublicadoPor')->references('id')->on('users');
 
             // Otros campos
             $table->dateTime('fecha_publicacion');  // la acta ha sido publicada o no?

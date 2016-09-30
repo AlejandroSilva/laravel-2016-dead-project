@@ -110,12 +110,10 @@ class ArchivoFinalInventarioController extends Controller {
                 'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
             ]);
 
-        $acta = $inventario->actaInventarioFCV;
-
         return view('archivo-final-inventario.archivo-final-index', [
-            'acta'=>$acta,
-            'archivos_finales' => $inventario->archivosFinales,
-            'idInventario' => $inventario->idInventario
+            'inventario' => $inventario,
+            'acta'=> $inventario->actaInventarioFCV,
+            'archivos_finales' => $inventario->archivosFinales
         ] );
     }
 
@@ -160,6 +158,44 @@ class ArchivoFinalInventarioController extends Controller {
         return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario])
             ->with('mensaje-exito-zip', $archivoFinalInventario->resultado);
         //return response()->json($resultadoActa->acta);
+    }
+
+    // POSTinventario/{idInventario}/publicar-acta
+    function api_publicarActa($idInventario){
+        // validar de que el usuario tenga los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('programaAuditorias_ver'))
+            return view('errors.403');
+
+        // el inventario existe?
+        $inventario = Inventarios::find($idInventario);
+        if(!$inventario)
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
+            ]);
+
+        // publicar
+        $inventario->actaInventarioFCV->publicar($user);
+        return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario]);
+    }
+
+    // POSTinventario/{idInventario}/despublicar-acta
+    function api_despublicarActa($idInventario){
+        // validar de que el usuario tenga los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('programaAuditorias_ver'))
+            return view('errors.403');
+
+        // el inventario existe?
+        $inventario = Inventarios::find($idInventario);
+        if(!$inventario)
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
+            ]);
+
+        // publicar
+        $inventario->actaInventarioFCV->despublicar();
+        return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario]);
     }
 
     // GET archivo-final-inventario/{idArchivo}/descargar

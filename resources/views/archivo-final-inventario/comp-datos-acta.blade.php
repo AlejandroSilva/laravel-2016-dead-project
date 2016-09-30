@@ -15,27 +15,40 @@
     .tr p:nth-child(2) {
         display: table-cell;
     }
+    .opciones-acta > form{
+        display: inline-block;
+    }
 </style>
 <div class="panel panel-default">
     <div class="panel-heading" align="center">
         <span class="glyphicon glyphicon-stats"></span>
         Acta Inventario
-        <div class="btn-group pull-right">
-            <button class="btn btn-primary btn-xs" type="button" disabled aria-haspopup="true" aria-expanded="false">
-                Editar Acta
-            </button>
-            <button
-                    class="btn btn-success btn-xs" type="button" disabled aria-haspopup="true" aria-expanded="false">
-                Publicar
-            </button>
-            <button
-                    class="btn btn-info btn-xs" type="button" disabled aria-haspopup="true" aria-expanded="false">
-                Despublicar
-            </button>
-        </div>
+        @if( isset($acta) && $acta->estaPublicada())
+            Publicada {{ $acta->publicadaPor? "por ".$acta->publicadaPor->nombreCorto() : '---'}}
+        @endif
+        @if( isset($acta) )
+            <div class="opciones-acta pull-right">
+                <form action="/inventario/{{$inventario->idInventario}}/publicar-acta" method="get" class="form-horizontal">
+                    <input type="submit" class="btn btn-primary btn-xs" value="Editar Acta" disabled/>
+                </form>
+                {{-- publicar o despublicar acta--}}
+                @if( $acta->estaPublicada() )
+                    <form action="/inventario/{{$inventario->idInventario}}/despublicar-acta" method="post" class="form-horizontal">
+                        <input type="hidden" value="{{ csrf_token() }}" name="_token">
+                        <input type="submit" class="btn btn-info btn-xs" value="Des-publicar"/>
+                    </form>
+                @else
+                    <form action="/inventario/{{$inventario->idInventario}}/publicar-acta" method="post" class="form-horizontal">
+                        <input type="hidden" value="{{ csrf_token() }}" name="_token">
+                        <input type="submit" class="btn btn-success btn-xs" value="Publicar"/>
+                    </form>
+                @endif
+            </div>
+        @endif
     </div>
     <div class="panel-body">
-        <form action="" class="form-horizontal">
+        {{-- muestr la tabla solo si el acta existe (han sido cargado sus datos en la BD) --}}
+        @if( isset($acta) )
             <div class="col-md-3"> {{-- columna 1/4--}}
                 <div class="dTable">
                     <div class="tr">
@@ -180,5 +193,10 @@
                     <p>{{ $acta->unid_absoluto_corregido_auditoria }}</p>
                 </div>
             </div>
+        @else
+            <div style="text-align: center;">
+                No se han cargado los datos del acta
+            </div>
+        @endif
     </div>
 </div>
