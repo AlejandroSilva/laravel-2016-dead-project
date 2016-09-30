@@ -81,7 +81,7 @@ class ArchivosHelper{
         chmod($carpetaDestino.$nombreFinal, 0774);   // 0744 por defecto
 
         return (object)[
-            'fullPath' => $carpetaDestino.$nombreFinal,
+            'fullpath' => $carpetaDestino.$nombreFinal,
             'nombre_archivo' => $nombreFinal,
             'nombre_original' => $nombreOriginal,
         ];

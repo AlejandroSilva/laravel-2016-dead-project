@@ -71,6 +71,7 @@ Route::group(['middleware' => ['web']], function (){
 //        Route::get('api/activo-fijo/cargar-maestra',                'MaestraController@api_cargar_maestra');  // ELIMINAR
 
         // ARCHIVO FINAL DE INVENTARIO / ACTAS
+        Route::get('inventario/descargar-consolidado-fcv',         'ArchivoFinalInventarioController@descargar_consolidado_fcv');
         Route::get('inventario/{idInventario}/archivo-final',       'ArchivoFinalInventarioController@show_archivofinal_index')->name('indexArchivoFinal');
         Route::get('archivo-final-inventario/{idArchivo}/descargar','ArchivoFinalInventarioController@descargar_archivo_final');
         Route::post('inventario/{idInventario}/subir-zip-fcv',      'ArchivoFinalInventarioController@api_subirZipFCV');

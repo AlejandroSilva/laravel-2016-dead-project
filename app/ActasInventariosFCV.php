@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class ActasInventariosFCV extends Model {
     public $table = 'actas_inventarios_fcv';
@@ -33,11 +34,22 @@ class ActasInventariosFCV extends Model {
     // #### Acciones
     // #### Getters
     function getHorasTrabajadas(){
-        return "(por calcular)";
+        // fechas validas?
+        if($this->captura_uno=='0000-00-00 00:00:00' || $this->fin_captura=='0000-00-00 00:00:00')
+            return null;
+
+        $inicio = Carbon::parse($this->captura_uno);
+        $fin = Carbon::parse($this->fin_captura);
+
+        $total = $fin->diffInSeconds($inicio);
+        return gmdate('H:i:s', $total);
     }
 
     // ####  Setters
     // #### Formatear respuestas
     // #### Scopes para hacer Querys/Busquedas
     // #### Buscar / Filtrar Nominas
+    static function buscar(){
+        return ActasInventariosFCV::get();
+    }
 }

@@ -13,13 +13,17 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-offset-1 col-md-4">
+        <div class="col-md-4">
             {{-- Formulario de envio de Zips --}}
             @include('archivo-final-inventario.comp-formulario-envio-zip')
         </div>
-        <div class="col-md-offset-1 col-md-4">
+        <div class="col-md-4">
             {{-- Formulario de envio de TXT --}}
             @include('archivo-final-inventario.comp-formulario-envio-txt')
+        </div>
+        <div class="col-md-4">
+            {{-- Descargar de consolidado --}}
+            @include('archivo-final-inventario.comp-descargar')
         </div>
     </div>
 </div>

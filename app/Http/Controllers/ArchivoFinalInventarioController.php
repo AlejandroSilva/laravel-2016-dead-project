@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActasInventariosFCV;
 use App\ArchivoFinalInventario;
 use Illuminate\Http\Request;
 use Auth;
@@ -10,6 +11,95 @@ use File;
 use App\Inventarios;
 
 class ArchivoFinalInventarioController extends Controller {
+
+    // GET inventario/descargar-consolidado-fcv
+    function descargar_consolidado_fcv(Request $request){
+        // todo recibir rango de fecha y otros filtros por el get
+        $actas = ActasInventariosFCV::buscar();
+
+        $cabeceras = [
+            'fecha inventario',
+            'cliente',
+            'ceco',
+            'supervisor',
+            'químico farmacéutico',
+            'nota presentación',
+            'nota supervisor',
+            'nota conteo',
+            'inicio conteo',
+            'fin conteo',
+            'fin revisión',
+            'horas trabajadas',
+            'dotacion presupuestada',
+            'dotacion efectiva',
+            'unidades inventariadas',
+            'unidades teóricas',
+            'unidades ajustadas (Valor Absoluto)',
+            // patentes
+            'PTT Total Inventariadas',
+            'PTT Revisadas Totales',
+            'PTT Revisadas QF',
+            'PTT Revisadas apoyo FCV 1',
+            'PTT Revisadas apoyo FCV 2',
+            'PTT Revisadas Supervisores FCV',
+            // items y SKUs
+            'Total SKU inventariados',
+            'Total items inventariados',
+            'Total items cod interno',
+            'Items auditados',
+            'Items revisados QF',
+            'Items revisados apoyo CV 1',
+            'Items revisados apoyo CV 2',
+            'SKU auditados',
+            'Unidades corregidas en revisión previo ajuste',
+            'Unidades corregidas',
+        ];
+        $datos = $actas->map(function($acta){
+            return [
+                $acta->fecha_toma,
+                $acta->nombre_empresa,
+                $acta->cod_local,
+                $acta->usuario,
+                $acta->administrador,
+                $acta->nota1,
+                $acta->nota2,
+                $acta->nota3,
+                $acta->captura_uno,
+                $acta->fin_captura,
+                $acta->fecha_revision_grilla,
+                $acta->getHorasTrabajadas(),
+                $acta->presupuesto,
+                $acta->efectiva,
+                $acta->unidades,
+                $acta->teorico_unidades,
+                $acta->unid_absoluto_corregido_auditoria,
+                // patentes
+                $acta->ptt_inventariadas,
+                $acta->aud1,
+                $acta->ptt_rev_qf,
+                $acta->ptt_rev_apoyo1,
+                $acta->ptt_rev_apoyo2,
+                $acta->ptt_rev_supervisor_fcv,
+                // items y SKUs
+                '-',
+                $acta->total_items_inventariados,   // tot3 || total_items_inventariados
+                $acta->total_items_inventariados ,
+                $acta->aud2,
+                $acta->items_rev_qf,
+                $acta->items_rev_apoyo1,
+                $acta->items_rev_apoyo2,
+                '-',
+                '-',
+                $acta->unid_absoluto_corregido_auditoria,
+            ];
+        })->toArray();
+
+        $workbook = \ExcelHelper::generarWorkbook($cabeceras, $datos);
+
+        // generar el archivo y descargarlo
+        $fullpath = \ExcelHelper::workbook_a_archivo($workbook);
+        return \ArchivosHelper::descargarArchivo($fullpath, "consolidado-actas.xlsx");
+    }
 
     // GET inventario/{idInventario}/archivo-final
     function show_archivofinal_index($idInventario){
