@@ -18,11 +18,28 @@ class ArchivoFinalInventario extends Model {
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\Inventarios', 'idInventario', 'idInventario');
     }
+    public function subidoPor(){
+        return $this->hasOne('App\User', 'id', 'idSubidoPor');
+    }
 
     // #### Helpers
     // #### Acciones
     // #### Getters
+    static function getPathCarpetaArchivos($cliente){
+        return public_path()."/$cliente/archivoFinalInventario/";
+    }
+    function getFullPath(){
+        $cliente = $this->inventario->local->cliente;
+        return self::getPathCarpetaArchivos($cliente->nombreCorto).$this->nombre_archivo;
+    }
+
     // #### Setters
+    function setResultado($mensaje, $actaValida){
+        $this->resultado = $mensaje;
+        $this->actaValida = $actaValida;
+        $this->save();
+    }
+
     // #### Formatear respuestas
     // #### Scopes para hacer Querys/Busquedas
     // #### Buscar / Filtrar Nominas

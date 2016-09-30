@@ -35,13 +35,13 @@ class MuestraVencimientoController extends Controller {
                 ->with('mensaje-error', 'Debe adjuntar la muestra de vencimiento');
 
         // el archivo es valido?
-        $archivo = $request->file('muestraVencimiento');
-        if (!$archivo->isValid())
+        $archivo_formulario = $request->file('muestraVencimiento');
+        if (!$archivo_formulario->isValid())
             return redirect()->route("indexMuestraVencimientoFCV")
                 ->with('mensaje-error', 'El archivo adjuntado no es valido.');
 
         // mover el archivo a la carpeta correspondiente
-        $archivo = \ArchivosHelper::moverMuestraVencimientoFCV($archivo);
+        $archivo = \ArchivosHelper::moverMuestraVencimientoFCV($archivo_formulario);
         // se guarda en la BD en registro del archivo enviado
         $archivoMuestraVencimiento = ArchivoMuestraVencimientoFCV::agregarArchivo(Auth::user(), $archivo);
 
@@ -85,25 +85,13 @@ class MuestraVencimientoController extends Controller {
         $archivoMVencimiento = ArchivoMuestraVencimientoFCV::find($idArchivoMuestraVencimiento);
         if(!$archivoMVencimiento)
             return response()->view('errors.errorConMensaje', [
-                'titulo' =>  'Archivo no encontrado',
-                'descripcion' => 'No hay registros del archivo que busca. Contactese con el departamento de informática.',
+                'titulo' =>  'Archivo de vencimiento no encontrado',
+                'descripcion' => 'No hay registros del archivo de vencimiento que busca. Contactese con el departamento de informática.',
             ]);
 
         $fullPath = $archivoMVencimiento->getFullPath();
         $nombreOriginal = $archivoMVencimiento->nombre_original;
-        // existe el archivo fisicamente en el servidor?
-        if(!File::exists($fullPath))
-            return response()->view('errors.errorConMensaje', [
-                'titulo' =>  'Archivo no encontrado',
-                'descripcion' => 'El archivo que busca no ha sido encontrado. Contactese con el departamento de informática.',
-            ]);
-
-        return response()
-        ->download($fullPath, $nombreOriginal, [
-            'Content-Type'=>'application/force-download',   // forzar la descarga en Opera Mini
-            'Pragma'=>'no-cache',
-            'Cache-Control'=>'no-cache, must-revalidate'
-        ]);
+        return \ArchivosHelper::descargarArchivo($fullPath, $nombreOriginal);
     }
 
 }
