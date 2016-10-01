@@ -111,6 +111,7 @@ class AuditoriasController extends Controller {
 
             $auditoria = new Auditorias();
             $auditoria->idLocal = $request->idLocal;
+            $auditoria->idAuditor = $request->idAuditor;
             $auditoria->fechaProgramada = $request->fechaProgramada;
             $auditoria->horaPresentacionAuditor = $local->llegadaSugeridaLiderDia();
             

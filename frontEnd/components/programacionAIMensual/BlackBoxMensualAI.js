@@ -87,12 +87,13 @@ export default class BlackBox{
         return existe
     }
     // Metodos de alto nivel
-    __crearDummy(annoMesDia, idLocal){
+    __crearDummy(annoMesDia, idLocal, auditor){
         return {
             idDummy: this.idDummy++,    // asignar e incrementar
             idAuditoria: null,
             idLocal: idLocal,
             fechaProgramada: annoMesDia,
+            idAuditor: auditor,
             inventarioEnELMismoMes: null,
             local: {
                 idLocal: idLocal,
@@ -116,7 +117,7 @@ export default class BlackBox{
             }
         }
     }
-    crearDummy(idCliente, numeroLocal, annoMesDia){
+    crearDummy(idCliente, numeroLocal, annoMesDia, auditor){
         // ########### Revisar Cliente ###########
         // el usuario no selecciono uno en el formulario
         if(idCliente==='-1' || idCliente==='' || !idCliente){
@@ -157,7 +158,7 @@ export default class BlackBox{
         }
 
         // ########### ok, se puede crear el inventario "vacio" ###########
-        let dummy = this.__crearDummy(annoMesDia, local.idLocal)
+        let dummy = this.__crearDummy(annoMesDia, local.idLocal, auditor)
         return[ null, dummy]
     }
 
