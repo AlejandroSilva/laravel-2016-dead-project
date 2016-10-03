@@ -304,17 +304,29 @@
     text-align: right;
 }
 
-/* NOMINA DE PAGO */
-.thNomimaPago {
+/* Archivo final / Acta */
+.thArchivoFinal {
     background: white;
     width: auto !important;
     padding-left: 0 !important;
 }
-.tdNominaPago {
+.tdArchivoFinal {
     background: white;
     width: auto !important;
     vertical-align: middle !important;
 }
+
+/* NOMINA DE PAGO */
+/*.thNomimaPago {*/
+    /*background: white;*/
+    /*width: auto !important;*/
+    /*padding-left: 0 !important;*/
+/*}*/
+/*.tdNominaPago {*/
+    /*background: white;*/
+    /*width: auto !important;*/
+    /*vertical-align: middle !important;*/
+/*}*/
 
 /* el tooltip esta dentro del span */
 .textoConTooltip span{

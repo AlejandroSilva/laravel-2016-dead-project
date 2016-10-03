@@ -40,6 +40,11 @@ class Inventarios extends Model {
         return $this->hasMany('App\ArchivoFinalInventario', 'idInventario', 'idInventario');
     }
 
+    function actaFCV(){
+        //return $this->hasOne('App\Model', 'foreign_key', 'local_key');
+        return $this->hasOne('App\ActasInventariosFCV', 'idInventario', 'idInventario');
+    }
+
     // #### Helpers
     function dotacionTotalSugerido($stock = null){
         // si no se entrega el stock como parametro, se toma el stock actual del local
@@ -153,25 +158,37 @@ class Inventarios extends Model {
     }
 
     // #### Acciones
-    function agregarArchivoFinal($user, $archivoFinal, $error){
-        ArchivoFinalInventario::create([
+    function agregarArchivoFinal($user, $archivo_formulario){
+        $ceco = $this->local->numero;
+        $cliente = $this->local->cliente->nombreCorto;
+        $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
+        $extra = "[$timestamp][$cliente][$ceco][$this->fechaProgramada]";
+        $carpetaDestino = ArchivoFinalInventario::getPathCarpetaArchivos($cliente);
+
+        // mover el archivo a la carpeta que corresponde
+        $archivoFinal = \ArchivosHelper::moverACarpeta($archivo_formulario, $extra, $carpetaDestino);
+
+        // guardar en la BD sus datos
+        return ArchivoFinalInventario::create([
             'idInventario' => $this->idInventario,
             'idSubidoPor' => $user? $user->id : null,
-            'nombre_archivo' => $archivoFinal['nombre_archivo'],
-            'nombre_original' => $archivoFinal['nombre_original'],
-            'resultado' => $error? $error : 'acta cargada correctamente'
+            'nombre_archivo' => $archivoFinal->nombre_archivo,
+            'nombre_original' => $archivoFinal->nombre_original,
+            'actaValida' => false,
+            'resultado' => 'ACTA PENDIENTE DE PROCESAR'
         ]);
     }
-    function insertarOActualizarActa($datosActa){
+    function insertarOActualizarActa($datosActa, $idArchivoFinalInventario){
+        // agregar el archivo desde el cual se cargaron los datos
+        $datosActa['idArchivoFinalInventario'] = $idArchivoFinalInventario;
+        $datosActa['idInventario'] = $this->idInventario;
+
+        // si ya existe un acta para este inventario, se actualizan los datos, de lo contrario se crea
         $acta = ActasInventariosFCV::where('idInventario', $this->idInventario)->first();
-        // si ya existe un acta para este inventario, se actualizan los datos
         if($acta){
             $acta->update($datosActa);
-        }else{
-            // si no existe un acta para el inventario, se crea
-            $datosActa['idInventario'] = $this->idInventario;
+        }else
             ActasInventariosFCV::create($datosActa);
-        }
     }
 
     // #### Getters
@@ -191,6 +208,13 @@ class Inventarios extends Model {
             // fecha con formato: ejemplo: "2016-05-30" -> "lunes 30 de mayo, 2016"
             return Carbon::parse($this->fechaProgramada)->formatLocalized('%A %e de %B, %Y');
         }
+    }
+    function estadoArchivoFinal(){
+        // si no hay nomina: esta pendiente
+        $acta = $this->actaFCV;
+        if(!$acta)
+            return 'pendiente';
+        return $acta->estaPublicada()? 'publicado' : 'por publicar';
     }
 
     // #### Setters
@@ -327,7 +351,7 @@ class Inventarios extends Model {
             'inv_patentes' => $inventario->patentesSugeridas(),
             'inv_unidadesReales' => $inventario->unidadesReal,
             'inv_unidadesTeorico' => $inventario->unidadesTeorico,
-
+            'inv_estadoArchivoFinal' => $inventario->estadoArchivoFinal(),
             // ######## NOMINA DIA ########
             'ndia_idNomina' => $inventario->nominaDia->idNomina,
             'ndia_dotTotal' => $inventario->nominaDia->dotacionTotal,

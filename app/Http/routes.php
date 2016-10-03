@@ -70,8 +70,13 @@ Route::group(['middleware' => ['web']], function (){
 //        Route::get('api/activo-fijo/cargar-articulos',              'MaestraController@api_cargar_articulos');  // ELIMINAR
 //        Route::get('api/activo-fijo/cargar-maestra',                'MaestraController@api_cargar_maestra');  // ELIMINAR
 
-        // ARCHIVO FINAL INVENTARIO
-        Route::post('api/archivo-final-inventario/{idInventario}/upload-zip',  'ArchivoFinalInventarioController@api_uploadZIP');
+        // ARCHIVO FINAL DE INVENTARIO / ACTAS
+        Route::get('inventario/descargar-consolidado-fcv',          'ArchivoFinalInventarioController@descargar_consolidado_fcv');
+        Route::get('inventario/{idInventario}/archivo-final',       'ArchivoFinalInventarioController@show_archivofinal_index')->name('indexArchivoFinal');
+        Route::post('inventario/{idInventario}/subir-zip-fcv',      'ArchivoFinalInventarioController@api_subirZipFCV');
+        Route::post('inventario/{idInventario}/publicar-acta',      'ArchivoFinalInventarioController@api_publicarActa');
+        Route::post('inventario/{idInventario}/despublicar-acta',   'ArchivoFinalInventarioController@api_despublicarActa');
+        Route::get('archivo-final-inventario/{idArchivo}/descargar','ArchivoFinalInventarioController@descargar_archivo_final');
 
         // MUESTRAS DE VENCIMIENTO
         Route::get('muestra-vencimiento-fcv',                           'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
@@ -107,6 +112,9 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('descargar-otro/{file}',                         'TemporalController@descargar_otro');
         Route::post('completado',                                   'TemporalController@post_archivo');
         Route::get('usuarioComoOperador/{runUsuario}',              'TemporalController@usuarioComoOperador');
+
+        // ruta temporal, es utilizada por la plataforma inventario para descargar el excel generado manualmente
+        Route::get('archivo-final-inventario/excel-actas',          'ArchivoFinalInventarioController@temp_descargarExcelActas');
     });
 
     /*

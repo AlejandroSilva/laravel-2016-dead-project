@@ -38,9 +38,5 @@ export class Dashboard extends React.Component {
 }
 
 Dashboard.propTypes = {
-    // numero: PropTypes.number.isRequired,
-    // texto: PropTypes.string.isRequired,
-    // objeto: PropTypes.object.isRequired,
     usuario: PropTypes.object.isRequired,
-    //permisos: PropTypes.arrayOf(PropTypes.string).isRequired
 }

@@ -5,113 +5,273 @@ namespace App\Http\Controllers;
 use App\ActasInventariosFCV;
 use App\ArchivoFinalInventario;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use Auth;
 use Response;
-use Illuminate\Support\Facades\DB;
+use File;
 // Nominas
 use App\Inventarios;
 
-class ArchivoFinalInventarioController extends Controller {
+class ArchivoFinalInventarioController extends Controller{
 
-    // POST api/archivo-final-inventario/{idInventario}/upload-zip
-    function api_uploadZIP(Request $request, $idInventario){
-        // todo validar permisos
+    // GET inventario/descargar-consolidado-fcv
+    function descargar_consolidado_fcv(Request $request){
+        // todo recibir rango de fecha y otros filtros por el get
+        $actas = ActasInventariosFCV::buscar();
 
-        // nomina existe?
-        $inventario = Inventarios::find($idInventario);
-        if(!$inventario)
-            return response()->json(['error' => 'El inventario indicado no existe'], 400);
-        $local = $inventario->local;
-        $cliente = $local->cliente;
+        $cabeceras = [
+            'fecha inventario',
+            'cliente',
+            'ceco',
+            'supervisor',
+            'químico farmacéutico',
+            'nota presentación',
+            'nota supervisor',
+            'nota conteo',
+            'inicio conteo',
+            'fin conteo',
+            'fin revisión',
+            'horas trabajadas',
+            'dotacion presupuestada',
+            'dotacion efectiva',
+            'unidades inventariadas',
+            'unidades teóricas',
+            'unidades ajustadas (Valor Absoluto)',
+            // patentes
+            'PTT Total Inventariadas',
+            'PTT Revisadas Totales',
+            'PTT Revisadas QF',
+            'PTT Revisadas apoyo FCV 1',
+            'PTT Revisadas apoyo FCV 2',
+            'PTT Revisadas Supervisores FCV',
+            // items y SKUs
+            'Total SKU inventariados',
+            'Total items inventariados',
+            'Total items cod interno',
+            'Items auditados',
+            'Items revisados QF',
+            'Items revisados apoyo CV 1',
+            'Items revisados apoyo CV 2',
+            'SKU auditados',
+            'Unidades corregidas en revisión previo ajuste',
+            'Unidades corregidas',
+        ];
+        $datos = $actas->map(function($acta){
+            return [
+                $acta->fecha_toma,
+                $acta->nombre_empresa,
+                $acta->cod_local,
+                $acta->usuario,
+                $acta->administrador,
+                $acta->nota1,
+                $acta->nota2,
+                $acta->nota3,
+                $acta->captura_uno,
+                $acta->fin_captura,
+                $acta->fecha_revision_grilla,
+                $acta->getHorasTrabajadas(true),
+                $acta->presupuesto,
+                $acta->efectiva,
+                $acta->unidades, // getUnidadesInventariadasF()
+                $acta->teorico_unidades, // getUnidadesTeoricas()
+                $acta->unid_absoluto_corregido_auditoria,
+                // patentes
+                $acta->ptt_inventariadas,
+                $acta->aud1,
+                $acta->ptt_rev_qf,
+                $acta->ptt_rev_apoyo1,
+                $acta->ptt_rev_apoyo2,
+                $acta->ptt_rev_supervisor_fcv,
+                // items y SKUs
+                '-',
+                $acta->total_items_inventariados,   // tot3 || total_items_inventariados
+                $acta->total_items_inventariados ,
+                $acta->aud2,
+                $acta->items_rev_qf,
+                $acta->items_rev_apoyo1,
+                $acta->items_rev_apoyo2,
+                '-',
+                '-',
+                $acta->unid_absoluto_corregido_auditoria,
+            ];
+        })->toArray();
 
-        // se adjunto un archivo?
-        if (!$request->hasFile('archivoFinalZip'))
-            return response()->json(['error' => 'Debe adjuntar el archivo zip.'], 400);
+        $workbook = \ExcelHelper::generarWorkbook($cabeceras, $datos);
 
-        // el archivo es valido?
-        $archivo = $request->file('archivoFinalZip');
-        if (!$archivo->isValid())
-            return response()->json(['error' => 'El archivo adjuntado no es valido.'], 400);
-
-        // mover el archivo a la carpeta correspondiente
-        $archivoFinal = \ArchivosHelper::moverArchivoFinalInventario($archivo, $cliente->nombreCorto, $local->numero, $inventario->fechaProgramada);
-
-        // paso 1) Extraer el archivo de acta del zip
-        $resultadoExtraccion = \ArchivoFinalInventarioFCV::descomprimirZip($archivoFinal['fullPath']);
-        if( $resultadoExtraccion->error!=null ){
-            $inventario->agregarArchivoFinal(Auth::user(), $archivoFinal, $resultadoExtraccion->error);
-            return response()->json(['error'=>$resultadoExtraccion->error], 400);
-        }
-
-        // paso 2) Parsear el archivo de acta si este existe
-        $resultadoActa = \ArchivoFinalInventarioFCV::parsearActa($resultadoExtraccion->acta_v1, $resultadoExtraccion->acta_v2, $local->numero);
-        if( $resultadoActa->error!=null ){
-            $inventario->agregarArchivoFinal(Auth::user(), $archivoFinal, $resultadoActa->error);
-            return response()->json(['error'=>$resultadoActa->error], 400);
-        }
-
-        // finalmente, actualizar el acta con los datos entregados
-        $inventario->insertarOActualizarActa($resultadoActa->acta);
-        $inventario->agregarArchivoFinal(Auth::user(), $archivoFinal, null);
-
-        return response()->json($resultadoActa->acta);
+        // generar el archivo y descargarlo
+        $fullpath = \ExcelHelper::workbook_a_archivo($workbook);
+        return \ArchivosHelper::descargarArchivo($fullpath, "consolidado-actas.xlsx");
     }
 
-    //función para mostrar los datos del acta, si existe un error no mostrará nada
-    public function show_inventario($idInventario){
+    // GET inventario/{idInventario}/archivo-final
+    function show_archivofinal_index($idInventario){
         // existe el inventario?
         $inventario = Inventarios::find($idInventario);
         if(!$inventario)
             return view('errors.errorConMensaje', [
                 'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
             ]);
-        $acta = $inventario->actaInventarioFCV;
-        if(!$acta)
-            return view('errors.errorConMensaje', [
-                'titulo' => 'Acta no existe', 'descripcion' => 'El acta que busca no ha sido encontrada.'
-            ]);
-        return view('operacional.inventario.inventario-archivofinal', [
-            'acta'=>$acta,
+
+        return view('archivo-final-inventario.archivo-final-index', [
+            'inventario' => $inventario,
+            'acta'=> $inventario->actaFCV,
             'archivos_finales' => $inventario->archivosFinales
         ] );
     }
 
-    //función para descargar un archivo .zip
+    // POST inventario/{idInventario}/subir-zip-fcv
+    function api_subirZipFCV(Request $request, $idInventario){
+        // todo validar permisos
+        // todo, validar que sea de FCV el archivo
+
+        // nomina existe?
+        $inventario = Inventarios::find($idInventario);
+        if(!$inventario)
+            return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario])
+                ->with('mensaje-error-zip', 'El inventario indicado no existe');
+        $local_numero = $inventario->local->numero;
+
+        // se adjunto un archivo?
+        if (!$request->hasFile('archivoFinalZip'))
+            return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario])
+                ->with('mensaje-error-zip', 'Debe adjuntar el archivo zip.');
+
+        // el archivo es valido?
+        $archivo_formulario = $request->file('archivoFinalZip');
+        if (!$archivo_formulario->isValid())
+            return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario])
+                ->with('mensaje-error-zip', 'El archivo adjuntado no es valido.');
+
+        // mover el archivo a la carpeta correspondiente e insertar en la BD
+        $archivoFinalInventario = $inventario->agregarArchivoFinal(Auth::user(), $archivo_formulario);
+
+        // parsear ZIP a un Acta
+        $resultadoActa = \ActaInventarioHelper::parsearZIPaActa($archivoFinalInventario->getFullPath(), $local_numero);
+        if( isset($resultadoActa->error) ){
+            $archivoFinalInventario->setResultado($resultadoActa->error, false);
+            return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario])
+                ->with('mensaje-error-zip', $resultadoActa->error);
+        }
+
+        // paso 3) finalmente, actualizar el acta con los datos entregados
+        $inventario->insertarOActualizarActa($resultadoActa->acta, $archivoFinalInventario->idArchivoFinalInventario);
+        $archivoFinalInventario->setResultado('acta cargada correctamente', true);
+
+        return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario])
+            ->with('mensaje-exito-zip', $archivoFinalInventario->resultado);
+        //return response()->json($resultadoActa->acta);
+    }
+
+    // POSTinventario/{idInventario}/publicar-acta
+    function api_publicarActa($idInventario){
+        // validar de que el usuario tenga los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('programaAuditorias_ver'))
+            return view('errors.403');
+
+        // el inventario existe?
+        $inventario = Inventarios::find($idInventario);
+        if(!$inventario)
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
+            ]);
+
+        // publicar
+        $inventario->actaFCV->publicar($user);
+        return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario]);
+    }
+
+    // POSTinventario/{idInventario}/despublicar-acta
+    function api_despublicarActa($idInventario){
+        // validar de que el usuario tenga los permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('programaAuditorias_ver'))
+            return view('errors.403');
+
+        // el inventario existe?
+        $inventario = Inventarios::find($idInventario);
+        if(!$inventario)
+            return view('errors.errorConMensaje', [
+                'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
+            ]);
+
+        // publicar
+        $inventario->actaFCV->despublicar();
+        return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario]);
+    }
+
+    // GET archivo-final-inventario/{idArchivo}/descargar
+    public function descargar_archivo_final($idArchivoFinalInventario){
+        // verificar permisos
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-maestra-fcv'))
+            return response()->view('errors.403', [], 403);
+
+        // existe el registro en la BD?
+        $archivoFinalInventario = ArchivoFinalInventario::find($idArchivoFinalInventario);
+        if(!$archivoFinalInventario)
+            return response()->view('errors.errorConMensaje', [
+                'titulo' =>  'Archivo final no encontrado',
+                'descripcion' => 'No hay registros del archivo final que busca. Contactese con el departamento de informática.',
+            ]);
+
+        $fullPath = $archivoFinalInventario->getFullPath();
+        $nombreOriginal = $archivoFinalInventario->nombre_original;
+        return \ArchivosHelper::descargarArchivo($fullPath, $nombreOriginal);
+    }
+
+    // GET archivo-final-inventario/excel-actas
+    function temp_descargarExcelActas(){
+        // archivo con ruta fija
+        $fullPath = public_path()."/actas-septiembre-2016.xlsx";
+        $nombreOriginal = "actas-septiembre-2016.xlsx";
+
+        // existe el archivo fisicamente en el servidor?
+        if(!File::exists($fullPath))
+            return response()->view('errors.errorConMensaje', [
+                'titulo' =>  'Archivo no encontrado',
+                'descripcion' => 'El archivo que busca no ha sido encontrado. Contactese con el departamento de informática.',
+            ]);
+
+        return response()
+            ->download($fullPath, $nombreOriginal, [
+                'Content-Type' => 'application/force-download',   // forzar la descarga en Opera Mini
+                'Pragma' => 'no-cache',
+                'Cache-Control' => 'no-cache, must-revalidate'
+            ]);
+    }
+        
+    //función para mostrar los datos del acta, si existe un error no mostrará nada
+    public function show_inventario($idInventario){
+        // existe el inventario?
+        $inventario = Inventarios::find($idInventario);
+        if (!$inventario)
+                return view('errors.errorConMensaje', [
+                    'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
+                ]);
+        $acta = $inventario->actaInventarioFCV;
+        if (!$acta)
+                return view('errors.errorConMensaje', [
+                    'titulo' => 'Acta no existe', 'descripcion' => 'El acta que busca no ha sido encontrada.'
+                ]);
+        return view('operacional.inventario.inventario-archivofinal', [
+            'acta' => $acta,
+            'archivos_finales' => $inventario->archivosFinales
+        ]);
+    }
+        
+        //función para descargar un archivo .zip
     public function download_ZIP($idArchivoFinalInventario){
         $archivo = ArchivoFinalInventario::find($idArchivoFinalInventario);
-        if(!$archivo)
-            return view('errors.errorConMensaje', [
-                'titulo' => 'Archivo No encontrado', 'descripcion' => 'El archivo que busca no se puede descargar.'
-            ]);
+        if (!$archivo) 
+           return view('errors.errorConMensaje', [
+               'titulo' => 'Archivo No encontrado',
+               'descripcion' => 'El archivo que busca no se puede descargar.'
+           ]);
         $download_archivo = $archivo->nombre_archivo;
-        $file= public_path(). "/FSB/archivoFinalInventario/". "$download_archivo";
+        $file = public_path() . "/FSB/archivoFinalInventario/" . "$download_archivo";
         $headers = array(
             'Content-Type: application/octet-stream',
         );
         return Response::download($file, $download_archivo, $headers);
     }
-
-    /*
-    public function delete_ZIP($idArchivoFinalInventario){
-        $archivo = ArchivoFinalInventario::find($idArchivoFinalInventario);
-        if($archivo){
-            DB::transaction(function() use($archivo){
-                $archivo->delete();
-                return response()->json([], 204);
-            });
-
-        }else{
-            return response()->json([], 404);
-        }
-    }
-
-    function indicadores(){
-        //dd("fff");
-      return view('operacional.clientes.indicadores');
-    }
-
-    */
 }
-
-
