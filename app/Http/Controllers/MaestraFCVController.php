@@ -72,11 +72,17 @@ class MaestraFCVController extends Controller
     }
     
     public function show_maestra_producto(){
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-maestra-fcv'))
+            return response()->view('errors.403', [], 403);
         $maestraFCV = ArchivoMaestraFCV::all();
         return view('operacional.maestra.maestra-producto', ['maestras' => $maestraFCV]);
     }
     
     public function download_Maestra($idArchivoMaestra){
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-maestra-fcv'))
+            return response()->view('errors.403', [], 403);
         $maestra = ArchivoMaestraFCV::find($idArchivoMaestra);
         if(!$maestra)
             return view('errors.errorConMensaje', [
