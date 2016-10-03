@@ -202,6 +202,13 @@ class Inventarios extends Model {
             return Carbon::parse($this->fechaProgramada)->formatLocalized('%A %e de %B, %Y');
         }
     }
+    function estadoArchivoFinal(){
+        // si no hay nomina: esta pendiente
+        $acta = $this->actaFCV;
+        if(!$acta)
+            return 'pendiente';
+        return $acta->estaPublicada()? 'publicado' : 'por publicar';
+    }
 
     // #### Setters
     function set_fechaProgramada($fechaProgramada){
@@ -339,7 +346,7 @@ class Inventarios extends Model {
             'inv_patentes' => $inventario->patentesSugeridas(),
             'inv_unidadesReales' => $inventario->unidadesReal,
             'inv_unidadesTeorico' => $inventario->unidadesTeorico,
-
+            'inv_estadoArchivoFinal' => $inventario->estadoArchivoFinal(),
             // ######## NOMINA DIA ########
             'ndia_idNomina' => $inventario->nominaDia->idNomina,
             'ndia_dotTotal' => $inventario->nominaDia->dotacionTotal,
