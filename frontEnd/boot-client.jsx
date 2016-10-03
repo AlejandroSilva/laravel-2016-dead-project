@@ -26,8 +26,6 @@ if( mainDashboardDOM ){
     ReactDOM.render(
         <Dashboard
             usuario={window.laravelUsuario}
-            // permisos={window.laravelPermisos}
-            fechaHoy={window.laravelFechaHoy}
         />, mainDashboardDOM)
 }
 

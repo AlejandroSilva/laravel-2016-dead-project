@@ -70,8 +70,8 @@ class ArchivoFinalInventarioController extends Controller {
                 $acta->getHorasTrabajadas(),
                 $acta->presupuesto,
                 $acta->efectiva,
-                $acta->unidades,
-                $acta->teorico_unidades,
+                $acta->unidades, // getUnidadesInventariadasF()
+                $acta->teorico_unidades, // getUnidadesTeoricas()
                 $acta->unid_absoluto_corregido_auditoria,
                 // patentes
                 $acta->ptt_inventariadas,
@@ -112,7 +112,7 @@ class ArchivoFinalInventarioController extends Controller {
 
         return view('archivo-final-inventario.archivo-final-index', [
             'inventario' => $inventario,
-            'acta'=> $inventario->actaInventarioFCV,
+            'acta'=> $inventario->actaFCV,
             'archivos_finales' => $inventario->archivosFinales
         ] );
     }
@@ -175,7 +175,7 @@ class ArchivoFinalInventarioController extends Controller {
             ]);
 
         // publicar
-        $inventario->actaInventarioFCV->publicar($user);
+        $inventario->actaFCV->publicar($user);
         return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario]);
     }
 
@@ -194,7 +194,7 @@ class ArchivoFinalInventarioController extends Controller {
             ]);
 
         // publicar
-        $inventario->actaInventarioFCV->despublicar();
+        $inventario->actaFCV->despublicar();
         return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario]);
     }
 

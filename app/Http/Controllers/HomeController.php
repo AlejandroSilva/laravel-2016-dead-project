@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Http\Requests;
+use App\Inventarios;
+use Doctrine\DBAL\Exception\InvalidFieldNameException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Auth;
@@ -18,30 +20,39 @@ class HomeController extends Controller {
 
     public function index() {
         $user = Auth::user();
+        $user11 = User::find(11);
+
         if($user){
-            // buscar cada uno de los permisos que tiene el usuario
-            $perms = [];
-            foreach ($user->roles as $role) {
-                foreach ($role->perms as $perm){
-                    array_push($perms, $perm->name);
-                }
-            }
-
             // buscar los inventarios desde hoy hasta el domingo
-            $fechaActual = Carbon::now();
-            $terminoSemana = new Carbon('next sunday');
-            $annoMesDiaInicio = $fechaActual->format('Y-m-d');
-            $annoMesDiaFin = $terminoSemana->format('Y-m-d');
+            $hoy = Carbon::now();
+            $esteDomingo = new Carbon('next sunday');
 
-            $user11 = User::find(11);
-            $nominasTitular = $user11->nominasComoTitular($annoMesDiaInicio, $annoMesDiaFin );
+            // Dashboard "Mis proximos inventarios"
+            $mostrar_misProximosInventarios = true;
+            $proximasNominas = $mostrar_misProximosInventarios?
+                $user11->nominasComoTitular($hoy->format('Y-m-d'), $esteDomingo->format('Y-m-d'))
+                :
+                [];
 
+            // Dashboard "Indicadores de gestión de inventarios"
+            $hoy = '2016-09-29';
+            $mostrar_indicadoresDeInventarios = true;
+            $inventariosAyer = Inventarios::buscar((object)[
+                'idCliente' => 2, // FCV
+                'fechaInicio' => $hoy,
+                'fechaFin' => $hoy
+            ]);
+
+            //return response()->json($inventariosAyer[0]->actaFCV);
             return view('home.dashboard',[
-                'user' => User::formatearMinimo($user),
-                'perms' => collect($perms)->unique(),
-                'fechaHoy' => \Carbon\Carbon::now()->format("Y-m-d"),
-                // "mis nominas"
-                'nominas' => $nominasTitular->todas
+                'hoy' => $hoy,
+                'usuario' => User::formatearMinimo($user),
+                // panel "mis proximos inventarios"
+                'mostrar_misProximosInventarios' => $mostrar_misProximosInventarios,
+                'nominas' => $proximasNominas->todas,
+                // panel "Indicadores de gestión de Inventarios"
+                'mostrar_indicadoresDeInventarios' => $mostrar_indicadoresDeInventarios,
+                'inventariosAyer' => $inventariosAyer
             ]);
         }else{
             return view('home.landing');

@@ -12,13 +12,18 @@
             <div id="react-main-dashboard"></div>
 
             {{-- Mis Inventarios --}}
-            @include('home.dashboard-tablaNominas', $nominas)
+            @if($mostrar_misProximosInventarios)
+                @include('home.dashboard-misProximosInventarios')
+            @endif
+
+            {{-- Indicadores de gestión de inventarios --}}
+            @if($mostrar_indicadoresDeInventarios)
+                @include('home.dashboard-indicadoresGestionInventarios')
+            @endif
         </div>
     </div>
 
     <script>
-        window.laravelUsuario = {!! json_encode($user) !!};
-        window.laravelPermisos = {!! json_encode($perms) !!};
-        window.laravelFechaHoy = {!! json_encode($fechaHoy) !!};
+        window.laravelUsuario = {!! json_encode($usuario) !!};
     </script>
 @endsection

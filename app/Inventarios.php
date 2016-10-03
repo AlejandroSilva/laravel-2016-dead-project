@@ -33,7 +33,7 @@ class Inventarios extends Model {
         return $this->hasMany('App\ArchivoFinalInventario', 'idInventario', 'idInventario');
     }
 
-    function actaInventarioFCV(){
+    function actaFCV(){
         //return $this->hasOne('App\Model', 'foreign_key', 'local_key');
         return $this->hasOne('App\ActasInventariosFCV', 'idInventario', 'idInventario');
     }

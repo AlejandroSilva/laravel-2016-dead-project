@@ -31,7 +31,7 @@ class ActaInventarioHelper{
             if( isset($value) && trim($value)!='' )
                 return $value;
             else
-                return $default;
+                return null;//return $default;
         }
         function _getDate(&$value, $DEFAULT_DATE='0000-00-00') {
             // La fecha se reciben como texto (ej. '30/03/2016',) el string debe estar definido, tener algo caracter, y
@@ -41,7 +41,7 @@ class ActaInventarioHelper{
                 $date = Carbon::createFromFormat($DATE_FORMAT, $value);
                 return $date!=false? $date->toDateString() : $DEFAULT_DATE;
             }else
-                return $DEFAULT_DATE;
+                return null;//return $DEFAULT_DATE;
         }
         function _getDatetime(&$value, $DEFAULT_DATETIME='00/00/00 00:00:00'){
             // Los datetime se reciben como texto, el string debe estar definido, tener algo caracter, y tener el
@@ -51,7 +51,7 @@ class ActaInventarioHelper{
                 $datetime = Carbon::createFromFormat($DATETIME_FORMAT, trim($value));
                 return $datetime!=false? $datetime->toDateTimeString() : $DEFAULT_DATETIME;
             }else{
-                return $DEFAULT_DATETIME;
+                return null; //return $DEFAULT_DATETIME;
             }
         }
         return [
@@ -93,18 +93,18 @@ class ActaInventarioHelper{
             'check3'            => _get($datos['check3'], '??'), // integer
             'check4'            => _get($datos['check4'], '??'), // integer
             // CAMPOS DE LA VERSION "NUEVA"
-            'fecha_revision_grilla'         => _getDatetime($datos['Fecha Revision Grilla']),        // dateTime
-            'supervisor_qf'                 => _getDate($datos['Supervisor QF']),                    // date
+            'fecha_revision_grilla'     => _getDatetime($datos['Fecha Revision Grilla']),        // dateTime
+            'supervisor_qf'             => _getDate($datos['Supervisor QF']),                    // date
             'diferencia_unid_absoluta'  => _get($datos['Diferencia Unidades Absoluta'], '??'),   // integer
-            'ptt_inventariadas'    => _get($datos['Cantidad PTT Inventariadas'], '??'),     // integer
-            'ptt_rev_qf'  => _get($datos['PTT Revisadas QF'], '??'), // integer
-            'ptt_rev_apoyo1'    => _get($datos['PTT Rev. Apoyo 1'], '??'), // integer
-            'ptt_rev_apoyo2'    => _get($datos['PTT Rev. Apoyo 2'], '??'), // integer
-            'ptt_rev_supervisor_fcv'   => _get($datos['PTT Rev. Sup. FCV'], '??'), // integer
-            'total_items_inventariados'     => _get($datos['Total Item Inventariados'], '??'), // integer
-            'items_auditados'                => _get($datos['Item Auditados'], '??'), // integer
-            'items_corregidos_auditoria'     => _get($datos['Items Corregido Auditoria'], '??'), // integer
-            'items_rev_qf'=> _get($datos['Items Revisadas QF'], '??'), // integer
+            'ptt_inventariadas'         => _get($datos['Cantidad PTT Inventariadas'], '??'),     // integer
+            'ptt_rev_qf'                => _get($datos['PTT Revisadas QF'], '??'), // integer
+            'ptt_rev_apoyo1'            => _get($datos['PTT Rev. Apoyo 1'], '??'), // integer
+            'ptt_rev_apoyo2'            => _get($datos['PTT Rev. Apoyo 2'], '??'), // integer
+            'ptt_rev_supervisor_fcv'    => _get($datos['PTT Rev. Sup. FCV'], '??'), // integer
+            'total_items_inventariados' => _get($datos['Total Item Inventariados'], '??'), // integer
+            'items_auditados'           => _get($datos['Item Auditados'], '??'), // integer
+            'items_corregidos_auditoria'=> _get($datos['Items Corregido Auditoria'], '??'), // integer
+            'items_rev_qf'      => _get($datos['Items Revisadas QF'], '??'), // integer
             'items_rev_apoyo1'  => _get($datos['Items Rev. Apoyo 1'], '??'), // integer
             'items_rev_apoyo2'  => _get($datos['Items Rev. Apoyo 2'], '??'), // integer
             'unid_neto_corregido_auditoria'     => _get($datos['Unidades Neto corregido Auditoria'], '??'), // integer

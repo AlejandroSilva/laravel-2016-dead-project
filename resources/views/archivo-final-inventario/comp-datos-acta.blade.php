@@ -89,11 +89,11 @@
                 <div class="dTable">
                     <div class="tr">
                         <p>Inicio Conteo</p>
-                        <p>{{  $acta->captura_uno }}</p>
+                        <p>{{  $acta->getInicioConteo() }}</p>
                     </div>
                     <div class="tr">
                         <p>Fin conteo</p>
-                        <p> {{  $acta->fin_captura }}</p>
+                        <p> {{  $acta->getFinConteo() }}</p>
                     </div>
                     <div class="tr">
                         <p>Fin revisión</p>
@@ -113,11 +113,11 @@
                     </div>
                     <div class="tr">
                         <p>Unidades Inventariadas</p>
-                        <p>{{ $acta->unidades }}</p>
+                        <p>{{ $acta->getUnidadesInventariadas(true) }}</p>
                     </div>
                     <div class="tr">
                         <p>Unidades Teóricas</p>
-                        <p>{{ $acta->teorico_unidades }}</p>
+                        <p>{{ $acta->getUnidadesTeoricas() }}</p>
                     </div>
                     <div class="tr">
                         <p>Unidades Ajustadas (Valor Absoluto)</p>

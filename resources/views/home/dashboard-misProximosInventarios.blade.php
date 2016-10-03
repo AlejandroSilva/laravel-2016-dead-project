@@ -6,7 +6,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <span class="glyphicon glyphicon-calendar"></span> Mis Inventarios
+        <span class="glyphicon glyphicon-calendar"></span> Mis próximos Inventarios
     </div>
     <div class="panel-body">
         @if( sizeof($nominas)>0)
@@ -45,7 +45,7 @@
                 </tbody>
             </table>
         @else
-            <p>Sin nominas</p>
+            <p>No tiene inventarios asignados esta semana</p>
         @endif
     </div>
 </div>
