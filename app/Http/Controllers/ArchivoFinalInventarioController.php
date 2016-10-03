@@ -67,7 +67,7 @@ class ArchivoFinalInventarioController extends Controller {
                 $acta->captura_uno,
                 $acta->fin_captura,
                 $acta->fecha_revision_grilla,
-                $acta->getHorasTrabajadas(),
+                $acta->getHorasTrabajadas(true),
                 $acta->presupuesto,
                 $acta->efectiva,
                 $acta->unidades, // getUnidadesInventariadasF()

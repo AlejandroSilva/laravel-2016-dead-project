@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\ActasInventariosFCV;
+use App\DiasHabiles;
 use App\Http\Requests;
 use App\Inventarios;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
@@ -24,35 +26,40 @@ class HomeController extends Controller {
 
         if($user){
             // buscar los inventarios desde hoy hasta el domingo
-            $hoy = Carbon::now();
-            $esteDomingo = new Carbon('next sunday');
+            $hoy = Carbon::now()->format('Y-m-d');
+            $esteDomingo = (new Carbon('next sunday'))->format('Y-m-d');
 
             // Dashboard "Mis proximos inventarios"
             $mostrar_misProximosInventarios = true;
             $proximasNominas = $mostrar_misProximosInventarios?
-                $user11->nominasComoTitular($hoy->format('Y-m-d'), $esteDomingo->format('Y-m-d'))
+                $user11->nominasComoTitular($hoy, $esteDomingo)
                 :
                 [];
 
             // Dashboard "Indicadores de gestión de inventarios"
-            $hoy = '2016-09-29';
             $mostrar_indicadoresDeInventarios = true;
+            $diaHabilHoy = DiasHabiles::find($hoy);
+            // TODO: DEJAR COMO 1
+            $diaHabilAnterior = $diaHabilHoy->diasHabilesAntes(2)->fecha;
             $inventariosAyer = Inventarios::buscar((object)[
                 'idCliente' => 2, // FCV
-                'fechaInicio' => $hoy,
-                'fechaFin' => $hoy
+                'fechaInicio' => $diaHabilAnterior,
+                'fechaFin' => $diaHabilAnterior
             ]);
+            $totalIndicadores = ActasInventariosFCV::calcularTotales($inventariosAyer);
 
             //return response()->json($inventariosAyer[0]->actaFCV);
             return view('home.dashboard',[
-                'hoy' => $hoy,
+                'hoy' => $diaHabilAnterior,
                 'usuario' => User::formatearMinimo($user),
                 // panel "mis proximos inventarios"
                 'mostrar_misProximosInventarios' => $mostrar_misProximosInventarios,
                 'nominas' => $proximasNominas->todas,
                 // panel "Indicadores de gestión de Inventarios"
+                'diaHabilAnterior' => $diaHabilAnterior,
                 'mostrar_indicadoresDeInventarios' => $mostrar_indicadoresDeInventarios,
-                'inventariosAyer' => $inventariosAyer
+                'inventariosAyer' => $inventariosAyer,
+                'totalIndicadores' => $totalIndicadores
             ]);
         }else{
             return view('home.landing');

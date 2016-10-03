@@ -101,7 +101,7 @@
                     </div>
                     <div class="tr">
                         <p>Horas trabajadas</p>
-                        <p>{{  $acta->getHorasTrabajadas() }}</p>
+                        <p>{{  $acta->getHorasTrabajadas(true) }}</p>
                     </div>
                     <div class="tr">
                         <p>Dotación Presupuestada</p>

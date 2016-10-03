@@ -2,11 +2,14 @@
     .tabla-nominas {
         font-size: 12px;
     }
+    .tdTextoDerecha{
+        text-align: right;
+    }
 </style>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <span class="glyphicon glyphicon-calendar"></span> Indicadores de Gestión {{$hoy}}
+        <span class="glyphicon glyphicon-calendar"></span> Indicadores de Gestión {{$diaHabilAnterior}}
     </div>
     <div class="panel-body">
         @if( sizeof($inventariosAyer)>0)
@@ -30,19 +33,19 @@
                 <tbody>
                     @foreach($inventariosAyer as $inv)
                         @php( $acta = $inv->actaFCV )
-                        @php( $mostrarDatos = $acta && $acta->estaPublicada())
+                        @php( $datosDisponibles = $acta && $acta->estaPublicada())
                         <tr>
                             <td class="">{{$inv->local->cliente->nombreCorto}} {{$inv->local->numero}}</td>
-                            <td class="">{{$mostrarDatos? $acta->usuario : ''}}</td>
-                            <td class="">{{$mostrarDatos? $acta->getUnidadesInventariadas(true) : ''}}</td>
-                            <td class="">{{$mostrarDatos? $acta->getHorasTrabajadas() : ''}}</td>
-                            <td class="">{{$mostrarDatos? $acta->getItemsHH(true) : ''}}</td>
-                            <td class="">{{$mostrarDatos? $acta->getNotaPromedio() : ''}}</td>
-                            <td class="">{{$mostrarDatos? $acta->getPorcentajeErrorSei() : ''}}</td>
-                            <td class="">{{$mostrarDatos? $acta->getItemRevisadosCliente(true) : ''}}</td>
-                            <td class="">{{$mostrarDatos? $acta->getPorcentajeRevisionCliente(true) : ''}}</td>
-                            <td class="">{{$mostrarDatos? $acta->getPatentesRevisadasTotales(true) : ''}}</td>
-                            <td class="">{{$mostrarDatos? $acta->getDiferenciaNeta(true) : ''}}</td>
+                            <td class="">{{$datosDisponibles? $acta->usuario : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getUnidadesInventariadas(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getHorasTrabajadas(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getItemsHH(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getNotaPromedio(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getPorcentajeErrorSei(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getItemRevisadosCliente(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getPorcentajeRevisionCliente(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getPatentesRevisadasTotales(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getDiferenciaNeta(true) : ''}}</td>
                             <td class="opciones">
                                 <a class="btn btn-default btn-xs" href="/inventario/{{$inv->idInventario}}/archivo-final" target="_blank">
                                     acta
@@ -56,7 +59,17 @@
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="11">Resumen actas</td>
+                        <td colspan="2">Resumen actas</td>
+                        <td class="tdTextoDerecha">{{ $totalIndicadores->unidadesInventariadas }}</td>
+                        <td class="tdTextoDerecha">{{ $totalIndicadores->horasTrabajadas }}</td>
+                        <td class="tdTextoDerecha">{{ $totalIndicadores->itemsHH_promedio }}</td>
+                        <td class="tdTextoDerecha">{{ $totalIndicadores->nota_promedio }}</td>
+                        <td class="tdTextoDerecha">{{ $totalIndicadores->porcentajeError_promedio }}</td>
+                        <td class="tdTextoDerecha">{{ $totalIndicadores->itemsRevisadosCliente }}</td>
+                        <td class="tdTextoDerecha">{{ $totalIndicadores->porcentajeRevisionCliente_promedio }}</td>
+                        <td class="tdTextoDerecha">{{ $totalIndicadores->patentesRevisadasCliente_total }}</td>
+                        <td class="tdTextoDerecha">{{ $totalIndicadores->diferenciaNeta_total }}</td>
+
                         <td>
                             <a class="btn btn-primary btn-xs btn-block" href="/inventario/descargar-consolidado-fcv">Descargar</a>
                         </td>

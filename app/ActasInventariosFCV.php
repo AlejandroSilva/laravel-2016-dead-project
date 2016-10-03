@@ -37,6 +37,66 @@ class ActasInventariosFCV extends Model {
     function estaPublicada(){
         return $this->fecha_publicacion!=null && $this->fecha_publicacion!='0000-00-00 00:00:00';
     }
+    static function calcularTotales($inventarios) {
+        $unidadesInventariadas = 0;
+        $minutosTrabajados = 0;
+        $itemsHH_total = 0;
+        $itemsHH_disponible = 0;
+        $nota_total = 0;
+        $nota_disponible = 0;
+        $porcentajeError_total = 0;
+        $porcentajeError_disponible = 0;
+        $itemsRevisadosCliente = 0;
+        $porcentajeRevision_total = 0;
+        $porcentajeRevision_disponible = 0;
+        $patentesRevisadasCliente_total = 0;
+        $diferenciaNeta_total = 0;
+        foreach ($inventarios as $inv) {
+            $acta = $inv->actaFCV;
+            $datosDisponibles = $acta && $acta->estaPublicada();
+
+            if($datosDisponibles){
+                $unidadesInventariadas += $acta->getUnidadesInventariadas();
+                $minutosTrabajados += $acta->getHorasTrabajadas();
+                $itemsRevisadosCliente = $acta->getItemRevisadosCliente();
+                $patentesRevisadasCliente_total += $acta->getPatentesRevisadasTotales();
+                $diferenciaNeta_total += $acta->getDiferenciaNeta();
+            }
+            // promediar solo si los datos estan disponibles y existen dentro del acta
+            if($datosDisponibles && $acta->getItemsHH()) {
+                $itemsHH_total += $acta->getItemsHH();
+                $itemsHH_disponible += 1;
+            }
+            // promediar solo si los datos estan disponibles y existen dentro del acta
+            if($datosDisponibles && $acta->getNotaPromedio()){
+                $nota_total += $acta->getNotaPromedio();
+                $nota_disponible += 1;
+            }
+            // promediar solo si los datos estan disponibles y existen dentro del acta
+            if($datosDisponibles && $acta->getPorcentajeErrorSei()){
+                $porcentajeError_total += $acta->getPorcentajeErrorSei();
+                $porcentajeError_disponible += 1;
+            }
+            // promediar solo si los datos estan disponibles y existen dentro del acta
+            if($datosDisponibles && $acta->getPorcentajeRevisionCliente()){
+                $porcentajeRevision_total += $acta->getPorcentajeRevisionCliente();
+                $porcentajeRevision_disponible += 1;
+            }
+        };
+        $itemsHH_promedio = round($itemsHH_total/$itemsHH_disponible);
+        return (object)[
+            'unidadesInventariadas' => number_format($unidadesInventariadas, 0, ',', '.'),
+            'horasTrabajadas' => gmdate('H:i:s', $minutosTrabajados),
+            'itemsHH_promedio' => number_format($itemsHH_promedio, 0, ',', '.'),
+            'nota_promedio' => number_format($nota_total/$nota_disponible, 1, ',', '.'),
+            'porcentajeError_promedio' => number_format($porcentajeError_total/$porcentajeError_disponible, 1, ',', '.').'%',
+            'itemsRevisadosCliente' => number_format($itemsRevisadosCliente, 0, ',', '.'),
+            'porcentajeRevisionCliente_promedio' => number_format($porcentajeRevision_total/$porcentajeRevision_disponible, 1, ',', '.').'%',
+            'patentesRevisadasCliente_total' => number_format($patentesRevisadasCliente_total , 0, ',', '.'),
+            'diferenciaNeta_total' =>  '$ '.number_format($diferenciaNeta_total, 0, ',', '.')
+        ];
+    }
+
     // #### Acciones
     function publicar($user){
         $this->fecha_publicacion = Carbon::now();
@@ -62,7 +122,7 @@ class ActasInventariosFCV extends Model {
             return null;
         return $fin;
     }
-    function getHorasTrabajadas(){
+    function getHorasTrabajadas($conFormato=false){
         $inicio = $this->getInicioConteo();
         $fin = $this->getFinConteo();
         // fechas validas?
@@ -73,9 +133,9 @@ class ActasInventariosFCV extends Model {
         $td_fin = Carbon::parse($fin);
 
         $diferencia = $td_fin->diffInSeconds($td_inicio);
-        return gmdate('H:i:s', $diferencia);
+        return $conFormato? gmdate('H:i:s', $diferencia) : $diferencia;
     }
-    function getUnidadesInventariadas($conFormato){
+    function getUnidadesInventariadas($conFormato=false){
         // dar formato al dato solo si existe
         if($this->unidades==null)
             return null;
@@ -109,10 +169,11 @@ class ActasInventariosFCV extends Model {
         $itemsHH = round($unidades/$dotacion/$horas_comoFloat);
         return $conFormato? number_format($itemsHH, 0, ',', '.') : $itemsHH;
     }
-    function getNotaPromedio(){
+    function getNotaPromedio($conFormato=false){
         if($this->nota1==0 || $this->nota2==0 || $this->nota3==0)
             return null;
-        return number_format(($this->nota1+$this->nota2+$this->nota3)/3, 1, ',', '.');
+        $promedio = ($this->nota1+$this->nota2+$this->nota3)/3;
+        return $conFormato? number_format($promedio, 1, ',', '.') : $promedio;
     }
     function getItemCorregido(){
         return $this->unid_absoluto_corregido_auditoria;
@@ -122,13 +183,14 @@ class ActasInventariosFCV extends Model {
         $totalRevisados = $this->items_rev_qf + $this->items_rev_apoyo1 + $this->items_rev_apoyo2;
         return $conFormato? number_format($totalRevisados, 0, ',', '.') : $totalRevisados;
     }
-    function getPorcentajeErrorSei(){
+    function getPorcentajeErrorSei($conFormato=false){
         $corregidos = $this->getItemCorregido();
         $revisados = $this->getItemRevisadosCliente();
         // si no estan los datos, no se puede hacer el calculo
         if($revisados==null || $corregidos==null)
             return null;
-        return number_format(($corregidos/$revisados)*100, 1)."%";
+        $porcentaje = ($corregidos/$revisados)*100;
+        return $conFormato? number_format($porcentaje, 1)."%" : $porcentaje;
     }
     function getItemTotalContados(){
         return $this->total_items_inventariados;
@@ -142,15 +204,15 @@ class ActasInventariosFCV extends Model {
         $porcentaje = $revisados/$totalContados * 100;
         return $conFormato? number_format($porcentaje, 1)."%" : $porcentaje;
     }
-    function getPatentesRevisadasTotales($conFormato){
+    function getPatentesRevisadasTotales($conFormato=false){
         if($this->aud1==null)
             return null;
         return $conFormato? number_format($this->aud1, 0, ',', '.') : $this->aud1;
     }
-    function getDiferenciaNeta($conFormato){
+    function getDiferenciaNeta($conFormato=false){
         if($this->aju2==null)
             return null;
-        return $conFormato? number_format($this->aju2, 0, ',', '.') : $this->aju2;
+        return $conFormato? '$ '.number_format($this->aju2, 0, ',', '.') : $this->aju2;
     }
 
     // ####  Setters
