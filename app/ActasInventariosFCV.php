@@ -83,15 +83,15 @@ class ActasInventariosFCV extends Model {
                 $porcentajeRevision_disponible += 1;
             }
         };
-        $itemsHH_promedio = $itemsHH_disponible>0? round($itemsHH_total/$itemsHH_disponible) : '';
-        $notas_promedio = $nota_disponible>0? $nota_total/$nota_disponible : '';
+        $itemsHH_promedio = $itemsHH_disponible>0? number_format(round($itemsHH_total/$itemsHH_disponible), 0, ',', '.') : '';
+        $notas_promedio = $nota_disponible>0? number_format($nota_total/$nota_disponible, 1, ',', '.') : '';
         $porcentajeError_promedio = $porcentajeError_disponible>0? number_format($porcentajeError_total/$porcentajeError_disponible, 1, ',', '.').'%' : '';
         $porcentajeRevision_promedio = $porcentajeRevision_disponible>0? number_format($porcentajeRevision_total/$porcentajeRevision_disponible, 1, ',', '.').'%' : '';
         return (object)[
             'unidadesInventariadas' => number_format($unidadesInventariadas, 0, ',', '.'),
             'horasTrabajadas' => gmdate('H:i:s', $minutosTrabajados),
-            'itemsHH_promedio' => number_format($itemsHH_promedio, 0, ',', '.'),
-            'nota_promedio' => number_format($notas_promedio, 1, ',', '.'),
+            'itemsHH_promedio' => $itemsHH_promedio,
+            'nota_promedio' => $notas_promedio,
             'porcentajeError_promedio' => $porcentajeError_promedio,
             'itemsRevisadosCliente' => number_format($itemsRevisadosCliente, 0, ',', '.'),
             'porcentajeRevisionCliente_promedio' => $porcentajeRevision_promedio,
