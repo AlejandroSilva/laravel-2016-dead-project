@@ -39,8 +39,7 @@ class HomeController extends Controller {
             // Dashboard "Indicadores de gestión de inventarios"
             $mostrar_indicadoresDeInventarios = true;
             $diaHabilHoy = DiasHabiles::find($hoy);
-            // TODO: DEJAR COMO 1
-            $diaHabilAnterior = $diaHabilHoy->diasHabilesAntes(2)->fecha;
+            $diaHabilAnterior = $diaHabilHoy->diasHabilesAntes(1)->fecha;
             $inventariosAyer = Inventarios::buscar((object)[
                 'idCliente' => 2, // FCV
                 'fechaInicio' => $diaHabilAnterior,

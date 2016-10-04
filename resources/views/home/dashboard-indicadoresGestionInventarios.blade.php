@@ -25,7 +25,7 @@
                     <th class="th">% error SEI</th>
                     <th class="th">Item rev cli</th>
                     <th class="th">% rev cli</th>
-                    <th class="th">ptt rev cli</th>
+                    <th class="th">Consolidado PTT FCV</th>
                     <th class="th">diferencia neta</th>
                     <th class="th">Archivo Final</th>
                 </tr>
@@ -38,14 +38,14 @@
                             <td class="">{{$inv->local->cliente->nombreCorto}} {{$inv->local->numero}}</td>
                             <td class="">{{$datosDisponibles? $acta->usuario : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getUnidadesInventariadas(true) : ''}}</td>
-                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getHorasTrabajadas(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getDuracionConteo(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getItemsHH(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getNotaPromedio(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getPorcentajeErrorSei(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getItemRevisadosCliente(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getPorcentajeRevisionCliente(true) : ''}}</td>
-                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getPatentesRevisadasTotales(true) : ''}}</td>
-                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getDiferenciaNeta(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getConsolidadoPatentes(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getDiferenciaNeto(true) : ''}}</td>
                             <td class="opciones">
                                 <a class="btn btn-default btn-xs" href="/inventario/{{$inv->idInventario}}/archivo-final" target="_blank">
                                     acta
@@ -67,7 +67,7 @@
                         <td class="tdTextoDerecha">{{ $totalIndicadores->porcentajeError_promedio }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->itemsRevisadosCliente }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->porcentajeRevisionCliente_promedio }}</td>
-                        <td class="tdTextoDerecha">{{ $totalIndicadores->patentesRevisadasCliente_total }}</td>
+                        <td class="tdTextoDerecha">{{ $totalIndicadores->consolidadoPatentesFCV_total }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->diferenciaNeta_total }}</td>
 
                         <td>

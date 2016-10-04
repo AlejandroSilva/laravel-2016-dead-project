@@ -97,11 +97,11 @@
                     </div>
                     <div class="tr">
                         <p>Fin revisión</p>
-                        <p>{{  $acta->fecha_revision_grilla }}</p>
+                        <p>{{ $acta->getFinProceso() }}</p>
                     </div>
                     <div class="tr">
                         <p>Horas trabajadas</p>
-                        <p>{{  $acta->getHorasTrabajadas(true) }}</p>
+                        <p>{{ $acta->getDuracionConteo(true) }}</p>
                     </div>
                     <div class="tr">
                         <p>Dotación Presupuestada</p>

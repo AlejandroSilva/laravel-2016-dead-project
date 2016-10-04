@@ -49,7 +49,7 @@ class ActasInventariosFCV extends Model {
         $itemsRevisadosCliente = 0;
         $porcentajeRevision_total = 0;
         $porcentajeRevision_disponible = 0;
-        $patentesRevisadasCliente_total = 0;
+        $consolidadoPatentesFCV_total = 0;
         $diferenciaNeta_total = 0;
         foreach ($inventarios as $inv) {
             $acta = $inv->actaFCV;
@@ -57,10 +57,10 @@ class ActasInventariosFCV extends Model {
 
             if($datosDisponibles){
                 $unidadesInventariadas += $acta->getUnidadesInventariadas();
-                $minutosTrabajados += $acta->getHorasTrabajadas();
+                $minutosTrabajados += $acta->getDuracionConteo();
                 $itemsRevisadosCliente = $acta->getItemRevisadosCliente();
-                $patentesRevisadasCliente_total += $acta->getPatentesRevisadasTotales();
-                $diferenciaNeta_total += $acta->getDiferenciaNeta();
+                $consolidadoPatentesFCV_total += $acta->getConsolidadoPatentes(false);
+                $diferenciaNeta_total += $acta->getDiferenciaNeto();
             }
             // promediar solo si los datos estan disponibles y existen dentro del acta
             if($datosDisponibles && $acta->getItemsHH()) {
@@ -95,7 +95,7 @@ class ActasInventariosFCV extends Model {
             'porcentajeError_promedio' => $porcentajeError_promedio,
             'itemsRevisadosCliente' => number_format($itemsRevisadosCliente, 0, ',', '.'),
             'porcentajeRevisionCliente_promedio' => $porcentajeRevision_promedio,
-            'patentesRevisadasCliente_total' => number_format($patentesRevisadasCliente_total , 0, ',', '.'),
+            'consolidadoPatentesFCV_total' => number_format($consolidadoPatentesFCV_total , 0, ',', '.'),
             'diferenciaNeta_total' =>  '$ '.number_format($diferenciaNeta_total, 0, ',', '.')
         ];
     }
@@ -113,21 +113,7 @@ class ActasInventariosFCV extends Model {
     }
 
     // #### Getters
-    function getInicioConteo(){
-        $inicio = $this->captura_uno;
-        if($inicio==null || $inicio=='0000-00-00 00:00:00')
-            return null;
-        return $inicio;
-    }
-    function getFinConteo(){
-        $fin = $this->fin_captura;
-        if($fin==null || $fin=='0000-00-00 00:00:00')
-            return null;
-        return $fin;
-    }
-    function getHorasTrabajadas($conFormato=false){
-        $inicio = $this->getInicioConteo();
-        $fin = $this->getFinConteo();
+    private function _getDiferenciaTiempo($inicio, $fin, $conFormato){
         // fechas validas?
         if($inicio==null || $fin==null)
             return null;
@@ -136,21 +122,183 @@ class ActasInventariosFCV extends Model {
         $td_fin = Carbon::parse($fin);
 
         $diferencia = $td_fin->diffInSeconds($td_inicio);
+        // H:i:s = hora min seg
         return $conFormato? gmdate('H:i:s', $diferencia) : $diferencia;
     }
+    private function _getDatetime($datetime){
+        if($datetime==null || $datetime=='0000-00-00 00:00:00')
+            return null;
+        return $datetime;
+    }
+    private function _getEnteroEnMiles($numero, $conFormato){
+        if($numero==null)
+            return null;
+        return $conFormato? number_format($numero, 0, ',', '.') : $numero;
+    }
+    private function _getFloat($numero, $conFormato){
+        if($numero==null)
+            return null;
+        return $conFormato? number_format($numero, 1, ',', '.') : $numero;
+    }
+
+    // hitos importantes del proceso de inventario
+    function getInicioConteo(){
+        return $this->_getDatetime($this->captura_uno);
+    }
+    function getFinConteo(){
+        return $this->_getDatetime($this->fin_captura);
+    }
+    function getFinProceso(){
+        return $this->_getDatetime($this->fecha_revision_grilla);
+    }
+    // duracion
+    function getDuracionConteo($conFormato=false){
+        // desde el "inicio del conteo", hasta el "fin del conteo"
+        $inicio = $this->getInicioConteo();
+        $fin = $this->getFinConteo();
+        return $this->_getDiferenciaTiempo($inicio, $fin, $conFormato);
+    }
+    function getDuracionRevision($conFormato=false){
+        // desde el "fin del conteo", hasta el "fin del proceso"
+        $inicio = $this->getFinConteo();
+        $fin = $this->getFinProceso();
+        return $this->_getDiferenciaTiempo($inicio, $fin, $conFormato);
+    }
+    function getDuracionTotalProceso($conFormato=false){
+        // desde el "inicio del conteo", hasta el "fin del proceso"
+        $inicio = $this->getInicioConteo();
+        $fin = $this->getFinProceso();
+        return $this->_getDiferenciaTiempo($inicio, $fin, $conFormato);
+    }
+    // dotaciones
+    function getDotacionPresupuestada($conFormato=false){
+        return $this->_getEnteroEnMiles($this->presupuesto, $conFormato);
+    }
+    function getDotacionEfectiva($conFormato=false){
+        return $this->_getEnteroEnMiles($this->efectiva, $conFormato);
+    }
+    // unidades
     function getUnidadesInventariadas($conFormato=false){
-        // dar formato al dato solo si existe
-        if($this->unidades==null)
-            return null;
-        return $conFormato? number_format($this->unidades, 0, ',', '.') : $this->unidades;
+        return $this->_getEnteroEnMiles($this->unidades, $conFormato);
     }
-    function getUnidadesTeoricas(){
-        // dar formato al dato solo si existe
-        if($this->teorico_unidades==null)
-            return null;
-        else
-            return number_format($this->teorico_unidades, 0, ',', '.');
+    function getUnidadesTeoricas($conFormato=false){
+        return $this->_getEnteroEnMiles($this->teorico_unidades, $conFormato);
     }
+    function getDiferenciaNeto($conFormato=false){
+        return $this->_getEnteroEnMiles($this->aju2, $conFormato);
+    }
+    function getDiferenciaAbsoluta($conFormato){
+        return $this->_getEnteroEnMiles($this->diferencia_unid_absoluta, $conFormato);
+    }
+    // evaluaciones / notas
+    function getNotaPresentacion(){
+        return $this->_getFloat($this->nota1, false);
+    }
+    function getNotaSupervisor(){
+        return $this->_getFloat($this->nota2, false);
+    }
+    function getNotaConteo(){
+        return $this->_getFloat($this->nota3, false);
+    }
+    function getNotaPromedio($conFormato=false){
+        $nota1 = $this->getNotaPresentacion();
+        $nota2 = $this->getNotaSupervisor();
+        $nota3 = $this->getNotaConteo();
+        if($nota1==0 || $nota1==null || $nota2==0 || $nota2==null || $nota3==0 || $nota3==null)
+            return null;
+        $promedio = ($this->nota1+$this->nota2+$this->nota3)/3;
+        return $conFormato? number_format($promedio, 1, ',', '.') : $promedio;
+    }
+    // Consolidado Auditoria FCV
+    function getConsolidadoPatentes($conFormato){
+        return $this->_getEnteroEnMiles($this->aud1, $conFormato);
+    }
+    function getConsolidadoUnidades($conFormato){
+        return $this->_getEnteroEnMiles($this->aud3, $conFormato);
+    }
+    function getConsolidadoItems($conFormato){
+        return $this->_getEnteroEnMiles($this->aud2, $conFormato);
+    }
+    // Auditoria QF
+    function getAuditoriaQF_patentes($conFormato){
+        return $this->_getEnteroEnMiles($this->ptt_rev_qf, $conFormato);
+    }
+    function getAuditoriaQF_unidades(){
+        return '-pend-';
+    }
+    function getAuditoriaQF_items($conFormato){
+        return $this->_getEnteroEnMiles($this->items_rev_qf, $conFormato);
+    }
+    // Auditoria Apoyo 1
+    function getAuditoriaApoyo1_patentes($conFormato){
+        return $this->_getEnteroEnMiles($this->ptt_rev_apoyo1, $conFormato);
+    }
+    function getAuditoriaApoyo1_unidades(){
+        return '-pend-';
+    }
+    function getAuditoriaApoyo1_items($conFormato){
+        return $this->_getEnteroEnMiles($this->items_rev_apoyo1, $conFormato);
+    }
+    // Auditoria Apoyo 2
+    function getAuditoriaApoyo2_patentes($conFormato){
+        return $this->_getEnteroEnMiles($this->ptt_rev_apoyo2, $conFormato);
+    }
+    function getAuditoriaApoyo2_unidades(){
+        return '-pend-';
+    }
+    function getAuditoriaApoyo2_items($conFormato){
+        return $this->_getEnteroEnMiles($this->items_rev_apoyo2, $conFormato);
+    }
+    // Auditoria Supervisor
+    function getAuditoriaSupervisor_patentes($conFormato){
+        return $this->_getEnteroEnMiles($this->ptt_rev_supervisor_fcv, $conFormato);
+    }
+    function getAuditoriaSupervisor_unidades(){
+        return '-pend-';
+    }
+    function getAuditoriaSupervisor_items(){
+        return '-pend-';
+    }
+    // Correciones Auditoria FCV a SEI
+    function getCorreccionPatentesEnAuditoria($conFormato){
+        return $this->_getEnteroEnMiles($this->aud4, $conFormato);
+    }
+    function getCorreccionItemsEnAuditoria($conFormato){
+        return $this->_getEnteroEnMiles($this->aud5, $conFormato);
+    }
+    function getCorreccionUnidadesNetoEnAuditoria($conFormato){
+        return $this->_getEnteroEnMiles($this->aud6, $conFormato);
+    }
+    function getCorreccionUnidadesAbsolutasEnAuditoria($conFormato){
+        return '-pend-';
+//        // si el neto es distinto a null, se entrega con/sin formato su valor absoluto
+//        $neto = $this->getCorreccionUnidadesNetoEnAuditoria(false);
+//        return $neto!=null? $this->_getEnteroEnMiles(abs($neto), $conFormato) : null;
+    }
+
+    // % Error Aud.
+    function getPorcentajeErrorSei($conFormato=false){
+        $itemCorregidos = $this->getItemCorregido();
+        $itemRevisados = $this->getItemRevisadosCliente();
+        // si no estan los datos, no se puede hacer el calculo
+        if($itemRevisados==null || $itemCorregidos==null)
+            return null;
+        $porcentaje = ($itemCorregidos/$itemRevisados)*100;
+        return $conFormato? number_format($porcentaje, 1)."%" : $porcentaje;
+    }
+    function getPorcentajeErrorQF($conFormato=false){
+        return '¿formula?';
+    }
+
+    // Variación Grilla
+    function getPorcentajeVariacionGrilla(){
+        return '¿formula?';
+    }
+    function getSKUInventariados(){
+        return '??';
+    }
+
+    // otros ... (eliminar?)
     function getItemsHH($conFormato=false){
         // si no hay hora de inicio ni de fin, no se puede calcular cuantas horas se trabajaron
         $inicio = $this->captura_uno;
@@ -172,12 +320,6 @@ class ActasInventariosFCV extends Model {
         $itemsHH = round($unidades/$dotacion/$horas_comoFloat);
         return $conFormato? number_format($itemsHH, 0, ',', '.') : $itemsHH;
     }
-    function getNotaPromedio($conFormato=false){
-        if($this->nota1==0 || $this->nota2==0 || $this->nota3==0)
-            return null;
-        $promedio = ($this->nota1+$this->nota2+$this->nota3)/3;
-        return $conFormato? number_format($promedio, 1, ',', '.') : $promedio;
-    }
     function getItemCorregido(){
         return $this->unid_absoluto_corregido_auditoria;
     }
@@ -186,15 +328,7 @@ class ActasInventariosFCV extends Model {
         $totalRevisados = $this->items_rev_qf + $this->items_rev_apoyo1 + $this->items_rev_apoyo2;
         return $conFormato? number_format($totalRevisados, 0, ',', '.') : $totalRevisados;
     }
-    function getPorcentajeErrorSei($conFormato=false){
-        $corregidos = $this->getItemCorregido();
-        $revisados = $this->getItemRevisadosCliente();
-        // si no estan los datos, no se puede hacer el calculo
-        if($revisados==null || $corregidos==null)
-            return null;
-        $porcentaje = ($corregidos/$revisados)*100;
-        return $conFormato? number_format($porcentaje, 1)."%" : $porcentaje;
-    }
+
     function getItemTotalContados(){
         return $this->total_items_inventariados;
     }
@@ -207,16 +341,7 @@ class ActasInventariosFCV extends Model {
         $porcentaje = $revisados/$totalContados * 100;
         return $conFormato? number_format($porcentaje, 1)."%" : $porcentaje;
     }
-    function getPatentesRevisadasTotales($conFormato=false){
-        if($this->aud1==null)
-            return null;
-        return $conFormato? number_format($this->aud1, 0, ',', '.') : $this->aud1;
-    }
-    function getDiferenciaNeta($conFormato=false){
-        if($this->aju2==null)
-            return null;
-        return $conFormato? '$ '.number_format($this->aju2, 0, ',', '.') : $this->aju2;
-    }
+
 
     // ####  Setters
     // #### Formatear respuestas
