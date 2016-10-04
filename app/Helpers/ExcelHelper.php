@@ -127,8 +127,11 @@ class ExcelHelper{
         // columnas con tamaño ajustable
         //PHPExcel_Shared_Font::setTrueTypeFontPath('/usr/share/fonts/truetype/msttcorefonts/');
         //PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
-        for ($col = 'A'; $col <= $MAX_COL; $col++)
+        $MAX_COL_INDEX = PHPExcel_Cell::columnIndexFromString($MAX_COL);
+        for($index=0 ; $index <= $MAX_COL_INDEX ; $index++){
+            $col = PHPExcel_Cell::stringFromColumnIndex($index);
             $sheet->getColumnDimension($col)->setAutoSize(TRUE);
+        }
 
         // SHEET 2: DEFINICIONES
         $sheetDefiniciones = $workbook->createSheet();
@@ -188,8 +191,11 @@ class ExcelHelper{
             'font' => ['bold'=>true ]
         ]);
         // columnas de tamaño ajustable
-        for ($col = 'A'; $col <= $MAX_COL_2; $col++)
+        $MAX_COL_INDEX_2 = PHPExcel_Cell::columnIndexFromString($MAX_COL_2);
+        for($index=0 ; $index <= $MAX_COL_INDEX_2 ; $index++){
+            $col = PHPExcel_Cell::stringFromColumnIndex($index);
             $sheetDefiniciones->getColumnDimension($col)->setAutoSize(TRUE);
+        }
 
         $sheet->setTitle('Inventarios');
         $sheetDefiniciones->setTitle('Definiciones');
