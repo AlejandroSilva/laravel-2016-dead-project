@@ -76,7 +76,6 @@ class ExcelHelper{
         // SHEET 1: DATOS
         $workbook = new PHPExcel();
         $sheet = $workbook->getActiveSheet();
-        $sheet->setTitle('Inventarios');
         $sheet->fromArray($cabeceras, NULL, 'A1');
         $sheet->fromArray($datos,  NULL, 'A3');
 
@@ -133,7 +132,6 @@ class ExcelHelper{
 
         // SHEET 2: DEFINICIONES
         $sheetDefiniciones = $workbook->createSheet();
-        $sheetDefiniciones->setTitle('Definiciones');
         $sheetDefiniciones->fromArray([
             ['Sección', 'Campo', 'Descripción'],
             ['Hitos importantes', 'detalle', 'descripción pendiente'],
@@ -192,6 +190,10 @@ class ExcelHelper{
         // columnas de tamaño ajustable
         for ($col = 'A'; $col <= $MAX_COL_2; $col++)
             $sheetDefiniciones->getColumnDimension($col)->setAutoSize(TRUE);
+
+        $sheet->setTitle('Inventarios');
+        $sheetDefiniciones->setTitle('Definiciones');
+        $workbook->setActiveSheetIndex(0);
         return $workbook;
     }
 

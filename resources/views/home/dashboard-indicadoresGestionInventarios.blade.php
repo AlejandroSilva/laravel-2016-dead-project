@@ -20,7 +20,6 @@
                     <th class="th">Lider</th>
                     <th class="th">Items</th>
                     <th class="th">Horas trabajadas</th>
-                    <th class="th">Items HH</th>
                     <th class="th">Nota Prom</th>
                     <th class="th">% error SEI</th>
                     <th class="th">Item rev cli</th>
@@ -39,7 +38,6 @@
                             <td class="">{{$datosDisponibles? $acta->usuario : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getUnidadesInventariadas(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getDuracionConteo(true) : ''}}</td>
-                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getItemsHH(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getNotaPromedio(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getPorcentajeErrorSei(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getItemRevisadosCliente(true) : ''}}</td>
@@ -62,7 +60,6 @@
                         <td colspan="2">Resumen actas</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->unidadesInventariadas }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->horasTrabajadas }}</td>
-                        <td class="tdTextoDerecha">{{ $totalIndicadores->itemsHH_promedio }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->nota_promedio }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->porcentajeError_promedio }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->itemsRevisadosCliente }}</td>

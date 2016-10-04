@@ -30,11 +30,11 @@ class ArchivoFinalInventarioController extends Controller {
                 // Químico
                 $acta->administrador,
                 // Inicio Conteo
-                $acta->getInicioConteo(),
+                $acta->getInicioConteo(true),
                 // Fin Conteo
-                $acta->getFinConteo(),
+                $acta->getFinConteo(true),
                 // Fin Proceso
-                $acta->getFinProceso(),
+                $acta->getFinProceso(true),
 
                 // ######  Duración
                 // Conteo

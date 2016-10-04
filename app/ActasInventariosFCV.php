@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Faker\Provider\cs_CZ\DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
@@ -23,6 +24,12 @@ class ActasInventariosFCV extends Model {
         'items_corregidos_auditoria', 'items_rev_qf', 'items_rev_apoyo1', 'items_rev_apoyo2', 'unid_neto_corregido_auditoria',
         'unid_absoluto_corregido_auditoria',
     ];
+    // aud2 = items_auditados
+    // aud5 = items_corregidos_auditoria
+    // tot1 = fin_captura
+    // tot2 = ptt_inventariadas
+    // tot3 = total_items_inventariados
+    // tot4 = unidades
 
     // #### Relaciones
     function inventario() {
@@ -40,8 +47,6 @@ class ActasInventariosFCV extends Model {
     static function calcularTotales($inventarios) {
         $unidadesInventariadas = 0;
         $minutosTrabajados = 0;
-        $itemsHH_total = 0;
-        $itemsHH_disponible = 0;
         $nota_total = 0;
         $nota_disponible = 0;
         $porcentajeError_total = 0;
@@ -63,11 +68,6 @@ class ActasInventariosFCV extends Model {
                 $diferenciaNeta_total += $acta->getDiferenciaNeto();
             }
             // promediar solo si los datos estan disponibles y existen dentro del acta
-            if($datosDisponibles && $acta->getItemsHH()) {
-                $itemsHH_total += $acta->getItemsHH();
-                $itemsHH_disponible += 1;
-            }
-            // promediar solo si los datos estan disponibles y existen dentro del acta
             if($datosDisponibles && $acta->getNotaPromedio()){
                 $nota_total += $acta->getNotaPromedio();
                 $nota_disponible += 1;
@@ -83,14 +83,12 @@ class ActasInventariosFCV extends Model {
                 $porcentajeRevision_disponible += 1;
             }
         };
-        $itemsHH_promedio = $itemsHH_disponible>0? number_format(round($itemsHH_total/$itemsHH_disponible), 0, ',', '.') : '';
         $notas_promedio = $nota_disponible>0? number_format($nota_total/$nota_disponible, 1, ',', '.') : '';
         $porcentajeError_promedio = $porcentajeError_disponible>0? number_format($porcentajeError_total/$porcentajeError_disponible, 1, ',', '.').'%' : '';
         $porcentajeRevision_promedio = $porcentajeRevision_disponible>0? number_format($porcentajeRevision_total/$porcentajeRevision_disponible, 1, ',', '.').'%' : '';
         return (object)[
             'unidadesInventariadas' => number_format($unidadesInventariadas, 0, ',', '.'),
             'horasTrabajadas' => gmdate('H:i:s', $minutosTrabajados),
-            'itemsHH_promedio' => $itemsHH_promedio,
             'nota_promedio' => $notas_promedio,
             'porcentajeError_promedio' => $porcentajeError_promedio,
             'itemsRevisadosCliente' => number_format($itemsRevisadosCliente, 0, ',', '.'),
@@ -125,10 +123,10 @@ class ActasInventariosFCV extends Model {
         // H:i:s = hora min seg
         return $conFormato? gmdate('H:i:s', $diferencia) : $diferencia;
     }
-    private function _getDatetime($datetime){
+    private function _getDatetime($datetime, $conFormato){
         if($datetime==null || $datetime=='0000-00-00 00:00:00')
             return null;
-        return $datetime;
+        return $conFormato? date_format(date_create($datetime), 'H:i:s') : $datetime;
     }
     private function _getEnteroEnMiles($numero, $conFormato){
         if($numero==null)
@@ -142,16 +140,16 @@ class ActasInventariosFCV extends Model {
     }
 
     // hitos importantes del proceso de inventario
-    function getInicioConteo(){
-        return $this->_getDatetime($this->captura_uno);
+    function getInicioConteo($conFormato=false){
+        return $this->_getDatetime($this->captura_uno, $conFormato);
     }
-    function getFinConteo(){
-        return $this->_getDatetime($this->fin_captura);
+    function getFinConteo($conFormato=false){
+        return $this->_getDatetime($this->fin_captura, $conFormato);
     }
-    function getFinProceso(){
-        return $this->_getDatetime($this->fecha_revision_grilla);
+    function getFinProceso($conFormato=false){
+        return $this->_getDatetime($this->fecha_revision_grilla, $conFormato);
     }
-    // duracion
+    // duración
     function getDuracionConteo($conFormato=false){
         // desde el "inicio del conteo", hasta el "fin del conteo"
         $inicio = $this->getInicioConteo();
@@ -217,6 +215,7 @@ class ActasInventariosFCV extends Model {
         return $this->_getEnteroEnMiles($this->aud3, $conFormato);
     }
     function getConsolidadoItems($conFormato){
+        // total_items_inventariados
         return $this->_getEnteroEnMiles($this->aud2, $conFormato);
     }
     // Auditoria QF
@@ -224,7 +223,7 @@ class ActasInventariosFCV extends Model {
         return $this->_getEnteroEnMiles($this->ptt_rev_qf, $conFormato);
     }
     function getAuditoriaQF_unidades(){
-        return '¿pendiente?';
+        return '(pendiente)';
     }
     function getAuditoriaQF_items($conFormato){
         return $this->_getEnteroEnMiles($this->items_rev_qf, $conFormato);
@@ -234,7 +233,7 @@ class ActasInventariosFCV extends Model {
         return $this->_getEnteroEnMiles($this->ptt_rev_apoyo1, $conFormato);
     }
     function getAuditoriaApoyo1_unidades(){
-        return '¿pendiente?';
+        return '(pendiente)';
     }
     function getAuditoriaApoyo1_items($conFormato){
         return $this->_getEnteroEnMiles($this->items_rev_apoyo1, $conFormato);
@@ -244,7 +243,7 @@ class ActasInventariosFCV extends Model {
         return $this->_getEnteroEnMiles($this->ptt_rev_apoyo2, $conFormato);
     }
     function getAuditoriaApoyo2_unidades(){
-        return '¿pendiente?';
+        return '(pendiente)';
     }
     function getAuditoriaApoyo2_items($conFormato){
         return $this->_getEnteroEnMiles($this->items_rev_apoyo2, $conFormato);
@@ -254,11 +253,17 @@ class ActasInventariosFCV extends Model {
         return $this->_getEnteroEnMiles($this->ptt_rev_supervisor_fcv, $conFormato);
     }
     function getAuditoriaSupervisor_unidades(){
-        return '¿pendiente?';
+        return '(pendiente)';
     }
     function getAuditoriaSupervisor_items(){
-        return '¿pendiente?';
+        return '(pendiente)';
     }
+    function getItemRevisadosCliente($conFormato=false){
+        // esteban lee el dato: "item_revisado"
+        $totalRevisados = $this->items_rev_qf + $this->items_rev_apoyo1 + $this->items_rev_apoyo2;
+        return $conFormato? number_format($totalRevisados, 0, ',', '.') : $totalRevisados;
+    }
+
     // Correciones Auditoria FCV a SEI
     function getCorreccionPatentesEnAuditoria($conFormato){
         return $this->_getEnteroEnMiles($this->aud4, $conFormato);
@@ -275,57 +280,28 @@ class ActasInventariosFCV extends Model {
 
     // % Error Aud.
     function getPorcentajeErrorSei($conFormato=false){
-        $itemCorregidos = $this->getItemCorregido();
+        // TODO: si dividen UNIDADES Y ITEMS, PROBLEMA??
+        $unidadesCorregidas = $this->getCorreccionUnidadesAbsolutasEnAuditoria(false);
         $itemRevisados = $this->getItemRevisadosCliente();
         // si no estan los datos, no se puede hacer el calculo
-        if($itemRevisados==null || $itemCorregidos==null)
+        if($itemRevisados==null || $unidadesCorregidas==null)
             return null;
-        $porcentaje = ($itemCorregidos/$itemRevisados)*100;
+        $porcentaje = ($unidadesCorregidas/$itemRevisados)*100;
         return $conFormato? number_format($porcentaje, 1)."%" : $porcentaje;
     }
     function getPorcentajeErrorQF($conFormato=false){
-        return '¿formula?';
+        return '(pendiente)';
     }
 
     // Variación Grilla
     function getPorcentajeVariacionGrilla(){
-        return '¿formula?';
+        return '(pendiente)';
     }
     function getSKUInventariados(){
-        return '??';
+        return '(pendiente)';
     }
 
-    // otros ... (eliminar?)
-    function getItemsHH($conFormato=false){
-        // si no hay hora de inicio ni de fin, no se puede calcular cuantas horas se trabajaron
-        $inicio = $this->captura_uno;
-
-        if($inicio=='0000-00-00 00:00:00' || $this->fin_captura=='0000-00-00 00:00:00')
-            return null;
-
-        // calcular la diferencia en horas, con punto flotante
-        $inicio = Carbon::parse($this->captura_uno);
-        $fin = Carbon::parse($this->fin_captura);
-        $horas_comoFloat = $fin->diffInMinutes($inicio)/60;
-
-        $unidades = $this->unidades;
-        $dotacion = $this->efectiva;
-
-        // no dividir por cero
-        if($dotacion==0 || $horas_comoFloat==0)
-            return null;
-        $itemsHH = round($unidades/$dotacion/$horas_comoFloat);
-        return $conFormato? number_format($itemsHH, 0, ',', '.') : $itemsHH;
-    }
-    function getItemCorregido(){
-        return $this->unid_absoluto_corregido_auditoria;
-    }
-    function getItemRevisadosCliente($conFormato=false){
-        // esteban lee el dato: "item_revisado"
-        $totalRevisados = $this->items_rev_qf + $this->items_rev_apoyo1 + $this->items_rev_apoyo2;
-        return $conFormato? number_format($totalRevisados, 0, ',', '.') : $totalRevisados;
-    }
-
+    // OTROS
     function getItemTotalContados(){
         return $this->total_items_inventariados;
     }
