@@ -224,7 +224,7 @@ class ActasInventariosFCV extends Model {
         return $this->_getEnteroEnMiles($this->ptt_rev_qf, $conFormato);
     }
     function getAuditoriaQF_unidades(){
-        return '-pend-';
+        return '¿pendiente?';
     }
     function getAuditoriaQF_items($conFormato){
         return $this->_getEnteroEnMiles($this->items_rev_qf, $conFormato);
@@ -234,7 +234,7 @@ class ActasInventariosFCV extends Model {
         return $this->_getEnteroEnMiles($this->ptt_rev_apoyo1, $conFormato);
     }
     function getAuditoriaApoyo1_unidades(){
-        return '-pend-';
+        return '¿pendiente?';
     }
     function getAuditoriaApoyo1_items($conFormato){
         return $this->_getEnteroEnMiles($this->items_rev_apoyo1, $conFormato);
@@ -244,7 +244,7 @@ class ActasInventariosFCV extends Model {
         return $this->_getEnteroEnMiles($this->ptt_rev_apoyo2, $conFormato);
     }
     function getAuditoriaApoyo2_unidades(){
-        return '-pend-';
+        return '¿pendiente?';
     }
     function getAuditoriaApoyo2_items($conFormato){
         return $this->_getEnteroEnMiles($this->items_rev_apoyo2, $conFormato);
@@ -254,10 +254,10 @@ class ActasInventariosFCV extends Model {
         return $this->_getEnteroEnMiles($this->ptt_rev_supervisor_fcv, $conFormato);
     }
     function getAuditoriaSupervisor_unidades(){
-        return '-pend-';
+        return '¿pendiente?';
     }
     function getAuditoriaSupervisor_items(){
-        return '-pend-';
+        return '¿pendiente?';
     }
     // Correciones Auditoria FCV a SEI
     function getCorreccionPatentesEnAuditoria($conFormato){
@@ -270,10 +270,7 @@ class ActasInventariosFCV extends Model {
         return $this->_getEnteroEnMiles($this->aud6, $conFormato);
     }
     function getCorreccionUnidadesAbsolutasEnAuditoria($conFormato){
-        return '-pend-';
-//        // si el neto es distinto a null, se entrega con/sin formato su valor absoluto
-//        $neto = $this->getCorreccionUnidadesNetoEnAuditoria(false);
-//        return $neto!=null? $this->_getEnteroEnMiles(abs($neto), $conFormato) : null;
+        return $this->_getEnteroEnMiles($this->unid_absoluto_corregido_auditoria, $conFormato);
     }
 
     // % Error Aud.
