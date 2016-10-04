@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build-dev": "webpack --config webpack.config.dev.js --progress --colors --watch",
-    "build-prod": "NODE_ENV=production webpack --config webpack.config.prod.js"
+    "build-prod": "NODE_ENV=production webpack --config webpack.config.prod.js",
+    "deploy": "ssh asilva@seiconsultores.cl 'cd /var/www/sig && git pull'"
   },
   "devDependencies": {
     "axios": "^0.11.0",
