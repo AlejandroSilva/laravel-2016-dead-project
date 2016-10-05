@@ -3,17 +3,14 @@
 namespace App\Http\Controllers;
 use App\ActasInventariosFCV;
 use App\DiasHabiles;
-use App\Http\Requests;
 use App\Inventarios;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Auth;
 // Carbon
 use Carbon\Carbon;
 // Models
 use App\User;
-use App\Nominas;
 
 class HomeController extends Controller {
 //    public function __construct() {
