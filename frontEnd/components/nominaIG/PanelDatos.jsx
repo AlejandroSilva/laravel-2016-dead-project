@@ -88,11 +88,11 @@ export class PanelDatos extends React.Component {
                             </tr>
                             <tr>
                                 <td>Excel</td>
-                                <td><a href={`/programacionIG/nomina/${this.props.nomina.idNominaPublica}/pdf`} className="btn btn-xs">Descargar</a></td>
+                                <td><a href={`/programacionIG/nomina/${this.props.nomina.idNominaPublica}/excel`} className="btn btn-xs">Descargar</a></td>
                             </tr>
                             <tr>
                                 <td>PDF</td>
-                                <td><a href={`/programacionIG/nomina/${this.props.nomina.idNominaPublica}/excel`} className="btn btn-xs">Descargar</a></td>
+                                <td><a href={`/programacionIG/nomina/${this.props.nomina.idNominaPublica}/pdf`} className="btn btn-xs">Descargar</a></td>
                             </tr>
                         </tbody>
                     </table>
