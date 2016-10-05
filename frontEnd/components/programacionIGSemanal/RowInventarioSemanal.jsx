@@ -383,9 +383,10 @@ class RowInventario extends React.Component{
                             puedeModificar={puedeEditarNominaNoche}
                     />
                 </td>
-                {/* Captador 1 */}
+                {/* Captadores */}
                 <td className={css.tdUsuario}>
                     <SelectCaptadores
+                        puedeEditar={puedeEditar_fecha_turno_stock}
                         visible={inventarioDia}
                         captadoresDisponibles={this.props.captadoresDisponibles}
                         captadores={inv.ndia_captadores}
@@ -394,6 +395,7 @@ class RowInventario extends React.Component{
                         cambiarAsignados={this.props.cambiarAsignados.bind(this, inv.ndia_idNomina)}
                     />
                     <SelectCaptadores
+                        puedeEditar={puedeEditar_fecha_turno_stock}
                         visible={inventarioNoche}
                         captadoresDisponibles={this.props.captadoresDisponibles}
                         captadores={inv.nnoche_captadores}

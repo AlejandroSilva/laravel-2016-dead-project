@@ -34,7 +34,11 @@ export class SelectCaptadores extends React.Component {
                 {(this.props.captadores.length == 0 && this.state.nuevoCaptadorVisible == false) ?
                     <div className={cx('captador-vacio')} >
                         <div className={cx('captador-vacio-texto')}></div>
-                        <div className={cx('captador-vacio-opcion')} onClick={this.mostrar_nuevoCaptador}></div>
+                        {/* Mostrar la opcion de agregar un captador solo si tiene los permisos */}
+                        {this.props.puedeEditar?
+                            <div className={cx('captador-vacio-opcion')} onClick={this.mostrar_nuevoCaptador}></div>
+                            : null
+                        }
                     </div>
                     :
                     null
@@ -42,6 +46,7 @@ export class SelectCaptadores extends React.Component {
 
                 {this.props.captadores.map(captador=>
                     <Captador
+                        puedeEditar={this.props.puedeEditar}
                         key={captador.idUsuario}
                         nombre={captador.nombre}
                         asignados={captador.asignados}
@@ -63,14 +68,12 @@ export class SelectCaptadores extends React.Component {
 }
 SelectCaptadores.propTypes = {
     // objetos
+    puedeEditar: PropTypes.bool.isRequired,
     captadoresDisponibles: PropTypes.arrayOf(PropTypes.object).isRequired,
     // metodos
     agregarCaptador: PropTypes.func.isRequired,
     quitarCaptador: PropTypes.func.isRequired,
     cambiarAsignados: PropTypes.func.isRequired,
-    // texto: PropTypes.string.isRequired,
-    // objeto: PropTypes.object.isRequired,
-    // arreglo: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 /* ############################################### SELECTOR CAPTADOR ################################################ */
@@ -150,13 +153,18 @@ class Captador extends React.Component {
                            onChange={this._onChange}
                            onKeyDown={this._onKeyDown}
                            onBlur={this.cambiarAsignados}
+                           disabled={this.props.puedeEditar==false}
                     />
-                    <div className={cx('dots-container')}
-                         onClick={this.toggleMenu}
-                         ref={ref=>this.nodeTrigger=ref}
-                    >
-                        <div className={cx('dots')}></div>
-                    </div>
+                    {/* Tiene opciones solo si tiene permisos para editar */}
+                    {this.props.puedeEditar ?
+                        <div className={cx('dots-container')}
+                             onClick={this.toggleMenu}
+                             ref={ref=>this.nodeTrigger = ref}
+                        >
+                            <div className={cx('dots')}></div>
+                        </div>
+                        : null
+                    }
                 </div>
                 <div ref={ref=>this.node=ref}>
                     <ul className={cx('options', {'options-hidden': this.state.optionsVisible==false})}>
