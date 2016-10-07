@@ -54,7 +54,7 @@ class MaestraFCVController extends Controller
         }
         //insertando datos parseados en la BD
         $archivoMaestraFCV->guardarRegistro($parseo->datos);
-        $archivoMaestraFCV->setResultado("archivo cargado correctamente en la base de datos", true);
+        $archivoMaestraFCV->setResultado("archivo cargado correctamente en la base de datos. ", true);
 
         return view('success.successConMensaje',[
             'titulo' => 'Cargado correctamente', 'descripcion' => $archivoMaestraFCV->resultado

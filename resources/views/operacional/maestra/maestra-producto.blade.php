@@ -51,7 +51,7 @@
                                 <td>{{ $archivoMaestraFCV->resultado }}</td>
                                 <td >{{ $archivoMaestraFCV->maestraValida? 'válida' : 'con errores' }}</td>
                                 <td>
-                                    <a aria-haspopup="true" aria-expanded="false"  href='/{{$archivoMaestraFCV->idArchivoMaestra}}/descargar-maestra'  class="btn btn-primary btn-xs">Descargar</a>
+                                    <a href='maestra-productos-fcv/{{$archivoMaestraFCV->idArchivoMaestra}}/descargar'  class="btn btn-primary btn-xs">Descargar</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -68,7 +68,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading" align="center"><span class="glyphicon glyphicon-upload"></span> Subir Nueva Maestra</div>
                 <div align="center">
-                    <form action="/api/archivo-maestra/upload-excel" method="post" enctype="multipart/form-data">
+                    <form action="/maestra-productos-fcv/subir-maestra-fcv" method="post" enctype="multipart/form-data">
                         <label>Seleccione Archivo:</label>
                         <input type="file" name="file" id="file">
                         <br><input type="submit" class="btn btn-primary btn-xs" value="Subir Maestra" name="submit"></br>

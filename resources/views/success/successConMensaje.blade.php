@@ -6,6 +6,7 @@
                 <div class="panel-heading">{{ $titulo }}</div>
                 <div class="panel-body">
                     {{ $descripcion }}
+                    <a href='/maestra-productos-fcv'  class="btn btn-primary btn-xs">Volver</a>
                 </div>
             </div>
         </div>
