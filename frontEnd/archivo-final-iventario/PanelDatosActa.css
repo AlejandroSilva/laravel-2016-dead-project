@@ -1,5 +1,12 @@
-.PanelHeading {
+.panel-heading {
     text-align: center;
+}
+.panel-heading .opcion-edicion {
+    width: 100px;
+}
+.panel-heading .opcion-publicacion {
+    margin-left: 20px;
+    width: 100px;
 }
 
 .tabla-datos{
