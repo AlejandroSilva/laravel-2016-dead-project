@@ -40,16 +40,18 @@
                         <th>Subido Por</th>
                         <th>Fecha Subida</th>
                         <th>Estado</th>
-                        <th width="1px">Opciones</th>
+                        <th>Valida</th>
+                        <th width="1px">Resultado</th>
                         </thead>
-                        @foreach($maestras as $maestra)
-                            <tr>
-                                <td>{{ $maestra->nombreOriginal}}</td>
-                                <td>{{ $maestra->usuario->nombreCompleto() }}</td>
-                                <td>{{ $maestra->created_at }}</td>
-                                <td>{{ $maestra->resultado }}</td>
+                        @foreach($archivosMaestraFCV as $archivoMaestraFCV)
+                            <tr class="{{ $archivoMaestraFCV->maestraValida? 'success' : 'warning' }}">
+                                <td>{{ $archivoMaestraFCV->nombreOriginal}}</td>
+                                <td>{{ $archivoMaestraFCV->usuario->nombreCompleto() }}</td>
+                                <td>{{ $archivoMaestraFCV->created_at }}</td>
+                                <td>{{ $archivoMaestraFCV->resultado }}</td>
+                                <td >{{ $archivoMaestraFCV->maestraValida? 'valida' : 'con errores' }}</td>
                                 <td>
-                                    <a aria-haspopup="true" aria-expanded="false"  href='/{{$maestra->idArchivoMaestra}}/descargar-maestra'  class="btn btn-primary btn-xs">Descargar</a>
+                                    <a aria-haspopup="true" aria-expanded="false"  href='/{{$archivoMaestraFCV->idArchivoMaestra}}/descargar-maestra'  class="btn btn-primary btn-xs">Descargar</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -63,23 +65,6 @@
 <div class='container-fluid'>
     <div class="row">
         <div class="col-md-5 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading" align="center"><span class="glyphicon glyphicon-download-alt"></span> Descargar Datos</div>
-                <div class="panel-body">
-                    <div align="center">
-                        <form action="" method="post" enctype="multipart/form-data">
-                            <td>
-                                <label>Descargar dump bd</label>
-                                <br>
-                                <a aria-haspopup="true" disabled aria-expanded="false" class="btn btn-primary btn-xs">Descargar</a>
-                            </td>
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-5">
             <div class="panel panel-default">
                 <div class="panel-heading" align="center"><span class="glyphicon glyphicon-upload"></span> Subir Nueva Maestra</div>
                 <div align="center">
@@ -97,6 +82,23 @@
                         {{session('mensaje-error')}}
                     </div>
                 @endif
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-heading" align="center"><span class="glyphicon glyphicon-download-alt"></span> Descargar Datos</div>
+                <div class="panel-body">
+                    <div align="center">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <td>
+                                <label>Descargar dump bd</label>
+                                <br>
+                                <a aria-haspopup="true" disabled aria-expanded="false" class="btn btn-primary btn-xs">Descargar</a>
+                            </td>
+                        </form>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>

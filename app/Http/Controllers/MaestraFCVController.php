@@ -1,23 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 // Carbon
-use Carbon\Carbon;
 // DB
 use DB;
-use PHPExcel;
-use PHPExcel_IOFactory;
-use PHPExcel_Shared_Date;
-// Modelos
-use App\Clientes;
 use Response;
-use App\ArchivoMaestraFCV;
-use App\MaestraFCV;
 use Auth;
+// Modelos
+use App\ArchivoMaestraFCV;
 
 class MaestraFCVController extends Controller
 {
@@ -30,18 +22,16 @@ class MaestraFCVController extends Controller
         // se adjunto un archivo?
         if (!$request->hasFile('file'))
             return view('errors.errorConMensaje', [
-                'titulo' => 'error', 'descripcion' => 'Debe adjuntar el archivo excel.'
+                'titulo' => 'Error', 'descripcion' => 'Debe adjuntar el archivo excel.'
             ]);
-            //return response()->json(['error' => 'Debe adjuntar el archivo.'], 400);
-
+        
         // el archivo es valido?
         $archivo = $request->file('file');
         if (!$archivo->isValid())
             return view('errors.errorConMensaje', [
                 'titulo' => 'error', 'descripcion' => 'Archivo adjunto no es valido.'
             ]);
-            //return response()->json(['error' => 'El archivo adjuntado no es valido.'], 400);
-        
+
         //Mover maestra a una carpeta en el servidor
         $moverArchivo=\ArchivoMaestraFCVHelper::moverAcarpeta($archivo);
         //Guardar archivo en la DB
@@ -75,20 +65,20 @@ class MaestraFCVController extends Controller
         $user = Auth::user();
         if(!$user || !$user->can('admin-maestra-fcv'))
             return response()->view('errors.403', [], 403);
-        $maestraFCV = ArchivoMaestraFCV::all();
-        return view('operacional.maestra.maestra-producto', ['maestras' => $maestraFCV]);
+        $archivosMaestraFCV = ArchivoMaestraFCV::all();
+        return view('operacional.maestra.maestra-producto', ['archivosMaestraFCV' => $archivosMaestraFCV]);
     }
     
     public function download_Maestra($idArchivoMaestra){
         $user = Auth::user();
         if(!$user || !$user->can('admin-maestra-fcv'))
             return response()->view('errors.403', [], 403);
-        $maestra = ArchivoMaestraFCV::find($idArchivoMaestra);
-        if(!$maestra)
+        $archivoMaestraFCV = ArchivoMaestraFCV::find($idArchivoMaestra);
+        if(!$archivoMaestraFCV)
             return view('errors.errorConMensaje', [
                 'titulo' => 'Archivo No encontrado', 'descripcion' => 'El archivo que busca no se puede descargar.'
             ]);
-        $download_archivo = $maestra->nombreArchivo;
+        $download_archivo = $archivoMaestraFCV->nombreArchivo;
         $file= public_path(). "/FCV/maestrasFCV/". "$download_archivo";
         $headers = array(
             'Content-Type: application/octet-stream',
