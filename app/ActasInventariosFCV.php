@@ -140,14 +140,61 @@ class ActasInventariosFCV extends Model {
     }
 
     // hitos importantes del proceso de inventario
+    function getFechaTomaInventario(){
+        return $this->fecha_toma;
+    }
+    function setFechaTomaInventario($fecha){
+        $this->fecha_toma = $fecha;
+        $this->save();
+    }
+    function getCliente(){
+        return $this->nombre_empresa;
+    }
+    function setCliente($cliente){
+        $this->nombre_empresa = $cliente;
+        $this->save();
+    }
+    function getCeco(){
+        return $this->cod_local;
+    }
+    function setCeco($ceco){
+        $this->cod_local = $ceco;
+        $this->save();
+    }
+    function getSupervisor(){
+        return $this->usuario;
+    }
+    function setSupervisor($supervisor){
+        $this->usuario = $supervisor;
+        $this->save();
+    }
+    function getQF(){
+        return $this->administrador;
+    }
+    function setQF($qf){
+        $this->administrador = $qf;
+        $this->save();
+    }
     function getInicioConteo($conFormato=false){
         return $this->_getDatetime($this->captura_uno, $conFormato);
+    }
+    function setInicioConteo($inicio){
+        $this->captura_uno = $inicio;
+        $this->save();
     }
     function getFinConteo($conFormato=false){
         return $this->_getDatetime($this->fin_captura, $conFormato);
     }
+    function setFinConteo($fincaptura){
+        $this->fin_captura = $fincaptura;
+        $this->save();
+    }
     function getFinProceso($conFormato=false){
         return $this->_getDatetime($this->fecha_revision_grilla, $conFormato);
+    }
+    function setFinProceso($finProceso){
+        $this->fecha_revision_grilla = $finProceso;
+        $this->save();
     }
     // duración
     function getDuracionConteo($conFormato=false){
@@ -172,85 +219,161 @@ class ActasInventariosFCV extends Model {
     function getDotacionPresupuestada($conFormato=false){
         return $this->_getEnteroEnMiles($this->presupuesto, $conFormato);
     }
+    function setDotacionPresupuestada($dotacion){
+        $this->presupuesto = $dotacion;
+        $this->save();
+    }
     function getDotacionEfectiva($conFormato=false){
         return $this->_getEnteroEnMiles($this->efectiva, $conFormato);
+    }
+    function setDotacionEfectiva($dotacion){
+        $this->efectiva = $dotacion;
+        $this->save();
     }
     // unidades
     function getUnidadesInventariadas($conFormato=false){
         return $this->_getEnteroEnMiles($this->unidades, $conFormato);
     }
+    function setUnidadesInventariadas($unidades){
+        $this->unidades = $unidades;
+        $this->save();
+    }
     function getUnidadesTeoricas($conFormato=false){
         return $this->_getEnteroEnMiles($this->teorico_unidades, $conFormato);
+    }
+    function setUnidadesTeoricas($unidades) {
+        $this->teorico_unidades = $unidades;
+        $this->save();
     }
     function getDiferenciaNeto($conFormato=false){
         return $this->_getEnteroEnMiles($this->aju2, $conFormato);
     }
-    function getDiferenciaAbsoluta($conFormato){
+    function setDiferenciaNeto($unidades){
+        $this->aju2 = $unidades;
+        $this->save();
+    }
+    function getDiferenciaAbsoluta($conFormato=false){
         return $this->_getEnteroEnMiles($this->diferencia_unid_absoluta, $conFormato);
+    }
+    function setDiferenciaAbsoluta($unidades){
+        $this->diferencia_unid_absoluta = $unidades;
+        $this->save();
     }
     // evaluaciones / notas
     function getNotaPresentacion(){
         return $this->_getFloat($this->nota1, false);
     }
+    function setNotaPresentacion($nota){
+        $this->nota1 = $nota;
+        $this->save();
+    }
     function getNotaSupervisor(){
         return $this->_getFloat($this->nota2, false);
+    }
+    function setNotaSupervisor($nota){
+        $this->nota2 = $nota;
+        $this->save();
     }
     function getNotaConteo(){
         return $this->_getFloat($this->nota3, false);
     }
-    function getNotaPromedio($conFormato=false){
+    function setNotaConteo($nota){
+        $this->nota3 =$nota;
+        $this->save();
+    }
+    function getNotaPromedio(){
         $nota1 = $this->getNotaPresentacion();
         $nota2 = $this->getNotaSupervisor();
         $nota3 = $this->getNotaConteo();
         if($nota1==0 || $nota1==null || $nota2==0 || $nota2==null || $nota3==0 || $nota3==null)
             return null;
         $promedio = ($this->nota1+$this->nota2+$this->nota3)/3;
-        return $conFormato? number_format($promedio, 1, ',', '.') : $promedio;
+        return number_format($promedio, 1, ',', '.');
     }
     // Consolidado Auditoria FCV
-    function getConsolidadoPatentes($conFormato){
+    function getConsolidadoPatentes($conFormato=false){
         return $this->_getEnteroEnMiles($this->aud1, $conFormato);
     }
-    function getConsolidadoUnidades($conFormato){
+    function setConsolidadoPatentes($ptt){
+        $this->aud1 = $ptt;
+        $this->save();
+    }
+    function getConsolidadoUnidades($conFormato=false){
         return $this->_getEnteroEnMiles($this->aud3, $conFormato);
     }
-    function getConsolidadoItems($conFormato){
+    function setConsolidadoUnidades($unidades){
+        $this->aud3 = $unidades;
+        $this->save();
+    }
+    function getConsolidadoItems($conFormato=false){
         // total_items_inventariados
         return $this->_getEnteroEnMiles($this->aud2, $conFormato);
     }
+    function setConsolidadoItems($items){
+        $this->aud2 = $items;
+        $this->save();
+    }
     // Auditoria QF
-    function getAuditoriaQF_patentes($conFormato){
+    function getAuditoriaQF_patentes($conFormato=false){
         return $this->_getEnteroEnMiles($this->ptt_rev_qf, $conFormato);
+    }
+    function setAuditoriaQF_patentes($ptt){
+        $this->ptt_rev_qf = $ptt;
+        $this->save();
     }
     function getAuditoriaQF_unidades(){
         return '(pendiente)';
     }
-    function getAuditoriaQF_items($conFormato){
+    function getAuditoriaQF_items($conFormato=false){
         return $this->_getEnteroEnMiles($this->items_rev_qf, $conFormato);
     }
+    function setAuditoriaQF_items($items){
+        $this->items_rev_qf = $items;
+        $this->save();
+    }
     // Auditoria Apoyo 1
-    function getAuditoriaApoyo1_patentes($conFormato){
+    function getAuditoriaApoyo1_patentes($conFormato=false){
         return $this->_getEnteroEnMiles($this->ptt_rev_apoyo1, $conFormato);
+    }
+    function setAuditoriaApoyo1_patentes($ptt){
+        $this->ptt_rev_apoyo1 = $ptt;
+        $this->save();
     }
     function getAuditoriaApoyo1_unidades(){
         return '(pendiente)';
     }
-    function getAuditoriaApoyo1_items($conFormato){
+    function getAuditoriaApoyo1_items($conFormato=false){
         return $this->_getEnteroEnMiles($this->items_rev_apoyo1, $conFormato);
     }
+    function setAuditoriaApoyo1_items($items){
+        $this->items_rev_apoyo1 = $items;
+        $this->save();
+    }
     // Auditoria Apoyo 2
-    function getAuditoriaApoyo2_patentes($conFormato){
+    function getAuditoriaApoyo2_patentes($conFormato=false){
         return $this->_getEnteroEnMiles($this->ptt_rev_apoyo2, $conFormato);
+    }
+    function setAuditoriaApoyo2_patentes($ptt){
+        $this->ptt_rev_apoyo2 = $ptt;
+        $this->save();
     }
     function getAuditoriaApoyo2_unidades(){
         return '(pendiente)';
     }
-    function getAuditoriaApoyo2_items($conFormato){
+    function getAuditoriaApoyo2_items($conFormato=false){
         return $this->_getEnteroEnMiles($this->items_rev_apoyo2, $conFormato);
     }
+    function setAuditoriaApoyo2_items($items){
+        $this->items_rev_apoyo2 = $items;
+        $this->save();
+    }
     // Auditoria Supervisor
-    function getAuditoriaSupervisor_patentes($conFormato){
+    function getAuditoriaSupervisor_patentes($conFormato=false){
         return $this->_getEnteroEnMiles($this->ptt_rev_supervisor_fcv, $conFormato);
+    }
+    function setAuditoriaSupervisor_patentes($ptt){
+        $this->ptt_rev_supervisor_fcv = $ptt;
+        $this->save();
     }
     function getAuditoriaSupervisor_unidades(){
         return '(pendiente)';
@@ -265,17 +388,33 @@ class ActasInventariosFCV extends Model {
     }
 
     // Correciones Auditoria FCV a SEI
-    function getCorreccionPatentesEnAuditoria($conFormato){
+    function getCorreccionPatentesEnAuditoria($conFormato=false){
         return $this->_getEnteroEnMiles($this->aud4, $conFormato);
     }
-    function getCorreccionItemsEnAuditoria($conFormato){
+    function setCorreccionPatentesEnAuditoria($ptt){
+        $this->aud4 = $ptt;
+        $this->save();
+    }
+    function getCorreccionItemsEnAuditoria($conFormato=false){
         return $this->_getEnteroEnMiles($this->aud5, $conFormato);
     }
-    function getCorreccionUnidadesNetoEnAuditoria($conFormato){
+    function setCorreccionItemsEnAuditoria($items){
+        $this->aud5 = $items;
+        $this->save();
+    }
+    function getCorreccionUnidadesNetoEnAuditoria($conFormato=false){
         return $this->_getEnteroEnMiles($this->aud6, $conFormato);
     }
-    function getCorreccionUnidadesAbsolutasEnAuditoria($conFormato){
+    function setCorreccionUnidadesNetoEnAuditoria($unidades){
+        $this->aud6 = $unidades;
+        $this->save();
+    }
+    function getCorreccionUnidadesAbsolutasEnAuditoria($conFormato=false){
         return $this->_getEnteroEnMiles($this->unid_absoluto_corregido_auditoria, $conFormato);
+    }
+    function setCorreccionUnidadesAbsolutasEnAuditoria($unidades){
+        $this->unid_absoluto_corregido_auditoria = $unidades;
+        $this->save();
     }
 
     // % Error Aud.
@@ -319,6 +458,73 @@ class ActasInventariosFCV extends Model {
     // ####  Setters
     // #### Formatear respuestas
     // #### Scopes para hacer Querys/Busquedas
+    static function formatoEdicionActa($acta){
+        if(!$acta) return [];
+        return [
+            // extras
+            'inv_idInventario' => $acta->idInventario,
+            'publicadaPor' => $acta->publicadaPor? $acta->publicadaPor->nombreCorto() : '--',
+            'fechaPublicacion' => $acta->estaPublicada()? $acta->fecha_publicacion : null,
+            'publicada' => $acta->estaPublicada(),
+            // hitos importantes
+            'fechaTomaInventario' => $acta->getFechaTomaInventario(),
+            'cliente' => $acta->getCliente(),
+            'ceco' => $acta->getCeco(),
+            'supervisor' => $acta->getSupervisor(),
+            'qf' => $acta->getQF(),
+            'inicioConteo' => $acta->getInicioConteo(false),
+            'finConteo' => $acta->getFinConteo(false),
+            'finProceso' => $acta->getFinProceso(false),
+            // duracion
+            'duracionConteo' => $acta->getDuracionConteo(true),
+            'duracionRevision' => $acta->getDuracionRevision(true),
+            'duracionTotalProceso' => $acta->getDuracionTotalProceso(true),
+            // dotacion
+            'dotacionPresupuestada' => $acta->getDotacionPresupuestada(),
+            'dotacionEfectiva' => $acta->getDotacionEfectiva(),
+            // unidades
+            'unidadesInventariadas' => $acta->getUnidadesInventariadas(),
+            'unidadesTeoricas' => $acta->getUnidadesTeoricas(),
+            'unidadesDiferenciaNeto' => $acta->getDiferenciaNeto(),
+            'unidadesDiferenciaAbsoluta' => $acta->getDiferenciaAbsoluta(),
+            // evaluaciones
+            'notaPresentacion' => $acta->getNotaPresentacion(),
+            'notaSupervisor' => $acta->getNotaSupervisor(),
+            'notaConteo' => $acta->getNotaConteo(),
+            'notaPromedio' => $acta->getNotaPromedio(),
+            // consolidado auditoria FCV
+            'consolidadoPatentes' => $acta->getConsolidadoPatentes(),
+            'consolidadoUnidades' => $acta->getConsolidadoUnidades(),
+            'consolidadoItems' => $acta->getConsolidadoItems(),
+            // auditoria QF
+            'auditoriaQFPatentes' => $acta->getAuditoriaQF_patentes(),
+            'auditoriaQFUnidades' => $acta->getAuditoriaQF_unidades(),
+            'auditoriaQFItems' => $acta->getAuditoriaQF_items(),
+            // auditoria Apoyo 1
+            'auditoriaApoyo1Patentes' => $acta->getAuditoriaApoyo1_patentes(),
+            'auditoriaApoyo1Unidades' => $acta->getAuditoriaApoyo1_unidades(),
+            'auditoriaApoyo1Items' => $acta->getAuditoriaApoyo1_items(),
+            // auditoria Apoyo 2
+            'auditoriaApoyo2Patentes' => $acta->getAuditoriaApoyo2_patentes(),
+            'auditoriaApoyo2Unidades' => $acta->getAuditoriaApoyo2_unidades(),
+            'auditoriaApoyo2Items' => $acta->getAuditoriaApoyo2_items(),
+            // auditoria Supervisor FCV
+            'auditoriaSupervisorPatentes' => $acta->getAuditoriaSupervisor_patentes(),
+            'auditoriaSupervisorUnidades' => $acta->getAuditoriaSupervisor_unidades(),
+            'auditoriaSupervisorItems' => $acta->getAuditoriaSupervisor_items(),
+            // Correcciones Auditoría FCV a SEI
+            'correccionPatentes' => $acta->getCorreccionPatentesEnAuditoria(),
+            'correccionItems' => $acta->getCorreccionItemsEnAuditoria(),
+            'correccionUnidadesNeto' => $acta->getCorreccionUnidadesNetoEnAuditoria(),
+            'correccionUnidadesAbsolutas' => $acta->getCorreccionUnidadesAbsolutasEnAuditoria(),
+            // % Error Aud.
+            'porcentajeErrorSEI' => $acta->getPorcentajeErrorSei(true),
+            'porcentajeErrorQF' => $acta->getPorcentajeErrorQF(true),
+
+
+        ];
+    }
+
     // #### Buscar / Filtrar Nominas
     static function buscar(){
         $query =  ActasInventariosFCV::where('fecha_publicacion', '!=', '0000-00-00 00:00:00');

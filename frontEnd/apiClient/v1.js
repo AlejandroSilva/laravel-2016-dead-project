@@ -116,7 +116,17 @@ export default {
         getPorMesYCliente: (annoMesDia, idCliente)=>
             axios.get(`/api/inventarios/buscar-2?mes=${annoMesDia}&idCliente=${idCliente}&incluirConFechaPendiente=true`),
         buscar2: (fechaInicio, fechaFin, idCliente)=>
-            axios.get(`/api/inventarios/buscar-2?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`)
+            axios.get(`/api/inventarios/buscar-2?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`),
+        acta: {
+            get: idInventario=>
+                axios.get(`/api/inventario/${idInventario}/acta`),
+            actualizar: (idInventario, datos)=>
+                axios.post(`/api/inventario/${idInventario}/acta`, datos),
+            publicar: (idInventario)=>
+                axios.post(`/api/inventario/${idInventario}/publicar-acta`),
+            despublicar: (idInventario)=>
+                axios.post(`/api/inventario/${idInventario}/despublicar-acta`),
+        }
     },
     auditoria: {
         nuevo: (datos)=>

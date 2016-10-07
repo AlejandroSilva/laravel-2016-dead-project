@@ -397,6 +397,11 @@ class Inventarios extends Model {
         ];
     }
 
+    static function formatoActa($inventarios){
+        $acta = $inventarios->actaFCV;
+        return ActasInventariosFCV::formatoEdicionActa($acta);
+    }
+
     // #### Scopes para hacer Querys/Busquedas
     static function buscar($peticion){
         // todo: deberian mejorar bastante los tiempos de respuesta, si se agregan los eager loading dentro del query

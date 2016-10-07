@@ -17,6 +17,7 @@ import { NominaIG } from './components/nominaIG/nominaIG.jsx'
 import { MantenedorStock } from './components/mantenedorStock/MantenedorStock.jsx'
 import { ActivoFijo } from './modulos-logistica/activoFijo/ActivoFijo.jsx'
 import { MantenedorPersonal } from './modulos-administracion/MantenedorPersonal/MantenedorPersonal.jsx'
+import { PanelDatosActa } from './archivo-final-iventario/PanelDatosActa.jsx'
 
 /** ************************************************************* **/
 /** ************************ DASHBOARD ************************** **/
@@ -29,6 +30,13 @@ if( mainDashboardDOM ){
         />, mainDashboardDOM)
 }
 
+let datosActaInventarioDOM = document.getElementById('react-datos-acta-inventario-fcv')
+if( datosActaInventarioDOM ){
+    ReactDOM.render(
+        <PanelDatosActa
+            idInventario={window.laravelIdInventario}
+        />, datosActaInventarioDOM)
+}
 /** ************************************************************* **/
 /** ************************ LOGISTICA ************************** **/
 /** ************************************************************* **/

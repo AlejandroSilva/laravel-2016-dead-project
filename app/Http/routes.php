@@ -74,8 +74,12 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('inventario/descargar-consolidado-fcv',          'ArchivoFinalInventarioController@descargar_consolidado_fcv');
         Route::get('inventario/{idInventario}/archivo-final',       'ArchivoFinalInventarioController@show_archivofinal_index')->name('indexArchivoFinal');
         Route::post('inventario/{idInventario}/subir-zip-fcv',      'ArchivoFinalInventarioController@api_subirZipFCV');
-        Route::post('inventario/{idInventario}/publicar-acta',      'ArchivoFinalInventarioController@api_publicarActa');
-        Route::post('inventario/{idInventario}/despublicar-acta',   'ArchivoFinalInventarioController@api_despublicarActa');
+        // acta
+        Route::get('api/inventario/{idInventario}/acta',                'ArchivoFinalInventarioController@api_getActa');
+        Route::post('api/inventario/{idInventario}/acta',               'ArchivoFinalInventarioController@api_actualizarActa');
+        Route::post('api/inventario/{idInventario}/publicar-acta',      'ArchivoFinalInventarioController@api_publicarActa');
+        Route::post('api/inventario/{idInventario}/despublicar-acta',   'ArchivoFinalInventarioController@api_despublicarActa');
+        // archivo final zip
         Route::get('archivo-final-inventario/{idArchivo}/descargar','ArchivoFinalInventarioController@descargar_archivo_final');
 
         // MUESTRAS DE VENCIMIENTO

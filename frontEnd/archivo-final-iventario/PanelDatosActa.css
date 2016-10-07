@@ -1,0 +1,36 @@
+.PanelHeading {
+    text-align: center;
+}
+
+.tabla-datos{
+    display: table;
+}
+.tr-header > p{
+    border-bottom: 1px solid #a9a9a9;
+    margin: 10px 0 0 0;
+}
+.tr-datos {
+    display: table-row;
+}
+.tr-datos:hover {
+    background: lightcyan;
+}
+.td-label {
+    font-weight: bold;
+    display: table-cell;
+    margin: 0 0 2px 0;
+}
+.td-inputTexto{
+    width: 100%;
+    margin: 0;
+}
+.td-inputNumero{
+    width: 80%;
+    margin: 0;
+}
+.td-dato {
+    display: table-cell;
+}
+.opciones-acta > form{
+    display: inline-block;
+}

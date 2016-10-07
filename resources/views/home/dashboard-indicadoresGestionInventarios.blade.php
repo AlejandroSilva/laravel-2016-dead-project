@@ -38,7 +38,7 @@
                             <td class="">{{$datosDisponibles? $acta->usuario : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getUnidadesInventariadas(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getDuracionConteo(true) : ''}}</td>
-                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getNotaPromedio(true) : ''}}</td>
+                            <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getNotaPromedio() : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getPorcentajeErrorSei(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getItemRevisadosCliente(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getPorcentajeRevisionCliente(true) : ''}}</td>

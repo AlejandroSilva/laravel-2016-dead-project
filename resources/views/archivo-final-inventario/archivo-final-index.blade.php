@@ -1,5 +1,9 @@
 @extends('layouts.unacolumna')
 
+<script>
+    window.laravelIdInventario = {!! $inventario->idInventario !!};
+</script>
+
 <div class="container-fluid">
     <h3>
         {{$inventario->local->cliente->nombreCorto }}
@@ -8,8 +12,13 @@
         {{$inventario->fechaProgramadaF()}}
     </h3>
     <div class="row">
+        <div id="react-datos-acta-inventario-fcv">
+            cargando datos del acta...
+        </div>
+    </div>
+    <div class="row">
         {{-- Datos del acta --}}
-        @include('archivo-final-inventario.comp-datos-acta')
+        {{--@include('archivo-final-inventario.comp-datos-acta')--}}
     </div>
 
     <div class="row">

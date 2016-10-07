@@ -41,7 +41,7 @@ class CreateActasInventariosFcvTable extends Migration {
             $table->integer('cod_local')->nullable();
             $table->string('nombre_empresa', 10)->nullable();
             $table->string('usuario', 60)->nullable();
-            $table->integer('nota1')->nullable();
+            $table->integer('nota1')->nullable();       // ¿deberia ser float?
             $table->integer('nota2')->nullable();
             $table->integer('nota3')->nullable();
             $table->integer('aud1')->nullable();
