@@ -10,7 +10,7 @@ class MaestraFCV extends Model{
     public $primaryKey = 'idMaestraFCV';
     public $timestamps = true;
     // Campos asignables
-    protected $fillable = ['idArchivoMaestra',  'codigoProducto', 'descriptor', 'codigo', 'laboratorio', 'clasificacionTerapeutica'];
+    protected $fillable = ['idArchivoMaestra',  'barra', 'descriptor', 'sku', 'laboratorio', 'clasificacionTerapeutica'];
     //Relaciones
     public function archivoMaestraFCV(){
         return $this->belongsTo('App\ArchivoMaestraFCV', 'idArchivoMaestra', 'idArchivoMaestra');

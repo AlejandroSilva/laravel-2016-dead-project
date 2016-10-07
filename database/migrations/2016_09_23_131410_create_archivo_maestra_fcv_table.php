@@ -16,6 +16,7 @@ class CreateArchivoMaestraFcvTable extends Migration
             // Otros campos
             $table->text('nombreArchivo');
             $table->text('nombreOriginal');
+            $table->boolean('maestraValida')->default(false);
             $table->text('resultado');
             $table->timestamps();
         });

@@ -25,21 +25,21 @@ class ArchivoMaestraFCVHelper{
         $error = '';
         
         for ($row = 2; $row <= $highestRow; $row++){
-            $codigoProducto = isset($arrayArchivo[$row]['A'])? $arrayArchivo[$row]['A'] : null;
+            $barra = isset($arrayArchivo[$row]['A'])? $arrayArchivo[$row]['A'] : null;
             $descriptor = isset($arrayArchivo[$row]['B'])? $arrayArchivo[$row]['B'] : null;
-            $codigo = isset($arrayArchivo[$row]['C'])? $arrayArchivo[$row]['C'] : null;
+            $sku = isset($arrayArchivo[$row]['C'])? $arrayArchivo[$row]['C'] : null;
             $laboratorio = isset($arrayArchivo[$row]['D'])? $arrayArchivo[$row]['D'] : null;
             $clasificacionTerapeutica = isset($arrayArchivo[$row]['E'])? $arrayArchivo[$row]['E'] : null;
             // validar de que los campos no vengan con datos nulos
-            $rowValido = self::_camposValidos($row, $codigoProducto, $descriptor, $codigo, $laboratorio, $clasificacionTerapeutica);
+            $rowValido = self::_camposValidos($row, $barra, $descriptor, $sku, $laboratorio, $clasificacionTerapeutica);
             if( $rowValido!=null )
                 $error = $error.$rowValido; // si se concatena un null con un string, el resultado es un string
 
             array_push($tableData,[
                 'idArchivoMaestra' => $idArchivo,
-                'codigoProducto' => $codigoProducto,
+                'barra' => $barra,
                 'descriptor' => $descriptor,
-                'codigo' => $codigo,
+                'sku' => $sku,
                 'laboratorio' => $laboratorio,
                 'clasificacionTerapeutica' => $clasificacionTerapeutica,
                 'created_at' => $now,
@@ -52,13 +52,13 @@ class ArchivoMaestraFCVHelper{
         ];
     }
     //Validar que los campos no contengas valores nulos
-    private static function _camposValidos($row, $codigoProducto, $descriptor, $codigo, $laboratorio, $clasificacionTerapeutica){
+    private static function _camposValidos($row, $barra, $descriptor, $sku, $laboratorio, $clasificacionTerapeutica){
         // todo: validar el tipo, que no sean string vacios, que sean numeros, etc
-        if($codigoProducto==null)
+        if($barra==null)
             return "En la fila $row, falta el campo 'codigoProducto'. ";
         if($descriptor==null)
             return "En la fila $row, falta el campo 'descriptor'. ";
-        if($codigo==null)
+        if($sku==null)
             return "En la fila $row, falta el campo 'codigo'. ";
         if($laboratorio==null)
             return "En la fila $row, falta el campo 'laboratorio'. ";
