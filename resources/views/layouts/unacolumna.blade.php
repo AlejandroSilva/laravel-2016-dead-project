@@ -60,6 +60,9 @@
                                     <li class="{{ Request::is('muestra-vencimiento-fcv')? 'active': '' }}">
                                         <a href="{{ url('muestra-vencimiento-fcv') }}">Muestra de vencimiento FCV</a>
                                     </li>
+                                    <li class="{{ Request::is('maestra-producto')? 'active': '' }}">
+                                        <a href="{{ url('maestra-producto') }}">Maestra de productos FCV</a>
+                                    </li>
                                 @endif
                             </ul>
                         </li>

@@ -40,7 +40,7 @@
                         <th>Subido Por</th>
                         <th>Fecha Subida</th>
                         <th>Estado</th>
-                        <th>Valida</th>
+                        <th>Válida</th>
                         <th width="1px">Resultado</th>
                         </thead>
                         @foreach($archivosMaestraFCV as $archivoMaestraFCV)
@@ -49,7 +49,7 @@
                                 <td>{{ $archivoMaestraFCV->usuario->nombreCompleto() }}</td>
                                 <td>{{ $archivoMaestraFCV->created_at }}</td>
                                 <td>{{ $archivoMaestraFCV->resultado }}</td>
-                                <td >{{ $archivoMaestraFCV->maestraValida? 'valida' : 'con errores' }}</td>
+                                <td >{{ $archivoMaestraFCV->maestraValida? 'válida' : 'con errores' }}</td>
                                 <td>
                                     <a aria-haspopup="true" aria-expanded="false"  href='/{{$archivoMaestraFCV->idArchivoMaestra}}/descargar-maestra'  class="btn btn-primary btn-xs">Descargar</a>
                                 </td>
