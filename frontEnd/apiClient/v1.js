@@ -126,6 +126,8 @@ export default {
                 axios.post(`/api/inventario/${idInventario}/publicar-acta`),
             despublicar: (idInventario)=>
                 axios.post(`/api/inventario/${idInventario}/despublicar-acta`),
+            reprocesar: (idArchivo)=>
+                axios.post(`/api/archivo-final-inventario/${idArchivo}/reprocesar`),
         }
     },
     auditoria: {

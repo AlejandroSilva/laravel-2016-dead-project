@@ -484,6 +484,7 @@ class ActasInventariosFCV extends Model {
         return [
             // extras
             'inv_idInventario' => $acta->idInventario,
+            'archivo_idArchivo' => $acta->idArchivoFinalInventario,
             'publicadaPor' => $acta->publicadaPor? $acta->publicadaPor->nombreCorto() : '--',
             'fechaPublicacion' => $acta->estaPublicada()? $acta->fecha_publicacion : null,
             'publicada' => $acta->estaPublicada(),

@@ -15,7 +15,7 @@ class ArchivoFinalInventarioController extends Controller {
     public function __construct() {
         $this->middleware('auth')->except('temp_descargarExcelActas');
         $this->middleware('buscarInventario')
-            ->only('show_archivofinal_index', 'api_subirZipFCV', 'api_getActa', 'api_actualizarActa', 'api_publicarActa');
+            ->only('show_archivofinal_index', 'api_subirZipFCV', 'api_getActa', 'api_actualizarActa', 'api_publicarActa', 'api_despublicarActa');
         $this->middleware('userCan:programaAuditorias_ver')
             ->only('api_publicarActa', 'api_despublicarActa');
     }
@@ -165,7 +165,7 @@ class ArchivoFinalInventarioController extends Controller {
         // todo validar permisos
         // todo, validar que sea de FCV el archivo
 
-        // nomina existe?
+        // MW: buscarInventario
         $inventario = $request->inventario;
         $local_numero = $inventario->local->numero;
 
@@ -200,6 +200,27 @@ class ArchivoFinalInventarioController extends Controller {
 
         return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario])
             ->with('mensaje-exito-zip', $archivoFinalInventario->resultado);
+    }
+
+    // POST archivo-final-inventario/{idArchivo}/reprocesar
+    // MW: auth
+    function api_reprocesar_zip(Request $request, $idArchivo){
+        $archivoFinalInventario = ArchivoFinalInventario::find($idArchivo);
+        $zipPath = $archivoFinalInventario->getFullPath();
+
+        // MW: buscarInventario
+        $inventario = $archivoFinalInventario->inventario;
+        $local_numero = $inventario->local->numero;
+
+        // parsear ZIP a un Acta
+        $resultadoActa = \ActaInventarioHelper::parsearZIPaActa($zipPath, $local_numero);
+        if( isset($resultadoActa->error) )
+            return response()->json($resultadoActa->error);
+
+        // paso 3) finalmente, actualizar el acta con los datos entregados
+        $inventario->insertarOActualizarActa($resultadoActa->acta, $archivoFinalInventario->idArchivoFinalInventario);
+
+        return response()->json(Inventarios::formatoActa($inventario));
     }
 
     // GET inventario/{idInventario}/acta

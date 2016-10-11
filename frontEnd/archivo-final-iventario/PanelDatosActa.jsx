@@ -51,6 +51,13 @@ export class PanelDatosActa extends React.Component {
                         })
                         // catch
                 }
+            },
+            reprocesar: ()=>{
+                api.inventario.acta.reprocesar(this.state.acta.archivo_idArchivo)
+                    .then(actaActualizada=>{
+                        console.log(actaActualizada)
+                        this.setState({acta: actaActualizada})
+                    })
             }
         }
     }
@@ -91,7 +98,8 @@ PanelDatosActa.childContextTypes = {
     finalizarEdicion: React.PropTypes.func,
     publicar: React.PropTypes.func,
     despublicar: React.PropTypes.func,
-    actualizarActa: React.PropTypes.func
+    actualizarActa: React.PropTypes.func,
+    reprocesar: React.PropTypes.func
 };
 
 const PanelHeading = ({publicada, publicadaPor, fechaPublicacion, editandoActa}, context)=>{
@@ -126,6 +134,10 @@ const PanelHeading = ({publicada, publicadaPor, fechaPublicacion, editandoActa},
                         Publicar
                     </button>
                 }
+                <button className={cx("btn btn-default btn-xs", 'opcion-publicacion')}
+                        disabled={puedeEditar == false} onClick={context.reprocesar}>
+                    Reprocesar
+                </button>
             </div>
         </div>
 }
@@ -133,7 +145,8 @@ PanelHeading.contextTypes = {
     iniciarEdicion: React.PropTypes.func,
     finalizarEdicion: React.PropTypes.func,
     publicar: React.PropTypes.func,
-    despublicar: React.PropTypes.func
+    despublicar: React.PropTypes.func,
+    reprocesar: React.PropTypes.func
 };
 
 

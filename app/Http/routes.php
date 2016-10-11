@@ -80,7 +80,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('api/inventario/{idInventario}/publicar-acta',      'ArchivoFinalInventarioController@api_publicarActa');
         Route::post('api/inventario/{idInventario}/despublicar-acta',   'ArchivoFinalInventarioController@api_despublicarActa');
         // archivo final zip
-        Route::get('archivo-final-inventario/{idArchivo}/descargar','ArchivoFinalInventarioController@descargar_archivo_final');
+        Route::get('archivo-final-inventario/{idArchivo}/descargar',    'ArchivoFinalInventarioController@descargar_archivo_final');
+        Route::post('api/archivo-final-inventario/{idArchivo}/reprocesar',   'ArchivoFinalInventarioController@api_reprocesar_zip');
 
         // MUESTRAS DE VENCIMIENTO
         Route::get('muestra-vencimiento-fcv',                           'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
