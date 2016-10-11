@@ -16,10 +16,6 @@
             cargando datos del acta...
         </div>
     </div>
-    <div class="row">
-        {{-- Datos del acta --}}
-        {{--@include('archivo-final-inventario.comp-datos-acta')--}}
-    </div>
 
     <div class="row">
         {{-- La tabla que incluye el listado de los archivos que han sido subidos a plataforma --}}

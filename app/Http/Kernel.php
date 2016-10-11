@@ -44,12 +44,17 @@ class Kernel extends HttpKernel {
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
-        'authAPI' => \App\Http\Middleware\AuthenticateAPI::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'role' => \Zizaco\Entrust\Middleware\EntrustRole::class,
         'permission' => \Zizaco\Entrust\Middleware\EntrustPermission::class,
         'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
+        // personalizados
+        'buscarInventario' => \App\Http\Middleware\BuscarInventario::class,
+        'buscarCliente' => \App\Http\Middleware\BuscarCliente::class,
+        'buscarLocal' => \App\Http\Middleware\BuscarLocal::class,
+        'buscarUsuario' => \App\Http\Middleware\BuscarUsuario::class,
+        'userCan' => \App\Http\Middleware\UserCan::class,
     ];
 }

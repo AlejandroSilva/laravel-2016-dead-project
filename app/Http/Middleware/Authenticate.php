@@ -16,7 +16,8 @@ class Authenticate {
      */
     public function handle($request, Closure $next, $guard = null) {
         if (Auth::guard($guard)->guest()) {
-            if ($request->ajax()) {
+            // si la peticion es un ajax, o esta en las rutas de las apis, entonces mostrar otro error
+            if ($request->ajax() || $request->is('api/*')) {
                 return response('Unauthorized.', 401);
             } else {
                 return redirect()->guest('login');

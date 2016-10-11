@@ -28,15 +28,6 @@
         {{--<li class="{{ Request::is('personal/operadores') ? 'active' : '' }}">--}}
         {{--<a href="{{ url('personal/operadores') }}">Operadores</a>--}}
         {{--</li>--}}
-
-        {{-- Gestión de Clientes --}}
-        {{--<li><h4>Clientes</h4></li>--}}
-        {{--<li class="{{ Request::is('admin/clientes') ? 'active' : '' }}">--}}
-            {{--<a href="{{ route('admin.clientes.lista') }}">Clientes</a>--}}
-        {{--</li>--}}
-        {{--<li class="{{ Request::is('admin/locales') ? 'active' : '' }}">--}}
-            {{--<a href="{{ url('admin/locales') }}">Locales</a>--}}
-        {{--</li>--}}
     {{--</ul>--}}
 {{--@stop--}}
 
