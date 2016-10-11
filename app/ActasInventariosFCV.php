@@ -22,8 +22,11 @@ class ActasInventariosFCV extends Model {
         'fecha_revision_grilla', 'supervisor_qf', 'diferencia_unid_absoluta', 'ptt_inventariadas', 'ptt_rev_qf',
         'ptt_rev_apoyo1', 'ptt_rev_apoyo2', 'ptt_rev_supervisor_fcv', 'total_items_inventariados', 'items_auditados',
         'items_corregidos_auditoria', 'items_rev_qf', 'items_rev_apoyo1', 'items_rev_apoyo2', 'unid_neto_corregido_auditoria',
-        'unid_absoluto_corregido_auditoria', 'total_sku_efectivos', 'porcentaje_error_qf', 'porcentaje_variacion_ajuste_grilla'
-    ];
+        'unid_absoluto_corregido_auditoria', 'total_sku_efectivos', 'porcentaje_error_qf', 'porcentaje_variacion_ajuste_grilla',
+        'supervisor_total_unidades', 'supervisor_total_items', 'supervisor_total_patentes',
+        'apoyo2_total_unidades', 'apoyo2_total_items', 'apoyo2_total_patentes',
+        'apoyo1_total_unidades', 'apoyo1_total_items', 'apoyo1_total_patentes',
+        'qf_total_unidades', 'qf_total_items', 'qf_total_patentes', ];
     // aud2 = items_auditados
     // aud5 = items_corregidos_auditoria
     // tot1 = fin_captura
@@ -129,7 +132,7 @@ class ActasInventariosFCV extends Model {
         return $conFormato? date_format(date_create($datetime), 'H:i:s') : $datetime;
     }
     private function _getEnteroEnMiles($numero, $conFormato){
-        if($numero==null)
+        if(!isset($numero))
             return null;
         return $conFormato? number_format($numero, 0, ',', '.') : $numero;
     }
@@ -137,6 +140,11 @@ class ActasInventariosFCV extends Model {
         if($numero==null)
             return null;
         return $conFormato? number_format($numero, 1, ',', '.') : $numero;
+    }
+    private function _getPorcentaje($porcentaje, $conFormato){
+        if($porcentaje==null)
+            return null;
+        return $conFormato? number_format($porcentaje, 1)."%" : $porcentaje;
     }
 
     // hitos importantes del proceso de inventario
@@ -321,8 +329,9 @@ class ActasInventariosFCV extends Model {
         $this->ptt_rev_qf = $ptt;
         $this->save();
     }
-    function getAuditoriaQF_unidades(){
-        return '(pendiente)';
+    function getAuditoriaQF_unidades($conFormato=false){
+        // todo: mejorar
+        return $this->_getEnteroEnMiles($this->qf_total_unidades, $conFormato);
     }
     function getAuditoriaQF_items($conFormato=false){
         return $this->_getEnteroEnMiles($this->items_rev_qf, $conFormato);
@@ -339,8 +348,9 @@ class ActasInventariosFCV extends Model {
         $this->ptt_rev_apoyo1 = $ptt;
         $this->save();
     }
-    function getAuditoriaApoyo1_unidades(){
-        return '(pendiente)';
+    function getAuditoriaApoyo1_unidades($conFormato=false){
+        // todo mejorar
+        return $this->_getEnteroEnMiles($this->apoyo1_total_unidades, $conFormato);
     }
     function getAuditoriaApoyo1_items($conFormato=false){
         return $this->_getEnteroEnMiles($this->items_rev_apoyo1, $conFormato);
@@ -357,8 +367,9 @@ class ActasInventariosFCV extends Model {
         $this->ptt_rev_apoyo2 = $ptt;
         $this->save();
     }
-    function getAuditoriaApoyo2_unidades(){
-        return '(pendiente)';
+    function getAuditoriaApoyo2_unidades($conFormato=false){
+        // todo mejorar
+        return $this->_getEnteroEnMiles($this->apoyo2_total_unidades, $conFormato);
     }
     function getAuditoriaApoyo2_items($conFormato=false){
         return $this->_getEnteroEnMiles($this->items_rev_apoyo2, $conFormato);
@@ -367,24 +378,24 @@ class ActasInventariosFCV extends Model {
         $this->items_rev_apoyo2 = $items;
         $this->save();
     }
+
     // Auditoria Supervisor
     function getAuditoriaSupervisor_patentes($conFormato=false){
-        return $this->_getEnteroEnMiles($this->ptt_rev_supervisor_fcv, $conFormato);
+//        return $this->_getEnteroEnMiles($this->ptt_rev_supervisor_fcv, $conFormato);
+        // todo mejorar
+        return $this->_getEnteroEnMiles($this->supervisor_total_patentes, $conFormato);
     }
     function setAuditoriaSupervisor_patentes($ptt){
         $this->ptt_rev_supervisor_fcv = $ptt;
         $this->save();
     }
-    function getAuditoriaSupervisor_unidades(){
-        return '(pendiente)';
+    function getAuditoriaSupervisor_unidades($conFormato=false){
+        // todo mejorar
+        return $this->_getEnteroEnMiles($this->supervisor_total_unidades, $conFormato);
     }
-    function getAuditoriaSupervisor_items(){
-        return '(pendiente)';
-    }
-    function getItemRevisadosCliente($conFormato=false){
-        // esteban lee el dato: "item_revisado"
-        $totalRevisados = $this->items_rev_qf + $this->items_rev_apoyo1 + $this->items_rev_apoyo2;
-        return $conFormato? number_format($totalRevisados, 0, ',', '.') : $totalRevisados;
+    function getAuditoriaSupervisor_items($conFormato=false){
+        // todo mejorar
+        return $this->_getEnteroEnMiles($this->supervisor_total_items, $conFormato);
     }
 
     // Correciones Auditoria FCV a SEI
@@ -426,10 +437,10 @@ class ActasInventariosFCV extends Model {
         if($itemRevisados==null || $unidadesCorregidas==null)
             return null;
         $porcentaje = ($unidadesCorregidas/$itemRevisados)*100;
-        return $conFormato? number_format($porcentaje, 1)."%" : $porcentaje;
+        return $this->_getPorcentaje($porcentaje, $conFormato);
     }
     function getPorcentajeErrorQF($conFormato=false){
-        return $conFormato? $this->porcentaje_error_qf."%" : $this->porcentaje_error_qf;
+        return $this->_getPorcentaje($this->porcentaje_error_qf, $conFormato);
     }
     function setPorcentajeErrorQF($porcentaje){
         $this->porcentaje_error_qf = $porcentaje;
@@ -437,14 +448,20 @@ class ActasInventariosFCV extends Model {
     }
 
     // Variación Grilla
-    function getPorcentajeVariacionGrilla(){
-        return '(pendiente)';
+    function getPorcentajeVariacionGrilla($conFormato=false){
+        return $this->_getPorcentaje($this->porcentaje_variacion_ajuste_grilla, $conFormato);
     }
-    function getSKUInventariados(){
-        return '(pendiente)';
+    function setPorcentajeVariacionGrilla($porcentaje){
+        $this->porcentaje_variacion_ajuste_grilla = $porcentaje;
+        $this->save();
     }
 
     // OTROS
+    function getItemRevisadosCliente($conFormato=false){
+        // esteban lee el dato: "item_revisado"
+        $totalRevisados = $this->items_rev_qf + $this->items_rev_apoyo1 + $this->items_rev_apoyo2;
+        return $conFormato? number_format($totalRevisados, 0, ',', '.') : $totalRevisados;
+    }
     function getItemTotalContados(){
         return $this->total_items_inventariados;
     }
@@ -524,6 +541,8 @@ class ActasInventariosFCV extends Model {
             // % Error Aud.
             'porcentajeErrorSEI' => $acta->getPorcentajeErrorSei(true),
             'porcentajeErrorQF' => $acta->getPorcentajeErrorQF(),
+            // Variación Grilla
+            'porcentajeVariacionGrilla' => $acta->getPorcentajeVariacionGrilla(),
         ];
     }
 

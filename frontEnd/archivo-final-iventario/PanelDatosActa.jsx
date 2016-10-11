@@ -405,6 +405,15 @@ const PanelBody = ({acta, editar}, ctx)=>
                             <Numero editarCampo={editar} valor={acta.porcentajeErrorQF}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'porcentajeErrorQF')}/>
                         </div>
+
+                        <div className={cx('tr-header')} >
+                            <p>VARIACIÓN GRILLA</p>
+                        </div>
+                        <div className={cx('tr-datos')}>
+                            <p className={cx('td-label')} title="en acta: '% Variacion Ajuste Neto (Grilla)'">Porcentaje variación</p>
+                            <Numero editarCampo={editar} valor={acta.porcentajeVariacionGrilla}
+                                    actualizarActa={ctx.actualizarActa.bind(this, 'porcentajeVariacionGrilla')}/>
+                        </div>
                     </div>
                 </div>
             </div>
