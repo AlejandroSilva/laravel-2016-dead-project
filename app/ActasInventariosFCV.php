@@ -22,7 +22,7 @@ class ActasInventariosFCV extends Model {
         'fecha_revision_grilla', 'supervisor_qf', 'diferencia_unid_absoluta', 'ptt_inventariadas', 'ptt_rev_qf',
         'ptt_rev_apoyo1', 'ptt_rev_apoyo2', 'ptt_rev_supervisor_fcv', 'total_items_inventariados', 'items_auditados',
         'items_corregidos_auditoria', 'items_rev_qf', 'items_rev_apoyo1', 'items_rev_apoyo2', 'unid_neto_corregido_auditoria',
-        'unid_absoluto_corregido_auditoria',
+        'unid_absoluto_corregido_auditoria', 'total_sku_efectivos', 'porcentaje_error_qf', 'porcentaje_variacion_ajuste_grilla'
     ];
     // aud2 = items_auditados
     // aud5 = items_corregidos_auditoria
@@ -429,7 +429,11 @@ class ActasInventariosFCV extends Model {
         return $conFormato? number_format($porcentaje, 1)."%" : $porcentaje;
     }
     function getPorcentajeErrorQF($conFormato=false){
-        return '(pendiente)';
+        return $conFormato? $this->porcentaje_error_qf."%" : $this->porcentaje_error_qf;
+    }
+    function setPorcentajeErrorQF($porcentaje){
+        $this->porcentaje_error_qf = $porcentaje;
+        $this->save();
     }
 
     // Variación Grilla
@@ -519,9 +523,7 @@ class ActasInventariosFCV extends Model {
             'correccionUnidadesAbsolutas' => $acta->getCorreccionUnidadesAbsolutasEnAuditoria(),
             // % Error Aud.
             'porcentajeErrorSEI' => $acta->getPorcentajeErrorSei(true),
-            'porcentajeErrorQF' => $acta->getPorcentajeErrorQF(true),
-
-
+            'porcentajeErrorQF' => $acta->getPorcentajeErrorQF(),
         ];
     }
 

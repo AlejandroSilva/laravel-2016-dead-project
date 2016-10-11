@@ -115,7 +115,7 @@ Route::group(['middleware' => ['web']], function (){
     | API's PROTEGIDAS SOLO A USUARIOS
     |--------------------------------------------------------------------------
     |*/
-    Route::group(['prefix'=>'api',  'middleware'=>['authAPI']], function() {
+    Route::group(['prefix'=>'api',  'middleware'=>['auth']], function() {
         // API CLIENTES Y LOCALES
         Route::get('clientes',                                      'ClientesController@api_getClientes');
         Route::get('cliente/{idCliente}/locales',                   'LocalesController@api_getLocales');

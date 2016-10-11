@@ -53,7 +53,7 @@ class CreateActasInventariosFcvTable extends Migration {
             $table->integer('aju1')->nullable();
             $table->integer('aju2')->nullable();
             $table->integer('aju3')->nullable();
-            $table->float('aju4')->nullable();;  // 2 decimales de precisio->nullable()n
+            $table->float('aju4')->nullable();;  // 2 decimales de precisio->nullable()
             $table->dateTime('tot1')->nullable();
             $table->integer('tot2')->nullable();
             $table->integer('tot3')->nullable();

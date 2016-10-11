@@ -401,8 +401,9 @@ const PanelBody = ({acta, editar}, ctx)=>
                             <p>{ acta.porcentajeErrorSEI }</p>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: '??????'">Porcentaje error QF</p>
-                            <p>{ acta.porcentajeErrorQF }</p>
+                            <p className={cx('td-label')} title="en acta: '(% Error QF CV)'">Porcentaje error QF</p>
+                            <Numero editarCampo={editar} valor={acta.porcentajeErrorQF}
+                                    actualizarActa={ctx.actualizarActa.bind(this, 'porcentajeErrorQF')}/>
                         </div>
                     </div>
                 </div>

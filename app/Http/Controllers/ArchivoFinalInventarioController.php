@@ -189,7 +189,6 @@ class ArchivoFinalInventarioController extends Controller {
             return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario])
                 ->with('mensaje-error-zip', $resultadoActa->error);
         }
-
         // paso 3) finalmente, actualizar el acta con los datos entregados
         $inventario->insertarOActualizarActa($resultadoActa->acta, $archivoFinalInventario->idArchivoFinalInventario);
         $archivoFinalInventario->setResultado('acta cargada correctamente', true);
@@ -265,6 +264,8 @@ class ArchivoFinalInventarioController extends Controller {
             'correccionItems' => 'numeric',
             'correccionUnidadesNeto' => 'numeric',
             'correccionUnidadesAbsolutas' => 'numeric',
+            // Porcentaje error auditoria
+            'porcentajeErrorQF' => 'numeric',
         ]);
         if($validator->fails()) {
             return response()->json(Inventarios::formatoActa($inventario));
@@ -345,7 +346,6 @@ class ArchivoFinalInventarioController extends Controller {
             //    $acta->setAuditoriaSupervisor_unidades($request->auditoriaSupervisorUnidades);
             //if(isset($request->auditoriaSupervisorItems))
             //    $acta->getAuditoriaSupervisor_items($request->auditoriaSupervisorItems);
-
             // Correcciones Auditoria FCV a SEI
             if(isset($request->correccionPatentes))
                 $acta->setCorreccionPatentesEnAuditoria($request->correccionPatentes);
@@ -355,6 +355,9 @@ class ArchivoFinalInventarioController extends Controller {
                 $acta->setCorreccionUnidadesNetoEnAuditoria($request->correccionUnidadesNeto);
             if(isset($request->correccionUnidadesAbsolutas))
                 $acta->setCorreccionUnidadesAbsolutasEnAuditoria($request->correccionUnidadesAbsolutas);
+            // Porcentaje error auditoria
+            if(isset($request->porcentajeErrorQF))
+                $acta->setPorcentajeErrorQF($request->porcentajeErrorQF);
 
             $inventario = Inventarios::find($idInventario);
             return response()->json(Inventarios::formatoActa($inventario));
