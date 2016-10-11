@@ -55,18 +55,13 @@ class MaestraFCVController extends Controller
         }
         //insertando datos parseados en la BD
         $archivoMaestraFCV->guardarRegistro($parseo->datos);
-        $skuDuplicado = MaestraFCV::skuDuplicados();
-        dd($skuDuplicado);
-        if($skuDuplicado!=null){
-            //return redirect()->route("maestraFCV")
-            //    ->with('skuDuplicado', $skuDuplicado);
-            dd($skuDuplicado);
+        $duplicados = MaestraFCV::skuDuplicados();
+        if($duplicados->count()>0){
+            return redirect()->route("maestraFCV");
         }
-        $archivoMaestraFCV->setResultado("archivo cargado correctamente en la base de datos. ", true);
-
-        return view('success.successConMensaje',[
-            'titulo' => 'Cargado correctamente', 'descripcion' => $archivoMaestraFCV->resultado
-        ]);
+        $archivoMaestraFCV->setResultado("archivo cargado correctamente en la base de datos. ", true);  
+        return redirect()->route("maestraFCV")
+                         ->with('mensaje-exito',$archivoMaestraFCV->resultado);
     }
     
     public function show_maestra_producto(){
@@ -74,7 +69,8 @@ class MaestraFCVController extends Controller
         if(!$user || !$user->can('admin-maestra-fcv'))
             return response()->view('errors.403', [], 403);
         $archivosMaestraFCV = ArchivoMaestraFCV::all();
-        return view('operacional.maestra.maestra-producto', ['archivosMaestraFCV' => $archivosMaestraFCV]);
+        $duplicados = MaestraFCV::skuDuplicados();
+        return view('operacional.maestra.maestra-producto', ['archivosMaestraFCV' => $archivosMaestraFCV, 'duplicados' => $duplicados]);
     }
     
     public function download_Maestra($idArchivoMaestra){

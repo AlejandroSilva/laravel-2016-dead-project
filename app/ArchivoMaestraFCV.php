@@ -46,6 +46,7 @@ class ArchivoMaestraFCV extends Model{
         $chunk = array_chunk($tableData,100,true);
         
         DB::transaction(function() use ($chunk) {
+            DB::table('maestra_fcv')->delete();
             foreach ($chunk as $dato) {
                 DB::table('maestra_fcv')->insert($dato);
             }

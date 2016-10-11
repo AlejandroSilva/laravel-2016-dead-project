@@ -73,16 +73,22 @@
                         <input type="file" name="file" id="file">
                         <br><input type="submit" class="btn btn-primary btn-xs" value="Subir Maestra" name="submit"></br>
                         <input type="hidden" value="{{ csrf_token() }}" name="_token">
+                        <div class="col-sm-12">
+                            @if(session('mensaje-exito'))
+                                <div class="alert alert-success" role="alert">
+                                    {{session('mensaje-exito')}}
+                                </div>
+                            @endif
+                            @if(session('mensaje-error'))
+                                <div class="alert alert-danger" role="alert">
+                                    {{session('mensaje-error')}}
+                                </div>
+                            @endif
+                        </div>
                     </form>
                 </div>
             </div>
-            <div class="col-sm-8 col-sm-offset-2">
-                @if(session('mensaje-error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{session('mensaje-error')}}
-                    </div>
-                @endif
-            </div>
+
         </div>
         <div class="col-md-5">
             <div class="panel panel-default">
@@ -101,5 +107,31 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            @if($duplicados->count()>0)
+                <div class="panel-heading" align="center"><span class="glyphicon glyphicon-duplicate"></span> Su maestra contiene sku duplicados</div>
+                <table class="table table-responsive table-hover tablefiles table-bordered">
+                    <thead>
+                    <th>barra</th>
+                    <th>descriptor</th>
+                    <th>sku</th>
+                    <th>laboratorio</th>
+                    <th>clasificacion</th>
+                    </thead>
+                    @foreach($duplicados as $duplicado)
+                        <tr class="warning">
+                            <td>{{ $duplicado->barra}}</td>
+                            <td>{{ $duplicado->descriptor}}</td>
+                            <td>{{ $duplicado->sku }}</td>
+                            <td>{{ $duplicado->laboratorio}}</td>
+                            <td >{{ $duplicado->clasificacionTerapeutica}}</td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+        </div>
+
     </div>
 </div>

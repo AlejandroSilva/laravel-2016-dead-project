@@ -12,7 +12,7 @@ use Auth;
 // Carbon
 use Carbon\Carbon;
 // Models
-use App\user;
+use App\User;
 use App\Nominas;
 
 class HomeController extends Controller {
