@@ -12,8 +12,16 @@ use File;
 use App\Inventarios;
 
 class ArchivoFinalInventarioController extends Controller {
+    public function __construct() {
+        $this->middleware('auth')->except('temp_descargarExcelActas');
+        $this->middleware('buscarInventario')
+            ->only('show_archivofinal_index', 'api_subirZipFCV', 'api_getActa', 'api_actualizarActa', 'api_publicarActa');
+        $this->middleware('userCan:programaAuditorias_ver')
+            ->only('api_publicarActa', 'api_despublicarActa');
+    }
 
     // GET inventario/descargar-consolidado-fcv
+    // MW: auth
     function descargar_consolidado_fcv(Request $request){
         // todo recibir rango de fecha y otros filtros por el get
         $actas = ActasInventariosFCV::buscar();
@@ -141,13 +149,9 @@ class ArchivoFinalInventarioController extends Controller {
     }
 
     // GET inventario/{idInventario}/archivo-final
-    function show_archivofinal_index($idInventario){
-        // existe el inventario?
-        $inventario = Inventarios::find($idInventario);
-        if(!$inventario)
-            return view('errors.errorConMensaje', [
-                'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
-            ]);
+    // MW: auth, buscarInventario
+    function show_archivofinal_index(Request $request, $idInventario){
+        $inventario = $request->inventario;
 
         return view('archivo-final-inventario.archivo-final-index', [
             'inventario' => $inventario,
@@ -157,15 +161,13 @@ class ArchivoFinalInventarioController extends Controller {
     }
 
     // POST inventario/{idInventario}/subir-zip-fcv
+    // MW: auth, buscarInventario
     function api_subirZipFCV(Request $request, $idInventario){
         // todo validar permisos
         // todo, validar que sea de FCV el archivo
 
         // nomina existe?
-        $inventario = Inventarios::find($idInventario);
-        if(!$inventario)
-            return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario])
-                ->with('mensaje-error-zip', 'El inventario indicado no existe');
+        $inventario = $request->inventario;
         $local_numero = $inventario->local->numero;
 
         // se adjunto un archivo?
@@ -193,29 +195,29 @@ class ArchivoFinalInventarioController extends Controller {
         $inventario->insertarOActualizarActa($resultadoActa->acta, $archivoFinalInventario->idArchivoFinalInventario);
         $archivoFinalInventario->setResultado('acta cargada correctamente', true);
 
+        // paso 4) dejar el acta como publicada
+        $user = $request->user;
+        $inventario->actaFCV->publicar($user);
+
         return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario])
             ->with('mensaje-exito-zip', $archivoFinalInventario->resultado);
-        //return response()->json($resultadoActa->acta);
     }
 
     // GET inventario/{idInventario}/acta
-    function api_getActa($idInventario){
+    // MW: auth, buscarInventario
+    function api_getActa(Request $request, $idInventario){
         // todo tiene los permisos?
-        // la nomina existe?
-        $inventario = Inventarios::find($idInventario);
-        if(!$inventario)
-            return response()->json([], 404);
 
+        $inventario = $request->inventario;
         return response()->json(Inventarios::formatoActa($inventario));
     }
+
     // POST inventario/{idInventario}/acta
+    // MW: auth, buscarInventario
     function api_actualizarActa(Request $request, $idInventario){
         // todo validar permisos
-        // todo validar si existe el inventario
 
-        $inventario = Inventarios::find($idInventario);
-        if(!$inventario)
-            return response()->json([], 404);
+        $inventario = $request->inventario;
 
         $validator = Validator::make($request->all(), [
             // hitos importantes
@@ -365,56 +367,34 @@ class ArchivoFinalInventarioController extends Controller {
     }
 
     // POSTinventario/{idInventario}/publicar-acta
-    function api_publicarActa($idInventario){
-        // validar de que el usuario tenga los permisos
-        $user = Auth::user();
-        if(!$user || !$user->can('programaAuditorias_ver'))
-            return view('errors.403');
+    // MW: auth, buscarInventario, userCan:programaAuditorias_ver
+    function api_publicarActa(Request $request, $idInventario){
+        // mw permisos
+        $user = $request->user;
+        // mw buscarInventario
+        $inventario = $request->inventario;
 
-        // el inventario existe?
-        $inventario = Inventarios::find($idInventario);
-        if(!$inventario)
-            return view('errors.errorConMensaje', [
-                'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
-            ]);
-
-        // publicar
+        // publicar, actualizar, y mostrar datos
         $inventario->actaFCV->publicar($user);
-
         $inventario = Inventarios::find($idInventario);
         return response()->json(Inventarios::formatoActa($inventario));
-        //return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario]);
     }
 
     // POSTinventario/{idInventario}/despublicar-acta
-    function api_despublicarActa($idInventario){
-        // validar de que el usuario tenga los permisos
-        $user = Auth::user();
-        if(!$user || !$user->can('programaAuditorias_ver'))
-            return view('errors.403');
+    // MW: auth, buscarInventario, userCan:programaAuditorias_ver
+    function api_despublicarActa(Request $request, $idInventario){
+        // mw buscarInventario
+        $inventario = $request->inventario;
 
-        // el inventario existe?
-        $inventario = Inventarios::find($idInventario);
-        if(!$inventario)
-            return view('errors.errorConMensaje', [
-                'titulo' => 'Inventario no encontrado', 'descripcion' => 'El inventario que busca no ha sido encontrado.'
-            ]);
-
-        // publicar
+        // des-publicar, actualizar, y mostrar datos
         $inventario->actaFCV->despublicar();
-
         $inventario = Inventarios::find($idInventario);
         return response()->json(Inventarios::formatoActa($inventario));
-        //return redirect()->route("indexArchivoFinal", ['idInventario'=>$idInventario]);
     }
 
     // GET archivo-final-inventario/{idArchivo}/descargar
-    public function descargar_archivo_final($idArchivoFinalInventario){
-        // verificar permisos
-        $user = Auth::user();
-        if(!$user || !$user->can('admin-maestra-fcv'))
-            return response()->view('errors.403', [], 403);
-
+    // auth
+    public function descargar_archivo_final(Request $request, $idArchivoFinalInventario){
         // existe el registro en la BD?
         $archivoFinalInventario = ArchivoFinalInventario::find($idArchivoFinalInventario);
         if(!$archivoFinalInventario)
@@ -429,6 +409,7 @@ class ArchivoFinalInventarioController extends Controller {
     }
 
     // GET archivo-final-inventario/excel-actas
+    // MW: ninguno, vista publica
     function temp_descargarExcelActas(){
         // archivo con ruta fija
         $fullPath = public_path()."/actas-septiembre-2016.xlsx";

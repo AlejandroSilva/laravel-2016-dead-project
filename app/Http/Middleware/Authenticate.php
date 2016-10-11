@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Auditorias;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,6 +25,7 @@ class Authenticate {
             }
         }
 
+        $request->user = Auth::user();
         return $next($request);
     }
 }
