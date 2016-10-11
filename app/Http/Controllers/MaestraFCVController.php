@@ -22,17 +22,14 @@ class MaestraFCVController extends Controller
         
         // se adjunto un archivo?
         if (!$request->hasFile('file'))
-            return view('errors.errorConMensaje', [
-                'titulo' => 'Error', 'descripcion' => 'Debe adjuntar el archivo excel.'
-            ]);
+            return redirect()->route("maestraFCV")
+                ->with('mensaje-error', "Debe adjuntar la maestra");
         
         // el archivo es valido?
         $archivo = $request->file('file');
         if (!$archivo->isValid())
-            return view('errors.errorConMensaje', [
-                'titulo' => 'error', 'descripcion' => 'Archivo adjunto no es valido.'
-            ]);
-
+            return redirect()->route("maestraFCV")
+                ->with('mensaje-error', "El archivo adjunto no es válido");
         //Mover maestra a una carpeta en el servidor
         $moverArchivo=\ArchivoMaestraFCVHelper::moverAcarpeta($archivo);
         //Guardar archivo en la DB
@@ -42,9 +39,8 @@ class MaestraFCVController extends Controller
         //Cuando no puede leer el excel retorna un error
         if($resultadoExcel->error!=null){
             $archivoMaestraFCV->setResultado($resultadoExcel->error, false);
-            return view('errors.errorConMensaje',[
-                'titulo' => 'error', 'descripcion' => $resultadoExcel->error
-            ]);
+            return redirect()->route("maestraFCV")
+                ->with('mensaje-error', $resultadoExcel->error);
         }
         //Parsear los datos del archivo
         $parseo = \ArchivoMaestraFCVHelper::parseo($resultadoExcel->datos, $archivoMaestraFCV->idArchivoMaestra);
@@ -55,9 +51,12 @@ class MaestraFCVController extends Controller
         }
         //insertando datos parseados en la BD
         $archivoMaestraFCV->guardarRegistro($parseo->datos);
-        $duplicados = MaestraFCV::skuDuplicados();
-        if($duplicados->count()>0){
-            return redirect()->route("maestraFCV");
+        $duplicados = \ArchivoMaestraFCVHelper::skuDuplicado();
+        // Select a la base de datos para revisar sku duplicados
+        if($duplicados->error!=null){
+            $archivoMaestraFCV->setResultado($duplicados->error, false);
+            return redirect()->route("maestraFCV")
+                             ->with('mensaje-error', "Maestra con SKU duplicados");
         }
         $archivoMaestraFCV->setResultado("archivo cargado correctamente en la base de datos. ", true);  
         return redirect()->route("maestraFCV")

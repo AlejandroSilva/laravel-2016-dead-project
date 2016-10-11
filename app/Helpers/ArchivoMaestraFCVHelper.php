@@ -1,6 +1,7 @@
 <?php
 // Carbon
 use Carbon\Carbon;
+use App\MaestraFCV;
 
 class ArchivoMaestraFCVHelper{
     static function moverAcarpeta($archivo){
@@ -50,6 +51,18 @@ class ArchivoMaestraFCVHelper{
             'datos' => $tableData,
             'error' => $error
         ];
+    }
+    static function skuDuplicado(){
+        $response = (object)[
+            'error' => null,
+            'datos' => null
+        ];
+        $duplicados = MaestraFCV::skuDuplicados();
+        if($duplicados->count()>0){
+            $response->datos = $duplicados;
+            $response->error = "SKU duplicados";
+        }
+        return $response;
     }
     //Validar que los campos no contengas valores nulos
     private static function _camposValidos($row, $barra, $descriptor, $sku, $laboratorio, $clasificacionTerapeutica){

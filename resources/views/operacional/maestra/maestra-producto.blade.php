@@ -60,31 +60,30 @@
             </div>
         </div>
     </div>
-</div>
-
-<div class='container-fluid'>
     <div class="row">
         <div class="col-md-5 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading" align="center"><span class="glyphicon glyphicon-upload"></span> Subir Nueva Maestra</div>
-                <div align="center">
+                <div class="panel-body" align="center">
                     <form action="/maestra-productos-fcv/subir-maestra-fcv" method="post" enctype="multipart/form-data">
+                        <input type="hidden" value="{{ csrf_token() }}" name="_token">
                         <label>Seleccione Archivo:</label>
                         <input type="file" name="file" id="file">
                         <br><input type="submit" class="btn btn-primary btn-xs" value="Subir Maestra" name="submit"></br>
-                        <input type="hidden" value="{{ csrf_token() }}" name="_token">
-                        <div class="col-sm-12">
-                            @if(session('mensaje-exito'))
+                        @if(session('mensaje-exito'))
+                            <br><div class="col-sm-12">
                                 <div class="alert alert-success" role="alert">
                                     {{session('mensaje-exito')}}
                                 </div>
-                            @endif
-                            @if(session('mensaje-error'))
-                                <div class="alert alert-danger" role="alert">
-                                    {{session('mensaje-error')}}
-                                </div>
-                            @endif
-                        </div>
+                            </div></br>
+                        @endif
+                        @if(session('mensaje-error'))
+                            <br><div class="col-sm-12">
+                            <div class="alert alert-danger" role="alert">
+                                {{session('mensaje-error')}}
+                            </div>
+                            </div></br>
+                        @endif
                     </form>
                 </div>
             </div>
@@ -108,30 +107,31 @@
             </div>
         </div>
     </div>
+    @if($duplicados->count()>0)
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            @if($duplicados->count()>0)
-                <div class="panel-heading" align="center"><span class="glyphicon glyphicon-duplicate"></span> Su maestra contiene sku duplicados</div>
+            <div class="panel panel-default">
+               <div class="panel-heading" align="center"><span class="glyphicon glyphicon-duplicate"></span> Su maestra contiene sku duplicados</div>
                 <table class="table table-responsive table-hover tablefiles table-bordered">
-                    <thead>
-                    <th>barra</th>
-                    <th>descriptor</th>
-                    <th>sku</th>
-                    <th>laboratorio</th>
-                    <th>clasificacion</th>
-                    </thead>
-                    @foreach($duplicados as $duplicado)
-                        <tr class="warning">
-                            <td>{{ $duplicado->barra}}</td>
-                            <td>{{ $duplicado->descriptor}}</td>
-                            <td>{{ $duplicado->sku }}</td>
-                            <td>{{ $duplicado->laboratorio}}</td>
-                            <td >{{ $duplicado->clasificacionTerapeutica}}</td>
-                        </tr>
-                    @endforeach
-                </table>
-            @endif
+                <thead>
+                <th>Código Barra</th>
+                <th>Descriptor</th>
+                <th>SKU</th>
+                <th>Laboratorio</th>
+                <th>Clasificación</th>
+                </thead>
+                @foreach($duplicados as $duplicado)
+                    <tr class="warning">
+                        <td>{{ $duplicado->barra}}</td>
+                        <td>{{ $duplicado->descriptor}}</td>
+                        <td>{{ $duplicado->sku }}</td>
+                        <td>{{ $duplicado->laboratorio}}</td>
+                        <td >{{ $duplicado->clasificacionTerapeutica}}</td>
+                    </tr>
+                @endforeach
+            </table>
+            </div>
         </div>
-
     </div>
+    @endif
 </div>

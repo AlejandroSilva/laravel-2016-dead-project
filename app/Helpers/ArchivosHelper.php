@@ -72,7 +72,7 @@ class ArchivosHelper{
             ]);
     }
 
-    static function moverACarpeta($archivo, $extra, $carpetaDestino){
+    static function _moverACarpeta($archivo, $extra, $carpetaDestino){
         $nombreOriginal = $archivo->getClientOriginalName();
         $nombreFinal = "$extra $nombreOriginal";
 
