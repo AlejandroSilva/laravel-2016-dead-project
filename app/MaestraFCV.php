@@ -15,4 +15,12 @@ class MaestraFCV extends Model{
     public function archivoMaestraFCV(){
         return $this->belongsTo('App\ArchivoMaestraFCV', 'idArchivoMaestra', 'idArchivoMaestra');
     }
+    static function skuDuplicados(){
+
+        $skuDuplicados = MaestraFCV::whereIn('sku', function ( $query ) {
+            $query->select('sku')->from('maestra_fcv')->groupBy('sku')->havingRaw('count(*) > 1');
+        })->get();
+
+        return $skuDuplicados;
+    }
 }

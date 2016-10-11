@@ -10,6 +10,7 @@ use Response;
 use Auth;
 // Modelos
 use App\ArchivoMaestraFCV;
+use App\MaestraFCV;
 
 class MaestraFCVController extends Controller
 {
@@ -54,6 +55,13 @@ class MaestraFCVController extends Controller
         }
         //insertando datos parseados en la BD
         $archivoMaestraFCV->guardarRegistro($parseo->datos);
+        $skuDuplicado = MaestraFCV::skuDuplicados();
+        dd($skuDuplicado);
+        if($skuDuplicado!=null){
+            //return redirect()->route("maestraFCV")
+            //    ->with('skuDuplicado', $skuDuplicado);
+            dd($skuDuplicado);
+        }
         $archivoMaestraFCV->setResultado("archivo cargado correctamente en la base de datos. ", true);
 
         return view('success.successConMensaje',[
