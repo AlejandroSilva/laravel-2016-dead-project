@@ -55,77 +55,77 @@ class ArchivoFinalInventarioController extends Controller {
 
                 // ######  Dotaciones
                 // Ppto.
-                $acta->getDotacionPresupuestada(false),
+                $acta->getDotacionPresupuestada(true),
                 // Efectivo
-                $acta->getDotacionEfectiva(false),
+                $acta->getDotacionEfectiva(true),
 
                 // ######  unidades
                 // Conteo
-                $acta->getUnidadesInventariadas(false),          // ??, no estoy seguro
+                $acta->getUnidadesInventariadas(),          // ??, no estoy seguro
                 // Teórico
                 $acta->getUnidadesTeoricas(),
                 // Dif. Neto
-                $acta->getDiferenciaNeto(false),
+                $acta->getDiferenciaNeto(),
                 // Dif. ABS
-                $acta->getDiferenciaAbsoluta(false),
+                $acta->getDiferenciaAbsoluta(),
 
                 // ######  Evaluaciones / Notas
                 // Nota Presentacion
-                $acta->getNotaPresentacion(false),
+                $acta->getNotaPresentacion(),
                 // Nota Supervisor
-                $acta->getNotaSupervisor(false),
+                $acta->getNotaSupervisor(),
                 // Nota Conteo
-                $acta->getNotaConteo(false),
+                $acta->getNotaConteo(),
 
                 // ######  Consolidado Auditoria FCV
                 // Patente
-                $acta->getConsolidadoPatentes(false),
+                $acta->getConsolidadoPatentes(true),
                 // Unidades
-                $acta->getConsolidadoUnidades(false),
+                $acta->getConsolidadoUnidades(true),
                 // Items
-                $acta->getConsolidadoItems(false),
+                $acta->getConsolidadoItems(true),
 
                 // ######  Auditoria QF
                 // Patente
-                $acta->getAuditoriaQF_patentes(false),
+                $acta->getAuditoriaQF_patentes(true),
                 // Unidades
-                $acta->getAuditoriaQF_unidades(false),
+                $acta->getAuditoriaQF_unidades(true),
                 // Items
-                $acta->getAuditoriaQF_items(false),
+                $acta->getAuditoriaQF_items(true),
 
                 // ######  Auditoria Apoyo 1
                 // Patente
-                $acta->getAuditoriaApoyo1_patentes(false),
+                $acta->getAuditoriaApoyo1_patentes(true),
                 // Unidades
-                $acta->getAuditoriaApoyo1_unidades(false),
+                $acta->getAuditoriaApoyo1_unidades(true),
                 // Items
-                $acta->getAuditoriaApoyo1_items(false),
+                $acta->getAuditoriaApoyo1_items(true),
 
                 // ######  Auditoria Apoyo 2
                 // Patente
-                $acta->getAuditoriaApoyo2_patentes(false),
+                $acta->getAuditoriaApoyo2_patentes(true),
                 // Unidades
-                $acta->getAuditoriaApoyo2_unidades(false),
+                $acta->getAuditoriaApoyo2_unidades(true),
                 // Items
-                $acta->getAuditoriaApoyo2_items(false),
+                $acta->getAuditoriaApoyo2_items(true),
 
                 // ######  Auditoria Supervisor
                 // Patente
-                $acta->getAuditoriaSupervisor_patentes(false),
+                $acta->getAuditoriaSupervisor_patentes(true),
                 // Unidades
-                $acta->getAuditoriaSupervisor_unidades(false),
+                $acta->getAuditoriaSupervisor_unidades(true),
                 // Items
-                $acta->getAuditoriaSupervisor_items(false),
+                $acta->getAuditoriaSupervisor_items(true),
 
                 // ######  Correciones Auditoria FCV a SEI
                 // Patentes
-                $acta->getCorreccionPatentesEnAuditoria(false),
+                $acta->getCorreccionPatentesEnAuditoria(),
                 // Items
-                $acta->getCorreccionItemsEnAuditoria(false),
+                $acta->getCorreccionItemsEnAuditoria(),
                 // Un. Neto
-                $acta->getCorreccionUnidadesNetoEnAuditoria(false),
+                $acta->getCorreccionUnidadesNetoEnAuditoria(),
                 // Un. ABS'
-                $acta->getCorreccionUnidadesAbsolutasEnAuditoria(false),
+                $acta->getCorreccionUnidadesAbsolutasEnAuditoria(),
 
                 // ######  % Error Aud.
                 // SEI
@@ -136,11 +136,10 @@ class ArchivoFinalInventarioController extends Controller {
                 // ######  Variación Grilla
                 // %
                 $acta->getPorcentajeVariacionGrilla(true),
-                // SKU Inv
-                $acta->getSKUInventariados(true),
             ];
         })->toArray();
 
+        //return response()->json($datos);
         $workbook = \ExcelHelper::generarWorkbook_consolidadoActas($datos);
 
         // generar el archivo y descargarlo
@@ -267,7 +266,10 @@ class ArchivoFinalInventarioController extends Controller {
             'correccionUnidadesNeto' => 'numeric',
             'correccionUnidadesAbsolutas' => 'numeric',
             // Porcentaje error auditoria
+            'porcentajeErrorSEI' => 'numeric',
             'porcentajeErrorQF' => 'numeric',
+            // Variacion Grilla
+            'porcentaje_variacion_ajuste_grilla' => 'numeric',
         ]);
         if($validator->fails()) {
             return response()->json(Inventarios::formatoActa($inventario));
@@ -358,8 +360,13 @@ class ArchivoFinalInventarioController extends Controller {
             if(isset($request->correccionUnidadesAbsolutas))
                 $acta->setCorreccionUnidadesAbsolutasEnAuditoria($request->correccionUnidadesAbsolutas);
             // Porcentaje error auditoria
+            //if(isset($request->porcentajeErrorSEI))
+            //    $acta->setPorcentajeErrorSEI($request->porcentajeErrorSEI);
             if(isset($request->porcentajeErrorQF))
                 $acta->setPorcentajeErrorQF($request->porcentajeErrorQF);
+            // Variacion Grilla
+            if(isset($request->porcentajeVariacionGrilla))
+                $acta->setPorcentajeVariacionGrilla($request->porcentajeVariacionGrilla);
 
             $inventario = Inventarios::find($idInventario);
             return response()->json(Inventarios::formatoActa($inventario));

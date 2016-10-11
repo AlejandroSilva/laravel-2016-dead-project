@@ -27,11 +27,11 @@ class ActaInventarioHelper{
 
 
     private static function __array_a_actaFCV($datos){
-        function _get(&$value, $default=null) {
+        function _get(&$value) {
             if( isset($value) && trim($value)!='' )
                 return $value;
             else
-                return null;//return $default;
+                return null;
         }
         function _getDate(&$value, $DEFAULT_DATE='0000-00-00') {
             // La fecha se reciben como texto (ej. '30/03/2016',) el string debe estar definido, tener algo caracter, y
@@ -112,6 +112,20 @@ class ActaInventarioHelper{
             'total_sku_efectivos' => _get($datos['Total SKU (Códigos internos) efectivos local']),          // integer
             'porcentaje_error_qf' => _get($datos['(% Error QF CV)']),                                       // float
             'porcentaje_variacion_ajuste_grilla' => _get($datos['% Variacion Ajuste Neto (Grilla)']),       // float
+
+            // ordenar luego
+            'qf_total_unidades'             => _get($datos['QF Total Unidades']),                // integer
+            'qf_total_items'                => _get($datos['QF Total Items']),                // integer
+            'qf_total_patentes'             => _get($datos['QF Total Patentes']),                // integer
+            'apoyo1_total_unidades'         => _get($datos['A1 Total Unidades']),                // integer
+            'apoyo1_total_items'            => _get($datos['A1 Total Items']),                // integer
+            'apoyo1_total_patentes'         => _get($datos['A1 Total Patentes']),                // integer
+            'apoyo2_total_unidades'         => _get($datos['A2 Total Unidades']),                // integer
+            'apoyo2_total_items'            => _get($datos['A2 Total Items']),                // integer
+            'apoyo2_total_patentes'         => _get($datos['A2 Total Patentes']),                // integer
+            'supervisor_total_unidades'     => _get($datos['SUP CV Total Unidades']),                // integer
+            'supervisor_total_items'        => _get($datos['SUP CV Total Items']),                // integer
+            'supervisor_total_patentes'     => _get($datos['SUP CV Total Patentes']),                // integer
         ];
     }
 
