@@ -646,11 +646,23 @@ class ActasInventariosFCV extends Model {
     }
 
     // #### Buscar / Filtrar Nominas
-    static function buscar(){
+    static function buscar($peticion){
         $query =  ActasInventariosFCV::where('fecha_publicacion', '!=', '0000-00-00 00:00:00');
 
-        // pendinte: ordenar por la fecha programada del inventario, no de la tabla acta
-        // $query->orderBy('inventario.fechaProgramada', 'asc');
-        return $query->get();
+        $fechaInicio = $peticion->fechaInicio;
+        if(isset($fechaInicio))
+            $query->whereHas('inventario', function($q) use ($fechaInicio) {
+                $q->where('fechaProgramada', '>=', $fechaInicio);
+            });
+
+        $fechaFin = $peticion->fechaFin;
+        if(isset($fechaFin))
+            $query->whereHas('inventario', function($q) use ($fechaFin) {
+                $q->where('fechaProgramada', '<=', $fechaFin);
+            });
+
+        // ordenados por fecha programada del inventario
+        $collection = $query->get();
+        return $collection->sortBy('inventario.fechaProgramada');
     }
 }

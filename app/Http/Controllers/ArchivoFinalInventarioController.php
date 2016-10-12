@@ -24,7 +24,10 @@ class ArchivoFinalInventarioController extends Controller {
     // MW: auth
     function descargar_consolidado_fcv(Request $request){
         // todo recibir rango de fecha y otros filtros por el get
-        $actas = ActasInventariosFCV::buscar();
+        $actas = ActasInventariosFCV::buscar((object)[
+            'fechaInicio' => $request->query('fechaInicio'),
+            'fechaFin' => $request->query('fechaFin'),
+        ]);
         $datos = $actas->map(function($acta){
             return [
                 // ######  Hitos importantes del proceso de inventario:
