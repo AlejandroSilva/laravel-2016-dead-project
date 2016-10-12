@@ -25,13 +25,18 @@ class ActaInventarioHelper{
         return (object)['acta'=>$acta];
     }
 
-
-    private static function __array_a_actaFCV($datos){
-        function _get(&$value) {
+    private static function __array_a_actaFCV($d){
+        function _get(&$value, &$value2=null) {
+            // si existe el primer valor, entregarlo
             if( isset($value) && trim($value)!='' )
                 return $value;
-            else
-                return null;
+            else{
+                // si no existe el primero, tratar con el segundo
+                if( isset($value2) && trim($value2)!='' )
+                    return $value2;
+                else
+                    return null;
+            }
         }
         function _getDate(&$value, $DEFAULT_DATE='0000-00-00') {
             // La fecha se reciben como texto (ej. '30/03/2016',) el string debe estar definido, tener algo caracter, y
@@ -55,77 +60,78 @@ class ActaInventarioHelper{
             }
         }
         return [
-            'presupuesto'       => _get($datos['presupuesto']),             // integer
-            'efectiva'          => _get($datos['efectiva']),                // integer
-            'hora_llegada'      => _get($datos['hora_llegada']),            // TODO: time funciona igual??
-            'administrador'     => _get($datos['administrador']),           // string
-            'porcentaje'        => _get($datos['porcentaje']),              // integer
-            'captura_uno'       => _getDatetime($datos['captura_uno']),     // dateTime
-            'emision_cero'      => _getDatetime($datos['emision_cero']),    // dateTime
-            'emision_variance'  => _getDatetime($datos['emision_variance']),// dateTime
-            'inicio_sumary'     => _getDatetime($datos['inicio_sumary']),   // dateTime
-            'fin_captura'       => _getDatetime($datos['fin_captura']),     // dateTime
-            'unidades'          => _get($datos['unidades']),                // integer
-            'teorico_unidades'  => _get($datos['teorico_unidades']),        // integer
-            'fecha_toma'        => _getDate($datos['fecha_toma']),          // date
-            'cod_local'         => _get($datos['cod_local']),               // integer
-            'nombre_empresa'    => _get($datos['nombre_empresa']),          // string
-            'usuario'           => _get($datos['usuario']),                 // string
-            'nota1'             => _get($datos['nota1']),  // integer
-            'nota2'             => _get($datos['nota2']),  // integer
-            'nota3'             => _get($datos['nota3']),  // integer
-            'aud1'              => _get($datos['Aud1']),   // integer
-            'aud2'              => _get($datos['Aud2']),   // integer
-            'aud3'              => _get($datos['Aud3']),   // integer
-            'aud4'              => _get($datos['Aud4']),   // integer
-            'aud5'              => _get($datos['Aud5']),   // integer
-            'aud6'              => _get($datos['Aud6']),   // integer
-            'aju1'              => _get($datos['Aju1']),   // integer
-            'aju2'              => _get($datos['Aju2']),   // integer
-            'aju3'              => _get($datos['Aju3']),   // integer
-            'aju4'              => _get($datos['Aju4']),   // float, 2 decimales de precision
-            'tot1'              => _getDatetime($datos['tot1']), // dateTime
-            'tot2'              => _get($datos['tot2']),   // integer
-            'tot3'              => _get($datos['tot3']),   // integer
-            'tot4'              => _get($datos['tot4']),   // integer
-            'check1'            => _get($datos['check1']), // integer
-            'check2'            => _get($datos['check2']), // integer
-            'check3'            => _get($datos['check3']), // integer
-            'check4'            => _get($datos['check4']), // integer
+            'presupuesto'       => _get($d['presupuesto']),
+            'efectiva'          => _get($d['efectiva']),
+            'hora_llegada'      => _get($d['hora_llegada']),
+            'administrador'     => _get($d['administrador']),
+            'porcentaje'        => _get($d['porcentaje']),
+            'captura_uno'       => _getDatetime($d['captura_uno']),
+            'emision_cero'      => _getDatetime($d['emision_cero']),
+            'emision_variance'  => _getDatetime($d['emision_variance']),
+            'inicio_sumary'     => _getDatetime($d['inicio_sumary']),
+            'fin_captura'       => _getDatetime($d['fin_captura']),
+            'unidades'          => _get($d['unidades']),
+            'teorico_unidades'  => _get($d['teorico_unidades']),
+            'fecha_toma'        => _getDate($d['fecha_toma']),
+            'cod_local'         => _get($d['cod_local']),
+            'nombre_empresa'    => _get($d['nombre_empresa']),
+            'usuario'           => _get($d['usuario']),
+            'nota1'             => _get($d['nota1']),
+            'nota2'             => _get($d['nota2']),
+            'nota3'             => _get($d['nota3']),
+            'aud1'              => _get($d['Aud1']),
+            'aud2'              => _get($d['Aud2']),
+            'aud3'              => _get($d['Aud3']),
+            'aud4'              => _get($d['Aud4']),
+            'aud5'              => _get($d['Aud5']),
+            'aud6'              => _get($d['Aud6']),
+            'aju1'              => _get($d['Aju1']),
+            'aju2'              => _get($d['Aju2']),
+            'aju3'              => _get($d['Aju3']),
+            'aju4'              => _get($d['Aju4']),
+            'tot1'              => _getDatetime($d['tot1']),
+            'tot2'              => _get($d['tot2']),
+            'tot3'              => _get($d['tot3']),
+            'tot4'              => _get($d['tot4']),
+            'check1'            => _get($d['check1']),
+            'check2'            => _get($d['check2']),
+            'check3'            => _get($d['check3']),
+            'check4'            => _get($d['check4']),
             // CAMPOS DE LA VERSION "NUEVA"
-            'fecha_revision_grilla'     => _getDatetime($datos['Fecha Revision Grilla']),   // dateTime
-            'supervisor_qf'             => _getDate($datos['Supervisor QF']),               // date
-            'diferencia_unid_absoluta'  => _get($datos['Diferencia Unidades Absoluta']),    // integer
-            'ptt_inventariadas'         => _get($datos['Cantidad PTT Inventariadas']),      // integer
-            'ptt_rev_qf'                => _get($datos['PTT Revisadas QF']),                // integer
-            'ptt_rev_apoyo1'            => _get($datos['PTT Rev. Apoyo 1']),                // integer
-            'ptt_rev_apoyo2'            => _get($datos['PTT Rev. Apoyo 2']),                // integer
-            'ptt_rev_supervisor_fcv'    => _get($datos['PTT Rev. Sup. FCV']),               // integer
-            'total_items_inventariados' => _get($datos['Total Item Inventariados']),        // integer
-            'items_auditados'           => _get($datos['Item Auditados']),                  // integer
-            'items_corregidos_auditoria'=> _get($datos['Items Corregido Auditoria']),       // integer
-            'items_rev_qf'      => _get($datos['Items Revisadas QF']),                      // integer
-            'items_rev_apoyo1'  => _get($datos['Items Rev. Apoyo 1']),                      // integer
-            'items_rev_apoyo2'  => _get($datos['Items Rev. Apoyo 2']),                      // integer
-            'unid_neto_corregido_auditoria'     => _get($datos['Unidades Neto corregido Auditoria']),       // integer
-            'unid_absoluto_corregido_auditoria' => _get($datos['Unidades Absoluto corregido Auditoria']),   // integer
-            'total_sku_efectivos' => _get($datos['Total SKU (Códigos internos) efectivos local']),          // integer
-            'porcentaje_error_qf' => _get($datos['(% Error QF CV)']),                                       // float
-            'porcentaje_variacion_ajuste_grilla' => _get($datos['% Variacion Ajuste Neto (Grilla)']),       // float
+            'fecha_revision_grilla'     => _getDatetime($d['Fecha Revision Grilla']),
+            'supervisor_qf'             => _getDate($d['Supervisor QF']),
+            'diferencia_unid_absoluta'  => _get($d['Diferencia Unidades Absoluta']),
+            'ptt_inventariadas'         => _get($d['Cantidad PTT Inventariadas']),
+            'ptt_rev_qf'                => _get($d['PTT Revisadas QF'], $d['QF Total Patentes']),       // dato repetido en 2 lados
+            'ptt_rev_apoyo1'            => _get($d['PTT Rev. Apoyo 1'], $d['A1 Total Patentes']),       // dato repetido en 2 lados
+            'ptt_rev_apoyo2'            => _get($d['PTT Rev. Apoyo 2'], $d['A2 Total Patentes']),       // dato repetido en 2 lados
+            'ptt_rev_supervisor_fcv'    => _get($d['PTT Rev. Sup. FCV'], $d['SUP CV Total Patentes']),  // dato repetido en 2 lados
+            'total_items_inventariados' => _get($d['Total Item Inventariados']),
+            'items_auditados'           => _get($d['Item Auditados']),
+            'items_corregidos_auditoria'=> _get($d['Items Corregido Auditoria']),
+            'items_rev_qf'      => _get($d['Items Revisadas QF'], $d['QF Total Items']),                // dato repetido en 2 lados
+            'items_rev_apoyo1'  => _get($d['Items Rev. Apoyo 1'], $d['A1 Total Items']),                // dato repetido en 2 lados
+            'items_rev_apoyo2'  => _get($d['Items Rev. Apoyo 2']),
+            'unid_neto_corregido_auditoria'     => _get($d['Unidades Neto corregido Auditoria']),
+            'unid_absoluto_corregido_auditoria' => _get($d['Unidades Absoluto corregido Auditoria']),
+            'total_sku_efectivos' => _get($d['Total SKU (Códigos internos) efectivos local']),
+            'porcentaje_error_qf' => _get($d['(% Error QF CV)']),
+            'porcentaje_variacion_ajuste_grilla' => _get($d['% Variacion Ajuste Neto (Grilla)']),
 
             // ordenar luego
-            'qf_total_unidades'             => _get($datos['QF Total Unidades']),                // integer
-            'qf_total_items'                => _get($datos['QF Total Items']),                // integer
-            'qf_total_patentes'             => _get($datos['QF Total Patentes']),                // integer
-            'apoyo1_total_unidades'         => _get($datos['A1 Total Unidades']),                // integer
-            'apoyo1_total_items'            => _get($datos['A1 Total Items']),                // integer
-            'apoyo1_total_patentes'         => _get($datos['A1 Total Patentes']),                // integer
-            'apoyo2_total_unidades'         => _get($datos['A2 Total Unidades']),                // integer
-            'apoyo2_total_items'            => _get($datos['A2 Total Items']),                // integer
-            'apoyo2_total_patentes'         => _get($datos['A2 Total Patentes']),                // integer
-            'supervisor_total_unidades'     => _get($datos['SUP CV Total Unidades']),                // integer
-            'supervisor_total_items'        => _get($datos['SUP CV Total Items']),                // integer
-            'supervisor_total_patentes'     => _get($datos['SUP CV Total Patentes']),                // integer
+            'qf_total_patentes'             => _get($d['QF Total Patentes'], $d['PTT Revisadas QF']),   // dato repetido en 2 lados
+            'qf_total_unidades'             => _get($d['QF Total Unidades']),
+            'qf_total_items'                => _get($d['QF Total Items'], $d['Items Revisadas QF']),    // dato repetido en 2 lados
+            'apoyo1_total_patentes'         => _get($d['A1 Total Patentes'], $d['PTT Rev. Apoyo 1']),   // dato repetido en 2 lados
+            'apoyo1_total_unidades'         => _get($d['A1 Total Unidades']),
+            'apoyo1_total_items'            => _get($d['A1 Total Items'], $d['Items Rev. Apoyo 1']),    // dato repetido en 2 lados
+            'apoyo2_total_patentes'         => _get($d['A2 Total Patentes'], $d['PTT Rev. Apoyo 2']),   // dato repetido en 2 lados
+            'apoyo2_total_unidades'         => _get($d['A2 Total Unidades']),
+            'apoyo2_total_items'            => _get($d['A2 Total Items'], $d['Items Rev. Apoyo 2']),    // dato repetido en 2 lados
+            'supervisor_total_patentes'     => _get($d['SUP CV Total Patentes'], $d['PTT Rev. Sup. FCV']), // dato repetido en 2 lados
+            'supervisor_total_unidades'     => _get($d['SUP CV Total Unidades']),
+            'supervisor_total_items'        => _get($d['SUP CV Total Items']),
+
         ];
     }
 

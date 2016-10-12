@@ -307,17 +307,17 @@ const PanelBody = ({acta, editar}, ctx)=>
                             <p>AUDITORIA QF</p>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: 'ptt_rev_qf'">Auditoria QF Patentes</p>
+                            <p className={cx('td-label')} title="en acta: 'PTT Revisadas QF' o 'QF Total Patentes'">Auditoria QF Patentes</p>
                             <Numero editarCampo={editar} valor={acta.auditoriaQFPatentes}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaQFPatentes')}/>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: '????'">Auditoria QF Unidades</p>
-                            <Numero editarCampo={false} valor={acta.auditoriaQFUnidades}
+                            <p className={cx('td-label')} title="en acta: 'QF Total Unidades'">Auditoria QF Unidades</p>
+                            <Numero editarCampo={editar} valor={acta.auditoriaQFUnidades}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaQFUnidades')}/>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: 'items_rev_qf'">Auditoria QF Ítems</p>
+                            <p className={cx('td-label')} title="en acta: 'Items Revisadas QF' o 'QF Total Items">Auditoria QF Ítems</p>
                             <Numero editarCampo={editar} valor={acta.auditoriaQFItems}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaQFItems')}/>
                         </div>
@@ -326,17 +326,17 @@ const PanelBody = ({acta, editar}, ctx)=>
                             <p>AUDITORIA APOYO 1</p>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: 'ptt_rev_apoyo1'">Auditoria Apoyo1 Patentes</p>
+                            <p className={cx('td-label')} title="en acta: 'PTT Rev. Apoyo 1' o 'A1 Total Patentes'">Auditoria Apoyo1 Patentes</p>
                             <Numero editarCampo={editar} valor={acta.auditoriaApoyo1Patentes}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaApoyo1Patentes')}/>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: '????'">Auditoria Apoyo1 Unidades</p>
-                            <Numero editarCampo={false} valor={acta.auditoriaApoyo1Unidades}
+                            <p className={cx('td-label')} title="en acta: 'A1 Total Unidades'">Auditoria Apoyo1 Unidades</p>
+                            <Numero editarCampo={editar} valor={acta.auditoriaApoyo1Unidades}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaApoyo1Unidades')}/>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: 'items_rev_apoyo1'">Auditoria Apoyo1 Ítems</p>
+                            <p className={cx('td-label')} title="en acta: 'Items Rev. Apoyo 1' o 'A1 Total Items'">Auditoria Apoyo1 Ítems</p>
                             <Numero editarCampo={editar} valor={acta.auditoriaApoyo1Items}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaApoyo1Items')}/>
                         </div>
@@ -345,17 +345,17 @@ const PanelBody = ({acta, editar}, ctx)=>
                             <p>AUDITORIA APOYO 2</p>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: 'ptt_rev_apoyo2'">Auditoria Apoyo2 Patentes</p>
+                            <p className={cx('td-label')} title="en acta: 'PTT Rev. Apoyo 2' o 'A2 Total Patentes'">Auditoria Apoyo2 Patentes</p>
                             <Numero editarCampo={editar} valor={acta.auditoriaApoyo2Patentes}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaApoyo2Patentes')}/>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: '????'">Auditoria Apoyo2 Unidades</p>
-                            <Numero editarCampo={false} valor={acta.auditoriaApoyo2Unidades}
+                            <p className={cx('td-label')} title="en acta: 'A2 Total Unidades'">Auditoria Apoyo2 Unidades</p>
+                            <Numero editarCampo={editar} valor={acta.auditoriaApoyo2Unidades}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaApoyo2Unidades')}/>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: 'items_rev_apoyo2'">Auditoria Apoyo2 Ítems</p>
+                            <p className={cx('td-label')} title="en acta: 'Items Rev. Apoyo 2' o 'A2 Total Items'">Auditoria Apoyo2 Ítems</p>
                             <Numero editarCampo={editar} valor={acta.auditoriaApoyo2Items}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaApoyo2Items')}/>
                         </div>
@@ -364,18 +364,18 @@ const PanelBody = ({acta, editar}, ctx)=>
                             <p>AUDITORIA SUPERVISOR FCV</p>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: 'ptt_rev_supervisor_fcv'">Auditoria Superv. FCV Patentes</p>
+                            <p className={cx('td-label')} title="en acta: 'PTT Rev. Sup. FCV' o 'SUP CV Total Patentes'">Auditoria Superv. FCV Patentes</p>
                             <Numero editarCampo={editar} valor={acta.auditoriaSupervisorPatentes}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaSupervisorPatentes')}/>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: '????'">Auditoria Superv. FCV Unidades</p>
-                            <Numero editarCampo={false} valor={acta.auditoriaSupervisorUnidades}
+                            <p className={cx('td-label')} title="en acta: 'SUP CV Total Unidades'">Auditoria Superv. FCV Unidades</p>
+                            <Numero editarCampo={editar} valor={acta.auditoriaSupervisorUnidades}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaSupervisorUnidades')}/>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: '???'">Auditoria Superv. FCV Ítems</p>
-                            <Numero editarCampo={false} valor={acta.auditoriaSupervisorItems}
+                            <p className={cx('td-label')} title="en acta: 'SUP CV Total Items'">Auditoria Superv. FCV Ítems</p>
+                            <Numero editarCampo={editar} valor={acta.auditoriaSupervisorItems}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'auditoriaSupervisorItems')}/>
                         </div>
                     </div>

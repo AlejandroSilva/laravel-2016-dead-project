@@ -346,31 +346,31 @@ class ArchivoFinalInventarioController extends Controller {
             // Auditoria QF
             if(isset($request->auditoriaQFPatentes))
                 $acta->setAuditoriaQF_patentes($request->auditoriaQFPatentes);
-            //if(isset($request->auditoriaQFUnidades))
-            //   $acta->setAuditoriaQF_unidades($request->auditoriaQFUnidades);
+            if(isset($request->auditoriaQFUnidades))
+               $acta->setAuditoriaQF_unidades($request->auditoriaQFUnidades);
             if(isset($request->auditoriaQFItems))
                 $acta->setAuditoriaQF_items($request->auditoriaQFItems);
             // Auditoria Apoyo 1
             if(isset($request->auditoriaApoyo1Patentes))
                 $acta->setAuditoriaApoyo1_patentes($request->auditoriaApoyo1Patentes);
-            //if(isset($request->auditoriaApoyo1Unidades))
-            //    $acta->setAuditoriaApoyo1_unidades($request->auditoriaApoyo1Unidades);
+            if(isset($request->auditoriaApoyo1Unidades))
+                $acta->setAuditoriaApoyo1_unidades($request->auditoriaApoyo1Unidades);
             if(isset($request->auditoriaApoyo1Items))
                 $acta->setAuditoriaApoyo1_items($request->auditoriaApoyo1Items);
             // Auditoria Apoyo 2
             if(isset($request->auditoriaApoyo2Patentes))
                 $acta->setAuditoriaApoyo2_patentes($request->auditoriaApoyo2Patentes);
-            //if(isset($request->auditoriaApoyo2Unidades))
-            //    $acta->setAuditoriaApoyo2_unidades($request->auditoriaApoyo2Unidades);
+            if(isset($request->auditoriaApoyo2Unidades))
+                $acta->setAuditoriaApoyo2_unidades($request->auditoriaApoyo2Unidades);
             if(isset($request->auditoriaApoyo2Items))
                 $acta->setAuditoriaApoyo2_items($request->auditoriaApoyo2Items);
             // Auditoria Supervisor
             if(isset($request->auditoriaSupervisorPatentes))
                 $acta->setAuditoriaSupervisor_patentes($request->auditoriaSupervisorPatentes);
-            //if(isset($request->auditoriaSupervisorUnidades))
-            //    $acta->setAuditoriaSupervisor_unidades($request->auditoriaSupervisorUnidades);
-            //if(isset($request->auditoriaSupervisorItems))
-            //    $acta->getAuditoriaSupervisor_items($request->auditoriaSupervisorItems);
+            if(isset($request->auditoriaSupervisorUnidades))
+                $acta->setAuditoriaSupervisor_unidades($request->auditoriaSupervisorUnidades);
+            if(isset($request->auditoriaSupervisorItems))
+                $acta->setAuditoriaSupervisor_items($request->auditoriaSupervisorItems);
             // Correcciones Auditoria FCV a SEI
             if(isset($request->correccionPatentes))
                 $acta->setCorreccionPatentesEnAuditoria($request->correccionPatentes);

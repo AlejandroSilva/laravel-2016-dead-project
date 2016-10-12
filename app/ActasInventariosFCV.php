@@ -42,6 +42,9 @@ class ActasInventariosFCV extends Model {
     public function publicadaPor(){
         return $this->hasOne('App\User', 'id', 'idPublicadoPor');
     }
+    public function archivoFinal(){
+        return $this->hasOne('App\ArchivoFinalInventario', 'idArchivoFinalInventario', 'idArchivoFinalInventario');
+    }
 
     // #### Helpers
     function estaPublicada(){
@@ -323,79 +326,142 @@ class ActasInventariosFCV extends Model {
     }
     // Auditoria QF
     function getAuditoriaQF_patentes($conFormato=false){
-        return $this->_getEnteroEnMiles($this->ptt_rev_qf, $conFormato);
+        // el dato puede estar en dos campos distintos dependiendo de la version
+        if(isset($this->qf_total_patentes))
+            return $this->_getEnteroEnMiles($this->qf_total_patentes, $conFormato);
+        else
+            return $this->_getEnteroEnMiles($this->ptt_rev_qf, $conFormato);
     }
     function setAuditoriaQF_patentes($ptt){
+        // el dato puede estar en dos campos distintos dependiendo de la version
         $this->ptt_rev_qf = $ptt;
+        $this->qf_total_patentes = $ptt;
         $this->save();
     }
     function getAuditoriaQF_unidades($conFormato=false){
-        // todo: mejorar
+        // solo en la version nueva
         return $this->_getEnteroEnMiles($this->qf_total_unidades, $conFormato);
     }
+    function setAuditoriaQF_unidades($unidades){
+        // solo en la version nueva
+        $this->qf_total_unidades = $unidades;
+        $this->save();
+    }
+
     function getAuditoriaQF_items($conFormato=false){
-        return $this->_getEnteroEnMiles($this->items_rev_qf, $conFormato);
+        // el dato puede estar en dos campos distintos dependiendo de la version
+        if(isset($this->qf_total_patentes))
+            return $this->_getEnteroEnMiles($this->qf_total_items, $conFormato);
+        else
+            return $this->_getEnteroEnMiles($this->items_rev_qf, $conFormato);
     }
     function setAuditoriaQF_items($items){
+        // el dato puede estar en dos campos distintos dependiendo de la version
         $this->items_rev_qf = $items;
+        $this->qf_total_items = $items;
         $this->save();
     }
     // Auditoria Apoyo 1
     function getAuditoriaApoyo1_patentes($conFormato=false){
-        return $this->_getEnteroEnMiles($this->ptt_rev_apoyo1, $conFormato);
+        // el dato puede estar en dos campos distintos dependiendo de la version
+        if(isset($this->apoyo1_total_patentes))
+            return $this->_getEnteroEnMiles($this->apoyo1_total_patentes, $conFormato);
+        else
+            return $this->_getEnteroEnMiles($this->ptt_rev_apoyo1, $conFormato);
     }
     function setAuditoriaApoyo1_patentes($ptt){
+        // el dato puede estar en dos campos distintos dependiendo de la version
         $this->ptt_rev_apoyo1 = $ptt;
+        $this->apoyo1_total_patentes = $ptt;
         $this->save();
     }
     function getAuditoriaApoyo1_unidades($conFormato=false){
-        // todo mejorar
         return $this->_getEnteroEnMiles($this->apoyo1_total_unidades, $conFormato);
     }
+    function setAuditoriaApoyo1_unidades($unidades){
+        $this->apoyo1_total_unidades = $unidades;
+        $this->save();
+    }
     function getAuditoriaApoyo1_items($conFormato=false){
-        return $this->_getEnteroEnMiles($this->items_rev_apoyo1, $conFormato);
+        // el dato puede estar en dos campos distintos dependiendo de la version
+        if(isset($this->apoyo1_total_items))
+            return $this->_getEnteroEnMiles($this->apoyo1_total_items, $conFormato);
+        else
+            return $this->_getEnteroEnMiles($this->items_rev_apoyo1, $conFormato);
     }
     function setAuditoriaApoyo1_items($items){
+        // el dato puede estar en dos campos distintos dependiendo de la version
         $this->items_rev_apoyo1 = $items;
+        $this->apoyo1_total_items = $items;
         $this->save();
     }
     // Auditoria Apoyo 2
     function getAuditoriaApoyo2_patentes($conFormato=false){
-        return $this->_getEnteroEnMiles($this->ptt_rev_apoyo2, $conFormato);
+        // el dato puede estar en dos campos distintos dependiendo de la version
+        if(isset($this->apoyo2_total_patentes))
+            return $this->_getEnteroEnMiles($this->apoyo2_total_patentes, $conFormato);
+        else
+            return $this->_getEnteroEnMiles($this->ptt_rev_apoyo2, $conFormato);
     }
     function setAuditoriaApoyo2_patentes($ptt){
+        // el dato puede estar en dos campos distintos dependiendo de la version
         $this->ptt_rev_apoyo2 = $ptt;
+        $this->apoyo2_total_patentes = $ptt;
         $this->save();
     }
     function getAuditoriaApoyo2_unidades($conFormato=false){
-        // todo mejorar
+        // solo disponible en el formato nuevo
         return $this->_getEnteroEnMiles($this->apoyo2_total_unidades, $conFormato);
     }
+    function setAuditoriaApoyo2_unidades($unidades){
+        $this->apoyo2_total_unidades = $unidades;
+        $this->save();
+    }
     function getAuditoriaApoyo2_items($conFormato=false){
-        return $this->_getEnteroEnMiles($this->items_rev_apoyo2, $conFormato);
+        // el dato puede estar en dos campos distintos dependiendo de la version
+        if(isset($this->apoyo2_total_items))
+            return $this->_getEnteroEnMiles($this->apoyo2_total_items, $conFormato);
+        else
+            return $this->_getEnteroEnMiles($this->items_rev_apoyo2, $conFormato);
     }
     function setAuditoriaApoyo2_items($items){
+        // el dato puede estar en dos campos distintos dependiendo de la version
+        $this->apoyo2_total_items = $items;
         $this->items_rev_apoyo2 = $items;
         $this->save();
     }
 
     // Auditoria Supervisor
     function getAuditoriaSupervisor_patentes($conFormato=false){
-//        return $this->_getEnteroEnMiles($this->ptt_rev_supervisor_fcv, $conFormato);
-        // todo mejorar
-        return $this->_getEnteroEnMiles($this->supervisor_total_patentes, $conFormato);
+        // el dato puede estar en dos campos distintos dependiendo de la version
+        if(isset($this->supervisor_total_patentes))
+            return $this->_getEnteroEnMiles($this->supervisor_total_patentes, $conFormato);
+        else
+            return $this->_getEnteroEnMiles($this->ptt_rev_supervisor_fcv, $conFormato);
     }
     function setAuditoriaSupervisor_patentes($ptt){
+        // el dato puede estar en dos campos distintos dependiendo de la version
         $this->ptt_rev_supervisor_fcv = $ptt;
+        $this->supervisor_total_patentes = $ptt;
         $this->save();
     }
     function getAuditoriaSupervisor_unidades($conFormato=false){
-        // todo mejorar
+        // solo disponible en nueva version de acta
         return $this->_getEnteroEnMiles($this->supervisor_total_unidades, $conFormato);
     }
+    function setAuditoriaSupervisor_unidades($unidades){
+        $this->supervisor_total_unidades = $unidades;
+        $this->save();
+    }
+
     function getAuditoriaSupervisor_items($conFormato=false){
-        // todo mejorar
+        // solo disponible en nueva version de acta
         return $this->_getEnteroEnMiles($this->supervisor_total_items, $conFormato);
+    }
+    function setAuditoriaSupervisor_items($items){
+        // solo disponible en nueva version de acta
+        $this->supervisor_total_items = $items;
+        $this->save();
     }
 
     // Correciones Auditoria FCV a SEI
@@ -475,6 +541,25 @@ class ActasInventariosFCV extends Model {
         return $conFormato? number_format($porcentaje, 1)."%" : $porcentaje;
     }
 
+    function leerFinProcesoDesdeChecklist(){
+        // si la fecha de fin de proceso ya fue leida, entonces no hacer este proceso
+        if( $this->getFinProceso()!=null )
+            return 1;
+
+        $zip =  new \ZipArchive();
+        $zipPath = $this->archivoFinal->getFullPath();
+        $resultado = $zip->open($zipPath);
+        if( $resultado !== true )
+            return 2;// ocurrio un error
+
+        $checklist = $zip->statName('CHECKLIST.pdf');
+        $time = $checklist['mtime'];
+        $datetime = date("Y-m-d H:i:s", $time);
+        $this->setFinProceso($datetime);
+        $this->save();
+
+        return $datetime;
+    }
 
     // ####  Setters
     // #### Formatear respuestas
