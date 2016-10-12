@@ -43,10 +43,15 @@ class ActaInventarioHelper{
             // tener el DD/MM/AAAA formato valido antes de ser convertido a fecha con el formato correcto '2016-03-30'
             $DATE_FORMAT = 'd/m/Y';
             if( isset($value) ){
-                $date = Carbon::createFromFormat($DATE_FORMAT, $value);
-                return $date!=false? $date->toDateString() : $DEFAULT_DATE;
+                try{
+                    $date = Carbon::createFromFormat($DATE_FORMAT, $value);
+                    return $date!=false? $date->toDateString() : $DEFAULT_DATE;
+                }catch(InvalidArgumentException $e){
+                    // esto puede ocurrir porque no entrega la fecha en el formato que corresponde...
+                    return null;
+                }
             }else
-                return null;//return $DEFAULT_DATE;
+                return null;
         }
         function _getDatetime(&$value, $DEFAULT_DATETIME='00/00/00 00:00:00'){
             // Los datetime se reciben como texto, el string debe estar definido, tener algo caracter, y tener el
@@ -56,7 +61,7 @@ class ActaInventarioHelper{
                 $datetime = Carbon::createFromFormat($DATETIME_FORMAT, trim($value));
                 return $datetime!=false? $datetime->toDateTimeString() : $DEFAULT_DATETIME;
             }else{
-                return null; //return $DEFAULT_DATETIME;
+                return null;
             }
         }
         return [
