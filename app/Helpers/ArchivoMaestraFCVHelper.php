@@ -65,6 +65,18 @@ class ArchivoMaestraFCVHelper{
         }
         return $response;
     }
+    static function parseoMaestra($maestras){
+        $datos = $maestras->map(function($maestra){
+            return [
+                $maestra->barra,
+                $maestra->descriptor,
+                $maestra->sku,
+                $maestra->laboratorio,
+                $maestra->clasificacionTerapeutica
+            ];
+        })->toArray();
+        return $datos;
+    }
     //Validar que los campos no contengas valores nulos
     private static function _camposValidos($row, $barra, $descriptor, $sku, $laboratorio, $clasificacionTerapeutica){
         // todo: validar el tipo, que no sean string vacios, que sean numeros, etc

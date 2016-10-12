@@ -26,9 +26,7 @@ class MaestraFCV extends Model{
         return $skuDuplicados;
     }
     static function dumpMaestra(){
-        $maestra = DB::table('maestra_fcv')
-                            ->select('barra','descriptor','sku','laboratorio','clasificacionTerapeutica')
-                            ->get();
-        return $maestra;
+        $maestras = MaestraFCV::all();
+        return $maestras;
     }
 }

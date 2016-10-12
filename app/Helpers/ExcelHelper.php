@@ -60,11 +60,29 @@ class ExcelHelper{
 
         return $workbook;
     }
+    public static function generarWorkbook_maestra($datosMaestra){
+        $cabecera = ['BARRA','DESCRIPTOR','SKU','LABORATORIO','CLASIFICACION TERAPEUTICA'];
+        $workbook = new PHPExcel();
+        $sheet = $workbook->getActiveSheet();
+        $sheet->fromArray($cabecera, NULL, 'A1');
+        $sheet->fromArray($datosMaestra,  NULL, 'A2');
+        $MAX_COL = $sheet->getHighestDataColumn();
+        //Aplicar estilos
+        $sheet->getStyle("A1:".$MAX_COL."1")->applyFromArray([
+            'borders' => ['bottom' => ['style' => PHPExcel_Style_Border::BORDER_THIN]],
+            'alignment' => ['horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER ],
+            'font' => ['bold'=>true]
+        ]);
+        foreach (range('A', $sheet->getHighestDataColumn()) as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+        return $workbook;
+    }
     public static function workbook_a_archivo($workbook){
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
         $random_number= md5(uniqid(rand(), true));
 
-        $fullpath = public_path()."/tmp/$random_number.xlxs";
+        $fullpath = public_path()."/FCV/DescargasMaestrasFCV/$random_number.xlxs";
         $excelWritter->save($fullpath);
         return $fullpath;
     }
