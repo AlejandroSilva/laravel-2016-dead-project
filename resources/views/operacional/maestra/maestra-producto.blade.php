@@ -98,10 +98,9 @@
                             <td>
                                 <label>Descargar dump bd</label>
                                 <br>
-                                <a aria-haspopup="true" disabled aria-expanded="false" class="btn btn-primary btn-xs">Descargar</a>
+                                <a href='maestra-productos-fcv/descargar/maestra'  class="btn btn-primary btn-xs">Descargar</a>
                             </td>
                         </form>
-
                     </div>
                 </div>
             </div>

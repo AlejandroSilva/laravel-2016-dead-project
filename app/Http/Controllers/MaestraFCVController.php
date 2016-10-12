@@ -88,4 +88,16 @@ class MaestraFCVController extends Controller
         );
         return Response::download($file, $download_archivo, $headers);
     }
+    public function descargarMaestraFCV(){
+        $user = Auth::user();
+        if(!$user || !$user->can('admin-maestra-fcv'))
+            return response()->view('errors.403', [], 403);
+        $dump = MaestraFCV::dumpMaestra();
+        dd($dump);
+        $workbook = \ExcelHelper::generarWorkbook($dump);
+        //dd($workbook);
+        \ExcelHelper::workbook_a_archivo($workbook);
+
+        return true;
+    }
 }

@@ -52,6 +52,7 @@ class ArchivoMaestraFCVHelper{
             'error' => $error
         ];
     }
+    // Select a la tabla maestra_fcv para revisar SKU duplicados
     static function skuDuplicado(){
         $response = (object)[
             'error' => null,

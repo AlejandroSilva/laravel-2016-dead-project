@@ -2,6 +2,8 @@
 
 namespace App;
 
+// DB
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class MaestraFCV extends Model{
@@ -22,5 +24,11 @@ class MaestraFCV extends Model{
         })->get();
 
         return $skuDuplicados;
+    }
+    static function dumpMaestra(){
+        $maestra = DB::table('maestra_fcv')
+                            ->select('barra','descriptor','sku','laboratorio','clasificacionTerapeutica')
+                            ->get();
+        return $maestra;
     }
 }
