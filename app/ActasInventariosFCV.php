@@ -529,7 +529,7 @@ class ActasInventariosFCV extends Model {
         if($this->ptt_inventariadas)
             return $this->_getEnteroEnMiles($this->ptt_inventariadas, $conFormato);
         else
-            $this->_getEnteroEnMiles($this->tot2, $conFormato);
+            return $this->_getEnteroEnMiles($this->tot2, $conFormato);
     }
     function getItemRevisadosCliente($conFormato=false){
         // esteban lee el dato: "item_revisado"
