@@ -545,7 +545,7 @@ class ActasInventariosFCV extends Model {
     function leerFinProcesoDesdeChecklist(){
         // si la fecha de fin de proceso ya fue leida, entonces no hacer este proceso
         if( $this->getFinProceso()!=null )
-            return 1;
+            return 'la fecha ya ha sido fijada';
 
         $zip =  new \ZipArchive();
         $zipPath = $this->archivoFinal->getFullPath();
@@ -553,13 +553,25 @@ class ActasInventariosFCV extends Model {
         if( $resultado !== true )
             return 2;// ocurrio un error
 
-        $checklist = $zip->statName('CHECKLIST.pdf');
-        $time = $checklist['mtime'];
-        $datetime = date("Y-m-d H:i:s", $time);
-        $this->setFinProceso($datetime);
-        $this->save();
+        $checklist1 = $zip->statName('CHECKLIST.pdf');
+        $checklist2 = $zip->statName('CHECKLIST_FCV.pdf');
+        $checklist1_time = $checklist1['mtime'];
+        $checklist2_time = $checklist2['mtime'];
 
-        return $datetime;
+        // el archivo "CHECKLIST.pdf" no siempre se encuentra
+        if($checklist1_time!=null){
+            $datetime1 = date("Y-m-d H:i:s", $checklist1_time);
+            $this->setFinProceso($datetime1);
+            $this->save();
+            return $datetime1;
+        }else if($checklist2_time!=null){
+            $datetime2 = date("Y-m-d H:i:s", $checklist2_time);
+            $this->setFinProceso($datetime2);
+            $this->save();
+            return $datetime2;
+        }else{
+            return 'checklist no encontrado';
+        }
     }
 
     // ####  Setters
