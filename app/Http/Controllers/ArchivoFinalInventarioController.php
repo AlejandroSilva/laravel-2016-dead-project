@@ -136,6 +136,8 @@ class ArchivoFinalInventarioController extends Controller {
                 // ######  Variación Grilla
                 // %
                 $acta->getPorcentajeVariacionGrilla(true),
+
+                $acta->idInventario
             ];
         })->toArray();
 

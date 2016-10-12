@@ -54,7 +54,7 @@ class ExcelHelper{
             // Unidades, 4
             'Conteo', 'Teórico', 'Dif. Neto', 'Dif. ABS',
             // Evaluaciones, 3
-            'Nota Presentación', 'Nota Supervisor', 'Nota Conteo',
+            'Pres.', 'Sup.', 'Cont.',
             // Consolidado Auditoria FCV, 3
             'Patente', 'Unidades', 'Ítems',
             // auditoria qf, 3
@@ -69,8 +69,8 @@ class ExcelHelper{
             'Patentes', 'Ítems', 'Un. Neto', 'Un. ABS',
             // perc.error aud, 2
             'SEI', 'QF',
-            // Variación grilla, 2
-            '%', 'SKU Inv.'
+            // Variación grilla, 1
+            '%'
         ]];
 
         // SHEET 1: DATOS
@@ -92,7 +92,7 @@ class ExcelHelper{
         $sheet->mergeCells("AG1:AI1");  // aud. sup, 3      AG-AI
         $sheet->mergeCells("AJ1:AM1");  // Correcc.aud, 4   AJ-AM
         $sheet->mergeCells("AN1:AO1");  // %erroraud, 2     AN-AO
-        $sheet->mergeCells("AP1:AQ1");  // var grilla, 2    AP-AQ
+        $sheet->mergeCells("AP1:AP1");  // var grilla, 1    AP-AP
 
         // Aplicar estilos
         $MAX_COL = $sheet->getHighestDataColumn();
@@ -122,7 +122,7 @@ class ExcelHelper{
         $sheet->getStyle("AI1:AI$MAX_ROW")->applyFromArray($estiloBordeDerecha );
         $sheet->getStyle("AM1:AM$MAX_ROW")->applyFromArray($estiloBordeDerecha );
         $sheet->getStyle("AO1:AO$MAX_ROW")->applyFromArray($estiloBordeDerecha );
-        $sheet->getStyle("AQ1:AQ$MAX_ROW")->applyFromArray($estiloBordeDerecha );
+        $sheet->getStyle("AP1:AP$MAX_ROW")->applyFromArray($estiloBordeDerecha );
 
         // columnas con tamaño ajustable
         //PHPExcel_Shared_Font::setTrueTypeFontPath('/usr/share/fonts/truetype/msttcorefonts/');
@@ -155,9 +155,9 @@ class ExcelHelper{
             ['Unidades', 'Teórico', 'descripción pendiente'],
             ['Unidades', 'Dif. Neto', 'descripción pendiente'],
             ['Unidades', 'Dif. ABS', 'descripción pendiente'],
-            ['Evaluaciones', 'Nota Presentación', 'descripción pendiente'],
-            ['Evaluaciones', 'Nota Supervisor', 'descripción pendiente'],
-            ['Evaluaciones', 'Nota Conteo', 'descripción pendiente'],
+            ['Evaluaciones', 'Pres.', 'descripción pendiente'],
+            ['Evaluaciones', 'Sup.', 'descripción pendiente'],
+            ['Evaluaciones', 'Cont.', 'descripción pendiente'],
             ['Consolidado Auditoría FCV', 'Patente', 'descripción pendiente'],
             ['Consolidado Auditoría FCV', 'Unidades', 'descripción pendiente'],
             ['Consolidado Auditoría FCV', 'Ítems', 'descripción pendiente'],
@@ -180,7 +180,6 @@ class ExcelHelper{
             ['% Error Aud.', 'SEI', 'descripción pendiente'],
             ['% Error Aud.', 'QF', 'descripción pendiente'],
             ['Variación Grilla', '%', 'descripción pendiente'],
-            ['Variación Grilla', 'SKU Inv.', 'descripción pendiente'],
         ], null, 'A1');
 
         // Estilos
