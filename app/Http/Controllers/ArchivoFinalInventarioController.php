@@ -325,8 +325,8 @@ class ArchivoFinalInventarioController extends Controller {
                 $acta->setUnidadesInventariadas($request->unidadesInventariadas);
             if(isset($request->unidadesTeoricas))
                 $acta->setUnidadesTeoricas($request->unidadesTeoricas);
-            if(isset($request->unidadesDiferenciaNeto))
-                $acta->setDiferenciaNeto($request->unidadesDiferenciaNeto);
+//            if(isset($request->unidadesDiferenciaNeto))
+//                $acta->setDiferenciaNeto($request->unidadesDiferenciaNeto);
             if(isset($request->unidadesDiferenciaAbsoluta))
                 $acta->setDiferenciaAbsoluta($request->unidadesDiferenciaAbsoluta);
             // evaluaciones / notas

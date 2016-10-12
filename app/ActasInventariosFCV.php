@@ -257,11 +257,12 @@ class ActasInventariosFCV extends Model {
         $this->save();
     }
     function getDiferenciaNeto($conFormato=false){
-        return $this->_getEnteroEnMiles($this->aju2, $conFormato);
-    }
-    function setDiferenciaNeto($unidades){
-        $this->aju2 = $unidades;
-        $this->save();
+        $real = $this->getUnidadesInventariadas(false);
+        $teoricas = $this->getUnidadesTeoricas(false);
+        if($real==null || $teoricas==null)
+            return null;
+        else
+            return $this->_getEnteroEnMiles($real-$teoricas, $conFormato);
     }
     function getDiferenciaAbsoluta($conFormato=false){
         return $this->_getEnteroEnMiles($this->diferencia_unid_absoluta, $conFormato);

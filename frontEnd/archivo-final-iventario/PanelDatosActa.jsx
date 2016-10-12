@@ -248,8 +248,8 @@ const PanelBody = ({acta, editar}, ctx)=>
                                     actualizarActa={ctx.actualizarActa.bind(this, 'unidadesTeoricas')}/>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: 'aju2'">Unidades Diff Neto</p>
-                            <Numero editarCampo={editar} valor={acta.unidadesDiferenciaNeto}
+                            <p className={cx('td-label')} title="calculo: 'unidades'-'teorico_unidades'">Unidades Diff Neto</p>
+                            <Numero editarCampo={false} valor={acta.unidadesDiferenciaNeto}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'unidadesDiferenciaNeto')}/>
                         </div>
                         <div className={cx('tr-datos')}>
