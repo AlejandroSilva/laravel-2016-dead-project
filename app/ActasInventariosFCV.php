@@ -524,6 +524,13 @@ class ActasInventariosFCV extends Model {
     }
 
     // OTROS
+    function getPatentesInventariadas($conFormato=false){
+        // la variable puede estar en dos campos distintos
+        if($this->ptt_inventariadas)
+            return $this->_getEnteroEnMiles($this->ptt_inventariadas, $conFormato);
+        else
+            $this->_getEnteroEnMiles($this->tot2, $conFormato);
+    }
     function getItemRevisadosCliente($conFormato=false){
         // esteban lee el dato: "item_revisado"
         $totalRevisados = $this->items_rev_qf + $this->items_rev_apoyo1 + $this->items_rev_apoyo2;

@@ -141,7 +141,8 @@ class ArchivoFinalInventarioController extends Controller {
                 // %
                 $acta->getPorcentajeVariacionGrilla(true),
 
-                $acta->idInventario
+                $acta->getPatentesInventariadas(true),
+                //$acta->idInventario
             ];
         })->toArray();
 
