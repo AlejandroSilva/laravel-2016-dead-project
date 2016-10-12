@@ -18,43 +18,48 @@ class HomeController extends Controller {
 //    }
 
     public function index() {
+        setlocale(LC_TIME, 'es_CL.utf-8');
+
         $user = Auth::user();
-        $user11 = User::find(11);
+        //$user11 = User::find(11);
 
         if($user){
             // buscar los inventarios desde hoy hasta el domingo
             $hoy = Carbon::now()->format('Y-m-d');
-            $esteDomingo = (new Carbon('next sunday'))->format('Y-m-d');
+            $diaHabilHoy = DiasHabiles::find($hoy);
 
             // Dashboard "Mis proximos inventarios"
-            $mostrar_misProximosInventarios = true;
+            $mostrar_misProximosInventarios = $user->hasRole('Lider') || $user->hasRole('Supervisor');
+            $misNominas_desde = $diaHabilHoy->diasHabilesAntes(2)->fecha;
+            $misNominas_hasta = $diaHabilHoy->diasHabilesDespues(3)->fecha;
             $proximasNominas = $mostrar_misProximosInventarios?
-                $user11->nominasComoTitular($hoy, $esteDomingo)
-                :
-                [];
+                $user->nominasComoTitular($misNominas_desde, $misNominas_hasta)->todas : [];
 
             // Dashboard "Indicadores de gestión de inventarios"
             $mostrar_indicadoresDeInventarios = true;
-            $diaHabilHoy = DiasHabiles::find($hoy);
-            $diaHabilAnterior = $diaHabilHoy->diasHabilesAntes(1)->fecha;
-            $inventariosAyer = Inventarios::buscar((object)[
+            $indicadoresGestion_desde = $diaHabilHoy->diasHabilesAntes(1)->fecha;
+            $indicadoresGestion_hasta = $diaHabilHoy->fecha;
+            $inventariosPeriodo = Inventarios::buscar((object)[
                 'idCliente' => 2, // FCV
-                'fechaInicio' => $diaHabilAnterior,
-                'fechaFin' => $diaHabilAnterior
+                'fechaInicio' => $indicadoresGestion_desde,
+                'fechaFin' => $indicadoresGestion_hasta
             ]);
-            $totalIndicadores = ActasInventariosFCV::calcularTotales($inventariosAyer);
+            $totalIndicadores = ActasInventariosFCV::calcularTotales($inventariosPeriodo);
 
-            //return response()->json($inventariosAyer[0]->actaFCV);
             return view('home.dashboard',[
-                'hoy' => $diaHabilAnterior,
-                'usuario' => User::formatearMinimo($user),
+                'usuario' => $user,
+
                 // panel "mis proximos inventarios"
                 'mostrar_misProximosInventarios' => $mostrar_misProximosInventarios,
-                'nominas' => $proximasNominas->todas,
+                'nominas' => $proximasNominas,
+                'misNominasDesde' => Carbon::parse($misNominas_desde)->formatLocalized('%A %e de %B'),
+                'misNominasHasta' => Carbon::parse($misNominas_hasta)->formatLocalized('%A %e de %B'),
+
                 // panel "Indicadores de gestión de Inventarios"
-                'diaHabilAnterior' => $diaHabilAnterior,
                 'mostrar_indicadoresDeInventarios' => $mostrar_indicadoresDeInventarios,
-                'inventariosAyer' => $inventariosAyer,
+                'indicadoresGestion_desde' => Carbon::parse($indicadoresGestion_desde)->formatLocalized('%A %e de %B'),
+                'indicadoresGestion_hasta' => Carbon::parse($indicadoresGestion_hasta)->formatLocalized('%A %e de %B'),
+                'inventariosPeriodo' => $inventariosPeriodo,
                 'totalIndicadores' => $totalIndicadores
             ]);
         }else{

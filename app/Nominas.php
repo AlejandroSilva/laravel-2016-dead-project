@@ -86,6 +86,11 @@ class Nominas extends Model {
         $dotacionTitulares = $this->dotacionTitular()->count();
         return ($dotacionTitulares + $supervisor) >= $this->dotacionOperadores;
     }
+    function informadaAlCliente(){
+        // 5 - Informada
+        // 6 - Informada con Excel (plataforma antigua)
+        return $this->idEstadoNomina==5 || $this->idEstadoNomina==6;
+    }
 
     // #### Acciones
     function addLog($titulo, $texto, $importancia=1){

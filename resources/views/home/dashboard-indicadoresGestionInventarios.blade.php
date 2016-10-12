@@ -9,10 +9,11 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <span class="glyphicon glyphicon-calendar"></span> Indicadores de Gestión {{$diaHabilAnterior}}
+        <span class="glyphicon glyphicon-calendar"></span>
+            Indicadores de Gestión desde <b>{{$indicadoresGestion_desde}}</b> hasta <b>{{$indicadoresGestion_hasta}}</b>
     </div>
     <div class="panel-body">
-        @if( sizeof($inventariosAyer)>0)
+        @if( sizeof($inventariosPeriodo)>0)
             <table class="table table-bordered table-hover table-condensed tabla-nominas">
                 <thead>
                 <tr>
@@ -30,7 +31,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @foreach($inventariosAyer as $inv)
+                    @foreach($inventariosPeriodo as $inv)
                         @php( $acta = $inv->actaFCV )
                         @php( $datosDisponibles = $acta && $acta->estaPublicada())
                         <tr>
@@ -57,7 +58,7 @@
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="2">Resumen actas</td>
+                        <td colspan="2">Resumen actas actuales</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->unidadesInventariadas }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->horasTrabajadas }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->nota_promedio }}</td>
@@ -66,9 +67,30 @@
                         <td class="tdTextoDerecha">{{ $totalIndicadores->porcentajeRevisionCliente_promedio }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->consolidadoPatentesFCV_total }}</td>
                         <td class="tdTextoDerecha">{{ $totalIndicadores->diferenciaNeta_total }}</td>
-
+                        <td></td>
+                    </tr>
+                    {{-- Mes Actual --}}
+                    <tr>
+                        <td colspan="2">Actas de Octubre</td>
+                        <td colspan="8"></td>
                         <td>
-                            <a class="btn btn-primary btn-xs btn-block" href="/inventario/descargar-consolidado-fcv">Descargar</a>
+                            <a class="btn btn-primary btn-xs btn-block" href="/inventario/descargar-consolidado-fcv?fechaInicio=2016-10-01&fechaFin=2016-10-31">Descargar</a>
+                        </td>
+                    </tr>
+                    {{-- Mes anterior --}}
+                    <tr>
+                        <td colspan="2">Actas de Septiembre</td>
+                        <td colspan="8"></td>
+                        <td>
+                            <a class="btn btn-primary btn-xs btn-block" href="/inventario/descargar-consolidado-fcv?fechaInicio=2016-09-01&fechaFin=2016-09-30">Descargar</a>
+                        </td>
+                    </tr>
+                {{-- 2016 --}}
+                    <tr>
+                        <td colspan="2">Actas de 2016</td>
+                        <td colspan="8"></td>
+                        <td>
+                            <a class="btn btn-primary btn-xs btn-block" href="/inventario/descargar-consolidado-fcv?fechaInicio=2016-05-01">Descargar</a>
                         </td>
                     </tr>
                 </tbody>
