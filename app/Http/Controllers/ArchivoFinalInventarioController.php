@@ -27,6 +27,7 @@ class ArchivoFinalInventarioController extends Controller {
         $actas = ActasInventariosFCV::buscar((object)[
             'fechaInicio' => $request->query('fechaInicio'),
             'fechaFin' => $request->query('fechaFin'),
+            'orden' => $request->query('orden'),
         ]);
         $datos = $actas->map(function($acta){
             return [

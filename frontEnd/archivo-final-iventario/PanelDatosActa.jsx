@@ -73,6 +73,7 @@ export class PanelDatosActa extends React.Component {
         return (
             <div className='panel panel-default'>
                 <PanelHeading
+                    actaConDatos={this.state.acta.inv_idInventario!=undefined}
                     publicada={this.state.acta.publicada}
                     publicadaPor={this.state.acta.publicadaPor}
                     fechaPublicacion={this.state.acta.fechaPublicacion}
@@ -102,7 +103,7 @@ PanelDatosActa.childContextTypes = {
     reprocesar: React.PropTypes.func
 };
 
-const PanelHeading = ({publicada, publicadaPor, fechaPublicacion, editandoActa}, context)=>{
+const PanelHeading = ({publicada, publicadaPor, fechaPublicacion, editandoActa, actaConDatos}, context)=>{
         const puedeEditar = true
         return <div className={cx("panel-heading", 'panel-heading')}>
             <span className="glyphicon glyphicon-stats"/> &nbsp;
@@ -114,28 +115,28 @@ const PanelHeading = ({publicada, publicadaPor, fechaPublicacion, editandoActa},
             <div className="pull-right">
                 {editandoActa?
                     <button className={cx('btn btn-primary btn-xs', 'opcion-edicion')}
-                            disabled={puedeEditar == false} onClick={context.finalizarEdicion}>
+                            disabled={puedeEditar==false || actaConDatos==false} onClick={context.finalizarEdicion}>
                         Finalizar Edición
                     </button>
                     :
                     <button className={cx('btn btn-default btn-xs', 'opcion-edicion')}
-                            disabled={puedeEditar == false} onClick={context.iniciarEdicion}>
+                            disabled={puedeEditar==false || actaConDatos==false} onClick={context.iniciarEdicion}>
                         Editar Acta
                     </button>
                 }
                 {publicada?
                     <button className={cx("btn btn-default btn-xs", 'opcion-publicacion')}
-                            disabled={puedeEditar == false} onClick={context.despublicar}>
+                            disabled={puedeEditar==false || actaConDatos==false} onClick={context.despublicar}>
                         Despublicar
                     </button>
                     :
                     <button className={cx("btn btn-primary btn-xs", 'opcion-publicacion')}
-                            disabled={puedeEditar == false} onClick={context.publicar}>
+                            disabled={puedeEditar==false || actaConDatos==false} onClick={context.publicar}>
                         Publicar
                     </button>
                 }
                 <button className={cx("btn btn-default btn-xs", 'opcion-publicacion')}
-                        disabled={puedeEditar == false} onClick={context.reprocesar}>
+                        disabled={puedeEditar==false} onClick={context.reprocesar}>
                     Reprocesar
                 </button>
             </div>

@@ -663,6 +663,11 @@ class ActasInventariosFCV extends Model {
 
         // ordenados por fecha programada del inventario
         $collection = $query->get();
-        return $collection->sortBy('inventario.fechaProgramada');
+
+        $orden = $peticion->orden;
+        if(isset($orden) && $orden=='desc')
+            return $collection->sortByDesc('inventario.fechaProgramada');
+        else
+            return $collection->sortBy('inventario.fechaProgramada');
     }
 }
