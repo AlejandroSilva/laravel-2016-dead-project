@@ -82,7 +82,7 @@ class ExcelHelper{
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
         $random_number= md5(uniqid(rand(), true));
 
-        $fullpath = public_path()."/FCV/DescargasMaestrasFCV/$random_number.xlxs";
+        $fullpath = public_path()."/tmp/$random_number.xlxs";
         $excelWritter->save($fullpath);
         return $fullpath;
     }
