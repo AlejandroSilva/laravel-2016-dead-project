@@ -56,9 +56,9 @@
 
                                 {{-- Maestra, Muestras de vencimiento e IRD--}}
                                 <li role="separator" class="divider"></li>
-                                @if( Auth::user()->can('admin-maestra-fcv') )
+                                @if( Auth::user()->hasRole('Developer') )
                                     <li class="{{ Request::is('muestra-vencimiento-fcv')? 'active': '' }}">
-                                        <a href="{{ url('muestra-vencimiento-fcv') }}">Muestra de vencimiento FCV</a>
+                                        <a href="{{ url('muestra-vencimiento-fcv') }}">(DEV) Muestra de vencimiento FCV</a>
                                     </li>
                                 @endif
                             </ul>
