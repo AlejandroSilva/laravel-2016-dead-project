@@ -43,7 +43,8 @@ class ExcelHelper{
             'Auditoría Sup. FCV', '', '',           // 3 celdas
             'Correcciones Auditoría FCV a SEI', '', '', '',    // 4 celdas
             '% Error Aud.', '',                     // 2 celdas
-            'Variación Grilla', '',                 // 2 celdas
+            'Variación Grilla',                     // 1 celdas
+            '',                                     // 1 celdas
         ], [
             // Hitos, 8
             'Fecha Inv', 'CL', 'Local', 'Supervisor', 'Químico Farmacéutico', 'Inicio Conteo', 'Fin Conteo', 'Fin Proceso',
@@ -70,7 +71,9 @@ class ExcelHelper{
             // perc.error aud, 2
             'SEI', 'QF',
             // Variación grilla, 1
-            '%'
+            '%',
+            // Patentes Inventariadas
+            'PTT Inventariadas',
         ]];
 
         // SHEET 1: DATOS
@@ -93,6 +96,7 @@ class ExcelHelper{
         $sheet->mergeCells("AJ1:AM1");  // Correcc.aud, 4   AJ-AM
         $sheet->mergeCells("AN1:AO1");  // %erroraud, 2     AN-AO
         $sheet->mergeCells("AP1:AP1");  // var grilla, 1    AP-AP
+        $sheet->mergeCells("AQ1:AQ1");  // var grilla, 1    AP-AP
 
         // Aplicar estilos
         $MAX_COL = $sheet->getHighestDataColumn();
@@ -123,6 +127,7 @@ class ExcelHelper{
         $sheet->getStyle("AM1:AM$MAX_ROW")->applyFromArray($estiloBordeDerecha );
         $sheet->getStyle("AO1:AO$MAX_ROW")->applyFromArray($estiloBordeDerecha );
         $sheet->getStyle("AP1:AP$MAX_ROW")->applyFromArray($estiloBordeDerecha );
+        $sheet->getStyle("AQ1:AP$MAX_ROW")->applyFromArray($estiloBordeDerecha );
 
         // columnas con tamaño ajustable
         //PHPExcel_Shared_Font::setTrueTypeFontPath('/usr/share/fonts/truetype/msttcorefonts/');
@@ -180,6 +185,7 @@ class ExcelHelper{
             ['% Error Aud.', 'SEI', 'descripción pendiente'],
             ['% Error Aud.', 'QF', 'descripción pendiente'],
             ['Variación Grilla', '%', 'descripción pendiente'],
+            ['Patentes Inventariadas', '', 'descripción pendiente'],
         ], null, 'A1');
 
         // Estilos
