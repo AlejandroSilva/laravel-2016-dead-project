@@ -208,7 +208,13 @@ class ArchivoFinalInventarioController extends Controller {
         $inventario->insertarOActualizarActa($resultadoActa->acta, $archivoFinalInventario->idArchivoFinalInventario);
         $archivoFinalInventario->setResultado('acta cargada correctamente', true);
 
-        // paso 4) dejar el acta como publicada
+        // paso 4) hay datos que no estan en el archivo, o directamente bienen malos, se procesan los archivos "manualmente"
+        // para extraer los datos
+        // $inventario->actaFCV->leerPatentesInventariadasDesdeElZip(); // este dato biene bien en el txt
+        $inventario->actaFCV->leerItemTotalInventarioDesdeElZip();
+        $inventario->actaFCV->leerSkuUnicosDesdeElZip();
+
+        // paso 5) dejar el acta como publicada
         $user = $request->user;
         $inventario->actaFCV->publicar($user);
 

@@ -433,7 +433,7 @@ const PanelBody = ({acta, editar}, ctx)=>
                             <p>TOTALES INVENTARIO</p>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="se procesa desde 'captura inventario estandar punto'">Patentes iventariadas</p>
+                            <p className={cx('td-label')} title="en acta: 'Cantidad PTT Inventariadas' o 'tot2'">Patentes iventariadas</p>
                             <Numero editarCampo={editar} valor={acta.patentesInventariadas}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'patentesInventariadas')}/>
                         </div>
