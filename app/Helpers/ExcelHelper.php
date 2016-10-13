@@ -58,11 +58,17 @@ class ExcelHelper{
     public static function generarWorkbook_maestra($datosMaestra){
         ini_set('memory_limit','1024M');
         ini_set('max_execution_time', 540);
+        //Dividir el arreglo en partes mas pequeñas
+        $chunk = array_chunk($datosMaestra,100,true);
         $cabecera = ['BARRA','DESCRIPTOR','SKU','LABORATORIO','CLASIFICACION TERAPEUTICA'];
         $workbook = new PHPExcel();
         $sheet = $workbook->getActiveSheet();
         $sheet->fromArray($cabecera, NULL, 'A1');
-        $sheet->fromArray($datosMaestra, NULL, 'A2');
+        foreach ($chunk as $dato){
+            //obtener ultima fila con datos y seguir en la siguiente
+            $fila = $sheet->getHighestRow()+1;
+            $sheet->fromArray($dato, NULL, "A$fila");
+        }
         $MAX_COL = $sheet->getHighestDataColumn();
         //Aplicar estilos
         $sheet->getStyle("A1:".$MAX_COL."1")->applyFromArray([
