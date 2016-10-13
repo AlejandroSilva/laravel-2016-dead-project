@@ -531,6 +531,12 @@ class ActasInventariosFCV extends Model {
         else
             return $this->_getEnteroEnMiles($this->tot2, $conFormato);
     }
+    function setPatentesInventariadas($patentes){
+        $this->ptt_inventariadas = $patentes;
+        $this->tot2 = $patentes;
+        $this->save();
+    }
+
     function getItemRevisadosCliente($conFormato=false){
         // esteban lee el dato: "item_revisado"
         $totalRevisados = $this->items_rev_qf + $this->items_rev_apoyo1 + $this->items_rev_apoyo2;
@@ -579,6 +585,22 @@ class ActasInventariosFCV extends Model {
         }else{
             return 'checklist no encontrado';
         }
+    }
+
+    function leerPatentesInventariadasDesdeElZip(){
+        $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO.csv', ';');
+        if(isset($unzip->error))
+            return $unzip->error;
+
+        $data = \CSVReader::csv_to_array($unzip->fullpath, ';');
+        // extraer los datos de la columna D(index 3), y omitir cualquier campo que no sea un numero
+        $column = \CSVReader::getColumn($data, 3);
+        $ptt = collect($column)->unique()->filter(function($value){
+            return is_numeric($value);
+        })->count();
+
+        $this->setPatentesInventariadas($ptt);
+        return $ptt;
     }
 
     // ####  Setters

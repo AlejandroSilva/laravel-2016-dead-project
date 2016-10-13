@@ -7,8 +7,7 @@ use App\ArchivoMuestraVencimientoFCV;
 
 class ArchivosHelper{
 
-    // ###################################### ARCHIVO FINAL INVENTARIO ######################################
-    static function extraerActaDelZip($zip_fullpath){
+    static function extraerArchivo($zip_fullpath, $archivo){
         $ZIP_ERROR = [
             ZIPARCHIVE::ER_EXISTS => 'El fichero ya existe.',
             ZIPARCHIVE::ER_INCONS => 'Archivo zip inconsistente.',
@@ -21,10 +20,9 @@ class ArchivosHelper{
             ZIPARCHIVE::ER_SEEK => 'Error de búsqueda.',
         ];
 
-        $tmpPath = public_path()."/tmp/archivoFinalInventario/".md5(uniqid(rand(), true))."/";
-        $archivoActa_v1 = 'archivo_salida_Acta.txt';
+        $tmpPath = public_path()."/tmp/".md5(uniqid(rand(), true))."/";
 
-        // tarta de abrir el archivo zip
+        // tratar de abrir el archivo zip
         $zip = new ZipArchive;      // documentacion: http://php.net/manual/es/ziparchive.extractto.php
         $resultado = $zip->open($zip_fullpath);
         if( $resultado !== true ){
@@ -33,14 +31,13 @@ class ArchivosHelper{
         }
 
         // extraer el zip dentro del acta
-        $extraccionCorrecta_acta = $zip->extractTo($tmpPath, $archivoActa_v1);
+        $extraccionCorrecta_acta = $zip->extractTo($tmpPath, $archivo);
         $zip->close();
         if($extraccionCorrecta_acta==false)
             return (object)['error'=>'Archivo de acta no encontrado dentro del zip.'];
 
         // leer los datos del txt a un array
-        $actatxt_fullpath = $tmpPath.$archivoActa_v1;
-        return (object)['actatxt_fullpath' => $actatxt_fullpath];
+        return (object)['fullpath' => $tmpPath.$archivo];
     }
 
     // #################################### MUESTRA VENCIMIENTO AUDITORIA FCV ###################################

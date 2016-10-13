@@ -4,13 +4,14 @@ use Carbon\Carbon;
 class ActaInventarioHelper{
     static function parsearZIPaActa($archivozip_fullpath, $local_numero){
         // paso 1) Extraer el archivo txt de acta del zip
-        $resultadoExtraccion = \ArchivosHelper::extraerActaDelZip($archivozip_fullpath);
+        $resultadoExtraccion = \ArchivosHelper::extraerArchivo($archivozip_fullpath, 'archivo_salida_Acta.txt');
+
         if(isset($resultadoExtraccion->error))
             return (object)['error' => $resultadoExtraccion->error];
 
         // paso 2) tratar de parsear el txt que fue extraido
-        $actatxt_fullpath = $resultadoExtraccion->actatxt_fullpath;
-        return self::parsearTXTaActa($actatxt_fullpath, $local_numero);
+        $fullpath = $resultadoExtraccion->fullpath;
+        return self::parsearTXTaActa($fullpath, $local_numero);
     }
 
     static function parsearTXTaActa($actatxt_fullpath, $local_numero){
