@@ -612,6 +612,8 @@ class ActasInventariosFCV extends Model {
 
 
     function leerFinProcesoDesdeElZip(){
+        $this->setFinProceso(null);
+
         // hay tres nombres para el mismo archivo...
         $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO.csv', ';');
         if(isset($unzip->error)){
@@ -619,7 +621,6 @@ class ActasInventariosFCV extends Model {
             if(isset($unzip->error)){
                 $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO_FARMA.csv', ';');
                 if(isset($unzip->error)){
-                    $this->setFinProceso(null);
                     return $unzip->error;
                 }
             }
@@ -660,7 +661,6 @@ class ActasInventariosFCV extends Model {
 
         // si no se encontro una patente 10.000 con los campos con fecha / fecha+hora, entonces terminar la busqueda
         if($finProceso==null){
-            $this->setFinProceso(null);
             return null;
         }
         try{
@@ -668,7 +668,6 @@ class ActasInventariosFCV extends Model {
             $this->setFinProceso($datetime);
             return $datetime;
         }catch(InvalidArgumentException $e){
-            $this->setFinProceso(null);
             return null;
         }
     }
