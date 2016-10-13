@@ -146,7 +146,7 @@ export default class BlackBoxSemanal{
         this.filtroFechaAuditoria = _.chain(this.lista)
             .map(auditoria=>{
                 let valor = auditoria.aud_fechaAuditoria
-                let texto = auditoria.aud_fechaProgramadaFbreve
+                let texto = auditoria.aud_fechaAuditoria==='0000-00-00'? 'PENDIENTE' : auditoria.aud_fechaAuditoria
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroFechaAuditoria, {'valor': valor})
