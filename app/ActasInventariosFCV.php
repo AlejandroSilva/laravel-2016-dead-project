@@ -538,10 +538,10 @@ class ActasInventariosFCV extends Model {
         $this->save();
     }
     function getItemTotalInventariados($conFormato=false){
-        return $this->_getPorcentaje($this->total_items_inventariados, $conFormato);
+        return $this->_getEnteroEnMiles($this->total_items_inventariados, $conFormato);
     }
     function getSkuUnicosInventariados($conFormato=false){
-        return $this->_getPorcentaje($this->sku_unicos_inventariados, $conFormato);
+        return $this->_getEnteroEnMiles($this->sku_unicos_inventariados, $conFormato);
     }
     function setSkuUnicosInventariados($sku){
         $this->sku_unicos_inventariados = $sku;
