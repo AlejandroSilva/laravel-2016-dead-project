@@ -588,9 +588,14 @@ class ActasInventariosFCV extends Model {
     }
 
     function leerPatentesInventariadasDesdeElZip(){
+        // hay dos nombres para el mismo archivo...
         $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO.csv', ';');
-        if(isset($unzip->error))
-            return $unzip->error;
+        if(isset($unzip->error)){
+            $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO_FCV.csv', ';');
+            if(isset($unzip->error)){
+                return $unzip->error;
+            }
+        }
 
         $data = \CSVReader::csv_to_array($unzip->fullpath, ';');
         // extraer los datos de la columna D(index 3), y omitir cualquier campo que no sea un numero
