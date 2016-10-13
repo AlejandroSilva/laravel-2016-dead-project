@@ -610,6 +610,66 @@ class ActasInventariosFCV extends Model {
         return $ptt;
     }
 
+
+    function leerFinProcesoDesdeElZip(){
+        // hay tres nombres para el mismo archivo...
+        $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO.csv', ';');
+        if(isset($unzip->error)){
+            $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO_FCV.csv', ';');
+            if(isset($unzip->error)){
+                $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO_FARMA.csv', ';');
+                if(isset($unzip->error)){
+                    $this->setFinProceso(null);
+                    return $unzip->error;
+                }
+            }
+        }
+
+        // Formato 1: El dato de fecha puede estar en la columna J (index 9) como "20160805222738"
+        //                            | YYYY |       MM      |    DD   |           HH        |     MM  |   SS    |
+        $regAnnoMesDiaHoraMinSeg = '/^201[0-9](0[1-9]|1[0-2]])[0-3][0-9](0[1-9]|1[0-9]|2[0-4])[0-6][0-9][0-6][0-9]$/';
+
+        // Formato 2: la columna J (index 9) con el formato "20161011" y en la columna K (index 10) como "212518"
+        //                  | YYYY |       MM      |    DD   |
+        $regAnnoMesDia = '/^201[0-9](0[1-9]|1[0-2])[0-3][1-9]$/';
+        //                 |           HH        |     MM  |   SS    |
+        $regHoraMinSeg = '/^(0[1-9]|1[0-9]|2[0-4])[0-6][0-9][0-6][0-9]$/';
+
+        $data = \CSVReader::csv_to_array($unzip->fullpath, ';');
+        $finProceso = collect($data)
+            // se busca la patente numero 10.000
+            ->filter(function($row){
+                return $row[3]=="10000";
+            })
+            ->map(function($row) use ($regAnnoMesDiaHoraMinSeg, $regAnnoMesDia, $regHoraMinSeg) {
+                // "formato 1"?
+                if (preg_match($regAnnoMesDiaHoraMinSeg, $row[9])) {
+                    return $row[9];
+                }
+                // "formato 2"? probado!
+                if (preg_match($regAnnoMesDia, $row[9]) && preg_match($regHoraMinSeg, $row[10])) {
+                    return $row[9] . $row[10];
+                }
+                return null;
+            })
+            // de todos, busca el con el valor mas alto (el ultimo en revisarse)
+            ->max();
+
+        // si no se encontro una patente 10.000 con los campos con fecha / fecha+hora, entonces terminar la busqueda
+        if($finProceso==null){
+            $this->setFinProceso(null);
+            return null;
+        }
+        try{
+            $datetime = Carbon::createFromFormat('YmdHis', $finProceso)->toDateTimeString();
+            $this->setFinProceso($datetime);
+            return $datetime;
+        }catch(InvalidArgumentException $e){
+            $this->setFinProceso(null);
+            return null;
+        }
+    }
+
     // ####  Setters
     // #### Formatear respuestas
     // #### Scopes para hacer Querys/Busquedas
