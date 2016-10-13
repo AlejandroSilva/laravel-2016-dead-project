@@ -59,9 +59,9 @@ class ArchivoFinalInventarioController extends Controller {
 
                 // ######  Dotaciones
                 // Ppto.
-                $acta->getDotacionPresupuestada(true),
+                $acta->getDotacionPresupuestada(false),
                 // Efectivo
-                $acta->getDotacionEfectiva(true),
+                $acta->getDotacionEfectiva(false),
 
                 // ######  unidades
                 // Conteo
@@ -83,43 +83,43 @@ class ArchivoFinalInventarioController extends Controller {
 
                 // ######  Consolidado Auditoria FCV
                 // Patente
-                $acta->getConsolidadoPatentes(true),
+                $acta->getConsolidadoPatentes(false),
                 // Unidades
-                $acta->getConsolidadoUnidades(true),
+                $acta->getConsolidadoUnidades(false),
                 // Items
-                $acta->getConsolidadoItems(true),
+                $acta->getConsolidadoItems(false),
 
                 // ######  Auditoria QF
                 // Patente
-                $acta->getAuditoriaQF_patentes(true),
+                $acta->getAuditoriaQF_patentes(false),
                 // Unidades
-                $acta->getAuditoriaQF_unidades(true),
+                $acta->getAuditoriaQF_unidades(false),
                 // Items
-                $acta->getAuditoriaQF_items(true),
+                $acta->getAuditoriaQF_items(false),
 
                 // ######  Auditoria Apoyo 1
                 // Patente
-                $acta->getAuditoriaApoyo1_patentes(true),
+                $acta->getAuditoriaApoyo1_patentes(false),
                 // Unidades
-                $acta->getAuditoriaApoyo1_unidades(true),
+                $acta->getAuditoriaApoyo1_unidades(false),
                 // Items
-                $acta->getAuditoriaApoyo1_items(true),
+                $acta->getAuditoriaApoyo1_items(false),
 
                 // ######  Auditoria Apoyo 2
                 // Patente
-                $acta->getAuditoriaApoyo2_patentes(true),
+                $acta->getAuditoriaApoyo2_patentes(false),
                 // Unidades
-                $acta->getAuditoriaApoyo2_unidades(true),
+                $acta->getAuditoriaApoyo2_unidades(false),
                 // Items
-                $acta->getAuditoriaApoyo2_items(true),
+                $acta->getAuditoriaApoyo2_items(false),
 
                 // ######  Auditoria Supervisor
                 // Patente
-                $acta->getAuditoriaSupervisor_patentes(true),
+                $acta->getAuditoriaSupervisor_patentes(false),
                 // Unidades
-                $acta->getAuditoriaSupervisor_unidades(true),
+                $acta->getAuditoriaSupervisor_unidades(false),
                 // Items
-                $acta->getAuditoriaSupervisor_items(true),
+                $acta->getAuditoriaSupervisor_items(false),
 
                 // ######  Correciones Auditoria FCV a SEI
                 // Patentes
@@ -143,11 +143,11 @@ class ArchivoFinalInventarioController extends Controller {
 
                 // ######  Totales inventario
                 // PTT
-                $acta->getPatentesInventariadas(true),
+                $acta->getPatentesInventariadas(false),
                 // Items totales
-                $acta->getItemTotalInventariados(true),
+                $acta->getItemTotalInventariados(false),
                 // SKU unicos
-                $acta->getSkuUnicosInventariados(true),
+                $acta->getSkuUnicosInventariados(false),
 
                 $acta->idInventario
             ];
