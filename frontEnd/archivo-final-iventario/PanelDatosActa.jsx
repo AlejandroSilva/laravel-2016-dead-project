@@ -428,6 +428,26 @@ const PanelBody = ({acta, editar}, ctx)=>
                             <Numero editarCampo={editar} valor={acta.porcentajeVariacionGrilla}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'porcentajeVariacionGrilla')}/>
                         </div>
+
+                        <div className={cx('tr-header')} >
+                            <p>TOTALES INVENTARIO</p>
+                        </div>
+                        <div className={cx('tr-datos')}>
+                            <p className={cx('td-label')} title="se procesa desde 'captura inventario estandar punto'">Patentes iventariadas</p>
+                            <Numero editarCampo={editar} valor={acta.patentesInventariadas}
+                                    actualizarActa={ctx.actualizarActa.bind(this, 'patentesInventariadas')}/>
+                        </div>
+                        <div className={cx('tr-datos')}>
+                            <p className={cx('td-label')} title="en acta: 'total_items_inventariados'">Items Totales</p>
+                            <Numero editarCampo={editar} valor={acta.itemTotalInventariados}
+                                    actualizarActa={ctx.actualizarActa.bind(this, 'itemTotalInventariados')}/>
+                        </div>
+                        <div className={cx('tr-datos')}>
+                            <p className={cx('td-label')} title="se procesa desde 'captura inventario estandar punto'">SKU unicos</p>
+                            <Numero editarCampo={editar} valor={acta.skuUnicosInventariados}
+                                    actualizarActa={ctx.actualizarActa.bind(this, 'skuUnicosInventariados')}/>
+                        </div>
+
                     </div>
                 </div>
             </div>

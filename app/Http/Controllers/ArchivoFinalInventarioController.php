@@ -305,6 +305,10 @@ class ArchivoFinalInventarioController extends Controller {
             'porcentajeErrorQF' => 'numeric',
             // Variacion Grilla
             'porcentaje_variacion_ajuste_grilla' => 'numeric',
+            // Totales Inventario
+            'patentesInventariadas' => 'numeric',
+            'itemTotalInventariados' => 'numeric',
+            'skuUnicosInventariados' => 'numeric',
         ]);
         if($validator->fails()) {
             return response()->json(Inventarios::formatoActa($inventario));
@@ -402,6 +406,14 @@ class ArchivoFinalInventarioController extends Controller {
             // Variacion Grilla
             if(isset($request->porcentajeVariacionGrilla))
                 $acta->setPorcentajeVariacionGrilla($request->porcentajeVariacionGrilla);
+            // Totales Inventario
+            if(isset($request->patentesInventariadas))
+                $acta->setPatentesInventariadas($request->patentesInventariadas);
+            if(isset($request->itemTotalInventariados))
+                $acta->setItemTotalInventariados($request->itemTotalInventariados);
+            if(isset($request->skuUnicosInventariados))
+                $acta->setSkuUnicosInventariados($request->skuUnicosInventariados);
+
 
             $inventario = Inventarios::find($idInventario);
             return response()->json(Inventarios::formatoActa($inventario));

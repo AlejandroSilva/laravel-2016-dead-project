@@ -820,6 +820,12 @@ class ActasInventariosFCV extends Model {
             'porcentajeErrorQF' => $acta->getPorcentajeErrorQF(),
             // Variación Grilla
             'porcentajeVariacionGrilla' => $acta->getPorcentajeVariacionGrilla(),
+            // Totales Inventario
+            'patentesInventariadas' => $acta->getPatentesInventariadas(),
+            // Items totales
+            'itemTotalInventariados' => $acta->getItemTotalInventariados(),
+            // SKU unicos
+            'skuUnicosInventariados' => $acta->getSkuUnicosInventariados(),
         ];
     }
 
