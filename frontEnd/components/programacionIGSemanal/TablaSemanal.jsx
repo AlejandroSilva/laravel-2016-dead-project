@@ -117,7 +117,7 @@ class TablaInventarios extends React.Component{
                         <th className={css.thPatentes}>PTT</th>
                         <th className={css.thUnidadesReales}>U.Cont</th>
                         <th className={css.thUnidadesTeoricas}>U.Teo</th>
-                        <th className={css.thArchivoFinal}>Archivo final</th>
+                        <th className={css.thArchivoFinal}>Acta</th>
                         {/*<th className={css.thNomimaPago}>Nom.Pago</th>*/}
                     </Sticky>
                 </thead>

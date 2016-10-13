@@ -444,45 +444,21 @@ class RowInventario extends React.Component{
                 <td className={css.tdUnidadesTeoricas}>
                     {inv.inv_unidadesTeorico}
                 </td>
-                {/* Archivo Final */}
+                {/* Acta */}
                 <td className={css.tdArchivoFinal}>
-                    <a className={cx('label', 'center-block', {
-                        'label-default' : inv.inv_estadoArchivoFinal=='pendiente',
-                        'label-info' : inv.inv_estadoArchivoFinal=='por publicar',
-                        'label-primary': inv.inv_estadoArchivoFinal=='publicado'
-                    })} href={`/inventario/${inv.inv_idInventario}/archivo-final`} target="_blank">
-                        {inv.inv_estadoArchivoFinal}
-                    </a>
+                    {/* Mostrar el boton de acta solo para el cliente FCV */}
+                    {inv.cliente_idCliente==2?
+                        <a className={cx('label', 'center-block', {
+                            'label-default' : inv.inv_estadoArchivoFinal=='pendiente',
+                            'label-info' : inv.inv_estadoArchivoFinal=='por publicar',
+                            'label-primary': inv.inv_estadoArchivoFinal=='publicado'
+                        })} href={`/inventario/${inv.inv_idInventario}/archivo-final`} target="_blank">
+                            {inv.inv_estadoArchivoFinal}
+                        </a>
+                        :
+                        null
+                    }
                 </td>
-                {/* Nómina de pago - PENDIENTE */}
-                {/*<td className={css.tdNominaPago}>*/}
-                    {/*/!* Día *!/*/}
-                    {/*<div style={{width: '60px'}}>*/}
-                        {/*{inv.ndia_urlNominaPago==''?*/}
-                            {/*<span className={cx('label label-default', inventarioDia? 'center-block' : 'hide')}>*/}
-                                {/*Pendiente*/}
-                            {/*</span>*/}
-                            {/*:*/}
-                            {/*<a href={inv.ndia_urlNominaPago} target="_blank"*/}
-                               {/*className={cx('label label-primary', inventarioDia? 'center-block' : 'hide')}>*/}
-                                {/*Disponible*/}
-                            {/*</a>*/}
-                        {/*}*/}
-                    {/*</div>*/}
-                    {/*/!* Noche *!/*/}
-                    {/*<div style={{width: '60px'}}>*/}
-                        {/*{inv.nnoche_urlNominaPago==''?*/}
-                            {/*<span className={cx('label label-default', inventarioNoche? 'center-block' : 'hide')}>*/}
-                                {/*Pendiente*/}
-                            {/*</span>*/}
-                            {/*:*/}
-                            {/*<a href={inv.nnoche_urlNominaPago} target="_blank"*/}
-                               {/*className={cx('label label-primary', inventarioNoche? 'center-block' : 'hide')}>*/}
-                                {/*Disponible*/}
-                            {/*</a>*/}
-                        {/*}*/}
-                    {/*</div>*/}
-                {/*</td>*/}
             </tr>
         )
     }
