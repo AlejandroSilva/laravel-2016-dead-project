@@ -141,8 +141,15 @@ class ArchivoFinalInventarioController extends Controller {
                 // %
                 $acta->getPorcentajeVariacionGrilla(true),
 
+                // ######  Totales inventario
+                // PTT
                 $acta->getPatentesInventariadas(true),
-                //$acta->idInventario
+                // Items totales
+                $acta->getItemTotalInventariados(true),
+                // SKU unicos
+                $acta->getSkuUnicosInventariados(true),
+
+                $acta->idInventario
             ];
         })->toArray();
 

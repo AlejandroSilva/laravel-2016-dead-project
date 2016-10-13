@@ -26,7 +26,9 @@ class ActasInventariosFCV extends Model {
         'supervisor_total_unidades', 'supervisor_total_items', 'supervisor_total_patentes',
         'apoyo2_total_unidades', 'apoyo2_total_items', 'apoyo2_total_patentes',
         'apoyo1_total_unidades', 'apoyo1_total_items', 'apoyo1_total_patentes',
-        'qf_total_unidades', 'qf_total_items', 'qf_total_patentes', ];
+        'qf_total_unidades', 'qf_total_items', 'qf_total_patentes',
+        'sku_unicos_inventariados'
+    ];
     // aud2 = items_auditados
     // aud5 = items_corregidos_auditoria
     // tot1 = fin_captura
@@ -318,7 +320,6 @@ class ActasInventariosFCV extends Model {
         $this->save();
     }
     function getConsolidadoItems($conFormato=false){
-        // total_items_inventariados
         return $this->_getEnteroEnMiles($this->aud2, $conFormato);
     }
     function setConsolidadoItems($items){
@@ -536,17 +537,24 @@ class ActasInventariosFCV extends Model {
         $this->tot2 = $patentes;
         $this->save();
     }
+    function getItemTotalInventariados($conFormato=false){
+        return $this->_getPorcentaje($this->total_items_inventariados, $conFormato);
+    }
+    function getSkuUnicosInventariados($conFormato=false){
+        return $this->_getPorcentaje($this->sku_unicos_inventariados, $conFormato);
+    }
+    function setSkuUnicosInventariados($sku){
+        $this->sku_unicos_inventariados = $sku;
+        $this->save();
+    }
 
     function getItemRevisadosCliente($conFormato=false){
         // esteban lee el dato: "item_revisado"
         $totalRevisados = $this->items_rev_qf + $this->items_rev_apoyo1 + $this->items_rev_apoyo2;
         return $conFormato? number_format($totalRevisados, 0, ',', '.') : $totalRevisados;
     }
-    function getItemTotalContados(){
-        return $this->total_items_inventariados;
-    }
     function getPorcentajeRevisionCliente($conFormato=false){
-        $totalContados = $this->getItemTotalContados();
+        $totalContados = $this->getItemTotalInventariados();
         $revisados = $this->getItemRevisadosCliente();
         // si no estan los datos, no se puede hacer el calculo
         if($revisados==null || $totalContados==null)
@@ -610,7 +618,6 @@ class ActasInventariosFCV extends Model {
         return $ptt;
     }
 
-
     function leerFinProcesoDesdeElZip(){
         $this->setFinProceso(null);
 
@@ -670,6 +677,40 @@ class ActasInventariosFCV extends Model {
         }catch(InvalidArgumentException $e){
             return null;
         }
+    }
+
+    function leerSkuUnicosDesdeElZip(){
+        if( $this->getSkuUnicosInventariados()!=null )
+            return 'los sku unicos ya estan en el arhivo';
+
+        // hay tres nombres para el mismo archivo...
+        $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO.csv', ';');
+        if(isset($unzip->error)){
+            $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO_FCV.csv', ';');
+            if(isset($unzip->error)){
+                $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO_FARMA.csv', ';');
+                if(isset($unzip->error)){
+                    return $unzip->error;
+                }
+            }
+        }
+
+        $data = \CSVReader::csv_to_array($unzip->fullpath, ';');
+        // extraer los datos de la columna A(index 0), y omitir cualquier campo que no sea un numero
+        $column = \CSVReader::getColumn($data, 0);
+        $skuUnicos = collect($column)
+            ->unique()
+            ->filter(function($value){
+                return is_numeric($value);
+            })
+            ->count();
+
+        $this->setSkuUnicosInventariados($skuUnicos);
+        return $skuUnicos;
+    }
+
+    function leerXXXXXXXX(){
+        //$this->total_items_inventariados
     }
 
     // ####  Setters
