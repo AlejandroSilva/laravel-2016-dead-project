@@ -540,6 +540,10 @@ class ActasInventariosFCV extends Model {
     function getItemTotalInventariados($conFormato=false){
         return $this->_getEnteroEnMiles($this->total_items_inventariados, $conFormato);
     }
+    function setItemTotalInventariados($items){
+        $this->total_items_inventariados = $items;
+        $this->save();
+    }
     function getSkuUnicosInventariados($conFormato=false){
         return $this->_getEnteroEnMiles($this->sku_unicos_inventariados, $conFormato);
     }
@@ -609,6 +613,9 @@ class ActasInventariosFCV extends Model {
 
         $data = \CSVReader::csv_to_array($unzip->fullpath, ';');
         // extraer los datos de la columna D(index 3), y omitir cualquier campo que no sea un numero
+        // NOTA: se deberian omitir las patentes 10000, porque son de auditoria, no de conteo, pero nunca deberia haber
+        // un sku que no paso por el inventario....
+
         $column = \CSVReader::getColumn($data, 3);
         $ptt = collect($column)->unique()->filter(function($value){
             return is_numeric($value);
@@ -695,6 +702,9 @@ class ActasInventariosFCV extends Model {
             }
         }
 
+        // NOTA: se deberian omitir las patentes 10000, porque son de auditoria, no de conteo, pero nunca deberia haber
+        // un sku que no paso por el inventario....
+
         $data = \CSVReader::csv_to_array($unzip->fullpath, ';');
         // extraer los datos de la columna A(index 0), y omitir cualquier campo que no sea un numero
         $column = \CSVReader::getColumn($data, 0);
@@ -704,13 +714,42 @@ class ActasInventariosFCV extends Model {
                 return is_numeric($value);
             })
             ->count();
-
         $this->setSkuUnicosInventariados($skuUnicos);
         return $skuUnicos;
     }
 
-    function leerXXXXXXXX(){
-        //$this->total_items_inventariados
+    function leerItemTotalInventarioDesdeElZip(){
+//        if( $this->getItemTotalInventariados()!=null )
+//            return 'los sku unicos ya estan en el arhivo';
+
+        // hay tres nombres para el mismo archivo...
+        $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO.csv', ';');
+        if(isset($unzip->error)){
+            $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO_FCV.csv', ';');
+            if(isset($unzip->error)){
+                $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO_FARMA.csv', ';');
+                if(isset($unzip->error)){
+                    return $unzip->error;
+                }
+            }
+        }
+
+        $data = \CSVReader::csv_to_array($unzip->fullpath, ';');
+        if(!isset($data[0][3]))
+            return "error leyendo el array... $this->idActaFCV";
+
+        $items = collect($data)
+            // se EXCLUYEN las filas que tengan patente = 10.000
+            ->filter(function($row){
+                // isset, elimina los primeros rows antes de la cabezera
+                // is_numeric, elimina la cabecera
+                // row!=10000, elimina la revision del qf
+                return isset($row[3]) && is_numeric($row[3]) && $row[3]!=10000;
+            })
+            ->count();
+
+        //$this->setItemTotalInventariados($items);
+        return $items;
     }
 
     // ####  Setters
