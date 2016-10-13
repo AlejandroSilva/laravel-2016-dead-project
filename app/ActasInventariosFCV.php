@@ -748,7 +748,7 @@ class ActasInventariosFCV extends Model {
             })
             ->count();
 
-        //$this->setItemTotalInventariados($items);
+        $this->setItemTotalInventariados($items);
         return $items;
     }
 
