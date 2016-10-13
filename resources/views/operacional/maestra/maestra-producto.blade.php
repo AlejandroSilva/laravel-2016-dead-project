@@ -109,26 +109,28 @@
     @if($duplicados->count()>0)
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-               <div class="panel-heading" align="center"><span class="glyphicon glyphicon-duplicate"></span> Su maestra contiene sku duplicados</div>
-                <table class="table table-responsive table-hover tablefiles table-bordered">
-                <thead>
-                <th>Código Barra</th>
-                <th>Descriptor</th>
-                <th>SKU</th>
-                <th>Laboratorio</th>
-                <th>Clasificación</th>
-                </thead>
-                @foreach($duplicados as $duplicado)
-                    <tr class="warning">
-                        <td>{{ $duplicado->barra}}</td>
-                        <td>{{ $duplicado->descriptor}}</td>
-                        <td>{{ $duplicado->sku }}</td>
-                        <td>{{ $duplicado->laboratorio}}</td>
-                        <td >{{ $duplicado->clasificacionTerapeutica}}</td>
-                    </tr>
-                @endforeach
-            </table>
+            <div class="panel panel-warning">
+               <div class="panel-heading" align="center"><span class="glyphicon glyphicon-duplicate"></span> SKU duplicados</div>
+                <div style="height:110px;overflow:auto;" class="panel-body">
+                    <table class="table table-responsive table-hover tablefiles table-bordered">
+                        <thead>
+                        <th>Código Barra</th>
+                        <th>Descriptor</th>
+                        <th>SKU</th>
+                        <th>Laboratorio</th>
+                        <th>Clasificación</th>
+                        </thead>
+                        @foreach($duplicados as $duplicado)
+                            <tr class="warning">
+                                <td>{{ $duplicado->barra}}</td>
+                                <td>{{ $duplicado->descriptor}}</td>
+                                <td>{{ $duplicado->sku }}</td>
+                                <td>{{ $duplicado->laboratorio}}</td>
+                                <td >{{ $duplicado->clasificacionTerapeutica}}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
             </div>
         </div>
     </div>

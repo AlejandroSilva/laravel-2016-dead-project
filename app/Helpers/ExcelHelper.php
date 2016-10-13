@@ -1,10 +1,5 @@
 <?php
 
-// PHPExcel
-//use PHPExcel;
-//use PHPExcel_IOFactory;
-//use PHPExcel_Shared_Date;
-
 class ExcelHelper{
     static function leerExcel($fullPath){
         $response = (object)[
@@ -61,11 +56,13 @@ class ExcelHelper{
         return $workbook;
     }
     public static function generarWorkbook_maestra($datosMaestra){
+        ini_set('memory_limit','1024M');
+        ini_set('max_execution_time', 540);
         $cabecera = ['BARRA','DESCRIPTOR','SKU','LABORATORIO','CLASIFICACION TERAPEUTICA'];
         $workbook = new PHPExcel();
         $sheet = $workbook->getActiveSheet();
         $sheet->fromArray($cabecera, NULL, 'A1');
-        $sheet->fromArray($datosMaestra,  NULL, 'A2');
+        $sheet->fromArray($datosMaestra, NULL, 'A2');
         $MAX_COL = $sheet->getHighestDataColumn();
         //Aplicar estilos
         $sheet->getStyle("A1:".$MAX_COL."1")->applyFromArray([

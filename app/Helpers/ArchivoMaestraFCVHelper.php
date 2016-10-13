@@ -66,7 +66,9 @@ class ArchivoMaestraFCVHelper{
         return $response;
     }
     static function parseoMaestra($maestras){
-        $datos = $maestras->map(function($maestra){
+        ini_set('memory_limit','1024M');
+        ini_set('max_execution_time', 540);
+        $maestraArray = array_map(function($maestra){
             return [
                 $maestra->barra,
                 $maestra->descriptor,
@@ -74,8 +76,8 @@ class ArchivoMaestraFCVHelper{
                 $maestra->laboratorio,
                 $maestra->clasificacionTerapeutica
             ];
-        })->toArray();
-        return $datos;
+        }, $maestras);
+        return $maestraArray;
     }
     //Validar que los campos no contengas valores nulos
     private static function _camposValidos($row, $barra, $descriptor, $sku, $laboratorio, $clasificacionTerapeutica){
