@@ -588,12 +588,14 @@ class ActasInventariosFCV extends Model {
     }
 
     function leerPatentesInventariadasDesdeElZip(){
-        // hay dos nombres para el mismo archivo...
+        // hay tres nombres para el mismo archivo...
         $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO.csv', ';');
         if(isset($unzip->error)){
             $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO_FCV.csv', ';');
             if(isset($unzip->error)){
-                return $unzip->error;
+                $unzip = $this->archivoFinal->unzipArchivo('CAPTURA_INVENTARIO_ESTANDAR_PUNTO_FARMA.csv', ';');
+                if(isset($unzip->error))
+                    return $unzip->error;
             }
         }
 
