@@ -642,7 +642,7 @@ class ActasInventariosFCV extends Model {
         $finProceso = collect($data)
             // se busca la patente numero 10.000
             ->filter(function($row){
-                return $row[3]=="10000";
+                return isset($row[3]) && $row[3]=="10000";
             })
             ->map(function($row) use ($regAnnoMesDiaHoraMinSeg, $regAnnoMesDia, $regHoraMinSeg) {
                 // "formato 1"?
