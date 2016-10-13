@@ -636,8 +636,8 @@ class ActasInventariosFCV extends Model {
         $regHoraMinSeg = '/^(0[1-9]|1[0-9]|2[0-4])[0-6][0-9][0-6][0-9]$/';
 
         $data = \CSVReader::csv_to_array($unzip->fullpath, ';');
-        if(!isset($row[0][3]))
-            return "error leyendo archivo... $this->idActaFCV";
+        if(!isset($data[0][3]))
+            return "error leyendo el array... $this->idActaFCV";
 
         $finProceso = collect($data)
             // se busca la patente numero 10.000
