@@ -423,9 +423,8 @@ class Inventarios extends Model {
         if(isset($peticion->fechaFin))
             $query->where('fechaProgramada', '<=', $peticion->fechaFin);
 
-        // Mes
-        $mes = $peticion->mes;
-        if(isset($mes) && $mes!=''){
+        // OPCIONAL: Mes
+        if(isset($peticion->mes) && $peticion->mes!=''){
             $_fecha = explode('-', $peticion->mes);
             $anno = $_fecha[0];
             $mes  = $_fecha[1];
