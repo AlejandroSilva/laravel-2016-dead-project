@@ -24,27 +24,28 @@ class ArchivoFinalInventarioController extends Controller {
     // GET programacionIG/archivos-finales-fcv
     // MW: auth
     function show_archivos_finales_fcv(Request $request){
-        $incluirPendientes = $request->incluirPendientes;
-        $inventarios = Inventarios::buscar((object)[
-            'idCliente' => 2, // FCV
-            'orden' => 'desc',
-            'ceco' => $request->ceco,
-            'mes' => $request->mes,
-            'quitarPendientes' => $incluirPendientes!="on"
-        ]);
-
         // ultimos 12 meses
         $hoy = Carbon::now();
         $mesesFechaProgramada = \FechaHelper::ultimosMeses($hoy, 7, true);
         $mesesConsolidados = \FechaHelper::ultimosMeses($hoy, 7, true);
 
+        $incluirPendientes = $request->incluirPendientes;
+        $cecoBuscado = $request->ceco;
+        $mesBuscado = isset($request->mes)? $request->mes : $mesesFechaProgramada[0]['value'];
+        $inventarios = Inventarios::buscar((object)[
+            'idCliente' => 2, // FCV
+            'orden' => 'desc',
+            'ceco' => $cecoBuscado,
+            'mes' => $mesBuscado,
+            'quitarPendientes' => $incluirPendientes!="on"
+        ]);
+
         return view('archivos-finales-fcv.index', [
             'inventarios' => $inventarios,
-            'cecoBuscado' => $request->ceco,
+            'cecoBuscado' => $cecoBuscado,
             // seleccionar el mes actual por defecto para la busqueda
-            'mesBuscado' => isset($request->mes)? $request->mes : $mesesFechaProgramada[0]['value'],
+            'mesBuscado' => $mesBuscado,
             'incluirPendientes' => $incluirPendientes,
-
             'mesesFechaProgramada' => $mesesFechaProgramada,
             'mesesConsolidados' => $mesesConsolidados,
         ]);
