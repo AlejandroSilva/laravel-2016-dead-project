@@ -41,7 +41,8 @@ class ArchivoFinalInventarioController extends Controller {
         return view('archivos-finales-fcv.index', [
             'inventarios' => $inventarios,
             'cecoBuscado' => $request->ceco,
-            'mesBuscado' => $request->mes,
+            // seleccionar el mes actual por defecto para la busqueda
+            'mesBuscado' => isset($request->mes)? $request->mes : $mesesFechaProgramada[0]['value'],
             'incluirPendientes' => $incluirPendientes,
 
             'mesesFechaProgramada' => $mesesFechaProgramada,
