@@ -75,8 +75,8 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="drop-fcv">
                                     <li class="dropdown-header">Inventarios</li>
-                                    <li class="{{ Request::is('programacionIG/archivos-finales-fcv')? 'active': '' }}">
-                                        <a href="{{ url('programacionIG/archivos-finales-fcv') }}">Archivos Finales FCV</a>
+                                    <li class="{{ Request::is('/informes-finales-inventarios-fcv')? 'active': '' }}">
+                                        <a href="{{ url('/informes-finales-inventarios-fcv') }}">Informes Finales Inventarios</a>
                                     </li>
                                 </ul>
                             </li>

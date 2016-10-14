@@ -21,9 +21,9 @@ class ArchivoFinalInventarioController extends Controller {
             ->only('api_publicarActa', 'api_despublicarActa');
     }
 
-    // GET programacionIG/archivos-finales-fcv
+    // GET informes-finales-inventarios-fcv
     // MW: auth
-    function show_archivos_finales_fcv(Request $request){
+    function show_informes_finales_inventario_fcv(Request $request){
         // ultimos 12 meses
         $hoy = Carbon::now();
         $mesesFechaProgramada = \FechaHelper::ultimosMeses($hoy, 7, true);
@@ -40,7 +40,7 @@ class ArchivoFinalInventarioController extends Controller {
             'quitarPendientes' => $incluirPendientes!="on"
         ]);
 
-        return view('archivos-finales-fcv.index', [
+        return view('informes-finales-inventarios-fcv.index', [
             'inventarios' => $inventarios,
             'cecoBuscado' => $cecoBuscado,
             // seleccionar el mes actual por defecto para la busqueda

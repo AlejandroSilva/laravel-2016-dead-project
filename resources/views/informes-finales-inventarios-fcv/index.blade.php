@@ -16,7 +16,7 @@
 
 <div class="container">
 
-    <h1>Archivos finales de inventarios FCV</h1>
+    <h1>Informes Finales de inventarios FCV</h1>
 
     <div class="row">
         <div class="col-sm-3">
@@ -27,7 +27,7 @@
                     Buscar Inventarios
                 </div>
                 <div class="panel-body">
-                    <form action="/programacionIG/archivos-finales-fcv" method="GET">
+                    <form action="/informes-finales-inventarios-fcv" method="GET">
                         {{-- Numero de local --}}
                         <div class="form-group">
                             <label>Numero de Local</label>

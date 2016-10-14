@@ -47,7 +47,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'Legacy_InventariosController@descargarPDF_porRango');
         // INVENTARIO - MANTENEDOR DE NOMINAS
         Route::get('programacionIG/nomina/{idNomina}',              'NominasController@show_nomina');
-        Route::get('programacionIG/archivos-finales-fcv',           'ArchivoFinalInventarioController@show_archivos_finales_fcv');
+        Route::get('informes-finales-inventarios-fcv',              'ArchivoFinalInventarioController@show_informes_finales_inventario_fcv');
 
 
         // NOMINAS - NOMINAS DE CAPTADOR
