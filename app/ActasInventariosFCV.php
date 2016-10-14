@@ -833,17 +833,33 @@ class ActasInventariosFCV extends Model {
     static function buscar($peticion){
         $query =  ActasInventariosFCV::where('fecha_publicacion', '!=', '0000-00-00 00:00:00');
 
-        $fechaInicio = $peticion->fechaInicio;
+        // Fecha Inicio
+         $fechaInicio = $peticion->fechaInicio;
         if(isset($fechaInicio))
             $query->whereHas('inventario', function($q) use ($fechaInicio) {
                 $q->where('fechaProgramada', '>=', $fechaInicio);
             });
 
+        // Fecha Fin
         $fechaFin = $peticion->fechaFin;
         if(isset($fechaFin))
             $query->whereHas('inventario', function($q) use ($fechaFin) {
                 $q->where('fechaProgramada', '<=', $fechaFin);
             });
+
+        // OPCIONAL: Mes
+        if(isset($peticion->mes) && $peticion->mes!=''){
+            $_fecha = explode('-', $peticion->mes);
+            $anno = $_fecha[0];
+            $mes  = $_fecha[1];
+
+            $query->whereHas('inventario', function($q) use ($anno, $mes) {
+                $q->whereRaw("extract(year from fechaProgramada) = ?", [$anno]);
+                // el mes buscado es opcional
+                if($mes!=0)
+                    $q->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
+            });
+        }
 
         // ordenados por fecha programada del inventario
         $collection = $query->get();

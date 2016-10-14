@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use App\ActasInventariosFCV;
 use App\ArchivoFinalInventario;
@@ -20,145 +21,32 @@ class ArchivoFinalInventarioController extends Controller {
             ->only('api_publicarActa', 'api_despublicarActa');
     }
 
-    // GET inventario/descargar-consolidado-fcv
+    // GET programacionIG/archivos-finales-fcv
     // MW: auth
-    function descargar_consolidado_fcv(Request $request){
-        // todo recibir rango de fecha y otros filtros por el get
-        $actas = ActasInventariosFCV::buscar((object)[
-            'fechaInicio' => $request->query('fechaInicio'),
-            'fechaFin' => $request->query('fechaFin'),
-            'orden' => $request->query('orden'),
+    function show_archivos_finales_fcv(Request $request){
+        $incluirPendientes = $request->incluirPendientes;
+        $inventarios = Inventarios::buscar((object)[
+            'idCliente' => 2, // FCV
+            'orden' => 'desc',
+            'ceco' => $request->ceco,
+            'mes' => $request->mes,
+            'quitarPendientes' => $incluirPendientes!="on"
         ]);
-        $datos = $actas->map(function($acta){
-            return [
-                // ######  Hitos importantes del proceso de inventario:
-                // Fecha Inv
-                $acta->getFechaTomaInventario(),
-                // CL
-                $acta->getCliente(),
-                // Loc
-                $acta->getCeco(),
-                // Supervisor
-                $acta->getSupervisor(),
-                // Químico
-                $acta->getQF(),
-                // Inicio Conteo
-                $acta->getInicioConteo(true),
-                // Fin Conteo
-                $acta->getFinConteo(true),
-                // Fin Proceso
-                $acta->getFinProceso(true),
 
-                // ######  Duración
-                // Conteo
-                $acta->getDuracionConteo(true),
-                // Revisión
-                $acta->getDuracionRevision(true),
-                // Total Proceso
-                $acta->getDuracionTotalProceso(true),
+        // ultimos 12 meses
+        $hoy = Carbon::now();
+        $mesesFechaProgramada = \FechaHelper::ultimosMeses($hoy, 7, true);
+        $mesesConsolidados = \FechaHelper::ultimosMeses($hoy, 7, true);
 
-                // ######  Dotaciones
-                // Ppto.
-                $acta->getDotacionPresupuestada(false),
-                // Efectivo
-                $acta->getDotacionEfectiva(false),
+        return view('archivos-finales-fcv.index', [
+            'inventarios' => $inventarios,
+            'cecoBuscado' => $request->ceco,
+            'mesBuscado' => $request->mes,
+            'incluirPendientes' => $incluirPendientes,
 
-                // ######  unidades
-                // Conteo
-                $acta->getUnidadesInventariadas(),          // ??, no estoy seguro
-                // Teórico
-                $acta->getUnidadesTeoricas(),
-                // Dif. Neto
-                $acta->getDiferenciaNeto(),
-                // Dif. ABS
-                $acta->getDiferenciaAbsoluta(),
-
-                // ######  Evaluaciones / Notas
-                // Nota Presentacion
-                $acta->getNotaPresentacion(),
-                // Nota Supervisor
-                $acta->getNotaSupervisor(),
-                // Nota Conteo
-                $acta->getNotaConteo(),
-
-                // ######  Consolidado Auditoria FCV
-                // Patente
-                $acta->getConsolidadoPatentes(false),
-                // Unidades
-                $acta->getConsolidadoUnidades(false),
-                // Items
-                $acta->getConsolidadoItems(false),
-
-                // ######  Auditoria QF
-                // Patente
-                $acta->getAuditoriaQF_patentes(false),
-                // Unidades
-                $acta->getAuditoriaQF_unidades(false),
-                // Items
-                $acta->getAuditoriaQF_items(false),
-
-                // ######  Auditoria Apoyo 1
-                // Patente
-                $acta->getAuditoriaApoyo1_patentes(false),
-                // Unidades
-                $acta->getAuditoriaApoyo1_unidades(false),
-                // Items
-                $acta->getAuditoriaApoyo1_items(false),
-
-                // ######  Auditoria Apoyo 2
-                // Patente
-                $acta->getAuditoriaApoyo2_patentes(false),
-                // Unidades
-                $acta->getAuditoriaApoyo2_unidades(false),
-                // Items
-                $acta->getAuditoriaApoyo2_items(false),
-
-                // ######  Auditoria Supervisor
-                // Patente
-                $acta->getAuditoriaSupervisor_patentes(false),
-                // Unidades
-                $acta->getAuditoriaSupervisor_unidades(false),
-                // Items
-                $acta->getAuditoriaSupervisor_items(false),
-
-                // ######  Correciones Auditoria FCV a SEI
-                // Patentes
-                $acta->getCorreccionPatentesEnAuditoria(),
-                // Items
-                $acta->getCorreccionItemsEnAuditoria(),
-                // Un. Neto
-                $acta->getCorreccionUnidadesNetoEnAuditoria(),
-                // Un. ABS'
-                $acta->getCorreccionUnidadesAbsolutasEnAuditoria(),
-
-                // ######  % Error Aud.
-                // SEI
-                $acta->getPorcentajeErrorSei(true),
-                // QF
-                $acta->getPorcentajeErrorQF(true),
-
-                // ######  Variación Grilla
-                // %
-                $acta->getPorcentajeVariacionGrilla(true),
-
-                // ######  Totales inventario
-                // PTT
-                $acta->getPatentesInventariadas(false),
-                // Items totales
-                $acta->getItemTotalInventariados(false),
-                // SKU unicos
-                $acta->getSkuUnicosInventariados(false),
-
-                $acta->idInventario
-            ];
-        })->toArray();
-
-        //return response()->json($datos);
-        $workbook = \ExcelHelper::generarWorkbook_consolidadoActas($datos);
-
-        // generar el archivo y descargarlo
-        $fullpath = \ExcelHelper::workbook_a_archivo($workbook);
-        return \ArchivosHelper::descargarArchivo($fullpath, "consolidado-actas.xlsx");
+            'mesesFechaProgramada' => $mesesFechaProgramada,
+            'mesesConsolidados' => $mesesConsolidados,
+        ]);
     }
 
     // GET inventario/{idInventario}/archivo-final
@@ -454,7 +342,7 @@ class ArchivoFinalInventarioController extends Controller {
 
     // GET archivo-final-inventario/{idArchivo}/descargar
     // auth
-    public function descargar_archivo_final(Request $request, $idArchivoFinalInventario){
+    function descargar_archivo_final(Request $request, $idArchivoFinalInventario){
         // existe el registro en la BD?
         $archivoFinalInventario = ArchivoFinalInventario::find($idArchivoFinalInventario);
         if(!$archivoFinalInventario)
@@ -466,6 +354,148 @@ class ArchivoFinalInventarioController extends Controller {
         $fullPath = $archivoFinalInventario->getFullPath();
         $nombreOriginal = $archivoFinalInventario->nombre_original;
         return \ArchivosHelper::descargarArchivo($fullPath, $nombreOriginal);
+    }
+
+    // GET inventario/descargar-consolidado-fcv
+    // MW: auth
+    function descargar_consolidado_fcv(Request $request){
+        // todo recibir rango de fecha y otros filtros por el get
+        $actas = ActasInventariosFCV::buscar((object)[
+            'fechaInicio' => $request->query('fechaInicio'),
+            'fechaFin' => $request->query('fechaFin'),
+            'mes' => $request->query('mes'),
+            'orden' => $request->query('orden'),
+        ]);
+        $datos = $actas->map(function($acta){
+            return [
+                // ######  Hitos importantes del proceso de inventario:
+                // Fecha Inv
+                $acta->getFechaTomaInventario(),
+                // CL
+                $acta->getCliente(),
+                // Loc
+                $acta->getCeco(),
+                // Supervisor
+                $acta->getSupervisor(),
+                // Químico
+                $acta->getQF(),
+                // Inicio Conteo
+                $acta->getInicioConteo(true),
+                // Fin Conteo
+                $acta->getFinConteo(true),
+                // Fin Proceso
+                $acta->getFinProceso(true),
+
+                // ######  Duración
+                // Conteo
+                $acta->getDuracionConteo(true),
+                // Revisión
+                $acta->getDuracionRevision(true),
+                // Total Proceso
+                $acta->getDuracionTotalProceso(true),
+
+                // ######  Dotaciones
+                // Ppto.
+                $acta->getDotacionPresupuestada(false),
+                // Efectivo
+                $acta->getDotacionEfectiva(false),
+
+                // ######  unidades
+                // Conteo
+                $acta->getUnidadesInventariadas(),          // ??, no estoy seguro
+                // Teórico
+                $acta->getUnidadesTeoricas(),
+                // Dif. Neto
+                $acta->getDiferenciaNeto(),
+                // Dif. ABS
+                $acta->getDiferenciaAbsoluta(),
+
+                // ######  Evaluaciones / Notas
+                // Nota Presentacion
+                $acta->getNotaPresentacion(),
+                // Nota Supervisor
+                $acta->getNotaSupervisor(),
+                // Nota Conteo
+                $acta->getNotaConteo(),
+
+                // ######  Consolidado Auditoria FCV
+                // Patente
+                $acta->getConsolidadoPatentes(false),
+                // Unidades
+                $acta->getConsolidadoUnidades(false),
+                // Items
+                $acta->getConsolidadoItems(false),
+
+                // ######  Auditoria QF
+                // Patente
+                $acta->getAuditoriaQF_patentes(false),
+                // Unidades
+                $acta->getAuditoriaQF_unidades(false),
+                // Items
+                $acta->getAuditoriaQF_items(false),
+
+                // ######  Auditoria Apoyo 1
+                // Patente
+                $acta->getAuditoriaApoyo1_patentes(false),
+                // Unidades
+                $acta->getAuditoriaApoyo1_unidades(false),
+                // Items
+                $acta->getAuditoriaApoyo1_items(false),
+
+                // ######  Auditoria Apoyo 2
+                // Patente
+                $acta->getAuditoriaApoyo2_patentes(false),
+                // Unidades
+                $acta->getAuditoriaApoyo2_unidades(false),
+                // Items
+                $acta->getAuditoriaApoyo2_items(false),
+
+                // ######  Auditoria Supervisor
+                // Patente
+                $acta->getAuditoriaSupervisor_patentes(false),
+                // Unidades
+                $acta->getAuditoriaSupervisor_unidades(false),
+                // Items
+                $acta->getAuditoriaSupervisor_items(false),
+
+                // ######  Correciones Auditoria FCV a SEI
+                // Patentes
+                $acta->getCorreccionPatentesEnAuditoria(),
+                // Items
+                $acta->getCorreccionItemsEnAuditoria(),
+                // Un. Neto
+                $acta->getCorreccionUnidadesNetoEnAuditoria(),
+                // Un. ABS'
+                $acta->getCorreccionUnidadesAbsolutasEnAuditoria(),
+
+                // ######  % Error Aud.
+                // SEI
+                $acta->getPorcentajeErrorSei(true),
+                // QF
+                $acta->getPorcentajeErrorQF(true),
+
+                // ######  Variación Grilla
+                // %
+                $acta->getPorcentajeVariacionGrilla(true),
+
+                // ######  Totales inventario
+                // PTT
+                $acta->getPatentesInventariadas(false),
+                // Items totales
+                $acta->getItemTotalInventariados(false),
+                // SKU unicos
+                $acta->getSkuUnicosInventariados(false),
+
+                $acta->idInventario
+            ];
+        })->toArray();
+
+        //return response()->json($datos);
+        $workbook = \ExcelHelper::generarWorkbook_consolidadoActas($datos);
+
+        // generar el archivo y descargarlo
+        $fullpath = \ExcelHelper::workbook_a_archivo($workbook);
+        return \ArchivosHelper::descargarArchivo($fullpath, "consolidado-actas.xlsx");
     }
 
     // GET archivo-final-inventario/excel-actas

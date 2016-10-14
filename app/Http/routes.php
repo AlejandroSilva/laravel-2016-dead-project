@@ -47,6 +47,9 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'Legacy_InventariosController@descargarPDF_porRango');
         // INVENTARIO - MANTENEDOR DE NOMINAS
         Route::get('programacionIG/nomina/{idNomina}',              'NominasController@show_nomina');
+        Route::get('programacionIG/archivos-finales-fcv',           'ArchivoFinalInventarioController@show_archivos_finales_fcv');
+
+
         // NOMINAS - NOMINAS DE CAPTADOR
         Route::get('nominas/captadores',                            'NominasController@show_captadores');
         // AUDITORIAS - PROGRAMACION AI
@@ -57,18 +60,11 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',     'Legacy_AuditoriasController@descargarPDF_porMes');
         Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'Legacy_AuditoriasController@descargarPDF_porRango');
 
-        // Archivo Maestro de clientes
-//        Route::get('archivo-maestro',                               'ArchivoMaestroController@showIndex');
-//        Route::post('api/archivo-maestro/upload',                   'ArchivoMaestroController@api_uploadArchivoMaestro');
-
         // ACTIVOS FIJOS
         Route::get('activo-fijo',                                   'ActivosFijosController@get_index');
         
         // MANTENEDOR - USUARIOS
         Route::get('personal',                                      'PersonalController@show_personal_index');
-//        Route::get('api/activo-fijo/cargar-productos',              'MaestraController@api_cargar_productos');  // ELIMINAR
-//        Route::get('api/activo-fijo/cargar-articulos',              'MaestraController@api_cargar_articulos');  // ELIMINAR
-//        Route::get('api/activo-fijo/cargar-maestra',                'MaestraController@api_cargar_maestra');  // ELIMINAR
 
         // ARCHIVO FINAL DE INVENTARIO / ACTAS
         Route::get('inventario/descargar-consolidado-fcv',          'ArchivoFinalInventarioController@descargar_consolidado_fcv');

@@ -22,19 +22,24 @@
                                 Gestión Operacional <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="drop-operacional">
-                                {{-- PROGRAMACIÓN INVENTARIO GENERAL --}}
+                                {{-- INVENTARIOS --}}
                                 @if( Auth::user()->can('programaInventarios_ver') )
+                                    <li class="dropdown-header">Inventarios</li>
                                     <li class="{{ Request::is('programacionIG/mensual')? 'active': '' }}">
                                         <a href="{{ url('programacionIG/mensual') }}">Programación mensual IG</a>
                                     </li>
                                     <li class="{{ Request::is('programacionIG/semanal')? 'active': '' }}">
                                         <a href="{{ url('programacionIG/semanal') }}">Programación semanal IG</a>
                                     </li>
+                                    <li class="{{ Request::is('programacionIG/archivos-finales-fcv')? 'active': '' }}">
+                                        <a href="{{ url('programacionIG/archivos-finales-fcv') }}">Archivos Finales FCV</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
                                 @endif
 
-                                {{-- PROGRAMACIÓN AUDITORIA INVENTARIO   --}}
+                                {{-- AUDITORIAS --}}
                                 @if( Auth::user()->can('programaAuditorias_ver') )
-                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header">Auditorias</li>
                                     <li class="{{ Request::is('programacionAI')? 'active': '' }}">
                                         <a href="{{ url('programacionAI') }}">Estado general Auditorias</a>
                                     </li>
@@ -44,22 +49,23 @@
                                     <li class="{{ Request::is('programacionAI/semanal')? 'active': '' }}">
                                         <a href="{{ url('programacionAI/semanal') }}">Programación semanal AI</a>
                                     </li>
+                                    <li role="separator" class="divider"></li>
                                 @endif
 
                                 {{-- Nominas --}}
                                 @if( Auth::user()->hasRole('SupervisorInventario') )
-                                    <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('nominas/captadores')? 'active': '' }}">
                                         <a href="{{ url('nominas/captadores') }}">Nominas Captadores/as</a>
                                     </li>
+                                    <li role="separator" class="divider"></li>
                                 @endif
 
                                 {{-- Maestra, Muestras de vencimiento e IRD--}}
-                                <li role="separator" class="divider"></li>
                                 @if( Auth::user()->hasRole('Developer') )
                                     <li class="{{ Request::is('muestra-vencimiento-fcv')? 'active': '' }}">
                                         <a href="{{ url('muestra-vencimiento-fcv') }}">(DEV) Muestra de vencimiento FCV</a>
                                     </li>
+                                    <li role="separator" class="divider"></li>
                                 @endif
                             </ul>
                         </li>

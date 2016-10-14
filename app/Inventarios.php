@@ -424,13 +424,31 @@ class Inventarios extends Model {
             $query->where('fechaProgramada', '<=', $peticion->fechaFin);
 
         // Mes
-        if(isset($peticion->mes)){
+        $mes = $peticion->mes;
+        if(isset($mes) && $mes!=''){
             $_fecha = explode('-', $peticion->mes);
             $anno = $_fecha[0];
             $mes  = $_fecha[1];
-            $query
-                ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
+            $query->whereRaw("extract(year from fechaProgramada) = ?", [$anno]);
+            // el mes buscado es opcional
+            if($mes!=0)
+                $query->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
+        }
+
+        // OPCIONAL: quitar todos los locales que se encuentren pendientes
+        if(isset($peticion->quitarPendientes) && $peticion->quitarPendientes==true){
+            $query->whereHas('actaFCV', function ($q) use ($idCliente) {
+                $q->where('fecha_Publicacion', '!=', null)
+                  ->where('fecha_Publicacion', '!=', '0000-00-00');
+            });
+        }
+
+        // OPCIONAL: busqueda por numero de local
+        if(isset($peticion->ceco) && $peticion->ceco!=''){
+            $ceco = $peticion->ceco;
+            $query->whereHas('local', function ($q) use ($ceco) {
+                $q->where('numero', '=', $ceco);
+            });
         }
 
         // Incluir con "fecha pendiente" en el resultado, solo si se indica explicitamente
@@ -438,7 +456,10 @@ class Inventarios extends Model {
         if( $incluirConFechaPendiente==false )
             $query->whereRaw("extract(day from fechaProgramada) != 0");
 
-        $query->orderBy('fechaProgramada', 'asc');
+        if(isset($peticion->orden) && $peticion->orden=='desc')
+            $query->orderBy('fechaProgramada', 'desc');
+        else
+            $query->orderBy('fechaProgramada', 'asc');
         return $query->get();
     }
 }
