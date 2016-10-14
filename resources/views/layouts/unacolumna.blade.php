@@ -31,9 +31,6 @@
                                     <li class="{{ Request::is('programacionIG/semanal')? 'active': '' }}">
                                         <a href="{{ url('programacionIG/semanal') }}">Programación semanal IG</a>
                                     </li>
-                                    <li class="{{ Request::is('programacionIG/archivos-finales-fcv')? 'active': '' }}">
-                                        <a href="{{ url('programacionIG/archivos-finales-fcv') }}">Archivos Finales FCV</a>
-                                    </li>
                                     <li role="separator" class="divider"></li>
                                 @endif
 
@@ -70,6 +67,21 @@
                             </ul>
                         </li>
 
+                        {{-- MENU FCV--}}
+                        @if( Auth::check() )
+                            <li class="#">
+                                <a id="drop-fcv" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    FCV <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="drop-fcv">
+                                    <li class="dropdown-header">Inventarios</li>
+                                    <li class="{{ Request::is('programacionIG/archivos-finales-fcv')? 'active': '' }}">
+                                        <a href="{{ url('programacionIG/archivos-finales-fcv') }}">Archivos Finales FCV</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
+
                         @if( Auth::user()->can('activoFijo-verModulo') )
                             <li class="">
                                 <a id="drop-logistica" href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -84,11 +96,11 @@
                             </li>
                         @endif
 
-                        @if( Auth::user()->hasRole('Administrador') )
-                            <li class="#">
-                                <a href="#">Gestión Financiera</a>
-                            </li>
-                        @endif
+                        {{--@if( Auth::user()->hasRole('Administrador') )--}}
+                            {{--<li class="#">--}}
+                                {{--<a href="#">Gestión Financiera</a>--}}
+                            {{--</li>--}}
+                        {{--@endif--}}
                     @endif
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
