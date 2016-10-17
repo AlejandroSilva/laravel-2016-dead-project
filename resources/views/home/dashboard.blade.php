@@ -19,6 +19,11 @@
             @if($mostrar_indicadoresDeInventarios)
                 @include('home.dashboard-indicadoresGestionInventarios')
             @endif
+
+            {{-- Dashboard "Estado general de auditorias FCV --}}
+            @if($mostrar_indicadoresDeInventarios)
+                @include('auditorias.estado-general-fcv.panel-estado-general')
+            @endif
         </div>
     </div>
 

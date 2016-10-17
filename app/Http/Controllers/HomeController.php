@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\ActasInventariosFCV;
-use App\DiasHabiles;
-use App\Inventarios;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
 use Illuminate\Support\Facades\App;
 use Auth;
@@ -11,6 +8,10 @@ use Auth;
 use Carbon\Carbon;
 // Models
 use App\User;
+use App\ActasInventariosFCV;
+use App\DiasHabiles;
+use App\Inventarios;
+use App\Auditorias;
 
 class HomeController extends Controller {
 //    public function __construct() {
@@ -46,6 +47,10 @@ class HomeController extends Controller {
             ]);
             $totalIndicadores = ActasInventariosFCV::calcularTotales($inventariosPeriodo);
 
+            // Dashboard "Estado general de auditorias FCV
+            $mostrar_estadoGeneralAuditorias_fcv = true;
+            $estadoGeneralAuditorias_fcv = Auditorias::estadoGeneralCliente(2);
+
             return view('home.dashboard',[
                 'usuario' => $user,
 
@@ -60,7 +65,13 @@ class HomeController extends Controller {
                 'indicadoresGestion_desde' => Carbon::parse($indicadoresGestion_desde)->formatLocalized('%A %e de %B'),
                 'indicadoresGestion_hasta' => Carbon::parse($indicadoresGestion_hasta)->formatLocalized('%A %e de %B'),
                 'inventariosPeriodo' => $inventariosPeriodo,
-                'totalIndicadores' => $totalIndicadores
+                'totalIndicadores' => $totalIndicadores,
+
+                // Dashboard "Estado general de auditorias FCV
+                'mostrar_estadoGeneralAuditorias_fcv' => $mostrar_estadoGeneralAuditorias_fcv,
+                'ega_dia' => $estadoGeneralAuditorias_fcv->dia,
+                'ega_zonas' => $estadoGeneralAuditorias_fcv->zonas,
+                'ega_totales' => $estadoGeneralAuditorias_fcv->totales,
             ]);
         }else{
             return view('home.landing');
