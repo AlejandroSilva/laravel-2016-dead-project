@@ -82,6 +82,7 @@
 
                                     {{-- AUDITORIAS --}}
                                     <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header">Auditorias</li>
                                     <li class="{{ Request::is('programacionAI')? 'active': '' }}">
                                         <a href="{{ url('programacionAI') }}">Estado general</a>
                                     </li>

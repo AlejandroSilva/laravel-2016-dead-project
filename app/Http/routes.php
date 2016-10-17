@@ -91,9 +91,12 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
     Route::group([], function(){
+        // INVENTARIOS
         Route::get('programacionIG/nomina/{publicIdNomina}/pdf',    'NominasController@show_nomina_pdfDownload');
         Route::get('programacionIG/nomina/{publicIdNomina}/excel',  'NominasController@show_nomina_excelDownload');
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
+        // AUDITORIAS
+        Route::get('auditorias/estado-general-fcv-publico',         'AuditoriasController@show_estado_general_fcv_publico');
 
         // ARCHIVO FINAL AUDITORIA
         Route::get('archivo-final-auditoria/{idArchivoCruzVerde}/descargar-zip',  'ArchivoFinalAuditoriaController@api_descargarZIP');

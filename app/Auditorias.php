@@ -47,6 +47,71 @@ class Auditorias extends Model {
         } else
             return null;
     }
+    static function estadoGeneralCliente($idCliente){
+        setlocale(LC_TIME, 'es_CL.utf-8');
+        $hoy_carbon = Carbon::now();
+        $primerDiaMes = $hoy_carbon->copy()->firstOfMonth()->format('Y-m-d');
+        $ultimoDiaMes = $hoy_carbon->copy()->lastOfMonth()->format('Y-m-d');
+        $hoy = $hoy_carbon->format('Y-m-d');
+        $hoyFormato = $hoy_carbon->formatLocalized('%d %B, %Y');
+
+        $zonas = Zonas::buscar()->map(function($zona) use($primerDiaMes, $hoy, $ultimoDiaMes, $idCliente){
+            $total = Auditorias::buscar((object)[
+                'idCliente' => $idCliente,
+                'idZona' => $zona->idZona,
+                'fechaInicio' => $primerDiaMes,
+                'fechaFin' => $ultimoDiaMes,
+            ])->count();
+            $realizado_optimo = Auditorias::buscar((object)[
+                'idCliente' => $idCliente,
+                'idZona' => $zona->idZona,
+                'fechaInicio' => $primerDiaMes,
+                'fechaFin' => $hoy,
+            ])->count();
+            $realizado_real = Auditorias::buscar((object)[
+                'idCliente' => $idCliente,
+                'idZona' => $zona->idZona,
+                'fechaInicio' => $primerDiaMes,
+                'fechaFin' => $hoy,
+                'realizada' => true
+            ])->count();
+
+            $realizado_porcentajeOptimo = number_format( ($realizado_optimo/$total)*100, 1, '.', ',');
+            $realizado_porcentajeReal = number_format( ($realizado_real/$total)*100, 1, '.', ',');
+            $pendiente_optimo = $total - $realizado_optimo;
+            $pendiente_real = $total - $realizado_real;
+            $pendiente_porcentajeOptimo = number_format( ($pendiente_optimo/$total)*100, 1, '.', ',');
+            $pendiente_porcentajeReal = number_format( ($pendiente_real/$total)*100, 1, '.', ',');
+            return (object)[
+                'nombreZona' => $zona->nombre,
+                'idZona' => $zona->idZona,
+                'totalMes' => $total,
+                // realizado optimo
+                'realizadoOptimo' => $realizado_optimo,
+                'realizadoPorcentajeOptimo' => $realizado_porcentajeOptimo,
+                // realizado real
+                'realizadoReal' => $realizado_real,
+                'realizadoPorcentajeReal' => $realizado_porcentajeReal,
+                // diferencia realizado optimo / realizado real
+                'realizadoDiferencia' => $realizado_real - $realizado_optimo,
+                'realizadoPorcentajeDiferencia' => $realizado_porcentajeReal - $realizado_porcentajeOptimo,
+                // pendiente optimo
+                'pendientesOptimo' => $pendiente_optimo,
+                'pendientePorcentajeOptimo' => $pendiente_porcentajeOptimo,
+                // pendiente real
+                'pendientesReal' => $pendiente_real,
+                'pendientePorcentajeReal' => $pendiente_porcentajeReal,
+                // diferencia pendiente optimo / pendiente real
+                'pendienteDiferencia' => $pendiente_real - $pendiente_optimo,
+                'pendientePorcentajeDiferencia' => $pendiente_porcentajeReal - $pendiente_porcentajeOptimo,
+            ];
+        });
+        return (object)[
+            'zonas' => $zonas,
+            'hoyFormato' => $hoyFormato
+        ];
+    }
+
     // ####  Getters
     function fechaProgramadaF(){
         setlocale(LC_TIME, 'es_CL.utf-8');

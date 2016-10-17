@@ -27,70 +27,21 @@ class AuditoriasController extends Controller {
 
     // GET auditorias/estado-general-fcv
     function show_estado_general_fcv(){
-        setlocale(LC_TIME, 'es_CL.utf-8');
-        $hoy_carbon = Carbon::now();
-        $mes = $hoy_carbon->copy()->firstOfMonth()->formatLocalized('%B');
-        $primerDiaMes = $hoy_carbon->copy()->firstOfMonth()->format('Y-m-d');
-        $ultimoDiaMes = $hoy_carbon->copy()->lastOfMonth()->format('Y-m-d');
-        $hoy = $hoy_carbon->format('Y-m-d');
-
-        $zonas = Zonas::buscar()->map(function($zona) use($primerDiaMes, $hoy, $ultimoDiaMes){
-            $total = Auditorias::buscar((object)[
-                'idCliente' => 2, // FCV
-                'idZona' => $zona->idZona,
-                'fechaInicio' => $primerDiaMes,
-                'fechaFin' => $ultimoDiaMes,
-            ])->count();
-            $realizado_optimo = Auditorias::buscar((object)[
-                'idCliente' => 2, // FCV
-                'idZona' => $zona->idZona,
-                'fechaInicio' => $primerDiaMes,
-                'fechaFin' => $hoy,
-            ])->count();
-            $realizado_real = Auditorias::buscar((object)[
-                'idCliente' => 2, // FCV
-                'idZona' => $zona->idZona,
-                'fechaInicio' => $primerDiaMes,
-                'fechaFin' => $hoy,
-                'realizada' => true
-            ])->count();
-
-            $realizado_porcentajeOptimo = number_format( ($realizado_optimo/$total)*100, 1, '.', ',');
-            $realizado_porcentajeReal = number_format( ($realizado_real/$total)*100, 1, '.', ',');
-            $pendiente_optimo = $total - $realizado_optimo;
-            $pendiente_real = $total - $realizado_real;
-            $pendiente_porcentajeOptimo = number_format( ($pendiente_optimo/$total)*100, 1, '.', ',');
-            $pendiente_porcentajeReal = number_format( ($pendiente_real/$total)*100, 1, '.', ',');
-            return (object)[
-                'nombreZona' => $zona->nombre,
-                'idZona' => $zona->idZona,
-                'totalMes' => $total,
-                // realizado optimo
-                'realizadoOptimo' => $realizado_optimo,
-                'realizadoPorcentajeOptimo' => $realizado_porcentajeOptimo,
-                // realizado real
-                'realizadoReal' => $realizado_real,
-                'realizadoPorcentajeReal' => $realizado_porcentajeReal,
-                // diferencia realizado optimo / realizado real
-                'realizadoDiferencia' => $realizado_real - $realizado_optimo,
-                'realizadoPorcentajeDiferencia' => $realizado_porcentajeReal - $realizado_porcentajeOptimo,
-                // pendiente optimo
-                'pendientesOptimo' => $pendiente_optimo,
-                'pendientePorcentajeOptimo' => $pendiente_porcentajeOptimo,
-                // pendiente real
-                'pendientesReal' => $pendiente_real,
-                'pendientePorcentajeReal' => $pendiente_porcentajeReal,
-                // diferencia pendiente optimo / pendiente real
-                'pendienteDiferencia' => $pendiente_real - $pendiente_optimo,
-                'pendientePorcentajeDiferencia' => $pendiente_porcentajeReal - $pendiente_porcentajeOptimo,
-            ];
-        });
+       $estadoGeneral = Auditorias::estadoGeneralCliente(2);
 
         return view('auditorias.estado-general-fcv.index', [
-            'mes' => $mes,
-            'zonas' => $zonas
+            'ega_hoy' => $estadoGeneral->hoyFormato,
+            'ega_zonas' => $estadoGeneral->zonas
         ]);
-        return response()->json($zonas);
+    }
+    // GET auditorias/estado-general-fcv-publico
+    function show_estado_general_fcv_publico(){
+        $estadoGeneral = Auditorias::estadoGeneralCliente(2);
+
+        return view('auditorias.estado-general-fcv.iframe-publico', [
+            'ega_hoy' => $estadoGeneral->hoyFormato,
+            'ega_zonas' => $estadoGeneral->zonas
+        ]);
     }
 
     // GET programacionAI/
