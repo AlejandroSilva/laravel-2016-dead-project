@@ -31,19 +31,19 @@ class AuditoriasController extends Controller {
 
         return view('auditorias.estado-general-fcv.index', [
             'ega_hoy' => $estadoGeneral->hoyFormato,
-            'ega_zonas' => $estadoGeneral->zonas
+            'ega_zonas' => $estadoGeneral->zonas,
+            'ega_totales' => $estadoGeneral->totales,
         ]);
     }
     // GET auditorias/estado-general-fcv-publico
     function show_estado_general_fcv_publico(){
         $estadoGeneral = Auditorias::estadoGeneralCliente(2);
 
-        return response()
-            ->view('auditorias.estado-general-fcv.iframe-publico', [
-                'ega_hoy' => $estadoGeneral->hoyFormato,
-                'ega_zonas' => $estadoGeneral->zonas
-            ])
-            ->header('Access-Control-Allow-Origin' , '*');
+        return view('auditorias.estado-general-fcv.iframe-publico', [
+            'ega_hoy' => $estadoGeneral->hoyFormato,
+            'ega_zonas' => $estadoGeneral->zonas,
+            'ega_totales' => $estadoGeneral->totales,
+        ]);
     }
 
     // GET programacionAI/
