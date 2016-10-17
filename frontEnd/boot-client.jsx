@@ -10,7 +10,6 @@ import ProgramacionIGMensual from './components/programacionIGMensual/Programaci
 import ProgramacionIGSemanal from './components/programacionIGSemanal/ProgramacionIGSemanal.jsx'
 import ProgramacionAIMensual from './components/programacionAIMensual/ProgramacionAIMensual.jsx'
 import ProgramacionAISemanal from './components/programacionAISemanal/ProgramacionAISemanal.jsx'
-import { ProgramacionAIPendientes } from './components/programacionAIPendientes/ProgramacionAIPendientes.jsx'
 import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.jsx'
 import { NominaIG } from './components/nominaIG/nominaIG.jsx'
 // OTROS
