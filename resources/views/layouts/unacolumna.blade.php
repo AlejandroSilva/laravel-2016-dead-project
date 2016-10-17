@@ -74,9 +74,19 @@
                                     FCV <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="drop-fcv">
+                                    {{-- INVENTARIOS --}}
                                     <li class="dropdown-header">Inventarios</li>
                                     <li class="{{ Request::is('/informes-finales-inventarios-fcv')? 'active': '' }}">
                                         <a href="{{ url('/informes-finales-inventarios-fcv') }}">Informes Finales Inventarios</a>
+                                    </li>
+
+                                    {{-- AUDITORIAS --}}
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('programacionAI')? 'active': '' }}">
+                                        <a href="{{ url('programacionAI') }}">Estado general</a>
+                                    </li>
+                                    <li class="{{ Request::is('/auditorias/estado-general-fcv')? 'active': '' }}">
+                                        <a href="{{ url('/auditorias/estado-general-fcv') }}">Estado general v2</a>
                                     </li>
                                 </ul>
                             </li>

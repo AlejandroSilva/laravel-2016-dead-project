@@ -53,6 +53,7 @@ Route::group(['middleware' => ['web']], function (){
         // NOMINAS - NOMINAS DE CAPTADOR
         Route::get('nominas/captadores',                            'NominasController@show_captadores');
         // AUDITORIAS - PROGRAMACION AI
+        Route::get('auditorias/estado-general-fcv',                 'AuditoriasController@show_estado_general_fcv');
         Route::get('programacionAI',                                'AuditoriasController@showProgramacionIndex');
         Route::get('programacionAI/mensual',                        'AuditoriasController@showMensual');
         Route::get('programacionAI/semanal',                        'AuditoriasController@showSemanal');

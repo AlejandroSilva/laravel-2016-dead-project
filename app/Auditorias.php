@@ -147,15 +147,15 @@ class Auditorias extends Model {
             });
         }
 
-        // Fecha desde
+        // OPCIONAL: Fecha desde
         if(isset($peticion->fechaInicio))
             $query->where('fechaProgramada', '>=', $peticion->fechaInicio);
 
-        // Fecha hasta
+        // OPCIONAL: Fecha hasta
         if(isset($peticion->fechaFin))
             $query->where('fechaProgramada', '<=', $peticion->fechaFin);
 
-        // Mes
+        // OPCIONAL: Mes
         if(isset($peticion->mes)){
             $_fecha = explode('-', $peticion->mes);
             $anno = $_fecha[0];
@@ -165,10 +165,23 @@ class Auditorias extends Model {
                 ->whereRaw("extract(month from fechaProgramada) = ?", [$mes]);
         }
 
-        // Incluir con "fecha pendiente" en el resultado, solo si se indica explicitamente
+        // OPCIONAL: Incluir con "fecha pendiente" en el resultado, solo si se indica explicitamente
         $incluirConFechaPendiente = isset($peticion->incluirConFechaPendiente) && $peticion->incluirConFechaPendiente=='true';
         if( $incluirConFechaPendiente==false )
             $query->whereRaw("extract(day from fechaProgramada) != 0");
+
+        // OPCIONAL: por Zona
+        if(isset($peticion->idZona)) {
+            $idZona = $peticion->idZona;
+            $query->whereHas('local.direccion.comuna.provincia.region', function ($q) use ($idZona) {
+                $q->where('idZona', '=', $idZona);
+            });
+        }
+
+        // OPCIONAL: REALIZADA?
+        if(isset($peticion->realizada)) {
+            $query->where('realizadaInformada', $peticion->realizada? true : false);
+        }
 
         $query->orderBy('fechaProgramada', 'asc');
         return $query->get();

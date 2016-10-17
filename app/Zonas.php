@@ -15,4 +15,14 @@ class Zonas extends Model{
         // hasMany(modelo, child.fogeignKey, this.localKey)
         return $this->hasMany('App\Regiones', 'idZona', 'idZona');
     }
+
+    // #### Scopes para hacer Querys/Busquedas
+    static function buscar(){
+        $query = Zonas::with([]);
+
+        // agregar filtros...
+
+        $query->orderBy('idZona');
+        return $query->get();
+    }
 }
