@@ -46,11 +46,6 @@ class AuditoriasController extends Controller {
         ]);
     }
 
-    // GET programacionAI/
-    public function showProgramacionIndex(){
-        return view('operacional.programacionAI.programacion-index');
-    }
-
     // GET programacionAI/mensual
     public function showMensual(){
         // validar de que el usuario tenga los permisos
@@ -236,102 +231,6 @@ class AuditoriasController extends Controller {
      * API DE INTERACCION CON LA OTRA PLATAFORMA
      * ##########################################################
      */
-
-    // GET api/auditoria/cliente/{idCliente}/mes/{annoMesDia}/estadoGeneral
-    function api_estadoGeneral($idCliente, $annoMesDia){
-        $dia = DiasHabiles::where('fecha', '=', $annoMesDia)->first();
-
-        if(!$dia){
-            return response()->json(['msg'=>'No se encuentra informacion de los dias habiles de esta fecha'], 400);
-        }
-        $cliente = Clientes::find($idCliente);
-        if($cliente){
-            $_fecha = explode('-', $annoMesDia);
-            $anno = $_fecha[0];
-            $mes  = $_fecha[1];
-            $diasHabilesMes = $dia->getDiasHabilesMes();
-            $diasHabilesTranscurridos = $dia->getDiasHabilesTranscurridosMes();
-            $diasHabilesRestantes = $dia->getDiasHabilesRestantesMes();
-            
-            $reporte_general = array_map(function($zona)
-            use($idCliente, $anno, $mes, $diasHabilesMes, $diasHabilesRestantes, $diasHabilesTranscurridos){
-
-                $auditorias = Auditorias::with([
-                    'local.direccion.comuna.provincia.region'
-                ])
-                // mismo mes
-                ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
-                ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
-                // mismo cliente
-                ->whereHas('local', function($q) use ($idCliente) {
-                    $q->where('idCliente', '=', $idCliente);
-                })
-                // misma zona
-                ->whereHas('local.direccion.comuna.provincia.region', function($q) use ($zona) {
-                    $q->where('idZona', '=', $zona['idZona']);
-                })
-                ->get();
-
-                // Filtrar las REALIZADAS, de las PENDIENTES
-                $realizadasInformado = [];
-                $pendientesInformado = [];
-                foreach ($auditorias as $auditoria){
-                    // IMPORTANTE: separar por Realizado Manual -----  SE IGNORAN LOS MANUALES
-                    // separar por Realizado Informado
-                    if($auditoria->realizadaInformada==0){
-                        array_push($pendientesInformado, $auditoria);
-                    }else{
-                        array_push($realizadasInformado, $auditoria);
-                    }
-                };
-
-                // Realizar los calculos de zona
-                $total = count($auditorias);
-                $realizadas = count($realizadasInformado);
-                $pendientes = count($pendientesInformado);
-                // Estado de avance Esperado
-                $auditoriasPorDia_esperado = $diasHabilesMes==0? 0 : round($total/$diasHabilesMes, 1);          // division por cero
-                $realizadasALaFecha_esperado = round($diasHabilesTranscurridos*$auditoriasPorDia_esperado);
-                $pendientesALaFecha_esperado = $total - $realizadasALaFecha_esperado;
-                $porcentajeAvance_esperado = $total==0? 0 : round(($realizadasALaFecha_esperado*100)/$total);   // division por cero
-                $diasParaTerminar_esperado = $auditoriasPorDia_esperado==0? 0 : round($pendientesALaFecha_esperado/$auditoriasPorDia_esperado, 1);
-                // Estado de avance Real
-                $auditoriasPorDia_real = $diasHabilesTranscurridos==0? 0 : round($realizadas/$diasHabilesTranscurridos, 1); // division por cero
-                $porcentajeAvance_real = $total==0? 0 : round(($realizadas*100)/$total);                        // division por cero
-                $diasParaTerminar_real = $auditoriasPorDia_real==0? 0 : round($pendientes/$auditoriasPorDia_real, 1);
-                
-                return [
-                    'zona'=>$zona,
-                    #'regiones'=>Zonas::find($zona['idZona'])->regiones,
-                    'informado'=>[
-                        // conteo de auditorias
-                        'totalMes'=>$total,
-                        'realizadas'=>$realizadas,
-                        'pendientes'=>$pendientes,
-                        // dias habiles del mes
-                        'diasHabilesMes'=>$diasHabilesMes,
-                        'diasHabilesRestantes'=>$diasHabilesRestantes,
-                        'diasHabilesTranscurridos'=>$diasHabilesTranscurridos,
-                        // Estado de avance Esperado
-                        'auditoriasPorDia_esperado'=>$auditoriasPorDia_esperado,
-                        'realizadasALaFecha_esperado'=>$realizadasALaFecha_esperado,
-                        'pendientesALaFecha_esperado'=>$pendientesALaFecha_esperado,
-                        'porcentajeCumplimiento_esperado'=>$porcentajeAvance_esperado,
-                        'diasParaTerminar_esperado'=>$diasParaTerminar_esperado,
-                        // Estado de avance Real
-                        'auditoriasPorDia_real'=>$auditoriasPorDia_real,
-                        'realizadasALaFecha_real'=>$realizadas,
-                        'porcentajeCumplimiento_real'=>$porcentajeAvance_real,
-                        'diasParaTerminar_real'=>$diasParaTerminar_real,
-                    ]
-                ];
-            }, Zonas::orderBy('idZona')->get()->toArray());
-
-            return response()->json($reporte_general, 200);
-        }else{
-            return response()->json(['msg'=>'cliente no encontrado'], 404);
-        }
-    }
 
     // POST api/auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado
     function api_informarRealizado($idCliente, $ceco, $annoMesDia){

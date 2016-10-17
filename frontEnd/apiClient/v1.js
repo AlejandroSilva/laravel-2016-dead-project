@@ -140,9 +140,7 @@ export default {
         getPorMesYCliente: (annoMesDia, idCliente)=>
             axios.get(`/api/auditoria/buscar?idCliente=${idCliente}&mes=${annoMesDia}&incluirConFechaPendiente=true`),
         getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>
-            axios.get(`/api/auditoria/buscar?idCliente=${idCliente}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`),
-        estadoGeneral: (idCliente, dia)=>
-            axios.get(`/api/auditoria/cliente/${idCliente}/dia/${dia}/estado-general`)
+            axios.get(`/api/auditoria/buscar?idCliente=${idCliente}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`)
     },
     nomina: {
         // utilizada por programacion IG para actualizar lider

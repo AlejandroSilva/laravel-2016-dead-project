@@ -64,13 +64,6 @@ if( programacionIGSemanalDOM ){
 }
 
 /** PROGRAMACIÓN AUDITORIA INVENTARIO */
-let programacionAIPendientesDOM = document.getElementById('react-programacionAI-pendientes')
-if( programacionAIPendientesDOM ){
-    ReactDOM.render(
-        <ProgramacionAIPendientes
-            // parametros
-        />, programacionAIPendientesDOM)
-}
 let programacionAIMensualDOM = document.getElementById('react-programacionAI-mensual')
 if( programacionAIMensualDOM ){
     /** IMPORANTE: POR EL MOMENTO SOLO SE MUESTRAN AUDITORIAS DE FCV **/

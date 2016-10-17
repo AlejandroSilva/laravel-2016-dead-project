@@ -54,7 +54,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('nominas/captadores',                            'NominasController@show_captadores');
         // AUDITORIAS - PROGRAMACION AI
         Route::get('auditorias/estado-general-fcv',                 'AuditoriasController@show_estado_general_fcv');
-        Route::get('programacionAI',                                'AuditoriasController@showProgramacionIndex');
         Route::get('programacionAI/mensual',                        'AuditoriasController@showMensual');
         Route::get('programacionAI/semanal',                        'AuditoriasController@showSemanal');
         // AUDITORIAS - DESCARGA DE PDF
@@ -229,7 +228,6 @@ Route::group(['middleware' => ['web']], function (){
 //        Route::get('auditoria/{fecha1}/al/{fecha2}/cliente/{idCliente}',        'AuditoriasController@api_getPorRangoYCliente');  // reemplazada por "buscar"
         Route::get('auditoria/{fecha1}/al/{fecha2}/auditor/{idAuditor}',        'Legacy_AuditoriasController@api_getPorRangoYAuditor');
 
-        Route::get('auditoria/cliente/{idCliente}/dia/{annoMesDia}/estado-general',                 'AuditoriasController@api_estadoGeneral');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado',   'AuditoriasController@api_informarRealizado');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-revisado',    'AuditoriasController@api_informarRevisado');
         Route::post('auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-fecha',       'AuditoriasController@api_informarFecha');

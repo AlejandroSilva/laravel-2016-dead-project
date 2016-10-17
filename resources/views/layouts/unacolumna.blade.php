@@ -83,11 +83,8 @@
                                     {{-- AUDITORIAS --}}
                                     <li role="separator" class="divider"></li>
                                     <li class="dropdown-header">Auditorias</li>
-                                    <li class="{{ Request::is('programacionAI')? 'active': '' }}">
-                                        <a href="{{ url('programacionAI') }}">Estado general</a>
-                                    </li>
                                     <li class="{{ Request::is('/auditorias/estado-general-fcv')? 'active': '' }}">
-                                        <a href="{{ url('/auditorias/estado-general-fcv') }}">Estado general v2</a>
+                                        <a href="{{ url('/auditorias/estado-general-fcv') }}">Estado general</a>
                                     </li>
                                 </ul>
                             </li>
