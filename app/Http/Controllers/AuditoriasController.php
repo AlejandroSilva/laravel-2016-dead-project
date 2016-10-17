@@ -38,10 +38,12 @@ class AuditoriasController extends Controller {
     function show_estado_general_fcv_publico(){
         $estadoGeneral = Auditorias::estadoGeneralCliente(2);
 
-        return view('auditorias.estado-general-fcv.iframe-publico', [
-            'ega_hoy' => $estadoGeneral->hoyFormato,
-            'ega_zonas' => $estadoGeneral->zonas
-        ]);
+        return response()
+            ->view('auditorias.estado-general-fcv.iframe-publico', [
+                'ega_hoy' => $estadoGeneral->hoyFormato,
+                'ega_zonas' => $estadoGeneral->zonas
+            ])
+            ->header('Access-Control-Allow-Origin' , '*');
     }
 
     // GET programacionAI/
