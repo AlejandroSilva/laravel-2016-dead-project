@@ -30,7 +30,7 @@ class AuditoriasController extends Controller {
        $estadoGeneral = Auditorias::estadoGeneralCliente(2);
 
         return view('auditorias.estado-general-fcv.index', [
-            'ega_hoy' => $estadoGeneral->hoyFormato,
+            'ega_dia' => $estadoGeneral->dia,
             'ega_zonas' => $estadoGeneral->zonas,
             'ega_totales' => $estadoGeneral->totales,
         ]);
@@ -40,7 +40,7 @@ class AuditoriasController extends Controller {
         $estadoGeneral = Auditorias::estadoGeneralCliente(2);
 
         return view('auditorias.estado-general-fcv.iframe-publico', [
-            'ega_hoy' => $estadoGeneral->hoyFormato,
+            'ega_dia' => $estadoGeneral->dia,
             'ega_zonas' => $estadoGeneral->zonas,
             'ega_totales' => $estadoGeneral->totales,
         ]);

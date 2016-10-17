@@ -16,7 +16,7 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Estado general de auditorías para el día <b>{{$ega_hoy}}</b>
+        Estado general de auditorías para el día <b>{{$ega_dia}}</b>
     </div>
     <table class="table table-bordered table-condensed table-hover">
         <thead>

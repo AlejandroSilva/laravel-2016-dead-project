@@ -49,13 +49,12 @@ class Auditorias extends Model {
     }
     static function estadoGeneralCliente($idCliente){
         setlocale(LC_TIME, 'es_CL.utf-8');
-        $hoy_carbon = Carbon::now();
-        $primerDiaMes = $hoy_carbon->copy()->firstOfMonth()->format('Y-m-d');
-        $ultimoDiaMes = $hoy_carbon->copy()->lastOfMonth()->format('Y-m-d');
-        $hoy = $hoy_carbon->format('Y-m-d');
-        $hoyFormato = $hoy_carbon->formatLocalized('%d %B, %Y');
+        $ayer_carbon = Carbon::yesterday();
+        $primerDiaMes = $ayer_carbon->copy()->firstOfMonth()->format('Y-m-d');
+        $ultimoDiaMes = $ayer_carbon->copy()->lastOfMonth()->format('Y-m-d');
+        $dia = $ayer_carbon->format('Y-m-d');
 
-        $zonas = Zonas::buscar()->map(function($zona) use($primerDiaMes, $hoy, $ultimoDiaMes, $idCliente){
+        $zonas = Zonas::buscar()->map(function($zona) use($primerDiaMes, $dia, $ultimoDiaMes, $idCliente){
             $total = Auditorias::buscar((object)[
                 'idCliente' => $idCliente,
                 'idZona' => $zona->idZona,
@@ -66,13 +65,13 @@ class Auditorias extends Model {
                 'idCliente' => $idCliente,
                 'idZona' => $zona->idZona,
                 'fechaInicio' => $primerDiaMes,
-                'fechaFin' => $hoy,
+                'fechaFin' => $dia,
             ])->count();
             $realizado_real = Auditorias::buscar((object)[
                 'idCliente' => $idCliente,
                 'idZona' => $zona->idZona,
                 'fechaInicio' => $primerDiaMes,
-                'fechaFin' => $hoy,
+                'fechaFin' => $dia,
                 'realizada' => true
             ])->count();
 
@@ -125,7 +124,7 @@ class Auditorias extends Model {
             'pendientesPorcentajeReal' => number_format( ($pendientesReal/$total)*100, 0, '.', ','),
         ];
         return (object)[
-            'hoyFormato' => $hoyFormato,
+            'dia' => $ayer_carbon->formatLocalized('%d %B, %Y'),
             'zonas' => $zonas,
             'totales' => $totales,
         ];
