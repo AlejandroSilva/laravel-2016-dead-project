@@ -37,9 +37,6 @@
                                 {{-- AUDITORIAS --}}
                                 @if( Auth::user()->can('programaAuditorias_ver') )
                                     <li class="dropdown-header">Auditorias</li>
-                                    <li class="{{ Request::is('programacionAI')? 'active': '' }}">
-                                        <a href="{{ url('programacionAI') }}">Estado general Auditorias</a>
-                                    </li>
                                     <li class="{{ Request::is('programacionAI/mensual')? 'active': '' }}">
                                         <a href="{{ url('programacionAI/mensual') }}">Programación mensual AI</a>
                                     </li>
@@ -84,7 +81,7 @@
                                     <li role="separator" class="divider"></li>
                                     <li class="dropdown-header">Auditorias</li>
                                     <li class="{{ Request::is('/auditorias/estado-general-fcv')? 'active': '' }}">
-                                        <a href="{{ url('/auditorias/estado-general-fcv') }}">Estado general</a>
+                                        <a href="{{ url('/auditorias/estado-general-fcv') }}">Estado general de Auditorias</a>
                                     </li>
                                 </ul>
                             </li>
