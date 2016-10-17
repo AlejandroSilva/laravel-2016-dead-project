@@ -22,13 +22,13 @@
         <thead>
             <tr>
                 <th></th>
-                <th></th>
+                <th>Programadas</th>
                 <th colspan="4">Realizadas</th>
                 <th colspan="4">Pendientes</th>
             </tr>
             <tr>
                 <th>Zona</th>
-                <th>Total Mes</th>
+                <th>Total</th>
                 {{-- realizadas --}}
                 <th>Optimo</th>
                 <th>% Optimo</th>
