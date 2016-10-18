@@ -56,31 +56,31 @@ class Auditorias extends Model {
 
         $zonas = Zonas::buscar()->map(function($zona) use($primerDiaMes, $dia, $ultimoDiaMes, $idCliente){
             $total = Auditorias::buscar((object)[
-                'idCliente' => $idCliente,
-                'idZona' => $zona->idZona,
+                'idCliente'   => $idCliente,
+                'idZona'      => $zona->idZona,
                 'fechaInicio' => $primerDiaMes,
-                'fechaFin' => $ultimoDiaMes,
+                'fechaFin'    => $ultimoDiaMes,
             ])->count();
             $realizado_optimo = Auditorias::buscar((object)[
-                'idCliente' => $idCliente,
-                'idZona' => $zona->idZona,
+                'idCliente'   => $idCliente,
+                'idZona'      => $zona->idZona,
                 'fechaInicio' => $primerDiaMes,
-                'fechaFin' => $dia,
+                'fechaFin'    => $dia,
             ])->count();
             $realizado_real = Auditorias::buscar((object)[
-                'idCliente' => $idCliente,
-                'idZona' => $zona->idZona,
+                'idCliente'   => $idCliente,
+                'idZona'      => $zona->idZona,
                 'fechaInicio' => $primerDiaMes,
-                'fechaFin' => $dia,
-                'realizada' => true
+                'fechaFin'    => $dia,
+                'realizada'   => true
             ])->count();
 
-            $realizado_porcentajeOptimo = number_format( ($realizado_optimo/$total)*100, 0, '.', ',');
-            $realizado_porcentajeReal = number_format( ($realizado_real/$total)*100, 0, '.', ',');
-            $pendiente_optimo = $total - $realizado_optimo;
-            $pendiente_real = $total - $realizado_real;
-            $pendiente_porcentajeOptimo = number_format( ($pendiente_optimo/$total)*100, 0, '.', ',');
-            $pendiente_porcentajeReal = number_format( ($pendiente_real/$total)*100, 0, '.', ',');
+            $realizado_porcentajeOptimo = $total!=0? number_format(($realizado_optimo/$total)*100, 0, '.', ',') : 0;
+            $realizado_porcentajeReal   = $total!=0? number_format(($realizado_real/$total)*100, 0, '.', ',') : 0;
+            $pendiente_optimo           = $total - $realizado_optimo;
+            $pendiente_real             = $total - $realizado_real;
+            $pendiente_porcentajeOptimo = $total!=0? number_format(($pendiente_optimo/$total)*100, 0, '.', ',') : 0;
+            $pendiente_porcentajeReal   = $total!=0? number_format(($pendiente_real/$total)*100, 0, '.', ',') : 0;
             return (object)[
                 'nombreZona' => $zona->nombre,
                 'idZona' => $zona->idZona,
@@ -105,23 +105,23 @@ class Auditorias extends Model {
                 'pendientePorcentajeDiferencia' => $pendiente_porcentajeReal - $pendiente_porcentajeOptimo,
             ];
         });
-        $total = $zonas->sum('totalMes');
-        $realizadoReal = $zonas->sum('realizadoReal');
-        $realizadoOptimo = $zonas->sum('realizadoOptimo');
+        $total            = $zonas->sum('totalMes');
+        $realizadoReal    = $zonas->sum('realizadoReal');
+        $realizadoOptimo  = $zonas->sum('realizadoOptimo');
         $pendientesOptimo = $zonas->sum('pendientesOptimo');
-        $pendientesReal = $zonas->sum('pendientesReal');
+        $pendientesReal   = $zonas->sum('pendientesReal');
         $totales = (object)[
             'total' => $total,
             // realizados
-            'realizadoReal' => $realizadoReal,
-            'realizadoOptimo' => $realizadoOptimo,
-            'realizadoPorcentajeOptimo' => number_format( ($realizadoOptimo/$total)*100, 0, '.', ','),
-            'realizadoPorcentajeReal' => number_format( ($realizadoReal/$total)*100, 0, '.', ','),
+            'realizadoReal'             => $realizadoReal,
+            'realizadoOptimo'           => $realizadoOptimo,
+            'realizadoPorcentajeOptimo' => $total!=0? number_format(($realizadoOptimo/$total)*100, 0, '.', ',') : 0,
+            'realizadoPorcentajeReal'   => $total!=0? number_format(($realizadoReal/$total)*100, 0, '.', ',') : 0,
             // pendientes
-            'pendientesReal' => $pendientesReal,
-            'pendientesOptimo' => $pendientesOptimo,
-            'pendientesPorcentajeOptimo' => number_format( ($pendientesOptimo/$total)*100, 0, '.', ','),
-            'pendientesPorcentajeReal' => number_format( ($pendientesReal/$total)*100, 0, '.', ','),
+            'pendientesReal'                => $pendientesReal,
+            'pendientesOptimo'              => $pendientesOptimo,
+            'pendientesPorcentajeOptimo'    => $total!=0? number_format(($pendientesOptimo/$total)*100, 0, '.', ',') : 0,
+            'pendientesPorcentajeReal'      => $total!=0? number_format(($pendientesReal/$total)*100, 0, '.', ',') : 0,
         ];
         return (object)[
             'dia' => $ayer_carbon->formatLocalized('%d %B, %Y'),
