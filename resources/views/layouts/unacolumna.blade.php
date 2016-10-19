@@ -59,7 +59,6 @@
                                     <li class="{{ Request::is('muestra-vencimiento-fcv')? 'active': '' }}">
                                         <a href="{{ url('muestra-vencimiento-fcv') }}">(DEV) Muestra de vencimiento FCV</a>
                                     </li>
-                                    <li role="separator" class="divider"></li>
                                 @endif
                             </ul>
                         </li>
@@ -82,6 +81,12 @@
                                     <li class="dropdown-header">Auditorias</li>
                                     <li class="{{ Request::is('/auditorias/estado-general-fcv')? 'active': '' }}">
                                         <a href="{{ url('/auditorias/estado-general-fcv') }}">Estado general de Auditorias</a>
+                                    </li>
+
+                                    {{-- MAESTRA DE PRODUCTOS --}}
+                                    <li role="separator" class="divider"></li>
+                                    <li class="{{ Request::is('maestra-productos-fcv')? 'active': '' }}">
+                                        <a href="{{ url('maestra-productos-fcv') }}">Maestra de productos FCV</a>
                                     </li>
                                 </ul>
                             </li>

@@ -18,7 +18,7 @@ class ArchivoFinalInventario extends Model {
         //     $this->belongsTo('App\Model', 'foreign_key', 'other_key');
         return $this->belongsTo('App\Inventarios', 'idInventario', 'idInventario');
     }
-    public function subidoPor(){
+    function subidoPor(){
         return $this->hasOne('App\User', 'id', 'idSubidoPor');
     }
 

@@ -1,10 +1,5 @@
 <?php
 
-// PHPExcel
-//use PHPExcel;
-//use PHPExcel_IOFactory;
-//use PHPExcel_Shared_Date;
-
 class ExcelHelper{
     static function leerExcel($fullPath){
         $response = (object)[
@@ -12,8 +7,10 @@ class ExcelHelper{
             'datos' => null
         ];
         try {
+            ini_set('memory_limit','1024M');
+            ini_set('max_execution_time', 540);
             // al indicar que tipo de archivo se espera, fuerzo a que no pueda abrir archivos de texto plano
-//            $inputFileType = 'Excel2007';
+            //$inputFileType = 'Excel2007';
             $inputFileType = PHPExcel_IOFactory::identify($fullPath);
             $objReader = PHPExcel_IOFactory::createReader($inputFileType);
             $objReader->setReadDataOnly(true);
