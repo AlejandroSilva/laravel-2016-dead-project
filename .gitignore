@@ -18,8 +18,7 @@ node_modules/
 .~lock.*
 
 # arhivos dinamicamente creados para ser descargados por los usuarios, deben ser eliminados con un CRON...
-/public/pmensual_*.xlxs
+public/pmensual_*.xlxs
 public/archivos_temporales/
 public/actualizarStock/uploads/
-public/archivos_temporales/
 public/otros-archivos/

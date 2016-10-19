@@ -122,7 +122,7 @@ class Nominas extends Model {
     function lideresDisponibles(){
         $turno = $this->turno;
         $inventario = $this->inventario;
-        $fechaInventario =  $inventario->fechaProgramada;
+        $fechaInventario = $inventario->fechaProgramada;
 
         $rolLider = \App\Role::where('name', 'Lider')->first();
         // obtener todos los lideres
@@ -268,25 +268,25 @@ class Nominas extends Model {
     }
     // utilizado por: VistaGeneralController@api_vista
     static function formatear_vistaGeneral($nomina){
-        return (object) [
-            'id' => $nomina->idNomina,
-            'turno'=> $nomina->turno,   // no es neceario mostrar 'jornada' del inventario
+        return (object)[
+            'id'                => $nomina->idNomina,
+            'turno'             => $nomina->turno,   // no es neceario mostrar 'jornada' del inventario
             // lider, supervisor, y dotacion
-            'dotOperadores' => $nomina->dotacionOperadores,
-            'dotTotal' => $nomina->dotacionTotal,
-            'idLider' => $nomina->idLider,
-            'idSupervisor' => $nomina->idSupervisor,
-            'idsDotacion' => $nomina->dotacion->map(function($operador){
+            'dotOperadores'     => $nomina->dotacionOperadores,
+            'dotTotal'          => $nomina->dotacionTotal,
+            'idLider'           => $nomina->idLider,
+            'idSupervisor'      => $nomina->idSupervisor,
+            'idsDotacion'       => $nomina->dotacion->map(function ($operador) {
                 return $operador->id;
             }),
             // INVENTARIO
-            'fechaProgramada' => $nomina->inventario->fechaProgramada,
+            'fechaProgramada'   => $nomina->inventario->fechaProgramada,
             // LOCAL
-            'local' => $nomina->inventario->local->numero,
-            'comuna' => $nomina->inventario->local->direccion->comuna->nombre,
+            'local'             => $nomina->inventario->local->numero,
+            'comuna'            => $nomina->inventario->local->direccion->comuna->nombre,
             //'region' => $nomina->inventario->local->direccion->comuna->provincia->region->numero,
             // CLIENTE
-            'cliente'=> $nomina->inventario->local->cliente->nombreCorto,
+            'cliente'           => $nomina->inventario->local->cliente->nombreCorto,
         ];
     }
 
@@ -294,18 +294,18 @@ class Nominas extends Model {
     function scopeFechaProgramadaEntre($query, $fechaInicio, $fechaFin){
         // que la fecha sea MAYOR a la fechaInicio
         $query
-            ->where(function($qq) use($fechaInicio){
+            ->where(function ($qq) use ($fechaInicio) {
                 $qq
-                    ->whereHas('inventario1', function($q) use($fechaInicio){
+                    ->whereHas('inventario1', function ($q) use ($fechaInicio) {
                         $q->where('fechaProgramada', '>=', $fechaInicio);
                     })
-                    ->orWhereHas('inventario2', function($q) use($fechaInicio){
+                    ->orWhereHas('inventario2', function ($q) use ($fechaInicio) {
                         $q->where('fechaProgramada', '>=', $fechaInicio);
                     });
             });
         // y la fecha sea MENOR a la fechaFin
         $query
-            ->where(function($qq) use($fechaFin) {
+            ->where(function ($qq) use ($fechaFin) {
                 $qq->whereHas('inventario1', function ($q) use ($fechaFin) {
                     $q->where('fechaProgramada', '<=', $fechaFin);
                 })->orWhereHas('inventario2', function ($q) use ($fechaFin) {
@@ -313,7 +313,8 @@ class Nominas extends Model {
                 });
             });
     }
-    function scopeHabilitada($query, $habilitada=true){
+
+    function scopeHabilitada($query, $habilitada = true){
         $query->where('habilitada', $habilitada);
     }
 
@@ -325,37 +326,31 @@ class Nominas extends Model {
         $query->where('habilitada', true);
 
         // Buscar por Turno: 'Día' o 'Noche'
-        if(isset($peticion->turno)){
+        if (isset($peticion->turno)) {
             $turno = $peticion->turno;
             $query->where('turno', $turno);
         }
 
         // Buscar por Lider
-        if(isset($peticion->idLider)){
+        if (isset($peticion->idLider)) {
             $idLider = $peticion->idLider;
             $query->where('idLider', $idLider);
         }
 
         // Buscar por Supervisor
-        if(isset($peticion->idSupervisor)){
+        if (isset($peticion->idSupervisor)) {
             $idSupervisor = $peticion->idSupervisor;
             $query->where('idSupervisor', $idSupervisor);
         }
 
-        // Buscar por idCaptador1 (no se ha usado, no puedo validar)
-//        if(isset($peticion->idCaptador1)){
-//            $idCaptador1 = $peticion->idCaptador1;
-//            $query->where('idCaptador1', $idCaptador1);
-//        }
-
         // Buscar por Operador
-        if(isset($peticion->idOperador)){
+        if (isset($peticion->idOperador)) {
             $idOperador = $peticion->idOperador;
             $query
-                ->where(function($q) use($idOperador){
+                ->where(function ($q) use ($idOperador) {
                     // $this->dotacion()->find($operador->id);
                     $q
-                        ->whereHas('dotacion', function($qq) use($idOperador){
+                        ->whereHas('dotacion', function ($qq) use ($idOperador) {
                             // dotacion = tabla 'nominas_user'
                             // $this->dotacion()->find($operador->id);
                             $qq->where('idUser', $idOperador);
@@ -364,25 +359,25 @@ class Nominas extends Model {
         }
 
         // Buscar por Fecha de Inicio
-        if(isset($peticion->fechaInicio)){
+        if (isset($peticion->fechaInicio)) {
             $fechaInicio = $peticion->fechaInicio;
             $query
-                ->where(function($qq) use($fechaInicio){
+                ->where(function ($qq) use ($fechaInicio) {
                     $qq
-                        ->whereHas('inventario1', function($q) use($fechaInicio){
+                        ->whereHas('inventario1', function ($q) use ($fechaInicio) {
                             $q->where('fechaProgramada', '>=', $fechaInicio);
                         })
-                        ->orWhereHas('inventario2', function($q) use($fechaInicio){
+                        ->orWhereHas('inventario2', function ($q) use ($fechaInicio) {
                             $q->where('fechaProgramada', '>=', $fechaInicio);
                         });
                 });
         }
 
         // Buscar por Fecha de Fin
-        if(isset($peticion->fechaFin)){
+        if (isset($peticion->fechaFin)) {
             $fechaFin = $peticion->fechaFin;
             $query
-                ->where(function($qq) use($fechaFin) {
+                ->where(function ($qq) use ($fechaFin) {
                     $qq->whereHas('inventario1', function ($q) use ($fechaFin) {
                         $q->where('fechaProgramada', '<=', $fechaFin);
                     })->orWhereHas('inventario2', function ($q) use ($fechaFin) {
