@@ -7,6 +7,16 @@ use App\ArchivoMuestraVencimientoFCV;
 
 class ArchivosHelper{
 
+//     no funciona esta wea, falla por los nombres de archivos...
+//    static function XLSXaCSV($xlsxPath){
+//        //$txtPath = public_path()."/tmp/".md5(uniqid(rand(), true))."/".rand()."txt";
+//        $txtPath = "/home/asilva/Escritorio/asd.txt";
+//        $REPLACE = 's/|\"/|/g;s/\"|/|/g;s/   \"//g';
+//        $com = "ssconvert -O 'separator=|' \"$xlsxPath\" $txtPath";
+//        exec($com);
+//        exec("sed -i -- '$REPLACE' $txtPath", $aa);
+//    }
+
     static function extraerArchivo($zip_fullpath, $archivo){
         $ZIP_ERROR = [
             ZIPARCHIVE::ER_EXISTS => 'El fichero ya existe.',
@@ -45,7 +55,7 @@ class ArchivosHelper{
     // utilizado por: MuestraVencimientoController::api_upload
     static function moverMuestraVencimientoFCV($archivo){
         $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
-        $extra = "[$timestamp][FCV] ";
+        $extra = "[$timestamp][FCV]_";
         $carpetaDestino = ArchivoMuestraVencimientoFCV::getPathCarpetaArchivos();
 
         return self::_moverACarpeta($archivo, $extra, $carpetaDestino);
@@ -74,7 +84,7 @@ class ArchivosHelper{
         $nombreFinal = "$extra $nombreOriginal";
 
         // guardar el archivo en una carpeta publica, y cambiar los permisos para que el grupo pueda modifiarlos
-        $archivo->move( $carpetaDestino, $nombreFinal);
+        $archivo->move($carpetaDestino, $nombreFinal);
         chmod($carpetaDestino.$nombreFinal, 0774);   // 0744 por defecto
 
         return (object)[
