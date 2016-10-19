@@ -22,18 +22,23 @@ Route::group(['middleware' => ['web']], function (){
     | RUTAS PROTEGIDAS SOLO A USUARIOS
     |--------------------------------------------------------------------------
     |*/
+
+
     Route::group(['middleware'=>['auth']], function(){
         // ################ CLIENTES Y LOCALES
         // VISTAS:
-        Route::get('admin/clientes',                                'ClientesController@show_Lista')->name('admin.clientes.lista');
-        Route::get('admin/locales',                                 'LocalesController@show_mantenedor')->name('admin.locales.lista');
-        Route::get('admin/stock',                                   'StockController@show_mantenedorStock');
+        Route::get('admin/mantenedor-locales',                      'LocalesController@show_mantenedor');
         // API:
-        Route::get('api/clientes',                                  'ClientesController@api_getClientes');
-        Route::get('api/cliente/{idCliente}/locales',               'LocalesController@api_getLocales');
-        Route::post('api/locales',                                  'LocalesController@api_nuevo');
+        Route::get('api/cliente/{idCliente}/locales',               'LocalesController@api_getLocalesDeCliente');
+        Route::post('api/locales',                                  'LocalesController@api_nuevoLocal');
         Route::put('api/local/{idLocal}',                           'LocalesController@api_actualizar');
 
+        // ################ STOCK
+        // VISTAS:
+        Route::get('admin/stock',                                   'StockController@show_mantenedorStock');
+        // API:
+        Route::post('api/stock/upload',                             'StockController@api_uploadArchivo');
+        Route::post('api/stock/pegar',                              'StockController@api_pegarDatos');
 
         // ################ USUARIOS, ROLES y PERMISOS
         // VISTAS:
@@ -195,8 +200,6 @@ Route::group(['middleware' => ['web']], function (){
 
         // ################ OTROS
         Route::get('api/comunas',                                   'OtrosController@api_comunas');
-        Route::post('api/stock/upload',                             'StockController@api_uploadArchivo');
-        Route::post('api/stock/pegar',                              'StockController@api_pegarDatos');
     });
 
     /*

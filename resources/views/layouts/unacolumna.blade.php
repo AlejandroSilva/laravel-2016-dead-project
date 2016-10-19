@@ -139,8 +139,8 @@
                                 {{-- Cliente / Locales --}}
                                 @if( Auth::user()->hasRole('Developer') )
                                     <li role="separator" class="divider"></li>
-                                    <li class="{{ Request::is('admin/locales')? 'active': '' }}">
-                                        <a href="{{ route('admin.locales.lista') }}">Mantenedor de Locales (D)</a>
+                                    <li class="{{ Request::is('admin/mantenedor-locales')? 'active': '' }}">
+                                        <a href="{{ url('admin/mantenedor-locales') }}">Mantenedor de Locales (Dev)</a>
                                     </li>
                                 @endif
 
@@ -151,7 +151,7 @@
                                 @endif
 
                                 {{-- Administrador de Personal --}}
-                                @if( Auth::user()->hasRole('Developer') )
+                                @if( Auth::user()->hasRole('Developer') ){{--Auth::user()->can('admin-mantenedorLocales')--}}
                                     <li role="separator" class="divider"></li>
                                     <li class="{{ Request::is('personal')? 'active': '' }}">
                                         <a href="{{ url('personal') }}">Mantenedor de Personal (D)</a>
