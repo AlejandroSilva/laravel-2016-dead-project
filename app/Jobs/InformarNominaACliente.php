@@ -27,6 +27,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ['psobarzo@seiconsultores.cl', 'Paula Sobarzo'],
         ['logistica@seiconsultores.cl', 'SEI'],
         ['asilva@seiconsultores.cl', 'Alejandro Silva'],
+        ['marcogamboa.spa@gmail.com', 'Marco Gamboa'],
     ];
     // Cliente 1: PUC
     protected $PUC_nomina_to = [
