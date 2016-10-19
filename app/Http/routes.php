@@ -57,9 +57,9 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('api/permission/{idPermission}/editar',          'AuthController@api_permission_actualizar');
         Route::delete('api/permission/{idPermission}',              'AuthController@api_permission_eliminar');
         // roles
-        Route::post('api/roles',                                    'AuthController@api_role_nuevo');
-        Route::put('api/role/{idRole}',                             'AuthController@api_role_actualizar');
-        Route::delete('api/role/{idRole}',                          'AuthController@api_eliminarRole');
+        Route::post('api/roles',                                    'AuthController@api_nuevoRol');
+        Route::put('api/role/{idRole}',                             'AuthController@api_actualizarRol');
+        Route::delete('api/role/{idRole}',                          'AuthController@api_eliminarRol');
         // usuarios - roles
         Route::post('api/usuario/{idUsuario}/role/{idRole}',        'AuthController@api_nuevo_rol');
         Route::delete('api/usuario/{idUsuario}/role/{idRole}',      'AuthController@api_delete_rol');
@@ -149,7 +149,7 @@ Route::group(['middleware' => ['web']], function (){
         // ################ MUESTRAS DE VENCIMIENTO
         // VISTAS:
         Route::get('muestra-vencimiento-fcv',                           'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
-        Route::post('muestra-vencimiento-fcv/subir-muestra-fcv',        'MuestraVencimientoController@api_subirMuestraFCV');
+        Route::post('muestra-vencimiento-fcv/subir-muestra',            'MuestraVencimientoController@api_subirMuestraFCV');
         // DESCARGAS:
         Route::get('muestra-vencimiento-fcv/{idMuestra}/descargar',     'MuestraVencimientoController@descargar_muestraFCV');
 

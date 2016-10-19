@@ -53,13 +53,6 @@
                                     </li>
                                     <li role="separator" class="divider"></li>
                                 @endif
-
-                                {{-- Maestra, Muestras de vencimiento e IRD--}}
-                                @if( Auth::user()->hasRole('Developer') )
-                                    <li class="{{ Request::is('muestra-vencimiento-fcv')? 'active': '' }}">
-                                        <a href="{{ url('muestra-vencimiento-fcv') }}">(DEV) Muestra de vencimiento FCV</a>
-                                    </li>
-                                @endif
                             </ul>
                         </li>
 
@@ -88,6 +81,13 @@
                                     <li class="{{ Request::is('maestra-productos-fcv')? 'active': '' }}">
                                         <a href="{{ url('maestra-productos-fcv') }}">Maestra de productos FCV</a>
                                     </li>
+
+                                    {{-- MUESTRA VENCIMIENTO FCV--}}
+                                    @if( Auth::user()->hasRole('Developer') )
+                                        <li class="{{ Request::is('muestra-vencimiento-fcv')? 'active': '' }}">
+                                            <a href="{{ url('muestra-vencimiento-fcv') }}">Muestra de vencimiento FCV (DEV)</a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </li>
                         @endif

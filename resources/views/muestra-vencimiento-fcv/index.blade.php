@@ -68,6 +68,7 @@
                             <input class="form-control" type="file" name="muestraVencimiento">
                         </div>
 
+
                         <div class="col-sm-offset-3 col-sm-9">
                             <input type="submit" class="btn btn-primary btn-sm btn-block" name="submit"></br>
                         </div>

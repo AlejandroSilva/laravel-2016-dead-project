@@ -18,12 +18,12 @@ class MuestraVencimientoController extends Controller {
 
         $archivos = ArchivoMuestraVencimientoFCV::all()
             ->sortByDesc('created_at');
-        return response()->view('muestraVencimiento.index', [
+        return response()->view('muestra-vencimiento-fcv.index', [
             'archivos' => $archivos,
         ]);
     }
 
-    // POST muestra-vencimiento-fcv/subir-muestra-fcv
+    // POST muestra-vencimiento-fcv/subir-muestra
     function api_subirMuestraFCV(Request $request){
         // verificar permisos
         $user = Auth::user();

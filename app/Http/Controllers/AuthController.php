@@ -255,7 +255,7 @@ class AuthController extends Controller {
     }
 
     // PUT api/role/{idRole}
-    public function api_role_actualizar($idRole, Request $request){
+    public function api_actualizarRol($idRole, Request $request){
         $usuario = Auth::user();
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
@@ -282,7 +282,7 @@ class AuthController extends Controller {
     }
 
     // POST api/roles
-    public function api_nuevoRole(Request $request){
+    public function api_nuevoRol(Request $request){
         $usuario = Auth::user();
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
@@ -303,8 +303,8 @@ class AuthController extends Controller {
         }
     }
 
-    // DELETE role/{idRole}
-    public function api_role_eliminar($idRole){
+    // DELETE api/role/{idRole}
+    public function api_eliminarRol($idRole){
         $usuario = Auth::user();
         if(!$usuario || !$usuario->hasRole('Administrador'))
             return view('errors.403');
