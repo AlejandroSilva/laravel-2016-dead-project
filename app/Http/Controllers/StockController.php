@@ -18,47 +18,37 @@ use App\Clientes;
 use App\Locales;
 
 class StockController extends Controller {
+    public function __construct() {
+        // permisos
+        $this->middleware('userCan:admin-actualizarStock')
+            ->only('show_actualizarStock', 'api_pegarDatos', 'api_subirArchivo');
+        // buscar
+        $this->middleware('buscarCliente')
+            ->only('api_pegarDatos');
+    }
+
     /**
      * ##########################################################
-     * Rutas que generan vistas
-     * ##########################################################
+     * VISTAS
      */
-    // GET admin/stock
-    function show_mantenedorStock(){
-        $user = Auth::user();
-        if(!$user || !$user->can('admin-actualizarStock'))
-            return view('errors.403');
-
-        return view('admin.mantenedorStock', [
+    // GET admin/actualizar-stock
+    // MW: auth, userCan:admin-actualizarStock
+    function show_actualizarStock(){
+        // permisos validados con el mw: 'userCan:admin-actualizarStock'
+        return view('admin.actualizar-stock', [
             'clientes' => Clientes::all()
         ]);
     }
 
     /**
      * ##########################################################
-     * Rutas para consumo del API REST
-     * ##########################################################
+     * API
      */
-    // GET stock/leerArchivo        --      RUTA PARA HACER PRUEBAS, ELIMINAR
-    function api_leerArchivo(){
-        $tableData = $this->leerArchivo(public_path().'/actualizarStock/stockFCV-2016-05-31.xlsx');
 
-        $data = collect($tableData);
-        $hoy = Carbon::now()->format("Y-m-d");
-        return response()->json(
-            $data->map(function($row) use($hoy){
-                // comoo es una ruta de prueba, se deja el idCliente=2 FCV
-                return $this->actualizarLocal(2, $row['numero'], $row['stock'], $hoy);
-            })
-        );
-    }
-    
     // POST stock/pegar
+    // MW: auth, userCan:admin-actualizarStock
     function api_pegarDatos(Request $request){
-        // revisar permisos
-        $user = Auth::user();
-        if(!$user || !$user->can('admin-actualizarStock'))
-            return response()->json(['error' => 'No tiene permisos para realizar esta acción'], 403);
+        // permisos revisados por mw "userCan:admin-actualizarStock"
 
         // revisar que el cliente este fijado y exista
         if(!$request->idCliente)
@@ -81,11 +71,9 @@ class StockController extends Controller {
     }
 
     // POST stock/upload
-    function api_uploadArchivo(Request $request){
-        // revisar permisos
-        $user = Auth::user();
-        if(!$user || !$user->can('admin-actualizarStock'))
-            return response()->json(['error' => 'No tiene permisos para realizar esta acción'], 403);
+    // MW: auth, userCan:admin-actualizarStock
+    function api_subirArchivo(Request $request){
+        // permisos revisados por "userCan:admin-actualizarStock"
 
         // revisar que el cliente este fijado y exista
         if(!$request->idCliente)
@@ -129,7 +117,6 @@ class StockController extends Controller {
         );
     }
 
-
     /**
      * ##########################################################
      * funciones privadas
@@ -160,7 +147,6 @@ class StockController extends Controller {
         try {
             $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
             $objReader = PHPExcel_IOFactory::createReader($inputFileType);
-//            dd($inputFileName);
             $objPHPExcel = $objReader->load($inputFileName);
         } catch(Exception $e) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
@@ -169,7 +155,6 @@ class StockController extends Controller {
         //  Get worksheet dimensions
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
-        $highestColumn = $sheet->getHighestColumn();
 
         //  Loop through each row of the worksheet in turn
         $tableData = [];

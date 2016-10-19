@@ -35,10 +35,10 @@ Route::group(['middleware' => ['web']], function (){
 
         // ################ STOCK
         // VISTAS:
-        Route::get('admin/stock',                                   'StockController@show_mantenedorStock');
+        Route::get('admin/actualizar-stock',                        'StockController@show_actualizarStock');
         // API:
-        Route::post('api/stock/upload',                             'StockController@api_uploadArchivo');
         Route::post('api/stock/pegar',                              'StockController@api_pegarDatos');
+        Route::post('api/stock/upload',                             'StockController@api_subirArchivo');
 
         // ################ USUARIOS, ROLES y PERMISOS
         // VISTAS:
