@@ -40,23 +40,26 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('api/stock/pegar',                              'StockController@api_pegarDatos');
         Route::post('api/stock/upload',                             'StockController@api_subirArchivo');
 
-        // ################ USUARIOS, ROLES y PERMISOS
+        // ################ USUARIOS
         // VISTAS:
-        Route::get('admin/usuarios-roles',                          'AuthController@show_usuarios_roles');
-        Route::get('admin/permissions-roles',                       'AuthController@show_permissions_roles');
-        Route::get('admin/permissions',                             'AuthController@show_permissions');
-        Route::get('admin/roles',                                   'AuthController@show_roles');
         Route::get('personal',                                      'PersonalController@show_personal_index');
-        // cambio de contraseña
-        Route::get('user/changePassword',                           'AuthController@show_changePassword');
-        Route::post('user/changePassword',                          'AuthController@post_change_password');
         // APIS:
-        // usuarios
         Route::get('api/usuario/{idUsuario}',                       'PersonalController@api_usuario_get');
         Route::put('api/usuario/{idUsuario}',                       'PersonalController@api_usuario_actualizar');
         Route::get('api/usuario/{rut}/historial-nominas',           'PersonalController@api_historial_nominas'); /*DESARROLLO*/
         Route::get('api/usuarios/buscar',                           'PersonalController@api_usuarios_buscar');
         Route::post('api/usuarios/nuevo-operador',                  'PersonalController@api_operador_nuevo');
+
+        // ################ ROLES y PERMISOS
+        // VISTAS:
+        Route::get('admin/usuarios-roles',                          'AuthController@show_usuarios_roles');
+        Route::get('admin/permissions-roles',                       'AuthController@show_permissions_roles');
+        Route::get('admin/permissions',                             'AuthController@show_permissions');
+        Route::get('admin/roles',                                   'AuthController@show_roles');
+        // cambio de contraseña
+        Route::get('user/changePassword',                           'AuthController@show_changePassword');
+        Route::post('user/changePassword',                          'AuthController@post_change_password');
+        // APIS:
         // permisos
         Route::post('api/permission/nuevo',                         'AuthController@api_permission_nuevo');
         Route::put('api/permission/{idPermission}/editar',          'AuthController@api_permission_actualizar');
@@ -87,6 +90,7 @@ Route::group(['middleware' => ['web']], function (){
         // DESCARGAS:
         Route::get('/pdf/inventarios/{mes}/cliente/{idCliente}',                            'Legacy_InventariosController@descargarPDF_porMes');
         Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'Legacy_InventariosController@descargarPDF_porRango');
+
 
         // ################ NOMINAS
         // VISTAS:
