@@ -146,8 +146,14 @@ class ActaInventarioHelper{
         foreach (file($archivoActa) as $linea){
             $d = explode(';', $linea);
             $key = $d[0];
-            // la expresion regular quita los "control chars", como tabs '\t', new lines '\n', y retorno de carro '\r'
-            $value = preg_replace('~[[:cntrl:]]~', '', $d[1]);
+            // a veces el acta trae el key, pero no el value, ni la marca de separacion (para variar con problemas)
+            // Ej: 'Total Unidades QF' vs 'Total Unidades QF;'... hay que manejar este problema
+            if(isset($d[1])){
+                // la expresion regular quita los "control chars", como tabs '\t', new lines '\n', y retorno de carro '\r'
+                $value = preg_replace('~[[:cntrl:]]~', '', $d[1]);
+            }else{
+                $value = null;
+            }
 
             $datos[$key] = $value;
         }
