@@ -48,7 +48,9 @@ class PersonalController extends Controller {
      * ##########################################################
      */
     function show_personal_index(Request $request){
-        // todo validar permisos
+        if(!Auth::user()->can('permiso-pendiente'))
+            return view('errors.403');
+
         return response()->view('operacional.personal.personal-index', [
 
         ]);
