@@ -127,7 +127,7 @@ export default {
             despublicar: (idInventario)=>
                 axios.post(`/api/inventario/${idInventario}/despublicar-acta-fcv`),
             reprocesar: (idArchivo)=>
-                axios.post(`/api/inventario/archivo-final/${idArchivo}/reprocesar`),
+                axios.post(`/api/inventario/archivo-final/${idArchivo}/reprocesar-fcv`),
         }
     },
     auditoria: {

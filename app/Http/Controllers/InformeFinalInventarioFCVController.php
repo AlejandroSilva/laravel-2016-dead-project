@@ -102,6 +102,10 @@ class InformeFinalInventarioFCVController extends Controller {
         // mover el archivo a la carpeta correspondiente e insertar en la BD
         $archivoFinalInventario = $inventario->agregarArchivoFinal($user, $archivo_formulario);
 
+        // procesar archivo
+        // TODO, CONTINUAR....
+        // $resultadoProcesar = $archivoFinalInventario->procesarArchivo();
+
         // parsear ZIP a un Acta
         $resultadoActa = \ActaInventarioHelper::parsearZIPaActa($archivoFinalInventario->getFullPath(), $local_numero);
         if( isset($resultadoActa->error) ){
@@ -143,6 +147,9 @@ class InformeFinalInventarioFCVController extends Controller {
         // MW: buscarInventario
         $inventario = $archivoFinalInventario->inventario;
         $local_numero = $inventario->local->numero;
+
+        // procesar archivo
+        $resultadoProcesar = $archivoFinalInventario->procesarArchivo();
 
         // parsear ZIP a un Acta
         $resultadoActa = \ActaInventarioHelper::parsearZIPaActa($zipPath, $local_numero);
