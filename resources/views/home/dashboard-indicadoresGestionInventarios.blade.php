@@ -46,11 +46,11 @@
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getConsolidadoPatentes(true) : ''}}</td>
                             <td class="tdTextoDerecha">{{$datosDisponibles? $acta->getDiferenciaNeto(true) : ''}}</td>
                             <td class="opciones">
-                                <a class="btn btn-default btn-xs" href="/inventario/{{$inv->idInventario}}/archivo-final" target="_blank">
+                                <a class="btn btn-default btn-xs" href="/inventario/{{$inv->idInventario}}/archivo-final-fcv" target="_blank">
                                     acta
                                 </a>
                                 @if($inv->actaFCV)
-                                    <a class="btn btn-primary btn-xs" href='archivo-final-inventario/{{$inv->actaFCV->idArchivoFinalInventario}}/descargar'>ZIP</a>
+                                    <a class="btn btn-primary btn-xs" href='inventario/archivo-final/{{$inv->actaFCV->idArchivoFinalInventario}}/descargar-fcv'>ZIP</a>
                                 @else
                                     --
                                 @endif
@@ -74,7 +74,7 @@
                         <td colspan="2">Actas de Octubre</td>
                         <td colspan="8"></td>
                         <td>
-                            <a class="btn btn-primary btn-xs btn-block" href="/inventario/descargar-consolidado-fcv?fechaInicio=2016-10-01&fechaFin=2016-10-31">Descargar</a>
+                            <a class="btn btn-primary btn-xs btn-block" href="/inventarios/descargar-consolidado-fcv?fechaInicio=2016-10-01&fechaFin=2016-10-31">Descargar</a>
                         </td>
                     </tr>
                     {{-- Mes anterior --}}
@@ -82,7 +82,7 @@
                         <td colspan="2">Actas de Septiembre</td>
                         <td colspan="8"></td>
                         <td>
-                            <a class="btn btn-primary btn-xs btn-block" href="/inventario/descargar-consolidado-fcv?fechaInicio=2016-09-01&fechaFin=2016-09-30">Descargar</a>
+                            <a class="btn btn-primary btn-xs btn-block" href="/inventarios/descargar-consolidado-fcv?fechaInicio=2016-09-01&fechaFin=2016-09-30">Descargar</a>
                         </td>
                     </tr>
                 {{-- 2016 --}}
@@ -90,7 +90,7 @@
                         <td colspan="2">Actas de 2016</td>
                         <td colspan="8"></td>
                         <td>
-                            <a class="btn btn-primary btn-xs btn-block" href="/inventario/descargar-consolidado-fcv?fechaInicio=2016-05-01">Descargar</a>
+                            <a class="btn btn-primary btn-xs btn-block" href="/inventarios/descargar-consolidado-fcv?fechaInicio=2016-05-01">Descargar</a>
                         </td>
                     </tr>
                 </tbody>

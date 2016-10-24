@@ -31,9 +31,7 @@ class AuthController extends Controller {
 
     ];
 
-    /**
-     * VISTAS
-     */
+    /*** ########################################################## VISTAS          */
 
     // GET auth/login
     function show_Login(){
@@ -44,7 +42,6 @@ class AuthController extends Controller {
     function show_Logout(){
         // destruir la session
         Auth::logout();
-        // volver a INICIO
         return Redirect::to('/');
     }
 
@@ -54,12 +51,12 @@ class AuthController extends Controller {
      * Funciones para el cambio de contraseñas
      * ##########################################################
      */
-    // GET user/changePassword
-    public function show_changePassword(){
-        return view('auth.changePassword');
+    // GET auth/cambiar-contrasena
+    public function show_cambiarContrasena(){
+        return view('auth.cambiar-contrasena');
     }
-    // POST user/changePassword
-    public function post_change_password(){
+    // POST auth/cambiar-contrasena
+    public function form_cambiarContrasena(){
         $rules = array(
             'password' => 'required',
             'newpassword' => 'required|min:5',
@@ -72,7 +69,7 @@ class AuthController extends Controller {
         $validation = Validator::make(Input::all(), $rules, $messages);
         if ($validation->fails())
         {
-            return Redirect::to('/user/changePassword')->withErrors($validation)->withInput();
+            return Redirect::to('/auth/cambiar-contrasena')->withErrors($validation)->withInput();
         }
         else{
             if (Hash::check(Input::get('password'), Auth::user()->password)){
@@ -84,12 +81,12 @@ class AuthController extends Controller {
                 }
                 else
                 {
-                    return Redirect::to('/user/changePassword')->with('flash_message', "No se ha podido guardar la nueva contaseña");
+                    return Redirect::to('/auth/cambiar-contrasena')->with('flash_message', "No se ha podido guardar la nueva contaseña");
                 }
             }
             else
             {
-                return Redirect::to('/user/changePassword')->with('flash-message',"La contraseña actual no es correcta");
+                return Redirect::to('/auth/cambiar-contrasena')->with('flash-message',"La contraseña actual no es correcta");
             }
         }
     }
@@ -101,100 +98,91 @@ class AuthController extends Controller {
      */
     //GET admin/usuarios-roles
     public function show_usuarios_roles(){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
+        if(!Auth::user()->can('administrar-permisos'))
             return view('errors.403');
 
-
-        $users = User::get();
-        $roles = Role::get();
-
-        return view('operacional.usuarios.usuarios', [
-            'users' => $users,
-            'roles' => $roles
+        return view('admin.index-usuarios-roles', [
+            'users' => User::get(),
+            'roles' => Role::get()
         ]);
     }
 
     // GET admin/permissions-roles
     public function show_permissions_roles(){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
+        if(!Auth::user()->can('administrar-permisos'))
             return view('errors.403');
-        $roles = Role::get();
-        $permissions = Permission::get();
 
-        return view('operacional.usuarios.permissions', [
-            'permissions' => $permissions,
-            'roles' => $roles
+        return view('admin.index-permissions-roles', [
+            'permissions' => Permission::get(),
+            'roles' => Role::get()
         ]);
     }
 
     //GET admin/permissions
     public function show_permissions(){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
+        if(!Auth::user()->can('administrar-permisos'))
             return view('errors.403');
-        $permissions = Permission::get();
-        return view('operacional.usuarios.mantPermissions',[
-            'permissions' => $permissions
+
+        return view('admin.index-permissions',[
+            'permissions' => Permission::get()
         ]);
     }
 
     // GET admin/roles
     public function show_roles(){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
+        if(!Auth::user()->can('administrar-permisos'))
             return view('errors.403');
-        $roles = Role::get();
-        return view('operacional.usuarios.mantRoles',[
-            'roles' => $roles
+
+        return view('admin.index-roles',[
+            'roles' => Role::get()
         ]);
     }
 
-
     // POST api/usuario/{idUsuario}/role/{idRole}
     public function api_nuevo_rol($idUsuario, $idRole){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
-            return view('errors.403');
+        if(!Auth::user()->can('administrar-permisos'))
+            return response()->json([], 403);
+
         $user = User::find($idUsuario);
         $user->roles()->attach($idRole);
+        return response()->json([]);
     }
 
     // POST api/usuario/{idUsuario}/role/{idRole}
     public function api_delete_rol($idUsuario, $idRole){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
-            return view('errors.403');
+        if(!Auth::user()->can('administrar-permisos'))
+            return response()->json([], 403);
+
         $user = User::find($idUsuario);
         $user->detachRole($idRole);
+        return response()->json([]);
     }
 
     // POST api/permission/{idPermission}/role/{idRole}
     public function api_nuevo_permiso($idPermission, $idRole){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
-            return view('errors.403');
+        if(!Auth::user()->can('administrar-permisos'))
+            return response()->json([], 403);
 
         $rol = Role::find($idRole);
         $rol->perms()->attach($idPermission);
+        return response()->json([]);
     }
 
     // DELETE permission/{idPermission}/roles/{idRole}
     public function api_delete_permiso($idPermission, $idRole){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
-            return view('errors.403');
+        if(!Auth::user()->can('administrar-permisos'))
+            return response()->json([], 403);
 
         $rol = Role::find($idRole);
         $rol->perms()->detach($idPermission);
+        return response()->json([]);
     }
 
     // PUT permission/{idPermission}/editar
     public function api_permission_actualizar($idPermission, Request $request){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
+        if(!Auth::user()->can('administrar-permisos'))
             return view('errors.403');
+
         $permission = Permission::find($idPermission);
         $permissionRules = $this->permissionRules;
         $permissionRules["name"] = "required|unique:permissions,name,$permission->name,name";
@@ -219,9 +207,9 @@ class AuthController extends Controller {
 
     // POST permission/nuevo
     public function api_permission_nuevo(Request $request){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
+        if(!Auth::user()->can('administrar-permisos'))
             return view('errors.403');
+
         $validator = Validator::make(Input::all(), $this->permissionRules);
         if($validator->fails()){
             return Redirect::to("admin/permissions")->withErrors($validator);
@@ -241,9 +229,9 @@ class AuthController extends Controller {
 
     // DELETE permission/{idPermission}
     public function api_permission_eliminar($idPermission){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
+        if(!Auth::user()->can('administrar-permisos'))
             return view('errors.403');
+
         $permission = Permission::findOrFail($idPermission);
         if(count($permission->roles->all())==0){
             $permission->delete();
@@ -256,9 +244,9 @@ class AuthController extends Controller {
 
     // PUT api/role/{idRole}
     public function api_actualizarRol($idRole, Request $request){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
+        if(!Auth::user()->can('administrar-permisos'))
             return view('errors.403');
+
         $role = Role::find($idRole);
         $roleRules = $this->roleRules;
         $roleRules["name"] = "required|unique:roles,name,$role->name,name";
@@ -283,9 +271,9 @@ class AuthController extends Controller {
 
     // POST api/roles
     public function api_nuevoRol(Request $request){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
+        if(!Auth::user()->can('administrar-permisos'))
             return view('errors.403');
+
         $validator = Validator::make(Input::all(), $this->roleRules);
         if($validator->fails()){
             return Redirect::to("admin/roles")->withErrors($validator);
@@ -305,9 +293,9 @@ class AuthController extends Controller {
 
     // DELETE api/role/{idRole}
     public function api_eliminarRol($idRole){
-        $usuario = Auth::user();
-        if(!$usuario || !$usuario->hasRole('Administrador'))
+        if(!Auth::user()->can('administrar-permisos'))
             return view('errors.403');
+
         $role = Role::findOrFail($idRole);
 
         if(count($role->users->all())==0){

@@ -27,8 +27,11 @@ class AuditoriasController extends Controller {
 
     // GET auditorias/estado-general-fcv
     function show_estado_general_fcv(){
-       $estadoGeneral = Auditorias::estadoGeneralCliente(2);
+        // verificar permisos
+        if(!Auth::user()->can('fcv-verEstadoGeneralAuditorias'))
+            return view('errors.403');
 
+       $estadoGeneral = Auditorias::estadoGeneralCliente(2);
         return view('auditorias.estado-general-fcv.index', [
             'ega_dia' => $estadoGeneral->dia,
             'ega_zonas' => $estadoGeneral->zonas,
@@ -36,9 +39,9 @@ class AuditoriasController extends Controller {
         ]);
     }
     // GET auditorias/estado-general-fcv-publico
+    // RUTA PUBLICA
     function show_estado_general_fcv_publico(){
         $estadoGeneral = Auditorias::estadoGeneralCliente(2);
-
         return view('auditorias.estado-general-fcv.iframe-publico', [
             'ega_dia' => $estadoGeneral->dia,
             'ega_zonas' => $estadoGeneral->zonas,
@@ -46,30 +49,30 @@ class AuditoriasController extends Controller {
         ]);
     }
 
-    // GET programacionAI/mensual
-    public function showMensual(){
+    // GET auditorias-verProgramacion
+    public function show_programacionMensual(){
         // validar de que el usuario tenga los permisos
         $user = Auth::user();
-        if(!$user || !$user->can('programaAuditorias_ver'))
+        if(!$user || !$user->can('auditorias-verProgramacion'))
             return view('errors.403');
         
         // Array Auditores
         $rolAuditor = Role::where('name', 'Auditor')->first();
         $auditores = $rolAuditor!=null? $rolAuditor->users : '[]';
-        return view('operacional.programacionAI.programacion-mensual', [
-            'puedeAgregarAuditorias'   => $user->can('programaAuditorias_agregar')? "true":"false",
-            'puedeModificarAuditorias' => $user->can('programaAuditorias_modificar')? "true":"false",
+        return view('auditorias.index-programacion-mensual', [
+            'puedeAgregarAuditorias'   => $user->can('auditorias-crearModificarEliminar')? "true":"false",
+            'puedeModificarAuditorias' => $user->can('auditorias-crearModificarEliminar')? "true":"false",
             'clientes' => Clientes::todos_conLocales(),
             'auditores' => $auditores
         ]);
     }
 
-    // GET programacionAI/semanal
-    public function showSemanal(){
+    // GET auditorias/programacion-semanal
+    public function show_programacionSemanal(){
         // validar de que el usuario tenga los permisos
         $user = Auth::user();
-        if(!$user || !$user->can('programaAuditorias_ver'))
-            return view('errors.403');
+        if(!$user || !$user->can('auditorias-verProgramacion'))
+            return response()->json([], 403);
 
         // buscar la menor fechaProgramada en los inventarios
         $select = Inventarios::
@@ -84,9 +87,9 @@ class AuditoriasController extends Controller {
         $auditores = $rolAuditor!=null? $rolAuditor->users : '[]';
 
         // buscar la mayor fechaProgramada en los iventarios
-        return view('operacional.programacionAI.programacion-semanal', [
-            'puedeModificarAuditorias' => $user->can('programaAuditorias_modificar')? "true":"false",
-            'puedeRevisarAuditorias' => $user->can('programaAuditorias_revisar')? "true":"false",
+        return view('auditorias.index-programacion-semanal', [
+            'puedeModificarAuditorias'  => $user->can('auditorias-crearModificarEliminar')? "true":"false",
+            'puedeRevisarAuditorias'    => $user->can('auditorias-crearModificarEliminar')? "true":"false",
             'clientes' => $clientes,
             'primerInventario'=> $minymax->primerInventario,
             'ultimoInventario'=> $minymax->ultimoInventario,
@@ -102,6 +105,10 @@ class AuditoriasController extends Controller {
 
     // POST api/auditoria/nuevo
     function api_nuevo(Request $request) {
+        // validar permisos
+        if(!Auth::user()->can('auditorias-crearModificarEliminar'))
+            return response()->json([], 403);
+
         $validator = Validator::make($request->all(), [
             // FK
             'idLocal'=> 'required',
@@ -146,6 +153,10 @@ class AuditoriasController extends Controller {
 
     // PUT api/auditorias/{idAuditoria}
     function api_actualizar($idAuditoria, Request $request) {
+        // validar permisos
+        if(!Auth::user()->can('auditorias-crearModificarEliminar'))
+            return response()->json([], 403);
+
         $auditoria = Auditorias::find($idAuditoria);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
         if($auditoria){
@@ -200,6 +211,10 @@ class AuditoriasController extends Controller {
 
     // DELETE api/auditorias/{idAuditoria}
     function api_eliminar($idAuditoria) {
+        // validar permisos
+        if(!Auth::user()->can('auditorias-crearModificarEliminar'))
+            return response()->json([], 403);
+
         $auditoria = Auditorias::find($idAuditoria);
         if ($auditoria) {
             Log::info("[AUDITORIA:ELIMINAR] auditoria '$idAuditoria' del idLocal '$auditoria->idLocal' programada para '$auditoria->fechaProgramada' eliminada.");
@@ -233,6 +248,7 @@ class AuditoriasController extends Controller {
      */
 
     // POST api/auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado
+    // PUBLICA
     function api_informarRealizado($idCliente, $ceco, $annoMesDia){
         $fecha = explode('-', $annoMesDia);
         $anno = $fecha[0];
@@ -276,6 +292,7 @@ class AuditoriasController extends Controller {
         return response()->json(Auditorias::find($auditoria->idAuditoria), 200);
     }
 
+    // PUBLICA
     function api_informarRevisado($idCliente, $ceco, $annoMesDia){
         $fecha = explode('-', $annoMesDia);
         $anno = $fecha[0];

@@ -8,7 +8,6 @@ use App\Jobs\InformarNominaACliente;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Log;
-use App\Http\Requests;
 // PHP Excel
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -27,12 +26,9 @@ class NominasController extends Controller {
      * Rutas que generan vistas
      * ##########################################################
      */
-    // GET programacionIG/nomina/{idNomina}
+    // GET nomina/{idNomina}
     function show_nomina($idNomina){
-        // el usuario esta logeado?
         $user = Auth::user();
-        if(!$user)
-            return view('errors.403');
 
         // la nomina existe?
         $nomina = Nominas::find($idNomina);
@@ -51,26 +47,28 @@ class NominasController extends Controller {
         }
 
         // el usuario tiene los permisos para ver las nominas, O es el captador asignado?
+        // TODO: esto esta mal, idCaptador1 y idCaptador2 ya no corren
         $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
-        if(!$esElCaptadorAsignado && !$user->can('programaInventarios_ver'))
+        if(!$esElCaptadorAsignado && !$user->can('nominas-verTodas'))
             return view('errors.403');
 
 
-        return view('operacional.nominas.nomina', [
+        return view('nominas.index-nomina', [
             'nomina' => Nominas::formatoPanelNomina($nomina),
             'comunas' => Comunas::all(),
             'permisos' => [
                 // para poder enviar debe tener los permisos, O ser el captador asociado (ambos no son necesarios)
-                'cambiarLider' => $user->can('nominaIG-cambiarLider'),
-                'cambiarSupervisor' => $user->can('nominaIG-cambiarSupervisor'),
-                'cambiarDotacion' => $user->can('nominaIG-cambiarDotacion') || $esElCaptadorAsignado,
-                'enviar' => $user->can('nominaIG-enviar') || $esElCaptadorAsignado,
-                'aprobar' => $user->can('nominaIG-aprobar'),
-                'informar' => $user->can('nominaIG-informar'),
-                'rectificar' => $user->can('nominaIG-rectificar')
+                'cambiarLider' => $user->can('inventarios-cambiarLiderSupervisorCaptador'),
+                'cambiarSupervisor' => $user->can('inventarios-cambiarLiderSupervisorCaptador'),
+                'cambiarDotacion' => $user->can('nominas-cambiarCualquierDotacion') || $esElCaptadorAsignado,
+                'enviar' => $user->can('nominas-enviar') || $esElCaptadorAsignado,
+                'aprobar' => $user->can('nominas-aprobar'),
+                'informar' => $user->can('nominas-informar'),
+                'rectificar' => $user->can('nominas-rectificar')
             ]
         ]);
     }
+
     // GET programacionIG/nomina/{idNomina}/pdf-preview
     // Esta ruta es publica, se utiliza para generar los PDFs
     function show_nomina_pdfPreview($idNomina){
@@ -97,7 +95,7 @@ class NominasController extends Controller {
         // Todo: revisar los permisos
         $rolCaptador = Role::where('name', 'Captador')->first();
         $captadores = $rolCaptador? $rolCaptador->users : [];
-        
+
         return view('nominas.captadores', [
             'captadores' => $captadores
         ]);
@@ -123,7 +121,7 @@ class NominasController extends Controller {
         return response()->json( array_values($nominas), 200);
     }
 
-    // PUT api/nomina/{idNomina}  // Modificar antuguo, no entrega un formato compacto, se debe reescribir
+    // PUT api/nomina/{idNomina}  // Modificar antiguo, no entrega un formato compacto, se debe reescribir
     function api_actualizar($idNomina, Request $request){
         // identificar la nomina indicada
         $nomina = Nominas::find($idNomina);
@@ -203,7 +201,7 @@ class NominasController extends Controller {
     function api_agregarLider($idNomina, $usuarioRUN){
         // Revisar que el usuario tenga los permisos para cambiar el lider
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-cambiarLider'))
+        if(!$user || !$user->can('inventarios-cambiarLiderSupervisorCaptador'))
             return response()->json(['error'=>'No tiene permisos para cambiar un Lider.'], 403);
 
         // la nomina existe?
@@ -231,7 +229,7 @@ class NominasController extends Controller {
     function api_quitarLider($idNomina){
         // Revisar que el usuario tenga los permisos para cambiar el lider
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-cambiarLider'))
+        if(!$user || !$user->can('inventarios-cambiarLiderSupervisorCaptador'))
             return response()->json(['error'=>'No tiene permisos para cambiar un Lider.'], 403);
 
         // la nomina existe?
@@ -254,7 +252,7 @@ class NominasController extends Controller {
         // solo el captador asociado Y las personas que tengan permiso pueden modificar al supervisor
         // Todo: falta considerar al captador asociado a la nomina
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-cambiarSupervisor'))
+        if(!$user || !$user->can('inventarios-cambiarLiderSupervisorCaptador'))
             return response()->json(['error'=>'No tiene permisos para cambiar un Supervisor.'], 403);
 
         // la nomina existe?
@@ -284,7 +282,7 @@ class NominasController extends Controller {
         // solo el captador asociado Y las personas que tengan permiso pueden modificar al supervisor
         // Todo: falta considerar al captador asociado a la nomina
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-cambiarSupervisor'))
+        if(!$user || !$user->can('inventarios-cambiarLiderSupervisorCaptador'))
             return response()->json(['error'=>'No tiene permisos para cambiar un Supervisor.'], 403);
 
         // la nomina existe?
@@ -389,7 +387,7 @@ class NominasController extends Controller {
 
         // puede hacer el cambio? (tiene los permisos O es el captador asignado)
         $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
-        if(!$esElCaptadorAsignado && !$user->can('nominaIG-cambiarDotacion'))
+        if(!$esElCaptadorAsignado && !$user->can('nominas-cambiarCualquierDotacion'))
             return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
 
         // la nomina se encuentra pendiente?
@@ -441,7 +439,7 @@ class NominasController extends Controller {
 
         // puede hacer el cambio? (tiene los permisos O es el captador asignado)
         $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
-        if(!$esElCaptadorAsignado && !$user->can('nominaIG-cambiarDotacion'))
+        if(!$esElCaptadorAsignado && !$user->can('nominas-cambiarCualquierDotacion'))
             return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
 
         // la nomina se encuentra pendiente?
@@ -469,7 +467,7 @@ class NominasController extends Controller {
 
         // tiene los permisos para hacer el cambio? (tiene los permisos O es el captador asignado)
         $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
-        if(!$esElCaptadorAsignado && !$user->can('nominaIG-enviar'))
+        if(!$esElCaptadorAsignado && !$user->can('nominas-enviar'))
             return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
 
         // la nomina esta pendiente?
@@ -488,7 +486,7 @@ class NominasController extends Controller {
     function api_aprobarNomina($idNomina){
         // Puede aprobar la nomina solo si tiene los permisos
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-aprobar'))
+        if(!$user || !$user->can('nominas-aprobar'))
             return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
 
         // la nomina existe?
@@ -510,7 +508,7 @@ class NominasController extends Controller {
     function api_rechazarNomina($idNomina){
         // Puede rechazar la nomina solo si tiene los permisos
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-aprobar'))
+        if(!$user || !$user->can('nominas-aprobar'))
             return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
 
         // la nomina existe?
@@ -533,7 +531,7 @@ class NominasController extends Controller {
         Log::info("[NOMINA:INFORMAR_CLIENTE] enviando nomina idNomina:$idNomina ...");
         // Puede informar la nomina (y enviar el correo) solo si tiene los permisos
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-informar')){
+        if(!$user || !$user->can('nominas-informar')){
             Log::info("[NOMINA:INFORMAR_CLIENTE:error] idNomina:$idNomina. No tiene permisos");
             return response()->json(['error'=>'No tiene permisos para enviar la Nómina'], 403);
         }
@@ -561,7 +559,7 @@ class NominasController extends Controller {
         // tengan los permisos (que el usuario pueda rectificar)
         if(isset($request->omitirCorreo) && $request->omitirCorreo==true){
             // validar que tenga los permisos
-            if(!$user->can('nominaIG-rectificar')){
+            if(!$user->can('nominas-rectificar')){
                 Log::info("[NOMINA:INFORMAR_CLIENTE:ERROR] idNomina:$idNomina. No tiene permisos para informar sin enviar correo");
                 return response()->json(['error'=>'No tiene permisos para informar la nomina sin enviar el correo'], 403);
             }
@@ -591,7 +589,7 @@ class NominasController extends Controller {
     function api_rectificarNomina($idNomina){
         // Puede informar la nomina (y enviar el correo) solo si tiene los permisos
         $user = Auth::user();
-        if(!$user || !$user->can('nominaIG-rectificar'))
+        if(!$user || !$user->can('nominas-rectificar'))
             return response()->json(['error'=>'No tiene permisos para rectificar la Nómina'], 403);
 
         // la nomina existe?
@@ -833,7 +831,7 @@ class NominasController extends Controller {
 
         // guardar y descargar el archivo
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-        $randomFileName = "archivos_temporales/nomina_".$local->cliente->nombreCorto."-".$local->numero."_".md5(uniqid(rand(), true)).".xlsx";
+        $randomFileName = public_path()."/tmp/nomina_".$local->cliente->nombreCorto."-".$local->numero."_".md5(uniqid(rand(), true)).".xlsx";
         $downloadFileName = "nomina ".$local->cliente->nombreCorto." ".$local->numero." ".$inventario->fechaProgramada.".xlsx";
         $excelWritter->save($randomFileName);
         return response()->download($randomFileName, $downloadFileName);

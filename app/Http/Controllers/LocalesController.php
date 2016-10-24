@@ -16,24 +16,18 @@ use App\Locales;
 
 class LocalesController extends Controller {
     public function __construct() {
-        // permisos
-        $this->middleware('userCan:admin-mantenedorLocales')
-            ->only('show_mantenedor', 'api_nuevoLocal', 'api_actualizar');
         // buscar cliente
-        $this->middleware('buscarCliente')
-            ->only('api_getLocalesDeCliente');
+        $this->middleware('buscarCliente')->only('api_getLocalesDeCliente');
     }
 
-    /**
-     * ##########################################################
-     * VISTAS
-     */
-
+    /*** ##########################################################   VISTAS        */
     // GET admin/mantenedor-locales
-    // MW auth, userCan:admin-mantenedorLocales
     function show_mantenedor(){
-        // permisos validados con: "userCan:admin-mantenedorLocales"
-        return view('operacional.locales.mantenedorLocales', [
+        // revisar permisos
+        if(!Auth::user()->can('administrar-locales'))
+            return view('errors.403');
+
+        return view('admin.index-mantenedor-locales', [
             'clientes' => Clientes::all(),
             'jornadas' => Jornadas::all(),
             'formatoLocales' => FormatoLocales::all(),
@@ -42,13 +36,9 @@ class LocalesController extends Controller {
         ]);
     }
 
-    /**
-     * ##########################################################
-     * API
-     */
-
+    /*** ##########################################################   API           */
     // GET api/cliente/{idCliente}/locales
-    // MW: auth, buscarCliente
+    // MW: buscarCliente
     function api_getLocalesDeCliente(Request $request, $idCliente){
         // cliente = mw "buscarCliente"
         $cliente = $request->cliente;
@@ -57,9 +47,10 @@ class LocalesController extends Controller {
     }
 
     // POST api/locales
-    // MW: auth, userCan:admin-mantenedorLocales
     function api_nuevoLocal(Request $request){
-        // permisos validados con: "userCan:admin-mantenedorLocales"
+        // revisar permisos
+        if(!Auth::user()->can('administrar-locales'))
+            return response()->json([], 403);
 
         // Validar que el local sea valido
         $crearLocal = Validator::make($request->all(), [
@@ -107,9 +98,10 @@ class LocalesController extends Controller {
     }
 
     // POST api/local/{idLocal}
-    // MW auth, userCan:admin-mantenedorLocales
     function api_actualizar($idLocal, Request $request){
-        // permisos validados con: "userCan:admin-mantenedorLocales"
+        // revisar permisos
+        if(!Auth::user()->can('administrar-locales'))
+            return response()->json([], 403);
 
         // No se puede cambiar el idCliente, ni el CECO
 

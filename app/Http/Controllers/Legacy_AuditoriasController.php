@@ -38,8 +38,11 @@ class Legacy_AuditoriasController extends Controller {
     // *                DESCARGA DE DOCUMENTOS
     // * ##########################################################
 
-    // GET /pdf/auditorias/{mes}/cliente/{idCliente}
-    function descargarPDF_porMes($annoMesDia, $idCliente){
+    // GET auditorias/descargar-excel-por-mes
+    function descargar_ExcelPorMes(Request $request){
+        $annoMesDia = $request->mes;
+        $idCliente = $request->idCliente;
+
         $auditorias = $this->buscarPorMesYCliente($annoMesDia, $idCliente);
         $cliente = Clientes::find($idCliente);
 
@@ -70,7 +73,7 @@ class Legacy_AuditoriasController extends Controller {
 
             // guardar
             $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_" . md5(uniqid(rand(), true)) . ".xlxs";
+            $randomFileName = public_path()."/tmp/pmensual_" . md5(uniqid(rand(), true)) . ".xlxs";
             $excelWritter->save($randomFileName);
 
             //return response()->json($auditorias, 200);
@@ -79,7 +82,11 @@ class Legacy_AuditoriasController extends Controller {
     }
 
     // GET /pdf/auditorias/{fechaInicial}/al{fechaFinal}/cliente/{idCliente}
-    function descargarPDF_porRango($fechaInicial, $fechaFinal, $idCliente){
+    function descargar_ExcelPorRango(Request $request){
+        $fechaInicial = $request->fechaInicial;
+        $fechaFinal = $request->fechaFinal;
+        $idCliente = $request->idCliente;
+
         $auditorias = $this->buscarPorRangoYCliente($fechaInicial, $fechaFinal, $idCliente);
         $cliente = Clientes::find($idCliente);
 
@@ -112,7 +119,7 @@ class Legacy_AuditoriasController extends Controller {
 
             // guardar
             $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-            $randomFileName = "pmensual_".md5(uniqid(rand(), true)).".xlxs";
+            $randomFileName = public_path()."/tmp/prango_".md5(uniqid(rand(), true)).".xlxs";
             $excelWritter->save($randomFileName);
 
             // entregar la descarga al usuario

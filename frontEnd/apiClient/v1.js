@@ -119,15 +119,15 @@ export default {
             axios.get(`/api/inventarios/buscar-2?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&idCliente=${idCliente}`),
         acta: {
             get: idInventario=>
-                axios.get(`/api/inventario/${idInventario}/acta`),
+                axios.get(`/api/inventario/${idInventario}/acta-fcv`),
             actualizar: (idInventario, datos)=>
-                axios.post(`/api/inventario/${idInventario}/acta`, datos),
+                axios.post(`/api/inventario/${idInventario}/acta-fcv`, datos),
             publicar: (idInventario)=>
-                axios.post(`/api/inventario/${idInventario}/publicar-acta`),
+                axios.post(`/api/inventario/${idInventario}/publicar-acta-fcv`),
             despublicar: (idInventario)=>
-                axios.post(`/api/inventario/${idInventario}/despublicar-acta`),
+                axios.post(`/api/inventario/${idInventario}/despublicar-acta-fcv`),
             reprocesar: (idArchivo)=>
-                axios.post(`/api/archivo-final-inventario/${idArchivo}/reprocesar`),
+                axios.post(`/api/inventario/archivo-final/${idArchivo}/reprocesar`),
         }
     },
     auditoria: {

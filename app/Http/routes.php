@@ -42,7 +42,7 @@ Route::group(['middleware' => ['web']], function (){
 
         // ################ USUARIOS
         // VISTAS:
-        Route::get('personal',                                      'PersonalController@show_personal_index');
+        Route::get('admin/personal',                                'PersonalController@show_personal_index');
         // APIS:
         Route::get('api/usuario/{idUsuario}',                       'PersonalController@api_usuario_get');
         Route::put('api/usuario/{idUsuario}',                       'PersonalController@api_usuario_actualizar');
@@ -57,8 +57,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('admin/permissions',                             'AuthController@show_permissions');
         Route::get('admin/roles',                                   'AuthController@show_roles');
         // cambio de contraseña
-        Route::get('user/changePassword',                           'AuthController@show_changePassword');
-        Route::post('user/changePassword',                          'AuthController@post_change_password');
+        Route::get('auth/cambiar-contrasena',                       'AuthController@show_cambiarContrasena');
+        Route::post('auth/cambiar-contrasena',                      'AuthController@form_cambiarContrasena');
         // APIS:
         // permisos
         Route::post('api/permission/nuevo',                         'AuthController@api_permission_nuevo');
@@ -78,9 +78,8 @@ Route::group(['middleware' => ['web']], function (){
 
         // ################ INVENTARIOS
         // VISTAS:
-        Route::get('programacionIG',                                'InventariosController@showProgramacionIndex');
-        Route::get('programacionIG/mensual',                        'InventariosController@showProgramacionMensual');
-        Route::get('programacionIG/semanal',                        'InventariosController@showProgramacionSemanal');
+        Route::get('inventarios/programacion-mensual',              'InventariosController@show_programacionMensual');
+        Route::get('inventarios/programacion-semanal',              'InventariosController@show_programacionSemanal');
         // API:
         Route::get('api/inventarios/buscar-2',                      'InventariosController@api_buscar_2');
         Route::post('api/inventario/nuevo',                         'InventariosController@api_nuevo');
@@ -88,14 +87,14 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('api/inventario/{idInventario}',                 'InventariosController@api_actualizar');
         Route::delete('api/inventario/{idInventario}',              'InventariosController@api_eliminar');
         // DESCARGAS:
-        Route::get('/pdf/inventarios/{mes}/cliente/{idCliente}',                            'Legacy_InventariosController@descargarPDF_porMes');
-        Route::get('/pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',   'Legacy_InventariosController@descargarPDF_porRango');
+        Route::get('inventarios/descargar-excel-por-mes',           'Legacy_InventariosController@descargarPDF_porMes');
+        Route::get('inventarios/descargar-excel-por-rango',         'Legacy_InventariosController@descargarPDF_porRango');
 
 
         // ################ NOMINAS
         // VISTAS:
         Route::get('nominas/captadores',                            'NominasController@show_captadores');
-        Route::get('programacionIG/nomina/{idNomina}',              'NominasController@show_nomina');
+        Route::get('nomina/{idNomina}',                             'NominasController@show_nomina');
         // API:
         Route::put('api/nomina/{idNomina}',                         'NominasController@api_actualizar');
         Route::get('api/nominas/buscar',                            'NominasController@api_buscar');
@@ -119,48 +118,48 @@ Route::group(['middleware' => ['web']], function (){
 
         // ################ ARCHIVO FINAL DE INVENTARIO / ACTAS
         // VISTAS:
-        Route::get('informes-finales-inventarios-fcv',                  'ArchivoFinalInventarioController@show_informes_finales_inventario_fcv');
-        Route::get('inventario/{idInventario}/archivo-final',           'ArchivoFinalInventarioController@show_archivofinal_index')->name('indexArchivoFinal');
-        Route::post('inventario/{idInventario}/subir-zip-fcv',          'ArchivoFinalInventarioController@api_subirZipFCV');
+        Route::get('inventarios/informes-finales-fcv',                   'InformeFinalInventarioFCVController@show_index_fcv');
+        Route::get('inventario/{idInventario}/archivo-final-fcv',        'InformeFinalInventarioFCVController@show_index_archivoFinal_fcv')->name('indexArchivoFinalFCV');
+        Route::post('inventario/{idInventario}/subir-zip-fcv',           'InformeFinalInventarioFCVController@form_subirZip_fcv');
         // DESCARGAS:
-        Route::get('inventario/descargar-consolidado-fcv',              'ArchivoFinalInventarioController@descargar_consolidado_fcv');
-        Route::get('archivo-final-inventario/{idArchivo}/descargar',    'ArchivoFinalInventarioController@descargar_archivo_final');
+        Route::get('inventarios/descargar-consolidado-fcv',              'InformeFinalInventarioFCVController@descargar_consolidado_fcv');
+        Route::get('inventario/archivo-final/{idArchivo}/descargar-fcv', 'InformeFinalInventarioFCVController@descargar_archivoFinal_fcv');
         // APIS:
-        Route::get('api/inventario/{idInventario}/acta',                'ArchivoFinalInventarioController@api_getActa');
-        Route::post('api/inventario/{idInventario}/acta',               'ArchivoFinalInventarioController@api_actualizarActa');
-        Route::post('api/inventario/{idInventario}/publicar-acta',      'ArchivoFinalInventarioController@api_publicarActa');
-        Route::post('api/inventario/{idInventario}/despublicar-acta',   'ArchivoFinalInventarioController@api_despublicarActa');
-        Route::post('api/archivo-final-inventario/{idArchivo}/reprocesar',   'ArchivoFinalInventarioController@api_reprocesar_zip');
+        Route::get('api/inventario/{idInventario}/acta-fcv',             'InformeFinalInventarioFCVController@api_getActa_fcv');
+        Route::post('api/inventario/{idInventario}/acta-fcv',            'InformeFinalInventarioFCVController@api_actualizarActa_fcv');
+        Route::post('api/inventario/{idInventario}/publicar-acta-fcv',   'InformeFinalInventarioFCVController@api_publicarActa_fcv');
+        Route::post('api/inventario/{idInventario}/despublicar-acta-fcv','InformeFinalInventarioFCVController@api_despublicarActa_fcv');
+        Route::post('api/inventario/archivo-final/{idArchivo}/reprocesar-fcv','InformeFinalInventarioFCVController@api_reprocesarZip_fcv');
 
 
         // ################ AUDITORIAS
         // VISTAS:
         // programacion auditorias
-        Route::get('auditorias/estado-general-fcv',                     'AuditoriasController@show_estado_general_fcv');
-        Route::get('programacionAI/mensual',                            'AuditoriasController@showMensual');
-        Route::get('programacionAI/semanal',                            'AuditoriasController@showSemanal');
+        Route::get('auditorias/estado-general-fcv',                 'AuditoriasController@show_estado_general_fcv');
+        Route::get('auditorias/programacion-mensual',               'AuditoriasController@show_programacionMensual');
+        Route::get('auditorias/programacion-semanal',               'AuditoriasController@show_programacionSemanal');
         // DESCARGAS:
-        Route::get('pdf/auditorias/{mes}/cliente/{idCliente}',          'Legacy_AuditoriasController@descargarPDF_porMes');
-        Route::get('pdf/auditorias/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}',     'Legacy_AuditoriasController@descargarPDF_porRango');
+        Route::get('auditorias/descargar-excel-por-mes',            'Legacy_AuditoriasController@descargar_ExcelPorMes');
+        Route::get('auditorias/descargar-excel-por-rango',          'Legacy_AuditoriasController@descargar_ExcelPorRango');
         // API:
-        Route::post('api/auditoria/nuevo',                              'AuditoriasController@api_nuevo');
-        Route::put('api/auditoria/{idAuditoria}',                       'AuditoriasController@api_actualizar');
-        Route::delete('api/auditoria/{idAuditoria}',                    'AuditoriasController@api_eliminar');
-        Route::get('api/auditoria/buscar',                              'AuditoriasController@api_buscar');
+        Route::post('api/auditoria/nuevo',                          'AuditoriasController@api_nuevo');
+        Route::put('api/auditoria/{idAuditoria}',                   'AuditoriasController@api_actualizar');
+        Route::delete('api/auditoria/{idAuditoria}',                'AuditoriasController@api_eliminar');
+        Route::get('api/auditoria/buscar',                          'AuditoriasController@api_buscar');
 
         // ################ MAESTRA DE PRODUCTOS
         // VISTAS:
-        Route::get('maestra-productos-fcv',                             'MaestraProductosController@show_maestra_productos_fcv')->name('maestraFCV');
-        Route::post('maestra-productos/subir-maestra-fcv',              'MaestraProductosController@subir_maestraFCV');
+        Route::get('maestra-productos-fcv',                         'MaestraProductosController@show_maestra_productos_fcv')->name('maestraFCV');
+        Route::post('maestra-productos/subir-maestra-fcv',          'MaestraProductosController@subir_maestraFCV');
         // DESCARGAS:
-        Route::get('maestra-productos/{idArchivoMaestra}/descargar',    'MaestraProductosController@descargar_archivo');
+        Route::get('maestra-productos/{idArchivo}/descargar-fcv',   'MaestraProductosController@descargar_maestraFCV');
 
         // ################ MUESTRAS DE VENCIMIENTO
         // VISTAS:
-        Route::get('muestra-vencimiento-fcv',                           'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
-        Route::post('muestra-vencimiento-fcv/subir-muestra',            'MuestraVencimientoController@api_subirMuestraFCV');
+        Route::get('muestra-vencimiento-fcv',                       'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
+        Route::post('muestra-vencimiento/subir-muestra-fcv',        'MuestraVencimientoController@api_subirMuestraFCV');
         // DESCARGAS:
-        Route::get('muestra-vencimiento-fcv/{idMuestra}/descargar',     'MuestraVencimientoController@descargar_muestraFCV');
+        Route::get('muestra-vencimiento-fcv/{idMuestra}/descargar', 'MuestraVencimientoController@descargar_muestraFCV');
 
         // ################ ARCHIVO FINAL AUDITORIA
         // DESCARGAS:
@@ -169,7 +168,7 @@ Route::group(['middleware' => ['web']], function (){
 
         // ################ VISTA GENERAL INVENTARIOS-AUDITORIAS
         // API:
-        Route::get('api/vista-general/nominas-inventarios',             'VistaGeneralController@api_obtenerNominasAuditorias');
+        Route::get('api/vista-general/nominas-inventarios',         'VistaGeneralController@api_obtenerNominasAuditorias');
 
 
         // ################ ACTIVOS FIJOS
@@ -223,8 +222,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{publicIdNomina}/excel',  'NominasController@show_nomina_excelDownload');
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
         // API:
-        Route::get('api/inventarios/buscar',                         'Legacy_InventariosController@api_publica_buscar');
-        Route::post('api/inventarios/informar-archivo-final',        'Legacy_InventariosController@api_publica_informarArchivoFinal');
+        Route::get('api/inventarios/buscar',                        'Legacy_InventariosController@api_publica_buscar');
+        Route::post('api/inventarios/informar-archivo-final',       'Legacy_InventariosController@api_publica_informarArchivoFinal');
 
         // ####     NOMINAS
         // API:
@@ -247,6 +246,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('usuarioComoOperador/{runUsuario}',              'TemporalController@usuarioComoOperador');
 
         // ruta temporal, es utilizada por la plataforma inventario para descargar el excel generado manualmente
-        Route::get('archivo-final-inventario/excel-actas',          'ArchivoFinalInventarioController@temp_descargarExcelActas');
+        //Route::get('archivo-final-inventario/excel-actas',          'ArchivoFinalInventarioController@temp_descargarExcelActas');
     });
 });

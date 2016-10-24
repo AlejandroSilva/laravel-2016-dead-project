@@ -107,7 +107,15 @@ class Legacy_InventariosController extends Controller {
     // * ##########################################################
 
     // GET /pdf/inventarios/{fechaInicial}/al/{fechaFinal}/cliente/{idCliente}
-    function descargarPDF_porRango($fechaInicio, $fechaFin, $idCliente){
+    function descargarPDF_porRango(Request $request){
+        // solo se puede descargar con permisos
+        if(!Auth::user()->can('inventarios-verProgramacion'))
+            return view('errors.403');
+
+        $fechaInicio = $request->fechaInicial;
+        $fechaFin    = $request->fechaFinal;
+        $idCliente   = $request->cliente;
+
         //Se utiliza funcion privada que recorre inventarios por fecha inicio-final y por idCliente
         $inventarios = $this->buscarInventarios($fechaInicio, $fechaFin, null, $idCliente, null, null);
 
@@ -127,13 +135,20 @@ class Legacy_InventariosController extends Controller {
 
         // guardar el archivo a disco y descargarlo
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-        $randomFileName = "archivos_temporales/progIGrango".md5(uniqid(rand(), true)).".xlxs";
+        $randomFileName = public_path()."/tmp/".md5(uniqid(rand(), true)).".xlxs";
         $excelWritter->save($randomFileName);
         return response()->download($randomFileName, "programacion IG $nombreCliente ($fechaInicio al $fechaFin).xlsx");
     }
 
-    // GET /pdf/inventarios/{mes}/cliente/{idCliente}
-    function descargarPDF_porMes($annoMesDia, $idCliente){
+    // GET /inventarios/descargar-excel-por-mes
+    function descargarPDF_porMes(Request $request){
+        // solo se puede descargar con permisos
+        if(!Auth::user()->can('inventarios-verProgramacion'))
+            return view('errors.403');
+
+        $annoMesDia = $request->mes;
+        $idCliente = $request->idCliente;
+
         //Se utiliza funcion privada que recorre inventarios por mes y dia
         $inventarios = $this->buscarInventarios(null, null, $annoMesDia, $idCliente, null, null, null);
 
@@ -151,7 +166,7 @@ class Legacy_InventariosController extends Controller {
 
         // guardar el archivo a disco y descargarlo
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
-        $randomFileName = "archivos_temporales/progIGmes_".md5(uniqid(rand(), true)).".xlxs";
+        $randomFileName = public_path()."/tmp/".md5(uniqid(rand(), true)).".xlxs";
         $excelWritter->save($randomFileName);
         return response()->download($randomFileName, "programacion IG $nombreCliente ($annoMesDia).xlsx");
     }

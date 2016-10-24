@@ -26,30 +26,25 @@ class InventariosController extends Controller {
      // *               RUTAS QUE GENERAN VISTAS
      // * ##########################################################
 
-    // GET programacionIG/
-    public function showProgramacionIndex(){
-        return view('operacional.programacionIG.programacionIG-index');
-    }
-
-    // GET programacionIG/mensual
-    public function showProgramacionMensual(){
+    // GET inventarios/programacion-mensual
+    public function show_programacionMensual(){
         // validar de que el usuario tenga los permisos
         $user = Auth::user();
-        if(!$user || !$user->can('programaInventarios_ver'))
+        if(!$user || !$user->can('inventarios-verProgramacion'))
             return view('errors.403');
         
-        return view('operacional.programacionIG.programacionIG-mensual', [
-            'puedeAgregarInventarios'   => $user->can('programaInventarios_agregar')? "true":"false",
-            'puedeModificarInventarios' => $user->can('programaInventarios_modificar')? "true":"false",
+        return view('inventarios.programacion-mensual', [
+            'puedeAgregarInventarios'   => $user->can('inventarios-crearModificarEliminar')? "true":"false",
+            'puedeModificarInventarios' => $user->can('inventarios-crearModificarEliminar')? "true":"false",
             'clientes' => Clientes::todos_conLocales(),
         ]);
     }
 
-    // GET programacionIG/semanal
-    public function showProgramacionSemanal(){
+    // GET inventarios/programacion-semanal
+    public function show_programacionSemanal(){
         // validar de que el usuario tenga los permisos
         $user = Auth::user();
-        if(!$user || !$user->can('programaInventarios_ver'))
+        if(!$user || !$user->can('inventarios-verProgramacion'))
             return view('errors.403');
 
         // Clientes
@@ -65,8 +60,8 @@ class InventariosController extends Controller {
         $lideres = $rolLider!=null? $rolLider->users : '[]';
 
         // buscar la mayor fechaProgramada en los iventarios
-        return view('operacional.programacionIG.programacionIG-semanal', [
-            'puedeModificarInventarios' => $user->can('programaInventarios_modificar')? "true":"false",
+        return view('inventarios.programacion-semanal', [
+            'puedeModificarInventarios' => $user->can('inventarios-crearModificarEliminar')? "true":"false",
             'clientes' => $clientes,
             'captadores'=> $captadores,
             'supervisores'=> $supervisores,
@@ -94,6 +89,10 @@ class InventariosController extends Controller {
 
     // POST api/inventario/nuevo
     function api_nuevo(Request $request){
+        // solo se puede crear con permisos
+        if(!Auth::user()->can('inventarios-crearModificarEliminar'))
+            return response()->json([], 403);
+
         $validator = Validator::make($request->all(), [
             // FK
             'idLocal'=> 'required',
@@ -198,6 +197,10 @@ class InventariosController extends Controller {
 
     // PUT api/inventario/{idInventario}
     function api_actualizar($idInventario, Request $request){
+        // solo se puede actualizar con permisos
+        if(!Auth::user()->can('inventarios-crearModificarEliminar'))
+            return response()->json([], 403);
+
         $inventario = Inventarios::find($idInventario);
         // si no existe retorna un objeto vacio con statusCode 404 (not found)
         if($inventario){
@@ -223,7 +226,11 @@ class InventariosController extends Controller {
     }
 
     // DELETE api/inventario/{idInventario}
-    function api_eliminar($idInventario, Request $request){
+    function api_eliminar($idInventario){
+        // solo se puede eliminar con permisos
+        if(!Auth::user()->can('inventarios-crearModificarEliminar'))
+            return response()->json([], 403);
+
         $inventario = Inventarios::find($idInventario);
         if($inventario){
             DB::transaction(function() use($inventario){
@@ -235,7 +242,7 @@ class InventariosController extends Controller {
                 $nominaNoche->delete();
                 return response()->json([], 204);
             });
-
+            return response()->json([]);
         }else{
             return response()->json([], 404);
         }

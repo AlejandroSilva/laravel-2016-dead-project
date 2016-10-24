@@ -16,26 +16,24 @@ class MaestraProductosController extends Controller {
     // GET maestra-productos-fcv
     public function show_maestra_productos_fcv(){
         $user = Auth::user();
-        if(!$user || !$user->can('admin-maestra-fcv'))
+        if(!$user || !$user->can('fcv-verMaestra'))
             return response()->view('errors.403', [], 403);
 
         $maestrasDeProductos = ArchivoMaestraProductos::buscar((object)[
             'idCliente' => 2, // FCV
             'orden' => 'desc'
         ]);
-        //$productosDuplicados = ProductosFCV::skuDuplicados();
-        return view('maestra-productos-fcv.index', [
-            'archivosMaestraProductos' => $maestrasDeProductos
+        return view('maestra-productos.index-fcv', [
+            'archivosMaestraProductos' => $maestrasDeProductos,
+            'puedeSubirArchivo' => $user->can('fcv-administrarMaestra')
         ]);
     }
 
-
     // POST maestra-productos/subir-maestra-fcv
-    //
     function subir_maestraFCV(Request $request){
         // ver que el usuario tenga los permisos correspondientes
         $user = Auth::user();
-        if(!$user || !$user->can('admin-maestra-fcv'))
+        if(!$user || !$user->can('fcv-administrarMaestra'))
             return response()->view('errors.403', [], 403);
         
         // se adjunto un archivo?
@@ -64,15 +62,14 @@ class MaestraProductosController extends Controller {
     }
 
 
-    // GET maestra-productos/{idArchivoMaestra}/descargar
-    //
-    public function descargar_archivo($idArchivoMaestra){
+    // GET maestra-productos/{idArchivo}/descargar-fcv
+    public function descargar_maestraFCV($idArchivo){
+        // el metodo es el mismo para otros clientes, pero solo cambian los permisos
         $user = Auth::user();
-        // todo mejorar los permisos dependiendo del usuario
-        if(!$user || !$user->can('admin-maestra-fcv'))
+        if(!$user || !$user->can('fcv-verMaestra'))
             return response()->view('errors.403', [], 403);
 
-        $archivoMaestra = ArchivoMaestraProductos::find($idArchivoMaestra);
+        $archivoMaestra = ArchivoMaestraProductos::find($idArchivo);
         return \ArchivosHelper::descargarArchivo($archivoMaestra->getFullPath(), $archivoMaestra->nombreArchivo);
     }
 }
