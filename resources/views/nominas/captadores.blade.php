@@ -1,10 +1,7 @@
+@extends('layouts.root')
+{{--@section('title', 'Programación Semanal IG')--}}
 
-{{-- locales.listado --}}
-@extends('operacional.layoutOperacional')
-
-@section('title', 'Geo')
-
-@section('content')
+@section('body')
     <div class="container">
         {{-- aca se montara el component 'ProgramacionMensual' de React --}}
         <h1>Captadores</h1>

@@ -1,8 +1,7 @@
-@extends('operacional.layoutOperacional')
-
+@extends('layouts.root')
 @section('title', 'Próximas nóminas')
 
-@section('content')
+@section('body')
     {{-- aca se montara el component 'ProgramacionMensual' de React --}}
     <div id="react-nominas-captador">
         <p>Cargando, espere unos segundos</p>

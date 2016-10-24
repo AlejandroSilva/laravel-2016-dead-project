@@ -25,9 +25,7 @@ use Auth;
 class ActivosFijosController extends Controller {
 
     /**
-     * ##########################################################
-     * Rutas que generan vistas
-     * ##########################################################
+     * ########################################################## VISTAS
      */
     // GET activo-fijo
     public function get_index(){
@@ -36,22 +34,21 @@ class ActivosFijosController extends Controller {
         if(!$user || !$user->can('activoFijo-verModulo'))
             return view('errors.403');
 
-        return response()->view('logistica.activoFijo.index', [
+        return response()->view('activo-fijo.index', [
             'almacenes' => AlmacenAF::all(),
             'permisos' => $user->permisosAsignados()
         ]);
     }
 
     /**
-     * ##########################################################
-     * Rutas para consumo del API REST
-     * ##########################################################
+     * ########################################################## APIs
      */
 
-    /** ####################### PRODUCTOS ###################### **/
+    /** PRODUCTOS **/
     // GET api/activo-fijo/productos/buscar
     public function api_productos_buscar(Request $request){
-        // todo: validar que tenga los permisos para ver los productos
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
 
         return response()->json(
             $this->_buscarProductos( (object)[
@@ -138,10 +135,13 @@ class ActivosFijosController extends Controller {
         return response()->json([]);
     }
 
-    /** ####################### ARTICULOS ###################### **/
+    /** ARTICULOS **/
 
     // GET api/activo-fijo/articulos/buscar
     public function api_articulos_buscar(Request $request){
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
+
         $query = ArticuloAF::with([]);
 
         // va a filtrar por barras?
@@ -174,6 +174,9 @@ class ActivosFijosController extends Controller {
 
     // POST api/activo-fijo/articulos/entregar
     public function api_articulos_entregar_a_almacen(Request $request){
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
+
         // todo: 1 se verifica que todos los articulos existan y que esten en "disponible"
 
         // crear una "guia de entrega", asignar su origen y su destino
@@ -231,7 +234,9 @@ class ActivosFijosController extends Controller {
 
     // POST api/activo-fijo/articulos/transferir (INCOMPLETA)
     public function api_articulos_transferir(Request $request){
-        // todo validar permisos
+        // permisos
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
 
         // Validar que el almacen exista
         $almacenOrigen = AlmacenAF::find($request->almacenOrigen);
@@ -272,6 +277,10 @@ class ActivosFijosController extends Controller {
 
     // POST api/activo-fijo/articulos/nuevo
     public function api_articulos_nuevo(Request $request) {
+        // permisos
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
+
         // validar si se tienen los permisos para agregar un producto
         $user = Auth::user();
         if(!$user || !$user->can('activoFijo-agregarArticulo'))
@@ -404,7 +413,7 @@ class ActivosFijosController extends Controller {
         return response()->json([]);
     }
 
-    /** ######################### BARRAS ####################### **/
+    /** BARRAS **/
 
     // POST api/activo-fijo/barras/nuevo
     public function api_barra_nueva(Request $request){
@@ -457,17 +466,25 @@ class ActivosFijosController extends Controller {
         return response()->json([]);
     }
 
-    /** ####################### ALMACENES ###################### **/
+    /** ALMACENES **/
 
     // GET api/activo-fijo/almacenes/buscar
     public function api_almacenes_buscar(){
+        // permisos
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
+
         // todo validaciones, y mejor mensaje de error
         return response()->json( AlmacenAF::all() );
     }
 
     // POST api/activo-fijo/almacen/nuevo
     public function api_almacen_nuevo(Request $request){
-        // todo: validar permisos, validar que los campos sean validos (por ahora solo se hace en el frontend)
+        // permisos
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
+
+        // todo: validar que los campos sean validos (por ahora solo se hace en el frontend)
         AlmacenAF::create([
             'idUsuarioResponsable' => $request->idResponsable,
             'nombre'=>$request->nombre
@@ -477,6 +494,10 @@ class ActivosFijosController extends Controller {
 
     // GET api/activo-fijo/almacen/{idAlmacen}/articulos
     public function api_almacen_articulos($idAlmacen){
+        // permisos
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
+
         // retornar todos los articulos asociados a algun almance
         $query = AlmacenAF_ArticuloAF::with([]);
 
@@ -502,10 +523,14 @@ class ActivosFijosController extends Controller {
         ));
     }
 
-    /** ####################### PRE-GUIAS ###################### **/
+    /** PRE-GUIAS **/
 
     // GET api/activo-fijo/preguias/buscar
     public function api_preguias_buscar(Request $request){
+        // permisos
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
+
         return response()->json(
             $this->_buscarPreguias( (object)[
                 'idAlmacenAF' => $request->query('almacen'),
@@ -515,7 +540,10 @@ class ActivosFijosController extends Controller {
 
     // GET api/activo-fijo/preguia/{idPreguia}
     public function api_preguia_fetch($idPreguia){
-        // todo: validar permisos
+        // permisos
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
+
         $preguia = PreguiaDespacho::find($idPreguia);
         if(!$preguia)
             return response()->json([], 200);
@@ -525,7 +553,10 @@ class ActivosFijosController extends Controller {
 
     // POST api/activo-fijo/preguia/{idPreguia}/devolver
     public function api_preguia_devolver(Request $request, $idPreguia){
-        // todo validar que tenga los permisos para retornar en esta preguia
+        // permisos
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
+        // todo crear los permisos correctos para retornar en esta preguia
 
         // la preguia indicada existe?
         $preguia = PreguiaDespacho::find($idPreguia);
@@ -573,20 +604,25 @@ class ActivosFijosController extends Controller {
         return response()->json([]);
     }
 
-    /** ######################### OTROS ######################## **/
+    /** OTROS **/
 
     // GET api/activo-fijo/responsables/buscar
     public function api_responsables_buscar(){
+        // permisos
+        if(!Auth::user()->can('activoFijo-verModulo'))
+            return response()->json([], 403);
+
         // Todo: Hacer esto bien, definir el permiso, y las condiciones para ser "responsable de inventario" 
         $rolLider = Role::where('name', 'Lider')->first();
         return response()->json(
             $rolLider->users->map('\App\User::formatearMinimo')
         );
     }
-    
+
     /**
-     * Privadas
+     * ########################################################## PRIVADAS
      */
+
     private function _buscarProductos($peticion){
         $query = ProductoAF::with([]);
 

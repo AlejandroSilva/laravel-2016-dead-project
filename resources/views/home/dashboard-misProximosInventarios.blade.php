@@ -41,11 +41,11 @@
                             <td class="td">{{$nomina->lider? $nomina->lider->nombreCorto() : '-'}}</td>
                             <td class="td">{{$nomina->cargoUsuario}}</td>
                             <td class="tdopcion">
-                                <a class="btn btn-default btn-xs" href="/inventario/{{$nomina->inventario->idInventario}}/archivo-final" target="_blank">
+                                <a class="btn btn-default btn-xs" href="/inventario/{{$nomina->inventario->idInventario}}/archivo-final-fcv" target="_blank">
                                     acta
                                 </a>
                                 @if($nomina->inventario->actaFCV)
-                                    <a class="btn btn-primary btn-xs" href='archivo-final-inventario/{{$nomina->inventario->actaFCV->idArchivoFinalInventario}}/descargar'>ZIP</a>
+                                    <a class="btn btn-primary btn-xs" href='inventario/archivo-final/{{$nomina->inventario->actaFCV->idArchivoFinalInventario}}/descargar-fcv'>ZIP</a>
                                 @else
                                     --
                                 @endif

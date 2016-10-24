@@ -18,43 +18,30 @@ use App\Clientes;
 use App\Locales;
 
 class StockController extends Controller {
-    public function __construct() {
-        // permisos
-        $this->middleware('userCan:admin-actualizarStock')
-            ->only('show_actualizarStock', 'api_pegarDatos', 'api_subirArchivo');
-        // buscar
-        $this->middleware('buscarCliente')
-            ->only('api_pegarDatos');
-    }
-
-    /**
-     * ##########################################################
-     * VISTAS
-     */
+    /*** ########################################################## VISTAS      */
     // GET admin/actualizar-stock
-    // MW: auth, userCan:admin-actualizarStock
     function show_actualizarStock(){
+        // revisar permisos
+        if(!Auth::user()->can('administrar-stock'))
+            return view('errors.403');
+
         // permisos validados con el mw: 'userCan:admin-actualizarStock'
-        return view('admin.actualizar-stock', [
+        return view('admin.index-actualizar-stock', [
             'clientes' => Clientes::all()
         ]);
     }
 
-    /**
-     * ##########################################################
-     * API
-     */
-
+    /*** ########################################################## APIs        */
     // POST stock/pegar
-    // MW: auth, userCan:admin-actualizarStock
     function api_pegarDatos(Request $request){
-        // permisos revisados por mw "userCan:admin-actualizarStock"
+        // revisar permisos
+        if(!Auth::user()->can('administrar-stock'))
+            return response()->json([], 403);
 
         // revisar que el cliente este fijado y exista
         if(!$request->idCliente)
             return response()->json(['error' => 'Debe indicar un cliente.'], 400);
-        $idCliente = $request->idCliente;
-        $cliente = Clientes::find($idCliente);
+        $cliente = Clientes::find($request->idCliente);
         if(!$cliente)
             return response()->json(['error' => 'El cliente seleccionado no es valido.'], 400);
 
@@ -71,9 +58,10 @@ class StockController extends Controller {
     }
 
     // POST stock/upload
-    // MW: auth, userCan:admin-actualizarStock
     function api_subirArchivo(Request $request){
-        // permisos revisados por "userCan:admin-actualizarStock"
+        // revisar permisos
+        if(!Auth::user()->can('administrar-stock'))
+            return response()->json([], 403);
 
         // revisar que el cliente este fijado y exista
         if(!$request->idCliente)
@@ -117,12 +105,7 @@ class StockController extends Controller {
         );
     }
 
-    /**
-     * ##########################################################
-     * funciones privadas
-     * ##########################################################
-     */
-
+    /*** ########################################################## PRIVADAS    */
     private function actualizarLocal($cliente, $numero, $stock, $fechaStock){
         // todo: validar que el stock y la $fechaStock sean validos
 

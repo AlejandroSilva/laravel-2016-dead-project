@@ -47,13 +47,11 @@ class PersonalController extends Controller {
      * Rutas que generan vistas
      * ##########################################################
      */
-    function show_personal_index(Request $request){
-        if(!Auth::user()->can('permiso-pendiente'))
+    function show_personal_index(){
+        if(!Auth::user()->can('administrar-personal'))
             return view('errors.403');
 
-        return response()->view('operacional.personal.personal-index', [
-
-        ]);
+        return response()->view('admin.index-personal', []);
     }
 
     /**

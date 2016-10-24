@@ -51,7 +51,7 @@ class HomeController extends Controller {
             $mostrar_estadoGeneralAuditorias_fcv = true;
             $estadoGeneralAuditorias_fcv = Auditorias::estadoGeneralCliente(2);
 
-            return view('home.dashboard',[
+            return view('home.index-usuario',[
                 'usuario' => $user,
 
                 // panel "mis proximos inventarios"
@@ -74,7 +74,7 @@ class HomeController extends Controller {
                 'ega_totales' => $estadoGeneralAuditorias_fcv->totales,
             ]);
         }else{
-            return view('home.landing');
+            return view('home.index-invitado');
         }
     }
 }

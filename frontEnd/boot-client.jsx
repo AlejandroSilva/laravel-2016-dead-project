@@ -4,19 +4,19 @@ import ReactDOM from 'react-dom'
 
 // Componentes
 // DASHBOARD
-import { Dashboard } from './modulos-dashboard/Dashboard.jsx'
+import { Dashboard } from './home/Dashboard.jsx'
 // LOGISTICA
-import ProgramacionIGMensual from './components/programacionIGMensual/ProgramacionIGMensual.jsx'
-import ProgramacionIGSemanal from './components/programacionIGSemanal/ProgramacionIGSemanal.jsx'
-import ProgramacionAIMensual from './components/programacionAIMensual/ProgramacionAIMensual.jsx'
-import ProgramacionAISemanal from './components/programacionAISemanal/ProgramacionAISemanal.jsx'
-import MantenedorLocales from './components/mantenedorLocales/MantenedorLocales.jsx'
-import { NominaIG } from './components/nominaIG/nominaIG.jsx'
+import ProgramacionIGMensual from './inventarios/programacion-mensual/ProgramacionIGMensual.jsx'
+import ProgramacionIGSemanal from './inventarios/programacion-semanal/ProgramacionIGSemanal.jsx'
+import ProgramacionAIMensual from './auditorias/programacion-mensual/ProgramacionAIMensual.jsx'
+import ProgramacionAISemanal from './auditorias/programacion-semanal/ProgramacionAISemanal.jsx'
+import MantenedorLocales from './admin/mantenedorLocales/MantenedorLocales.jsx'
+import { NominaIG } from './nominas/nominaIG/nominaIG.jsx'
 // OTROS
-import { MantenedorStock } from './components/mantenedorStock/MantenedorStock.jsx'
-import { ActivoFijo } from './modulos-logistica/activoFijo/ActivoFijo.jsx'
-import { MantenedorPersonal } from './modulos-administracion/MantenedorPersonal/MantenedorPersonal.jsx'
-import { PanelDatosActa } from './archivo-final-iventario/PanelDatosActa.jsx'
+import { MantenedorStock } from './admin/mantenedorStock/MantenedorStock.jsx'
+import { ActivoFijo } from './activo-fijo/ActivoFijo.jsx'
+import { MantenedorPersonal } from './admin/MantenedorPersonal/MantenedorPersonal.jsx'
+import { PanelDatosActa } from './inventarios/archivo-final-fcv/PanelDatosActa.jsx'
 
 /** ************************************************************* **/
 /** ************************ DASHBOARD ************************** **/
@@ -34,6 +34,7 @@ if( datosActaInventarioDOM ){
     ReactDOM.render(
         <PanelDatosActa
             idInventario={window.laravelIdInventario}
+            puedeEditar={window.laravelpuedeEditar}
         />, datosActaInventarioDOM)
 }
 /** ************************************************************* **/

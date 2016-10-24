@@ -1,4 +1,4 @@
-<html>
+<html lang="es">
 <head>
     <title>SIG - @yield('title', 'Sistema Información Gerencial')</title>
     {{--<title>DEV BRANCH</title>--}}
@@ -7,7 +7,6 @@
 
     <link rel='stylesheet' href='/vendor/react-widgets/react-widgets.min.css'>
     <link rel='stylesheet' href='/vendor/fixed-data-table/fixed-data-table.css'>
-    {{--<link rel='stylesheet' href='/css/styles.css'>--}}
     <style>
         body {
             padding-top: 70px;
@@ -42,7 +41,10 @@
     </style>
 </head>
 <body>
-    @yield('hmtl-body')
+    @include('layouts.menu.menu')
+
+    @yield('body')
+
     {{-- Scroller para react-data-tables --}}
     <script src="/vendor/zinga-scroller/Animate.js"></script>
     <script src="/vendor/zinga-scroller/Scroller.js"></script>
