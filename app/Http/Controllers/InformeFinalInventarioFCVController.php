@@ -542,7 +542,8 @@ class InformeFinalInventarioFCVController extends Controller {
                 // SKU unicos
                 $acta->getSkuUnicosInventariados(false),
 
-                $acta->idInventario
+                // ID Inventario
+                //$acta->idInventario
             ];
         })->toArray();
 
