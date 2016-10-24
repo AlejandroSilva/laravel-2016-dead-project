@@ -28,41 +28,41 @@ class ExcelHelper{
 
     public static function generarWorkbook_consolidadoActas($datos){
         $cabeceras = [[
-            'Hitos importantes del proceso de inventario', '', '', '', '', '', '', '',  // 8 celdas
+            '', '', '', '', '', 'Conteo', '', '',   // 8 celdas
             'Duración', '','',                      // 3 celdas
             'Dotaciones', '',                       // 2 celdas
             'Unidades', '', '', '',                 // 4 celdas
             'Evaluaciones', '', '',                 // 3 celdas
-            'Consolidado Auditoría FCV', '', '',    // 3 celdas
+            'Tot. Aud. FCV', '', '',                // 3 celdas
             'Auditoría QF', '', '',                 // 3 celdas
-            'Auditoría Apoyo 1', '', '',            // 3 celdas
-            'Auditoría Apoyo 2', '', '',            // 3 celdas
-            'Auditoría Sup. FCV', '', '',           // 3 celdas
+            'Aud. Apoyo 1', '', '',                 // 3 celdas
+            'Aud. Apoyo 2', '', '',                 // 3 celdas
+            'Aud. Sup. FCV', '', '',                // 3 celdas
             'Correcciones Auditoría FCV a SEI', '', '', '',    // 4 celdas
             '% Error Aud.', '',                     // 2 celdas
             'Variación Grilla',                     // 1 celdas
             'Totales Inventario',                   // 3 celdas
         ], [
             // Hitos, 8
-            'Fecha Inv', 'CL', 'Local', 'Supervisor', 'Químico Farmacéutico', 'Inicio Conteo', 'Fin Conteo', 'Fin Proceso',
+            'Fecha Inv', 'CL', 'Local', 'Supervisor', 'Químico Farmacéutico', 'Inicio', 'Fin', 'Fin Proceso',
             // Duracion, 3
-            'Conteo', 'Revisión', 'Total Proceso',
+            'Conteo', 'Revisión', 'IG',
             // Dotaciones, 2
-            'Presup.', 'Efectivo',
+            'Ppto.', 'Efec.',
             // Unidades, 4
-            'Conteo', 'Teórico', 'Dif. Neto', 'Dif. ABS',
+            'Conteo', 'Mapro', 'Dif.Neto', 'Dif.ABS',
             // Evaluaciones, 3
             'Pres.', 'Sup.', 'Cont.',
             // Consolidado Auditoria FCV, 3
-            'Patente', 'Unidades', 'Ítems',
+            'PTT', 'Unids', 'Ítems',
             // auditoria qf, 3
-            'Patente', 'Unidades', 'Ítems',
+            'PTT', 'Unids', 'Ítems',
             // auditoria apoyo 1, 3
-            'Patente', 'Unidades', 'Ítems',
+            'PTT', 'Unids', 'Ítems',
             // auditoria apoyo 2, 3
-            'Patente', 'Unidades', 'Ítems',
+            'PTT', 'Unids', 'Ítems',
             // auditoria sup, 3
-            'Patente', 'Unidades', 'Ítems',
+            'PTT', 'Unids', 'Ítems',
             // Correcciones Auditoria, 4
             'Patentes', 'Ítems', 'Un. Neto', 'Un. ABS',
             // perc.error aud, 2
@@ -70,9 +70,9 @@ class ExcelHelper{
             // Variación grilla, 1
             '%',
             // Totales inventario, 3
-            'PTT Inventariadas',
-            'Items totales',
-            'SKU unicos',
+            'PTT',
+            'Items',
+            'SKU',
         ]];
 
         // SHEET 1: DATOS
@@ -82,7 +82,7 @@ class ExcelHelper{
         $sheet->fromArray($datos,  NULL, 'A3');
 
         // unir celdas de la cabecera
-        $sheet->mergeCells("A1:H1");    // hitos, 8,        A-H
+        $sheet->mergeCells("F1:G1");    // hitos, 8,        F-G
         $sheet->mergeCells("I1:K1");    // duracion, 3      I-K
         $sheet->mergeCells("L1:M1");    // dotaciones, 2    L-M
         $sheet->mergeCells("N1:Q1");    // unidades, 4      N-Q
