@@ -482,9 +482,14 @@ class ActasInventariosFCV extends Model {
         $this->save();
     }
     function getCorreccionUnidadesNetoEnAuditoria($conFormato=false){
-        return $this->_getEnteroEnMiles($this->aud6, $conFormato);
+        // el dato puede estar en dos campos distintos dependiendo de la version
+        if(isset($this->unid_neto_corregido_auditoria))
+            return $this->_getEnteroEnMiles($this->unid_neto_corregido_auditoria, $conFormato);
+        else
+            return $this->_getEnteroEnMiles($this->aud6, $conFormato);
     }
     function setCorreccionUnidadesNetoEnAuditoria($unidades){
+        $this->unid_neto_corregido_auditoria = $unidades;
         $this->aud6 = $unidades;
         $this->save();
     }

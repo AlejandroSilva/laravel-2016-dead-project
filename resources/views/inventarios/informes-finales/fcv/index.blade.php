@@ -3,9 +3,9 @@
 
 @section('body')
     <style>
-        .td-opciones .btn {
+        .btn-100 {
             width: 110px;
-            text-align: left;
+            text-align: left !important;
         }
         .texto-centrado{
             text-align: center;
@@ -106,12 +106,15 @@
                                     <td>{{ $inv->local->nombre }}</td>
                                     <td class="td-opciones">
                                         @if($inv->actaFCV && $datosDisponibles==true)
-                                            <a class="btn btn-primary btn-xs" href='/inventario/archivo-final/{{$inv->actaFCV->idArchivoFinalInventario}}/descargar-fcv'>
+                                            <a class="btn btn-primary btn-xs btn-100" href='/inventario/archivo-final/{{$inv->actaFCV->idArchivoFinalInventario}}/descargar-fcv'>
                                                 <span class="glyphicon glyphicon-download-alt"></span>
                                                 Descargar ZIP
                                             </a>
+                                            <a class="btn btn-default btn-xs" href='/inventario/{{$inv->idInventario}}/archivo-final-fcv'>
+                                                acta
+                                            </a>
                                         @else
-                                            <a class="btn btn-success btn-xs" href='/inventario/{{$inv->idInventario}}/archivo-final-fcv'>
+                                            <a class="btn btn-success btn-xs btn-100" href='/inventario/{{$inv->idInventario}}/archivo-final-fcv'>
                                                 <span class="glyphicon glyphicon-plus"></span>
                                                 Agregar
                                             </a>

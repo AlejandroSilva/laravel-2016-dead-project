@@ -397,7 +397,7 @@ const PanelBody = ({acta, editar}, ctx)=>
                                     actualizarActa={ctx.actualizarActa.bind(this, 'correccionItems')}/>
                         </div>
                         <div className={cx('tr-datos')}>
-                            <p className={cx('td-label')} title="en acta: 'aud6'">Correccion Unidades Neto</p>
+                            <p className={cx('td-label')} title="en acta: 'Unidades Neto corregido Auditoria' o 'aud6'">Correccion Unidades Neto</p>
                             <Numero editarCampo={editar} valor={acta.correccionUnidadesNeto}
                                     actualizarActa={ctx.actualizarActa.bind(this, 'correccionUnidadesNeto')}/>
                         </div>

@@ -74,7 +74,7 @@
                         <td colspan="2">Actas de Octubre</td>
                         <td colspan="8"></td>
                         <td>
-                            <a class="btn btn-primary btn-xs btn-block" href="/inventarios/descargar-consolidado-fcv?fechaInicio=2016-10-01&fechaFin=2016-10-31">Descargar</a>
+                            <a class="btn btn-primary btn-xs btn-block" href="/inventarios/descargar-consolidado-fcv?fechaInicio=2016-10-01&fechaFin=2016-10-31&orden=desc">Descargar</a>
                         </td>
                     </tr>
                     {{-- Mes anterior --}}
@@ -82,7 +82,7 @@
                         <td colspan="2">Actas de Septiembre</td>
                         <td colspan="8"></td>
                         <td>
-                            <a class="btn btn-primary btn-xs btn-block" href="/inventarios/descargar-consolidado-fcv?fechaInicio=2016-09-01&fechaFin=2016-09-30">Descargar</a>
+                            <a class="btn btn-primary btn-xs btn-block" href="/inventarios/descargar-consolidado-fcv?fechaInicio=2016-09-01&fechaFin=2016-09-30&orden=desc">Descargar</a>
                         </td>
                     </tr>
                 {{-- 2016 --}}
@@ -90,7 +90,7 @@
                         <td colspan="2">Actas de 2016</td>
                         <td colspan="8"></td>
                         <td>
-                            <a class="btn btn-primary btn-xs btn-block" href="/inventarios/descargar-consolidado-fcv?fechaInicio=2016-05-01">Descargar</a>
+                            <a class="btn btn-primary btn-xs btn-block" href="/inventarios/descargar-consolidado-fcv?fechaInicio=2016-05-01&orden=desc">Descargar</a>
                         </td>
                     </tr>
                 </tbody>
