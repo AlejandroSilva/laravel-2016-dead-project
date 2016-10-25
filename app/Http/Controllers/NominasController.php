@@ -414,11 +414,11 @@ class NominasController extends Controller {
             if($nomina->tieneDotacionCompleta())
                 return response()->json('Ha alcanzado el maximo de dotacion', 400);
             // No hay problemas en este punto, agregar usuario y retornar la dotacion
-            $nomina->dotacion()->save($operador, ['titular'=>true]);
+            $nomina->dotacion()->save($operador, ['titular'=>true, 'idRoleAsignado'=>17]);
         }else{
             // No existe restriccion a cuantos operadores de reemplazo pueden haber
             // No hay problemas en este punto, agregar usuario y retornar la dotacion
-            $nomina->dotacion()->save($operador, ['titular'=>false]);
+            $nomina->dotacion()->save($operador, ['titular'=>false, 'idRoleAsignado'=>17]);
         }
         // se debe actualizar la dotacion antes de imprimirla
         return response()->json(
