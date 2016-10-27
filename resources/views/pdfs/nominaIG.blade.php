@@ -1,7 +1,13 @@
-{{--layout/twocolumns--}}
-@extends('layouts.root')
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Nomina</title>
+    <link rel='stylesheet' href='/vendor/bootstrap/bootstrap.min.css'>
 
-@section('hmtl-body')
     <style>
         .panelHeading_compacto {
             padding-top: 2px !important;
@@ -50,6 +56,8 @@
             max-width: 85px !important;
         }
     </style>
+</head>
+<body>
     <div class='container'>
         <div class="row">
             <div class="col-xs-12">
@@ -115,7 +123,6 @@
         <div class="row">
             {{-- Dotacion --}}
             <div class="col-xs-8">
-
                 {{--Dotacion titular--}}
                 <div class="panel panel-primary">
                     <div class="panel-heading panelHeading_compacto">Personal Asignado</div>
@@ -189,8 +196,8 @@
                         </table>
                     </div>
                 @endif
-
             </div>
+
             {{-- Imagen Lider --}}
             @if( isset($lider) )
                 @if( $lider->imagenPerfil!='' )
@@ -205,4 +212,5 @@
             @endif
         </div>
     </div>
-@stop
+</body>
+</html>
