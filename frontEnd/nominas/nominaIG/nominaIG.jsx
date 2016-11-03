@@ -247,7 +247,7 @@ export class NominaIG extends React.Component {
                         captadorSEI={this.state.nomina.captadorSEI}
                         lider={this.state.nomina.lider}
                         supervisor={this.state.nomina.supervisor}
-                        maximoOperadores={this.state.nomina.dotacionTotal}
+                        maximoOperadores={this.state.nomina.dotacionOperadores}
 
                         // permisos (solo puede editar si esta pendente, y es un captador asignado o es un "captador SEI"
                         editarLiderSupervisor={nominaPendiente && this.props.permisos.cambiarLiderSupervisor}
