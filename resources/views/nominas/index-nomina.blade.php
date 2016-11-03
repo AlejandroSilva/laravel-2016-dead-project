@@ -2,6 +2,9 @@
 {{--@section('title', '')--}}
 
 @section('body')
+
+    @include('inventarios.header-inventario')
+
     {{-- aca se montara el component 'TablaAuditoriasPendientes' de React --}}
     <div id="react-nominaIG-nominaIG">
         <p>Cargando, espere unos segundos</p>

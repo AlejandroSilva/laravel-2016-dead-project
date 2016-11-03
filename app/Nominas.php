@@ -4,9 +4,9 @@ use Crypt;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 // Modelos
-use App\DiasHabiles;
-use App\EstadoNominas;
-use App\NominaLog;
+//use App\DiasHabiles;
+//use App\EstadoNominas;
+//use App\NominaLog;
 
 class Nominas extends Model {
     // llave primaria
@@ -45,7 +45,7 @@ class Nominas extends Model {
         // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
         return $this->belongsToMany('App\User', 'nominas_user', 'idNomina', 'idUser')
             ->withTimestamps()
-            ->withPivot('titular', 'idRoleAsignado');
+            ->withPivot('titular', 'idRoleAsignado', 'idCaptador');
 //            ->join('roles', 'idRoleAsignado', '=', 'roles.id');
 //            ->select('drink_id', 'customer_id', 'pivot_customer_got_drink', 'chair.name AS pivot_chair_name');
     }
@@ -78,8 +78,8 @@ class Nominas extends Model {
             ->where('titular', false)
             ->orderBy('nominas_user.created_at', 'asc');
     }
-    function usuarioEnDotacion($operador){
-        return $this->dotacion()->find($operador->id);
+    function usuarioEnDotacion($idOperador){
+        return $this->dotacion()->find($idOperador);
     }
     function tieneDotacionCompleta(){
         $supervisor = $this->supervisor? 1 : 0;
@@ -91,6 +91,9 @@ class Nominas extends Model {
         // 6 - Informada con Excel (plataforma antigua)
         return $this->idEstadoNomina==5 || $this->idEstadoNomina==6;
     }
+    function estaDisponible(){
+        return $this->idEstadoNomina==2;
+    }
 
     // #### Acciones
     function addLog($titulo, $texto, $importancia=1){
@@ -101,6 +104,11 @@ class Nominas extends Model {
             'importancia' => $importancia,
             'mostrarAlerta' => false
         ]) );
+    }
+    function agregarCaptador($captador, $operadoresAsignados=0){
+        $this->captadores()->save($captador, [
+            'operadoresAsignados'=>$operadoresAsignados
+        ]);
     }
 
     // ####  Getters
@@ -170,6 +178,58 @@ class Nominas extends Model {
         return $lideres;
     }
 
+    function getOperadoresCaptadorSEI(){
+        $captador = $this->captadores->find(1);
+        // si el captador es "Captador SEI", tambien debe tener/mostrar todos los operadores de los otros captadores
+        // esto es importante, para no tener "captadores huerfanos" en caso de que se elimine un captador y este tenga
+        // operadores agregados.
+        $operadoresTitulares = $this
+            ->dotacionTitular
+            ->map(function($operador){
+                $captador = User::find($operador->pivot->idCaptador);
+                return User::formatoPanelNomina($operador, $captador->nombreCorto());
+            })->all();
+        $operadoresReemplazo = $this
+            ->dotacionReemplazo
+            ->map(function($operador){
+                $captador = User::find($operador->pivot->idCaptador);
+                return User::formatoPanelNomina($operador, $captador->nombreCorto());
+            })->all();
+
+        return [
+            'idCaptador' => $captador->id,
+            'nombre' => $captador->nombreCorto(),
+            'operadoresAsignados' => $captador->pivot->operadoresAsignados,
+            'dotacionTitular' => array_values($operadoresTitulares),
+            'dotacionReemplazo' => array_values($operadoresReemplazo),
+        ];
+    }
+    function getOperadoresCaptador($captador){
+        $operadoresTitulares = $this
+            ->dotacionTitular
+            ->where('pivot.idCaptador', $captador->id)
+            ->map(function($operador){
+                $captador = User::find($operador->pivot->idCaptador);
+                return User::formatoPanelNomina($operador, $captador->nombreCorto());
+            })->all();
+        $operadoresReemplazo = $this
+            ->dotacionReemplazo
+            ->where('pivot.idCaptador', $captador->id)
+            ->map(function($operador){
+                $captador = User::find($operador->pivot->idCaptador);
+                return User::formatoPanelNomina($operador, $captador->nombreCorto());
+            })->all();
+
+        return [
+            'idCaptador' => $captador->id,
+            'nombre' => $captador->nombreCorto(),
+            'operadoresAsignados' => $captador->pivot->operadoresAsignados,
+            'totalOperadoresAgregados' => sizeof($operadoresTitulares),
+            'dotacionTitular' => array_values($operadoresTitulares),
+            'dotacionReemplazo' => array_values($operadoresReemplazo),
+        ];
+    }
+
     // ####  Setters
     // Utilizar este metodo para cambiar la dotacion (si la dotacion cambia, agregar un registro Log al historia
     function set_dotacionTotal($total){
@@ -203,6 +263,7 @@ class Nominas extends Model {
         }
     }
 
+
     // #### Formatear respuestas
     static function formatearSimple($nomina){
         return [
@@ -225,15 +286,28 @@ class Nominas extends Model {
         ];
     }
 
-    // utilizado por: NominasController@
+    // utilizado por: NominasController@ para mostrarse en NominaIG.jsx
     static function formatoPanelNomina($nomina){
+        $captadorSEI = $nomina->getOperadoresCaptadorSEI();
+
+        $captadores = $nomina
+            ->captadores
+            // no incluir el "Captador SEI"
+            ->filter(function($captador){
+                return $captador->id!==1;
+            })
+            ->map(function($captador) use($nomina){
+                return $nomina->getOperadoresCaptador($captador);
+            })
+            ->all();
+
         return [
             'idNomina' => $nomina->idNomina,
             'idNominaPublica' => $nomina->getPublicId(),
             'idEstadoNomina' => $nomina->estado->idEstadoNomina,
             "rectificada" => $nomina->rectificada,
-            'lider' => User::formatoPanelNomina($nomina->lider),
-            'supervisor' => User::formatoPanelNomina($nomina->supervisor),
+            'lider' => User::formatoPanelNomina($nomina->lider, '-'),
+            'supervisor' => User::formatoPanelNomina($nomina->supervisor, '-'),
             'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatoPanelNomina'),
             'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatoPanelNomina'),
             'nominaCompleta' => 'calculo pendiente',
@@ -258,6 +332,10 @@ class Nominas extends Model {
             'local_telefono2' => $nomina->inventario->local->telefono2,
             'local_emailContacto' => $nomina->inventario->local->emailContacto,
             'local_formato' => $nomina->inventario->local->formatoLocal->nombre,
+            'fechaLimiteCaptador' => $nomina->fechaLimiteCaptador,
+            // captadores
+            'captadorSEI' => $captadorSEI,
+            'captadores' => array_values($captadores)
         ];
     }
     // utilizado por: NominasController@api_buscar
@@ -358,6 +436,20 @@ class Nominas extends Model {
                 });
         }
 
+        // Buscar por Captador
+        if (isset($peticion->idCaptador)) {
+            $idCaptador = $peticion->idCaptador;
+            $query
+                ->where(function ($q) use ($idCaptador) {
+                    $q
+                        ->whereHas('captadores', function ($qq) use ($idCaptador) {
+                            // captadores = tabla 'nominas_captadores'
+                            // $this->captadores()->find($captador->id);
+                            $qq->where('idCaptador', $idCaptador);
+                        });
+                });
+        }
+
         // Buscar por Fecha de Inicio
         if (isset($peticion->fechaInicio)) {
             $fechaInicio = $peticion->fechaInicio;
@@ -388,5 +480,21 @@ class Nominas extends Model {
 
         // los resultados se deben ordenar en el metodo controlador que lo llame
         return $query->get();
+    }
+
+    static function normalizarCaptadores(){
+        $captadorSEI = User::find(1);
+
+        Nominas::all()->each(function($nomina) use($captadorSEI){
+            // si tiene a bernardita, quitarla
+            if($nomina->captadores()->find(8))
+                $nomina->captadores()->detach(8);
+
+            // si no tiene a CAPTADOR SEI, agregarlo
+            if(!$nomina->captadores()->find(1))
+                $nomina->captadores()->save($captadorSEI, ['operadoresAsignados'=>0]);
+        });
+
+        return "finalizado";
     }
 }

@@ -1,0 +1,83 @@
+.panelHeading_compacto {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+
+/* ############# Dotación Seleccionada #############*/
+.tablaDotacion {
+    table-layout: fixed;
+    font-size: 12px;
+}
+.tablaDotacion td {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+/* Correlativo */
+.colCorrelativo{
+    width: 25px;
+}
+
+/* Usuario RUN */
+.colUsuarioRUN {
+    width: 60px;
+}
+.tdUsuarioRUN {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.tdUsuarioRUN > input {
+    width: 100%;
+}
+
+/* Usuario DV*/
+.colUsuarioDV {
+    width: 25px;
+}
+.thUsuarioDV {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+}
+.tdUsuarioDV {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.tdUsuarioDV > input {
+    width: 100%;
+    text-align: center;
+}
+
+/* Nombre */
+.colNombre {
+    width: 170px;
+}
+.tdNombre {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.tdNombre > input {
+    width: 100%;
+}
+
+/* Cargo */
+.colCargo {
+    width: 65px;
+}
+/* Captador */
+.colCaptador {
+    width: 100px;
+}
+
+/* Experiencia */
+.colExperiencia {
+    width: 120px;
+}
+
+/* Opciones */
+.colOpciones {
+    width: auto;
+}
+
+/* Imagen de perfil */
+.imgCentrada {
+    margin: 0 auto;
+}

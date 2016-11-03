@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -141,6 +142,8 @@ class InventariosController extends Controller {
             $nominaDia->turno = 'Día';
             $nominaDia->fechaLimiteCaptador = Inventarios::calcularFechaLimiteCaptador($request->fechaProgramada);
             $nominaDia->save();
+            // se asigna el "Captador SEI" por defecto" a la nueva nomina
+            $nominaDia->agregarCaptador(User::find(1), 0);
 
             $nominaNoche = new Nominas();
             // Lider, Captador1, Captador2 no se definen
@@ -155,6 +158,8 @@ class InventariosController extends Controller {
             $nominaNoche->turno = 'Noche';
             $nominaNoche->fechaLimiteCaptador = Inventarios::calcularFechaLimiteCaptador($request->fechaProgramada);
             $nominaNoche->save();
+            // se asigna el "Captador SEI" por defecto" a la nueva nomina
+            $nominaNoche->agregarCaptador(User::find(1), 0);
 
             $inventario->nominaDia()->associate($nominaDia);
             $inventario->nominaNoche()->associate($nominaNoche);

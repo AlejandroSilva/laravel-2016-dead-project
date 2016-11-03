@@ -2,11 +2,15 @@
 import React from 'react'
 let PropTypes = React.PropTypes
 // Componentes
-import * as css from './PanelDotaciones.css'
+import * as css from './PanelCaptador.css'
 import { InputRun } from '../../shared/input/InputRun.jsx'
 // Validador Rut
 
 export class RowOperador extends React.Component {
+    onPressEnter(run){
+        this.ref_usuarioDV.value = ''
+        this.props.agregarUsuario(run)
+    }
     onRUNChange(usuarioRUN, usuarioDV){
         // a medida que escriben el rut, se ira actualizando el DV
         this.ref_usuarioDV.value = usuarioDV
@@ -30,12 +34,15 @@ export class RowOperador extends React.Component {
                         {this.props.cargo}
                     </td>
                     <td>
-                        {`Lid: ${this.props.personal.experienciaComoLider}, Sup: ${this.props.personal.experienciaComoSupervisor}, Ope: ${this.props.personal.experienciaComoOperador}`}
+                        {this.props.personal.captador}
+                    </td>
+                    <td>
+                        {`Lid:${this.props.personal.experienciaComoLider} Sup:${this.props.personal.experienciaComoSupervisor} Ope:${this.props.personal.experienciaComoOperador}`}
                     </td>
                     <td>
                         {this.props.editable ?
                             <button className="btn btn-xs btn-warning"
-                                    onClick={()=>{ this.props.quitarUsuario(this.props.personal.usuarioRUN) }}
+                                    onClick={()=>{ this.props.quitarUsuario(this.props.personal.id) }}
                             >Quitar</button>
                             :
                             null
@@ -51,7 +58,7 @@ export class RowOperador extends React.Component {
                     <td className={css.tdUsuarioRUN}>
                         {this.props.editable ?
                             <InputRun key={1}
-                                onPressEnter={this.props.agregarUsuario}
+                                onPressEnter={this.onPressEnter.bind(this)}
                                 onRUNChange={this.onRUNChange.bind(this)}
                             />
                             :
@@ -66,6 +73,9 @@ export class RowOperador extends React.Component {
                     </td>
                     <td>
                         {this.props.cargo}
+                    </td>
+                    <td>
+                        {/* Captador */}
                     </td>
                     <td>
                         {/* experiencia */}
@@ -86,5 +96,4 @@ RowOperador.propTypes = {
     cargo: PropTypes.string,
     agregarUsuario: PropTypes.func.isRequired,
     quitarUsuario: PropTypes.func.isRequired
-    // comunas: PropTypes.arrayOf(PropTypes.object).isRequired
 }

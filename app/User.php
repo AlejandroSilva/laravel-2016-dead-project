@@ -35,13 +35,13 @@ class User extends Authenticatable {
         // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
         return $this->belongsToMany('App\Nominas', 'nominas_captadores', 'idCaptador', 'idNomina')
             ->withTimestamps()
-            ->withPivot('titular', 'idRoleAsignado');
+            ->withPivot('titular', 'idRoleAsignado', 'idCaptador');
     }
     function __nominasComoOperador__sin_uso__(){
         // la relacion entre las dos tablas tiene timestamps (para ordenar), y otros campos
         return $this->belongsToMany('App\Nominas', 'nominas_user', 'idUser', 'idNomina')
             ->withTimestamps()
-            ->withPivot('titular', 'idRoleAsignado');
+            ->withPivot('titular', 'idRoleAsignado', 'idCaptador');
     }
 
     // #### Helpers
@@ -142,8 +142,10 @@ class User extends Authenticatable {
 
     // #### Formatear respuestas
     // usado por Nominas::formatoPanelNomina
-    static function formatoPanelNomina($user){
-        if(!$user) return null;
+    static function formatoPanelNomina($user, $captador){
+        if(!$user)
+            return null;
+
         $experiencia = $user->experiencia();
         return [
             'id' => $user->id,
@@ -153,7 +155,8 @@ class User extends Authenticatable {
             'imagenPerfil' => $user->imagenPerfil,
             'experienciaComoLider' => $experiencia->comoLider,
             'experienciaComoSupervisor' => $experiencia->comoSupervisor,
-            'experienciaComoOperador' => $experiencia->comoOperador
+            'experienciaComoOperador' => $experiencia->comoOperador,
+            'captador' => $captador
         ];
     }
 

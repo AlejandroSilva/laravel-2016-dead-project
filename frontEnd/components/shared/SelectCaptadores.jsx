@@ -88,7 +88,7 @@ class Captador extends React.Component {
         // Metodos del menu de opciones
         this.__onClickHandler__ = (evt)=>{
             // detecta cuando se hace un click fuera de este componente, cuando eso pasa y el menu es visible, lo oculta
-            let clickAfuera = !this.node.contains(evt.target) && !this.nodeTrigger.contains(evt.target)
+            let clickAfuera = !this.node.contains(evt.target) && (this.nodeTrigger && !this.nodeTrigger.contains(evt.target))
             if(clickAfuera && this.state.optionsVisible)
                 this._hideMenu()
         }

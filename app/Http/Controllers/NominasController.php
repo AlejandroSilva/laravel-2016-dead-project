@@ -20,7 +20,14 @@ use App\Nominas;
 use App\Role;
 use App\User;
 
+use App\Services\NominaService;
+
 class NominasController extends Controller {
+//    public function __construct(/*\NominasService $nominasService*/){
+//        parent::__construct();
+//        //$this->nominasService = $nominasService;
+//    }
+
     /**
      * ##########################################################
      * Rutas que generan vistas
@@ -46,22 +53,27 @@ class NominasController extends Controller {
             ]);
         }
 
-        // el usuario tiene los permisos para ver las nominas, O es el captador asignado?
-        // TODO: esto esta mal, idCaptador1 y idCaptador2 ya no corren
-        $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
-        if(!$esElCaptadorAsignado && !$user->can('nominas-verTodas'))
+        $verTodas = $user->can('nominas-verTodas');
+        $editarTodas = $user->can('nominas-cambiarCualquierDotacion');
+        $captadorPivot = $nomina->captadores()->find($user->id);
+        $usuario_idCaptador = $captadorPivot? $captadorPivot->pivot->idCaptador : null;
+        // el usuario tiene los permisos para ver la nominas? (es uno de los captadores asignados, o tiene permisos para ver todo)
+        if(!$usuario_idCaptador && !$verTodas)
             return view('errors.403');
 
-
         return view('nominas.index-nomina', [
+            'inventario' => $nomina->inventario,        // utilizado en el header
             'nomina' => Nominas::formatoPanelNomina($nomina),
             'comunas' => Comunas::all(),
             'permisos' => [
+                // todo: agregar al permiso, el checkeo si la nomina esta completa?
                 // para poder enviar debe tener los permisos, O ser el captador asociado (ambos no son necesarios)
-                'cambiarLider' => $user->can('inventarios-cambiarLiderSupervisorCaptador'),
-                'cambiarSupervisor' => $user->can('inventarios-cambiarLiderSupervisorCaptador'),
-                'cambiarDotacion' => $user->can('nominas-cambiarCualquierDotacion') || $esElCaptadorAsignado,
-                'enviar' => $user->can('nominas-enviar') || $esElCaptadorAsignado,
+                'cambiarLiderSupervisor' => $user->can('inventarios-cambiarLiderSupervisorCaptador'),
+                'verTodasNominas' =>  $verTodas,
+                'editarTodasNominas' =>  $editarTodas,
+                'editarIdCaptador' =>  $usuario_idCaptador,
+
+                'enviar' => $user->can('nominas-enviar'),
                 'aprobar' => $user->can('nominas-aprobar'),
                 'informar' => $user->can('nominas-informar'),
                 'rectificar' => $user->can('nominas-rectificar')
@@ -80,6 +92,7 @@ class NominasController extends Controller {
                 'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
             ]);
         }
+
         return view('pdfs.nominaIG', [
             'nomina' => $nomina,
             'inventario' => $nomina->inventario,
@@ -172,9 +185,8 @@ class NominasController extends Controller {
         }
     }
 
-    // -- cambios en la dotacion de las nominas
-    // GET api/nomina/{idNomina}/dotacion
-    function api_get($idNomina){
+    // GET api/nomina/{idNomina}
+    function api_getNomina($idNomina){
         $nomina = Nominas::find($idNomina);
         return $nomina?
             response()->json(Nominas::formatoPanelNomina($nomina))
@@ -198,262 +210,120 @@ class NominasController extends Controller {
     }
 
     // POST api/nomina/{idNomina}/lider/{usuarioRUN}
-    function api_agregarLider($idNomina, $usuarioRUN){
+    function api_agregarLider(NominaService $nominaService, $idNomina, $usuarioRUN){
         // Revisar que el usuario tenga los permisos para cambiar el lider
         $user = Auth::user();
-        if(!$user || !$user->can('inventarios-cambiarLiderSupervisorCaptador'))
-            return response()->json(['error'=>'No tiene permisos para cambiar un Lider.'], 403);
-
-        // la nomina existe?
+        $lider = User::where('usuarioRUN', $usuarioRUN)->first();
         $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
-        // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=2)
-            return response()->json(['idNomina'=>'Para asignar el Lider, la nómina debe estar Pendiente'], 400);
-        // el usuario existe? es un lider?
-        $usuario = User::where('usuarioRUN', $usuarioRUN)->first();
-        if(!$usuario)
-            return response()->json(['usuarioRUN'=>'Usuario no encontrado'], 404);
-        if(!$usuario->hasRole('Lider'))
-            return response()->json(['usuarioRUN'=>'El usuario no es un Lider'], 400);
-        // se agrega el lider y se actualiza la dotacion
-        $nomina->idLider = $usuario->id;
-        $nomina->save();
-        // entregar nomina actualizada
-        return response()->json(
-            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 201
-        );
+
+        $res = $nominaService->agregarLider($user, $nomina, $lider);
+        if(isset($res->error))
+            return response()->json($res->error, 400);
+        else
+            return response()->json(Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200);  // nomina actualizada
     }
     // DELETE api/nomina/{idNomina}/lider
-    function api_quitarLider($idNomina){
-        // Revisar que el usuario tenga los permisos para cambiar el lider
+    function api_quitarLider(NominaService $nominaService, $idNomina){
         $user = Auth::user();
-        if(!$user || !$user->can('inventarios-cambiarLiderSupervisorCaptador'))
-            return response()->json(['error'=>'No tiene permisos para cambiar un Lider.'], 403);
-
-        // la nomina existe?
         $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
-        // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=2)
-            return response()->json(['idNomina'=>'Para quitar el Lider, la nómina debe estar Pendiente'], 400);
-        // quitar el lider
-        $nomina->idLider = null;
-        $nomina->save();
-        // entregar nomina actualizada
-        return response()->json(
-            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 201
-        );
+
+        // quitar el lider de la nomina
+        $res = $nominaService->quitarLider($user, $nomina);
+        return isset($res->error)?
+            response()->json($res->error, $res->codigo)
+            :
+            response()->json(Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200);  // nomina actualizada
     }
     // POST api/nomina/{idNomina}/supervisor/{usuarioRUN}
-    function api_agregarSupervisor($idNomina, $usuarioRUN){
-        // solo el captador asociado Y las personas que tengan permiso pueden modificar al supervisor
-        // Todo: falta considerar al captador asociado a la nomina
+    function api_agregarSupervisor(NominaService $nominaService, $idNomina, $usuarioRUN){
         $user = Auth::user();
-        if(!$user || !$user->can('inventarios-cambiarLiderSupervisorCaptador'))
-            return response()->json(['error'=>'No tiene permisos para cambiar un Supervisor.'], 403);
-
-        // la nomina existe?
         $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
-        // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=2)
-            return response()->json(['idNomina'=>'Para quitar el supervisor, la nómina debe estar Pendiente'], 400);
-        // el usuario existe? es un lider?
-        $usuario = User::where('usuarioRUN', $usuarioRUN)->first();
-        if(!$usuario)
-            return response()->json(['usuarioRUN'=>'Usuario no encontrado'], 404);
-        if(!$usuario->hasRole('Supervisor'))
-            return response()->json(['usuarioRUN'=>'El usuario no es un Supervisor'], 400);
+        $supervisor = User::where('usuarioRUN', $usuarioRUN)->first();
 
-        // se agrega el lider y se actualiza la dotacion
-        $nomina->idSupervisor = $usuario->id;
-        $nomina->save();
-        // entregar nomina actualizada
-        return response()->json(
-            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 201
-        );
+        // seleccionar usuario como supervisor, solo si este existe
+        $res = $nominaService->agregarSupervisor($user, $nomina, $supervisor);
+        return isset($res->error)?
+            response()->json($res->error, 400)
+            :
+            response()->json(Nominas::formatoPanelNomina( Nominas::find($idNomina) ));  // nomina actualizada
     }
     // DELETE api/nomina/{idNomina}/supervisor
-    function api_quitarSupervisor($idNomina){
-        // solo el captador asociado Y las personas que tengan permiso pueden modificar al supervisor
-        // Todo: falta considerar al captador asociado a la nomina
+    function api_quitarSupervisor(NominaService $nominaService, $idNomina){
         $user = Auth::user();
-        if(!$user || !$user->can('inventarios-cambiarLiderSupervisorCaptador'))
-            return response()->json(['error'=>'No tiene permisos para cambiar un Supervisor.'], 403);
-
-        // la nomina existe?
         $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json(['idNomina'=>'Nomina no encontrada'], 404);
-        // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=2)
-            return response()->json(['idNomina'=>'Para quitar el supervisor, la nómina debe estar Pendiente'], 400);
-        // quitar el lider
-        $nomina->idSupervisor = null;
-        $nomina->save();
-        // entregar nomina actualizada
-        return response()->json(
-            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200
-        );
+
+        $res = $nominaService->quitarSupervisor($user, $nomina);
+        return isset($res->error)?
+            response()->json($res->error, $res->codigo)
+            :
+            response()->json( Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ) ); // entregar nomina actualizada
     }
-
     // POST nomina/{idNomina}/captador/{idUsuario}
-    function api_agregarCaptador($idNomina, $idUsuario){
-        // todo revisar que tenga permisos
-
-        // la nomina existe?
+    function api_agregarCaptador(NominaService $nominaService, $idNomina, $idUsuario){
+        $user = Auth::user();
         $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json(['idNomina'=>'La nomina no existe'], 400);
+        $captador = User::find($idUsuario);
 
-        // el usuario existe?
-        $user = User::find($idUsuario);
-        if(!$user)
-            return response()->json(['idUsuario'=>'El usuario no existe'], 400);
-
-        // todo, revisar que sea un captador
-
-        // revisar que no haya sido agregado anteriormente
-        $captadorAgregadoPreviamente = $nomina->captadores()->find($idUsuario);
-        if($captadorAgregadoPreviamente)
-            return response()->json(['idUsuario'=>'El captador ya esta asignado a la nomina'], 400);
-
-        // agregar el captador, por defecto se deja asignado 0 operadores
-        $nomina->captadores()->save($user, ['operadoresAsignados'=>0]);
-        return response()->json(
-            Inventarios::formato_programacionIGSemanal($nomina->inventario)
-        );
+        $res = $nominaService->agregarCaptador($user, $nomina, $captador);
+        return isset($res->error)?
+            response()->json($res->error, $res->codigo)
+            :
+            response()->json(Inventarios::formato_programacionIGSemanal($nomina->inventario), 200);
     }
     // DELETE 'nomina/{idNomina}/captador/{idUsuario}
-    function api_quitarCaptador($idNomina, $idUsuario){
-        // todo, revisar que tenga permisos
-
-        // la nomina existe?
+    function api_quitarCaptador(NominaService $nominaService, $idNomina, $idUsuario){
+        $user = Auth::user();
         $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json(['idNomina'=>'La nomina no existe'], 400);
+        $captador = User::find($idUsuario);
 
-        // el usuario existe?
-        $user = User::find($idUsuario);
-        if(!$user)
-            return response()->json(['idUsuario'=>'El usuario no existe'], 400);
-
-        $nomina->captadores()->detach($idUsuario);
-
-        return response()->json(Inventarios::formato_programacionIGSemanal($nomina->inventario), 200);
+        $res = $nominaService->quitarCaptador($user, $nomina, $captador);
+        return isset($res->error)?
+            response()->json($res->error, $res->codigo)
+            :
+            response()->json(Inventarios::formato_programacionIGSemanal($nomina->inventario), 200);
     }
-    // PUT nomina/{idNomina}/captador/{idUsuario}
-    function api_cambiarAsignadosDeCaptador($idNomina, $idUsuario, Request $request){
-        // todo, revisar que tenga permisos
-
-        // la nomina existe?
+    // PUT nomina/{idNomina}/captador/{idCaptador}
+    function api_cambiarAsignadosDeCaptador(NominaService $nominaService, $idNomina, $idCaptador, Request $request){
+        $user = Auth::user();
         $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json(['idNomina'=>'La nomina no existe'], 400);
+        $captador = User::find($idCaptador);
 
-        // el usuario existe?
-        $user = User::find($idUsuario);
-        if(!$user)
-            return response()->json(['idUsuario'=>'El usuario no existe'], 400);
-
-        // todo validar el numero
-
-        $operadorNomina = $nomina->captadores()->find($idUsuario);
-        $operadorNomina->pivot->operadoresAsignados  = $request->asignados;
-        $operadorNomina->pivot->save();
-
-        // buscar inventario actualizado
-        $inventarioActualizado = Inventarios::find($nomina->inventario->idInventario);
-        return response()->json(
-            Inventarios::formato_programacionIGSemanal($inventarioActualizado)
-        );
+        $res = $nominaService->cambiarAsignadosDeCaptador($user, $nomina, $captador, $request->asignados);
+        return isset($res->error)?
+            response()->json($res->error, $res->codigo)
+            :
+            response()->json(Inventarios::formato_programacionIGSemanal( Inventarios::find($nomina->inventario->idInventario) ));
     }
 
     // POST api/nomina/{idNomina}/operador/{usuarioRUN}
-    function api_agregarOperador($idNomina, $usuarioRUN, Request $request){
-        // el usuario tiene permisos?
+    function api_agregarOperador(NominaService $nominaService, $idNomina, $usuarioRUN, Request $request){
         $user = Auth::user();
-        if(!$user)
-            return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
-
-        // la nomina existe?
         $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json('Nomina no encontrada', 404);
-
-        // puede hacer el cambio? (tiene los permisos O es el captador asignado)
-        $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
-        if(!$esElCaptadorAsignado && !$user->can('nominas-cambiarCualquierDotacion'))
-            return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
-
-        // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=2)
-            return response()->json(['idNomina'=>'Para agregar el usuario, la nómina debe estar Pendiente'], 400);
-
-        // el operador existe? se entrega un 204 y en el frontend se muestra un formulario
+        // existe un operador con ese rut? (si se entrega un 204 y el frontend muestra un formulario de creacion)
         $operador = User::where('usuarioRUN', $usuarioRUN)->first();
         if(!$operador)
-            return response()->json('', 204);
+            return response()->json(['usuarioRUN'=>'No existe ningun usuario con ese RUN'], 204);
 
-        // el operador esta bloqueado de participar?
-        if( $operador->bloqueado==true )
-            return response()->json(['error'=>'El usuario esta bloqueado, no puede participar de inventarios'], 400);
-
-        // Si el operador ya esta en la nomina, no hacer nada y devolver la lista como esta
-        $operadorExiste = $nomina->usuarioEnDotacion($operador);
-        if($operadorExiste)
-            return response()->json(
-                Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 200);
-
-        // Si es titular, ver si la dotacion esta completa
-        if($request->esTitular==true){
-            if($nomina->tieneDotacionCompleta())
-                return response()->json('Ha alcanzado el maximo de dotacion', 400);
-            // No hay problemas en este punto, agregar usuario y retornar la dotacion
-            $nomina->dotacion()->save($operador, ['titular'=>true, 'idRoleAsignado'=>17]);
-        }else{
-            // No existe restriccion a cuantos operadores de reemplazo pueden haber
-            // No hay problemas en este punto, agregar usuario y retornar la dotacion
-            $nomina->dotacion()->save($operador, ['titular'=>false, 'idRoleAsignado'=>17]);
-        }
-        // se debe actualizar la dotacion antes de imprimirla
-        return response()->json(
-            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 201
-        );
+        // Agregar el operador a la nomina
+        $res = $nominaService->agregarOperador($user, $nomina, $operador, $request->esTitular, $request->idCaptador);
+        return isset($res->error)?
+            response()->json($res->error, $res->codigo)
+            :
+            response()->json(Nominas::formatoPanelNomina( Nominas::find($idNomina) ), 200);  // se debe actualizar la nomina y dotacion
     }
-    // DELETE api/nomina/{idNomina}/operador/{usuarioRUN}
-    function api_quitarOperador($idNomina, $usuarioRUN){
-        // el usuario existe?
+    // DELETE api/nomina/{idNomina}/operador/{idOperador}
+    function api_quitarOperador(NominaService $nominaService, $idNomina, $idOperador){
         $user = Auth::user();
-        if(!$user)
-            return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
-
-        // la nomina existe?
         $nomina = Nominas::find($idNomina);
-        if(!$nomina)
-            return response()->json('Nomina no encontrada', 404);
+        $operador = User::find($idOperador);
 
-        // puede hacer el cambio? (tiene los permisos O es el captador asignado)
-        $esElCaptadorAsignado = $user->id==$nomina->idCaptador1 || $user->id==$nomina->idCaptador2;
-        if(!$esElCaptadorAsignado && !$user->can('nominas-cambiarCualquierDotacion'))
-            return response()->json(['error'=>'No tiene permisos para cambiar la Dotación'], 403);
-
-        // la nomina se encuentra pendiente?
-        if($nomina->idEstadoNomina!=2)
-            return response()->json(['idNomina'=>'Para quitar el usuario, la nómina debe estar Pendiente'], 400);
-        // el operador existe?
-        $usuario = User::where('usuarioRUN', $usuarioRUN)->first();
-        if(!$usuario)
-            return response()->json('Operador no encontrado', 404);
-        $nomina->dotacion()->detach($usuario);
-        return response()->json(
-            Nominas::formatoPanelNomina( Nominas::find($nomina->idNomina) ), 201
-        );
+        $res = $nominaService->quitarOperador($user, $nomina, $operador);
+        return isset($res->error)?
+            response()->json($res->error, $res->codigo)
+            :
+            response()->json( Nominas::formatoPanelNomina(Nominas::find($idNomina) ), 201);
     }
+
     function api_enviarNomina($idNomina){
         // el usuario esta logeado?
         $user = Auth::user();

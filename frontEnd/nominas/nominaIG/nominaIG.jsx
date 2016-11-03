@@ -9,8 +9,8 @@ import * as ReactNotifyCSS from '../../shared/ReactNotify/ReactNotify.css'
 import Modal from 'react-bootstrap/lib/Modal.js'
 import { FormularioUsuario } from './FormularioUsuario.jsx'
 import { PanelDatos } from './PanelDatos.jsx'
-import { PanelDotaciones } from './PanelDotaciones.jsx'
 import { PanelEstados } from './PanelEstados.jsx'
+import { PanelCaptadorSEI, PanelCaptador } from './PanelCaptador.jsx'
 
 export class NominaIG extends React.Component {
     constructor(props) {
@@ -20,156 +20,101 @@ export class NominaIG extends React.Component {
             RUNbuscado: '',
             esTitular: true,
             // --------
-            idEstadoNomina: this.props.nomina.idEstadoNomina,
-            haSidoRectificada: this.props.nomina.rectificada,
-            lider: this.props.nomina.lider,
-            supervisor: this.props.nomina.supervisor,
-            dotacionTitular: this.props.nomina.dotacionTitular,
-            dotacionReemplazo: this.props.nomina.dotacionReemplazo
+            nomina: this.props.nomina
+        }
+        this.ajaxErrorHandler = (errorTitle)=>{
+            return (err)=>{
+                if(err.status==500)
+                    return this.refs.notificator.error("Error critico en el servidor", "Contactese con el departamento de informática.", 4*1000);
+                // en otro error, buscar el cuerpo del mensaje
+                let msgs = _.values(err.data).join('. ')
+                console.log(err)
+                console.log(errorTitle, err.data)
+                this.refs.notificator.error(errorTitle, msgs, 4*1000);
+            }
+        }
+    }
+
+    getChildContext(){
+        return {
+            // modificar lider
+            agregarLider: (run)=>{
+                if (run === '')
+                    return console.log('RUN vacio, no se hace nada')
+                api.nomina(this.props.nomina.idNomina).agregarLider(run)
+                    .then(nomina=> {
+                        this.refs.notificator.success("Nómina", "Lider agregado", 4*1000);
+                        this.setState({nomina})
+                    })
+                    .catch(this.ajaxErrorHandler('Error al asignar el Lider'))
+            },
+            quitarLider: ()=>{
+                api.nomina(this.props.nomina.idNomina).quitarLider()
+                    .then(nomina=>{
+                        console.log('lider quitado correctamente')
+                        this.setState({nomina})
+                    })
+                    .catch(this.ajaxErrorHandler('Error al quitar el Lider'))
+            },
+            // modificar supervisor
+            agregarSupervisor: (run)=>{
+                if (run === '')
+                    return console.log('RUN vacio, no se hace nada')
+                api.nomina(this.props.nomina.idNomina).agregarSupervisor(run)
+                    .then(nomina=> {
+                        this.refs.notificator.success("Nómina", "Supervisor agregado", 4*1000);
+                        this.setState({nomina})
+                    })
+                    .catch(this.ajaxErrorHandler('Error al asignar el Supervisor'))
+            },
+            quitarSupervisor: ()=>{
+                api.nomina(this.props.nomina.idNomina).quitarSupervisor()
+                    .then(nomina=>{
+                        console.log('dotacion actualizada')
+                        this.setState({nomina})
+                    })
+                    .catch(this.ajaxErrorHandler('Error al quitar el Supervisor'))
+            },
+            // modificar dotacion
+            agregarOperador: (esTitular, idCaptador, run)=>{
+                console.log(esTitular, idCaptador, run)
+                if(run===''){
+                    return console.log('RUN vacio, no se hace nada');
+                }
+                api.nomina(this.props.nomina.idNomina).agregarOperador(run, esTitular, idCaptador)
+                    .then(response=>{
+                        let nominaActualizada = response.data
+                        let statusCode = response.status
+
+                        // si no se encuentra el usuario, se debe mostrar el formulario para crear uno
+                        if(statusCode==204){
+                            console.log("RUN no existe, mostrando formulario")
+                            this.setState({
+                                showModal: true,
+                                RUNbuscado: run,
+                                esTitular
+                            })
+
+                        } else if(statusCode==200){
+                            this.refs.notificator.success("Nómina", "Usuario agregado correctamente", 4*1000);
+                            this.setState({nomina: nominaActualizada})
+                        }
+                    })
+                    .catch(this.ajaxErrorHandler('Agregar Operador'))
+            },
+            quitarOperador: (idUsuario)=>{
+                console.log('quitar usuario', idUsuario)
+                api.nomina(this.props.nomina.idNomina).quitarOperador(idUsuario)
+                    .then(nomina=>{
+                        console.log('dotacion actualizada')
+                        this.setState({nomina})
+                    })
+                    .catch(this.ajaxErrorHandler('error al quitar el operador'))
+            }
         }
     }
 
     // ######### Metodos para cambiar la dotacion de la nomina #########
-    agregarLider(run) {
-        if (run === '') {
-            return console.log('RUN vacio, no se hace nada');
-        }
-        api.nomina.agregarLider(this.props.nomina.idNomina, run)
-            .then(nominaActualizada=> {
-                this.refs.notificator.success("Nómina", "Lider agregado", 4*1000);
-                this.setState({
-                    lider: nominaActualizada.lider,
-                    supervisor: nominaActualizada.supervisor,
-                    dotacionTitular: nominaActualizada.dotacionTitular,
-                    dotacionReemplazo: nominaActualizada.dotacionReemplazo
-                })
-            })
-            .catch(err=>{
-                let msgs = _.values(err.data).join('. ')
-                console.log('ha ocurrido un error al asignar el lider', err.data)
-                this.refs.notificator.error("Error al asignar el Lider", msgs, 4*1000);
-            })
-    }
-    quitarLider(){
-        api.nomina.quitarLider(this.props.nomina.idNomina)
-            .then(nominaActualizada=>{
-                console.log('dotacion actualizada')
-                this.setState({
-                    lider: nominaActualizada.lider,
-                    supervisor: nominaActualizada.supervisor,
-                    dotacionTitular: nominaActualizada.dotacionTitular,
-                    dotacionReemplazo: nominaActualizada.dotacionReemplazo
-                })
-            })
-            .catch(err=>{
-                let msgs = _.values(err.data).join('. ')
-                console.log('ha ocurrido un error al quitar el Lider', err.data)
-                this.refs.notificator.error("Error al quitar el Lider", msgs, 4*1000);
-            })
-    }
-
-    agregarSupervisor(run) {
-        if (run === '') {
-            return console.log('RUN vacio, no se hace nada');
-        }
-        api.nomina.agregarSupervisor(this.props.nomina.idNomina, run)
-            .then(nominaActualizada=> {
-                this.refs.notificator.success("Nómina", "Supervisor agregado", 4*1000);
-                this.setState({
-                    lider: nominaActualizada.lider,
-                    supervisor: nominaActualizada.supervisor,
-                    dotacionTitular: nominaActualizada.dotacionTitular,
-                    dotacionReemplazo: nominaActualizada.dotacionReemplazo
-                })
-            })
-            .catch(err=>{
-                let msgs = _.values(err.data).join('. ')
-                console.log('ha ocurrido un error al asignar el Supervisor', err.data)
-                this.refs.notificator.error("Error al asignar el Supervisor", msgs, 4*1000);
-            })
-    }
-    quitarSupervisor(){
-        api.nomina.quitarSupervisor(this.props.nomina.idNomina)
-            .then(nominaActualizada=>{
-                console.log('dotacion actualizada')
-                this.setState({
-                    lider: nominaActualizada.lider,
-                    supervisor: nominaActualizada.supervisor,
-                    dotacionTitular: nominaActualizada.dotacionTitular,
-                    dotacionReemplazo: nominaActualizada.dotacionReemplazo
-                })
-            })
-            .catch(err=>{
-                let msgs = _.values(err.data).join('. ')
-                console.log('ha ocurrido un error al quitar el Supervisor', err.data)
-                this.refs.notificator.error("Error", msgs, 4*1000);
-            })
-    }
-
-    agregarOperador(esTitular, run){
-        if(run===''){
-            return console.log('RUN vacio, no se hace nada');
-        }
-        api.nomina.agregarOperador(this.props.nomina.idNomina, run, esTitular)
-            .then(response=>{
-                let nominaActualizada = response.data
-                let statusCode = response.status
-
-                // si no se encuentra el usuario, se debe mostrar el formulario para crear uno
-                if(statusCode==204){
-                    console.log("RUN no existe, mostrando formulario")
-                    this.setState({
-                        showModal: true,
-                        RUNbuscado: run,
-                        esTitular
-                    })
-                } else if(statusCode==200){
-                    this.refs.notificator.error("Nómina", "El usuario ya existe en la nómina", 4*1000);
-                    //console.log('operador ya existe, dotacion sin cambios', dotacion)
-                    this.setState({
-                        lider: nominaActualizada.lider,
-                        supervisor: nominaActualizada.supervisor,
-                        dotacionTitular: nominaActualizada.dotacionTitular,
-                        dotacionReemplazo: nominaActualizada.dotacionReemplazo
-                    })
-
-                } else if(statusCode==201){
-                    // se agrego el usuario a la dotacion, retornan la dotacion actualizada
-                    this.refs.notificator.success("Nómina", "Usuario agregado correctamente", 4*1000);
-                    //console.log('usuario agregado, dotacion actualizada', dotacion)
-                    this.setState({
-                        lider: nominaActualizada.lider,
-                        supervisor: nominaActualizada.supervisor,
-                        dotacionTitular: nominaActualizada.dotacionTitular,
-                        dotacionReemplazo: nominaActualizada.dotacionReemplazo
-                    })
-                }
-            })
-            .catch(err=>{
-                let msgs = _.values(err.data).join('. ')
-                console.log('ha ocurrido un error al agregar un operador', err.data)
-                this.refs.notificator.error("Error", msgs, 4*1000);
-            })
-    }
-    quitarOperador(run){
-        console.log('quitar usuario', run)
-        api.nomina.quitarOperador(this.props.nomina.idNomina, run)
-            .then(nominaActualizada=>{
-                console.log('dotacion actualizada')
-                this.setState({
-                    lider: nominaActualizada.lider,
-                    supervisor: nominaActualizada.supervisor,
-                    dotacionTitular: nominaActualizada.dotacionTitular,
-                    dotacionReemplazo: nominaActualizada.dotacionReemplazo
-                })
-            })
-            .catch(err=>{
-                let msgs = _.values(err.data).join('. ')
-                console.log('error al quitar el operador', err.data)
-                this.refs.notificator.error("Error", msgs, 4*1000);
-            })
-    }
-
     onNuevoUsuario(datos){
         console.log('enviando', datos)
 
@@ -191,12 +136,9 @@ export class NominaIG extends React.Component {
     // ######### Metodos para cambiar el estado de la nomina #########
     enviarNomina(){
         // al enviar una nomina, esta pasa al estado "enviada"
-        return api.nomina.enviar(this.props.nomina.idNomina)
+        return api.nomina(this.state.nomina.idNomina).enviar()
             .then(nomina=>{
-                this.setState({
-                    idEstadoNomina: nomina.idEstadoNomina,
-                    haSidoRectificada: nomina.rectificada,
-                })
+                this.setState({nomina})
             })
             .catch(err=>{
                 let msgs = _.values(err.data).join('. ')
@@ -206,12 +148,9 @@ export class NominaIG extends React.Component {
     }
     aprobarNomina(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
-        return api.nomina.aprobar(this.props.nomina.idNomina)
+        return api.nomina(this.state.nomina.idNomina).aprobar()
             .then(nomina=>{
-                this.setState({
-                    idEstadoNomina: nomina.idEstadoNomina,
-                    haSidoRectificada: nomina.rectificada,
-                })
+                this.setState({nomina})
             })
             .catch(err=> {
                 let msgs = _.values(err.data).join('. ')
@@ -221,12 +160,9 @@ export class NominaIG extends React.Component {
     }
     rechazarNomina(){
         // al rechazar una nomina, esta vuelve a quedar en estado pendiente
-        return api.nomina.rechazar(this.props.nomina.idNomina)
+        return api.nomina(this.state.nomina.idNomina).rechazar()
             .then(nomina=>{
-                this.setState({
-                    idEstadoNomina: nomina.idEstadoNomina,
-                    haSidoRectificada: nomina.rectificada,
-                })
+                this.setState({nomina})
             })
             .catch(err=> {
                 let msgs = _.values(err.data).join('. ')
@@ -236,12 +172,9 @@ export class NominaIG extends React.Component {
     }
     informarNomina(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
-        return api.nomina.informar(this.props.nomina.idNomina)
+        return api.nomina(this.props.state.idNomina).informar()
             .then(nomina=>{
-                this.setState({
-                    idEstadoNomina: nomina.idEstadoNomina,
-                    haSidoRectificada: nomina.rectificada,
-                })
+                this.setState({nomina})
             })
             .catch(err=> {
                 let msgs = _.values(err.data).join('. ')
@@ -251,12 +184,9 @@ export class NominaIG extends React.Component {
     }
     completarSinCorreo(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
-        return api.nomina.completarSinCorreo(this.props.nomina.idNomina)
+        return api.nomina(this.state.nomina.idNomina).completarSinCorreo()
             .then(nomina=>{
-                this.setState({
-                    idEstadoNomina: nomina.idEstadoNomina,
-                    haSidoRectificada: nomina.rectificada,
-                })
+                this.setState({nomina})
             })
             .catch(err=> {
                 let msgs = _.values(err.data).join('. ')
@@ -266,12 +196,9 @@ export class NominaIG extends React.Component {
     }
     rectificarNomina(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
-        return api.nomina.rectificar(this.props.nomina.idNomina)
+        return api.nomina(this.state.nomina.idNomina)   .rectificar()
             .then(nomina=>{
-                this.setState({
-                    idEstadoNomina: nomina.idEstadoNomina,
-                    haSidoRectificada: nomina.rectificada,
-                })
+                this.setState({nomina})
             })
             .catch(err=> {
                 let msgs = _.values(err.data).join('. ')
@@ -281,19 +208,16 @@ export class NominaIG extends React.Component {
     }
 
     render(){
-        let operadoresAsignados = this.state.supervisor? this.state.dotacionTitular.length+1 : this.state.dotacionTitular.length
-        let totalAsignados = this.state.lider? operadoresAsignados +1 : operadoresAsignados
-        // la nomina tiene todos los captadores asignados? y el total corresponde a lo asignado?
-        let nominaCompleta = (this.props.nomina.dotacionTotal==totalAsignados)
-                       // && (this.props.nomina.dotacionOperadores==operadoresAsignados)
+        let nominaPendiente = this.state.nomina.idEstadoNomina==2
 
-        // console.log('operadoresAsignados', operadoresAsignados)
+        let operadoresAsignados = this.state.nomina.supervisor? this.state.nomina.dotacionTitular.length+1 : this.state.nomina.dotacionTitular.length
+        let totalAsignados = this.state.nomina.lider? operadoresAsignados +1 : operadoresAsignados
+        // la nomina tiene todos los captadores asignados? y el total corresponde a lo asignado?
+        let nominaCompleta = (this.state.nomina.dotacionTotal==totalAsignados)
         console.log('totalAsignados', totalAsignados)
-        // console.log('dotacionOperadores==operadores asignados', this.props.nomina.dotacionOperadores, operadoresAsignados, this.props.nomina.dotacionOperadores==operadoresAsignados)
-        // console.log('dotacionTotal==totalAsignados', this.props.nomina.dotacionTotal, totalAsignados, this.props.nomina.dotacionTotal==totalAsignados)
-        // console.log("nominaCompleta", nominaCompleta)
+
         return (
-            <div className="container">
+            <div className="container-fluid">
                 <ReactNotify ref='notificator' className={ReactNotifyCSS}/>
                 <Modal
                     show={this.state.showModal}
@@ -315,34 +239,42 @@ export class NominaIG extends React.Component {
                 </Modal>
 
                 <PanelDatos
-                    nomina={this.props.nomina}
+                    nomina={this.state.nomina}
                 />
 
-                <PanelDotaciones
-                    // general
-                    dotacionOperadores={this.props.nomina.dotacionOperadores}
-                    // para poder editar, se debe considerar: estado, permisos, y otras variables
-                    liderEditable={this.state.idEstadoNomina==2 && this.props.permisos.cambiarLider}
-                    supervisorEditable={this.state.idEstadoNomina==2 && this.props.permisos.cambiarSupervisor}
-                    dotacionEditable={this.state.idEstadoNomina==2 && this.props.permisos.cambiarDotacion}
-                    // dotacion
-                    lider={this.state.lider}
-                    supervisor={this.state.supervisor}
-                    dotacionTitular={this.state.dotacionTitular}
-                    dotacionReemplazo={this.state.dotacionReemplazo}
-                    // metodos
-                    agregarOperadorTitular={this.agregarOperador.bind(this, true)}
-                    agregarOperadorReemplazo={this.agregarOperador.bind(this, false)}
-                    quitarOperador={this.quitarOperador.bind(this)}
-                    agregarLider={this.agregarLider.bind(this)}
-                    quitarLider={this.quitarLider.bind(this)}
-                    agregarSupervisor={this.agregarSupervisor.bind(this)}
-                    quitarSupervisor={this.quitarSupervisor.bind(this)}
-                />
+                {this.props.permisos.verTodasNominas?
+                    <PanelCaptadorSEI
+                        captadorSEI={this.state.nomina.captadorSEI}
+                        lider={this.state.nomina.lider}
+                        supervisor={this.state.nomina.supervisor}
+                        maximoOperadores={this.state.nomina.dotacionTotal}
+
+                        // permisos (solo puede editar si esta pendente, y es un captador asignado o es un "captador SEI"
+                        editarLiderSupervisor={nominaPendiente && this.props.permisos.cambiarLiderSupervisor}
+                        editarOperadores={nominaPendiente && this.props.permisos.editarTodasNominas}
+                    />
+                    :
+                    null
+                }
+
+                {this.state.nomina.captadores.map(captador=> {
+                    let esMiNomina = this.props.permisos.editarIdCaptador == captador.idCaptador
+
+                    return (this.props.permisos.verTodasNominas || esMiNomina)?
+                         <PanelCaptador
+                            key={captador.idCaptador}
+                            captador={captador}
+                            // permisos (solo puede editar si esta pendente, y es un captador asignado o es un "captador SEI"
+                            editarLiderSupervisor={nominaPendiente && this.props.permisos.cambiarLiderSupervisor}
+                            editarOperadores={nominaPendiente && (this.props.permisos.editarTodasNominas || esMiNomina)}
+                        />
+                        :
+                        null
+                })}
 
                 <PanelEstados
-                    idEstado={this.state.idEstadoNomina}
-                    haSidoRectificada={this.state.haSidoRectificada}
+                    idEstado={this.state.nomina.idEstadoNomina}
+                    haSidoRectificada={this.state.nomina.rectificada}
                     enviarNomina={this.enviarNomina.bind(this)}
                     aprobarNomina={this.aprobarNomina.bind(this)}
                     rechazarNomina={this.rechazarNomina.bind(this)}
@@ -363,4 +295,12 @@ NominaIG.propTypes = {
     comunas: PropTypes.arrayOf(PropTypes.object).isRequired,
     // Permisos
     permisos: PropTypes.object.isRequired
+}
+NominaIG.childContextTypes = {
+    agregarLider: PropTypes.func,
+    quitarLider: PropTypes.func,
+    agregarSupervisor: PropTypes.func,
+    quitarSupervisor: PropTypes.func,
+    agregarOperador: PropTypes.func,
+    quitarOperador: PropTypes.func
 }

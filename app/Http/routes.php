@@ -99,7 +99,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::put('api/nomina/{idNomina}',                         'NominasController@api_actualizar');
         Route::get('api/nominas/buscar',                            'NominasController@api_buscar');
         // api para cambios en la dotacion de las nominas
-        Route::get('api/nomina/{idNomina}/dotacion',                'NominasController@api_get');
+        Route::get('api/nomina/{idNomina}',                         'NominasController@api_getNomina');
         Route::get('api/nomina/{idNomina}/lideres-disponibles',     'NominasController@api_lideresDisponibles');
         Route::post('api/nomina/{idNomina}/lider/{usuarioRUN}',     'NominasController@api_agregarLider');
         Route::delete('api/nomina/{idNomina}/lider',                'NominasController@api_quitarLider');

@@ -159,6 +159,9 @@ return [
         App\Providers\HelpersServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
+
+        // SEI Service Providers
+        App\Providers\NominaServiceProvider::class,
     ],
 
     /*

@@ -3,7 +3,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 // Modelos
-use App\Locales;
+//use App\Locales;
 use App\ActasInventariosFCV;
 
 class Inventarios extends Model {
@@ -122,6 +122,9 @@ class Inventarios extends Model {
 //            'auditorias'=>$auditoriasCercanas,
 //            'tieneTopeFechaConAuditoria' => $auditoriasCercanas->count()>0
 //        ];
+    }
+    function getFechaLimiteCaptador(){
+        return Inventarios::calcularFechaLimiteCaptador($this->fechaProgramada);
     }
     static function calcularFechaLimiteCaptador($fechaProgramada){
         $cuartoDiasHabilAntes = DiasHabiles::with([])

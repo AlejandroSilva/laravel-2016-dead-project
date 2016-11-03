@@ -8,7 +8,7 @@ export class PanelDatos extends React.Component {
     
     render(){
         return <div className="row">
-            <div className="col-sm-4">
+            <div className="col-sm-3">
                 {/* Datos generales del inventario */}
                 <div className="panel panel-default">
                     <div className={'panel-heading '+css.panelDatos_heading}>Inventario</div>
@@ -39,7 +39,7 @@ export class PanelDatos extends React.Component {
                     </table>
                 </div>
             </div>
-            <div className="col-sm-5">
+            <div className="col-sm-4">
                 {/* Datos generales del local*/}
                 <div className="panel panel-default">
                     <div className={'panel-heading '+css.panelDatos_heading}>Local</div>
@@ -76,7 +76,7 @@ export class PanelDatos extends React.Component {
                 </div>
             </div>
 
-            <div className="col-sm-3">
+            <div className="col-sm-2">
                 {/* Datos generales del Nomina*/}
                 <div className="panel panel-default">
                     <div className={'panel-heading '+css.panelDatos_heading}>Nómina</div>
@@ -98,6 +98,18 @@ export class PanelDatos extends React.Component {
                     </table>
                 </div>
             </div>
+
+            <section className="col-sm-2">
+                <div className="panel panel-primary">
+                    <div className={'panel-heading '+css.panelDatos_heading}>Lider</div>
+                    {this.props.nomina.lider && this.props.nomina.lider.imagenPerfil?
+                        <img className={"img-responsive center-block"}
+                             src={`/imagenPerfil/${this.props.nomina.lider.imagenPerfil}`} alt=""/>
+                        :
+                        <p>Sin imagen</p>
+                    }
+                </div>
+            </section>
         </div>
     }
     

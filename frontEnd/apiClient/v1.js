@@ -142,45 +142,43 @@ export default {
         getPorRangoYCliente: (fechaInicio, fechaFin, idCliente)=>
             axios.get(`/api/auditoria/buscar?idCliente=${idCliente}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`)
     },
-    nomina: {
+    nomina: (idNomina)=>({
         // utilizada por programacion IG para actualizar lider
-        actualizar: (idNomina, datos)=>
+        actualizar: (datos)=>
             axios.put(`/api/nomina/${idNomina}`, datos),
-        agregarLider: (idNomina, usuarioRUN)=>
+        agregarLider: (usuarioRUN)=>
             axios.post(`/api/nomina/${idNomina}/lider/${usuarioRUN}`),
-        quitarLider: (idNomina, usuarioRUN)=>
+        quitarLider: ()=>
             axios.delete(`/api/nomina/${idNomina}/lider`),
-        agregarCaptador: (idNomina, idUsuario)=>
+        agregarCaptador: (idUsuario)=>
             axios.post(`/api/nomina/${idNomina}/captador/${idUsuario}`),
-        quitarCaptador: (idNomina, idUsuario)=>
+        quitarCaptador: (idUsuario)=>
             axios.delete(`/api/nomina/${idNomina}/captador/${idUsuario}`),
-        cambiarAsignadosCaptador: (idNomina, idUsuario, payload)=>
-            axios.put(`/api/nomina/${idNomina}/captador/${idUsuario}`, payload),
-        agregarSupervisor: (idNomina, usuarioRUN)=>
+        cambiarAsignadosCaptador: (idCaptador, payload)=>
+            axios.put(`/api/nomina/${idNomina}/captador/${idCaptador}`, payload),
+        agregarSupervisor: (usuarioRUN)=>
             axios.post(`/api/nomina/${idNomina}/supervisor/${usuarioRUN}`),
-        quitarSupervisor: (idNomina, usuarioRUN)=>
+        quitarSupervisor: ()=>
             axios.delete(`/api/nomina/${idNomina}/supervisor`),
-        agregarOperador: (idNomina, usuarioRUN, esTitular)=>
-            axiosRaw.post(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, {esTitular}),
-        quitarOperador: (idNomina, usuarioRUN)=>
+        agregarOperador: (usuarioRUN, esTitular, idCaptador)=>
+            axiosRaw.post(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, {esTitular, idCaptador}),
+        quitarOperador: (usuarioRUN)=>
             axios.delete(`/api/nomina/${idNomina}/operador/${usuarioRUN}`),
-        // modificarOperador: (idNomina, usuarioRUN, datos)=>
-        //     axios.put(`/api/nomina/${idNomina}/operador/${usuarioRUN}`, datos),
-        lideresDisponibles: (idNomina)=>
+        lideresDisponibles: ()=>
             axios.get(`/api/nomina/${idNomina}/lideres-disponibles`),
-        enviar: (idNomina)=>
+        enviar: ()=>
             axios.post(`/api/nomina/${idNomina}/estado-enviar`),
-        aprobar: (idNomina)=>
+        aprobar: ()=>
             axios.post(`/api/nomina/${idNomina}/estado-aprobar`),
-        rechazar: (idNomina)=>
+        rechazar: ()=>
             axios.post(`/api/nomina/${idNomina}/estado-rechazar`),
-        informar: (idNomina)=>
+        informar: ()=>
             axios.post(`/api/nomina/${idNomina}/estado-informar`),
-        completarSinCorreo: (idNomina)=>
+        completarSinCorreo: ()=>
             axios.post(`/api/nomina/${idNomina}/estado-informar`, {omitirCorreo: true}),
-        rectificar: (idNomina)=>
+        rectificar: ()=>
             axios.post(`/api/nomina/${idNomina}/estado-rectificar`)
-    },
+    }),
     geo: {
        comunas: ()=>
             axios.get(`/api/geo/comunas`)

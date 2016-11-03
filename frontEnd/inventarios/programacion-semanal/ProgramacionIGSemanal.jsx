@@ -68,7 +68,7 @@ class ProgramacionIGSemanal extends React.Component {
 
     // Metodos de los hijos
     lideresDisponibles(idNomina){
-        return api.nomina.lideresDisponibles(idNomina)
+        return api.nomina(idNomina).lideresDisponibles()
     }
     guardarInventario(idInventario, formInventario){
         api.inventario.actualizar(idInventario, formInventario)
@@ -81,7 +81,7 @@ class ProgramacionIGSemanal extends React.Component {
             })
     }
     guardarNomina(idNomina, datos){
-        api.nomina.actualizar(idNomina, datos)
+        api.nomina(idNomina).actualizar(datos)
             .then(inventarioActualizado=>{
                 console.log('nomina actualizada correctamente')
                 // actualizar los datos y el state de la app
@@ -139,7 +139,7 @@ class ProgramacionIGSemanal extends React.Component {
         this.setState(this.blackbox.getListaFiltrada())
     }
     nomina_agregarCaptador(idNomina, idCaptador){
-        api.nomina.agregarCaptador(idNomina, idCaptador)
+        api.nomina(idNomina).agregarCaptador(idCaptador)
             .then(inventarioActualizado=>{
                 this.blackbox.actualizarInventario(inventarioActualizado)
                 this.setState( this.blackbox.getListaFiltrada() )
@@ -149,7 +149,7 @@ class ProgramacionIGSemanal extends React.Component {
             })
     }
     nomina_quitarCaptador(idNomina, idCaptador){
-        api.nomina.quitarCaptador(idNomina, idCaptador)
+        api.nomina(idNomina).quitarCaptador(idCaptador)
             .then(inventarioActualizado=>{
                 this.blackbox.actualizarInventario(inventarioActualizado)
                 this.setState( this.blackbox.getListaFiltrada() )
@@ -159,9 +159,7 @@ class ProgramacionIGSemanal extends React.Component {
             })
     }
     nomina_cambiarAsignadosCaptador(idNomina, idCaptador, asignados){
-        //console.log('nomina_cambiarAsignadosCaptador', idNomina, idCaptador, asignados)
-
-        api.nomina.cambiarAsignadosCaptador(idNomina, idCaptador, {asignados})
+        api.nomina(idNomina).cambiarAsignadosCaptador(idCaptador, {asignados})
             .then(inventarioActualizado=>{
                 this.blackbox.actualizarInventario(inventarioActualizado)
                 this.setState( this.blackbox.getListaFiltrada() )

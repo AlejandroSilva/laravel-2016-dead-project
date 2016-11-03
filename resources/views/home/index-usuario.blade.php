@@ -3,9 +3,14 @@
 @section('body')
     <div class="container">
         <div class="row">
-            {{-- Mis Inventarios --}}
+            {{-- Lider/Supervisor/Operador: Mis Inventarios --}}
             @if($mostrar_misProximosInventarios)
                 @include('home.dashboard-misProximosInventarios')
+            @endif
+
+            {{-- Captador: Nominas asignadas para completarlas --}}
+            @if($mostrar_misNominasAsignadasCaptador)
+                @include('home.dashboard-misNominasAsignadasCaptador')
             @endif
 
             {{-- Indicadores de gestión de inventarios --}}
@@ -14,7 +19,7 @@
             @endif
 
             {{-- Dashboard "Estado general de auditorias FCV --}}
-            @if($mostrar_indicadoresDeInventarios)
+            @if($mostrar_estadoGeneralAuditorias_fcv)
                 @include('auditorias.estado-general-fcv.panel-estado-general')
             @endif
         </div>
