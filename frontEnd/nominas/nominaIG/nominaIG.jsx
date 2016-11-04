@@ -140,11 +140,7 @@ export class NominaIG extends React.Component {
             .then(nomina=>{
                 this.setState({nomina})
             })
-            .catch(err=>{
-                let msgs = _.values(err.data).join('. ')
-                console.log('error al enviar nomina', err.data)
-                this.refs.notificator.error("Error", msgs, 4*1000);
-            })
+            .catch(this.ajaxErrorHandler('error al enviar nomina'))
     }
     aprobarNomina(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
@@ -152,11 +148,7 @@ export class NominaIG extends React.Component {
             .then(nomina=>{
                 this.setState({nomina})
             })
-            .catch(err=> {
-                let msgs = _.values(err.data).join('. ')
-                console.log('error al aprobar nomina', err.data)
-                this.refs.notificator.error("Error", msgs, 4 * 1000);
-            })
+            .catch(this.ajaxErrorHandler('error al aprobar nomina'))
     }
     rechazarNomina(){
         // al rechazar una nomina, esta vuelve a quedar en estado pendiente
@@ -164,23 +156,15 @@ export class NominaIG extends React.Component {
             .then(nomina=>{
                 this.setState({nomina})
             })
-            .catch(err=> {
-                let msgs = _.values(err.data).join('. ')
-                console.log('error al rechazar nomina', err.data)
-                this.refs.notificator.error("Error", msgs, 4 * 1000);
-            })
+            .catch(this.ajaxErrorHandler('error al rechazar nomina'))
     }
     informarNomina(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
-        return api.nomina(this.props.state.idNomina).informar()
+        return api.nomina(this.state.nomina.idNomina).informar()
             .then(nomina=>{
                 this.setState({nomina})
             })
-            .catch(err=> {
-                let msgs = _.values(err.data).join('. ')
-                console.log('Error al aprobar nomina', err.data)
-                this.refs.notificator.error("Error", msgs, 4 * 1000);
-            })
+            .catch(this.ajaxErrorHandler('Error al aprobar nomina'))
     }
     completarSinCorreo(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
@@ -188,11 +172,7 @@ export class NominaIG extends React.Component {
             .then(nomina=>{
                 this.setState({nomina})
             })
-            .catch(err=> {
-                let msgs = _.values(err.data).join('. ')
-                console.log('Error al aprobar nomina', err.data)
-                this.refs.notificator.error("Error", msgs, 4 * 1000);
-            })
+            .catch(this.ajaxErrorHandler('Error al aprobar nomina'))
     }
     rectificarNomina(){
         // al aprobar una nomina, esta pasa al estado "aprobada"
@@ -200,11 +180,7 @@ export class NominaIG extends React.Component {
             .then(nomina=>{
                 this.setState({nomina})
             })
-            .catch(err=> {
-                let msgs = _.values(err.data).join('. ')
-                console.log('Error al rectificar nomina', err.data)
-                this.refs.notificator.error("Error", msgs, 4 * 1000);
-            })
+            .catch(this.ajaxErrorHandler('Error al rectificar nomina'))
     }
 
     render(){

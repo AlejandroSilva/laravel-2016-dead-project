@@ -170,7 +170,7 @@ let PanelUsuarios = ({titulo, children})=>
                     <th>Nombre</th>
                     <th>Cargo</th>
                     <th>Captador</th>
-                    <th>Experiencia <small>Lider/Superv./Opera.</small></th>
+                    <th>Experiencia</th>
                     <th></th>
                 </tr>
             </thead>

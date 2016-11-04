@@ -37,7 +37,9 @@ export class RowOperador extends React.Component {
                         {this.props.personal.captador}
                     </td>
                     <td>
-                        {`Lid:${this.props.personal.experienciaComoLider} Sup:${this.props.personal.experienciaComoSupervisor} Ope:${this.props.personal.experienciaComoOperador}`}
+                        {this.props.cargo=='Lider'?      `Lider:${this.props.personal.experienciaComoLider}` : ''}
+                        {this.props.cargo=='Supervisor'? `Supervisor:${this.props.personal.experienciaComoSupervisor}` : ''}
+                        {this.props.cargo=='Operador'?   `Operador:${this.props.personal.experienciaComoOperador}` : ''}
                     </td>
                     <td>
                         {this.props.editable ?
