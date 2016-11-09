@@ -93,10 +93,10 @@ class User extends Authenticatable {
             'todas' => $todas
         ];
     }
-    function experiencia(){
+    function experiencia($fechaHasta){
         // todo: la experiencia deberia contemplar solo las nominas que han sido terminadas
         // es decir, debe buscar en las nominasFinales/nominasDePago
-        $nominas = $this->nominasComoTitular(null, null, null);
+        $nominas = $this->nominasComoTitular(null, $fechaHasta, null);
         return (object)[
             'comoLider' => count($nominas->comoLider),
             'comoSupervisor' => count($nominas->comoSupervisor),
@@ -142,11 +142,12 @@ class User extends Authenticatable {
 
     // #### Formatear respuestas
     // usado por Nominas::formatoPanelNomina
-    static function formatoPanelNomina($user, $captador){
+    static function formatoPanelNomina($user, $captador, $buscarExperienciaHasta){
         if(!$user)
             return null;
+        // mostrar la experiencia hasta el dia del inventario
 
-        $experiencia = $user->experiencia();
+        $experiencia = $user->experiencia($buscarExperienciaHasta);
         return [
             'id' => $user->id,
             'usuarioRUN' => $user->usuarioRUN,

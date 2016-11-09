@@ -187,13 +187,13 @@ class Nominas extends Model {
             ->dotacionTitular
             ->map(function($operador){
                 $captador = User::find($operador->pivot->idCaptador);
-                return User::formatoPanelNomina($operador, $captador->nombreCorto());
+                return User::formatoPanelNomina($operador, $captador->nombreCorto(), $this->inventario->fechaProgramada);
             })->all();
         $operadoresReemplazo = $this
             ->dotacionReemplazo
             ->map(function($operador){
                 $captador = User::find($operador->pivot->idCaptador);
-                return User::formatoPanelNomina($operador, $captador->nombreCorto());
+                return User::formatoPanelNomina($operador, $captador->nombreCorto(), $this->inventario->fechaProgramada);
             })->all();
 
         return [
@@ -210,14 +210,14 @@ class Nominas extends Model {
             ->where('pivot.idCaptador', $captador->id)
             ->map(function($operador){
                 $captador = User::find($operador->pivot->idCaptador);
-                return User::formatoPanelNomina($operador, $captador->nombreCorto());
+                return User::formatoPanelNomina($operador, $captador->nombreCorto(), $this->inventario->fechaProgramada);
             })->all();
         $operadoresReemplazo = $this
             ->dotacionReemplazo
             ->where('pivot.idCaptador', $captador->id)
             ->map(function($operador){
                 $captador = User::find($operador->pivot->idCaptador);
-                return User::formatoPanelNomina($operador, $captador->nombreCorto());
+                return User::formatoPanelNomina($operador, $captador->nombreCorto(), $this->inventario->fechaProgramada);
             })->all();
 
         return [
@@ -306,10 +306,16 @@ class Nominas extends Model {
             'idNominaPublica' => $nomina->getPublicId(),
             'idEstadoNomina' => $nomina->estado->idEstadoNomina,
             "rectificada" => $nomina->rectificada,
-            'lider' => User::formatoPanelNomina($nomina->lider, '-'),
-            'supervisor' => User::formatoPanelNomina($nomina->supervisor, '-'),
-            'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatoPanelNomina'),
-            'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatoPanelNomina'),
+            'lider' => User::formatoPanelNomina($nomina->lider, '-', $nomina->inventario->fechaProgramada),
+            'supervisor' => User::formatoPanelNomina($nomina->supervisor, '-', $nomina->inventario->fechaProgramada),
+            //'dotacionTitular' => $nomina->dotacionTitular->map('\App\User::formatoPanelNomina', '-', $nomina->inventario->fechaProgramada),
+            'dotacionTitular' => $nomina->dotacionTitular->map(function($u) use($nomina){
+                return User::formatoPanelNomina($u, '-', $nomina->inventario->fechaProgramada);
+            }),
+            //'dotacionReemplazo' => $nomina->dotacionReemplazo->map('\App\User::formatoPanelNomina'),
+            'dotacionReemplazo' => $nomina->dotacionReemplazo->map(function($u) use($nomina){
+                return User::formatoPanelNomina($u, '-', $nomina->inventario->fechaProgramada);
+            }),
             'nominaCompleta' => 'calculo pendiente',
             'dotacionTotal' => $nomina->dotacionTotal,
             'dotacionOperadores' => $nomina->dotacionOperadores,
