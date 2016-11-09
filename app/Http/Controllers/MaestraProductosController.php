@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Clientes;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 // DB
@@ -10,11 +9,13 @@ use Response;
 use Auth;
 // Modelos
 use App\ArchivoMaestraProductos;
+// Servicios
+use App\Services\MaestraFCVService;
 
 class MaestraProductosController extends Controller {
 
-    // GET maestra-productos-fcv
-    public function show_maestra_productos_fcv(){
+    // GET maestra-fcv
+    function show_maestraFCV(){
         $user = Auth::user();
         if(!$user || !$user->can('fcv-verMaestra'))
             return response()->view('errors.403', [], 403);
@@ -29,13 +30,46 @@ class MaestraProductosController extends Controller {
         ]);
     }
 
-    // POST maestra-productos/subir-maestra-fcv
-    function subir_maestraFCV(Request $request){
-        // ver que el usuario tenga los permisos correspondientes
+    // GET maestra-fcv/{idMaestra}/ver-estado
+    function show_verEstadoMaestraFCV($idMaestra){
+        // validar usuario
         $user = Auth::user();
-        if(!$user || !$user->can('fcv-administrarMaestra'))
+        if(!$user)
             return response()->view('errors.403', [], 403);
-        
+
+        // existe la maestra?
+        $archivoMaestra = ArchivoMaestraProductos::find($idMaestra);
+        if(!$archivoMaestra)
+            return response()->view('errors.errorConMensaje', [
+                'titulo' =>  'Maestra de productos no encontrada',
+                'descripcion' => 'La maestra de productos que busca no ha sido encontrada. Contactese con el departamento de informática.',
+        ]);
+
+        return view('maestra-productos.ver-estado', [
+            'archivoMaestra' => $archivoMaestra
+        ]);
+    }
+
+    // POST maestra-fcv/{idMaestra}/actualizar-estado
+    function formpost_actualizarEstadoFCV(MaestraFCVService $maestraFCVService, $idMaestra){
+        $user = Auth::user();
+        $archivoMaestra = ArchivoMaestraProductos::find($idMaestra);
+
+        $maestraFCVService->validarProductosFCV($user, $archivoMaestra);
+        return redirect()->route("verEstadoMaestraFCV", [
+            'idMaestra' => $idMaestra
+        ]);
+    }
+
+    // GET maestra-fcv/{idMaestra}/actualizar-maestra
+    function show_actualizarMaestraFCV($idMaestra){
+        return response()->json(['por desarrollar'], 501);
+    }
+
+    // POST maestra-productos/subir-maestra-fcv
+    function formpost_subirMaestraFCV(MaestraFCVService $maestraFCVService, Request $request){
+        $user = Auth::user();
+
         // se adjunto un archivo?
         if (!$request->hasFile('file'))
             return redirect()->route("maestraFCV")
@@ -47,23 +81,42 @@ class MaestraProductosController extends Controller {
             return redirect()->route("maestraFCV")
                 ->with('mensaje-error', "El archivo adjunto no es válido");
 
-        // mover el archivo a la carpeta correspondiente, y crear un registro en la BD
-        $clienteFCV = Clientes::find(2);
-        $archivoMaestraFCV = $clienteFCV->agregarArchivoMaestra(Auth::user(), $archivo);
-
-        // procesar archivo
-        $resultadoProcesar = $archivoMaestraFCV->procesarArchivo();
+        // ToDO: terminar esto en algun momento... con archivos grandes se cae, el desarrollo se detuvo...
+        $res = $maestraFCVService->agregarMaestraFCV($user, $archivo);
 
         // mostrar index
-        if(isset($resultadoProcesar->mensajeError))
-            return redirect()->route("maestraFCV")->with('mensaje-error', $resultadoProcesar->mensajeError);
+        if(isset($res->error)){
+            if($res->codigo==401 || $res->codigo==403)
+                return response()->view('errors.403', [], 403);
+            else
+                return redirect()->route("maestraFCV")->with('mensaje-error', $res->mensaje);
+        }
         else
-            return redirect()->route("maestraFCV")->with('mensaje-exito', $resultadoProcesar->mensajeExito);
+            return redirect()->route("maestraFCV")->with('mensaje-exito', "Productos cargados correctamente");
     }
 
 
-    // GET maestra-productos/{idArchivo}/descargar-fcv
-    public function descargar_maestraFCV($idArchivo){
+    // GET maestra-fcv/{idMaestra}/descargar-db
+    function descargarDB_maestraFCV(MaestraFCVService $maestraFCVService, $idMaestra){
+        $user = Auth::user();
+        $archivoMaestra = ArchivoMaestraProductos::find($idMaestra);
+
+        $res = $maestraFCVService->descargarMaestraDesdeDB($user, $archivoMaestra);
+        if(isset($res->error)){
+            if($res->codigo==403)
+                return response()->view('errors.403', [], 403);
+            else
+                return response()->view('errors.errorConMensaje', [
+                    'titulo' =>  $res->campo,
+                    'descripcion' => $res->mensaje
+                ]);
+        }
+        else
+            return \ArchivosHelper::descargarArchivo($res->maestraPath, "maestra.xlsx");
+    }
+
+    // GET maestra-fcv/{idArchivo}/descargar-original
+    function descargarOriginal_maestraFCV($idArchivo){
         // el metodo es el mismo para otros clientes, pero solo cambian los permisos
         $user = Auth::user();
         if(!$user || !$user->can('fcv-verMaestra'))
@@ -72,4 +125,5 @@ class MaestraProductosController extends Controller {
         $archivoMaestra = ArchivoMaestraProductos::find($idArchivo);
         return \ArchivosHelper::descargarArchivo($archivoMaestra->getFullPath(), $archivoMaestra->nombreArchivo);
     }
+
 }

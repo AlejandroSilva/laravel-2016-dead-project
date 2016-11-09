@@ -24,16 +24,26 @@ class ArchivoMaestraFCVHelper{
 
         $productos = [];
         for( $row=2; $row<=$highestRow; $row++ ){
-            $productos[] = [
-                'idArchivoMaestra'          => $idArchivoMaestra,
-                'sku'                       => isset($array[$row]['A'])? trim($array[$row]['A']) : null,
-                'descriptor'                => isset($array[$row]['B'])? trim($array[$row]['B']) : null,
-                'barra'                     => isset($array[$row]['C'])? trim($array[$row]['C']) : null,
-                'laboratorio'               => isset($array[$row]['D'])? trim($array[$row]['D']) : null,
-                'clasificacionTerapeutica'  => isset($array[$row]['E'])? trim($array[$row]['E']) : null,
-                'created_at'                => $now,
-                'updated_at'                => $now
-            ];
+            $sku                       = isset($array[$row]['A'])? trim($array[$row]['A']) : null;
+            $descriptor                = isset($array[$row]['B'])? trim($array[$row]['B']) : null;
+            $barra                     = isset($array[$row]['C'])? trim($array[$row]['C']) : null;
+            $laboratorio               = isset($array[$row]['D'])? trim($array[$row]['D']) : null;
+            $clasificacionTerapeutica  = isset($array[$row]['E'])? trim($array[$row]['E']) : null;
+
+            // puede existir unn caso, en que un row este lleno de "espacios", y se lea incorrectamente como un producto
+            // si al menos un campo es distinto de null y de '', entonces la fila es "valida" (aunque no tenga todos los campos
+            if($sku!=null || $descriptor!=null || $barra!=null || $laboratorio!=null || $clasificacionTerapeutica!=null){
+                $productos[] = [
+                    'idArchivoMaestra'          => $idArchivoMaestra,
+                    'sku'                       => $sku,
+                    'descriptor'                => $descriptor,
+                    'barra'                     => $barra,
+                    'laboratorio'               => $laboratorio,
+                    'clasificacionTerapeutica'  => $clasificacionTerapeutica,
+                    'created_at'                => $now,
+                    'updated_at'                => $now
+                ];
+            }
         }
         return $productos;
     }

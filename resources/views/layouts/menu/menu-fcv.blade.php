@@ -40,8 +40,8 @@
         {{-- MAESTRA DE PRODUCTOS --}}
         @if( $mostrarMaestra )
 
-            <li class="{{ Request::is('maestra-productos-fcv')? 'active': '' }}">
-                <a href="{{ url('maestra-productos-fcv') }}">Maestra de productos FCV</a>
+            <li class="{{ Request::is('maestra-fcv')? 'active': '' }}">
+                <a href="{{ url('maestra-fcv') }}">Maestra de productos FCV</a>
             </li>
         @endif
         {{-- MUESTRA VENCIMIENTO FCV--}}

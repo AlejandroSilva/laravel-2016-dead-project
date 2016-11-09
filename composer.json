@@ -15,7 +15,9 @@
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "h4cc/wkhtmltoimage-amd64": "0.12.x",
         "barryvdh/laravel-snappy": "^0.3.0",
-        "chumper/zipper": "0.6.x"
+        "chumper/zipper": "0.6.x",
+        "mk-j/php_xlsxwriter": "^0.22.0",
+        "akeneo-labs/spreadsheet-parser": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -71,6 +71,9 @@ class ArchivosHelper{
                 'descripcion' => 'El archivo que busca no ha sido encontrado. Contactese con el departamento de informática.',
             ]);
 
+        // hot fix: problema esporadico con el buffer
+        ob_end_clean();
+
         return response()
             ->download($fullPath, $nombreArchivo, [
                 'Content-Type'=>'application/force-download',   // forzar la descarga en Opera Mini

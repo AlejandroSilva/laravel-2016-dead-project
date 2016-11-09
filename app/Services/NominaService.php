@@ -301,10 +301,10 @@ class NominaService implements NominaServiceContract {
     }
 
     // privados
-    private function _error($field, $msg, $codigo){
+    private function _error($campo, $msg, $codigo){
         return (object)[
             'error'=>[
-                "$field"=>$msg
+                "$campo"=>$msg
             ],
             'codigo'=>$codigo
         ];

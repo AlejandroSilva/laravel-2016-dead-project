@@ -24,11 +24,13 @@
             <h3><small>{{$inventario->fechaProgramadaF()}}</small></h3>
         </div>
         <div class="col-xs-6">
+
+            {{-- En algun momento terinar esto --}}
             <ul class="nav nav-pills navbar-right nav-inventario">
-                <li class="active"><a href="#">Nomina Día</a></li>
+                <li class="disabled activeX"><a href="#">Nomina Día</a></li>
                 <li class="disabled"><a href="#">Nomina Noche</a></li>
-                <li class=""><a href="#">Archivo Final</a></li>
-                <li class=""><a href="#">Historial</a></li>
+                <li class="disabled"><a href="#">Archivo Final</a></li>
+                <li class="disabled"><a href="#">Historial</a></li>
             </ul>
         </div>
     </div>

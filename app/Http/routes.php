@@ -149,10 +149,14 @@ Route::group(['middleware' => ['web']], function (){
 
         // ################ MAESTRA DE PRODUCTOS
         // VISTAS:
-        Route::get('maestra-productos-fcv',                         'MaestraProductosController@show_maestra_productos_fcv')->name('maestraFCV');
-        Route::post('maestra-productos/subir-maestra-fcv',          'MaestraProductosController@subir_maestraFCV');
+        Route::get('maestra-fcv',                                   'MaestraProductosController@show_maestraFCV')->name('maestraFCV');
+        Route::post('maestra-fcv/subir-maestra',                    'MaestraProductosController@formpost_subirMaestraFCV');
+        Route::get('maestra-fcv/{idMaestra}/ver-estado',            'MaestraProductosController@show_verEstadoMaestraFCV')->name('verEstadoMaestraFCV');
+        Route::post('maestra-fcv/{idMaestra}/actualizar-estado',    'MaestraProductosController@formpost_actualizarEstadoFCV');
+        Route::get('maestra-fcv/{idMaestra}/actualizar-maestra',    'MaestraProductosController@show_actualizarMaestraFCV');
         // DESCARGAS:
-        Route::get('maestra-productos/{idArchivo}/descargar-fcv',   'MaestraProductosController@descargar_maestraFCV');
+        Route::get('maestra-fcv/{idMaestra}/descargar-db',          'MaestraProductosController@descargarDB_maestraFCV');
+        Route::get('maestra-fcv/{idArchivo}/descargar-original',    'MaestraProductosController@descargarOriginal_maestraFCV');
 
         // ################ MUESTRAS DE VENCIMIENTO
         // VISTAS:

@@ -57,11 +57,23 @@
                                 <td>{{ $archivo->created_at }}</td>
                                 <td>{{ $archivo->resultado }}</td>
                                 <td>{{ $archivo->maestraValida? 'válida' : 'con errores' }}</td>
-                                <td>{{ count($archivo->getProductosDuplicados()) }}</td>
-                                <td>{{ count($archivo->getProductosInvalidos()) }}</td>
+                                <td>{{ $archivo->getBarrasDuplicadas()->total }}</td>
+                                <td>{{ $archivo->getCamposVacios()->total }}</td>
                                 <td>
-                                    <a class="btn btn-primary btn-xs" href='maestra-productos/{{$archivo->idArchivoMaestra}}/descargar-fcv'>
+                                    <a class="btn btn-default btn-xs" href='maestra-fcv/{{$archivo->idArchivoMaestra}}/ver-estado'>
+                                        Ver estado
+                                    </a>
+                                    <a class="btn btn-default btn-xs" href='maestra-fcv/{{$archivo->idArchivoMaestra}}/actualizar-maestra'>
+                                        Actualizar
+                                    </a>
+                                    {{-- mostrar link de descarga solo si la maestra es "valida" --}}
+                                    <a class="btn btn-primary btn-xs"
+                                       {{ $archivo->maestraValida? '' : "disabled=true" }}
+                                       href="{{ $archivo->maestraValida? "maestra-fcv/$archivo->idArchivoMaestra/descargar-db" : "#" }}">
                                         Descargar
+                                    </a>
+                                    <a class="btn btn-default btn-xs" href='maestra-fcv/{{$archivo->idArchivoMaestra}}/descargar-original'>
+                                        original
                                     </a>
                                 </td>
                             </tr>
@@ -79,7 +91,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" align="center"><span class="glyphicon glyphicon-upload"></span> Subir maestra de productos</div>
                     <div class="panel-body" align="center">
-                        <form class="form-horizontal" action="/maestra-productos/subir-maestra-fcv" method="post" enctype="multipart/form-data">
+                        <form class="form-horizontal" action="/maestra-fcv/subir-maestra" method="post" enctype="multipart/form-data">
                             <input type="hidden" value="{{ csrf_token() }}" name="_token">
                             <div class="col-xs-12">
                                 <input class="form-control" type="file" name="file" {{$puedeSubirArchivo? '' : 'disabled'}}>

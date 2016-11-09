@@ -162,6 +162,7 @@ return [
 
         // SEI Service Providers
         App\Providers\NominaServiceProvider::class,
+        App\Providers\MaestraFCVProvider::class,
     ],
 
     /*

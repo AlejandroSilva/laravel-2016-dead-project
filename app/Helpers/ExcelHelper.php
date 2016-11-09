@@ -1,6 +1,27 @@
-<?php
+|<?php
+use Akeneo\Component\SpreadsheetParser\SpreadsheetParser;
+
 
 class ExcelHelper{
+    static function leerExcel_rapido($fullPath){
+        // el desarrollo de este metodo quedo detendio... seguir a penas se pueda
+        $response = (object)[
+            'error' => null,
+            'datos' => null
+        ];
+
+        $workbook = SpreadsheetParser::open($fullPath);
+        $sheet = $workbook->getWorksheetIndex('myworksheet');
+        $datos = [];
+        foreach ($workbook->createRowIterator($sheet) as $rowIndex => $values) {
+            //var_dump($rowIndex, $values);
+            $datos[] = $values;
+        }
+
+        $response->datos = $datos;
+        return $response;
+    }
+
     static function leerExcel($fullPath){
         $response = (object)[
             'error' => null,
@@ -209,11 +230,38 @@ class ExcelHelper{
         return $workbook;
     }
 
+    public static function generarXLSX_maestraFCV($productos){
+        $cabecera = [
+            'CODIGO_PRODUCTO' => 'string',
+            'DESCRIPTOR' => 'string',
+            'CODIGO' => 'string',
+            'Laboratorio' => 'string',
+            'Clasificación Terapéutica' => 'string'
+        ];
+        $datos = [];
+        foreach ($productos as $prod)
+            $datos[] = [
+                $prod->sku,
+                $prod->descriptor,
+                $prod->barra,
+                $prod->laboratorio,
+                $prod->clasificacionTerapeutica,
+            ];
+
+        $random_number= md5(uniqid(rand(), true));
+        $fullpath = public_path()."/tmp/maestraFCV$random_number.xlsx";
+
+        $writer = new XLSXWriter();
+        $writer->writeSheet($datos,'ProductosFCV', $cabecera);
+        $writer->writeToFile($fullpath);
+        return $fullpath;
+    }
+
     public static function workbook_a_archivo($workbook){
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
         $random_number= md5(uniqid(rand(), true));
 
-        $fullpath = public_path()."/tmp/$random_number.xlxs";
+        $fullpath = public_path()."/tmp/$random_number.xlsx";
         $excelWritter->save($fullpath);
         return $fullpath;
     }

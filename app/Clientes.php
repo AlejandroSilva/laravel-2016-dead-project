@@ -3,8 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-// Carbon
-use Carbon\Carbon;
 
 class Clientes extends Model {
     // llave primaria
@@ -16,25 +14,6 @@ class Clientes extends Model {
     public function locales(){
         // hasMany(modelo, child.fogeignKey, this.localKey)
         return $this->hasMany('App\Locales', 'idCliente', 'idCliente');
-    }
-
-    // #### Acciones
-    function agregarArchivoMaestra($user, $archivo){
-        $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
-        $cliente = $this->nombreCorto;
-        $extra = "[$timestamp][$cliente]";
-        $carpetaArchivosMaestra = ArchivoMaestraProductos::getPathCarpeta($cliente);
-
-        // mover el archivo a la carpeta que corresponde
-        $archivoFinal = \ArchivosHelper::moverACarpeta($archivo, $extra, $carpetaArchivosMaestra);
-
-        return ArchivoMaestraProductos::create([
-            'idCliente' => $this->idCliente,
-            'idSubidoPor' => $user? $user->id : null,
-            'nombreArchivo' => $archivoFinal->nombre_archivo,
-            'nombreOriginal' => $archivoFinal->nombre_original,
-            'resultado' => 'archivo en proceso'
-        ]);
     }
 
     // #### Formatear respuestas
