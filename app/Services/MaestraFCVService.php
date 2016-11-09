@@ -10,8 +10,10 @@ use App\ArchivoMaestraProductos;
 use App\Clientes;
 
 class MaestraFCVService implements MaestraFCVContract {
-    // como siempre, este modulo quedo incompleto...
+    // como siempre, este modulo quedo incompleto..., falta mejorar la carga de maestra en archivos grandes, y todas
+    // las acciones para actualizar, y editar una maestra
 
+    // Actualizaciones
     public function agregarMaestraFCV($user, $archivo){
         // validar permisos
         if(!$user || !$user->can('fcv-administrarMaestra'))
@@ -95,7 +97,6 @@ class MaestraFCVService implements MaestraFCVContract {
             return $this->_error('productos', $error, 400);
         }
     }
-
     public function descargarMaestraDesdeDB($user, $archivoMaestraProductos){
         // validar permisos
         if(!$user || !$user->can('fcv-administrarMaestra'))
@@ -113,6 +114,7 @@ class MaestraFCVService implements MaestraFCVContract {
         ];
     }
 
+    // Actualizaciones
     public function subirActualizacionFCV(){
 
     }
