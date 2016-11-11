@@ -192,7 +192,7 @@ export class FormularioAgregarAuditoria extends React.Component {
                     {/* Locales */}
                     <div className={'col-sm-3 form-group ' + (this.state.errores.errorNumeroLocal? 'has-error':'')}>
                         <label className="control-label" htmlFor="locales">Local</label>
-                        <input className="form-control" type="number" min='1' max='9999' name="locales"
+                        <input className="form-control" name="locales"
                                ref={ref=>this.inputNumeroLocal=ref}
                                onChange={this.inputNumeroLocalChanged.bind(this)}
                                disabled={this.props.puedeAgregar? '':'disabled'}/>

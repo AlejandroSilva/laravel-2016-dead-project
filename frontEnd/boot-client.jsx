@@ -67,7 +67,7 @@ if( programacionIGSemanalDOM ){
 let programacionAIMensualDOM = document.getElementById('react-programacionAI-mensual')
 if( programacionAIMensualDOM ){
     /** IMPORANTE: POR EL MOMENTO SOLO SE MUESTRAN AUDITORIAS DE FCV **/
-    let clienteFCV = window.laravelClientes.filter(cliente=>cliente.nombreCorto==='FCV')
+    let clienteFCV = window.laravelClientes.filter(cliente=>cliente.nombreCorto==='FCV' || cliente.nombreCorto==='WOM')
     ReactDOM.render(
         <ProgramacionAIMensual
             puedeModificar={ window.laravelPuedeModificarAuditorias }
