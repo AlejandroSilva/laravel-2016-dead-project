@@ -12,34 +12,40 @@ class LocalesTableSeeder extends Seeder {
     public function run() {
         $parsedData = null;
         DB::transaction(function() {
-            $this->parseAndInsert( public_path('seedFiles/localesFCV.csv') );
-            $this->parseAndInsert( public_path('seedFiles/localesPreunic.csv') );
+            $this->parseAndInsert( public_path('seedFiles/wom_final.csv') );
         });
     }
 
     public static function parseAndInsert($file){
-        $data = CSVSeeder::csv_to_array($file);
+        //$data = CSVReader::csv_to_array($file, ',');
+        $data = CSVReader::csv_to_array(public_path('seedFiles/wom_final.csv'), ',');
 
-        array_map(function ($row){
+        for($i=1; $i<count($data) ; $i++){
+            $row = $data[$i];
+
             $now = \Carbon\Carbon::now();
             // Local
             $local = [// FK
-                'idCliente' => $row['idCliente'],
-                'idFormatoLocal' => $row['idFormatoLocal'],
-                'idJornadaSugerida' => $row['idJornadaSugerida'],
+                'idCliente' => $row[0],
+                'idFormatoLocal' => $row[1],
+                'idJornadaSugerida' => $row[2],
 
                 // otros campos
-                'numero' => $row['numero'],
-                'nombre' => $row['nombre'],
-                'horaApertura' => $row['horaApertura'],
-                'horaCierre' => $row['horaCierre'],
-                'emailContacto' => $row['emailContacto'],
-                'codArea1' => $row['codArea1'],
-                'codArea2' => $row['codArea2'],
-                'telefono1' => $row['telefono1'],
-                'telefono2' => $row['telefono2'],
-                'stock' => $row['stock'],
-                'fechaStock' => $row['fechaActualizacionStock'],
+                'numero' => $row[3],
+                'nombre' => $row[4],
+                'horaApertura' => $row[9],
+                'horaCierre' => $row[10],
+                'horaAperturaSab' => $row[11],
+                'horaCierreSab' => $row[12],
+                'horaAperturaDom' => $row[13],
+                'horaCierreDom' => $row[14],
+                'emailContacto' => '',//$row['emailContacto'],
+                'codArea1' => '',//$row['codArea1'],
+                'codArea2' => '',//$row['codArea2'],
+                'telefono1' => '',//$row['telefono1'],
+                'telefono2' => '',//$row['telefono2'],
+                'stock' => 1, //$row['stock'],
+                'fechaStock' => '2016-11-11', //$row['fechaActualizacionStock'],
                 'created_at'=>$now,
                 'updated_at'=> $now
             ];
@@ -48,16 +54,16 @@ class LocalesTableSeeder extends Seeder {
             // Direccion
             $direccion = [// Composite key (PK & FK)
                 'idLocal' => $idLocal, // FK
-                'cutComuna' => $row['cutComuna'], // otros campos
-                'direccion' => $row['direccion'],
-                'referencia' => $row['referencia'],
-                'gmapShortUrl' => $row['gmapShortUrl'],
-                'gmapIframeUrl' => $row['gmapIframeUrl'],
+                'cutComuna' => $row[18], // otros campos
+                'direccion' => $row[19],
+                'referencia' => '',//$row['referencia'],
+                'gmapShortUrl' => '',//$row['gmapShortUrl'],
+                'gmapIframeUrl' => '',//$row['gmapIframeUrl'],
                 'created_at'=>$now,
                 'updated_at'=>$now
             ];
             DB::table('direcciones')->insert($direccion);
-        }, $data);
+        }
     }
 
     public static function actualizarStock($file){
