@@ -266,7 +266,7 @@ class AuditoriasController extends Controller {
         }
         
         // Buscar una aditoria del LOCAL en el mismo MES
-        $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)
+        $auditoria = Auditorias::where('idLocal', '=', (int)$local->idLocal) // remove leading zero
             ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
             ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
             ->first();
@@ -311,7 +311,7 @@ class AuditoriasController extends Controller {
         }
 
         // Buscar una aditoria del LOCAL en el mismo MES, y el mismo DIA
-        $auditoria = Auditorias::where('idLocal', '=', $local->idLocal)
+        $auditoria = Auditorias::where('idLocal', '=', (int)$local->idLocal)    // remove leading zero
             ->whereRaw("extract(year from fechaProgramada) = ?", [$anno])
             ->whereRaw("extract(month from fechaProgramada) = ?", [$mes])
             // no considerar el dia, la plataforma "inventario.seiconsultores.cl" siempre se equivoca en +-1 o +-2 dias....
