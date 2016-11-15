@@ -240,10 +240,16 @@ class InventariosController extends Controller {
         if($inventario){
             DB::transaction(function() use($inventario){
                 $inventario->delete();
-                // eliminar sus jornadas
                 $nominaDia = $inventario->nominaDia;
-                $nominaDia->delete();
                 $nominaNoche = $inventario->nominaNoche;
+                // eliminar operadores de la nomina
+                $nominaDia->dotacion()->detach();
+                $nominaNoche->dotacion()->detach();
+                // eliminar captadores de las nominas
+                $nominaDia->captadores()->detach();
+                $nominaNoche->captadores()->detach();
+                // eliminar la nomina de dia y de noche
+                $nominaDia->delete();
                 $nominaNoche->delete();
                 return response()->json([], 204);
             });
