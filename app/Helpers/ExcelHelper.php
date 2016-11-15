@@ -1,7 +1,6 @@
 <?php
 use Akeneo\Component\SpreadsheetParser\SpreadsheetParser;
 
-
 class ExcelHelper{
     static function leerExcel_rapido($fullPath){
         // el desarrollo de este metodo quedo detendio... seguir a penas se pueda
@@ -28,8 +27,12 @@ class ExcelHelper{
             'datos' => null
         ];
         try {
-            ini_set('memory_limit','1024M');
+            ini_set('memory_limit','2048M');
             ini_set('max_execution_time', 540);
+            $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+            $cacheSettings = array( 'memoryCacheSize' => '512MB');
+            PHPExcel_Settings::setCacheStorageMethod($cacheMethod,$cacheSettings);
+
             // al indicar que tipo de archivo se espera, fuerzo a que no pueda abrir archivos de texto plano
             //$inputFileType = 'Excel2007';
             $inputFileType = PHPExcel_IOFactory::identify($fullPath);

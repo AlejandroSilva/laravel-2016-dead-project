@@ -45,17 +45,18 @@ class MaestraFCVService implements MaestraFCVContract {
         // parsear Excel a Array de productos
         $path = $archivoMaestraProductos->getFullPath();
         $idArchivo = $archivoMaestraProductos->idArchivoMaestra;
-        $resultadoProductos = \ArchivoMaestraFCVHelper::parsearExcelAProductos($path, $idArchivo);
-        if(isset($resultadoProductos->error)){
-            $archivoMaestraProductos->setResultado($resultadoProductos->error, false);
-            return $this->_error('archivo', $resultadoProductos->error, 400);
+        $resultadoParsearExcel =  $this->_parsearExcelAProductos($path, $idArchivo);
+
+        if(isset($resultadoParsearExcel->error)){
+            $archivoMaestraProductos->setResultado($resultadoParsearExcel->error, false);
+            return $this->_error('archivo', $resultadoParsearExcel->error, 400);
         }
 
         // Eliminar los productos anteriores de este mismo idArchivoMaestra
         ProductosFCV::where('idArchivoMaestra', $idArchivo)->delete();
 
         // Agregar productos a la DB
-        $chunks = array_chunk($resultadoProductos->productos, 5000, true);
+        $chunks = array_chunk($resultadoParsearExcel->productos, 5000, true);
         DB::transaction(function() use ($chunks){
             foreach($chunks as $chunk) {
                 ProductosFCV::insert($chunk);
@@ -131,6 +132,48 @@ class MaestraFCVService implements MaestraFCVContract {
                 "$campo"=>$mensaje
             ],
             'codigo'=>$codigo
+        ];
+    }
+    private function _parsearExcelAProductos($excelPath, $idArchivoMaestra){
+        // paso 1) de Excel a Array
+        $resultadoExcel = \ExcelHelper::leerExcel_rapido($excelPath);
+        if(isset($resultadoExcel->error))
+            return (object)[
+                'error' => $resultadoExcel->error
+            ];
+
+        // paso 2) Parsear los datos del archivo
+        $now = Carbon::now()->toDateTimeString();
+        $array = $resultadoExcel->datos;
+        $highestRow = count($array);
+
+        $productos = [];
+        // se salta la primera fila, la que tiene los headers
+        for( $row=1; $row<=$highestRow; $row++ ){
+            $sku                       = isset($array[$row][0])? trim($array[$row][0]) : null;
+            $descriptor                = isset($array[$row][1])? trim($array[$row][1]) : null;
+            $barra                     = isset($array[$row][2])? trim($array[$row][2]) : null;
+            $laboratorio               = isset($array[$row][3])? trim($array[$row][3]) : null;
+            $clasificacionTerapeutica  = isset($array[$row][4])? trim($array[$row][4]) : null;
+
+            // puede existir unn caso, en que un row este lleno de "espacios", y se lea incorrectamente como un producto
+            // si al menos un campo es distinto de null y de '', entonces la fila es "valida" (aunque no tenga todos los campos
+            if($sku!=null || $descriptor!=null || $barra!=null || $laboratorio!=null || $clasificacionTerapeutica!=null){
+                $productos[] = [
+                    'idArchivoMaestra'          => $idArchivoMaestra,
+                    'sku'                       => $sku,
+                    'descriptor'                => $descriptor,
+                    'barra'                     => $barra,
+                    'laboratorio'               => $laboratorio,
+                    'clasificacionTerapeutica'  => $clasificacionTerapeutica,
+                    'created_at'                => $now,
+                    'updated_at'                => $now
+                ];
+            }
+        }
+
+        return (object)[
+            'productos' => $productos
         ];
     }
 }
