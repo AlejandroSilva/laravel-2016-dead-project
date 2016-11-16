@@ -7,6 +7,7 @@ export default class BlackBoxIGSemanal{
         // this.filtroClientes = []
         this.filtroRegiones = []
         this.filtroComunas = []
+        this.filtroTurnos = []
         this.filtroLideres = []
         this.filtroCaptadores = []
         this.filtroCeco = []
@@ -16,6 +17,7 @@ export default class BlackBoxIGSemanal{
         this.lista = []
         this.filtroRegiones = []
         this.filtroComunas = []
+        this.filtroTurnos = []
         this.filtroLideres = []
         this.filtroCaptadores = []
         this.filtroCeco = []
@@ -99,6 +101,20 @@ export default class BlackBoxIGSemanal{
 
                 // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
                 let opcion = _.find(this.filtroComunas, {'valor': valor})
+                return opcion? opcion : {valor, texto, seleccionado: true}
+            })
+            .uniqBy('valor')
+            .sortBy('texto')
+            .value()
+
+        // ##### Filtro Turnos
+        this.filtroTurnos = _.chain(this.lista)
+            .map(inventario=>{
+                let valor = inventario.inv_idJornada
+                let texto = inventario.inv_jornada
+
+                // entrega la opcion si ya existe (para mantener el estado del campo 'seleccionado', o la crea si no existe
+                let opcion = _.find(this.filtroTurnos, {'valor': valor})
                 return opcion? opcion : {valor, texto, seleccionado: true}
             })
             .uniqBy('valor')
@@ -209,6 +225,10 @@ export default class BlackBoxIGSemanal{
                 .filter(inventario=>{
                     return _.find(this.filtroComunas, {'valor': inventario.local_cutComuna, 'seleccionado': true})
                 })
+                // Filtrar por Turno
+                .filter(inventario=>{
+                    return _.find(this.filtroTurnos, {'valor': inventario.inv_idJornada, 'seleccionado': true})
+                })
                 // Filtrar por Lideres
                 .filter(inventario=>{
                     if(inventario.inv_idJornada=='1'){
@@ -251,6 +271,7 @@ export default class BlackBoxIGSemanal{
             filtros: {
                 filtroRegiones: this.filtroRegiones,
                 filtroComunas: this.filtroComunas,
+                filtroTurnos: this.filtroTurnos,
                 filtroLideres: this.filtroLideres,
                 filtroCaptadores: this.filtroCaptadores,
                 filtroCeco: this.filtroCeco,

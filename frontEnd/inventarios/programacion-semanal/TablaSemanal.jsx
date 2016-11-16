@@ -79,7 +79,13 @@ class TablaInventarios extends React.Component{
                                 actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroComunas')}
                             />
                         </th>
-                        <th className={css.thTurno}>Turno</th>
+                        <th className={css.thTurno}>
+                            <HeaderConFiltro
+                                nombre='Turno'
+                                filtro={this.props.filtros.filtroTurnos || []}
+                                actualizarFiltro={this.props.actualizarFiltro.bind(this, 'filtroTurnos')}
+                            />
+                        </th>
                         <th className={css.thTienda}>Tienda</th>
                         <th className={css.thStock}>Stock</th>
                         <th className={css.thDotacionTotal}>Dot.Total</th>

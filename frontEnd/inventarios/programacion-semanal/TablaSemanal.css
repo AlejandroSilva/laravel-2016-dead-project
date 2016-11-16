@@ -107,7 +107,10 @@
 
 /* TURNO */
 .thTurno{
-    width: 45px !important;
+    /* sin filtro (solo texto) no necesita padding, y tendria un ancho de 45px */
+    width: 49px !important;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
     background: white;
 }
 .tdTurno{
