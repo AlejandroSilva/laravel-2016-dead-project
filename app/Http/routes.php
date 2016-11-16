@@ -161,7 +161,7 @@ Route::group(['middleware' => ['web']], function (){
         // ################ MUESTRAS DE VENCIMIENTO
         // VISTAS:
         Route::get('muestra-vencimiento-fcv',                       'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
-        Route::post('muestra-vencimiento/subir-muestra-fcv',        'MuestraVencimientoController@api_subirMuestraFCV');
+        Route::post('muestra-vencimiento-fcv/subir-muestra',        'MuestraVencimientoController@post_subirMuestraFCV');
         // DESCARGAS:
         Route::get('muestra-vencimiento-fcv/{idMuestra}/descargar', 'MuestraVencimientoController@descargar_muestraFCV');
 

@@ -84,7 +84,7 @@ class MaestraProductosController extends Controller {
         // ToDO: terminar esto en algun momento... con archivos grandes se cae, el desarrollo se detuvo...
         $res = $maestraFCVService->agregarMaestraFCV($user, $archivo);
 
-        // mostrar index
+        // redireccionar a index
         if(isset($res->error)){
             if($res->codigo==401 || $res->codigo==403)
                 return response()->view('errors.403', [], 403);

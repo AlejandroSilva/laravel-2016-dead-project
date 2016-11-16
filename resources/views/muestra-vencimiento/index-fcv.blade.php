@@ -3,76 +3,105 @@
 
 @section('body')
     <style  type="text/css">
-        .tabla-documentos {
+        .container-tabla-archivos{
+            max-height: 400px;
+            overflow: overlay;
+        }
+        .tabla-archivos {
             font-size: 12px;
+            padding: 0 !important;
+            text-align: center;
         }
-        .tabla-documentos {
-            display: block;
-            height: 400px;
-            overflow-y: scroll;
+        .tabla-archivos .col-id{
+            width: 20px;
         }
-        .td-no-wrap{
-            white-space: nowrap;
+        .tabla-archivos th {
+            text-align: center;
+            padding: 0 !important;
+        }
+        .tabla-archivos td {
+            text-align: center;
+            padding-top: 1px ;
+            padding-bottom: 1px ;
         }
     </style>
 
     <div class="container">
         <div class="row">
-            {{-- ARHIVOS SUBIDOS A PLATAFORMA --}}
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading" align="center">
-                        <span class="glyphicon glyphicon-folder-close"></span> Muestras de Vencimiento
-                    </div>
-                    <div class="panel-body">
-                        <table class="table table-responsive table-hover table-bordered tabla-documentos">
-                            <thead>
-                                <th>Nombre archivo</th>
-                                <th>Subido por</th>
-                                <th>Fecha subida</th>
-                                <th>Estado</th>
-                                <th>Valida</th>
-                                <th>Resultado</th>
-                            </thead>
-                            <tbody>
-                                @foreach($archivos as $archivo)
-                                    <tr class="{{ $archivo->muestraValida? 'success' : 'warning' }}">
-                                        <td>{{ $archivo->nombre_original}}</td>
-                                        <td class="td-no-wrap">{{ $archivo->subidoPor? $archivo->subidoPor->nombreCorto() : '-'}}</td>
-                                        <td class="td-no-wrap">{{ $archivo->created_at }}</td>
-                                        <td class="td-no-wrap">{{ $archivo->muestraValida? 'valida' : 'con errores' }}</td>
-                                        <td>{{ $archivo->resultado }}</td>
-                                        <td>
-                                            <a href='/muestra-vencimiento-fcv/{{$archivo->idArchivoMuestraVencimientoFCV}}/descargar' class="btn btn-primary btn-xs">Descargar</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+            <h1>Muestras de vencimiento, auditorias FCV</h1>
+
+            {{-- archivos subidos --}}
+            <div class="panel panel-primary">
+                <div class="panel-heading" align="center" style="padding:0">
+                    <span class="glyphicon glyphicon-folder-close"></span> Muestras de Vencimiento</div>
+                <div class="container-tabla-archivos">
+                    <table class="table table-responsive table-hover tabla-archivos table-bordered">
+                        <thead>
+                        <th class="col-id">ID</th>
+                        <th>Nombre archivo</th>
+                        <th>Subido por</th>
+                        <th>Fecha y hora subida</th>
+                        <th>Estado</th>
+                        <th>Válida</th>
+                        <th>Duplicados</th>
+                        <th>Invalidos</th>
+                        <th>Opciones</th>
+                        </thead>
+                        <tbody>
+                        @foreach($archivosMuestrasVencimiento as $archivo)
+                            <tr class="{{ $archivo->maestraValida? 'success' : 'warning' }}">
+                                <td class="col-id">{{ $archivo->idArchivoMuestraVencimientoFCV}}</td>
+                                <td>{{ $archivo->nombreOriginal }}</td>
+                                <td>{{ $archivo->subidoPor? $archivo->subidoPor->nombreCorto() : '-' }}</td>
+                                <td>{{ $archivo->created_at }}</td>
+                                <td>{{ $archivo->resultado }}</td>
+                                <td>{{ $archivo->maestraValida? 'válida' : 'con errores' }}</td>
+                                <td> $archivo->getBarrasDuplicadas()->total </td>
+                                <td> $archivo->getCamposVacios()->total </td>
+                                <td>
+                                    <a class="btn btn-default btn-xs" href='maestra-fcv/{{$archivo->idArchivoMaestra}}/ver-estado'>
+                                        Ver estado
+                                    </a>
+                                    <a class="btn btn-default btn-xs" href='maestra-fcv/{{$archivo->idArchivoMaestra}}/actualizar-maestra'>
+                                        Actualizar
+                                    </a>
+                                    {{-- mostrar link de descarga solo si la maestra es "valida" --}}
+                                    <a class="btn btn-primary btn-xs"
+                                       {{ $archivo->maestraValida? '' : "disabled=true" }}
+                                       href="{{ $archivo->maestraValida? "maestra-fcv/$archivo->idArchivoMaestra/descargar-db" : "#" }}">
+                                        Descargar
+                                    </a>
+                                    <a class="btn btn-default btn-xs" href='maestra-fcv/{{$archivo->idArchivoMaestra}}/descargar-original'>
+                                        original
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            {{-- ENVIAR NUEVA MUESTRA --}}
-            <div class="col-md-6">
+            {{-- SUBIR ARCHIVO MUESTRA VENCIMIENTO --}}
+            <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading" align="center">
-                        <span class="glyphicon glyphicon-upload"></span> Subir muestra<muestra></muestra>
+                        <span class="glyphicon glyphicon-upload"></span> Subir muestra de vencimiento
                     </div>
                     <div class="panel-body">
-                        <form class="form-horizontal" action="/muestra-vencimiento/subir-muestra-fcv" method="post" enctype="multipart/form-data">
+                        <form class="form-horizontal" action="/muestra-vencimiento-fcv/subir-muestra" method="post" enctype="multipart/form-data">
                             <input type="hidden" value="{{ csrf_token() }}" name="_token">
 
-                            <label class="col-md-3">Muestra de vencimiento</label>
-                            <div class="col-sm-9">
+                            <div class="col-xs-12">
                                 <input class="form-control" type="file" name="muestraVencimiento">
                             </div>
 
-
-                            <div class="col-sm-offset-3 col-sm-9">
-                                <input type="submit" class="btn btn-primary btn-sm btn-block" name="submit"></br>
+                            <div class="col-xs-12">
+                                <input type="submit" class="btn btn-primary btn-sm btn-block" {{$puedeSubirArchivo? '' : 'disabled'}}
+                                        value="Enviar" name="submit"
+                                >
                             </div>
 
                             {{-- mensaje de error o de exito luego de subir un archivo --}}
@@ -89,23 +118,6 @@
                                 @endif
                             </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-
-            {{-- DESCARGAR DATOS EXISTENTE --}}
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading" align="center"><span class="glyphicon glyphicon-download-alt"></span> Descargar Datos</div>
-                    <div class="panel-body">
-                        <div class="panel-body">
-                            <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
-                                <label class="col-md-3">Descargar datos</label>
-                                <div class="col-sm-9">
-                                    <a class="btn btn-primary btn-sm btn-block" disabled>Descargar datos</a>
-                                </div>
-                            </form>
-                        </div>
                     </div>
                 </div>
             </div>

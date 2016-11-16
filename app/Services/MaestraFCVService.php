@@ -20,12 +20,11 @@ class MaestraFCVService implements MaestraFCVContract {
             return $this->_error('user', 'no tiene permisos', 403);
 
         $clienteFCV = Clientes::find(2);
-
+        // extras en el nombre del archivo
         $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
         $cliente = $clienteFCV->nombreCorto;
         $extra = "[$timestamp][$cliente]";
         $carpetaArchivosMaestra = ArchivoMaestraProductos::getPathCarpeta($cliente);
-
         // mover el archivo a la carpeta que corresponde
         $archivoFinal = \ArchivosHelper::moverACarpeta($archivo, $extra, $carpetaArchivosMaestra);
 

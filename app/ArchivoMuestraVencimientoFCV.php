@@ -11,7 +11,7 @@ class ArchivoMuestraVencimientoFCV extends Model {
     // este modelo tiene timestamps
     public $timestamps = true;
     // campos asignables
-    protected $fillable = ['idSubidoPor', 'nombre_archivo', 'nombre_original', 'resultado' ];
+    protected $fillable = ['idSubidoPor', 'nombreArchivo', 'nombreOriginal', 'resultado' ];
 
     // #### Relaciones
     public function subidoPor(){
@@ -22,16 +22,7 @@ class ArchivoMuestraVencimientoFCV extends Model {
     }
 
     // #### Helpers
-
     // #### Acciones
-    static function agregarArchivo($user, $archivo){
-        return ArchivoMuestraVencimientoFCV::create([
-            'idSubidoPor' => $user? $user->id : null,
-            'nombre_archivo' => $archivo->nombre_archivo,
-            'nombre_original' => $archivo->nombre_original,
-            'resultado' => 'ANÁLISIS DE ARCHIVO INCOMPLETO',
-        ]);
-    }
 
     // #### Getters
     static function getPathCarpetaArchivos(){

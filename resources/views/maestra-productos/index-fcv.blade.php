@@ -24,17 +24,16 @@
             padding-top: 1px ;
             padding-bottom: 1px ;
         }
-
     </style>
 
     <div class="container">
         {{-- Archivos enviados--}}
         <div class="row">
-            <div class="col-xs-12">
-                <h1>Maestra de productos FCV</h1>
+            <h1>Maestra de productos FCV</h1>
 
-                <div class="panel panel-primary">
-                <div class="panel-heading" align="center"><span class="glyphicon glyphicon-folder-close"></span> Archivos enviados</div>
+            <div class="panel panel-primary">
+                <div class="panel-heading" align="center" style="padding:0">
+                    <span class="glyphicon glyphicon-folder-close"></span> Maestras de productos</div>
                 <div class="container-tabla-archivos">
                     <table class="table table-responsive table-hover tabla-archivos table-bordered">
                         <thead>
@@ -82,7 +81,6 @@
                     </table>
                 </div>
             </div>
-            </div>
         </div>
 
         <div class="row">
@@ -93,6 +91,7 @@
                     <div class="panel-body" align="center">
                         <form class="form-horizontal" action="/maestra-fcv/subir-maestra" method="post" enctype="multipart/form-data">
                             <input type="hidden" value="{{ csrf_token() }}" name="_token">
+
                             <div class="col-xs-12">
                                 <input class="form-control" type="file" name="file" {{$puedeSubirArchivo? '' : 'disabled'}}>
                             </div>

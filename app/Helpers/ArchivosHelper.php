@@ -50,17 +50,6 @@ class ArchivosHelper{
         return (object)['fullpath' => $tmpPath.$archivo];
     }
 
-    // #################################### MUESTRA VENCIMIENTO AUDITORIA FCV ###################################
-
-    // utilizado por: MuestraVencimientoController::api_upload
-    static function moverMuestraVencimientoFCV($archivo){
-        $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
-        $extra = "[$timestamp][FCV]_";
-        $carpetaDestino = ArchivoMuestraVencimientoFCV::getPathCarpetaArchivos();
-
-        return self::_moverACarpeta($archivo, $extra, $carpetaDestino);
-    }
-
     // ################################################# OTROS ##################################################
 
     static function descargarArchivo($fullPath, $nombreArchivo){

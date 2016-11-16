@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Providers\MuestraVencimientoFCVProvider;
+use App\Services\MuestraVencimientoFCVService;
 use Illuminate\Http\Request;
 use Auth;
 use File;
@@ -17,59 +19,38 @@ class MuestraVencimientoController extends Controller {
             return response()->view('errors.403', [], 403);
 
         return response()->view('muestra-vencimiento.index-fcv', [
-            'archivos' => ArchivoMuestraVencimientoFCV::all()->sortByDesc('created_at'),
+            'archivosMuestrasVencimiento' => ArchivoMuestraVencimientoFCV::all()->sortByDesc('created_at'),
+            'puedeSubirArchivo' => $user->can('fcv-administrarMuestras')
         ]);
     }
 
     // POST muestra-vencimiento/subir-muestra-fcv
-    function api_subirMuestraFCV(Request $request){
-        // verificar permisos
+    function post_subirMuestraFCV(MuestraVencimientoFCVService $mvencimientoService, Request $request){
         $user = Auth::user();
-        if(!$user || !$user->can('fcv-administrarMuestras'))
-            return response()->json([], 403);
 
+        // verificar que venga un archivo en el POST
         if (!$request->hasFile('muestraVencimiento'))
             return redirect()->route("indexMuestraVencimientoFCV")
                 ->with('mensaje-error', 'Debe adjuntar la muestra de vencimiento');
 
         // el archivo es valido?
-        $archivo_formulario = $request->file('muestraVencimiento');
-        if (!$archivo_formulario->isValid())
+        $archivoFormulario = $request->file('muestraVencimiento');
+        if (!$archivoFormulario->isValid())
             return redirect()->route("indexMuestraVencimientoFCV")
                 ->with('mensaje-error', 'El archivo adjuntado no es valido.');
 
-        // mover el archivo a la carpeta correspondiente
-        $archivo = \ArchivosHelper::moverMuestraVencimientoFCV($archivo_formulario);
-        // se guarda en la BD en registro del archivo enviado
-        $archivoMuestraVencimiento = ArchivoMuestraVencimientoFCV::agregarArchivo(Auth::user(), $archivo);
+        $res = $mvencimientoService->agregarArchivoMuestra($user, $archivoFormulario);
+        return response()->json($res);
 
-        // 1) leer los datos del xlsx
-        $resultadoExcel = \ExcelHelper::leerExcel($archivoMuestraVencimiento->getFullPath());
-        if( $resultadoExcel->error!=null ){
-            $archivoMuestraVencimiento->setResultado($resultadoExcel->error, false);
-            return redirect()->route("indexMuestraVencimientoFCV")
-                ->with('mensaje-error', $resultadoExcel->error);
-        }
-
-        // 2) parsear los datos al formato correcto
-        $resultadoParseo = \MuestraVencimiento::parsearArrayMuestraFCV($resultadoExcel->datos, $archivoMuestraVencimiento->idArchivoMuestraVencimientoFCV);
-        if( $resultadoParseo->error!=null ){
-            $archivoMuestraVencimiento->setResultado($resultadoParseo->error, false);
-            return redirect()->route("indexMuestraVencimientoFCV")
-                ->with('mensaje-error', $resultadoParseo->error);
-        }
-
-        // insertar los datos en la BD
-        $archivoMuestraVencimiento->agregarDatos($resultadoParseo->datos);
-
-        // todo: validar: buscar duplicados o algun otro error
-
-        // se agrego correctamente el archivo a la BD
-        $archivoMuestraVencimiento->setResultado("Archivo cargado correctamente a la DB.", true);
-
-        //return response()->json($archivoMuestraVencimiento);
-        return redirect()->route("indexMuestraVencimientoFCV")
-            ->with('mensaje-exito', $archivoMuestraVencimiento->resultado);
+        // redireccionar a index
+//        if(isset($res->error)){
+//            if($res->codigo==401 || $res->codigo==403)
+//                return response()->view('errors.403', [], 403);
+//            else
+//                return redirect()->route("indexMuestraVencimientoFCV")->with('mensaje-error', $res->mensaje);
+//        }
+//        else
+//            return redirect()->route("indexMuestraVencimientoFCV")->with('mensaje-exito', "Productos cargados correctamente");
     }
 
     // GET muestra-vencimiento-fcv/{idMuestra}/descargar

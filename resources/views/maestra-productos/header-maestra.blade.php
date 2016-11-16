@@ -1,5 +1,4 @@
 <style>
-
     .titulo-inventario h2{
         margin-bottom: 0;
     }
