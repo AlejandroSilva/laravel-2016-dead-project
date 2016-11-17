@@ -162,8 +162,11 @@ return [
 
         // SEI Service Providers
         App\Providers\NominaServiceProvider::class,
+        // FCV
         App\Providers\MaestraFCVProvider::class,
         App\Providers\MuestraVencimientoFCVProvider::class,
+        // WOM
+        App\Providers\MaestraWOMProvider::class,
     ],
 
     /*

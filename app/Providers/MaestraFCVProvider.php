@@ -9,7 +9,7 @@ class MaestraFCVProvider extends ServiceProvider {
     protected $defer = true;
 
     public function boot() {
-        $this->app->bind('App\Contracts\NominaServiceContract', function(){
+        $this->app->bind('App\Contracts\MaestraFCVContract', function(){
             return new \MaestraFCVService();
         });
     }

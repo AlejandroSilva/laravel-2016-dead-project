@@ -17,6 +17,8 @@
                     @include('layouts.menu.menu-gestion-operacional')
                     {{-- FCV --}}
                     @include('layouts.menu.menu-fcv')
+                    {{-- WOM --}}
+                    @include('layouts.menu.menu-wom')
                     {{-- GESTION LOGISTICA --}}
                     @include('layouts.menu.menu-gestion-logistica')
                 </ul>

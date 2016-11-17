@@ -147,7 +147,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::delete('api/auditoria/{idAuditoria}',                'AuditoriasController@api_eliminar');
         Route::get('api/auditoria/buscar',                          'AuditoriasController@api_buscar');
 
-        // ################ MAESTRA DE PRODUCTOS
+        // ################                             - FARMACIA CRUZ VERDE -
+        // ######## MAESTRA DE PRODUCTOS
         // VISTAS:
         Route::get('maestra-fcv',                                   'MaestraProductosController@show_maestraFCV')->name('maestraFCV');
         Route::post('maestra-fcv/subir-maestra',                    'MaestraProductosController@formpost_subirMaestraFCV');
@@ -158,16 +159,30 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('maestra-fcv/{idMaestra}/descargar-db',          'MaestraProductosController@descargarDB_maestraFCV');
         Route::get('maestra-fcv/{idArchivo}/descargar-original',    'MaestraProductosController@descargarOriginal_maestraFCV');
 
-        // ################ MUESTRAS DE VENCIMIENTO
+        // ######## MUESTRAS DE VENCIMIENTO
         // VISTAS:
         Route::get('muestra-vencimiento-fcv',                       'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
         Route::post('muestra-vencimiento-fcv/subir-muestra',        'MuestraVencimientoController@post_subirMuestraFCV');
         // DESCARGAS:
         Route::get('muestra-vencimiento-fcv/{idMuestra}/descargar', 'MuestraVencimientoController@descargar_muestraFCV');
 
-        // ################ ARCHIVO FINAL AUDITORIA
+        // ######## ARCHIVO FINAL AUDITORIA
         // DESCARGAS:
         Route::get('api/archivo-final-auditoria/{idArchivoCruzVerde}/descargar-zip',  'ArchivoFinalAuditoriaController@api_descargarZIP');
+
+
+        // ################                                    - WOM -
+        // ######## MAESTRA DE PRODUCTOS
+        // VISTAS:
+        Route::get('maestra-wom',                                   'MaestraProductosController@show_maestraWOM')->name('maestraWOM');
+        Route::post('maestra-wom/subir-maestra',                    'MaestraProductosController@formpost_subirMaestraWOM');
+        // DESCARGAS:
+        Route::get('maestra-wom/{idArchivo}/descargar-original',    'MaestraProductosController@descargarOriginal_maestraWOM');
+
+        // ######## ARCHIVOS DE RESPUESTA
+        // VISTAS:
+        Route::get('archivos-respuesta-wom',                        'ArchivoRespuestaWOMController@show_index')->name('indexArchivoRespuestaWOM');
+
 
 
         // ################ VISTA GENERAL INVENTARIOS-AUDITORIAS
