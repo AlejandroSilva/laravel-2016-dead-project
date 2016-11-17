@@ -43,8 +43,11 @@
                 </div>
                 <div class="col-sm-2">
                     <ul class="nav nav-pills navbar-right nav-header">
-                        <li class="success">
-                            <a class="btn btn-xs btn-success pull" href="agregar-archivos-respuesta-wom">
+                        <li class="success" >
+                            <a class="btn btn-xs btn-success pull"
+                               href={{ $puedeSubirArchivo? 'agregar-archivos-respuesta-wom' : '#' }}
+                               {{ $puedeSubirArchivo? '' : 'disabled' }}
+                            >
                                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;Agregar archivo</a>
                         </li>
                     </ul>
@@ -139,7 +142,7 @@
                                     <td class="td-opciones">
                                         <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-original'>
                                             <span class="glyphicon glyphicon-download-alt"></span>
-                                            Descargar ZIP
+                                            Descargar
                                         </a>
                                     </td>
                                 </tr>
