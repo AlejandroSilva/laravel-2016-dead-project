@@ -182,6 +182,10 @@ Route::group(['middleware' => ['web']], function (){
         // ######## ARCHIVOS DE RESPUESTA
         // VISTAS:
         Route::get('archivos-respuesta-wom',                        'ArchivoRespuestaWOMController@show_index')->name('indexArchivoRespuestaWOM');
+        Route::get('agregar-archivos-respuesta-wom',                'ArchivoRespuestaWOMController@show_agregarArchivo')->name('indexAgregarRespuestaWOM');
+        Route::post('agregar-archivos-respuesta-wom',               'ArchivoRespuestaWOMController@post_agregarArchivo');
+        // DESCARGAS:
+        Route::get('archivo-respuesta-wom/{idArchivo}/descargar-original',  'ArchivoRespuestaWOMController@descargarOriginal');
 
 
 

@@ -14,6 +14,7 @@ use App\Inventarios;
 
 class InformeFinalInventarioFCVController extends Controller {
     public function __construct() {
+        // todo: convertir esto a servicio en algun momento....
         // Buscar
         $this->middleware('buscarInventario')
             ->only('show_index_archivoFinal_fcv', 'form_subirZip_fcv', 'api_getActa_fcv',
@@ -554,27 +555,4 @@ class InformeFinalInventarioFCVController extends Controller {
         $fullpath = \ExcelHelper::workbook_a_archivo($workbook);
         return \ArchivosHelper::descargarArchivo($fullpath, "consolidado-actas.xlsx");
     }
-
-    // ELIMINAR!!!!!!!!!!!!!!!!! YA NO ES PUBLICA, FALLA EN LA OTRA PLATAFORMA
-    // GET archivo-final-inventario/excel-actas
-    // MW: ninguno, vista publica
-//    function temp_descargarExcelActas(){
-//        // archivo con ruta fija
-//        $fullPath = public_path()."/actas-septiembre-2016.xlsx";
-//        $nombreOriginal = "actas-septiembre-2016.xlsx";
-//
-//        // existe el archivo fisicamente en el servidor?
-//        if(!File::exists($fullPath))
-//            return response()->view('errors.errorConMensaje', [
-//                'titulo' =>  'Archivo no encontrado',
-//                'descripcion' => 'El archivo que busca no ha sido encontrado. Contactese con el departamento de informática.',
-//            ]);
-//
-//        return response()
-//            ->download($fullPath, $nombreOriginal, [
-//                'Content-Type'=>'application/force-download',   // forzar la descarga en Opera Mini
-//                'Pragma'=>'no-cache',
-//                'Cache-Control'=>'no-cache, must-revalidate'
-//            ]);
-//    }
 }

@@ -167,6 +167,7 @@ return [
         App\Providers\MuestraVencimientoFCVProvider::class,
         // WOM
         App\Providers\MaestraWOMProvider::class,
+        App\Providers\RespuestaWOMProvider::class,
     ],
 
     /*

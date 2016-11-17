@@ -24,7 +24,7 @@ class ArchivoFinalInventario extends Model {
 
     // #### Helpers
     function procesarArchivo(){
-        // TODO CONTINUAR DESARROLLO ..........
+        // TODO CONTINUAR DESARROLLO, en algun momento..........
     }
     function unzipArchivo($archivo){
         $zipPath = $this->getFullPath();
