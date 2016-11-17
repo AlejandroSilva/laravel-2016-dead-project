@@ -193,6 +193,6 @@ class MaestraProductosController extends Controller {
         if($archivoMaestra->idCliente!=9)
             return response()->view('errors.403', [], 403);
 
-        return \ArchivosHelper::descargarArchivo($archivoMaestra->getFullPath(), $archivoMaestra->nombreArchivo);
+        return \ArchivosHelper::descargarArchivo($archivoMaestra->getFullPath(), $archivoMaestra->nombreOriginal);
     }
 }
