@@ -80,7 +80,7 @@ class ActaInventarioHelper{
             'teorico_unidades'  => _get($d['teorico_unidades']),
             'fecha_toma'        => _getDate($d['fecha_toma']),
             'cod_local'         => _get($d['cod_local']),
-            'nombre_empresa'    => _get($d['nombre_empresa']),
+            'nombre_empresa'    => 'FCV', // _get($d['nombre_empresa']), siempre le cambian el nombre... dejar fijo
             'usuario'           => _get($d['usuario']),
             'nota1'             => _get($d['nota1']),
             'nota2'             => _get($d['nota2']),
