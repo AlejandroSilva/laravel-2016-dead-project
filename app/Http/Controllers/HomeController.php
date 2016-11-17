@@ -21,6 +21,15 @@ class HomeController extends Controller {
         $user = Auth::user();
 
         if($user){
+            // a pedido... hacer redirect a los usuarios "especiales"
+            // marco de SEI -> programacion semanal IG
+            if($user->id==2)
+                return redirect('inventarios/programacion-semanal');
+            // felipe de WOM -> Archivos de respuesta de WOM
+            if($user->id==697)
+                return redirect('archivos-respuesta-wom');
+
+
             // buscar los inventarios desde hoy hasta el domingo
             $hoy = Carbon::now()->format('Y-m-d');
             $diaHabilHoy = DiasHabiles::find($hoy);
@@ -33,14 +42,14 @@ class HomeController extends Controller {
                 $user->nominasComoTitular($misNominas_desde, $misNominas_hasta)->todas : [];
 
             // Dashboard "Mis nominas por completar"
-            $captador = User::find(658);
-            $mostrar_misNominasAsignadasCaptador = $captador->hasRole('Captador');
+            //$captador = User::find(658);
+            $mostrar_misNominasAsignadasCaptador = $user->hasRole('Captador');
             $nominasCaptador = Nominas::buscar((object)[
-                'idCaptador' => $captador->id
+                'idCaptador' => $user->id
             ]);
 
             // Dashboard "Indicadores de gestión de inventarios"
-            $mostrar_indicadoresDeInventarios = true;
+            $mostrar_indicadoresDeInventarios = $user->hasRole('Administrador');    // mostrar si es auditor, o cliente FCV...
             $indicadoresGestion_desde = $diaHabilHoy->diasHabilesAntes(1)->fecha;
             $indicadoresGestion_hasta = $diaHabilHoy->fecha;
             $inventariosPeriodo = Inventarios::buscar((object)[
