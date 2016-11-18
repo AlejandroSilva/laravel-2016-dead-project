@@ -122,8 +122,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('inventario/{idInventario}/archivo-final-fcv',        'InformeFinalInventarioFCVController@show_index_archivoFinal_fcv')->name('indexArchivoFinalFCV');
         Route::post('inventario/{idInventario}/subir-zip-fcv',           'InformeFinalInventarioFCVController@form_subirZip_fcv');
         // DESCARGAS:
-        Route::get('inventarios/descargar-consolidado-fcv',              'InformeFinalInventarioFCVController@descargar_consolidado_fcv');
-        Route::get('inventario/archivo-final/{idArchivo}/descargar-fcv', 'InformeFinalInventarioFCVController@descargar_archivoFinal_fcv');
+        //Route::get('inventarios/descargar-consolidado-fcv',              'InformeFinalInventarioFCVController@descargar_consolidado_fcv');    // movido a publico
+        //Route::get('inventario/archivo-final/{idArchivo}/descargar-fcv', 'InformeFinalInventarioFCVController@descargar_archivoFinal_fcv');   // movido a publico
         // APIS:
         Route::get('api/inventario/{idInventario}/acta-fcv',             'InformeFinalInventarioFCVController@api_getActa_fcv');
         Route::post('api/inventario/{idInventario}/acta-fcv',            'InformeFinalInventarioFCVController@api_actualizarActa_fcv');
@@ -245,6 +245,12 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('programacionIG/nomina/{publicIdNomina}/pdf',    'NominasController@show_nomina_pdfDownload');
         Route::get('programacionIG/nomina/{publicIdNomina}/excel',  'NominasController@show_nomina_excelDownload');
         Route::get('programacionIG/nomina/{idNomina}/pdf-preview',  'NominasController@show_nomina_pdfPreview');
+
+        // PANEL INDICADORES DE GESTION "inventario" // ordenar en algun momento
+        Route::get('indicadores-gestion-fcv-publico',                    'InformeFinalInventarioFCVController@show_indicadores_gestion_fcv_publico');
+        Route::get('inventarios/descargar-consolidado-fcv',              'InformeFinalInventarioFCVController@descargar_consolidado_fcv');
+        Route::get('inventario/archivo-final/{idArchivo}/descargar-fcv', 'InformeFinalInventarioFCVController@descargar_archivoFinal_fcv');
+
         // API:
         Route::get('api/inventarios/buscar',                        'Legacy_InventariosController@api_publica_buscar');
         Route::post('api/inventarios/informar-archivo-final',       'Legacy_InventariosController@api_publica_informarArchivoFinal');

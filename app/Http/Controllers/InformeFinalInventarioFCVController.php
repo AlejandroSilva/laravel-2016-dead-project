@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
-use App\ActasInventariosFCV;
-use App\ArchivoFinalInventario;
 use Illuminate\Http\Request;
 use Auth;
 use File;
-// Nominas
+// Modelos
 use App\Inventarios;
+use App\DiasHabiles;
+use App\ActasInventariosFCV;
+use App\ArchivoFinalInventario;
 
 class InformeFinalInventarioFCVController extends Controller {
     public function __construct() {
@@ -387,15 +388,42 @@ class InformeFinalInventarioFCVController extends Controller {
         return response()->json(Inventarios::formatoActa($inventario));
     }
 
+
     /**
-     * ##########################################################   DESCARGAS
+     * ##########################################################   RUTAS PUBLICAS
+     */
+
+    // GET indicadores-gestion-fcv-publico
+    function show_indicadores_gestion_fcv_publico(){
+        $hoy = Carbon::now()->format('Y-m-d');
+        $diaHabilHoy = DiasHabiles::find($hoy);
+
+        $indicadoresGestion_desde = $diaHabilHoy->diasHabilesAntes(1)->fecha;
+        $indicadoresGestion_hasta = $diaHabilHoy->fecha;
+        $inventariosPeriodo = Inventarios::buscar((object)[
+            'idCliente' => 2, // FCV
+            'fechaInicio' => $indicadoresGestion_desde,
+            'fechaFin' => $indicadoresGestion_hasta
+        ]);
+        $totalIndicadores = ActasInventariosFCV::calcularTotales($inventariosPeriodo);
+
+        return view('inventarios.indicadores-gestion-fcv-publico', [
+            'indicadoresGestion_desde' => Carbon::parse($indicadoresGestion_desde)->formatLocalized('%A %e de %B'),
+            'indicadoresGestion_hasta' => Carbon::parse($indicadoresGestion_hasta)->formatLocalized('%A %e de %B'),
+            'inventariosPeriodo' => $inventariosPeriodo,
+            'totalIndicadores' => $totalIndicadores,
+        ]);
+    }
+
+    /**
+     * #############################    DESCARGAS
      */
 
     // GET inventario/archivo-final/{idArchivo}/descargar-fcv
     function descargar_archivoFinal_fcv($idArchivoFinalInventario){
-        // solo se descarga si tiene permisos
-        if(!Auth::user()->can('fcv-verInformesFinalesInventario'))
-            return view('errors.403');
+        // solo se descarga si tiene permisos --- ahora la ruta es publica
+//        if(!Auth::user()->can('fcv-verInformesFinalesInventario'))
+//            return view('errors.403');
 
         // existe el registro en la BD?
         $archivoFinalInventario = ArchivoFinalInventario::find($idArchivoFinalInventario);
@@ -413,8 +441,8 @@ class InformeFinalInventarioFCVController extends Controller {
     // GET inventarios/descargar-consolidado-fcv
     function descargar_consolidado_fcv(Request $request){
         // solo se descarga si tiene permisos
-        if(!Auth::user()->can('fcv-verInformesFinalesInventario'))
-            return view('errors.403');
+//        if(!Auth::user()->can('fcv-verInformesFinalesInventario'))
+//            return view('errors.403');
 
         // todo recibir rango de fecha y otros filtros por el get
         $actas = ActasInventariosFCV::buscar((object)[
@@ -555,4 +583,5 @@ class InformeFinalInventarioFCVController extends Controller {
         $fullpath = \ExcelHelper::workbook_a_archivo($workbook);
         return \ArchivosHelper::descargarArchivo($fullpath, "consolidado-actas.xlsx");
     }
+
 }
