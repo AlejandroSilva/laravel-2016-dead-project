@@ -28,8 +28,8 @@ class InformeFinalInventarioFCVController extends Controller {
     // GET inventarios/informes-finales-fcv
     function show_index_fcv(Request $request){
         // permisos
-        if(!Auth::user()->can('fcv-verInformesFinalesInventario'))
-            return view('errors.403');
+//        if(!Auth::user()->can('fcv-verInformesFinalesInventario'))
+//            return view('errors.403');
 
         // ultimos 12 meses
         $hoy = Carbon::now();

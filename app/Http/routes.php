@@ -118,7 +118,7 @@ Route::group(['middleware' => ['web']], function (){
 
         // ################ ARCHIVO FINAL DE INVENTARIO / ACTAS
         // VISTAS:
-        Route::get('inventarios/informes-finales-fcv',                   'InformeFinalInventarioFCVController@show_index_fcv');
+        //Route::get('inventarios/informes-finales-fcv',                   'InformeFinalInventarioFCVController@show_index_fcv');
         Route::get('inventario/{idInventario}/archivo-final-fcv',        'InformeFinalInventarioFCVController@show_index_archivoFinal_fcv')->name('indexArchivoFinalFCV');
         Route::post('inventario/{idInventario}/subir-zip-fcv',           'InformeFinalInventarioFCVController@form_subirZip_fcv');
         // DESCARGAS:
@@ -234,6 +234,7 @@ Route::group(['middleware' => ['web']], function (){
     |--------------------------------------------------------------------------
     |*/
     Route::group([], function(){
+        Route::get('inventarios/informes-finales-fcv',                   'InformeFinalInventarioFCVController@show_index_fcv');
         // ####     USUARIOS
         // API:
         Route::get('api/usuario/{idUsuario}/roles',                 'PersonalController@api_getRolesUsuario');
