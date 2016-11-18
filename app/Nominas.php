@@ -161,8 +161,11 @@ class Nominas extends Model {
                 ///**/          'nominas' => $lider->nominasComoTitular($fechaInventario, $fechaInventario, $turno),
                 // un lider esta disponible cuando no esta asignado a otra nomina en el mismo turno, Y cuando es el lider
                 // que esta asignado actualmente a la nomina
-                'disponible' => $lider->disponibleParaInventario($fechaInventario, $turno) ||
-                    $lider->id == $this->idLider
+
+                'disponible' => true
+                // se deshabilita la verificacion... ahora un lider lo pueden asignar a multiples nominas... por el cliente WOM
+                //'disponible' => $lider->disponibleParaInventario($fechaInventario, $turno) ||
+                //    $lider->id == $this->idLider
             ];
         });
 
