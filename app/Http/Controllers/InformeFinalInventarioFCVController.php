@@ -395,6 +395,8 @@ class InformeFinalInventarioFCVController extends Controller {
 
     // GET indicadores-gestion-fcv-publico
     function show_indicadores_gestion_fcv_publico(){
+        setlocale(LC_TIME, 'es_CL.utf-8');
+
         $hoy = Carbon::now()->format('Y-m-d');
         $diaHabilHoy = DiasHabiles::find($hoy);
 
