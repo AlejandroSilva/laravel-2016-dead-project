@@ -5,8 +5,6 @@
     <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
     <meta name="viewport" content="width=device-width, user-scalable=no">
 
-    <link rel='stylesheet' href='/vendor/react-widgets/react-widgets.min.css'>
-    <link rel='stylesheet' href='/vendor/fixed-data-table/fixed-data-table.min.css'>
     <style>
         body {
             padding-top: 70px;
@@ -54,4 +52,6 @@
 </html>
 {{-- Styles en esta seccion hacen que se haga render mas rapido en la pagina --}}
 <link rel='stylesheet' href='/vendor/bootstrap/bootstrap.min.css'>
+<link rel='stylesheet' href='/vendor/react-widgets/react-widgets.min.css'>
+<link rel='stylesheet' href='/vendor/fixed-data-table/fixed-data-table.min.css'>
 <link rel='stylesheet' href='/app/frontEnd.css'>
