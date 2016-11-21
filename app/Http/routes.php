@@ -277,5 +277,8 @@ Route::group(['middleware' => ['web']], function (){
 
         // ruta temporal, es utilizada por la plataforma inventario para descargar el excel generado manualmente
         //Route::get('archivo-final-inventario/excel-actas',          'ArchivoFinalInventarioController@temp_descargarExcelActas');
+
+
+        Route::get('wom', 'WOMOfflineController@index');
     });
 });
