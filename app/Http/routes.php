@@ -186,7 +186,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('agregar-archivos-respuesta-wom',               'ArchivoRespuestaWOMController@post_agregarArchivo');
         // DESCARGAS:
         Route::get('archivo-respuesta-wom/{idArchivo}/descargar-original',  'ArchivoRespuestaWOMController@descargarOriginal');
-
+        Route::get('archivo-respuesta-wom/{idArchivo}/descargar-excel',     'ArchivoRespuestaWOMController@descargarExcel');
+        Route::get('archivo-respuesta-wom/{idArchivo}/descargar-pdf',       'ArchivoRespuestaWOMController@descargarActaPdf');
 
 
         // ################ VISTA GENERAL INVENTARIOS-AUDITORIAS
@@ -280,5 +281,6 @@ Route::group(['middleware' => ['web']], function (){
 
 
         Route::get('wom', 'WOMOfflineController@index');
+        Route::get('archivo-respuesta-wom/{idArchivo}/preview-pdf',         'ArchivoRespuestaWOMController@acta_vistaPreviaPDF');
     });
 });

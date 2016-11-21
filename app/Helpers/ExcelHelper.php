@@ -1,5 +1,6 @@
 <?php
 use Akeneo\Component\SpreadsheetParser\SpreadsheetParser;
+use Carbon\Carbon;
 
 class ExcelHelper{
     static function leerExcel_rapido($fullPath){
@@ -259,6 +260,43 @@ class ExcelHelper{
         $writer->writeToFile($fullpath);
         return $fullpath;
     }
+
+    public static function generarXLSX_capturasRespuestaWOM($capturas){
+        $cabecera = [
+            'Nro. Documento' => 'string',
+            'Nro. Linea' => 'string',
+            'Fecha Despacho' => 'string',
+            'Código Material' => 'string',
+            'Cantidad' => 'string',
+            'Número de Serie' => 'string',
+            'Org. Origen' => 'string',
+            'Comentario' => 'string',
+            'Estado' => 'string',
+        ];
+        $datos = [];
+        foreach ($capturas as $cap)
+            $datos[] = [
+                $cap->ptt,
+                $cap->correlativo,
+                Carbon::parse($cap->fechaCaptura)->format('Ymd'),
+                //1,//
+                $cap->sku,
+                $cap->conteoInicial,
+                $cap->serie,
+                $cap->codigoOrganizacion,
+                $cap->nombreOrganizacion,
+                $cap->estado,
+            ];
+
+        $random_number= md5(uniqid(rand(), true));
+        $fullpath = public_path()."/tmp/respuestaWOM_$random_number.xlsx";
+
+        $writer = new XLSXWriter();
+        $writer->writeSheet($datos,'RespuestaWOM', $cabecera);
+        $writer->writeToFile($fullpath);
+        return $fullpath;
+    }
+
 
     public static function workbook_a_archivo($workbook){
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");

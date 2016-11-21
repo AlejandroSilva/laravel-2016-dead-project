@@ -20,7 +20,7 @@
 
 
         .btn-100 {
-            width: 110px;
+            /*width: 80px;*/
             text-align: left !important;
         }
         .texto-centrado{
@@ -140,10 +140,22 @@
                                     <td>{{ $archivo->nombreOriginal }}</td>
                                     <td>{{ $archivo->created_at }}</td>
                                     <td class="td-opciones">
-                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-original'>
+                                        <a class="btn btn-default btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-original'>
                                             <span class="glyphicon glyphicon-download-alt"></span>
-                                            Descargar
+                                            Original
                                         </a>
+                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-excel'>
+                                            <span class="glyphicon glyphicon-download-alt"></span>
+                                            Excel
+                                        </a>
+                                        {{--<a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-pdf'>--}}
+                                            {{--<span class="glyphicon glyphicon-download-alt"></span>--}}
+                                            {{--PDF--}}
+                                        {{--</a>--}}
+                                        {{--<a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/preview-pdf'>--}}
+                                            {{--<span class="glyphicon glyphicon-download-alt"></span>--}}
+                                            {{--PDF-preview--}}
+                                        {{--</a>--}}
                                     </td>
                                 </tr>
                             @endforeach
