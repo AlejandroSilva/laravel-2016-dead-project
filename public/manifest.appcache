@@ -1,0 +1,12 @@
+CACHE MANIFEST
+#rev 10
+
+#images/imagen1.png
+#images/imagen2.png
+
+NETWORK:
+comm.cgi
+
+CACHE:
+wom
+/vendor/bootstrap/bootstrap.min.css
