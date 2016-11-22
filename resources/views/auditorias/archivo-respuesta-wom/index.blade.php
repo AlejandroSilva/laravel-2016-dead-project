@@ -151,6 +151,10 @@
                                             <span class="glyphicon glyphicon-download-alt"></span>
                                             TXT
                                         </a>
+                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-excel'>
+                                            <span class="glyphicon glyphicon-download-alt"></span>
+                                            Excel
+                                        </a>
                                         <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-pdf'>
                                             <span class="glyphicon glyphicon-download-alt"></span>
                                             PDF

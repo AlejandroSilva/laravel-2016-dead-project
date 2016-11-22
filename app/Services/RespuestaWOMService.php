@@ -205,6 +205,19 @@ class RespuestaWOMService implements RespuestaWOMContract {
         ];
     }
 
+    public function generarExcel($user, $idArchivo){
+        // todo: validar permisos del usuario
+        $archivoRespuesta = ArchivoRespuestaWOM::find($idArchivo);
+        $capturas = $archivoRespuesta->capturas;
+        $nombreOriginal = $archivoRespuesta->nombreOriginal;
+        $extensionIndex = strrpos($nombreOriginal, ".");
+        $basename = substr($nombreOriginal, 0, $extensionIndex);
+        return (object)[
+            'fullPath' => \ExcelHelper::generarXLSX_capturasRespuestaWOM($capturas),
+            'fileName' => "$basename.xlsx"
+        ];
+    }
+
     // privados
     private function _error($campo, $mensaje, $codigo){
         return (object)[

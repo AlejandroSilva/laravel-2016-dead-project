@@ -135,6 +135,19 @@ class ArchivoRespuestaWOMController extends Controller {
     }
 
     // GET archivo-respuesta-wom/{idArchivo}/descargar-excel
+    function descargarExcel(RespuestaWOMService $respuestaWOMService, $idArchivo){
+        $user = Auth::user();
+
+        $res = $respuestaWOMService->generarExcel($user, $idArchivo);
+        if(isset($res->error))
+            //return response()->view('errors.403', [], 403);
+            return response()->json($res->error, 400);
+        else{
+            return \ArchivosHelper::descargarArchivo($res->fullPath, $res->fileName);
+        }
+    }
+
+    // GET archivo-respuesta-wom/{idArchivo}/descargar-txt
     function descargarTxt(RespuestaWOMService $respuestaWOMService, $idArchivo){
         $user = Auth::user();
 
