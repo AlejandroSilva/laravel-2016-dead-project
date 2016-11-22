@@ -135,10 +135,10 @@ class ArchivoRespuestaWOMController extends Controller {
     }
 
     // GET archivo-respuesta-wom/{idArchivo}/descargar-excel
-    function descargarExcel(RespuestaWOMService $respuestaWOMService, $idArchivo){
+    function descargarTxt(RespuestaWOMService $respuestaWOMService, $idArchivo){
         $user = Auth::user();
 
-        $res = $respuestaWOMService->generarExcel($user, $idArchivo);
+        $res = $respuestaWOMService->generarTxt($user, $idArchivo);
         if(isset($res->error))
             //return response()->view('errors.403', [], 403);
             return response()->json($res->error, 400);

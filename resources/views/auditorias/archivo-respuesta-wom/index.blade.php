@@ -147,14 +147,14 @@
                                             <span class="glyphicon glyphicon-download-alt"></span>
                                             Original
                                         </a>
-                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-excel'>
+                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-txt'>
                                             <span class="glyphicon glyphicon-download-alt"></span>
-                                            Excel
+                                            TXT
                                         </a>
-                                        {{--<a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-pdf'>--}}
-                                            {{--<span class="glyphicon glyphicon-download-alt"></span>--}}
-                                            {{--PDF--}}
-                                        {{--</a>--}}
+                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-pdf'>
+                                            <span class="glyphicon glyphicon-download-alt"></span>
+                                            PDF
+                                        </a>
                                         {{--<a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/preview-pdf'>--}}
                                             {{--<span class="glyphicon glyphicon-download-alt"></span>--}}
                                             {{--PDF-preview--}}

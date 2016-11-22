@@ -177,17 +177,31 @@ class RespuestaWOMService implements RespuestaWOMContract {
         ];
     }
 
-    public function generarExcel($user, $idArchivo){
+    public function generarTxt($user, $idArchivo){
         // todo: validar permisos del usuario
         $archivoRespuesta = ArchivoRespuestaWOM::find($idArchivo);
         $capturas = $archivoRespuesta->capturas;
 
+        // nombre de la descarga
         $nombreOriginal = $archivoRespuesta->nombreOriginal;
         $extensionIndex = strrpos($nombreOriginal, ".");
         $basename = substr($nombreOriginal, 0, $extensionIndex);
+
+        // crear txt
+        $random_number= md5(uniqid(rand(), true));
+        $fullpath = public_path()."/tmp/respuestaWOM_$random_number.txt";
+        $archivoTxt = fopen($fullpath, "w");
+        fwrite($archivoTxt, "Nro. Documento|Nro. Linea|Fecha Despacho|Código Material|Cantidad|Número de Serie|Org. Origen|Comentario|Estado");
+        foreach ($capturas as $cap){
+            $fecha = Carbon::parse($cap->fechaCaptura)->format('Ymd');
+            $line = "\r\n$cap->ptt|$cap->correlativo|$fecha|$cap->sku|$cap->conteoInicial|$cap->serie|$cap->codigoOrganizacion|$cap->nombreOrganizacion|$cap->estado";
+            fwrite($archivoTxt, $line);
+        }
+        fclose($archivoTxt);
+
         return (object)[
-            'fullPath' => \ExcelHelper::generarXLSX_capturasRespuestaWOM($capturas),
-            'fileName' => "$basename.xlsx"
+            'fullPath' => $fullpath,
+            'fileName' => "$basename.txt"
         ];
     }
 
