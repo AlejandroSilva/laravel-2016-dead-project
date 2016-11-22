@@ -129,7 +129,7 @@
                     <table class="table table-bordered table-hover table-condensed tabla-nominas">
                         <thead>
                         <tr>
-                            {{--<th class="th">#</th>--}}
+                            <th class="th">#</th>
                             <th class="th">Nombre archivo</th>
                             <th class="th">Fecha/hora subida</th>
                             <th class="th">Opciones</th>
@@ -139,7 +139,7 @@
                         @if( count($archivosRespuesta)>0 )
                             @foreach($archivosRespuesta as $archivo)
                                 <tr>
-{{--                                    <td>{{ $archivo->idArchivoRespuestaWOM }}</td>--}}
+                                    <td>{{ $archivo->idArchivoRespuestaWOM }}</td>
                                     <td>{{ $archivo->nombreOriginal }}</td>
                                     <td>{{ $archivo->created_at }}</td>
                                     <td class="td-opciones">

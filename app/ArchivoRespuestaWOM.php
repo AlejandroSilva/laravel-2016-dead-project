@@ -23,6 +23,29 @@ class ArchivoRespuestaWOM extends Model {
     }
 
     // #### Helpers
+    function tieneBarra($sku, $serie){
+        // existe en el sku?
+        if($sku!==null) {
+            $res = DB::table('capturas_respuesta_wom')
+                ->select('sku')
+                ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
+                ->where('sku', $sku)
+                ->get();
+            if(sizeof($res)>0)
+                return true;
+        }
+        // existe en el serie?
+        if($serie!==null) {
+            $res = DB::table('capturas_respuesta_wom')
+                ->select('sku')
+                ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
+                ->where('serie', $serie)
+                ->get();
+            if(sizeof($res)>0)
+                return true;
+        }
+        return false;
+    }
     // #### Acciones
     // #### Getters
     static function getPathCarpeta($nombreCliente){
@@ -31,6 +54,10 @@ class ArchivoRespuestaWOM extends Model {
     function getFullPath(){
         $cliente  = Clientes::find(9)->nombreCorto;
         return self::getPathCarpeta($cliente).$this->nombreArchivo;
+    }
+    function getFullPath2(){
+        $cliente  = Clientes::find(9)->nombreCorto;
+        return self::getPathCarpeta($cliente).$this->nombreArchivoConteo2;
     }
     function getOrganizacionDesdeNombreArchivo(){
         $nombreArchivo = $this->nombreOriginal;

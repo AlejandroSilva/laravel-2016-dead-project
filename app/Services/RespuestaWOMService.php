@@ -63,12 +63,7 @@ class RespuestaWOMService implements RespuestaWOMContract {
         $archivoRespuestaWOM->nombreArchivoConteo2 = $archivo->nombre_archivo;
         $archivoRespuestaWOM->nombreOriginalConteo2 = $archivo->nombre_original;
         $archivoRespuestaWOM->save();
-
-        //$archivoRespuestaWOM->setResultado("no se validan los productos, solo se recibe el archivo", true);
-
-        // despues de cargar, se pueden procesar los productos y luego validarlos...
-        //return $this->procesarMaestraWOM($user, $archivoMaestraWOM);
-        //return $this->procesarArchivo($user, $archivoRespuestaWOM);
+        return $this->procesarArchivoConteo2($archivoRespuestaWOM);
     }
 
     public function procesarArchivo($user, $archivoRespuesta){
@@ -90,6 +85,34 @@ class RespuestaWOMService implements RespuestaWOMContract {
         $archivoRespuesta->capturas()->delete();
         $archivoRespuesta->capturas()->insert($registros);
         return $registros;
+    }
+
+    public function procesarArchivoConteo2($archivoRespuesta){
+        //$archivoRespuesta = ArchivoRespuestaWOM::find(8);
+        $txt2Path = $archivoRespuesta->getFullPath2();
+        // TODO: obtener el numero de local del archivo, esto debe ser sustituido por otro metodo mas tarde
+        $unaCaptura = $archivoRespuesta->capturas->first();
+        $organizacion = $unaCaptura? $unaCaptura->codigoOrganizacion : '-';
+
+        // obtener los registros de la captura2
+        $resultadoParsear = $this->_parsearTXT($txt2Path, $archivoRespuesta->idArchivoRespuestaWOM, $organizacion);
+        if(isset($resultadoParsear->error))
+            return $resultadoParsear;
+
+        // buscar los registros en captura2 que no esten en captura1
+        $registrosNuevos = [];
+        foreach( $resultadoParsear->registros as $cap2){
+            if( $archivoRespuesta->tieneBarra($cap2['sku'], $cap2['serie']) ){
+                // si lo tiene, actualizar conteo2?
+            }else{
+                $cap2['sku'] = $cap2['sku']==null? '' : $cap2['sku'];   // sku no puede ser null
+                $cap2['conteoFinal'] = $cap2['conteoInicial'];          // para diferenciarlos del conteo2
+                $registrosNuevos[] = $cap2;
+            }
+        }
+        // agregar los registros
+        $archivoRespuesta->capturas()->insert($registrosNuevos);
+        return $registrosNuevos;
     }
 
     public function _parsearTXT($txtPath, $idArchivo, $organizacion){
