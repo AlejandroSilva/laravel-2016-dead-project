@@ -41,6 +41,11 @@ class CapturaRespuestaWOM extends Model {
             $query->where('ptt', $peticion->patente);
         }
 
+        // Buscar por estado (opcional)
+        if (isset($peticion->estado)) {
+            $query->where('estado', $peticion->estado);
+        }
+
         return $query->get();
     }
 }

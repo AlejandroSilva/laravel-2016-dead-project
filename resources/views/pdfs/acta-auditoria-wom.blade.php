@@ -98,6 +98,9 @@
                                     <td>Unidades "En uso"</td><td>{{ $unidadesEnUso }}</td>
                                 </tr>
                                 <tr>
+                                    <td>Unidades "En Prestamo"</td><td>{{ $unidadesEnPrestamo }}</td>
+                                </tr>
+                                <tr>
                                     <td>Unidades "Servicio Técnico"</td><td>{{ $unidadesServicioTecnico }}</td>
                                 </tr>
                                 <tr>

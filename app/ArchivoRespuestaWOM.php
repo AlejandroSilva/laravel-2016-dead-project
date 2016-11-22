@@ -43,17 +43,25 @@ class ArchivoRespuestaWOM extends Model {
     function getUnidadesNuevo(){
         $capturas = CapturaRespuestaWOM::buscar((object)[
             'idArchivo' => $this->idArchivoRespuestaWOM,
-            'patente'   => "NUEVO"
+            'estado'   => "NUEVO"
         ]);
         return $capturas->count();
     }
     function getUnidadesEnUso(){
         $capturas = CapturaRespuestaWOM::buscar((object)[
             'idArchivo' => $this->idArchivoRespuestaWOM,
-            'patente'   => "EN USO"
+            'estado'   => "EN USO"
         ]);
         return $capturas->count();
     }
+    function getUnidadesEnPrestamo(){
+        $capturas = CapturaRespuestaWOM::buscar((object)[
+            'idArchivo' => $this->idArchivoRespuestaWOM,
+            'patente'   => "PRESTAMO"
+        ]);
+        return $capturas->count();
+    }
+
     function getUnidadesServicioTecnico(){
         $capturas = CapturaRespuestaWOM::buscar((object)[
             'idArchivo' => $this->idArchivoRespuestaWOM,

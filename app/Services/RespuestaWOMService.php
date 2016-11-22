@@ -40,7 +40,7 @@ class RespuestaWOMService implements RespuestaWOMContract {
 
         // despues de cargar, se pueden procesar los productos y luego validarlos...
         //return $this->procesarMaestraWOM($user, $archivoMaestraWOM);
-        //return $this->procesarArchivo($user, $archivoRespuestaWOM);
+        return $this->procesarArchivo($user, $archivoRespuestaWOM);
     }
 
     public function agregarArchivoRespuestaWOM_conteo2($user, $idArchivoConteo1, $archivo) {
