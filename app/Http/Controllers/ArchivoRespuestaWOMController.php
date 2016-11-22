@@ -26,6 +26,7 @@ class ArchivoRespuestaWOMController extends Controller {
 
         $archivosRespuestaWOM = ArchivoRespuestaWOM::all();
         return view('auditorias.archivo-respuesta-wom.index', [
+            'puedeAdministrar'  => $user->can('wom-administrarArchivosRespuesta'),
             'archivosRespuesta' => $archivosRespuestaWOM,
             'puedeSubirArchivo' => $user->can('wom-subirArchivosRespusta')
         ]);
@@ -101,6 +102,31 @@ class ArchivoRespuestaWOMController extends Controller {
             return redirect()->route("indexAgregarRespuestaWOM")
                 ->with('mensaje-exito', "Archivo cargado correctamente");
     }
+    function post_agregarArchivo_nuevo(RespuestaWOMService $respuestaWOMService, Request $request){
+        $user = Auth::user();
+        $organizacion = $request->org;
+        $liderWom = $request->liderWom;
+        $runLiderWom = $request->runLiderWom;
+        $liderSei = $request->liderSei;
+        $runLiderSei = $request->runLiderSei;
+        $archivoCaptura1 = $request->file('captura1');
+        $archivoCaptura2 = $request->file('captura2');
+
+        $res = $respuestaWOMService->agregarArchivoRespuestaWOM($user, $archivoCaptura1, $archivoCaptura2, $organizacion);
+        if(isset($res->error)){
+            // si ocurre un error, hacer un redirect con los campos del formulario para no volver a completar los campos
+            return redirect()->route("indexAgregarRespuestaWOM")
+                ->with('mensaje-error', $res->mensaje)
+                ->with('org', $organizacion)
+                ->with('liderWom', $liderWom)
+                ->with('runLiderWom', $runLiderWom)
+                ->with('liderSei', $liderSei)
+                ->with('runLiderSei', $runLiderSei);
+        }else
+            return redirect()->route("indexAgregarRespuestaWOM")
+                ->with('mensaje-exito', "Archivo cargado correctamente");
+    }
+
     function post_agregarArchivoConteo2(RespuestaWOMService $respuestaWOMService, Request $request, $idArchivo1){
         $user = Auth::user();
 
@@ -126,13 +152,22 @@ class ArchivoRespuestaWOMController extends Controller {
     }
 
     // GET archivo-respuesta-wom/{idArchivo}/descargar-original
-    function descargarOriginal($idArchivo){
+    function descargarArchivoCarga1($idArchivo){
         $user = Auth::user();
         if(!$user || !$user->can('wom-verArchivosRespuesta'))
             return response()->view('errors.403', [], 403);
 
         $archivoRespuesta = ArchivoRespuestaWOM::find($idArchivo);
         return \ArchivosHelper::descargarArchivo($archivoRespuesta->getFullPath(), $archivoRespuesta->nombreOriginal);
+    }
+    // GET archivo-respuesta-wom/{idArchivo}/descargar-original
+    function descargarArchivoCarga2($idArchivo){
+        $user = Auth::user();
+        if(!$user || !$user->can('wom-verArchivosRespuesta'))
+            return response()->view('errors.403', [], 403);
+
+        $archivoRespuesta = ArchivoRespuestaWOM::find($idArchivo);
+        return \ArchivosHelper::descargarArchivo($archivoRespuesta->getFullPath2(), $archivoRespuesta->nombreOriginalConteo2);
     }
 
     // GET archivo-respuesta-wom/{idArchivo}/descargar-excel

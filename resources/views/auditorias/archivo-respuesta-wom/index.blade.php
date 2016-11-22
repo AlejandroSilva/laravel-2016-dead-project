@@ -143,21 +143,27 @@
                                     <td>{{ $archivo->nombreOriginal }}</td>
                                     <td>{{ $archivo->created_at }}</td>
                                     <td class="td-opciones">
-                                        <a class="btn btn-default btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-original'>
+                                        @if($puedeAdministrar==true)
+                                            <a class="btn btn-default btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-excel'>
+                                                <span class="glyphicon glyphicon-download-alt"></span>
+                                                Excel
+                                            </a>
+                                        @endif
+                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-carga1'>
                                             <span class="glyphicon glyphicon-download-alt"></span>
-                                            Original
+                                            Conteo1
+                                        </a>
+                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-carga2'>
+                                            <span class="glyphicon glyphicon-download-alt"></span>
+                                            Conteo2
                                         </a>
                                         <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-txt'>
                                             <span class="glyphicon glyphicon-download-alt"></span>
-                                            TXT
-                                        </a>
-                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-excel'>
-                                            <span class="glyphicon glyphicon-download-alt"></span>
-                                            Excel
+                                            TXT Carga
                                         </a>
                                         <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-pdf'>
                                             <span class="glyphicon glyphicon-download-alt"></span>
-                                            PDF
+                                            Acta
                                         </a>
                                         {{--<a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/preview-pdf'>--}}
                                             {{--<span class="glyphicon glyphicon-download-alt"></span>--}}
