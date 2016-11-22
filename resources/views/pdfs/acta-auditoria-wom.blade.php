@@ -9,7 +9,9 @@
     <link rel='stylesheet' href='/vendor/bootstrap/bootstrap.min.css'>
 
     <style>
-
+        h1{
+            padding: 40px;
+        }
         .tablaDatos {
             font-size: 12px;
         }
@@ -40,26 +42,26 @@
                         <table class="table table-compact table-striped tablaDatos">
                             <tbody>
                                 <tr>
-                                    <td>Fecha</td><td><b>{{ "x" }}</b></td>
+                                    <td>Fecha</td><td>{{ $fecha }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Organización</td><td><b>{{ "x" }}</b></td>
+                                    <td>Organización</td><td>{{ $organizacion }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Líder WOM</td><td><b>{{ "x" }}</b></td>
+                                    <td>Líder WOM</td><td>{{ $liderWom }}</td>
                                 </tr>
                                 <tr>
-                                    <td>RUN Líder WOM</td><td>{{ "x" }}</td>
+                                    <td>RUN Líder WOM</td><td>{{ $runLiderWom }}</td>
                                 </tr>
                                 {{-- LIDER SEI--}}
                                 <tr>
-                                    <td></td><td><b></b></td>
+                                    <td></td><td></td>
                                 </tr>
                                 <tr>
-                                    <td>Líder SEI</td><td><b>{{ "x" }}</b></td>
+                                    <td>Líder SEI</td><td>{{ $liderSei }}</td>
                                 </tr>
                                 <tr>
-                                    <td>RUN Líder SEI</td><td>{{ "x" }}</td>
+                                    <td>RUN Líder SEI</td><td>{{ $runLiderSei  }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -113,18 +115,22 @@
             <div class="row">
                 {{-- FIRMA WOM --}}
                 <div class="col-xs-3 col-xs-offset-2 firma">
-                    <img src="" alt="" width="200px" height="200px" class="img-rounded">
+                    {{--<img src="" alt="" width="200px" height="200px" class="img-rounded">--}}
+                    <div style="margin-top: 100px"></div>
                     <div class="line"></div>
-                    <h4><b>WOM</b></h4>
+                    <h5><b>WOM</b></h5>
+                    <h5>{{ $liderWom }}</h5>
+                    <h6>Lider WOM</h6>
                 </div>
 
                 {{-- FIRMA SEI--}}
                 <div class="col-xs-3 col-xs-offset-2 firma">
-                    <img src="" alt="" width="200px" height="200px" class="img-rounded">
+                    {{--<img src="" alt="" width="200px" height="200px" class="img-rounded">--}}
+                    <div style="margin-top: 100px"></div>
                     <div class="line"></div>
-                    <h4><b>Empresa externa</b></h4>
-                    <h4>Lider XXXXX</h4>
-                    <h5>Auditor IG</h5>
+                    <h5><b>Empresa externa</b></h5>
+                    <h5>{{ $liderSei }}</h5>
+                    <h6>Auditor IG</h6>
                 </div>
             </div>
         </div>

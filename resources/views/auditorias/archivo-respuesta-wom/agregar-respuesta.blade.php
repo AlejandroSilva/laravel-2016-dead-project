@@ -4,6 +4,9 @@
 @section('body')
     <style>
         {{-- header --}}
+        .page-header{
+            margin-top: 0 !important;
+        }
         .page-header h2{
             margin-bottom: 0;
         }

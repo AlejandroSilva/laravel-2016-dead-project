@@ -177,7 +177,7 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('maestra-wom',                                   'MaestraProductosController@show_maestraWOM')->name('maestraWOM');
         Route::post('maestra-wom/subir-maestra',                    'MaestraProductosController@formpost_subirMaestraWOM');
         // DESCARGAS:
-        Route::get('maestra-wom/{idArchivo}/descargar-original',    'MaestraProductosController@descargarOriginal_maestraWOM');
+        Route::get('maestra-wom/{idArchivo1}/descargar-original',    'MaestraProductosController@descargarOriginal_maestraWOM');
 
         // ######## ARCHIVOS DE RESPUESTA
         // VISTAS:
@@ -282,5 +282,6 @@ Route::group(['middleware' => ['web']], function (){
 
         Route::get('wom', 'WOMOfflineController@index');
         Route::get('archivo-respuesta-wom/{idArchivo}/preview-pdf',         'ArchivoRespuestaWOMController@acta_vistaPreviaPDF');
+        Route::post('api/respuesta-wom/{idArchivo}/agregar-conteo2',            'ArchivoRespuestaWOMController@post_agregarArchivoConteo2');
     });
 });

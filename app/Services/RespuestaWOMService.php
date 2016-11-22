@@ -22,10 +22,11 @@ class RespuestaWOMService implements RespuestaWOMContract {
         // extras en el nombre del archivo
         $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
         $cliente = $clienteWOM->nombreCorto;
-        $extra = "[$timestamp][$cliente]";
-        $carpetaArchivosMaestra = ArchivoRespuestaWOM::getPathCarpeta($cliente);
+        //$hash = md5(uniqid(rand(), true));
+        $extra = "[$timestamp][$cliente][conteo1]";
+        $pathArchivosMaestra = ArchivoRespuestaWOM::getPathCarpeta($cliente);
         // mover el archivo a la carpeta que corresponde
-        $archivo = \ArchivosHelper::moverACarpeta($archivo, $extra, $carpetaArchivosMaestra);
+        $archivo = \ArchivosHelper::moverACarpeta($archivo, $extra, $pathArchivosMaestra);
 
         // ... y crear un registro en la BD
         $archivoRespuestaWOM = ArchivoRespuestaWOM::create([
@@ -39,7 +40,35 @@ class RespuestaWOMService implements RespuestaWOMContract {
 
         // despues de cargar, se pueden procesar los productos y luego validarlos...
         //return $this->procesarMaestraWOM($user, $archivoMaestraWOM);
-        return $this->procesarArchivo($user, $archivoRespuestaWOM);
+        //return $this->procesarArchivo($user, $archivoRespuestaWOM);
+    }
+
+    public function agregarArchivoRespuestaWOM_conteo2($user, $idArchivoConteo1, $archivo) {
+        // validar permisos
+        if(!$user || !$user->can('wom-subirArchivosRespusta'))
+            return $this->_error('user', 'no tiene permisos', 403);
+
+        $clienteWOM = Clientes::find(9);
+        // extras en el nombre del archivo
+        $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
+        $cliente = $clienteWOM->nombreCorto;
+        //$hash = md5(uniqid(rand(), true));
+        $extra = "[$timestamp][$cliente][conteo2]";
+        $pathArchivosMaestra = ArchivoRespuestaWOM::getPathCarpeta($cliente);
+        // mover el archivo a la carpeta que corresponde
+        $archivo = \ArchivosHelper::moverACarpeta($archivo, $extra, $pathArchivosMaestra);
+
+        // ... y crear un registro en la BD
+        $archivoRespuestaWOM = ArchivoRespuestaWOM::find($idArchivoConteo1);
+        $archivoRespuestaWOM->nombreArchivoConteo2 = $archivo->nombre_archivo;
+        $archivoRespuestaWOM->nombreOriginalConteo2 = $archivo->nombre_original;
+        $archivoRespuestaWOM->save();
+
+        //$archivoRespuestaWOM->setResultado("no se validan los productos, solo se recibe el archivo", true);
+
+        // despues de cargar, se pueden procesar los productos y luego validarlos...
+        //return $this->procesarMaestraWOM($user, $archivoMaestraWOM);
+        //return $this->procesarArchivo($user, $archivoRespuestaWOM);
     }
 
     public function procesarArchivo($user, $archivoRespuesta){

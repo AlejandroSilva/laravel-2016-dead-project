@@ -52,9 +52,16 @@ class ArchivoRespuestaWOMController extends Controller {
                 'titulo' => 'Nomina no encontrada',
                 'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
             ]);
-
+        // extraer un registro cualquiera para sacar algunos datos generales
+        $registro = $archivoRespuesta->capturas->first();
 
         return view('pdfs.acta-auditoria-wom', [
+            'liderWom' => $archivoRespuesta->liderWom,
+            'runLiderWom' => $archivoRespuesta->runLiderWom,
+            'liderSei' => $archivoRespuesta->liderSei,
+            'runLiderSei' => $archivoRespuesta->runLiderSei,
+            'fecha' => $registro->fechaCaptura,
+            'organizacion' => $registro->codigoOrganizacion,
             'unidadesNuevo' => $archivoRespuesta->getUnidadesNuevo(),
             'unidadesEnUso' => $archivoRespuesta->getUnidadesEnUso(),
             'unidadesServicioTecnico' => $archivoRespuesta->getUnidadesServicioTecnico(),
@@ -86,6 +93,29 @@ class ArchivoRespuestaWOMController extends Controller {
 
 
         $res = $respuestaWOMService->agregarArchivoRespuestaWOM($user, $archivo);
+        if(isset($res->error)){
+            return redirect()->route("indexAgregarRespuestaWOM")
+                ->with('mensaje-error', $res->error);
+        }else
+            return redirect()->route("indexAgregarRespuestaWOM")
+                ->with('mensaje-exito', "Archivo cargado correctamente");
+    }
+    function post_agregarArchivoConteo2(RespuestaWOMService $respuestaWOMService, Request $request, $idArchivo1){
+        $user = Auth::user();
+
+        // se adjunto un archivo?
+        if (!$request->hasFile('file2'))
+            return redirect()->route("indexAgregarRespuestaWOM")
+                ->with('mensaje-error', "Debe adjuntar un archivo");
+
+        // el archivo es valido?
+        $archivo2 = $request->file('file2');
+        if (!$archivo2->isValid())
+            return redirect()->route("indexAgregarRespuestaWOM")
+                ->with('mensaje-error', "El archivo no es válido");
+
+
+        $res = $respuestaWOMService->agregarArchivoRespuestaWOM_conteo2($user, $idArchivo1, $archivo2);
         if(isset($res->error)){
             return redirect()->route("indexAgregarRespuestaWOM")
                 ->with('mensaje-error', $res->error);
