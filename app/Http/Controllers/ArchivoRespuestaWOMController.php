@@ -64,7 +64,7 @@ class ArchivoRespuestaWOMController extends Controller {
             'fecha' => $registro->fechaCaptura,
             'organizacion' => $registro->codigoOrganizacion,
             'unidadesNuevo' => $archivoRespuesta->getUnidadesNuevo(),
-            'unidadesEnUso' => $archivoRespuesta->getUnidadesEnUso(),
+            'unidadesUsado' => $archivoRespuesta->getUnidadesUsado(),
             'unidadesEnPrestamo' => $archivoRespuesta->getUnidadesEnPrestamo(),
             'unidadesServicioTecnico' => $archivoRespuesta->getUnidadesServicioTecnico(),
             'unidadesTotal' => $archivoRespuesta->getUnidadesTotal(),

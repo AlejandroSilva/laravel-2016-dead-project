@@ -95,7 +95,7 @@
                                     <td>Unidades "Nuevo"</td><td>{{ $unidadesNuevo }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Unidades "En uso"</td><td>{{ $unidadesEnUso }}</td>
+                                    <td>Unidades "En uso"</td><td>{{ $unidadesUsado }}</td>
                                 </tr>
                                 <tr>
                                     <td>Unidades "En Prestamo"</td><td>{{ $unidadesEnPrestamo }}</td>
