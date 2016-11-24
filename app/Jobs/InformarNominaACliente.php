@@ -26,8 +26,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ['fpizarro@seiconsultores.cl', 'Francisca Pizarro'],
         ['psobarzo@seiconsultores.cl', 'Paula Sobarzo'],
         ['logistica@seiconsultores.cl', 'SEI'],
-        ['asilva@seiconsultores.cl', 'Alejandro Silva'],
-        ['marcogamboa.spa@gmail.com', 'Marco Gamboa'],
+        ['asilva@seiconsultores.cl', 'Alejandro Silva']
     ];
     // Cliente 1: PUC
     protected $PUC_nomina_to = [
@@ -72,7 +71,7 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ['jjimenez@construmart.cl', 'Juan Carlos Jimenez Velasquez'],
         ['cristian.cerna@construmart.cl', 'Cristian Cerna'],
     ];
-    
+
 
     /**
      * Create a new job instance.
