@@ -27,11 +27,15 @@ Route::group(['middleware' => ['web']], function (){
     Route::group(['middleware'=>['auth']], function(){
         // ################ CLIENTES Y LOCALES
         // VISTAS:
+        Route::get('admin/mantenedor-clientes',                     'ClientesController@show_mantenedor');
         Route::get('admin/mantenedor-locales',                      'LocalesController@show_mantenedor');
         // API:
         Route::get('api/cliente/{idCliente}/locales',               'LocalesController@api_getLocalesDeCliente');
         Route::post('api/locales',                                  'LocalesController@api_nuevoLocal');
         Route::put('api/local/{idLocal}',                           'LocalesController@api_actualizar');
+        Route::post('cliente',                                      'ClientesController@form_nuevo');
+        Route::put('api/cliente/{idCliente}',                       'ClientesController@form_editar');
+        Route::delete('api/cliente/{idCliente}',                    'ClientesController@api_eliminar');
 
         // ################ STOCK
         // VISTAS:

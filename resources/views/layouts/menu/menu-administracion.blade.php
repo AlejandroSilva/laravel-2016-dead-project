@@ -15,6 +15,11 @@
             {{-- LOCALES --}}
             @if( $mostrarAdministrarLocales || $mostrarAdministrarStock)
                 <li class="dropdown-header">Locales</li>
+                @if( $mostrarAdministrarLocales && Auth::user()->hasRole('Administrador') )
+                    <li class="{{ Request::is('admin/mantenedor-clientes')? 'active': '' }}">
+                        <a href="{{ url('admin/mantenedor-clientes') }}">Mantenedor de Clientes</a>
+                    </li>
+                @endif
                 {{-- Mantenedor Locales --}}
                 @if( $mostrarAdministrarLocales && Auth::user()->hasRole('Developer') )
                     <li class="{{ Request::is('admin/mantenedor-locales')? 'active': '' }}">
