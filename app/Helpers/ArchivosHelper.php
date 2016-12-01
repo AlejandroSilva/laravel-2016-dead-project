@@ -44,7 +44,7 @@ class ArchivosHelper{
         $extraccionCorrecta_acta = $zip->extractTo($tmpPath, $archivo);
         $zip->close();
         if($extraccionCorrecta_acta==false)
-            return (object)['error'=>'Archivo de acta no encontrado dentro del zip.'];
+            return (object)['error'=>'Archivo no encontrado dentro del zip.'];
 
         // leer los datos del txt a un array
         return (object)['fullpath' => $tmpPath.$archivo];

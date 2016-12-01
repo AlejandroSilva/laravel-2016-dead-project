@@ -52,7 +52,7 @@ class RespuestaWOMService implements RespuestaWOMContract {
         $txtConteoFinal = \ArchivosHelper::extraerArchivo($zipPath, 'My Documents/Auditoria_Final_Conteo.txt');
         if(isset($txtConteoFinal->error))
             return (object)[
-                'error'=> "Error al leer el conteo final: $txtConteoFinal->error",
+                'error'=> "Error al leer el archivo de conteo final: $txtConteoFinal->error \nEL ARCHIVO NO HA SIDO CARGADO AL SISTEMA",
                 'archivoRespuesta' => $archivoRespuesta
             ];
 
@@ -60,7 +60,7 @@ class RespuestaWOMService implements RespuestaWOMContract {
         $resultadoParsear = $this->_parsearTXTConteoFinal($txtConteoFinal->fullpath, $idArchivo);
         if(isset($resultadoParsear->error))
             return (object)[
-                'error'=> "Error al parsear el archivo de conteo final: $resultadoParsear->error",
+                'error'=> "Error al leer registros del conteo final: $resultadoParsear->error \nEL ARCHIVO NO HA SIDO CARGADO AL SISTEMA",
                 'archivoRespuesta' => $archivoRespuesta
             ];
 
@@ -75,7 +75,7 @@ class RespuestaWOMService implements RespuestaWOMContract {
         $txtActa = \ArchivosHelper::extraerArchivo($zipPath, 'My Documents/ArchivoActa.txt');
         if(isset($txtActa->error))
             return (object)[
-                'error'=> "Error al leer el acta: $txtActa->error. EL ARCHIVO NO HA SIDO CARGADO AL SISTEMA",
+                'error'=> "Error al leer el acta: $txtActa->error \nEL ARCHIVO NO HA SIDO CARGADO AL SISTEMA",
                 'archivoRespuesta' => $archivoRespuesta
             ];
         $acta = $this->_parsearTXTActa($txtActa->fullpath);
