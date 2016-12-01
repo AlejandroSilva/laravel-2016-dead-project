@@ -46,8 +46,15 @@ class ArchivoRespuestaWOMController extends Controller {
     // GET archivo-respuesta-wom/{idArchivo}/pdf-preview
     function acta_vistaPreviaPDF($idArchivo){
         // validar que el archivo exista
-        // todo: validar que el archivo ha sido "publicado"
         $archivoRespuesta = ArchivoRespuestaWOM::find($idArchivo);
+
+        // buscar firma
+        $pathFirmaVacia = '/WOM/sin-firma-wom.jpg';
+        $zipPath = $archivoRespuesta->getFullPath();
+        $archivoFirma = \ArchivosHelper::extraerArchivo($zipPath, 'My Documents/Firma.jpg');
+        $pathFirmaWom = isset($archivoFirma->error) ?
+             $pathFirmaVacia : str_replace( public_path(), '', $archivoFirma->fullpath );
+
         if(!$archivoRespuesta)
             return view('errors.errorConMensaje', [
                 'titulo' => 'Nomina no encontrada',
@@ -56,6 +63,8 @@ class ArchivoRespuestaWOMController extends Controller {
 
         return view('pdfs.acta-auditoria-wom', [
             'archivo' => $archivoRespuesta,
+            'firmaWom' => $pathFirmaWom,
+            'firmaSei' => $pathFirmaVacia
         ]);
     }
 

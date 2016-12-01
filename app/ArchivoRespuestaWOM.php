@@ -23,29 +23,29 @@ class ArchivoRespuestaWOM extends Model {
     }
 
     // #### Helpers
-    function tieneBarra($sku, $serie){
-        // existe en el sku?
-        if($sku!==null) {
-            $res = DB::table('capturas_respuesta_wom')
-                ->select('sku')
-                ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
-                ->where('sku', $sku)
-                ->get();
-            if(sizeof($res)>0)
-                return true;
-        }
-        // existe en el serie?
-        if($serie!==null) {
-            $res = DB::table('capturas_respuesta_wom')
-                ->select('sku')
-                ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
-                ->where('serie', $serie)
-                ->get();
-            if(sizeof($res)>0)
-                return true;
-        }
-        return false;
-    }
+//    function tieneBarra($sku, $serie){
+//        // existe en el sku?
+//        if($sku!==null) {
+//            $res = DB::table('capturas_respuesta_wom')
+//                ->select('sku')
+//                ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
+//                ->where('sku', $sku)
+//                ->get();
+//            if(sizeof($res)>0)
+//                return true;
+//        }
+//        // existe en el serie?
+//        if($serie!==null) {
+//            $res = DB::table('capturas_respuesta_wom')
+//                ->select('sku')
+//                ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
+//                ->where('serie', $serie)
+//                ->get();
+//            if(sizeof($res)>0)
+//                return true;
+//        }
+//        return false;
+//    }
     // #### Acciones
 
     function eliminar(){
@@ -61,10 +61,10 @@ class ArchivoRespuestaWOM extends Model {
         $cliente  = Clientes::find(9)->nombreCorto;
         return self::getPathCarpeta($cliente).$this->nombreArchivo;
     }
-    function getFullPath2(){
-        $cliente  = Clientes::find(9)->nombreCorto;
-        return self::getPathCarpeta($cliente).$this->nombreArchivoConteo2;
-    }
+//    function getFullPath2(){
+//        $cliente  = Clientes::find(9)->nombreCorto;
+//        return self::getPathCarpeta($cliente).$this->nombreArchivoConteo2;
+//    }
 //    function getOrganizacionDesdeNombreArchivo(){
 //        $nombreArchivo = $this->nombreOriginal;
 //        // quitar extension
@@ -141,11 +141,6 @@ class ArchivoRespuestaWOM extends Model {
         $this->resultado = $mensaje;
         $this->archivoValido = $archivoValido;
         $this->save();
-    }
-
-    function agregarOActualizarRegistros($registros){
-        // eliminar registros anteriores
-        // agregar los nuevos registros
     }
 
     // #### Formatear respuestas

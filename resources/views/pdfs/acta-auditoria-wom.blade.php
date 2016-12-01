@@ -115,8 +115,7 @@
             <div class="row">
                 {{-- FIRMA WOM --}}
                 <div class="col-xs-4 col-xs-offset-1 firma">
-                    {{--<img src="" alt="" width="200px" height="200px" class="img-rounded">--}}
-                    <div style="margin-top: 100px"></div>
+                    <img src="{{$firmaWom}}" alt="" width="150px" height="150px" class="img-rounded">
                     <div class="line"></div>
                     <h5><b>WOM</b></h5>
                     <h5>{{ $archivo->liderWom }}</h5>
@@ -126,8 +125,7 @@
 
                 {{-- FIRMA SEI--}}
                 <div class="col-xs-4 col-xs-offset-2 firma">
-                    {{--<img src="" alt="" width="200px" height="200px" class="img-rounded">--}}
-                    <div style="margin-top: 100px"></div>
+                    <img src="{{$firmaSei}}" alt="" width="150px" height="150px" class="img-rounded">
                     <div class="line"></div>
                     <h5><b>SEI Consultores</b></h5>
                     <h5>{{ $archivo->liderSei }}</h5>
