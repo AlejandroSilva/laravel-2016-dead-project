@@ -19,6 +19,9 @@
             padding-top: 0 !important;
             padding-bottom: 0 !important;
         }
+        .td-75 {
+            width: 75%;
+        }
         .firma {
             text-align: center;
         }
@@ -35,9 +38,11 @@
 
             <div class="row">
                 <h1>Acta de Auditoria IG WOM</h1>
-
+                <div class="col-xs-12">
+                    <h4>Datos generales</h4>
+                </div>
                 {{-- SUPERIOR IZQUIERDO--}}
-                <div class="col-xs-6">
+                <div class="col-xs-12">
                     <div class="panel panel-default">
                         <table class="table table-compact table-striped tablaDatos">
                             <tbody>
@@ -63,16 +68,6 @@
                                 <tr>
                                     <td>RUN Líder SEI</td><td>{{ $archivo->runLiderSei  }}</td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {{--SUPERIOR DERECHO--}}
-                <div class="col-xs-6">
-                    <div class="panel panel-default">
-                        <table class="table table-compact table-striped tablaDatos">
-                            <tbody>
                                 <tr>
                                     <td>Duración</td><td>{{ $archivo->tiempoTranscurrido }}</td>
                                 </tr>
@@ -80,32 +75,96 @@
                         </table>
                     </div>
                 </div>
+
+                {{--SUPERIOR DERECHO--}}
+                {{--<div class="col-xs-4">--}}
+                    {{--<div class="panel panel-default">--}}
+                        {{--<table class="table table-compact table-striped tablaDatos">--}}
+                            {{--<tbody>--}}
+                                {{--<tr>--}}
+                                    {{--<td>Duración</td><td>{{ $archivo->tiempoTranscurrido }}</td>--}}
+                                {{--</tr>--}}
+                            {{--</tbody>--}}
+                        {{--</table>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
             </div>
 
+            {{-- Conteo --}}
             <div class="row">
-                {{--<div class="col-xs-10 col-xs-offset-1">--}}
                 <div class="col-xs-12">
+                    <h4>Resumen conteo</h4>
                     <div class="panel panel-default">
                         <table class="table table-compact tablaDatos">
                             <tbody>
                                 <tr>
-                                    <td>Unidades "Nuevo"</td><td>{{ $archivo->unidadesNuevo }}</td>
+                                    <td class="td-75">Unidades "Nuevo"</td><td>{{ $archivo->unidadesNuevo }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Unidades "En uso"</td><td>{{ $archivo->unidadesUsado }}</td>
+                                    <td class="td-75">Unidades "En uso"</td><td>{{ $archivo->unidadesUsado }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Unidades "En Prestamo"</td><td>{{ $archivo->unidadesPrestamo }}</td>
+                                    <td class="td-75">Unidades "En Prestamo"</td><td>{{ $archivo->unidadesPrestamo }}</td>
                                 </tr>
                                 {{--<tr>--}}
-                                    {{--<td>Unidades "Servicio Técnico"</td><td>{{ $archivo->unidadesServTecnico }}</td>--}}
+                                    {{--<td class="td-75">Unidades "Servicio Técnico"</td><td>{{ $archivo->unidadesServTecnico }}</td>--}}
                                 {{--</tr>--}}
                                 <tr>
-                                    <td>Total Unidades Contadas</td><td>{{ $archivo->unidadesContadas }}</td>
+                                    <td class="td-75">Total Unidades Contadas</td><td>{{ $archivo->unidadesContadas }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Total Patentes</td><td>{{ $archivo->pttTotal }}</td>
+                                    <td class="td-75">Total Patentes</td><td>{{ $archivo->pttTotal }}</td>
                                 </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Checklist --}}
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Checklist</h4>
+                    <div class="panel panel-default">
+                        <table class="table table-compact tablaDatos">
+                            <tbody>
+                            <tr>
+                                <td class="td-75">Identifico todos sectores</td><td>{{ $archivo->identificoTodosLosSectores }}</td>
+                            </tr>
+                            <tr>
+                                <td class="td-75">Identifico ESTADO de telefonos</td><td>{{ $archivo->identificoEstadoDeTelefonos }}</td>
+                            </tr>
+                            <tr>
+                                <td class="td-75">Identifico cajas SIM abiertas</td><td>{{ $archivo->identificoCajasSIMAbiertas }}</td>
+                            </tr>
+                            <tr>
+                                <td class="td-75">Presenta ordenado sus productos</td><td>{{ $archivo->presentaOrdenadoSusProductos }}</td>
+                            </tr>
+                            <tr>
+                                <td class="td-75">Se realizó segundo conteo a télefonos</td><td>{{ $archivo->seRealizoSegundoConteATelefonos }}</td>
+                            </tr>
+                            <tr>
+                                <td class="td-75">Escaneo cajas abiertas de SIM uno a uno</td><td>{{ $archivo->escaneoCajasAbiertasSIMUnoAUno }}</td>
+                            </tr>
+                            <tr>
+                                <td class="td-75">Tiene buena disposición y explica AI</td><td>{{ $archivo->tieneBuenaDisposicionYExplica }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Evaluación --}}
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Evaluación</h4>
+                    <div class="panel panel-default">
+                        <table class="table table-compact tablaDatos">
+                            <tbody>
+                            <tr>
+                                <td class="td-75">Evaluación</td><td>{{ $archivo->evaluacionAServicioSEI }}</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
