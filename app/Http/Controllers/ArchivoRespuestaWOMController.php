@@ -53,24 +53,9 @@ class ArchivoRespuestaWOMController extends Controller {
                 'titulo' => 'Nomina no encontrada',
                 'descripcion' => 'La nomina que ha solicitado no ha sido encontrada. Verifique que el identificador sea el correcto y que el inventario no haya sido eliminado.'
             ]);
-        // extraer un registro cualquiera para sacar algunos datos generales
-        $registro = $archivoRespuesta->capturas->first();
 
         return view('pdfs.acta-auditoria-wom', [
-            'liderWom' => $archivoRespuesta->liderWom,
-            'runLiderWom' => $archivoRespuesta->runLiderWom,
-            'liderSei' => $archivoRespuesta->liderSei,
-            'runLiderSei' => $archivoRespuesta->runLiderSei,
-            'fecha' => $registro->fechaCaptura,
-            'organizacion' => $registro->codigoOrganizacion,
-            'unidadesNuevo' => $archivoRespuesta->getUnidadesNuevo(),
-            'unidadesUsado' => $archivoRespuesta->getUnidadesUsado(),
-            'unidadesEnPrestamo' => $archivoRespuesta->getUnidadesEnPrestamo(),
-            'unidadesServicioTecnico' => $archivoRespuesta->getUnidadesServicioTecnico(),
-            'unidadesTotal' => $archivoRespuesta->getUnidadesTotal(),
-            'patentesTotal' => $archivoRespuesta->getPatentesTotal(),
-            'primeraCaptura' => $archivoRespuesta->getPrimeraCaptura(),
-            'ultimaCaptura' => $archivoRespuesta->getUltimaCaptura(),
+            'archivo' => $archivoRespuesta,
         ]);
     }
 
@@ -94,65 +79,69 @@ class ArchivoRespuestaWOMController extends Controller {
                 ->with('mensaje-error', "El archivo no es válido");
 
 
-        $res = $respuestaWOMService->agregarArchivoRespuestaWOM($user, $archivo);
+        $res = $respuestaWOMService->agregarZipRespuestaWOM($user, $archivo);
+
         if(isset($res->error)){
+            // si el archivo no se puedo agregar por algun error, eliminarlo
+            $res->archivoRespuesta->eliminar();
+
             return redirect()->route("indexAgregarRespuestaWOM")
                 ->with('mensaje-error', $res->error);
         }else
             return redirect()->route("indexAgregarRespuestaWOM")
                 ->with('mensaje-exito', "Archivo cargado correctamente");
     }
-    function post_agregarArchivo_nuevo(RespuestaWOMService $respuestaWOMService, Request $request){
-        $user = Auth::user();
-        $organizacion = $request->org;
-        $liderWom = $request->liderWom;
-        $runLiderWom = $request->runLiderWom;
-        $liderSei = $request->liderSei;
-        $runLiderSei = $request->runLiderSei;
-        $archivoCaptura1 = $request->file('captura1');
-        $archivoCaptura2 = $request->file('captura2');
+//    function post_agregarArchivo_nuevo(RespuestaWOMService $respuestaWOMService, Request $request){
+//        $user = Auth::user();
+//        $organizacion = $request->org;
+//        $liderWom = $request->liderWom;
+//        $runLiderWom = $request->runLiderWom;
+//        $liderSei = $request->liderSei;
+//        $runLiderSei = $request->runLiderSei;
+//        $archivoCaptura1 = $request->file('captura1');
+//        $archivoCaptura2 = $request->file('captura2');
+//
+//        $res = $respuestaWOMService->agregarArchivoRespuestaWOM($user, $archivoCaptura1, $archivoCaptura2, $organizacion);
+//        if(isset($res->error)){
+//            // si ocurre un error, hacer un redirect con los campos del formulario para no volver a completar los campos
+//            return redirect()->route("indexAgregarRespuestaWOM")
+//                ->with('mensaje-error', $res->mensaje)
+//                ->with('org', $organizacion)
+//                ->with('liderWom', $liderWom)
+//                ->with('runLiderWom', $runLiderWom)
+//                ->with('liderSei', $liderSei)
+//                ->with('runLiderSei', $runLiderSei);
+//        }else
+//            return redirect()->route("indexAgregarRespuestaWOM")
+//                ->with('mensaje-exito', "Archivo cargado correctamente");
+//    }
 
-        $res = $respuestaWOMService->agregarArchivoRespuestaWOM($user, $archivoCaptura1, $archivoCaptura2, $organizacion);
-        if(isset($res->error)){
-            // si ocurre un error, hacer un redirect con los campos del formulario para no volver a completar los campos
-            return redirect()->route("indexAgregarRespuestaWOM")
-                ->with('mensaje-error', $res->mensaje)
-                ->with('org', $organizacion)
-                ->with('liderWom', $liderWom)
-                ->with('runLiderWom', $runLiderWom)
-                ->with('liderSei', $liderSei)
-                ->with('runLiderSei', $runLiderSei);
-        }else
-            return redirect()->route("indexAgregarRespuestaWOM")
-                ->with('mensaje-exito', "Archivo cargado correctamente");
-    }
-
-    function post_agregarArchivoConteo2(RespuestaWOMService $respuestaWOMService, Request $request, $idArchivo1){
-        $user = Auth::user();
-
-        // se adjunto un archivo?
-        if (!$request->hasFile('file2'))
-            return redirect()->route("indexAgregarRespuestaWOM")
-                ->with('mensaje-error', "Debe adjuntar un archivo");
-
-        // el archivo es valido?
-        $archivo2 = $request->file('file2');
-        if (!$archivo2->isValid())
-            return redirect()->route("indexAgregarRespuestaWOM")
-                ->with('mensaje-error', "El archivo no es válido");
-
-
-        $res = $respuestaWOMService->agregarArchivoRespuestaWOM_conteo2($user, $idArchivo1, $archivo2);
-        if(isset($res->error)){
-            return redirect()->route("indexAgregarRespuestaWOM")
-                ->with('mensaje-error', $res->error);
-        }else
-            return redirect()->route("indexAgregarRespuestaWOM")
-                ->with('mensaje-exito', "Archivo cargado correctamente");
-    }
+//    function post_agregarArchivoConteo2(RespuestaWOMService $respuestaWOMService, Request $request, $idArchivo1){
+//        $user = Auth::user();
+//
+//        // se adjunto un archivo?
+//        if (!$request->hasFile('file2'))
+//            return redirect()->route("indexAgregarRespuestaWOM")
+//                ->with('mensaje-error', "Debe adjuntar un archivo");
+//
+//        // el archivo es valido?
+//        $archivo2 = $request->file('file2');
+//        if (!$archivo2->isValid())
+//            return redirect()->route("indexAgregarRespuestaWOM")
+//                ->with('mensaje-error', "El archivo no es válido");
+//
+//
+//        $res = $respuestaWOMService->agregarArchivoRespuestaWOM_conteo2($user, $idArchivo1, $archivo2);
+//        if(isset($res->error)){
+//            return redirect()->route("indexAgregarRespuestaWOM")
+//                ->with('mensaje-error', $res->error);
+//        }else
+//            return redirect()->route("indexAgregarRespuestaWOM")
+//                ->with('mensaje-exito', "Archivo cargado correctamente");
+//    }
 
     // GET archivo-respuesta-wom/{idArchivo}/descargar-original
-    function descargarArchivoCarga1($idArchivo){
+    function descargarZip($idArchivo){
         $user = Auth::user();
         if(!$user || !$user->can('wom-verArchivosRespuesta'))
             return response()->view('errors.403', [], 403);
@@ -161,14 +150,14 @@ class ArchivoRespuestaWOMController extends Controller {
         return \ArchivosHelper::descargarArchivo($archivoRespuesta->getFullPath(), $archivoRespuesta->nombreOriginal);
     }
     // GET archivo-respuesta-wom/{idArchivo}/descargar-original
-    function descargarArchivoCarga2($idArchivo){
-        $user = Auth::user();
-        if(!$user || !$user->can('wom-verArchivosRespuesta'))
-            return response()->view('errors.403', [], 403);
-
-        $archivoRespuesta = ArchivoRespuestaWOM::find($idArchivo);
-        return \ArchivosHelper::descargarArchivo($archivoRespuesta->getFullPath2(), $archivoRespuesta->nombreOriginalConteo2);
-    }
+//    function descargarArchivoCarga2($idArchivo){
+//        $user = Auth::user();
+//        if(!$user || !$user->can('wom-verArchivosRespuesta'))
+//            return response()->view('errors.403', [], 403);
+//
+//        $archivoRespuesta = ArchivoRespuestaWOM::find($idArchivo);
+//        return \ArchivosHelper::descargarArchivo($archivoRespuesta->getFullPath2(), $archivoRespuesta->nombreOriginalConteo2);
+//    }
 
     // GET archivo-respuesta-wom/{idArchivo}/descargar-excel
     function descargarExcel(RespuestaWOMService $respuestaWOMService, $idArchivo){
@@ -187,9 +176,8 @@ class ArchivoRespuestaWOMController extends Controller {
     function descargarTxt(RespuestaWOMService $respuestaWOMService, $idArchivo){
         $user = Auth::user();
 
-        $res = $respuestaWOMService->generarTxt($user, $idArchivo);
+        $res = $respuestaWOMService->generarTxtConteoFinal($user, $idArchivo);
         if(isset($res->error))
-            //return response()->view('errors.403', [], 403);
             return response()->json($res->error, 400);
         else{
             return \ArchivosHelper::descargarArchivo($res->fullPath, $res->fileName);

@@ -2,5 +2,5 @@
 
 Interface RespuestaWOMContract {
     // Maestra
-    public function agregarArchivoRespuestaWOM($user, $archivo);
+    public function agregarZipRespuestaWOM($user, $archivo);
 }

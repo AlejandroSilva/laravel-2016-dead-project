@@ -41,27 +41,27 @@
                     <div class="panel panel-default">
                         <table class="table table-compact table-striped tablaDatos">
                             <tbody>
+                                {{--<tr>--}}
+                                    {{--<td>Fecha</td><td> $fecha }}</td>--}}
+                                {{--</tr>--}}
                                 <tr>
-                                    <td>Fecha</td><td>{{ $fecha }}</td>
+                                    <td>Organización</td><td>{{ $archivo->organizacion }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Organización</td><td>{{ $organizacion }}</td>
+                                    <td>Líder WOM</td><td>{{ $archivo->liderWom }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Líder WOM</td><td>{{ $liderWom }}</td>
-                                </tr>
-                                <tr>
-                                    <td>RUN Líder WOM</td><td>{{ $runLiderWom }}</td>
+                                    <td>RUN Líder WOM</td><td>{{ $archivo->runLiderWom }}</td>
                                 </tr>
                                 {{-- LIDER SEI--}}
                                 <tr>
                                     <td></td><td></td>
                                 </tr>
                                 <tr>
-                                    <td>Líder SEI</td><td>{{ $liderSei }}</td>
+                                    <td>Líder SEI</td><td>{{ $archivo->liderSei }}</td>
                                 </tr>
                                 <tr>
-                                    <td>RUN Líder SEI</td><td>{{ $runLiderSei  }}</td>
+                                    <td>RUN Líder SEI</td><td>{{ $archivo->runLiderSei  }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -74,10 +74,7 @@
                         <table class="table table-compact table-striped tablaDatos">
                             <tbody>
                                 <tr>
-                                    <td>Primera Captura</td><td>{{ $primeraCaptura }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Última Captura</td><td>{{ $ultimaCaptura  }}</td>
+                                    <td>Duración</td><td>{{ $archivo->tiempoTranscurrido }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -92,22 +89,22 @@
                         <table class="table table-compact tablaDatos">
                             <tbody>
                                 <tr>
-                                    <td>Unidades "Nuevo"</td><td>{{ $unidadesNuevo }}</td>
+                                    <td>Unidades "Nuevo"</td><td>{{ $archivo->unidadesNuevo }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Unidades "En uso"</td><td>{{ $unidadesUsado }}</td>
+                                    <td>Unidades "En uso"</td><td>{{ $archivo->unidadesUsado }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Unidades "En Prestamo"</td><td>{{ $unidadesEnPrestamo }}</td>
+                                    <td>Unidades "En Prestamo"</td><td>{{ $archivo->unidadesPrestamo }}</td>
+                                </tr>
+                                {{--<tr>--}}
+                                    {{--<td>Unidades "Servicio Técnico"</td><td>{{ $archivo->unidadesServTecnico }}</td>--}}
+                                {{--</tr>--}}
+                                <tr>
+                                    <td>Total Unidades Contadas</td><td>{{ $archivo->unidadesContadas }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Unidades "Servicio Técnico"</td><td>{{ $unidadesServicioTecnico }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Total Unidades Contadas</td><td>{{ $unidadesTotal }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Total Patentes</td><td>{{ $patentesTotal  }}</td>
+                                    <td>Total Patentes</td><td>{{ $archivo->pttTotal }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -117,22 +114,24 @@
 
             <div class="row">
                 {{-- FIRMA WOM --}}
-                <div class="col-xs-3 col-xs-offset-2 firma">
+                <div class="col-xs-4 col-xs-offset-1 firma">
                     {{--<img src="" alt="" width="200px" height="200px" class="img-rounded">--}}
                     <div style="margin-top: 100px"></div>
                     <div class="line"></div>
                     <h5><b>WOM</b></h5>
-                    <h5>{{ $liderWom }}</h5>
-                    <h6>Lider WOM</h6>
+                    <h5>{{ $archivo->liderWom }}</h5>
+                    <h5>{{ $archivo->runLiderWom }}</h5>
+                    <h6>Líder WOM</h6>
                 </div>
 
                 {{-- FIRMA SEI--}}
-                <div class="col-xs-3 col-xs-offset-2 firma">
+                <div class="col-xs-4 col-xs-offset-2 firma">
                     {{--<img src="" alt="" width="200px" height="200px" class="img-rounded">--}}
                     <div style="margin-top: 100px"></div>
                     <div class="line"></div>
-                    <h5><b>Empresa externa</b></h5>
-                    <h5>{{ $liderSei }}</h5>
+                    <h5><b>SEI Consultores</b></h5>
+                    <h5>{{ $archivo->liderSei }}</h5>
+                    <h5>{{ $archivo->runLiderSei }}</h5>
                     <h6>Auditor IG</h6>
                 </div>
             </div>

@@ -149,14 +149,14 @@
                                                 Excel
                                             </a>
                                         @endif
-                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-carga1'>
+                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-zip'>
                                             <span class="glyphicon glyphicon-download-alt"></span>
-                                            Conteo1
+                                            Zip
                                         </a>
-                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-carga2'>
-                                            <span class="glyphicon glyphicon-download-alt"></span>
-                                            Conteo2
-                                        </a>
+                                        {{--<a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-carga2'>--}}
+                                            {{--<span class="glyphicon glyphicon-download-alt"></span>--}}
+                                            {{--Conteo2--}}
+                                        {{--</a>--}}
                                         <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-txt'>
                                             <span class="glyphicon glyphicon-download-alt"></span>
                                             TXT Carga
