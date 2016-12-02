@@ -50,8 +50,7 @@ class Legacy_InventariosController extends Controller {
         header('Access-Control-Allow-Origin: *');
 
         $zipPath = isset($request->zipPath)? $request->zipPath : null;
-        $msg = "[INVENTARIO:INFORMAR_FINAL:PROCESAR_ARHIVO] $zipPath ";
-
+        Log::info("[INVENTARIO:INFORMAR_FINAL:PROCESAR_ARHIVO] $zipPath ");
 
         $idCliente= $request->idCliente;
         $ceco = $request->ceco;
