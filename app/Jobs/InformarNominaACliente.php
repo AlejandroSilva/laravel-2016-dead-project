@@ -72,6 +72,9 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ['cristian.cerna@construmart.cl', 'Cristian Cerna'],
     ];
 
+    protected $WOM_nomina_to = [
+        ['asilvawom@seiconsultores.cl', 'Alejandro Silva WOM'],
+    ];
 
     /**
      * Create a new job instance.
@@ -162,6 +165,13 @@ class InformarNominaACliente extends Job implements ShouldQueue {
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "$nominaRectificada CMT Local Nº$local->numero",
                 'to' => $this->CMT_nomina_to,
+                'bcc' => $this->SEI_nomina_bcc
+            ], $datosVista);
+        }else if($cliente->idCliente==7){                   // 9: WOM
+            $this->enviarCorreos('emails.informarNomina.GENERICA', [
+                // WIP terminar luego....
+                'subject' => "$nominaRectificada WOM organización $local->numero",
+                'to' => $this->WOM_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else{                                              // Otros clientes
