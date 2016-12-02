@@ -48,8 +48,20 @@ class RespuestaWOMService implements RespuestaWOMContract {
         $zipPath = $archivoRespuesta->getFullPath();
         $idArchivo = $archivoRespuesta->idArchivoRespuestaWOM;
 
+        // extraer la organizacion del local, del nombre de archivo
+        $match = [];
+        preg_match("/_[a-zA-Z0-9]{3}_/", $archivoRespuesta->nombreOriginal, $match);
+        $organizacion = str_replace('_', '', isset($match[0])? $match[0] : '');
+        if($organizacion=="")
+            return (object)[
+                'error'=> "Error al leer la organizacion desde el nombre del archivo. Un ejemplo de nombre valido es 'WOMInv_SOV_20161202.zip' \nEL ARCHIVO NO HA SIDO CARGADO AL SISTEMA",
+                'archivoRespuesta' => $archivoRespuesta
+            ];
+
         // ########### Leer datos del conteo final
         $txtConteoFinal = \ArchivosHelper::extraerArchivo($zipPath, 'My Documents/Auditoria_Final_Conteo.txt');
+        if(isset($txtConteoFinal->error))
+            $txtConteoFinal = \ArchivosHelper::extraerArchivo($zipPath, "My Documents/Auditoria_Final_Conteo_$organizacion.txt");
         if(isset($txtConteoFinal->error))
             return (object)[
                 'error'=> "Error al leer el archivo de conteo final: $txtConteoFinal->error \nEL ARCHIVO NO HA SIDO CARGADO AL SISTEMA",
@@ -73,6 +85,8 @@ class RespuestaWOMService implements RespuestaWOMContract {
 
         // ########### Leer datos del acta
         $txtActa = \ArchivosHelper::extraerArchivo($zipPath, 'My Documents/ArchivoActa.txt');
+        if(isset($txtActa->error))
+            $txtActa = \ArchivosHelper::extraerArchivo($zipPath, "My Documents/ArchivoActa_$organizacion.txt");
         if(isset($txtActa->error))
             return (object)[
                 'error'=> "Error al leer el acta: $txtActa->error \nEL ARCHIVO NO HA SIDO CARGADO AL SISTEMA",

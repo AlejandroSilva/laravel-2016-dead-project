@@ -52,6 +52,9 @@ class ArchivoRespuestaWOMController extends Controller {
         $pathFirmaVacia = '/WOM/sin-firma-wom.jpg';
         $zipPath = $archivoRespuesta->getFullPath();
         $archivoFirma = \ArchivosHelper::extraerArchivo($zipPath, 'My Documents/Firma.jpg');
+        if( isset($archivoFirma->error) )
+            $archivoFirma = \ArchivosHelper::extraerArchivo($zipPath, "My Documents/Firma_$archivoRespuesta->organizacion.jpg");
+
         $pathFirmaWom = isset($archivoFirma->error) ?
              $pathFirmaVacia : str_replace( public_path(), '', $archivoFirma->fullpath );
 
