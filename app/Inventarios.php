@@ -174,6 +174,31 @@ class Inventarios extends Model {
             'resultado' => 'ACTA PENDIENTE DE PROCESAR'
         ]);
     }
+    function agregarArchivoFinal2($user, $zipPath, $nombreOriginal){
+        // sorry al que tenga que mantener, pero a la cresta el DRY :P
+        $ceco = $this->local->numero;
+        $cliente = $this->local->cliente->nombreCorto;
+        $timestamp = Carbon::now()->format("Y-m-d_h-i-s");
+        $extra = "[$timestamp][$cliente][$ceco][$this->fechaProgramada]";
+        $carpetaDestino = ArchivoFinalInventario::getPathCarpetaArchivos($cliente);
+
+        // mover el archivo a la carpeta que corresponde
+        //$archivoFinal = \ArchivosHelper::moverACarpeta($archivo_formulario, $extra, $carpetaDestino);
+        //chmod($carpetaDestino.$nombreFinal, 0774);   // 0744 por defecto
+        $nombreNuevo = "$extra $nombreOriginal";
+        rename($zipPath, "$carpetaDestino/$nombreNuevo");
+
+        // guardar en la BD sus datos
+        return ArchivoFinalInventario::create([
+            'idInventario' => $this->idInventario,
+            'idSubidoPor' => $user? $user->id : null,
+            'nombre_archivo' => $nombreNuevo,
+            'nombre_original' => $nombreOriginal,
+            'actaValida' => false,
+            'resultado' => 'ACTA PENDIENTE DE PROCESAR'
+        ]);
+    }
+
     function insertarOActualizarActa($datosActa, $idArchivoFinalInventario){
         // agregar el archivo desde el cual se cargaron los datos
         $datosActa['idArchivoFinalInventario'] = $idArchivoFinalInventario;

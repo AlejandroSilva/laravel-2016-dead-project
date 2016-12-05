@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\User;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -44,13 +46,31 @@ class Legacy_InventariosController extends Controller {
         return response()->json($inventarios, 200);
     }
 
-    // POST api/inventario/informar-archivo-final
+    // POST api/inventarios/informar-archivo-final
     function api_publica_informarArchivoFinal(Request $request){
         // agrega cabeceras para las peticiones con CORS
         header('Access-Control-Allow-Origin: *');
 
-        $zipPath = isset($request->zipPath)? $request->zipPath : null;
+        //$zipPath = isset($request->zipPath)? $request->zipPath : null;
+        $zipPath = '/home/asilva/Escritorio/FCV_321_02122016.zip';
         Log::info("[INVENTARIO:INFORMAR_FINAL:PROCESAR_ARHIVO] $zipPath ");
+
+
+        $inventario = Inventarios::find(2653);
+        $user  = User::find(1);
+
+        $archivoFinalInventario = $inventario->agregarArchivoFinal2($user, $zipPath, 'FCV_321_02122016.zip');
+        $resultadoActa = \ActaInventarioHelper::parsearZIPaActa($archivoFinalInventario->getFullPath(), $inventario->local->numero);
+        if( isset($resultadoActa->error) ){
+            $archivoFinalInventario->setResultado($resultadoActa->error, false);
+        }else{
+            $inventario->insertarOActualizarActa($resultadoActa->acta, $archivoFinalInventario->idArchivoFinalInventario);
+            $archivoFinalInventario->setResultado('acta cargada correctamente', true);
+            $inventario->actaFCV->leerItemTotalInventarioDesdeElZip();
+            $inventario->actaFCV->leerSkuUnicosDesdeElZip();
+            $inventario->actaFCV->publicar($user);
+        }
+
 
         $idCliente= $request->idCliente;
         $ceco = $request->ceco;
