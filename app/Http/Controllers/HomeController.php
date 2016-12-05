@@ -34,6 +34,8 @@ class HomeController extends Controller {
             $hoy = Carbon::now()->format('Y-m-d');
             $diaHabilHoy = DiasHabiles::find($hoy);
 
+            // Dashboard "Agregar archivo respuesta WOM"
+
             // Dashboard "Mis proximos inventarios"
             $mostrar_misProximosInventarios = $user->hasRole('Lider') || $user->hasRole('Supervisor');
             $misNominas_desde = $diaHabilHoy->diasHabilesAntes(2)->fecha;
@@ -65,6 +67,9 @@ class HomeController extends Controller {
 
             return view('home.index-usuario',[
                 'usuario' => $user,
+
+                // Panel "Agregar archivo respuesta WOM"
+                'puedeSubirArchivosWOM' => $user->can('wom-subirArchivosRespusta') && !$user->hasRole('Administrador'),
 
                 // panel "mis proximos inventarios"
                 'mostrar_misProximosInventarios' => $mostrar_misProximosInventarios,

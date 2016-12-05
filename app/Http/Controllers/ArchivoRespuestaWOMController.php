@@ -19,17 +19,22 @@ class ArchivoRespuestaWOMController extends Controller {
      */
 
     // GET archivos-respuesta-wom
-    function show_index(){
+    function show_index(Request $request){
         $user = Auth::user();
         if(!$user || !$user->can('wom-verArchivosRespuesta'))
             return response()->view('errors.403', [], 403);
 
-        $archivosRespuestaWOM = ArchivoRespuestaWOM::all()
-            ->sortByDesc('created_at');
+        $query = ArchivoRespuestaWOM::with([]);
+        if(isset($request->ceco) && $request->ceco!=""){
+            $query->where('organizacion', $request->ceco);
+        }
+        $archivosRespuestaWOM = $query->get()->sortByDesc('created_at');
+
         return view('auditorias.archivo-respuesta-wom.index', [
             'puedeAdministrar'  => $user->can('wom-administrarArchivosRespuesta'),
             'archivosRespuesta' => $archivosRespuestaWOM,
-            'puedeSubirArchivo' => $user->can('wom-subirArchivosRespusta')
+            'puedeSubirArchivo' => $user->can('wom-subirArchivosRespusta'),
+            'cecoBuscado'       => $request->ceco
         ]);
     }
 

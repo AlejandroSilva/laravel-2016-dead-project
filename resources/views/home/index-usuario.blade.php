@@ -3,6 +3,10 @@
 @section('body')
     <div class="container">
         <div class="row">
+            {{-- Agregar archivos WOM --}}
+            @if($puedeSubirArchivosWOM)
+                @include('home.dashboard-agregarArchivosWOM')
+            @endif
             {{-- Lider/Supervisor/Operador: Mis Inventarios --}}
             @if($mostrar_misProximosInventarios)
                 @include('home.dashboard-misProximosInventarios')

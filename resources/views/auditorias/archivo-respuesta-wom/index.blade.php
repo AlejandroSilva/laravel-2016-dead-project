@@ -20,19 +20,11 @@
         .nav-header > li > a {
             padding: 5px 15px !important;
         }
-
-
         .btn-100 {
-            /*width: 80px;*/
             text-align: left !important;
         }
         .texto-centrado{
             text-align: center;
-        }
-        .descargar-consolidado-link{
-            width: 100%;
-            margin: 5px 0;
-            text-align: left !important;
         }
     </style>
 
@@ -67,58 +59,21 @@
                         Buscar Inventarios
                     </div>
                     <div class="panel-body">
-                        <form action="/inventarios/informes-finales-fcv" method="GET">
+                        <form action="/archivos-respuesta-wom" method="GET">
                             {{-- Numero de local --}}
                             <div class="form-group">
                                 <label>Numero de Local</label>
                                 <input class="form-control" name="ceco" placeholder="Numero de local"
-                                       disabled
-                                       {{--value={{$cecoBuscado}}--}}
+                                       value={{$cecoBuscado}}
                                 >
                             </div>
-                            {{-- Fecha programada --}}
-                            <div class="form-group">
-                                <label>Mes</label>
-                                <select name="mes" class="form-control" disabled>
-                                    <option value="">Todos</option>
-                                    {{--@foreach($mesesFechaProgramada as $mes)--}}
-                                        {{--<option value="{{$mes['value']}}" {{$mesBuscado==$mes['value']? 'selected' : ''}}>--}}
-                                            {{--{{$mes['text']}}--}}
-                                        {{--</option>--}}
-                                    {{--@endforeach--}}
-                                </select>
-                            </div>
-                            {{-- Incluir inventarios sin archivo final--}}
-                            {{--<div class="checkbox">--}}
-                                {{--<label>--}}
-                                    {{--<input type="checkbox" name="incluirPendientes" {{$incluirPendientes? 'checked="selected"' : ''}}/>--}}
-                                    {{--incluir inventarios pendientes--}}
-                                {{--</label>--}}
-                            {{--</div>--}}
                             {{-- Buscar --}}
                             <span class="input-group-btn">
-                                <input type="submit" class="btn btn-primary btn-sm btn-block" value="Buscar" disabled/>
+                                <input type="submit" class="btn btn-primary btn-sm btn-block" value="Buscar"/>
                             </span>
                         </form>
                     </div>
                 </div>
-
-                {{-- PANEL CONSOLIDADOS --}}
-                {{--<div class="panel panel-default">--}}
-                    {{--<div class="panel-heading">--}}
-                        {{--Consolidado de Inventarios--}}
-                    {{--</div>--}}
-                    {{--<div class="panel-body">--}}
-                        {{--@foreach($mesesConsolidados as $mes)--}}
-                            {{--<a class="btn btn-primary descargar-consolidado-link"--}}
-                               {{--href="/inventarios/descargar-consolidado-fcv?mes={{$mes['value']}}&orden=desc">--}}
-                                {{--<span class="glyphicon glyphicon-download-alt"></span>--}}
-                                {{--Descargar {{$mes['text']}}--}}
-                            {{--</a>--}}
-                        {{--@endforeach--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-
             </div>
             {{-- TABLA DE INVENTARIOS --}}
             <div class="col-sm-9">
@@ -156,10 +111,6 @@
                                             <span class="glyphicon glyphicon-download-alt"></span>
                                             Zip
                                         </a>
-                                        {{--<a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-carga2'>--}}
-                                            {{--<span class="glyphicon glyphicon-download-alt"></span>--}}
-                                            {{--Conteo2--}}
-                                        {{--</a>--}}
                                         <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-txt'>
                                             <span class="glyphicon glyphicon-download-alt"></span>
                                             TXT Carga
@@ -168,10 +119,6 @@
                                             <span class="glyphicon glyphicon-download-alt"></span>
                                             Acta
                                         </a>
-                                        {{--<a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/preview-pdf'>--}}
-                                            {{--<span class="glyphicon glyphicon-download-alt"></span>--}}
-                                            {{--PDF-preview--}}
-                                        {{--</a>--}}
                                     </td>
                                 </tr>
                             @endforeach
