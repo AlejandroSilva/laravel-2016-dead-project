@@ -137,9 +137,12 @@
                         </thead>
                         <tbody>
                         @if( count($archivosRespuesta)>0 )
+                            @php( $i=1 )
                             @foreach($archivosRespuesta as $archivo)
                                 <tr>
-                                    <td>{{ $archivo->idArchivoRespuestaWOM }}</td>
+                                    <td>
+                                        <p title="{{ $archivo->idArchivoRespuestaWOM }}">{{ $i++ }}</p>
+                                    </td>
                                     <td>{{ $archivo->nombreOriginal }}</td>
                                     <td>{{ $archivo->created_at }}</td>
                                     <td class="td-opciones">
