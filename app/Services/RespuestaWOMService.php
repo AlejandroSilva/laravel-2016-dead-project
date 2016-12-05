@@ -130,9 +130,9 @@ class RespuestaWOMService implements RespuestaWOMContract {
         // ########### Marcar como correcto
         $archivoRespuesta->setResultado("Productos cargados", true);
 
-        return $acta;
-//        return [$txtConteoFinal, $txtActa, $acta];
-//        return "ok";
+        return (object)[
+            'archivoRespuesta' => $archivoRespuesta
+        ];
     }
 
     public function _parsearTXTActa($txtPath){
@@ -183,91 +183,6 @@ class RespuestaWOMService implements RespuestaWOMContract {
         }
         return (object)['registros'=>$registros];
     }
-
-//    public function _parsearTXTConteoFinal_ORIGINAL($txtPath, $idArchivo){
-//        $now = Carbon::now();
-//        // parsear el TXT a Array
-//        $data = \CSVReader::csv_to_array($txtPath, ';');
-//        if($data==false)
-//            return $this->_error('archivo', 'error al leer el archivo txt', 500);
-//
-//        // convertir Data a Registros
-//        $registros = [];
-//        $regex_sku = "/^1[0-9]{7}$/";                       // 8 digitos, inicia con "1"
-//        $regex_ean15 = "/^[0-9]{15}$/";                     // 15 digitos
-//        $regex_ean16 = "/^([a-z]|[A-Z]|[0-9]){16}$/";       // 16 digitos, con letras
-//        $regex_ean20 = "/^[0-9]{20}$/";                     // 20 digitos
-//
-//
-//        for($i=1; $i<count($data); $i++){
-//            $row = $data[$i];
-//            // sanitizar patente
-//            if( isset($row[0]) ){
-//                $_ptt = array_reverse( explode('|', trim($row[0])) );
-//                $ptt = $_ptt[0];
-//            }else{
-//                $ptt = null;
-//            }
-//            // verificar que la barra sea valida
-//            $barra = isset($row[1])? trim($row[1]) : null;
-//            if(preg_match($regex_sku, $barra)){
-//                $_barra = "00".$barra;
-//                $sku = substr($_barra, 0, 3).".".substr($_barra, 3, 3).".".substr($_barra, 6, 4);
-//                $serie = null;
-//                $barra_valido = true;
-//            }else if(preg_match($regex_ean15, $barra) || preg_match($regex_ean16, $barra) || preg_match($regex_ean20, $barra)){
-//                $sku = null;
-//                $serie = $barra;
-//                $barra_valido = true;
-//            }else{
-//                $barra_valido = false;
-//            }
-//
-//            $correlativo    = isset($row[2])? trim($row[2]) : null;
-//            $conteo         = isset($row[3])? trim($row[3]) : null;
-//            $estado         = isset($row[4])? trim($row[4]) : null;
-//            $fecha          = isset($row[5])? trim($row[5]) : null;
-//            // parsear fecha
-//            if(\DateTime::createFromFormat('d-m-Y', $fecha)!=false)
-//                $fecha = Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');
-//            else
-//                $fecha = null;
-//            $hora           = isset($row[6])? trim($row[6]) : null;
-//
-//            // si la fila no tiene correlativo, ean, conteo, estado, etc. no tomar en cuenta
-//            if($ptt!=null && $barra_valido && $correlativo!=null && $conteo!=null /*&& $estado!=null && $fecha!=null && $hora!=null*/){
-//                $registros[] = [
-//                    'idArchivoRespuestaWOM' => $idArchivo,
-//                    'line'                  => $i+1,
-//                    // en la patente, se quitan los campos "extras"
-//                    'ptt'                   => $ptt,
-//                    // el ean, dependiendo del codigo se considera SKU o SERIE
-//                    'sku'                   => $sku,
-//                    'serie'                 => $serie,
-//                    // correlativo, queda igual
-//                    'correlativo'           => $correlativo,
-//                    // conteo, queda igual
-//                    'conteoInicial'         => $conteo,
-//                    'conteoFinal'           => null,
-//                    // estado, queda igual
-//                    'estado'                => $estado,
-//                    // fecha, pasa del formato DD-MM-YYYY A YYYYMMDD
-//                    'fechaCaptura'          => $fecha,
-//                    // hora, queda igual
-//                    'horaCaptura'           => $hora,
-//                    // organizacion...
-//                    'codigoOrganizacion'    => $organizacion,
-//                    'nombreOrganizacion'    => $organizacion,
-//                    'created_at'            => $now,
-//                    'updated_at'            => $now
-//                ];
-//            }
-//        }
-//
-//        return (object)[
-//            'registros'=>$registros
-//        ];
-//    }
 
     public function generarTxtConteoFinal($user, $idArchivo){
         // todo: validar permisos del usuario
