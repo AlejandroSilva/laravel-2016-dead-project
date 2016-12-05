@@ -24,7 +24,8 @@ class ArchivoRespuestaWOMController extends Controller {
         if(!$user || !$user->can('wom-verArchivosRespuesta'))
             return response()->view('errors.403', [], 403);
 
-        $archivosRespuestaWOM = ArchivoRespuestaWOM::all();
+        $archivosRespuestaWOM = ArchivoRespuestaWOM::all()
+            ->sortByDesc('created_at');
         return view('auditorias.archivo-respuesta-wom.index', [
             'puedeAdministrar'  => $user->can('wom-administrarArchivosRespuesta'),
             'archivosRespuesta' => $archivosRespuestaWOM,
