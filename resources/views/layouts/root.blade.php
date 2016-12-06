@@ -123,8 +123,10 @@
         p { margin: 0px 0px 10px; }
         .btn-default { color: rgb(51, 51, 51); background-color: rgb(255, 255, 255); border-color: rgb(204, 204, 204); }
         .btn-100 { text-align: left !important; }
-    </style>
-    <style>
+
+
+
+
         {{-- Custom navbar --}}
         body {
             padding-top: 70px;
