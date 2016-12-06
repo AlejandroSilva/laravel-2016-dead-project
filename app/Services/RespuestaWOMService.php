@@ -50,7 +50,7 @@ class RespuestaWOMService implements RespuestaWOMContract {
 
         // extraer la organizacion del local, del nombre de archivo
         $match = [];
-        preg_match("/_[a-zA-Z0-9]{3}_/", $archivoRespuesta->nombreOriginal, $match);
+        preg_match("/_[a-zA-Z0-9]{2,3}_/", $archivoRespuesta->nombreOriginal, $match);
         $organizacion = str_replace('_', '', isset($match[0])? $match[0] : '');
         if($organizacion=="")
             return (object)[
