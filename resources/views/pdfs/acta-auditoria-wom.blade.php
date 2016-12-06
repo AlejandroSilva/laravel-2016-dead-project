@@ -19,8 +19,11 @@
             padding-top: 0 !important;
             padding-bottom: 0 !important;
         }
+        .td-50 {
+            width: 60%;
+        }
         .td-75 {
-            width: 75%;
+            width: 70%;
         }
         .firma {
             text-align: center;
@@ -29,7 +32,6 @@
             border-top: 2px solid black;
             width: 100%;
         }
-
     </style>
 </head>
 <body>
@@ -37,7 +39,7 @@
         <div class="col-xs-10 col-xs-offset-1">
 
             <div class="row">
-                <h1>Acta de Auditoria IG WOM</h1>
+                <h1>Acta de Auditoría IG WOM</h1>
                 <div class="col-xs-12">
                     <h4>Datos generales</h4>
                 </div>
@@ -46,48 +48,32 @@
                     <div class="panel panel-default">
                         <table class="table table-compact table-striped tablaDatos">
                             <tbody>
-                                {{--<tr>--}}
-                                    {{--<td>Fecha</td><td> $fecha }}</td>--}}
-                                {{--</tr>--}}
                                 <tr>
-                                    <td>Organización</td><td>{{ $archivo->organizacion }}</td>
+                                    <td class="td-50">Organización</td><td>{{ $archivo->organizacion }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Líder WOM</td><td>{{ $archivo->liderWom }}</td>
+                                    <td class="td-50">Líder WOM</td><td>{{ $archivo->liderWom }}</td>
                                 </tr>
                                 <tr>
-                                    <td>RUN Líder WOM</td><td>{{ $archivo->runLiderWom }}</td>
+                                    <td class="td-50">RUN Líder WOM</td><td>{{ $archivo->runLiderWom }}</td>
                                 </tr>
                                 {{-- LIDER SEI--}}
                                 <tr>
                                     <td></td><td></td>
                                 </tr>
                                 <tr>
-                                    <td>Líder SEI</td><td>{{ $archivo->liderSei }}</td>
+                                    <td class="td-50">Líder SEI</td><td>{{ $archivo->liderSei }}</td>
                                 </tr>
                                 <tr>
-                                    <td>RUN Líder SEI</td><td>{{ $archivo->runLiderSei  }}</td>
+                                    <td class="td-50">RUN Líder SEI</td><td>{{ $archivo->runLiderSei  }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Duración</td><td>{{ $archivo->tiempoTranscurrido }}</td>
+                                    <td class="td-50">Duración</td><td>{{ $archivo->tiempoTranscurrido }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-
-                {{--SUPERIOR DERECHO--}}
-                {{--<div class="col-xs-4">--}}
-                    {{--<div class="panel panel-default">--}}
-                        {{--<table class="table table-compact table-striped tablaDatos">--}}
-                            {{--<tbody>--}}
-                                {{--<tr>--}}
-                                    {{--<td>Duración</td><td>{{ $archivo->tiempoTranscurrido }}</td>--}}
-                                {{--</tr>--}}
-                            {{--</tbody>--}}
-                        {{--</table>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
             </div>
 
             {{-- Conteo --}}
@@ -104,11 +90,8 @@
                                     <td class="td-75">Unidades "En uso"</td><td>{{ $archivo->unidadesUsado }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="td-75">Unidades "En Prestamo"</td><td>{{ $archivo->unidadesPrestamo }}</td>
+                                    <td class="td-75">Unidades "En Préstamo"</td><td>{{ $archivo->unidadesPrestamo }}</td>
                                 </tr>
-                                {{--<tr>--}}
-                                    {{--<td class="td-75">Unidades "Servicio Técnico"</td><td>{{ $archivo->unidadesServTecnico }}</td>--}}
-                                {{--</tr>--}}
                                 <tr>
                                     <td class="td-75">Total Unidades Contadas</td><td>{{ $archivo->unidadesContadas }}</td>
                                 </tr>
@@ -132,7 +115,7 @@
                                 <td class="td-75">Identifico todos sectores</td><td>{{ $archivo->identificoTodosLosSectores }}</td>
                             </tr>
                             <tr>
-                                <td class="td-75">Identifico ESTADO de telefonos</td><td>{{ $archivo->identificoEstadoDeTelefonos }}</td>
+                                <td class="td-75">Identifico ESTADO de teléfonos</td><td>{{ $archivo->identificoEstadoDeTelefonos }}</td>
                             </tr>
                             <tr>
                                 <td class="td-75">Identifico cajas SIM abiertas</td><td>{{ $archivo->identificoCajasSIMAbiertas }}</td>
@@ -141,7 +124,7 @@
                                 <td class="td-75">Presenta ordenado sus productos</td><td>{{ $archivo->presentaOrdenadoSusProductos }}</td>
                             </tr>
                             <tr>
-                                <td class="td-75">Se realizó segundo conteo a télefonos</td><td>{{ $archivo->seRealizoSegundoConteATelefonos }}</td>
+                                <td class="td-75">Se realizó segundo conteo a teléfonos</td><td>{{ $archivo->seRealizoSegundoConteATelefonos }}</td>
                             </tr>
                             <tr>
                                 <td class="td-75">Escaneo cajas abiertas de SIM uno a uno</td><td>{{ $archivo->escaneoCajasAbiertasSIMUnoAUno }}</td>

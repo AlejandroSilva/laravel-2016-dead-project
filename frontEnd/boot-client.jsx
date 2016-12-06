@@ -1,6 +1,3 @@
-import '../public/vendor/bootstrap/bootstrap.min.css'
-import '../public/vendor/fixed-data-table/fixed-data-table.min.css'
-import '../public/vendor/react-widgets/css/react-widgets.min.css'
 // Librerias
 import React from 'react'
 import ReactDOM from 'react-dom'
