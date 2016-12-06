@@ -64,10 +64,6 @@
         .panel-primary > .panel-heading { color: rgb(255, 255, 255); background-color: rgb(51, 122, 183); border-color: rgb(51, 122, 183); }
         .glyphicon { position: relative; top: 1px; display: inline-block; font-family: "Glyphicons Halflings"; font-style: normal; font-weight: 400; line-height: 1; -webkit-font-smoothing: antialiased; }
         b, strong { font-weight: 700; }
-        table { border-spacing: 0px; border-collapse: collapse; background-color: transparent; }
-        .table { width: 100%; max-width: 100%; margin-bottom: 20px; }
-        .table-bordered { border: 1px solid rgb(221, 221, 221); }
-        .panel > .panel-collapse > .table, .panel > .table, .panel > .table-responsive > .table { margin-bottom: 0px; }
 
         .btn { display: inline-block; padding: 6px 12px; margin-bottom: 0px; font-size: 14px; font-weight: 400; line-height: 1.42857; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; cursor: pointer; user-select: none; background-image: none; border: 1px solid transparent; border-radius: 4px; }
         .btn-default { color: rgb(51, 51, 51); background-color: rgb(255, 255, 255); border-color: rgb(204, 204, 204); }
@@ -114,9 +110,10 @@
     @yield('body')
 
     {{-- Scroller para react-data-tables --}}
-    <script src="/vendor/zinga-scroller/ZingaAnimateScroller.min.js"></script>
-    <script src="/vendor/jquery/jquery-2.2.1.min.js"></script>
-    <script src="/vendor/bootstrap/bootstrap.min.js"></script>
+    <script async src="/vendor/zinga-scroller/ZingaAnimateScroller.min.js"></script>
+    {{--<script src="/vendor/jquery/jquery-2.2.1.min.js"></script>--}}
+    {{--<script src="/vendor/jquery/jquery-2.1.1.min-xs.js"></script>--}}
+    {{--<script src="/vendor/bootstrap/bootstrap.min-xs.js"></script>--}}
     <script async src="/app/bundle.js"></script>
 </body>
 </html>

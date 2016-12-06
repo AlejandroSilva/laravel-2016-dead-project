@@ -1,3 +1,7 @@
+window.$ = window.jQuery = require('../public/vendor/jquery/jquery-2.1.1.min-xs.js')
+require('../public/vendor/bootstrap/bootstrap.min-xs.js')
+// require('../public/vendor/zinga-scroller/ZingaAnimateScroller.min.js')
+
 // Librerias
 import React from 'react'
 import ReactDOM from 'react-dom'
