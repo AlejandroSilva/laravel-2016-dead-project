@@ -21,14 +21,14 @@
             padding: 5px 15px !important;
         }
         .btn-100 {
+            /*width: 80px;*/
             text-align: left !important;
         }
         .texto-centrado{
             text-align: center;
         }
     </style>
-
-    <div class="container">
+        {{-- bienvenido el que quiera hacerlo responsive --}}
 
         {{-- HEADER --}}
         <div class="container fluid">
@@ -48,89 +48,115 @@
                     </ul>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-sm-3">
+            <div class="row">
+                <div class="col-sm-3">
 
-                {{-- PANEL BUSQUEDA --}}
-                <div class="panel panel-default hidden-xs">
-                    <div class="panel-heading">
-                        Buscar Inventarios
-                    </div>
-                    <div class="panel-body">
-                        <form action="/archivos-respuesta-wom" method="GET">
-                            {{-- Numero de local --}}
-                            <div class="form-group">
-                                <label>Numero de Local</label>
-                                <input class="form-control" name="ceco" placeholder="Numero de local"
-                                       value={{$cecoBuscado}}
-                                >
-                            </div>
-                            {{-- Buscar --}}
-                            <span class="input-group-btn">
+                    {{-- PANEL BUSQUEDA --}}
+                    <div class="panel panel-default hidden-xs">
+                        <div class="panel-heading">
+                            Buscar Inventarios
+                        </div>
+                        <div class="panel-body">
+                            <form action="/archivos-respuesta-wom" method="GET">
+                                {{-- Numero de local --}}
+                                <div class="form-group">
+                                    <label>Numero de Local</label>
+                                    <input class="form-control" name="ceco" placeholder="Numero de local"
+                                           value={{$cecoBuscado}}
+                                    >
+                                </div>
+                                {{-- Buscar --}}
+                                <span class="input-group-btn">
                                 <input type="submit" class="btn btn-primary btn-sm btn-block" value="Buscar"/>
                             </span>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            {{-- TABLA DE INVENTARIOS --}}
-            <div class="col-sm-9">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Inventarios
-                    </div>
-                    <table class="table table-bordered table-hover table-condensed tabla-nominas">
-                        <thead>
-                        <tr>
-                            <th class="th">#</th>
-                            <th class="th">Nombre archivo</th>
-                            <th class="th">Fecha/hora subida</th>
-                            <th class="th">Opciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @if( count($archivosRespuesta)>0 )
-                            @php( $i=1 )
-                            @foreach($archivosRespuesta as $archivo)
-                                <tr>
-                                    <td>
-                                        <p title="{{ $archivo->idArchivoRespuestaWOM }}">{{ $i++ }}</p>
-                                    </td>
-                                    <td>{{ $archivo->nombreOriginal }}</td>
-                                    <td>{{ $archivo->created_at }}</td>
-                                    <td class="td-opciones">
-                                        @if($puedeAdministrar==true)
-                                            <a class="btn btn-default btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-excel'>
+                {{-- TABLA DE INVENTARIOS --}}
+                <div class="col-sm-9">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Inventarios
+                        </div>
+                        <table class="table table-bordered table-hover table-condensed tabla-nominas">
+                            <thead>
+                            <tr>
+                                <th class="th">#</th>
+                                <th class="th">Nombre archivo</th>
+                                <th class="th">Fecha/hora subida</th>
+                                <th class="th">Opciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if( count($archivosRespuesta)>0 )
+                                @php( $i=1 )
+                                @foreach($archivosRespuesta as $archivo)
+                                    <tr>
+                                        <td>
+                                            <p title="{{ $archivo->idArchivoRespuestaWOM }}">{{ $i++ }}</p>
+                                        </td>
+                                        <td>{{ $archivo->nombreOriginal }}</td>
+                                        <td>{{ $archivo->created_at }}</td>
+                                        <td class="td-opciones">
+                                            @if($puedeAdministrar==true)
+                                                <a class="btn btn-default btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-excel'>
+                                                    <span class="glyphicon glyphicon-download-alt"></span>
+                                                    Excel
+                                                </a>
+                                            @endif
+                                            <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-zip'>
                                                 <span class="glyphicon glyphicon-download-alt"></span>
-                                                Excel
+                                                Zip
                                             </a>
-                                        @endif
-                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-zip'>
-                                            <span class="glyphicon glyphicon-download-alt"></span>
-                                            Zip
-                                        </a>
-                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-txt'>
-                                            <span class="glyphicon glyphicon-download-alt"></span>
-                                            TXT Carga
-                                        </a>
-                                        <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-pdf'>
-                                            <span class="glyphicon glyphicon-download-alt"></span>
-                                            Acta
-                                        </a>
+                                            <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-txt'>
+                                                <span class="glyphicon glyphicon-download-alt"></span>
+                                                TXT Carga
+                                            </a>
+                                            <a class="btn btn-primary btn-xs btn-100" href='archivo-respuesta-wom/{{ $archivo->idArchivoRespuestaWOM }}/descargar-pdf'>
+                                                <span class="glyphicon glyphicon-download-alt"></span>
+                                                Acta
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="4" class="texto-centrado">
+                                        Sin archivos en este periodo
                                     </td>
                                 </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td colspan="4" class="texto-centrado">
-                                    Sin archivos en este periodo
-                                </td>
-                            </tr>
-                        @endif
-                        </tbody>
-                    </table>
+                            @endif
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-4">
+                                <ul>
+                                    <li><b>Total "Nuevo"</b> {{ $totalNuevo }}</li>
+                                    <li><b>Total "En uso"</b> {{ $totalUsado }}</li>
+                                    <li><b>Total "En préstamo"</b> {{ $totalPrestamo }}</li>
+                                    <li><b>Total "En Servicio Técnico"</b> {{ $totalServTecnico }}</li>
+                                    <li><b>Total Unidades</b> {{ $totalUnidades }}</li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-4">
+                                <ul>
+                                    <li><b>Total Patentes</b> {{ $totalPatentes }}</li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-3">
+                                <ul>
+                                    <li><b>Auditorías</b> {{ $totalAuditorias }}</li>
+                                    <li><b>Promedio de nota</b> {{ $promedioNotas }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

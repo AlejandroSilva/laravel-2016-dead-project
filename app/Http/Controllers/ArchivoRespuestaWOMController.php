@@ -31,11 +31,23 @@ class ArchivoRespuestaWOMController extends Controller {
         }
         $archivosRespuestaWOM = $query->get()->sortByDesc('created_at');
 
+        $totalAuditoriasConNota = $archivosRespuestaWOM->filter(function($a){return isset($a->evaluacionAServicioSEI);})->count();
         return view('auditorias.archivo-respuesta-wom.index', [
             'puedeAdministrar'  => $user->can('wom-administrarArchivosRespuesta'),
             'archivosRespuesta' => $archivosRespuestaWOM,
             'puedeSubirArchivo' => $user->can('wom-subirArchivosRespusta'),
-            'cecoBuscado'       => $request->ceco
+            'cecoBuscado'       => $request->ceco,
+            // totales
+            'totalNuevo'        => number_format($archivosRespuestaWOM->sum('unidadesNuevo'), 0, ',', '.'),
+            'totalUsado'        => number_format($archivosRespuestaWOM->sum('unidadesUsado'), 0, ',', '.'),
+            'totalPrestamo'     => number_format($archivosRespuestaWOM->sum('unidadesPrestamo'), 0, ',', '.'),
+            'totalServTecnico'  => number_format($archivosRespuestaWOM->sum('unidadesServTecnico'), 0, ',', '.'),
+            'totalUnidades'     => number_format($archivosRespuestaWOM->sum('unidadesContadas'), 0, ',', '.'),
+            'totalPatentes'     => number_format($archivosRespuestaWOM->sum('pttTotal'), 0, ',', '.'),
+            'totalAuditorias'   => number_format($archivosRespuestaWOM->count(), 0, ',', '.'),
+
+            'promedioNotas'     => $totalAuditoriasConNota>0?
+                number_format($archivosRespuestaWOM->sum('evaluacionAServicioSEI')/$totalAuditoriasConNota, 1, ',', '.') : ''
         ]);
     }
 
