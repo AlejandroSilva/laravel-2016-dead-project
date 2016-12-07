@@ -16,10 +16,23 @@ node_modules/
 
 # .lock son archivos que se encuentran actualmente abiertos
 .~lock.*
+yarn.lock
+composer.lock
 
 # arhivos dinamicamente creados para ser descargados por los usuarios, deben ser eliminados con un CRON...
 public/pmensual_*.xlxs
 public/archivos_temporales/
 public/actualizarStock/uploads/
 public/otros-archivos/
+public/app/*.svg
+public/app/*.eot
+public/app/*.woff
+public/app/*.woff2
+public/app/*.ttf
+public/app/*.gif
+public/seedFiles/wom_final.csv
+
+public/FCV
+public/WOM
+public/tmp
 !/public/WOM/sin-firma-wom.jpg

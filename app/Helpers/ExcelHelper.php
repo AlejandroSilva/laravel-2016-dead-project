@@ -300,23 +300,26 @@ class ExcelHelper{
     public static function generarXLSX_archivosWOM($archivos){
         $cabecera = [
             'Organización' => 'string',
+            'Fecha' => 'string',
             'Líder WOM' => 'string',
             'RUN Líder WOM' => 'string',
             'Líder Sei' => 'string',
-            'RUN Lider Sei' => 'string',
-            'unid. Contadas' => 'string',
-            'unid. Nuevo' => 'string',
-            'unid. Usado' => 'string',
-            'unid. Prestamo' => 'string',
-            'unid. Serv Tecnico' => 'string',
+            'RUN Líder Sei' => 'string',
+            'Unid. Contadas' => 'string',
+            'Unid. Nuevo' => 'string',
+            'Unid. Usado' => 'string',
+            'Unid. Préstamo' => 'string',
             'Patentes' => 'string',
-            'tiempo' => 'string',
-            'evaluacion' => 'string'
+            'Tiempo' => 'string',
+            'Evaluación' => 'string',
+            'Cumplimiento WOM' => 'string',
+            'Cumplimiento SEI' => 'string'
         ];
         $datos = [];
         foreach ($archivos as $a)
             $datos[] = [
                 $a->organizacion,
+                $a->fecha,
                 $a->liderWOM,
                 $a->runLiderWOM,
                 $a->liderSei,
@@ -325,10 +328,11 @@ class ExcelHelper{
                 $a->unidadesNuevo,
                 $a->unidadesUsado,
                 $a->unidadesPrestamo,
-                $a->unidadesServTecnico,
                 $a->pttTotal,
                 $a->tiempoTranscurrido,
-                $a->evaluacionAServicioSEI
+                $a->evaluacionAServicioSEI,
+                $a->pCunplimientoWOM? "$a->pCunplimientoWOM%" : '',
+                $a->pCunplimientoSEI? "$a->pCunplimientoSEI%" : ''
             ];
 
         $random_number= md5(uniqid(rand(), true));

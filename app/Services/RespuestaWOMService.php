@@ -230,8 +230,11 @@ class RespuestaWOMService implements RespuestaWOMContract {
 //            return $this->_error('Maestra de productos', 'La maestra que busca no ha sido encontrada', 404);
 
         $archivos = DB::select(DB::raw("
-            select organizacion, liderWOM, runLiderWOM, liderSei, runLiderSei, unidadesContadas, unidadesNuevo, 
-            unidadesUsado, unidadesPrestamo, unidadesServTecnico, pttTotal, tiempoTranscurrido, evaluacionAServicioSEI
+            select organizacion, date_format(created_at, '%d-%m-%Y') as fecha, liderWOM, runLiderWOM, liderSei, runLiderSei, 
+            unidadesContadas, unidadesNuevo, unidadesUsado, unidadesPrestamo, unidadesServTecnico, pttTotal, 
+            tiempoTranscurrido, evaluacionAServicioSEI,
+            round(( (identificoTodosLosSectores='SI') + (identificoEstadoDeTelefonos='SI') + (identificoCajasSIMAbiertas='SI') + (presentaOrdenadoSusProductos='SI') )*100/4) as pCunplimientoWOM,
+            round(( (seRealizoSegundoConteATelefonos='SI') + (escaneoCajasAbiertasSIMUnoAUno='SI') + (tieneBuenaDisposicionYExplica='SI') )*100/3) as pCunplimientoSEI
             from archivos_respuesta_wom
             order by created_at desc
         "));

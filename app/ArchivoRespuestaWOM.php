@@ -23,31 +23,7 @@ class ArchivoRespuestaWOM extends Model {
     }
 
     // #### Helpers
-//    function tieneBarra($sku, $serie){
-//        // existe en el sku?
-//        if($sku!==null) {
-//            $res = DB::table('capturas_respuesta_wom')
-//                ->select('sku')
-//                ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
-//                ->where('sku', $sku)
-//                ->get();
-//            if(sizeof($res)>0)
-//                return true;
-//        }
-//        // existe en el serie?
-//        if($serie!==null) {
-//            $res = DB::table('capturas_respuesta_wom')
-//                ->select('sku')
-//                ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
-//                ->where('serie', $serie)
-//                ->get();
-//            if(sizeof($res)>0)
-//                return true;
-//        }
-//        return false;
-//    }
     // #### Acciones
-
     function eliminar(){
         $this->capturas()->delete();
         $this->delete();
@@ -61,52 +37,7 @@ class ArchivoRespuestaWOM extends Model {
         $cliente  = Clientes::find(9)->nombreCorto;
         return self::getPathCarpeta($cliente).$this->nombreArchivo;
     }
-//    function getFullPath2(){
-//        $cliente  = Clientes::find(9)->nombreCorto;
-//        return self::getPathCarpeta($cliente).$this->nombreArchivoConteo2;
-//    }
-//    function getOrganizacionDesdeNombreArchivo(){
-//        $nombreArchivo = $this->nombreOriginal;
-//        // quitar extension
-//        $nombreArchivo = explode('.', $nombreArchivo)[0];
-//        $normalizado = str_replace(' ', '_', $nombreArchivo);
-//        $array_palabras = array_reverse( explode('_', $normalizado));
-//        return $array_palabras[0];
-//    }
-//    function getUnidadesNuevo(){
-//        $capturas = CapturaRespuestaWOM::buscar((object)[
-//            'idArchivo' => $this->idArchivoRespuestaWOM,
-//            'estado'   => "NUEVO"
-//        ]);
-//        return $capturas->count();
-//    }
-//    function getUnidadesUsado(){
-//        $capturas = CapturaRespuestaWOM::buscar((object)[
-//            'idArchivo' => $this->idArchivoRespuestaWOM,
-//            'estado'   => "USADO"
-//        ]);
-//        return $capturas->count();
-//    }
-//    function getUnidadesEnPrestamo(){
-//        $capturas = CapturaRespuestaWOM::buscar((object)[
-//            'idArchivo' => $this->idArchivoRespuestaWOM,
-//            'estado'   => "PRESTAMO"
-//        ]);
-//        return $capturas->count();
-//    }
-//    function getUnidadesServicioTecnico(){
-//        $capturas = CapturaRespuestaWOM::buscar((object)[
-//            'idArchivo' => $this->idArchivoRespuestaWOM,
-//            'estado'   => 'SERV. TECN'
-//        ]);
-//        return $capturas->count();
-//    }
-//    function getUnidadesTotal(){
-//        $capturas = CapturaRespuestaWOM::buscar((object)[
-//            'idArchivo' => $this->idArchivoRespuestaWOM,
-//        ]);
-//        return $capturas->count();
-//    }
+
     function getPatentesTotal(){
         $res = DB::table('capturas_respuesta_wom')
             ->select(DB::raw('count(distinct(ptt)) as total'))
@@ -114,27 +45,6 @@ class ArchivoRespuestaWOM extends Model {
             ->get();
         return $res[0]->total;
     }
-//    function getPrimeraCaptura(){
-//        $res = DB::table('capturas_respuesta_wom')
-//            ->select('horaCaptura')
-//            ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
-//            ->orderBy('fechaCaptura', 'ASC')
-//            ->orderBy('horaCaptura', 'ASC')
-//            ->limit(1)
-//            ->get();
-//        return $res[0]->horaCaptura;
-//    }
-//    function getUltimaCaptura(){
-//
-//        $res = DB::table('capturas_respuesta_wom')
-//            ->select('horaCaptura')
-//            ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
-//            ->orderBy('fechaCaptura', 'DESC')
-//            ->orderBy('horaCaptura', 'DESC')
-//            ->limit(1)
-//            ->get();
-//        return $res[0]->horaCaptura;
-//    }
 
     // #### Setters
     function setResultado($mensaje, $archivoValido){
