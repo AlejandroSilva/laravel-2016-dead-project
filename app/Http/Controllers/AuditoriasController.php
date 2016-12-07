@@ -250,6 +250,7 @@ class AuditoriasController extends Controller {
     // POST api/auditoria/cliente/{idCliente}/ceco/{CECO}/fecha/{fecha}/informar-realizado
     // PUBLICA
     function api_informarRealizado($idCliente, $ceco, $annoMesDia){
+        $ceco = ltrim($ceco, '0');
         $fecha = explode('-', $annoMesDia);
         $anno = $fecha[0];
         $mes  = $fecha[1];
@@ -294,6 +295,7 @@ class AuditoriasController extends Controller {
 
     // PUBLICA
     function api_informarRevisado($idCliente, $ceco, $annoMesDia){
+        $ceco = ltrim($ceco, '0');
         $fecha = explode('-', $annoMesDia);
         $anno = $fecha[0];
         $mes  = $fecha[1];
