@@ -231,8 +231,7 @@ class RespuestaWOMService implements RespuestaWOMContract {
 
         $archivos = DB::select(DB::raw("
             select organizacion, date_format(created_at, '%d-%m-%Y') as fecha, liderWOM, runLiderWOM, liderSei, runLiderSei, 
-            unidadesContadas, unidadesNuevo, unidadesUsado, unidadesPrestamo, unidadesServTecnico, pttTotal, 
-            tiempoTranscurrido, evaluacionAServicioSEI,
+            unidadesContadas, unidadesNuevo, unidadesUsado, unidadesPrestamo, pttTotal, tiempoTranscurrido, evaluacionAServicioSEI,
             round(( (identificoTodosLosSectores='SI') + (identificoEstadoDeTelefonos='SI') + (identificoCajasSIMAbiertas='SI') + (presentaOrdenadoSusProductos='SI') )*100/4) as pCunplimientoWOM,
             round(( (seRealizoSegundoConteATelefonos='SI') + (escaneoCajasAbiertasSIMUnoAUno='SI') + (tieneBuenaDisposicionYExplica='SI') )*100/3) as pCunplimientoSEI
             from archivos_respuesta_wom
