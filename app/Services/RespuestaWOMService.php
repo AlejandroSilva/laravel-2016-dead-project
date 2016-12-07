@@ -233,6 +233,7 @@ class RespuestaWOMService implements RespuestaWOMContract {
             select organizacion, liderWOM, runLiderWOM, liderSei, runLiderSei, unidadesContadas, unidadesNuevo, 
             unidadesUsado, unidadesPrestamo, unidadesServTecnico, pttTotal, tiempoTranscurrido, evaluacionAServicioSEI
             from archivos_respuesta_wom
+            order by created_at desc
         "));
 
         return (object)[
