@@ -135,7 +135,7 @@
 
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <ul>
                                     <li><b>Total "Nuevo"</b> {{ $totalNuevo }}</li>
                                     <li><b>Total "En uso"</b> {{ $totalUsado }}</li>
@@ -144,12 +144,12 @@
                                     <li><b>Total Unidades</b> {{ $totalUnidades }}</li>
                                 </ul>
                             </div>
-                            <div class="col-sm-4">
-                                <ul>
-                                    <li><b>Total Patentes</b> {{ $totalPatentes }}</li>
-                                </ul>
-                            </div>
-                            <div class="col-sm-3">
+                            {{--<div class="col-sm-4">--}}
+                                {{--<ul>--}}
+                                    {{--<li><b>Total Patentes</b> {{ $totalPatentes }}</li>--}}
+                                {{--</ul>--}}
+                            {{--</div>--}}
+                            <div class="col-sm-6">
                                 <ul>
                                     <li><b>Auditorías</b> {{ $totalAuditorias }}</li>
                                     <li><b>Promedio de nota</b> {{ $promedioNotas }}</li>
