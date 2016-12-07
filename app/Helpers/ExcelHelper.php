@@ -297,6 +297,50 @@ class ExcelHelper{
         return $fullpath;
     }
 
+    public static function generarXLSX_archivosWOM($archivos){
+        $cabecera = [
+            'Organización' => 'string',
+            'Líder WOM' => 'string',
+            'RUN Líder WOM' => 'string',
+            'Líder Sei' => 'string',
+            'RUN Lider Sei' => 'string',
+            'unid. Contadas' => 'string',
+            'unid. Nuevo' => 'string',
+            'unid. Usado' => 'string',
+            'unid. Prestamo' => 'string',
+            'unid. Serv Tecnico' => 'string',
+            'Patentes' => 'string',
+            'tiempo' => 'string',
+            'evaluacion' => 'string'
+        ];
+        $datos = [];
+        foreach ($archivos as $a)
+            $datos[] = [
+                $a->organizacion,
+                $a->liderWOM,
+                $a->runLiderWOM,
+                $a->liderSei,
+                $a->runLiderSei,
+                $a->unidadesContadas,
+                $a->unidadesNuevo,
+                $a->unidadesUsado,
+                $a->unidadesPrestamo,
+                $a->unidadesServTecnico,
+                $a->pttTotal,
+                $a->tiempoTranscurrido,
+                $a->evaluacionAServicioSEI
+            ];
+
+        $random_number= md5(uniqid(rand(), true));
+        $fullpath = public_path()."/tmp/archivosWOM$random_number.xlsx";
+
+        $writer = new XLSXWriter();
+        $writer->writeSheet($datos,'wom', $cabecera);
+        $writer->writeToFile($fullpath);
+        return $fullpath;
+    }
+
+    
     public static function workbook_a_archivo($workbook){
         $excelWritter = PHPExcel_IOFactory::createWriter($workbook, "Excel2007");
         $random_number= md5(uniqid(rand(), true));

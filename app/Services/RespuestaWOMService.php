@@ -144,7 +144,6 @@ class RespuestaWOMService implements RespuestaWOMContract {
         return $data;
     }
 
-
     public function _parsearTXTConteoFinal($txtPath, $idArchivo){
         $now = Carbon::now();
         // parsear el TXT a Array
@@ -222,6 +221,22 @@ class RespuestaWOMService implements RespuestaWOMContract {
         return (object)[
             'fullPath' => \ExcelHelper::generarXLSX_capturasRespuestaWOM($capturas),
             'fileName' => "$basename.xlsx"
+        ];
+    }
+
+    public function descargarConsolidado($user){
+        // falta validar permisos
+//        if(!$archivoMaestraProductos)
+//            return $this->_error('Maestra de productos', 'La maestra que busca no ha sido encontrada', 404);
+
+        $archivos = DB::select(DB::raw("
+            select organizacion, liderWOM, runLiderWOM, liderSei, runLiderSei, unidadesContadas, unidadesNuevo, 
+            unidadesUsado, unidadesPrestamo, unidadesServTecnico, pttTotal, tiempoTranscurrido, evaluacionAServicioSEI
+            from archivos_respuesta_wom
+        "));
+
+        return (object)[
+            'xlsxPath' => \ExcelHelper::generarXLSX_archivosWOM($archivos),
         ];
     }
 

@@ -189,7 +189,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('agregar-archivos-respuesta-wom',                'ArchivoRespuestaWOMController@show_agregarArchivo')->name('indexAgregarRespuestaWOM');
         Route::post('agregar-archivos-respuesta-wom',               'ArchivoRespuestaWOMController@post_agregarArchivo');
         // DESCARGAS:
-        Route::get('archivo-respuesta-wom/{idArchivo}/descargar-zip',    'ArchivoRespuestaWOMController@descargarZip');
+        Route::get('archivo-respuesta-wom/descargar-consolidado',           'ArchivoRespuestaWOMController@descargarConsolidado');
+        Route::get('archivo-respuesta-wom/{idArchivo}/descargar-zip',       'ArchivoRespuestaWOMController@descargarZip');
 //        Route::get('archivo-respuesta-wom/{idArchivo}/descargar-carga2',    'ArchivoRespuestaWOMController@descargarArchivoCarga2');
         Route::get('archivo-respuesta-wom/{idArchivo}/descargar-excel',     'ArchivoRespuestaWOMController@descargarExcel');
         Route::get('archivo-respuesta-wom/{idArchivo}/descargar-txt',       'ArchivoRespuestaWOMController@descargarTxt');

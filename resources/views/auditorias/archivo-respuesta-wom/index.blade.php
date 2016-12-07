@@ -73,6 +73,16 @@
                             </form>
                         </div>
                     </div>
+
+                    <div class="panel panel-default hidden-xs">
+                        <div class="panel-heading">
+                            Consolidado
+                        </div>
+                        <div class="panel-body">
+                            <a href="/archivo-respuesta-wom/descargar-consolidado" class="btn btn-sm btn-block btn-primary">Descargar</a>
+                        </div>
+                    </div>
+                    
                 </div>
                 {{-- TABLA DE INVENTARIOS --}}
                 <div class="col-sm-9">

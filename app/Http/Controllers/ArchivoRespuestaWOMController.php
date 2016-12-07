@@ -183,4 +183,14 @@ class ArchivoRespuestaWOMController extends Controller {
                 ->download($basename);  //->stream('nomina.pdf');
         }
     }
+
+    // GET archivo-respuesta-wom/descargar-consolidado
+    function descargarConsolidado(RespuestaWOMService $respuestaWOMService){
+        $res = $respuestaWOMService->descargarConsolidado(null);
+        if(isset($res->error))
+            return response()->json($res->error, 400);
+        else{
+            return \ArchivosHelper::descargarArchivo($res->xlsxPath, 'consolidado WOM.xlsx');
+        }
+    }
 }
