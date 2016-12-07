@@ -121,10 +121,37 @@ export class NominaIG extends React.Component {
         api.usuarios.nuevoOperador(datos)
             .then(usuario=>{
                 console.log('nuevo usuario creado', usuario)
-                this.agregarOperador(this.state.esTitular, usuario.usuarioRUN)
+                // ESTO DA UN PROBLEMA DE REFERENCIA, ES FACIL DE SOLUCIONAR, DEBE ESTAR EN EL MISMO CONTEXTO QUE getChildContext
+                // PERO COMO NADIE VA A MANTERNER ESTO, FILO
+                //this.agregarOperador(this.state.esTitular, usuario.usuarioRUN)
+
+                // INICIO: codigo repetido de "agregarOperador"
+                api.nomina(this.props.nomina.idNomina).agregarOperador(usuario.usuarioRUN, this.state.esTitular, 1)
+                    .then(response=>{
+                        let nominaActualizada = response.data
+                        let statusCode = response.status
+
+                        // si no se encuentra el usuario, se debe mostrar el formulario para crear uno
+                        if(statusCode==204){
+                            console.log("RUN no existe, mostrando formulario")
+                            this.setState({
+                                showModal: true,
+                                RUNbuscado: run,
+                                //esTitular
+                            })
+
+                        } else if(statusCode==200){
+                            this.refs.notificator.success("Nómina", "Usuario agregado correctamente", 4*1000);
+                            this.setState({nomina: nominaActualizada})
+                        }
+                    })
+                    .catch(this.ajaxErrorHandler('Agregar Operador'))
+                // FIN: codigo repetido de "agregarOperador"
+
                 this.setState({showModal: false})
             })
             .catch(err=>{
+                console.log(err)
                 alert('ha ocurrido un erro al crear un usuario ', err)
             })
     }
