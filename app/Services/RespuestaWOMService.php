@@ -109,7 +109,6 @@ class RespuestaWOMService implements RespuestaWOMContract {
                                                         str_replace('.', '', $acta['Unidades en USADO']) :null;
         $archivoRespuesta->unidadesPrestamo         = isset($acta['Unidades en PRESTAMO']) ?
                                                         str_replace('.', '', $acta['Unidades en PRESTAMO']) :null;
-        $archivoRespuesta->unidadesServTecnico      = null;
         $archivoRespuesta->tiempoTranscurrido       = isset($acta['Tiempo Transcurrido : ']) ? $acta['Tiempo Transcurrido : '] :null;
         $archivoRespuesta->evaluacionAServicioSEI   = isset($acta['Evaluación a servicio SEI']) ? $acta['Evaluación a servicio SEI'] :null;
         // preguntas
@@ -123,8 +122,6 @@ class RespuestaWOMService implements RespuestaWOMContract {
 
         // otros (no viene en el archivo de acta)
         $archivoRespuesta->pttTotal = $archivoRespuesta->getPatentesTotal();    // no viene en el archivo de acta
-        $archivoRespuesta->unidadesErrorSei = null;
-        $archivoRespuesta->porcentajeErrorSei = null;
         $archivoRespuesta->save();
 
         // ########### Marcar como correcto

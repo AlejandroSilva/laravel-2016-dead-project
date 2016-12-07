@@ -150,7 +150,6 @@
                                     <li><b>Total "Nuevo"</b> {{ $totalNuevo }}</li>
                                     <li><b>Total "En uso"</b> {{ $totalUsado }}</li>
                                     <li><b>Total "En préstamo"</b> {{ $totalPrestamo }}</li>
-                                    <li><b>Total "En Servicio Técnico"</b> {{ $totalServTecnico }}</li>
                                     <li><b>Total Unidades</b> {{ $totalUnidades }}</li>
                                 </ul>
                             </div>
