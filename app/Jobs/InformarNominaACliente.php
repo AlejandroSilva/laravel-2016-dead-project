@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Jobs\Job;
-use Carbon\Carbon;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -71,9 +70,12 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         ['jjimenez@construmart.cl', 'Juan Carlos Jimenez Velasquez'],
         ['cristian.cerna@construmart.cl', 'Cristian Cerna'],
     ];
-
+    // Cliente 9: WOM
     protected $WOM_nomina_to = [
-        ['asilvawom@seiconsultores.cl', 'Alejandro Silva WOM'],
+        ['felipe.pavez@wom.cl', 'Felipe Pavez'],
+        ['wilson.mollo@wom.cl', 'Wilson Mollo'],
+        ['mariella.leiva@wom.cl', 'Mariella Leiva'],
+        ['pablo.jorquera@wom.cl', 'Pablo Jorquera'],
     ];
 
     /**
@@ -109,11 +111,6 @@ class InformarNominaACliente extends Job implements ShouldQueue {
             'local' => $local,
             'inventario' => $inventario,
             'nomina' => $this->nomina,
-//            'fechaProgramada' => Carbon::parse($inventario->fechaProgramada)->formatLocalized('%A %d %B'),
-//            'horaPresentacionLider' => (new \DateTime($_hlider))->format('H:i'),
-//            'horaPresentacionEquipo' => (new \DateTime($_hequipo))->format('H:i'),
-//            'horaPresentacionLider' => $this->nomina->horaPresentacionLiderF(),
-//            'horaPresentacionEquipo' => $this->nomina->horaPresentacionEquipoF(),
             // personal
             'lider' => $lider,
             'supervisor' => $this->nomina->supervisor,
@@ -136,8 +133,6 @@ class InformarNominaACliente extends Job implements ShouldQueue {
             $correoLocal = $local->emailContacto;
             if($correoLocal)
                 array_unshift($destinatariosFCV, [$correoLocal, "Local $local->numero"]);   // agrega al inicio
-                //array_push($destinatariosFCV, [$correoLocal, "Local $local->numero"]);    // agrega al final
-
             $this->enviarCorreos('emails.informarNomina.FCV', [
                 'subject' => "$nominaRectificada Cruz Verde Nº$local->numero",
                 'to' => $destinatariosFCV,
@@ -167,11 +162,17 @@ class InformarNominaACliente extends Job implements ShouldQueue {
                 'to' => $this->CMT_nomina_to,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
-        }else if($cliente->idCliente==7){                   // 9: WOM
-            $this->enviarCorreos('emails.informarNomina.GENERICA', [
+        }else if($cliente->idCliente==9){                   // 9: WOM
+            // WOM tambien envia un correo al local (solo si esta definido)
+            $destinatariosWOM = $this->WOM_nomina_to;
+            $correoLocal = $local->emailContacto;
+            if($correoLocal)
+                array_unshift($destinatariosWOM, [$correoLocal, "Local $local->numero"]);   // agrega al inicio
+
+            $this->enviarCorreos('emails.informarNomina.WOM', [
                 // WIP terminar luego....
                 'subject' => "$nominaRectificada WOM organización $local->numero",
-                'to' => $this->WOM_nomina_to,
+                'to' => $destinatariosWOM,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else{                                              // Otros clientes
