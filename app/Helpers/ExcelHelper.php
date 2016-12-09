@@ -331,8 +331,8 @@ class ExcelHelper{
                 $a->pttTotal,
                 $a->tiempoTranscurrido,
                 $a->evaluacionAServicioSEI,
-                $a->pCunplimientoWOM? "$a->pCunplimientoWOM%" : '',
-                $a->pCunplimientoSEI? "$a->pCunplimientoSEI%" : ''
+                "$a->pCunplimientoWOM%",
+                "$a->pCunplimientoSEI%"
             ];
 
         $random_number= md5(uniqid(rand(), true));
