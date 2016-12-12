@@ -70,6 +70,10 @@ class HomeController extends Controller {
                 // Panel "Agregar archivo respuesta WOM"
                 'puedeSubirArchivosWOM' => $user->can('wom-subirArchivosRespusta') && !$user->hasRole('Administrador'),
 
+                // Panel "Buscar muestra vencimiento"
+                // "deploy" pendiente
+                'puedeBuscarMuestrasFCV' => $user->can('fcv-verMuestras') && false,
+
                 // panel "mis proximos inventarios"
                 'mostrar_misProximosInventarios' => $mostrar_misProximosInventarios,
                 'nominas' => $proximasNominas,

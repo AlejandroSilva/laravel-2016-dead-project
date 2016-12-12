@@ -7,6 +7,11 @@
             @if($puedeSubirArchivosWOM)
                 @include('home.dashboard-agregarArchivosWOM')
             @endif
+            {{-- Buscar muestras FCV --}}
+            @if($puedeBuscarMuestrasFCV)
+                @include('home.dashboard-buscarMuestrasFCV')
+            @endif
+
             {{-- Lider/Supervisor/Operador: Mis Inventarios --}}
             @if($mostrar_misProximosInventarios)
                 @include('home.dashboard-misProximosInventarios')

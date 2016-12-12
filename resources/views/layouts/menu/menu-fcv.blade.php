@@ -30,8 +30,8 @@
             </li>
         @endif
 
-        {{-- SECCION: ARCHIVOS --}}
-        {{--@if( $mostrarMaestra || $mostrarMuestras)--}}
+        {{-- SECCION: MUESTRAS --}}
+        {{--@if( $mostrarMuestras)--}}
             {{--<li role="separator" class="divider"></li>--}}
             {{--<li class="{{ Request::is('auditorias/estado-general-fcv')? 'active': '' }}">--}}
                 {{--<a href="{{ url('auditoria/muestras') }}">Descargar muestras</a>--}}
