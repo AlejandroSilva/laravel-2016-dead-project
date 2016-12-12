@@ -233,12 +233,23 @@ class Auditorias extends Model {
         $query = Auditorias::with([]);
 
         // Cliente (solo si existe y es dintito a 0)
-        $idCliente = $peticion->idCliente;
-        if( isset($idCliente) && $idCliente!=0) {
+        if( isset($peticion->idCliente) && $peticion->idCliente!=0) {
+            $idCliente = $peticion->idCliente;
             $query->whereHas('local', function ($q) use ($idCliente) {
                 $q->where('idCliente', '=', $idCliente);
             });
         }
+        // OPCIONAL: buscar por CECO
+        if( isset($peticion->ceco) && $peticion->ceco!=0) {
+            $ceco = $peticion->ceco;
+            $query->whereHas('local', function ($q) use ($ceco) {
+                $q->where('numero', $ceco);
+            });
+        }
+
+        // OPCIONAL: buscar por Auditor
+        if( isset($peticion->idAuditor) && $peticion->idAuditor!=0)
+            $query->where('idAuditor', $peticion->idAuditor);
 
         // OPCIONAL: Fecha desde
         if(isset($peticion->fechaInicio))

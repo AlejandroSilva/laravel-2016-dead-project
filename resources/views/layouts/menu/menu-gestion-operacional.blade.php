@@ -9,7 +9,6 @@
         <ul class="dropdown-menu" aria-labelledby="drop-operacional">
             {{-- PROGRAMACION DE INVENTARIOS --}}
             @if( $mostrarPInventarios )
-                <li class="dropdown-header">Inventarios</li>
                 <li class="{{ Request::is('inventarios/programacion-mensual')? 'active': '' }}">
                     <a href="{{ url('inventarios/programacion-mensual') }}">Programación mensual IG</a>
                 </li>
@@ -21,7 +20,6 @@
 
             {{-- PROGRAMACION DE AUDITORIAS --}}
             @if( $mostrarPAuditorias )
-                <li class="dropdown-header">Auditorias</li>
                 <li class="{{ Request::is('auditorias/programacion-mensual')? 'active': '' }}">
                     <a href="{{ url('auditorias/programacion-mensual') }}">Programación mensual AI</a>
                 </li>
@@ -33,7 +31,6 @@
 
             {{-- NOMINAS DE CAPTADORES --}}
             @if( $mostrarPInventarios && Auth::user()->hasRole('Developer') )
-                <li class="dropdown-header">Nominas</li>
                 <li class="{{ Request::is('nominas/captadores')? 'active': '' }}">
                     <a href="{{ url('nominas/captadores') }}">Nominas Captadores/as (Dev)</a>
                 </li>

@@ -14,7 +14,6 @@
 
         {{-- ARCHIVOS DE RESPUESTA --}}
         @if( $mostrarArchivosRespuesta )
-            <li class="dropdown-header">Archivos de respuesta</li>
             <li class="{{ Request::is('archivos-respuesta-wom')? 'active': '' }}">
                 <a href="{{ url('archivos-respuesta-wom') }}">Ver archivos de respuesta WOM</a>
             </li>
@@ -28,7 +27,6 @@
         {{-- MAESTRA DE PRODUCTOS --}}
         @if( $mostrarMaestra )
             <li role="separator" class="divider"></li>
-            <li class="dropdown-header">Maestra de Productos</li>
             <li class="{{ Request::is('maestra-wom')? 'active': '' }}">
                 <a href="{{ url('maestra-wom') }}">Ver maestra de productos WOM</a>
             </li>

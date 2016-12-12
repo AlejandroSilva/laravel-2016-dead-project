@@ -52,6 +52,9 @@
                                     <td class="td-50">Organización</td><td>{{ $archivo->organizacion }}</td>
                                 </tr>
                                 <tr>
+                                    <td class="td-50">Fecha</td><td>{{ $archivo->getFechaF() }}</td>
+                                </tr>
+                                <tr>
                                     <td class="td-50">Líder WOM</td><td>{{ $archivo->liderWom }}</td>
                                 </tr>
                                 <tr>

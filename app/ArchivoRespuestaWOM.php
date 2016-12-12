@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -37,13 +38,16 @@ class ArchivoRespuestaWOM extends Model {
         $cliente  = Clientes::find(9)->nombreCorto;
         return self::getPathCarpeta($cliente).$this->nombreArchivo;
     }
-
     function getPatentesTotal(){
         $res = DB::table('capturas_respuesta_wom')
             ->select(DB::raw('count(distinct(ptt)) as total'))
             ->where('idArchivoRespuestaWOM', $this->idArchivoRespuestaWOM)
             ->get();
         return $res[0]->total;
+    }
+    function getFechaF(){
+        setlocale(LC_TIME, 'es_CL.utf-8');
+        return Carbon::parse($this->created_at)->formatLocalized('%d de %B, %Y');
     }
 
     // #### Setters

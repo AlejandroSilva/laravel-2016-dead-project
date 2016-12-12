@@ -159,12 +159,12 @@ return [
         App\Providers\HelpersServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
+        //Barryvdh\Debugbar\ServiceProvider::class,
 
         // SEI Service Providers
         App\Providers\NominaServiceProvider::class,
         // FCV
         App\Providers\MaestraFCVProvider::class,
-        App\Providers\MuestraVencimientoFCVProvider::class,
         // WOM
         App\Providers\MaestraWOMProvider::class,
         App\Providers\RespuestaWOMProvider::class,

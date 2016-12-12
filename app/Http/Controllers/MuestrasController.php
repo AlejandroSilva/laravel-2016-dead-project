@@ -4,14 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Auditorias;
 use App\Services\MuestrasFCVService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
 class MuestrasController extends Controller {
-    // GET auditoria/{idAuditoria}/muestras
-    function show_index(){
-        return response()->json("vista: muestras de la auditoria");
+
+    // GET auditoria/muestras
+    function show_indexBuscar(Request $request){
+        $ceco = $request->ceco;
+        $hoy = Carbon::now();
+
+        $auditorias = (isset($ceco) && $ceco!=0)?
+            Auditorias::buscar((object)[
+                'ceco' => $ceco,
+                'mes'  => $hoy,
+            ])
+            :
+            Auditorias::buscar((object)[
+                'idAuditor' => Auth::user()->id,
+                'fechaInicio'  => $hoy->format('Y-m-d'),
+                'fechaFin'  => $hoy->format('Y-m-d'),
+            ]);
+        return view('auditorias.muestras.index-buscar', [
+            'auditorias' => $auditorias,
+            'cecoBuscado' => $ceco
+        ]);
     }
 
     // GET api/auditoria/{idAuditoria}/muestra-ird

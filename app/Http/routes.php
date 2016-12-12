@@ -151,8 +151,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::delete('api/auditoria/{idAuditoria}',                'AuditoriasController@api_eliminar');
         Route::get('api/auditoria/buscar',                          'AuditoriasController@api_buscar');
 
-        // muestras
-        Route::get('auditoria/{idAuditoria}/muestras',                  'MuestrasController@show_index');
+        // MUESTRAS
+        Route::get('auditoria/muestras',                                'MuestrasController@show_indexBuscar');
         Route::get('api/auditoria/{idAuditoria}/muestra-ird',           'MuestrasController@descargarMuestraIrd');
         Route::post('api/auditoria/{idAuditoria}/muestra-ird',          'MuestrasController@post_cargarMuestraIrd');
         Route::get('api/auditoria/{idAuditoria}/muestra-vencimiento',   'MuestrasController@descargarMuestraVencimiento');
