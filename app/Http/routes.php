@@ -151,24 +151,31 @@ Route::group(['middleware' => ['web']], function (){
         Route::delete('api/auditoria/{idAuditoria}',                'AuditoriasController@api_eliminar');
         Route::get('api/auditoria/buscar',                          'AuditoriasController@api_buscar');
 
+        // muestras
+        Route::get('auditoria/{idAuditoria}/muestras',                  'MuestrasController@show_index');
+        Route::get('api/auditoria/{idAuditoria}/muestra-ird',           'MuestrasController@descargarMuestraIrd');
+        Route::post('api/auditoria/{idAuditoria}/muestra-ird',          'MuestrasController@post_cargarMuestraIrd');
+        Route::get('api/auditoria/{idAuditoria}/muestra-vencimiento',   'MuestrasController@descargarMuestraVencimiento');
+        Route::post('api/auditoria/{idAuditoria}/muestra-vencimiento',  'MuestrasController@post_cargarMuestraVencimiento');
+
         // ################                             - FARMACIA CRUZ VERDE -
         // ######## MAESTRA DE PRODUCTOS
         // VISTAS:
-        Route::get('maestra-fcv',                                   'MaestraProductosController@show_maestraFCV')->name('maestraFCV');
-        Route::post('maestra-fcv/subir-maestra',                    'MaestraProductosController@formpost_subirMaestraFCV');
-        Route::get('maestra-fcv/{idMaestra}/ver-estado',            'MaestraProductosController@show_verEstadoMaestraFCV')->name('verEstadoMaestraFCV');
-        Route::post('maestra-fcv/{idMaestra}/actualizar-estado',    'MaestraProductosController@formpost_actualizarEstadoFCV');
-        Route::get('maestra-fcv/{idMaestra}/actualizar-maestra',    'MaestraProductosController@show_actualizarMaestraFCV');
-        // DESCARGAS:
-        Route::get('maestra-fcv/{idMaestra}/descargar-db',          'MaestraProductosController@descargarDB_maestraFCV');
-        Route::get('maestra-fcv/{idArchivo}/descargar-original',    'MaestraProductosController@descargarOriginal_maestraFCV');
+//        Route::get('maestra-fcv',                                   'MaestraProductosController@show_maestraFCV')->name('maestraFCV');
+//        Route::post('maestra-fcv/subir-maestra',                    'MaestraProductosController@formpost_subirMaestraFCV');
+//        Route::get('maestra-fcv/{idMaestra}/ver-estado',            'MaestraProductosController@show_verEstadoMaestraFCV')->name('verEstadoMaestraFCV');
+//        Route::post('maestra-fcv/{idMaestra}/actualizar-estado',    'MaestraProductosController@formpost_actualizarEstadoFCV');
+//        Route::get('maestra-fcv/{idMaestra}/actualizar-maestra',    'MaestraProductosController@show_actualizarMaestraFCV');
+//        // DESCARGAS:
+//        Route::get('maestra-fcv/{idMaestra}/descargar-db',          'MaestraProductosController@descargarDB_maestraFCV');
+//        Route::get('maestra-fcv/{idArchivo}/descargar-original',    'MaestraProductosController@descargarOriginal_maestraFCV');
 
         // ######## MUESTRAS DE VENCIMIENTO
         // VISTAS:
-        Route::get('muestra-vencimiento-fcv',                       'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
-        Route::post('muestra-vencimiento-fcv/subir-muestra',        'MuestraVencimientoController@post_subirMuestraFCV');
+//        Route::get('muestra-vencimiento-fcv',                       'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
+//        Route::post('muestra-vencimiento-fcv/subir-muestra',        'MuestraVencimientoController@post_subirMuestraFCV');
         // DESCARGAS:
-        Route::get('muestra-vencimiento-fcv/{idMuestra}/descargar', 'MuestraVencimientoController@descargar_muestraFCV');
+//        Route::get('muestra-vencimiento-fcv/{idMuestra}/descargar', 'MuestraVencimientoController@descargar_muestraFCV');
 
         // ######## ARCHIVO FINAL AUDITORIA
         // DESCARGAS:
@@ -191,7 +198,6 @@ Route::group(['middleware' => ['web']], function (){
         // DESCARGAS:
         Route::get('archivo-respuesta-wom/descargar-consolidado',           'ArchivoRespuestaWOMController@descargarConsolidado');
         Route::get('archivo-respuesta-wom/{idArchivo}/descargar-zip',       'ArchivoRespuestaWOMController@descargarZip');
-//        Route::get('archivo-respuesta-wom/{idArchivo}/descargar-carga2',    'ArchivoRespuestaWOMController@descargarArchivoCarga2');
         Route::get('archivo-respuesta-wom/{idArchivo}/descargar-excel',     'ArchivoRespuestaWOMController@descargarExcel');
         Route::get('archivo-respuesta-wom/{idArchivo}/descargar-txt',       'ArchivoRespuestaWOMController@descargarTxt');
         Route::get('archivo-respuesta-wom/{idArchivo}/descargar-pdf',       'ArchivoRespuestaWOMController@descargarActaPdf');

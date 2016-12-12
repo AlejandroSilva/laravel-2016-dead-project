@@ -27,6 +27,7 @@ class TablaAuditoriaSemanal extends React.Component{
                     <col className={css.thAperturaCierre}/>
                     <col className={css.thAperturaCierre}/>
                     <col className={css.thDireccion}/>
+                    <col className={css.thMuestras}/>
                     <col className={css.thOpciones}/>
                 </colgroup>
                 <thead>
@@ -95,6 +96,7 @@ class TablaAuditoriaSemanal extends React.Component{
                         <th className={css.thAperturaCierre}>Hr.Apertura</th>
                         <th className={css.thAperturaCierre}>Hr.Cierre</th>
                         <th className={css.thDireccion}>Dirección</th>
+                        <th className={css.thMuestras}>Muestras</th>
                         <th className={css.thOpciones}>Opciones</th>
                     </Sticky>
                 </thead>

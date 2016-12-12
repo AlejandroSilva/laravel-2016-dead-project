@@ -33,23 +33,22 @@
         @endif
 
         {{-- SECCION: ARCHIVOS --}}
-        @if( $mostrarMaestra || $mostrarMuestras)
-            <li role="separator" class="divider"></li>
-            <li class="dropdown-header">Archivos</li>
-        @endif
+        {{--@if( $mostrarMaestra || $mostrarMuestras)--}}
+            {{--<li role="separator" class="divider"></li>--}}
+            {{--<li class="dropdown-header">Archivos</li>--}}
+        {{--@endif--}}
         {{-- MAESTRA DE PRODUCTOS --}}
-        @if( $mostrarMaestra )
-
-            <li class="{{ Request::is('maestra-fcv')? 'active': '' }}">
-                <a href="{{ url('maestra-fcv') }}">Maestra de productos FCV</a>
-            </li>
-        @endif
+        {{--@if( $mostrarMaestra )--}}
+            {{--<li class="{{ Request::is('maestra-fcv')? 'active': '' }}">--}}
+                {{--<a href="{{ url('maestra-fcv') }}">Maestra de productos FCV</a>--}}
+            {{--</li>--}}
+        {{--@endif--}}
         {{-- MUESTRA VENCIMIENTO FCV--}}
-        @if( $mostrarMuestras && Auth::user()->hasRole('Developer') )
-            <li class="{{ Request::is('muestra-vencimiento-fcv')? 'active': '' }}">
-                <a href="{{ url('muestra-vencimiento-fcv') }}">(DEV) Muestra de vencimiento FCV</a>
-            </li>
-        @endif
+        {{--@if( $mostrarMuestras && Auth::user()->hasRole('Developer') )--}}
+            {{--<li class="{{ Request::is('muestra-vencimiento-fcv')? 'active': '' }}">--}}
+                {{--<a href="{{ url('muestra-vencimiento-fcv') }}">(DEV) Muestra de vencimiento FCV</a>--}}
+            {{--</li>--}}
+        {{--@endif--}}
     </ul>
 </li>
 

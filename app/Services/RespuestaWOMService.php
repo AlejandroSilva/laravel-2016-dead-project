@@ -222,10 +222,6 @@ class RespuestaWOMService implements RespuestaWOMContract {
     }
 
     public function descargarConsolidado($user){
-        // falta validar permisos
-//        if(!$archivoMaestraProductos)
-//            return $this->_error('Maestra de productos', 'La maestra que busca no ha sido encontrada', 404);
-
         $archivos = DB::select(DB::raw("
             select organizacion, date_format(created_at, '%d-%m-%Y') as fecha, liderWOM, runLiderWOM, liderSei, runLiderSei, 
             unidadesContadas, unidadesNuevo, unidadesUsado, unidadesPrestamo, pttTotal, tiempoTranscurrido, evaluacionAServicioSEI,

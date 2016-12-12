@@ -149,6 +149,19 @@ class RowAuditoriaSemanal extends React.Component{
                 <td className={css.tdDireccion}>
                     {this.props.auditoria.local_direccion}
                 </td>
+                {/* Muestras */}
+                <td className={css.tdMuestras}>
+                    {this.props.auditoria.aud_mirdDisponible ?
+                        <a href={`/api/auditoria/${this.props.auditoria.aud_idAuditoria}/muestra-ird`} className="btn btn-xs btn-primary">ird</a>
+                        :
+                        <btn className="btn btn-xs btn-default">ird</btn>
+                    }
+                    {this.props.auditoria.aud_mvencimientoDisponible?
+                        <a href={`/api/auditoria/${this.props.auditoria.aud_idAuditoria}/muestra-vencimiento`} className="btn btn-xs btn-primary">venc</a>
+                        :
+                        <btn className="btn btn-xs btn-default">venc</btn>
+                    }
+                </td>
                 {/* Opciones */}
                 <td className={css.tdOpciones}>
                     {this.props.puedeModificar?

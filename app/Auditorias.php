@@ -165,6 +165,15 @@ class Auditorias extends Model {
             return Carbon::parse($this->fechaProgramada)->formatLocalized('%a %e de %b');
         }
     }
+    static function getPathMuestras(){
+        return public_path().'/FCV/muestras/';
+    }
+    function getPathMuestraIrd(){
+        return $this->nombreArchivoIrd!=null? Auditorias::getPathMuestras().$this->nombreArchivoIrd : null;
+    }
+    function getPathMuestraVencimiento(){
+        return $this->nombreArchivoVencimiento!=null? Auditorias::getPathMuestras().$this->nombreArchivoVencimiento : null;
+    }
 
     // ####  Setters
     //
@@ -197,7 +206,8 @@ class Auditorias extends Model {
             'aud_aprobada' => $auditoria->aprovada,
             'aud_idAuditor' => $auditoria->idAuditor,
             'aud_auditor' => $auditoria->auditor? $auditoria->auditor->nombreCorto() : '--',
-
+            'aud_mirdDisponible' => $auditoria->getPathMuestraIrd()!=null,
+            'aud_mvencimientoDisponible' => $auditoria->getPathMuestraVencimiento()!=null,
             'cliente_idCliente' => $auditoria->local->idCliente,
             'cliente_nombreCorto' => $auditoria->local->cliente->nombreCorto,
 

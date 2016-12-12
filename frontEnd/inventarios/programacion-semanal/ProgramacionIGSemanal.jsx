@@ -22,8 +22,6 @@ class ProgramacionIGSemanal extends React.Component {
         this.state = {
             idCliente: 0,
             // seleccionar el mes completo
-            // fechaInicialSeleccionada: moment( moment().format('YYYY-MM-01') ),
-            // fechaFinalSeleccionada: moment().endOf('month'),
             fechaInicialSeleccionada: moment().subtract(1, 'days'),
             fechaFinalSeleccionada: moment().endOf('week'),
             // Inventarios y Filtros
@@ -111,7 +109,6 @@ class ProgramacionIGSemanal extends React.Component {
         }, ()=>{
             let fechaInicio = this.state.fechaInicialSeleccionada.format('YYYY-MM-DD')
             let fechaFinal  = this.state.fechaFinalSeleccionada.format('YYYY-MM-DD')
-            //console.log(`rango seleccionado ${fechaInicio} al ${fechaFinal}`)
             // se llama al metodo seleccionar semana, que hace lo mismo
             this.buscarInventarios(fechaInicio, fechaFinal)
         })
@@ -125,7 +122,6 @@ class ProgramacionIGSemanal extends React.Component {
 
         api.inventario.buscar2(fechaInicio, fechaFin, idCliente)
             .then(inventarios=>{
-                //console.log(`inventarios del rango ${fechaInicio} a ${fechaFin}, y cliente ${idCliente}`, inventarios)
                 this.blackbox.reset()
                 inventarios.forEach(inventario=>this.blackbox.add(inventario))
 
@@ -186,7 +182,6 @@ class ProgramacionIGSemanal extends React.Component {
                                 onChange={this.onSelectClienteChanged.bind(this)}>
                             <option value="0">Todos</option>
                             {this.props.clientes.map((cliente, index)=>{
-                                //return <option key={index} value={cliente.idCliente}>{"asdas" + cliente.nombre}</option
                                 return <option key={index} value={cliente.idCliente}>{`${cliente.nombreCorto} - ${cliente.nombre}`}</option>
                             })}
                         </select>

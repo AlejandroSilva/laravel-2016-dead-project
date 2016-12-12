@@ -269,6 +269,18 @@
     line-height: 1 !important;
 }
 
+/* Muestras */
+.thMuestras {
+    width: 65px !important;
+    background: white;
+}
+.tdMuestras {
+    width: 65px !important;
+    background: white;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+}
+
 /* Opciones */
 .thOpciones {
     width: auto !important;

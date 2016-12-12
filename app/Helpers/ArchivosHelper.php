@@ -1,21 +1,6 @@
 <?php
 
-// Carbon
-use Carbon\Carbon;
-//Modelos
-use App\ArchivoMuestraVencimientoFCV;
-
 class ArchivosHelper{
-
-//     no funciona esta wea, falla por los nombres de archivos...
-//    static function XLSXaCSV($xlsxPath){
-//        //$txtPath = public_path()."/tmp/".md5(uniqid(rand(), true))."/".rand()."txt";
-//        $txtPath = "/home/asilva/Escritorio/asd.txt";
-//        $REPLACE = 's/|\"/|/g;s/\"|/|/g;s/   \"//g';
-//        $com = "ssconvert -O 'separator=|' \"$xlsxPath\" $txtPath";
-//        exec($com);
-//        exec("sed -i -- '$REPLACE' $txtPath", $aa);
-//    }
 
     static function extraerArchivo($zip_fullpath, $archivo){
         $ZIP_ERROR = [
@@ -32,8 +17,7 @@ class ArchivosHelper{
 
         $tmpPath = public_path()."/tmp/".md5(uniqid(rand(), true))."/";
 
-        // tratar de abrir el archivo zip
-        $zip = new ZipArchive;      // documentacion: http://php.net/manual/es/ziparchive.extractto.php
+        $zip = new ZipArchive;
         $resultado = $zip->open($zip_fullpath);
         if( $resultado !== true ){
             $msg = isset($ZIP_ERROR[$resultado])? $ZIP_ERROR[$resultado] : 'Error desconocido.';
