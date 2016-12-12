@@ -26,9 +26,8 @@ class HomeController extends Controller {
             if($user->id==2)
                 return redirect('inventarios/programacion-semanal');
             // felipe de WOM -> Archivos de respuesta de WOM
-            if($user->id==697)
+            if($user->id==697 || $user->id==721 || $user->id==722 || $user->id==724)
                 return redirect('archivos-respuesta-wom');
-
 
             // buscar los inventarios desde hoy hasta el domingo
             $hoy = Carbon::now()->format('Y-m-d');
