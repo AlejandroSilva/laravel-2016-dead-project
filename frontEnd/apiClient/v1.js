@@ -146,6 +146,8 @@ export default {
         // utilizada por programacion IG para actualizar lider
         actualizar: (datos)=>
             axios.put(`/api/nomina/${idNomina}`, datos),
+        actualizarEmailContacto: (emailContacto)=>
+            axios.post(`/api/nomina/${idNomina}/actualizar-email`, {emailContacto}),
         agregarLider: (usuarioRUN)=>
             axios.post(`/api/nomina/${idNomina}/lider/${usuarioRUN}`),
         quitarLider: ()=>

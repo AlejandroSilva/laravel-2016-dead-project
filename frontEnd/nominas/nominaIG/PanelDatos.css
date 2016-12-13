@@ -11,3 +11,8 @@
     padding-top: 0 !important;
     padding-bottom: 0 !important;
 }
+.inputEmail {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}

@@ -16,7 +16,7 @@ export class NominaIG extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            showModal: false,
+            showModalNuevoUsuario: false,
             RUNbuscado: '',
             esTitular: true,
             // --------
@@ -90,7 +90,7 @@ export class NominaIG extends React.Component {
                         if(statusCode==204){
                             console.log("RUN no existe, mostrando formulario")
                             this.setState({
-                                showModal: true,
+                                showModalNuevoUsuario: true,
                                 RUNbuscado: run,
                                 esTitular
                             })
@@ -110,6 +110,11 @@ export class NominaIG extends React.Component {
                         this.setState({nomina})
                     })
                     .catch(this.ajaxErrorHandler('error al quitar el operador'))
+            },
+            editarEmailContacto: (emailContacto)=>{
+                api.nomina(this.props.nomina.idNomina).actualizarEmailContacto(emailContacto)
+                    .then(nomina=> this.setState({nomina}))
+                    .catch(error=> console.error(error))
             }
         }
     }
@@ -135,7 +140,7 @@ export class NominaIG extends React.Component {
                         if(statusCode==204){
                             console.log("RUN no existe, mostrando formulario")
                             this.setState({
-                                showModal: true,
+                                showModalNuevoUsuario: true,
                                 RUNbuscado: run,
                                 //esTitular
                             })
@@ -148,7 +153,7 @@ export class NominaIG extends React.Component {
                     .catch(this.ajaxErrorHandler('Agregar Operador'))
                 // FIN: codigo repetido de "agregarOperador"
 
-                this.setState({showModal: false})
+                this.setState({showModalNuevoUsuario: false})
             })
             .catch(err=>{
                 console.log(err)
@@ -156,7 +161,7 @@ export class NominaIG extends React.Component {
             })
     }
     onCancelarFormulario(){
-        this.setState({showModal: false})
+        this.setState({showModalNuevoUsuario: false})
         console.log('formulario cancelado')
     }
 
@@ -223,7 +228,7 @@ export class NominaIG extends React.Component {
             <div className="container-fluid">
                 <ReactNotify ref='notificator' className={ReactNotifyCSS}/>
                 <Modal
-                    show={this.state.showModal}
+                    show={this.state.showModalNuevoUsuario}
                     onHide={this.onCancelarFormulario.bind(this)}
                     dialogClassName={css.modalAmplio}
                 >
@@ -305,5 +310,6 @@ NominaIG.childContextTypes = {
     agregarSupervisor: PropTypes.func,
     quitarSupervisor: PropTypes.func,
     agregarOperador: PropTypes.func,
-    quitarOperador: PropTypes.func
+    quitarOperador: PropTypes.func,
+    editarEmailContacto: PropTypes.func
 }

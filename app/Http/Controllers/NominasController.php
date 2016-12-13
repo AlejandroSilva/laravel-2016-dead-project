@@ -209,6 +209,19 @@ class NominasController extends Controller {
         return response()->json( $nomina->lideresDisponibles() );
     }
 
+    function api_actualizarEmailContacto($idNomina, Request $request){
+        $nomina = Nominas::find($idNomina);
+        if(!$nomina)
+            return response()->json(['idNomina'=>'La nómina indicada no existe'], 400);
+
+        if(isset($request->emailContacto)){
+            $local = $nomina->inventario->local;
+            $local->emailContacto = $request->emailContacto;
+            $local->save();
+        }
+        return response()->json(Nominas::formatoPanelNomina( Nominas::find($idNomina) ));  // nomina actualizada
+    }
+
     // POST api/nomina/{idNomina}/lider/{usuarioRUN}
     function api_agregarLider(NominaService $nominaService, $idNomina, $usuarioRUN){
         // Revisar que el usuario tenga los permisos para cambiar el lider
