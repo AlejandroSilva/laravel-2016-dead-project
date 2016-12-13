@@ -170,7 +170,6 @@ class InformarNominaACliente extends Job implements ShouldQueue {
                 array_unshift($destinatariosWOM, [$correoLocal, "Local $local->numero"]);   // agrega al inicio
 
             $this->enviarCorreos('emails.informarNomina.WOM', [
-                // WIP terminar luego....
                 'subject' => "$nominaRectificada WOM organización $local->numero",
                 'to' => $destinatariosWOM,
                 'bcc' => $this->SEI_nomina_bcc
