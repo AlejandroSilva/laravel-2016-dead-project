@@ -149,25 +149,28 @@ class PersonalController extends Controller {
             'totalLider' => $totalLider,
             'totalSupervisor' => $totalSupervisor,
             'totalOperador' => $totalOperador,
-            'nomLider' => $nominas->comoLider->map(function($inv){
-                return [
-                    'idNomina' => $inv->idNomina,
-                    'idEstadoNomina' => $inv->idEstadoNomina,
-                    'rectificada' => $inv->rectificada,
-                ];
-            }),
-            'nomSupervisor' => $nominas->comoSupervisor->map(function($inv){
-                return [
-                    'idNomina' => $inv->idNomina,
-                    'idEstadoNomina' => $inv->idEstadoNomina,
-                    'rectificada' => $inv->rectificada,
-                ];
-            }),
+//            'nomLider' => $nominas->comoLider->map(function($inv){
+//                return [
+//                    'idNomina' => $inv->idNomina,
+//                    'idEstadoNomina' => $inv->idEstadoNomina,
+//                    'rectificada' => $inv->rectificada,
+//                ];
+//            }),
+//            'nomSupervisor' => $nominas->comoSupervisor->map(function($inv){
+//                return [
+//                    'idNomina' => $inv->idNomina,
+//                    'idEstadoNomina' => $inv->idEstadoNomina,
+//                    'rectificada' => $inv->rectificada,
+//                ];
+//            }),
             'nomOperador' => $nominas->comoOperador->map(function($inv){
                 return [
-                    'idNomina' => $inv->idNomina,
-                    'idEstadoNomina' => $inv->idEstadoNomina,
-                    'rectificada' => $inv->rectificada,
+                    //'idNomina' => $inv->idNomina,
+                    'url' => "http://sig.seiconsultores.cl/nomina/".$inv->idNomina,
+                    'inventario' => $inv->inventario->local->cliente->nombreCorto." ".$inv->inventario->local->nombre,
+                    'fecha' => $inv->inventario->fechaProgramadaF(),
+//                    'idEstadoNomina' => $inv->idEstadoNomina,
+//                    'rectificada' => $inv->rectificada,
                 ];
             })
         ]);
