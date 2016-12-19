@@ -145,9 +145,8 @@ if( activoFijoDOM ) {
 let personalIndexDOM = document.getElementById('react-personal-index')
 if( personalIndexDOM ) {
     ReactDOM.render(
-        <MantenedorPersonal
-            almacenes={window.laravelAlmacenes}
-        />, personalIndexDOM
+        <MantenedorPersonal/>,
+        personalIndexDOM
     )
 }
 

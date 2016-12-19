@@ -51,7 +51,10 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('api/usuario/{idUsuario}',                       'PersonalController@api_usuario_get');
         Route::put('api/usuario/{idUsuario}',                       'PersonalController@api_usuario_actualizar');
         Route::get('api/usuario/{rut}/historial-nominas',           'PersonalController@api_historial_nominas'); /*DESARROLLO*/
+        Route::post('api/usuario/{idUsuario}/bloquear',             'PersonalController@api_bloquearUsuario');
+        Route::post('api/usuario/{idUsuario}/cambiar-contrasena',   'PersonalController@api_cambiarContrasena');
         Route::get('api/usuarios/buscar',                           'PersonalController@api_usuarios_buscar');
+        Route::post('api/usuarios/nuevo-usuario',                   'PersonalController@api_usuario_nuevo');
         Route::post('api/usuarios/nuevo-operador',                  'PersonalController@api_operador_nuevo');
 
         // ################ ROLES y PERMISOS

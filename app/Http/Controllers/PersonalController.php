@@ -42,6 +42,12 @@ class PersonalController extends Controller {
         'tipoCuenta' => 'max:30',
         'numeroCuenta' => 'max:20',
     ];
+    private $rulesMessages = [
+        'required' => 'El campo es obligatorio',
+        'unique' => 'Ya asignado',
+        'max' => 'Debe tener máximo :max caracteres',
+        'min' => 'Debe tener mínimo :min caracteres',
+    ];
     /**
      * ##########################################################
      * Rutas que generan vistas
@@ -78,6 +84,23 @@ class PersonalController extends Controller {
         );
     }
 
+    // POST api/usuarios/nuevo-usuario
+    function api_usuario_nuevo(){
+        // Todo: solo algunos usuarios pueden agregar operadores (crear un permiso?)
+        $usuarioAuth = Auth::user();
+        $validator = Validator::make(Input::all(), $this->userRules, $this->rulesMessages);
+        if($validator->fails()){
+            $error = $validator->messages();
+            Log::info("[USUARIO:NUEVO_OPERADOR:ERROR] Usuario:'$usuarioAuth->nombre1 $usuarioAuth->apellidoPaterno'($usuarioAuth->id)'. Validador: $error");
+            return response()->json($error, 400);
+        }else{
+            $usuario = User::create( Input::all() );
+            Log::info("[USUARIO:NUEVO_OPERADOR:OK] Usuario:'$usuarioAuth->nombre1 $usuarioAuth->apellidoPaterno'($usuarioAuth->id)' ha creado:'$usuario->nombre1 $usuario->apellidoPaterno'($usuario->id)'");
+            // se parsea el usuario con el formato "estandar"
+            $usuarioActualizado = User::find($usuario->id);
+            return response()->json( User::formatoCompleto($usuarioActualizado), 200);
+        }
+    }
     // POST api/usuarios/nuevo-operador
     function api_operador_nuevo(){
         // Todo: solo algunos usuarios pueden agregar operadores (crear un permiso?)
@@ -121,7 +144,7 @@ class PersonalController extends Controller {
         $actualizarRules = $this->userRules;
         $actualizarRules['usuarioRUN'] = "required|max:15|unique:users,usuarioRUN,$idUsuario";
 
-        $validator = Validator::make(Input::all(), $actualizarRules);
+        $validator = Validator::make(Input::all(), $actualizarRules, $this->rulesMessages);
         if($validator->fails()){
             $error = $validator->messages();
             return response()->json($error, 400);
@@ -132,47 +155,44 @@ class PersonalController extends Controller {
         return response()->json(['msg'=>'OK'], 200);
     }
 
-    // PUT api/usuario/{rut}/historial-nominas  /* EN DESARROLLO, NO SE OCUPA POR NINGUNA API */
-    function api_historial_nominas($rut){
-        $user = User::where('usuarioRUN', $rut)->first();
+    function api_bloquearUsuario($idUsuario){
+        // todo permisos
+
+        $user = User::find($idUsuario);
+        if(!$user)
+            return response()->json(['idUsuario'=>'El usuario no existe'], 400);
+        $user->bloquear();
+        return response()->json([], 200);
+    }
+
+    function api_cambiarContrasena($idUsuario, Request $request){
+        // todo permisos
+
+        $user = User::find($idUsuario);
+        if(!$user)
+            return response()->json(['idUsuario'=>'El usuario no existe'], 400);
+        $user->cambiarContrasena($request->contrasena);
+        return response()->json([], 200);
+    }
+    // GET api/usuario/{rut}/historial-nominas  /* EN DESARROLLO, NO SE OCUPA POR NINGUNA API */
+    function api_historial_nominas($idUsuario){
+        //$user = User::where('usuarioRUN', $rut)->first();
+        $user = User::find($idUsuario);
         if(!$user)
             return response()->json('rut no encontrado');
 
         $nominas = $user->nominasComoTitular('2000-01-01', '2020-12-12');
-        $totalLider = $nominas->comoLider->count();
-        $totalSupervisor = $nominas->comoSupervisor->count();
-        $totalOperador = $nominas->comoOperador->count();
 
         return response()->json([
-//                'usuario' => $user
             'nombre' => $user->nombreCompleto(),
-            'totalLider' => $totalLider,
-            'totalSupervisor' => $totalSupervisor,
-            'totalOperador' => $totalOperador,
-//            'nomLider' => $nominas->comoLider->map(function($inv){
-//                return [
-//                    'idNomina' => $inv->idNomina,
-//                    'idEstadoNomina' => $inv->idEstadoNomina,
-//                    'rectificada' => $inv->rectificada,
-//                ];
-//            }),
-//            'nomSupervisor' => $nominas->comoSupervisor->map(function($inv){
-//                return [
-//                    'idNomina' => $inv->idNomina,
-//                    'idEstadoNomina' => $inv->idEstadoNomina,
-//                    'rectificada' => $inv->rectificada,
-//                ];
-//            }),
-            'nomOperador' => $nominas->comoOperador->map(function($inv){
+            'nominas' => array_values($nominas->todas->map(function($inv) {
                 return [
-                    //'idNomina' => $inv->idNomina,
-                    'url' => "http://sig.seiconsultores.cl/nomina/".$inv->idNomina,
-                    'inventario' => $inv->inventario->local->cliente->nombreCorto." ".$inv->inventario->local->nombre,
-                    'fecha' => $inv->inventario->fechaProgramadaF(),
-//                    'idEstadoNomina' => $inv->idEstadoNomina,
-//                    'rectificada' => $inv->rectificada,
+                    'role' => $inv->cargoUsuario,
+                    'url' => "http://sig.seiconsultores.cl/nomina/" . $inv->idNomina,
+                    'inventario' => $inv->inventario->local->cliente->nombreCorto . " " . $inv->inventario->local->nombre,
+                    'fecha' => $inv->inventario->fechaProgramadaF()
                 ];
-            })
+            })->toArray())
         ]);
     }
     /**
@@ -217,5 +237,4 @@ class PersonalController extends Controller {
         $excelWritter->save($randomFileName);
         return response()->download($randomFileName, $downloadFileName);
     }
-
 }

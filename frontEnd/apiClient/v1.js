@@ -189,9 +189,10 @@ export default {
         fetch: ()=>
             axios.get(`/api/usuarios/buscar`)
         ,
-        
         // buscarRUN: (run)=>
         //     axios.get(`/api/usuarios/buscar?run=${run}`),
+        nuevoUsuario: (datos)=>
+            axios.post(`/api/usuarios/nuevo-usuario`, datos),
         nuevoOperador: (datos)=>
             axios.post(`/api/usuarios/nuevo-operador`, datos),
     },
@@ -201,7 +202,13 @@ export default {
         nominasAsignadas: (fechaHoy)=>
             axios.get(`/api/nominas/buscar?idCaptador1=${idUsuario}&fechaInicio=${fechaHoy}`),
         actualizar: (datos)=>
-            axios.put(`/api/usuario/${idUsuario}`, datos)
+            axios.put(`/api/usuario/${idUsuario}`, datos),
+        bloquear: ()=>
+            axios.post(`/api/usuario/${idUsuario}/bloquear`, {}),
+        cambiarContrasena: (contrasena)=>
+            axios.post(`/api/usuario/${idUsuario}/cambiar-contrasena`, {contrasena}),
+        historial: ()=>
+            axios.get(`/api/usuario/${idUsuario}/historial-nominas`)
     }),
     vistaGeneral: {
         fetch: (annoMesDia, idCliente=0)=>

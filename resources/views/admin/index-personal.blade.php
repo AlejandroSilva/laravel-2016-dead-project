@@ -3,7 +3,7 @@
 
 @section('body')
     {{-- aca se montara el component 'TablaAuditoriasPendientes' de React --}}
-    <div class="container-fluid">
+    <div class="container">
         <div id="react-personal-index">
             <p>Cargando, espere unos segundos</p>
         </div>

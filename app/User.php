@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Hash;
 
 class User extends Authenticatable {
     // This will enable the relation with Role and add the following methods roles(), hasRole($name),
@@ -84,7 +85,7 @@ class User extends Authenticatable {
         $todas = $nominasOperador
             ->merge($nominasSupervisor)
             ->merge($nominasLider)
-            ->sortBy('inventario.fechaProgramada');
+            ->sortByDesc('inventario.fechaProgramada');
 
         return (object)[
             'comoLider' => $nominasLider,
@@ -117,7 +118,14 @@ class User extends Authenticatable {
     }
 
     // #### Acciones
-    //
+    function bloquear(){
+        $this->bloqueado = true;
+        $this->save();
+    }
+    function cambiarContrasena($contrasena){
+        $this->password = Hash::make($contrasena);
+        $this->save();
+    }
 
     // ####  Getters
     function nombreCorto(){
@@ -222,14 +230,19 @@ class User extends Authenticatable {
         return [
             'id' => $user->id,
             'RUN' => "$user->usuarioRUN-$user->usuarioDV",
+            'usuarioRUN' => $user->usuarioRUN,
+            'usuarioDV' => $user->usuarioDV,
             'nombre1' => $user->nombre1,
             'nombre2' => $user->nombre2,
             'apellidoPaterno' => $user->apellidoPaterno,
             'apellidoMaterno' => $user->apellidoMaterno,
-            'fechaNacimiento' => $user->fechaNacimiento=='0000-00-00'? '' : $user->fechaNacimiento,
-            //'cutComuna' => $user->cutComuna,
+            'fechaNacimiento' => $user->fechaNacimiento,
+            //'fechaNacimiento' => $user->fechaNacimiento=='0000-00-00'? '' : $user->fechaNacimiento,
+            'cutComuna' => $user->cutComuna,
             'comuna' => $user->comuna->nombre,
+            'region' => $user->comuna->provincia->region->nombreCorto,
             'email' => $user->email,
+            'emailPersonal' => $user->emailPersonal,
             'telefono' => $user->telefono,
             'bloqueado' => $user->bloqueado=="1",
         ];

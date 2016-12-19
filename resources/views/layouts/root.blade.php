@@ -121,4 +121,5 @@
 <link rel='stylesheet' href='/vendor/bootstrap/bootstrap.min.css'>
 <link rel='stylesheet' href='/vendor/react-widgets/css/react-widgets.min.css'>
 <link rel='stylesheet' href='/vendor/fixed-data-table/fixed-data-table.min.css'>
+<link rel='stylesheet' href='/vendor/react-virtualized/styles.css'>
 <link rel='stylesheet' href='/app/frontEnd.css'>

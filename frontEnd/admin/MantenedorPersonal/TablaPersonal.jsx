@@ -1,142 +1,140 @@
 // Librerias
 import React from 'react'
 let PropTypes = React.PropTypes
+import { AutoSizer, Table, Column } from 'react-virtualized'
 // Componentes
-import { Table, Column, Cell } from 'fixed-data-table'
-import TouchExampleWrapper from '../../shared/TouchExampleWrapper.jsx'
+import {
+    ModalTrigger,
+    ModalEditarUsuario,
+    ModalBloquearUsuario,
+    ModalCambiarContrasena,
+    ModalHistorial
+} from './Modales.jsx'
 // Styles
-import classNames from 'classnames/bind'
 import * as css from './tablaPersonal.css'
+import classNames from 'classnames/bind'
 let cx = classNames.bind(css)
 
 export class TablaPersonal extends React.Component {
     render(){
         return (
-            <TouchExampleWrapper
-                tableWidth={1300}
-                tableHeight={600}
-            >
-                <Table
-                    // table
-                    width={1400}
-                    height={600}
-                    // header
-                    headerHeight={30}
-                    // rows
-                    rowHeight={42}
-                    rowsCount={this.props.usuarios.length}
-                >
-
-                    <Column
-                        header={<Cell>#</Cell>}
-                        cell={({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                {rowIndex+1}
-                            </Cell>}
-                        width={30}
-                        fixed={true}
-                    />
-                    <Column
-                        header={<Cell>RUN</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell', 'cell-run')} style={{padding:0}}>
-                                {this.props.usuarios[rowIndex].RUN}
-                            </Cell> }
-                        width={80}
-                        fixed={true}
-                    />
-                    <Column
-                        header={<Cell>Nombres</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                <p style={{margin: 0}}>{this.props.usuarios[rowIndex].nombre1}</p>
-                                <p style={{margin: 0}}>{this.props.usuarios[rowIndex].nombre2}</p>
-                            </Cell> }
-                        width={150}
-                    />
-                    <Column
-                        header={<Cell>Apellidos</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                <p style={{margin: 0}}>{this.props.usuarios[rowIndex].apellidoPaterno}</p>
-                                <p style={{margin: 0}}>{this.props.usuarios[rowIndex].apellidoMaterno}</p>
-                            </Cell>}
-                        width={150}
-                    />
-                    <Column
-                        header={<Cell>F.Nac</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                {this.props.usuarios[rowIndex].fechaNacimiento}
-                            </Cell> }
-                        width={80}
-                    />
-                    <Column
-                        header={<Cell>Comuna</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                {this.props.usuarios[rowIndex].comuna}
-                            </Cell> }
-                        width={80}
-                    />
-                    <Column
-                        header={<Cell>Email</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                {this.props.usuarios[rowIndex].email}
-                            </Cell> }
-                        width={130}
-                    />
-                    <Column
-                        header={<Cell>Telefono</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell', 'cell-telefono')}>
-                                {this.props.usuarios[rowIndex].telefono}
-                            </Cell> }
-                        width={80}
-                    />
-                    <Column
-                        header={<Cell>Bloqueado</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                {this.props.usuarios[rowIndex].bloqueado? 'bloqueado' : ''}
-                            </Cell> }
-                        width={80}
-                    />
-                    <Column
-                        header={<Cell>Documentos</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell', 'cell-documentos')}>
-                                <button className="btn btn-xs btn-default">C.ID</button>
-                                <button className="btn btn-xs btn-default">DOM</button>
-                                <button className="btn btn-xs btn-default">C.NAC</button>
-                                <button className="btn btn-xs btn-default">C.ANT</button>
-                                <button className="btn btn-xs btn-default">CONT</button>
-                                {/*
-                                <button className="btn btn-xs btn-default">C.Ident.</button>
-                                <button className="btn btn-xs btn-default">Domic</button>
-                                <button className="btn btn-xs btn-default">C.Nac.</button>
-                                <button className="btn btn-xs btn-default">Cert.Antece.</button>
-                                <button className="btn btn-xs btn-default">Contrato</button>
-                                */}
-                            </Cell> }
-                        width={225}
-                    />
-                    <Column
-                        header={<Cell>Opciones</Cell>}
-                        cell={ ({rowIndex})=>
-                            <Cell className={cx('cell')}>
-                                <button className="btn btn-xs btn-primary"
-                                        onClick={this.props.seleccionarUsuario.bind(this, this.props.usuarios[rowIndex].id)}
-                                >editar</button>
-                                <button className="btn btn-xs btn-primary">bloquear</button>
-                                <button className="btn btn-xs btn-primary">contraseña</button>
-                            </Cell> }
-                        width={200}
-                    />
-                </Table>
-            </TouchExampleWrapper>
+            <div style={{height: '90%'}}>
+                <AutoSizer>
+                    {({ height, width }) =>
+                        <Table
+                            // general
+                            height={height}
+                            width={width}
+                            // headers
+                            headerHeight={30}
+                            headerClassName={css.headerColumn}
+                            // rows
+                            rowCount={this.props.usuarios.length}
+                            rowGetter={({index})=> this.props.usuarios[index]}
+                            rowHeight={40}
+                            rowClassName={({index})=> index<0? css.headerRow : ((index%2===0)? css.evenRow : css.oddRow)}
+                        >
+                            <Column
+                                dataKey='#'
+                                label={'#'}
+                                disableSort={true}
+                                cellRenderer={({rowIndex}) => rowIndex}
+                                width={25}
+                            />
+                            <Column
+                                dataKey='RUN'
+                                label={'RUN'}
+                                cellRenderer={({ rowData, dataKey }) => rowData[dataKey]}
+                                width={65}
+                            />
+                            <Column
+                                dataKey='nombres'
+                                label={'nombres'}
+                                cellRenderer={({ rowData }) =>
+                                    <div>
+                                        <p style={{margin: 0}}>{rowData.nombre1}</p>
+                                        <p style={{margin: 0}}>{rowData.nombre2}</p>
+                                    </div>
+                                }
+                                width={90}
+                            />
+                            <Column
+                                dataKey='apellidos'
+                                label={'Apellidos'}
+                                cellRenderer={({ rowData }) =>
+                                    <div>
+                                        <p style={{margin: 0}}>{rowData.apellidoPaterno}</p>
+                                        <p style={{margin: 0}}>{rowData.apellidoMaterno}</p>
+                                    </div>
+                                }
+                                width={90}
+                            />
+                            <Column
+                                dataKey='region'
+                                label={'Región'}
+                                cellRenderer={({ dataKey, rowData }) => rowData[dataKey]}
+                                width={90}
+                            />
+                            <Column
+                                dataKey='comuna'
+                                label={'Comuna'}
+                                cellRenderer={({ dataKey, rowData }) => rowData[dataKey]}
+                                width={90}
+                            />
+                            <Column
+                                dataKey='email'
+                                label={'Email'}
+                                cellRenderer={({ dataKey, rowData }) => rowData[dataKey]}
+                                width={200}
+                            />
+                            {/*<Column*/}
+                                {/*dataKey='telefono'*/}
+                                {/*label={'Teléfono'}*/}
+                                {/*cellRenderer={({ dataKey, rowData }) => rowData[dataKey]}*/}
+                                {/*width={80}*/}
+                            {/*/>*/}
+                            <Column
+                                dataKey='bloqueado'
+                                label={'Estado'}
+                                cellRenderer={({ dataKey, rowData }) => rowData[dataKey]? 'Bloqueado' : ''}
+                                width={60}
+                            />
+                            <Column
+                                dataKey='opciones'
+                                label={'Opciones'}
+                                cellRenderer={({ cellData, columnData, dataKey, rowData, rowIndex }) => (
+                                    <div>
+                                        {/* Editar */}
+                                        <BotonEditar
+                                            usuario={rowData}
+                                            actualizarUsuario={this.props.actualizarUsuario.bind(rowData.id)}
+                                        />
+                                        {/* Bloquear */}
+                                        <BotonBloquear
+                                            idUsuario={rowData.id}
+                                            estaBloqueado={rowData.bloqueado}
+                                            bloquearUsuario={this.props.bloquearUsuario}
+                                        />
+                                        {/* Cambiar contraseña */}
+                                        <BotonCambiarContrasena
+                                            idUsuario={rowData.id}
+                                            cambiarContrasena={this.props.cambiarContrasena}
+                                        />
+                                        {/* Historial nomina */}
+                                        <BotonVerHistorial
+                                            idUsuario={rowData.id}
+                                            verHistorial={this.props.verHistorial.bind(this, rowData.id)}
+                                        />
+                                    </div>
+                                )}
+                                width={280}
+                            />
+                        </Table>
+                    }
+                </AutoSizer>
+            </div>
         )
+        console.log(this.props.usuarios.length)
     }
 }
 
@@ -146,5 +144,76 @@ TablaPersonal.propTypes = {
     // objeto: PropTypes.object.isRequired,
     usuarios: PropTypes.arrayOf(PropTypes.object).isRequired,
     // Metodos
-    seleccionarUsuario: PropTypes.func.isRequired,
+    bloquearUsuario: PropTypes.func.isRequired,
+    cambiarContrasena: PropTypes.func.isRequired,
 }
+
+
+const BotonEditar = ({usuario, actualizarUsuario})=>
+    <ModalTrigger>
+        {(isVisible, showModal, hideModal)=>
+            <button className="btn btn-xs btn-primary" onClick={showModal}>
+                Editar
+                {isVisible && <ModalEditarUsuario
+                    usuario={usuario}
+                    actualizarUsuario={actualizarUsuario}
+                    hideModal={hideModal}
+                />}
+            </button>
+        }
+    </ModalTrigger>
+
+const BotonBloquear = ({idUsuario, estaBloqueado, bloquearUsuario})=>
+    estaBloqueado==false?
+        <ModalTrigger>
+            {(isVisible, showModal, hideModal)=>
+                <button className="btn btn-xs btn-primary" onClick={showModal}>
+                    Bloquear
+                    {isVisible && (
+                        <ModalBloquearUsuario
+                            hideModal={hideModal}
+                            onBloquear={()=>{
+                                hideModal()
+                                bloquearUsuario(idUsuario)
+                            }}
+                        />
+                    )}
+                </button>
+            }
+        </ModalTrigger>
+    :
+        <button className={cx("btn btn-xs btn-default")} disabled>Bloquear</button>
+
+const BotonCambiarContrasena = ({idUsuario, cambiarContrasena})=>
+    <ModalTrigger>
+        {(isVisible, showModal, hideModal)=>
+            <button className="btn btn-xs btn-primary" onClick={showModal}>
+                Cambiar contraseña
+                {isVisible && (
+                    <ModalCambiarContrasena
+                        hideModal={hideModal}
+                        onAceptar={(contrasena)=>{
+                            hideModal()
+                            cambiarContrasena(idUsuario, contrasena)
+                        }}
+                    />
+                )}
+            </button>
+        }
+    </ModalTrigger>
+
+
+const BotonVerHistorial = ({idUsuario, verHistorial})=>
+<ModalTrigger>
+    {(isVisible, showModal, hideModal)=>
+        <button className="btn btn-xs btn-primary" onClick={showModal}>
+            Historial
+            {isVisible && (
+                <ModalHistorial
+                    hideModal={hideModal}
+                    verHistorial={verHistorial}
+                />
+            )}
+        </button>
+    }
+</ModalTrigger>

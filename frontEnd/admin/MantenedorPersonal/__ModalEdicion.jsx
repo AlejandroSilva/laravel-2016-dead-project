@@ -11,20 +11,6 @@ import * as cssModal from './modal.css'
 export class ModalEdicion extends React.Component {
     constructor(props, context) {
         super(props, context)
-        this.state = {
-            visible: false,
-            usuario: {}
-        }
-        // Metodos
-        this.showModal = (usuario)=>{
-            this.setState({
-                visible: true,
-                usuario
-            })
-        }
-        this.hideModal = ()=>{
-            this.setState({visible: false})
-        }
     }
 
     render(){

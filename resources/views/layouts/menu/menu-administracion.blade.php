@@ -56,7 +56,7 @@
 
             {{-- Administrador de Personal --}}
             @if( $mostrarAdministrarPersonal && Auth::user()->hasRole('Developer') )
-                <li class="dropdown-header">Personal SEI</li>
+                <li class="dropdown-header">Personal</li>
                 <li class="{{ Request::is('admin/personal')? 'active': '' }}">
                     <a href="{{ url('admin/personal') }}">Mantenedor de Personal (Dev)</a>
                 </li>

@@ -1,21 +1,36 @@
-.cell {
+
+.headerRow,
+.evenRow,
+.oddRow {
+    border-bottom: 1px solid #e0e0e0;
     font-size: 12px;
-    /*padding-top: 0 !important;*/
+}
+.oddRow {
+    background-color: #fafafa;
 }
 
-.cell-run :global(.public_fixedDataTableCell_cellContent){
-    width: 80px;
-    text-align: right;
-    padding-left: 0;
+.headerColumn {
+    /*text-transform: none;*/
 }
 
-.cell-documentos :global(.public_fixedDataTableCell_cellContent){
-    padding-left: 0;
-    padding-right: 0;
-}
+/*.cell {*/
+    /*font-size: 12px;*/
+    /*!*padding-top: 0 !important;*!*/
+/*}*/
 
-.cell-telefono :global(.public_fixedDataTableCell_cellContent){
-    width: 80px;
-    text-align: right;
-    padding-left: 0;
-}
+/*.cell-run :global(.public_fixedDataTableCell_cellContent){*/
+    /*width: 80px;*/
+    /*text-align: right;*/
+    /*padding-left: 0;*/
+/*}*/
+
+/*.cell-documentos :global(.public_fixedDataTableCell_cellContent){*/
+    /*padding-left: 0;*/
+    /*padding-right: 0;*/
+/*}*/
+
+/*.cell-telefono :global(.public_fixedDataTableCell_cellContent){*/
+    /*width: 80px;*/
+    /*text-align: right;*/
+    /*padding-left: 0;*/
+/*}*/
