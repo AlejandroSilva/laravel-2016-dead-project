@@ -35,18 +35,15 @@ export class MantenedorStock extends React.Component {
 
     onFormSubmit(evt){
         evt.preventDefault();
-        // limpiar la tabla y los errores
         this.setState({
             realizandoPeticion: true,
             resultado: [],
             error: ''
         })
 
-        // hacer una llamada con los elementos que se han adjuntado
         let archivoExcel = ReactDOM.findDOMNode(this.refInputArchivo).files[0]
         api.local.enviarArchivoStock(this.state.idCliente, archivoExcel)
             .then(datos=>{
-                // construir la tabla con el resultado
                 this.setState({
                     realizandoPeticion: false,
                     resultado: datos
@@ -61,12 +58,10 @@ export class MantenedorStock extends React.Component {
                     error: mensajeError
                 })
                 this.refs.notificator.error("Error", mensajeError, 4*1000);
-                console.log(mensajeError)
             })
     }
 
     onPaste(evt){
-        // limpiar el cuadro de texto y bloquearlo mientras se procesan los campos
         this.refInputPaste.text = ''
         this.setState({
             resultado: [],
@@ -94,8 +89,6 @@ export class MantenedorStock extends React.Component {
                 }
             }).filter(row=>row!=null)
 
-            console.log('ROWS', rows_array)
-
             api.local.enviarPegarStock({
                 idCliente: this.state.idCliente,
                 datos: rows_array
@@ -117,7 +110,6 @@ export class MantenedorStock extends React.Component {
                         error: mensajeError
                     })
                     this.refs.notificator.error("Error", mensajeError, 4*1000);
-                    console.log(mensajeError)
                 })
         })
     }

@@ -21,9 +21,9 @@
                     </li>
                 @endif
                 {{-- Mantenedor Locales --}}
-                @if( $mostrarAdministrarLocales && Auth::user()->hasRole('Developer') )
+                @if( $mostrarAdministrarLocales )
                     <li class="{{ Request::is('admin/mantenedor-locales')? 'active': '' }}">
-                        <a href="{{ url('admin/mantenedor-locales') }}">Mantenedor de Locales (Dev)</a>
+                        <a href="{{ url('admin/mantenedor-locales') }}">Mantenedor de Locales</a>
                     </li>
                 @endif
                 {{-- Stock de locales --}}
@@ -55,10 +55,10 @@
             @endif
 
             {{-- Administrador de Personal --}}
-            @if( $mostrarAdministrarPersonal && Auth::user()->hasRole('Developer') )
+            @if( $mostrarAdministrarPersonal )
                 <li class="dropdown-header">Personal</li>
                 <li class="{{ Request::is('admin/personal')? 'active': '' }}">
-                    <a href="{{ url('admin/personal') }}">Mantenedor de Personal (Dev)</a>
+                    <a href="{{ url('admin/personal') }}">Mantenedor de Personal</a>
                 </li>
             @endif
 

@@ -1,0 +1,15 @@
+.btn-50-perc {
+    width: 50%;
+    display: inline-block;
+    margin-top: 0 !important;
+}
+
+.form__control-label > label{
+    font-size: 12px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.form__error-message {
+    display: block;
+    color: #a94442;
+}

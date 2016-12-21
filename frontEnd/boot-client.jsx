@@ -14,7 +14,7 @@ import ProgramacionIGMensual from './inventarios/programacion-mensual/Programaci
 import ProgramacionIGSemanal from './inventarios/programacion-semanal/ProgramacionIGSemanal.jsx'
 import ProgramacionAIMensual from './auditorias/programacion-mensual/ProgramacionAIMensual.jsx'
 import ProgramacionAISemanal from './auditorias/programacion-semanal/ProgramacionAISemanal.jsx'
-import MantenedorLocales from './admin/mantenedorLocales/MantenedorLocales.jsx'
+import MantenedorLocales2 from './admin/mantenedorLocales2/MantenedorLocales2.jsx'
 import { NominaIG } from './nominas/nominaIG/nominaIG.jsx'
 // OTROS
 import { MantenedorStock } from './admin/mantenedorStock/MantenedorStock.jsx'
@@ -98,7 +98,7 @@ if( programacionAISemanalDOM ){
 let mantenedorLocalesDOM = document.getElementById('react-mantenedor-locales')
 if( mantenedorLocalesDOM ){
     ReactDOM.render(
-        <MantenedorLocales
+        <MantenedorLocales2
             clientes={window.laravelClientes}
             jornadas={window.laravelJornadas}
             formatoLocales={window.laravelFormatoLocales}

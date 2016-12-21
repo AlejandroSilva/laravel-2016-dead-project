@@ -42,8 +42,8 @@ class LocalesController extends Controller {
     function api_getLocalesDeCliente(Request $request, $idCliente){
         // cliente = mw "buscarCliente"
         $cliente = $request->cliente;
-
-        return response()->json($cliente->locales->map('\App\Locales::formatoLocal_completo'), 200);
+        $locales = $cliente->locales->sortBy('numero')->map('\App\Locales::formatoLocal_completo')->toArray();
+        return response()->json(array_values($locales), 200);
     }
 
     // POST api/locales
@@ -71,7 +71,7 @@ class LocalesController extends Controller {
             'codArea2' => 'sometimes|max:10',
             'telefono2' => 'sometimes|max:20',
             'stock' => 'required|numeric|digits_between:1,11',
-            'fechaStock' => 'required|date',
+            //'fechaStock' => 'required|date',
             // En el mismo validator se revisa la direccion
             'cutComuna'=> 'required|exists:comunas,cutComuna',
             'direccion'=> 'required|max:150|'
@@ -146,6 +146,10 @@ class LocalesController extends Controller {
             $local->idFormatoLocal = $request->idFormatoLocal;
         if(isset($request->idJornadaSugerida) && !$errors->get('idJornadaSugerida'))
             $local->idJornadaSugerida = $request->idJornadaSugerida;
+        if(isset($request->horaApertura) && !$errors->get('horaApertura'))
+            $local->horaApertura = $request->horaApertura;
+        if(isset($request->horaCierre) && !$errors->get('horaCierre'))
+            $local->horaCierre = $request->horaCierre;
         if(isset($request->emailContacto) && !$errors->get('emailContacto'))
             $local->emailContacto= $request->emailContacto;
         if(isset($request->telefono1) && !$errors->get('telefono1'))

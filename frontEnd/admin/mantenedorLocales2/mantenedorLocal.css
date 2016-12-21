@@ -1,0 +1,14 @@
+
+.headerColumn {
+    font-size: 12px;
+}
+
+headerRow,
+.evenRow,
+.oddRow {
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 12px;
+}
+.oddRow {
+    background-color: #fafafa;
+}

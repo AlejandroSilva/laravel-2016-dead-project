@@ -130,8 +130,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('inventario/{idInventario}/archivo-final-fcv',        'InformeFinalInventarioFCVController@show_index_archivoFinal_fcv')->name('indexArchivoFinalFCV');
         Route::post('inventario/{idInventario}/subir-zip-fcv',           'InformeFinalInventarioFCVController@form_subirZip_fcv');
         // DESCARGAS:
-        //Route::get('inventarios/descargar-consolidado-fcv',              'InformeFinalInventarioFCVController@descargar_consolidado_fcv');    // movido a publico
-        //Route::get('inventario/archivo-final/{idArchivo}/descargar-fcv', 'InformeFinalInventarioFCVController@descargar_archivoFinal_fcv');   // movido a publico
         // APIS:
         Route::get('api/inventario/{idInventario}/acta-fcv',             'InformeFinalInventarioFCVController@api_getActa_fcv');
         Route::post('api/inventario/{idInventario}/acta-fcv',            'InformeFinalInventarioFCVController@api_actualizarActa_fcv');
@@ -163,24 +161,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('api/auditoria/{idAuditoria}/muestra-vencimiento',  'MuestrasController@post_cargarMuestraVencimiento');
 
         // ################                             - FARMACIA CRUZ VERDE -
-        // ######## MAESTRA DE PRODUCTOS
-        // VISTAS:
-//        Route::get('maestra-fcv',                                   'MaestraProductosController@show_maestraFCV')->name('maestraFCV');
-//        Route::post('maestra-fcv/subir-maestra',                    'MaestraProductosController@formpost_subirMaestraFCV');
-//        Route::get('maestra-fcv/{idMaestra}/ver-estado',            'MaestraProductosController@show_verEstadoMaestraFCV')->name('verEstadoMaestraFCV');
-//        Route::post('maestra-fcv/{idMaestra}/actualizar-estado',    'MaestraProductosController@formpost_actualizarEstadoFCV');
-//        Route::get('maestra-fcv/{idMaestra}/actualizar-maestra',    'MaestraProductosController@show_actualizarMaestraFCV');
-//        // DESCARGAS:
-//        Route::get('maestra-fcv/{idMaestra}/descargar-db',          'MaestraProductosController@descargarDB_maestraFCV');
-//        Route::get('maestra-fcv/{idArchivo}/descargar-original',    'MaestraProductosController@descargarOriginal_maestraFCV');
-
-        // ######## MUESTRAS DE VENCIMIENTO
-        // VISTAS:
-//        Route::get('muestra-vencimiento-fcv',                       'MuestraVencimientoController@show_indexFCV')->name('indexMuestraVencimientoFCV');
-//        Route::post('muestra-vencimiento-fcv/subir-muestra',        'MuestraVencimientoController@post_subirMuestraFCV');
-        // DESCARGAS:
-//        Route::get('muestra-vencimiento-fcv/{idMuestra}/descargar', 'MuestraVencimientoController@descargar_muestraFCV');
-
         // ######## ARCHIVO FINAL AUDITORIA
         // DESCARGAS:
         Route::get('api/archivo-final-auditoria/{idArchivoCruzVerde}/descargar-zip',  'ArchivoFinalAuditoriaController@api_descargarZIP');
@@ -292,10 +272,6 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('descargar-otro/{file}',                         'TemporalController@descargar_otro');
         Route::post('completado',                                   'TemporalController@post_archivo');
         Route::get('usuarioComoOperador/{runUsuario}',              'TemporalController@usuarioComoOperador');
-
-        // ruta temporal, es utilizada por la plataforma inventario para descargar el excel generado manualmente
-        //Route::get('archivo-final-inventario/excel-actas',          'ArchivoFinalInventarioController@temp_descargarExcelActas');
-
         Route::get('wom', 'WOMOfflineController@index');
         Route::get('archivo-respuesta-wom/{idArchivo}/preview-pdf',         'ArchivoRespuestaWOMController@acta_vistaPreviaPDF');
         Route::post('api/respuesta-wom/{idArchivo}/agregar-conteo2',            'ArchivoRespuestaWOMController@post_agregarArchivoConteo2');

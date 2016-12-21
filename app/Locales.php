@@ -160,8 +160,8 @@ class Locales extends Model{
             'horaCierreF' => $local->horaCierreF(),
             // contacto
             'emailContacto' => $local->emailContacto,
-            'telefono1' => "$local->codArea1 $local->telefono1",
-            'telefono2' => "$local->codArea2 $local->telefono2",
+            'telefono1' => "$local->codArea1$local->telefono1",
+            'telefono2' => "$local->codArea2$local->telefono2",
         ];
     }
     static function formatoLocal_completo($local){
@@ -173,6 +173,7 @@ class Locales extends Model{
         $_local['formatoLocal_produccionSugerida'] = $local->formatoLocal->produccionSugerida;
         // Jornada Sugerida
         $_local['idJornadaSugerida'] = $local->jornada->idJornada;
+        $_local['jornadaSugerida'] = $local->jornada->nombre;
         // direcion comuna provincia region
         $_local['direccion'] = $local->direccion->direccion;
         // Comuna
