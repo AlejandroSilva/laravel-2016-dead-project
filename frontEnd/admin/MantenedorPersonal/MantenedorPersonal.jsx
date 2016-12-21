@@ -49,7 +49,7 @@ export class MantenedorPersonal extends React.Component {
             api.usuario(idUsuario).cambiarContrasena(contrasena)
         }
         this.verHistorial = (idUsuario)=>{
-            api.usuario(idUsuario).historial()
+            return api.usuario(idUsuario).historial()
         }
     }
     componentWillMount(){
