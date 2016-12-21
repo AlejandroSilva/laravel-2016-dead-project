@@ -33,7 +33,7 @@ export class TablaPersonal extends React.Component {
                                 dataKey='#'
                                 label={'#'}
                                 disableSort={true}
-                                cellRenderer={({rowIndex}) => rowIndex}
+                                cellRenderer={({rowIndex}) => rowIndex+1}
                                 width={25}
                             />
                             <Column
