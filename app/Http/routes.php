@@ -36,6 +36,10 @@ Route::group(['middleware' => ['web']], function (){
         Route::post('cliente',                                      'ClientesController@form_nuevo');
         Route::put('api/cliente/{idCliente}',                       'ClientesController@form_editar');
         Route::delete('api/cliente/{idCliente}',                    'ClientesController@api_eliminar');
+        Route::get('admin/mantenedor-correos',                      'ClientesController@show_mantenedorCorreos');
+        Route::get('api/local/{idLocal}/correo-nomina',             'ClientesController@api_getCorreosNomina');
+        Route::post('api/local/{idLocal}/correo-nomina',            'ClientesController@api_agregarCorreoNomina');
+        Route::delete('api/local/{id}/correo-nomina/{idCorreo}',    'ClientesController@api_quitarCorreoNomina');
 
         // ################ STOCK
         // VISTAS:

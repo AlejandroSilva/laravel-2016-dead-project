@@ -26,6 +26,12 @@
                         <a href="{{ url('admin/mantenedor-locales') }}">Mantenedor de Locales</a>
                     </li>
                 @endif
+                {{-- Mantenedor Correos --}}
+                @if( $mostrarAdministrarLocales )
+                    <li class="{{ Request::is('admin/mantenedor-correos')? 'active': '' }}">
+                        <a href="{{ url('admin/mantenedor-correos') }}">Mantenedor de Correos</a>
+                    </li>
+                @endif
                 {{-- Stock de locales --}}
                 @if( $mostrarAdministrarStock )
                     <li class="{{ Request::is('admin/actualizar-stock')? 'active': '' }}">

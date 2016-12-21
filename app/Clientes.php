@@ -15,6 +15,10 @@ class Clientes extends Model {
         // hasMany(modelo, child.fogeignKey, this.localKey)
         return $this->hasMany('App\Locales', 'idCliente', 'idCliente');
     }
+    public function correos(){
+        // hasMany(modelo, child.fogeignKey, this.localKey)
+        return $this->hasMany('App\CorreosCliente', 'idCliente', 'idCliente');
+    }
 
     // #### Formatear respuestas
     static function formatearSimple($cliente){

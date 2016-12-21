@@ -79,4 +79,26 @@ class ClientesController extends Controller {
         $cliente->delete();
         return redirect('admin/mantenedor-clientes');
     }
+
+
+    function show_mantenedorCorreos(){
+        return view('admin.index-mantenedor-correos', [
+            'clientes' => Clientes::all()
+        ]);
+    }
+
+    // no validar nada... a esta altura da lo mismo
+    function api_getCorreosNomina($idCliente){
+        return response()->json( Clientes::find($idCliente)->correos );
+    }
+    function api_agregarCorreoNomina($idCliente, Request $request){
+        return response()->json(\App\CorreosCliente::create([
+            'idCliente' => $idCliente,
+            'correo' => $request->correo
+        ]));
+    }
+    function api_quitarCorreoNomina($id, $idCorreo){
+        return response()->json( \App\CorreosCliente::find($idCorreo)->delete() );
+    }
+
 }

@@ -21,6 +21,7 @@ import { MantenedorStock } from './admin/mantenedorStock/MantenedorStock.jsx'
 import { ActivoFijo } from './activo-fijo/ActivoFijo.jsx'
 import { MantenedorPersonal } from './admin/MantenedorPersonal/MantenedorPersonal.jsx'
 import { PanelDatosActa } from './inventarios/archivo-final-fcv/PanelDatosActa.jsx'
+import { MantenedorCorreos } from './admin/mantenedorCorreos/mantenedor-correos.jsx'
 
 /** ************************************************************* **/
 /** ************************ DASHBOARD ************************** **/
@@ -150,7 +151,15 @@ if( personalIndexDOM ) {
     )
 }
 
-
+let correosDOM = document.getElementById('react-mantenedor-clientes')
+if( correosDOM ) {
+    ReactDOM.render(
+        <MantenedorCorreos
+            clientes={window.laravelClientes}
+        />,
+        correosDOM
+    )
+}
 // http://jamesknelson.com/push-state-vs-hash-based-routing-with-react-js/
 //class App extends React.Component{
 //    render(){

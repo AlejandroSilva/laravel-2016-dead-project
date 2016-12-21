@@ -11,7 +11,7 @@ import {
 // Styles
 import * as css from './mantenedorLocal.css'
 
-class MantenedorLocales2 extends React.Component{
+export default class MantenedorLocales2 extends React.Component{
     constructor(props){
         super(props)
         this.state = {
@@ -28,7 +28,7 @@ class MantenedorLocales2 extends React.Component{
             })
         }
         this.fetchLocales = ()=>{
-            api.cliente.getLocales(this.state.idCliente)
+            api.cliente(this.state.idCliente).getLocales()
                 .then(locales=>{
                     this.setState({locales})
                 })
@@ -52,7 +52,6 @@ class MantenedorLocales2 extends React.Component{
     componentWillMount(){
         this.fetchLocales()
     }
-
     render(){
         return (
             <div>
@@ -96,8 +95,6 @@ class MantenedorLocales2 extends React.Component{
         )
     }
 }
-
-export default MantenedorLocales2
 
 const SelectorCliente = ({idClienteSeleccionado, seleccionarCliente, clientes})=>
     <div className="row">

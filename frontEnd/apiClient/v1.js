@@ -84,10 +84,16 @@ export default {
                 axios.get(`api/activo-fijo/productos/buscar`),
         }
     },
-    cliente: {
-        getLocales: (idCliente)=>
-            axios.get(`/api/cliente/${idCliente}/locales`)
-    },
+    cliente: (idCliente)=>({
+        getLocales: ()=>
+            axios.get(`/api/cliente/${idCliente}/locales`),
+        getCorreos: ()=>
+            axios.get(`/api/local/${idCliente}/correo-nomina`),
+        agregarCorreo: (datos)=>
+            axios.post(`/api/local/${idCliente}/correo-nomina`, datos),
+        quitarCorreo: (idCorreo)=>
+            axios.delete(`/api/local/${idCliente}/correo-nomina/${idCorreo}`),
+    }),
     local: {
         // get: (idLocal)=>
         //     axios.get(`/api/locales/${idLocal}`),
