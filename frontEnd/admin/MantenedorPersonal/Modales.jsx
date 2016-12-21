@@ -84,7 +84,7 @@ export class ModalAgregarUsuario extends React.Component{
     }
     render(){
         return (
-            <Modal show={true} onHide={this.props.hideModal}>
+            <Modal show={true} onHide={this.props.hideModal} className={cx('modal')}>
                 <Modal.Header closeButton>
                     <Modal.Title>Nuevo usuario</Modal.Title>
                 </Modal.Header>
@@ -218,7 +218,7 @@ export class ModalEditarUsuario extends React.Component{
     }
     render(){
         return(
-            <Modal show={true} onHide={this.props.hideModal}>
+            <Modal show={true} onHide={this.props.hideModal} className={cx('modal')}>
                 <Modal.Header closeButton>
                     <Modal.Title>Editando a : {this.state.usuario.nombre1} {this.state.usuario.apellidoPaterno} </Modal.Title>
                 </Modal.Header>
@@ -305,7 +305,7 @@ export class ModalEditarUsuario extends React.Component{
 }
 
 export const ModalBloquearUsuario = ({hideModal, onBloquear})=>
-    <Modal show={true} onHide={hideModal}>
+    <Modal show={true} onHide={hideModal} className={cx('modal')}>
         <Modal.Header closeButton>
             <Modal.Title>¿Esta seguro que desea bloquear al usuario?</Modal.Title>
         </Modal.Header>
@@ -321,7 +321,7 @@ export const ModalCambiarContrasena = ({hideModal, onAceptar})=>{
         onAceptar(refContrasena.value)
     }
     return (
-        <Modal show={true} onHide={hideModal}>
+        <Modal show={true} onHide={hideModal} className={cx('modal')}>
             <Modal.Header closeButton>
                 <Modal.Title>Cambio de contraseña</Modal.Title>
             </Modal.Header>
@@ -376,7 +376,7 @@ export class ModalHistorial extends React.Component{
     }
     render(){
         return(
-            <Modal show={true} onHide={this.props.hideModal}>
+            <Modal show={true} onHide={this.props.hideModal} className={cx('modal')}>
                 <Modal.Header closeButton>
                     <Modal.Title>Historial de nominas {this.state.nombre!=''? ` de ${this.state.nombre}` : ''}</Modal.Title>
                 </Modal.Header>
