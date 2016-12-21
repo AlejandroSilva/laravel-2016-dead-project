@@ -14,7 +14,8 @@ class CreateCorreosClientesTable extends Migration {
             $table->foreign('idCliente')
                 ->references('idCliente')
                 ->on('clientes');
-            $table->string('correo', 20);
+            $table->string('correo', 35);
+            $table->string('nombre', 35);
         });
     }
     public function down() {

@@ -94,7 +94,8 @@ class ClientesController extends Controller {
     function api_agregarCorreoNomina($idCliente, Request $request){
         return response()->json(\App\CorreosCliente::create([
             'idCliente' => $idCliente,
-            'correo' => $request->correo
+            'correo' => $request->correo,
+            'nombre' => $request->nombre
         ]));
     }
     function api_quitarCorreoNomina($id, $idCorreo){

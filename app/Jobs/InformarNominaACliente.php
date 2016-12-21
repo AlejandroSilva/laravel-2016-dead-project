@@ -15,27 +15,22 @@ class InformarNominaACliente extends Job implements ShouldQueue {
 
     protected $nomina;
     protected $SEI_DESARROLLO = [
-        ['pm5k.sk@gmail.com', 'ASILVA DESARROLLO'],
-//        ['logistica@seiconsultores.cl', 'SEI']
+        //['pm5k.sk@gmail.com', 'ASILVA DESARROLLO'],
     ];
     protected $SEI_nomina_bcc = [
-        ['pm5k.sk@gmail.com', 'ASILVA eliminar luego'],
         ['mgamboa@seiconsultores.cl', 'Marco Gamboa'],
         ['clopez@seiconsultores.cl', 'Carlos Lopez'],
         ['gbriones@seiconsultores.cl', 'Gabriela Briones'],
         ['fpizarro@seiconsultores.cl', 'Francisca Pizarro'],
         ['psobarzo@seiconsultores.cl', 'Paula Sobarzo'],
         ['logistica@seiconsultores.cl', 'SEI'],
-        ['asilva@seiconsultores.cl', 'Alejandro Silva']
     ];
     // Cliente 1: PUC
     protected $PUC_nomina_to = [
-//        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
         ['amundaca@sb.cl', 'Alvaro Mundaca']
     ];
     // Cliente 2: FCV
     protected $FCV_nomina_to = [
-//        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
         ['gabriel.vera@cruzverde.cl', 'Gabriel Vera'],
         ['pajorquera@cruzverde.cl', 'Pamela Jorquera'],
         ['jorge.alcaya@cruzverde.cl', 'Jorge Alcaya'],
@@ -55,7 +50,6 @@ class InformarNominaACliente extends Job implements ShouldQueue {
     ];
     // Cliente 5: SB
     protected $SB_nomina_to = [
-//        ['mgamboa@seiconsultores.cl', 'Marco Gamboa']
         ['mbenavente@sb.cl', 'Marianela Benavente'],
         ['sguajardo@sb.cl', 'Silvia Guajardo'],
         ['controldeinventariosb@sb.cl', 'Control de Inventario'],
@@ -123,14 +117,15 @@ class InformarNominaACliente extends Job implements ShouldQueue {
         $nominaRectificada = $this->nomina->rectificada==1? "Nomina RECTIFICADA" : "Nomina";
 
         if($cliente->idCliente==1){                         // 1: PREUNIC
+            $destinatariosPUC = \App\Clientes::find(1)->correos->map(function($c){ return [$c->correo, $c->nombre]; })->toArray();
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "$nominaRectificada PREUNIC Nº$local->numero",
-                'to' => $this->PUC_nomina_to,
+                'to' => $destinatariosPUC,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==2){                   // 2: FCV
             // FCV tambien envia un correo al local (solo si esta definido)
-            $destinatariosFCV = $this->FCV_nomina_to;
+            $destinatariosFCV = \App\Clientes::find(2)->correos->map(function($c){ return [$c->correo, $c->nombre]; })->toArray();
             $correoLocal = $local->emailContacto;
             if($correoLocal)
                 array_unshift($destinatariosFCV, [$correoLocal, "Local $local->numero"]);   // agrega al inicio
@@ -140,32 +135,37 @@ class InformarNominaACliente extends Job implements ShouldQueue {
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==3){                   // 3: CKY
+            $destinatariosCKY = \App\Clientes::find(3)->correos->map(function($c){ return [$c->correo, $c->nombre]; })->toArray();
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "$nominaRectificada CKY Local Nº$local->numero",
-                'to' => $this->CKY_nomina_to,
+                'to' => $destinatariosCKY,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==4){                   // 4: CID
+            $destinatariosCID = \App\Clientes::find(4)->correos->map(function($c){ return [$c->correo, $c->nombre]; })->toArray();
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "$nominaRectificada CID Local Nº$local->numero",
-                'to' => $this->CID_nomina_to,
+                'to' => $destinatariosCID,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==5){                   // 5: SALCOBRAND
+            $destinatariosSB = \App\Clientes::find(5)->correos->map(function($c){ return [$c->correo, $c->nombre]; })->toArray();
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "$nominaRectificada SB Local Nº$local->numero",
-                'to' => $this->SB_nomina_to,
+                'to' => $destinatariosSB,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==7){                   // 7: CMT
+            $destinatariosCMT = \App\Clientes::find(7)->correos->map(function($c){ return [$c->correo, $c->nombre]; })->toArray();
             $this->enviarCorreos('emails.informarNomina.GENERICA', [
                 'subject' => "$nominaRectificada CMT Local Nº$local->numero",
-                'to' => $this->CMT_nomina_to,
+                'to' => $destinatariosCMT,
                 'bcc' => $this->SEI_nomina_bcc
             ], $datosVista);
         }else if($cliente->idCliente==9){                   // 9: WOM
             // WOM tambien envia un correo al local (solo si esta definido)
-            $destinatariosWOM = $this->WOM_nomina_to;
+            $destinatariosWOM = \App\Clientes::find(9)->correos->map(function($c){ return [$c->correo, $c->nombre]; })->toArray();
+
             $correoLocal = $local->emailContacto;
             if($correoLocal)
                 array_unshift($destinatariosWOM, [$correoLocal, "Local $local->numero"]);   // agrega al inicio

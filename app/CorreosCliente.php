@@ -8,5 +8,5 @@ class CorreosCliente extends Model {
     public $primaryKey = 'idCorreo';
     public $timestamps = false;
 
-    protected $fillable = ['idCliente', 'correo'];
+    protected $fillable = ['idCliente', 'correo', 'nombre'];
 }

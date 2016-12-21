@@ -1,0 +1,5 @@
+.fixedWidth {
+    width: 200px;
+    display: inline-block;
+    margin-bottom: 0    ;
+}

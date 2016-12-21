@@ -27,7 +27,7 @@
                     </li>
                 @endif
                 {{-- Mantenedor Correos --}}
-                @if( $mostrarAdministrarLocales )
+                @if( $mostrarAdministrarLocales && Auth::user()->hasRole('Developer') )
                     <li class="{{ Request::is('admin/mantenedor-correos')? 'active': '' }}">
                         <a href="{{ url('admin/mantenedor-correos') }}">Mantenedor de Correos</a>
                     </li>
