@@ -1,6 +1,7 @@
 
 .container{
     position: relative;
+    z-index: 9000;
 }
 .divTitulo {
     width: auto;

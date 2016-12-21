@@ -4,6 +4,7 @@
 .oddRow {
     border-bottom: 1px solid #e0e0e0;
     font-size: 12px;
+    overflow: inherit !important;
 }
 .oddRow {
     background-color: #fafafa;

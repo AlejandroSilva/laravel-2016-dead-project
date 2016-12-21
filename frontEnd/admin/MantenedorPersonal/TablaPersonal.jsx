@@ -3,13 +3,8 @@ import React from 'react'
 let PropTypes = React.PropTypes
 import { AutoSizer, Table, Column } from 'react-virtualized'
 // Componentes
-import {
-    ModalTrigger,
-    ModalEditarUsuario,
-    ModalBloquearUsuario,
-    ModalCambiarContrasena,
-    ModalHistorial
-} from './Modales.jsx'
+import {ModalTrigger, ModalEditarUsuario, ModalBloquearUsuario, ModalCambiarContrasena, ModalHistorial } from './Modales.jsx'
+import { HeaderConBusqueda } from '../../components/shared/HeaderConBusqueda.jsx'
 // Styles
 import * as css from './tablaPersonal.css'
 import classNames from 'classnames/bind'
@@ -45,11 +40,25 @@ export class TablaPersonal extends React.Component {
                                 dataKey='RUN'
                                 label={'RUN'}
                                 cellRenderer={({ rowData, dataKey }) => rowData[dataKey]}
-                                width={65}
+                                headerRenderer={()=>
+                                    <HeaderConBusqueda
+                                        nombre="RUN"
+                                        busqueda={this.props.busquedaRUN}
+                                        realizarBusqueda={this.props.realizarBusquedaRUN}
+                                    />
+                                }
+                                width={70}
                             />
                             <Column
                                 dataKey='nombres'
                                 label={'nombres'}
+                                headerRenderer={()=>
+                                    <HeaderConBusqueda
+                                        nombre="Nombres"
+                                        busqueda={this.props.busquedaNombre}
+                                        realizarBusqueda={this.props.realizarBusquedaNombre}
+                                    />
+                                }
                                 cellRenderer={({ rowData }) =>
                                     <div>
                                         <p style={{margin: 0}}>{rowData.nombre1}</p>
@@ -61,6 +70,13 @@ export class TablaPersonal extends React.Component {
                             <Column
                                 dataKey='apellidos'
                                 label={'Apellidos'}
+                                headerRenderer={()=>
+                                    <HeaderConBusqueda
+                                        nombre="Apellidos"
+                                        busqueda={this.props.busquedaApellido}
+                                        realizarBusqueda={this.props.realizarBusquedaApellido}
+                                    />
+                                }
                                 cellRenderer={({ rowData }) =>
                                     <div>
                                         <p style={{margin: 0}}>{rowData.apellidoPaterno}</p>
@@ -85,14 +101,8 @@ export class TablaPersonal extends React.Component {
                                 dataKey='email'
                                 label={'Email'}
                                 cellRenderer={({ dataKey, rowData }) => rowData[dataKey]}
-                                width={200}
+                                width={190}
                             />
-                            {/*<Column*/}
-                                {/*dataKey='telefono'*/}
-                                {/*label={'Teléfono'}*/}
-                                {/*cellRenderer={({ dataKey, rowData }) => rowData[dataKey]}*/}
-                                {/*width={80}*/}
-                            {/*/>*/}
                             <Column
                                 dataKey='bloqueado'
                                 label={'Estado'}
@@ -137,7 +147,6 @@ export class TablaPersonal extends React.Component {
         console.log(this.props.usuarios.length)
     }
 }
-
 TablaPersonal.propTypes = {
     // numero: PropTypes.number.isRequired,
     // texto: PropTypes.string.isRequired,
@@ -147,7 +156,6 @@ TablaPersonal.propTypes = {
     bloquearUsuario: PropTypes.func.isRequired,
     cambiarContrasena: PropTypes.func.isRequired,
 }
-
 
 const BotonEditar = ({usuario, actualizarUsuario})=>
     <ModalTrigger>
@@ -202,18 +210,17 @@ const BotonCambiarContrasena = ({idUsuario, cambiarContrasena})=>
         }
     </ModalTrigger>
 
-
 const BotonVerHistorial = ({idUsuario, verHistorial})=>
-<ModalTrigger>
-    {(isVisible, showModal, hideModal)=>
-        <button className="btn btn-xs btn-primary" onClick={showModal}>
-            Historial
-            {isVisible && (
-                <ModalHistorial
-                    hideModal={hideModal}
-                    verHistorial={verHistorial}
-                />
-            )}
-        </button>
-    }
-</ModalTrigger>
+    <ModalTrigger>
+        {(isVisible, showModal, hideModal)=>
+            <button className="btn btn-xs btn-primary" onClick={showModal}>
+                Historial
+                {isVisible && (
+                    <ModalHistorial
+                        hideModal={hideModal}
+                        verHistorial={verHistorial}
+                    />
+                )}
+            </button>
+        }
+    </ModalTrigger>
