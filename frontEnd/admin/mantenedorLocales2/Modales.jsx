@@ -1,11 +1,13 @@
 // Librerias
 import React from 'react'
+import { AutoSizer, Table, Column } from 'react-virtualized'
 // Componentes
 import Modal from 'react-bootstrap/lib/Modal.js'
 // Style
 import classNames from 'classnames/bind'
-import * as css from './modal.css'
-let cx = classNames.bind(css)
+import * as cssModal from './modal.css'
+import * as cssTabla from './mantenedorLocal.css'
+let cx = classNames.bind(cssModal)
 
 // function as a children FTW! :D
 export class ModalTrigger extends React.Component{
@@ -36,7 +38,7 @@ export class ModalAgregarLocal extends React.Component {
                 telefono1: '',
                 telefono2: '',
                 stock: 1,
-                cutComuna: 7301,
+                cutComuna: 13101,
                 direccion: ''
             },
             error: {}
@@ -208,7 +210,6 @@ export class ModalAgregarLocal extends React.Component {
     }
 }
 
-
 export class ModalEditarLocal extends React.Component{
     constructor(props){
         super(props)
@@ -368,6 +369,190 @@ export class ModalEditarLocal extends React.Component{
                         </div>
                     </form>
                 </Modal.Body>
+            </Modal>
+        )
+    }
+}
+
+export class ModalPegarLocales extends React.Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            locales: [],
+            todosValidos: false,
+            errores: ''
+        }
+        this.onPaste = (evt)=>{
+            evt.preventDefault()
+            evt.clipboardData.items[0].getAsString(texto=>{
+                const getTime = ((string='00:00')=>(
+                    /^[0-9]{2}:[0-9]{2}:[0-9]{2}$/.test(string) ?
+                        string.replace(/:[0-9]{2}$/, '')
+                        :
+                        ( /^[0-9]{2}:[0-9]{2}$/.test(string) ? string : '00:00' )
+                ))
+                let locales = texto.trim()
+                    .split('\n')
+                    .filter(row=>row!=='')
+                    .map(row=> row.trim().split('\t'))
+                    .map(row => {
+                        return {
+                            idCliente: this.props.idCliente,
+                            numero:             row[0] || '',
+                            nombre:             row[1] || '',
+                            idJornadaSugerida:  row[2] || 3,
+                            jornada:            this.props.jornadas.find(jor=>jor.idJornada==(row[2]||3)),
+                            idFormatoLocal:     4,
+                            horaApertura:       getTime(row[3]),
+                            horaCierre:         getTime(row[4]),
+                            emailContacto:      row[5] || '',
+                            telefono1:          row[6] || '',
+                            telefono2:          row[7] || '',
+                            stock:              1,
+                            cutComuna:          row[8] || 13101,
+                            comuna:             this.props.comunas.find(com=>com.cutComuna==(row[8] || 7301)),
+                            direccion:          row[9] || ''
+                            }
+                    })
+                this.setState({
+                    locales,
+                    todosValidos: locales.filter(local=> (!local.jornada || !local.comuna) ).length==0 && locales.length>0,
+                    errores: ''
+                })
+            })
+        }
+
+        this.agregarLocales = ()=>{
+            this.setState({
+                errores: ''
+            },()=>{
+                this.props.agregarLocales(this.state.locales)
+                    .then(this.props.hideModal)
+                    .catch(err=>{
+                        this.setState({
+                            errores: err.data.join('. ')
+                        })
+                    })
+            })
+        }
+    }
+    componentDidMount(){
+        this.refInputPaste.focus()
+    }
+    render(){
+        let {locales} = this.state
+        return (
+            <Modal show={true} onHide={this.props.hideModal} dialogClassName={cx('modalPegarLocales')} >
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        <small className="col-md-8">Pegar las columnas: Ceco, Nombre, Jornada, Hora Apertura, Hora Cierre, Email, telefono1, telefono2, CUT Comuna y Direccion desde excel</small>
+                        <input className="col-md-3" type="text" value='' onPaste={this.onPaste} ref={ref=>this.refInputPaste=ref}/>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body className={cx('tabla-pegar-locales')}>
+                    <AutoSizer>
+                        {({height, width}) =>
+                            <Table
+                                    // general
+                                    height={height}
+                                    width={width}
+                                    // headers
+                                    headerHeight={30}
+                                    headerClassName={cssTabla.headerColumn}
+                                    // rows
+                                    rowCount={locales.length}
+                                    rowGetter={({index})=> locales[index]}
+                                    rowHeight={40}
+                                    rowClassName={({index})=> index<0? cssTabla.headerRow : ((index%2===0)? cssTabla.evenRow : cssTabla.oddRow)}
+                                >
+                                    {/* Cliente */}
+                                    {/* Ceco */}
+                                    <Column
+                                        dataKey='numero' label="CECO"
+                                        cellRenderer={({ cellData, columnData, dataKey, rowData, rowIndex }) => rowData[dataKey] }
+                                        width={40}
+                                    />
+                                    {/* Nombre */}
+                                    <Column
+                                        dataKey='nombre' label="Nombre"
+                                        cellRenderer={({ cellData, columnData, dataKey, rowData, rowIndex }) => rowData[dataKey] }
+                                        width={120}
+                                    />
+                                    {/* Jornada */}
+                                    <Column
+                                        dataKey='idJornadaSugerida' label="Jornada"
+                                        cellRenderer={({ dataKey, rowData }) =>
+                                            rowData.jornada? rowData.jornada.nombre : <span className="label label-danger">INVALIDA</span>
+                                        }
+                                        width={70}
+                                    />
+                                    {/* Hora Apertura */}
+                                    <Column
+                                        dataKey='horaApertura' label="Apertura"
+                                        cellRenderer={({ cellData, columnData, dataKey, rowData, rowIndex }) => rowData[dataKey] }
+                                        width={70}
+                                    />
+                                    {/* Hora Cierre */}
+                                    <Column
+                                        dataKey='horaCierre' label="Cierre"
+                                        cellRenderer={({ cellData, columnData, dataKey, rowData, rowIndex }) => rowData[dataKey] }
+                                        width={50}
+                                    />
+                                    {/* Email */}
+                                    <Column
+                                        dataKey='emailContacto' label="Email"
+                                        cellRenderer={({ cellData, columnData, dataKey, rowData, rowIndex }) => rowData[dataKey] }
+                                        width={100}
+                                    />
+                                    {/* Telefono 1 */}
+                                    <Column
+                                        dataKey='telefono1' label="Telefono1"
+                                        cellRenderer={({ cellData, columnData, dataKey, rowData, rowIndex }) => rowData[dataKey] }
+                                        width={85}
+                                    />
+                                    {/* Telefono 2 */}
+                                    <Column
+                                        dataKey='telefono2' label="Telefono2"
+                                        cellRenderer={({ cellData, columnData, dataKey, rowData, rowIndex }) => rowData[dataKey] }
+                                        width={85}
+                                    />
+                                    {/* Comuna */}
+                                    <Column
+                                        dataKey='cutComuna' label="CUT Comuna"
+                                        cellRenderer={({ cellData, columnData, dataKey, rowData, rowIndex }) =>
+                                            rowData.comuna? rowData.comuna.nombre : <span className="label label-danger">INVALIDA</span>
+                                        }
+                                        width={100}
+                                    />
+                                    {/* Direccion */}
+                                    <Column
+                                        dataKey='direccion' label="Dirección"
+                                        cellRenderer={({ cellData, columnData, dataKey, rowData, rowIndex }) => rowData[dataKey] }
+                                        width={200}
+                                        flexGrow={1}
+                                    />
+                                </Table>
+                        }
+                    </AutoSizer>
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className={"col-md-6 "+cssModal.textAlignLeft}>
+                        <p>* JORNADA, corresponde a: (1) No definido, (2) Día, (3) Noche, (4) Día y Noche</p>
+                        <p>* CUT COMUNA, corresponde a un el Código Unico Territorial. <a href="http://www.ine.cl/canales/chile_estadistico/territorio/division_politico_administrativa/xls/240111/codigoterr.xls">ver códigos</a></p>
+                    </div>
+                    <div className="col-md-3">
+                        {this.state.errores && (<div className="alert alert-danger">{this.state.errores}</div>)}
+                    </div>
+                    <div className="col-md-3 pull-right">
+                        <button className="btn btn-md btn-default"
+                                onClick={this.props.hideModal}
+                        >Cancelar</button>
+                        <button className="btn btn-md btn-primary"
+                                disabled={this.state.todosValidos? '' : 'disabled'}
+                                onClick={this.agregarLocales}
+                        >Agregar</button>
+                    </div>
+                </Modal.Footer>
             </Modal>
         )
     }

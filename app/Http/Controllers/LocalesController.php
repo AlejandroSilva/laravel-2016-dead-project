@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 // Modelos
+use DB;
 use Auth;
 use App\Clientes;
 use App\Comunas;
@@ -46,7 +47,7 @@ class LocalesController extends Controller {
         return response()->json(array_values($locales), 200);
     }
 
-    // POST api/locales
+    // POST api/local
     function api_nuevoLocal(Request $request){
         // revisar permisos
         if(!Auth::user()->can('administrar-locales'))
@@ -95,6 +96,69 @@ class LocalesController extends Controller {
         $direccion->save();
 
         return response()->json(Locales::formatoLocal_completo($local));
+    }
+    function api_nuevosLocales(Request $request){
+        // revisar permisos
+        if(!Auth::user()->can('administrar-locales'))
+            return response()->json([], 403);
+
+        $locales = $request->locales;
+        foreach ($locales as $local){
+            $crearLocal = Validator::make($local, [
+                'idCliente' => 'required|max:10',
+                // formato local debe existir en la tabla
+                'idFormatoLocal' => 'required|exists:formato_locales,idFormatoLocal',
+                // jornada sugerida debe existir en la tabla
+                'idJornadaSugerida' => 'required|exists:jornadas,idJornada',
+                // valida que el numero y el nombre sean unicos, pero solo para el cliente indicado
+                //unique:table,column,except,idColumn
+                'numero' => "required|numeric|unique:locales,numero,NULL,id,idCliente,".$local['idCliente'],
+                'nombre' => "required|unique:locales,nombre,NULL,id,IdCliente,",$local['idCliente'],
+                'horaApertura' => 'required|date_format:H:i',
+                'horaCierre' => 'required|date_format:H:i',
+                'emailContacto' => 'sometimes|max:50',
+                'codArea1' => 'sometimes|max:10',
+                'telefono1' => 'sometimes|max:20',
+                'codArea2' => 'sometimes|max:10',
+                'telefono2' => 'sometimes|max:20',
+                'stock' => 'required|numeric|digits_between:1,11',
+                'cutComuna'=> 'required|exists:comunas,cutComuna',
+                'direccion'=> 'required|max:150|'
+            ], [
+                'idFormatoLocal.required' => ':attribute es obligatorio',
+                'idFormatoLocal.exists' => 'Formato de Local no existe en la BD',
+                'idJornadaSugerida.required' => ':attribute es obligatorio',
+                'idJornadaSugerida.exists' => ':attribute no existe en la BD',
+                'numero.unique' => 'Ya existe un local con el CECO '.$local['numero'],
+                'nombre.unique' => 'Ya existe un local con el nombre '.$local['nombre'],
+                'cutComuna.exists' => 'El CUT Comuna '.$local['cutComuna'].' es invalido ',
+
+                'required' => 'Campo :attribute es obligatorio',
+                'exists' => ':attribute :value no existe en la BD',
+                'unique' => 'Ya existe un local con el :attribute',
+                'max' => 'Largo máximo :max',
+                'numeric' => 'Debe ser un numero'
+            ]);
+            if($crearLocal->fails()){
+                return response()->json($crearLocal->errors()->all(), 400);
+            }
+        }
+
+        // Crear el Local y la direccion
+        DB::transaction(function () use ($locales){
+            array_map(function($local){
+                $l = Locales::create( $local );
+                $direccion = new Direcciones([
+                    'idLocal'=> $l->idLocal,
+                    'direccion' => $local['direccion'],
+                    'cutComuna' => $local['cutComuna']
+                ]);
+                $direccion->save();
+            }, $locales);
+        });
+
+//        return response()->json(Locales::formatoLocal_completo($local));
+        return response()->json(($locales[0]));
     }
 
     // POST api/local/{idLocal}

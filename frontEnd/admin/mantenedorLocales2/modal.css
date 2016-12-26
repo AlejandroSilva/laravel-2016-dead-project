@@ -1,3 +1,11 @@
+.modalPegarLocales{
+    width: 1200px;
+    /*height: 800px;*/
+}
+.tabla-pegar-locales {
+    height: 400px;
+}
+
 .btn-50-perc {
     width: 50%;
     display: inline-block;
@@ -12,4 +20,8 @@
 .form__error-message {
     display: block;
     color: #a94442;
+}
+
+.textAlignLeft {
+    text-align: left;
 }

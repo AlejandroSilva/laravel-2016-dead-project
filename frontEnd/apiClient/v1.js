@@ -98,7 +98,9 @@ export default {
         // get: (idLocal)=>
         //     axios.get(`/api/locales/${idLocal}`),
         nuevo: (datos)=>
-            axios.post(`/api/locales`, datos),
+            axios.post(`/api/local`, datos),
+        nuevos: (locales)=>
+            axios.post(`/api/locales`, {locales}),
         actualizar: (idLocal, datos) =>
             axios.put(`/api/local/${idLocal}`, datos),
         enviarArchivoStock: (idCliente, archivo)=>{

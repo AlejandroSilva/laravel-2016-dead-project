@@ -6,7 +6,8 @@ import { AutoSizer, Table, Column } from 'react-virtualized'
 import {
     ModalTrigger,
     ModalAgregarLocal,
-    ModalEditarLocal
+    ModalEditarLocal,
+    ModalPegarLocales
 } from './Modales.jsx'
 // Styles
 import * as css from './mantenedorLocal.css'
@@ -15,7 +16,7 @@ export default class MantenedorLocales2 extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            idCliente: 1,
+            idCliente: "1",
             locales: [],
         }
         this.seleccionarCliente = (evt)=>{
@@ -48,6 +49,13 @@ export default class MantenedorLocales2 extends React.Component{
                 .catch(meh=>{})
             return request
         }
+        this.agregarLocalesPegar = (locales)=>{
+            let request = api.local.nuevos(locales)
+            request
+                .then(this.fetchLocales)
+                .catch(err=>{})
+            return request
+        }
     }
     componentWillMount(){
         this.fetchLocales()
@@ -67,6 +75,21 @@ export default class MantenedorLocales2 extends React.Component{
                                         Agregar Local
                                         {isVisible && <ModalAgregarLocal
                                             agregarLocal={this.agregarLocal}
+                                            hideModal={hideModal}
+                                            idCliente={this.state.idCliente}
+                                            jornadas={this.props.jornadas}
+                                            comunas={this.props.comunas}
+                                            formatoLocales={this.props.formatoLocales}
+                                        />}
+                                    </button>
+                                }
+                            </ModalTrigger>
+                            <ModalTrigger>
+                                {(isVisible, showModal, hideModal)=>
+                                    <button className="btn btn-sm btn-success" onClick={showModal}>
+                                        Pegar Locales
+                                        {isVisible && <ModalPegarLocales
+                                            agregarLocales={this.agregarLocalesPegar}
                                             hideModal={hideModal}
                                             idCliente={this.state.idCliente}
                                             jornadas={this.props.jornadas}

@@ -31,7 +31,8 @@ Route::group(['middleware' => ['web']], function (){
         Route::get('admin/mantenedor-locales',                      'LocalesController@show_mantenedor');
         // API:
         Route::get('api/cliente/{idCliente}/locales',               'LocalesController@api_getLocalesDeCliente');
-        Route::post('api/locales',                                  'LocalesController@api_nuevoLocal');
+        Route::post('api/local',                                    'LocalesController@api_nuevoLocal');
+        Route::post('api/locales',                                  'LocalesController@api_nuevosLocales');
         Route::put('api/local/{idLocal}',                           'LocalesController@api_actualizar');
         Route::post('cliente',                                      'ClientesController@form_nuevo');
         Route::put('api/cliente/{idCliente}',                       'ClientesController@form_editar');
