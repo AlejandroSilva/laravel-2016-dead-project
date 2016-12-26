@@ -201,7 +201,7 @@ export class ModalAgregarLocal extends React.Component {
 
                         <div className={cx('form-group', 'form__control-label')}>
                             <a className={cx("btn btn-block btn-default", 'btn-50-perc')} href="#" onClick={this.props.hideModal}>Cancelar</a>
-                            <button className={cx("btn btn-block btn-primary", 'btn-50-perc')} type="submit">Actualizar</button>
+                            <button className={cx("btn btn-block btn-primary", 'btn-50-perc')} type="submit">Agregar</button>
                         </div>
                     </form>
                 </Modal.Body>
