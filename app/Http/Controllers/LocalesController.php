@@ -112,7 +112,7 @@ class LocalesController extends Controller {
                 'idJornadaSugerida' => 'required|exists:jornadas,idJornada',
                 // valida que el numero y el nombre sean unicos, pero solo para el cliente indicado
                 //unique:table,column,except,idColumn
-                'numero' => "required|numeric|unique:locales,numero,NULL,id,idCliente,".$local['idCliente'],
+                'numero' => "required|unique:locales,numero,NULL,id,idCliente,".$local['idCliente'],
                 'nombre' => "required|unique:locales,nombre,NULL,id,IdCliente,",$local['idCliente'],
                 'horaApertura' => 'required|date_format:H:i',
                 'horaCierre' => 'required|date_format:H:i',
